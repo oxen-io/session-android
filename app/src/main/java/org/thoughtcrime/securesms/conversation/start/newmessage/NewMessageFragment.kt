@@ -45,7 +45,7 @@ class NewMessageFragment : Fragment() {
             viewModel,
             onClose = { delegate.onDialogClosePressed() },
             onBack = { delegate.onDialogBackPressed() },
-            onHelp = { requireContext().openUrl("https://sessionapp.zendesk.com/hc/en-us/articles/4439132747033-How-do-Session-ID-usernames-work") }
+            onHelp = { requireContext().openUrl("https://sessionapp.zendesk.com/hc/en-us/articles/4439132747033-How-do-Account-ID-usernames-work") }
         )
     }
 

@@ -8,7 +8,6 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.session.libsession.utilities.TextSecurePreferences
-import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.home.startHomeActivity
@@ -31,7 +30,7 @@ class LoadingActivity: BaseActionBarActivity() {
     private fun register(loadFailed: Boolean) {
         when {
             loadFailed -> startPickDisplayNameActivity(loadFailed = true)
-            else -> startHomeActivity()
+            else -> startHomeActivity(isNewAccount = false)
         }
 
         finish()
@@ -42,11 +41,9 @@ class LoadingActivity: BaseActionBarActivity() {
 
         setUpActionBarSessionLogo()
 
-        ApplicationContext.getInstance(this).newAccount = false
-
         setComposeContent {
-            val state by viewModel.states.collectAsState()
-            LoadingScreen(state)
+            val progress by viewModel.progress.collectAsState()
+            LoadingScreen(progress)
         }
 
         lifecycleScope.launch {

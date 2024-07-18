@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Alles selecteren</string>
     <string name="MediaOverviewActivity_collecting_attachments">Bijlagen aan het verzamelen…</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediabericht</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Mms-bericht aan het downloaden</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Fout bij downloaden van mms-bericht, tik om opnieuw te proberen</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Verzenden naar %s</string>
     <!-- MediaSendActivity -->
@@ -570,7 +567,7 @@
     <string name="activity_create_private_chat_scan_qr_code_tab_title">Scan QR-code</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">Scan de QR-code van een gebruiker om een sessie te starten. QR-codes kunnen worden gevonden door op het QR-icoon in de accountinstellingen te tikken.</string>
     <string name="fragment_enter_public_key_edit_text_hint">Voer uw Account ID of ONS naam in</string>
-    <string name="fragment_enter_public_key_explanation">Gebruikers kunnen hun Session-ID delen door naar hun accountinstellingen te gaan en op \"Deel Session-ID\" te tikken, of door hun QR-code te delen.</string>
+    <string name="fragment_enter_public_key_explanation">Gebruikers kunnen hun Account-ID delen door naar hun accountinstellingen te gaan en op \"Deel Account-ID\" te tikken, of door hun QR-code te delen.</string>
     <string name="fragment_enter_public_key_error_message">Controleer de sessie-ID of ONS naam en probeer het opnieuw.</string>
     <string name="fragment_scan_qr_code_camera_access_explanation">Sessie heeft cameratoegang nodig om QR-codes te scannen</string>
     <string name="fragment_scan_qr_code_grant_camera_access_button_title">Toegang tot camera verlenen</string>

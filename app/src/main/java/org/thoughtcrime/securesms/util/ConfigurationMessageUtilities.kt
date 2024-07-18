@@ -24,6 +24,7 @@ import org.session.libsession.utilities.prefs
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
@@ -31,10 +32,12 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import java.util.Timer
 
 object ConfigurationMessageUtilities {
+    private const val TAG = "ConfigMessageUtils"
 
     private val debouncer = WindowDebouncer(3000, Timer())
 
     private fun scheduleConfigSync(userPublicKey: String) {
+
         debouncer.publish {
             // don't schedule job if we already have one
             val storage = MessagingModuleConfiguration.shared.storage
@@ -44,23 +47,20 @@ object ConfigurationMessageUtilities {
                 (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
                 return@publish
             }
-            val newConfigSync = ConfigurationSyncJob(ourDestination)
-            JobQueue.shared.add(newConfigSync)
+            val newConfigSyncJob = ConfigurationSyncJob(ourDestination)
+            JobQueue.shared.add(newConfigSyncJob)
         }
     }
 
     @JvmStatic
     fun syncConfigurationIfNeeded(context: Context) {
-        // add if check here to schedule new config job process and return early
-        val userPublicKey = context.prefs.getLocalNumber() ?: return
+        val userPublicKey = context.prefs.getLocalNumber() ?: return Log.w(TAG, "User Public Key is null")
         scheduleConfigSync(userPublicKey)
     }
 
     fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
-        // add if check here to schedule new config job process and return early
         val userPublicKey = context.prefs.getLocalNumber() ?: return Promise.ofFail(NullPointerException("User Public Key is null"))
-        // schedule job if none exist
-        // don't schedule job if we already have one
+        // Schedule a new job if one doesn't already exist (only)
         scheduleConfigSync(userPublicKey)
         return Promise.ofSuccess(Unit)
     }
@@ -205,7 +205,7 @@ object ConfigurationMessageUtilities {
             val admins = group.admins.map { it.serialize() to true }.toMap()
             val members = group.members.filterNot { it.serialize() !in admins.keys }.map { it.serialize() to false }.toMap()
             GroupInfo.LegacyGroupInfo(
-                sessionId = groupPublicKey,
+                accountId = groupPublicKey,
                 name = group.title,
                 members = admins + members,
                 priority = if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,

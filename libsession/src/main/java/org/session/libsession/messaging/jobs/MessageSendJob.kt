@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.jobs.Job.Companion.MAX_BUFFER_SIZE
+import org.session.libsession.messaging.jobs.Job.Companion.MAX_BUFFER_SIZE_BYTES
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.visible.VisibleMessage
@@ -118,12 +118,12 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
         val kryo = Kryo()
         kryo.isRegistrationRequired = false
         // Message
-        val messageOutput = Output(ByteArray(4096), MAX_BUFFER_SIZE)
+        val messageOutput = Output(ByteArray(4096), MAX_BUFFER_SIZE_BYTES)
         kryo.writeClassAndObject(messageOutput, message)
         messageOutput.close()
         val serializedMessage = messageOutput.toBytes()
         // Destination
-        val destinationOutput = Output(ByteArray(4096), MAX_BUFFER_SIZE)
+        val destinationOutput = Output(ByteArray(4096), MAX_BUFFER_SIZE_BYTES)
         kryo.writeClassAndObject(destinationOutput, destination)
         destinationOutput.close()
         val serializedDestination = destinationOutput.toBytes()

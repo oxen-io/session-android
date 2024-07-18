@@ -168,9 +168,6 @@
     <string name="MediaOverviewActivity_Select_all">Обрати все</string>
     <string name="MediaOverviewActivity_collecting_attachments">Збираю вкладення...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Мультимедійне повідомлення</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Завантаження MMS...</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Виникла помилка при завантаженні MMS, натисніть щоб повторити</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Відправити %s</string>
     <!-- MediaSendActivity -->

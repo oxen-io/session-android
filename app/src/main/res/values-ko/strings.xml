@@ -136,9 +136,6 @@
     <string name="MediaOverviewActivity_Select_all">모두 선택</string>
     <string name="MediaOverviewActivity_collecting_attachments">첨부파일 저장 준비 중…</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">멀티미디어 메시지</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS 메시지 내려 받는 중</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">MMS 내려 받기 오류, 다시 보내려면 다시 시도를 눌러주세요.</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">%s에게 전송</string>
     <!-- MediaSendActivity -->

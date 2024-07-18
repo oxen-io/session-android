@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
@@ -58,6 +59,7 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter
 import org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
+import org.thoughtcrime.securesms.home.search.GlobalSearchResult
 import org.thoughtcrime.securesms.home.search.GlobalSearchViewModel
 import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
 import org.thoughtcrime.securesms.mms.GlideApp
@@ -84,6 +86,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     companion object {
+        const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
         const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
     }
 
@@ -134,9 +137,14 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
     }
 
+    private val isNewAccount: Boolean get() = intent.getBooleanExtra(FROM_ONBOARDING, false)
+
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
+
+        if (!isTaskRoot) { finish(); return }
+
         // Set content view
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -171,7 +179,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
         // Set up empty state view
         binding.emptyStateContainer.setThemedContent {
-            EmptyView(ApplicationContext.getInstance(this).newAccount)
+            EmptyView(isNewAccount)
         }
 
         IP2Country.configureIfNeeded(this@HomeActivity)
@@ -231,67 +239,25 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             }
             // Get group results and display them
             launch {
-                globalSearchViewModel.result.collect { result ->
-                    if (result.query.isEmpty()) {
-                        class NamedValue<T>(val name: String?, val value: T)
-
-                        // Unknown is temporarily to be grouped together with numbers title.
-                        // https://optf.atlassian.net/browse/SES-2287
-                        val numbersTitle = "#"
-                        val unknownTitle = numbersTitle
-
-                        listOf(
-                            GlobalSearchAdapter.Model.Header(R.string.contacts),
-                            GlobalSearchAdapter.Model.SavedMessages(publicKey)
-                        ) + result.contacts
-                            // Remove ourself, we're shown above.
-                            .filter { it.accountID != publicKey }
-                            // Get the name that we will display and sort by, and uppercase it to
-                            // help with sorting and we need the char uppercased later.
-                            .map { (it.nickname?.takeIf(String::isNotEmpty) ?: it.name?.takeIf(String::isNotEmpty))
-                                .let { name -> NamedValue(name?.uppercase(), it) } }
-                            // Digits are all grouped under a #, the rest are grouped by their first character.uppercased()
-                            // If there is no name, they go under Unknown
-                            .groupBy { it.name?.run { first().takeUnless(Char::isDigit)?.toString() ?: numbersTitle } ?: unknownTitle }
-                            // place the # at the end, after all the names starting with alphabetic chars
-                            .toSortedMap(compareBy {
-                                when (it) {
-                                    unknownTitle -> Char.MAX_VALUE
-                                    numbersTitle -> Char.MAX_VALUE - 1
-                                    else -> it.first()
-                                }
-                            })
-                            // Flatten the map of char to lists into an actual List that can be displayed.
-                            .flatMap { (key, contacts) ->
-                                listOf(
-                                    GlobalSearchAdapter.Model.SubHeader(key)
-                                ) + contacts.sortedBy { it.name ?: it.value.accountID }.map { it.value }.map { GlobalSearchAdapter.Model.Contact(it, it.accountID == publicKey) }
+                globalSearchViewModel.result.map { result ->
+                    result.query to when {
+                        result.query.isEmpty() -> buildList {
+                            add(GlobalSearchAdapter.Model.Header(R.string.contacts))
+                            add(GlobalSearchAdapter.Model.SavedMessages(publicKey))
+                            addAll(result.groupedContacts)
+                        }
+                        else -> buildList {
+                            result.contactAndGroupList.takeUnless { it.isEmpty() }?.let {
+                                add(GlobalSearchAdapter.Model.Header(R.string.contacts))
+                                addAll(it)
                             }
-                    } else {
-                        val contactAndGroupList = result.contacts.map { GlobalSearchAdapter.Model.Contact(it, it.accountID == publicKey) } +
-                            result.threads.map(GlobalSearchAdapter.Model::GroupConversation)
-
-                        val contactResults = contactAndGroupList.toMutableList()
-
-                        if (contactResults.isNotEmpty()) {
-                            contactResults.add(0, GlobalSearchAdapter.Model.Header(R.string.conversations))
+                            result.messageResults.takeUnless { it.isEmpty() }?.let {
+                                add(GlobalSearchAdapter.Model.Header(R.string.global_search_messages))
+                                addAll(it)
+                            }
                         }
-
-                        val unreadThreadMap = result.messages
-                            .map { it.threadId }.toSet()
-                            .associateWith { mmsSmsDatabase.getUnreadCount(it) }
-
-                        val messageResults: MutableList<GlobalSearchAdapter.Model> = result.messages
-                            .map { GlobalSearchAdapter.Model.Message(it, unreadThreadMap[it.threadId] ?: 0, it.conversationRecipient.isLocalNumber) }
-                            .toMutableList()
-
-                        if (messageResults.isNotEmpty()) {
-                            messageResults.add(0, GlobalSearchAdapter.Model.Header(R.string.global_search_messages))
-                        }
-
-                        contactResults + messageResults
-                    }.let { globalSearchAdapter.setNewData(result.query, it) }
-                }
+                    }
+                }.collectLatest(globalSearchAdapter::setNewData)
             }
         }
         EventBus.getDefault().register(this@HomeActivity)
@@ -306,6 +272,54 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             configFactory.user
                 ?.takeUnless { it.isBlockCommunityMessageRequestsSet() }
                 ?.setCommunityMessageRequests(false)
+        }
+    }
+
+    private val GlobalSearchResult.groupedContacts: List<GlobalSearchAdapter.Model> get() {
+        class NamedValue<T>(val name: String?, val value: T)
+
+        // Unknown is temporarily to be grouped together with numbers title.
+        // https://optf.atlassian.net/browse/SES-2287
+        val numbersTitle = "#"
+        val unknownTitle = numbersTitle
+
+        return contacts
+            // Remove ourself, we're shown above.
+            .filter { it.accountID != publicKey }
+            // Get the name that we will display and sort by, and uppercase it to
+            // help with sorting and we need the char uppercased later.
+            .map { (it.nickname?.takeIf(String::isNotEmpty) ?: it.name?.takeIf(String::isNotEmpty))
+                .let { name -> NamedValue(name?.uppercase(), it) } }
+            // Digits are all grouped under a #, the rest are grouped by their first character.uppercased()
+            // If there is no name, they go under Unknown
+            .groupBy { it.name?.run { first().takeUnless(Char::isDigit)?.toString() ?: numbersTitle } ?: unknownTitle }
+            // place the # at the end, after all the names starting with alphabetic chars
+            .toSortedMap(compareBy {
+                when (it) {
+                    unknownTitle -> Char.MAX_VALUE
+                    numbersTitle -> Char.MAX_VALUE - 1
+                    else -> it.first()
+                }
+            })
+            // Flatten the map of char to lists into an actual List that can be displayed.
+            .flatMap { (key, contacts) ->
+                listOf(
+                    GlobalSearchAdapter.Model.SubHeader(key)
+                ) + contacts.sortedBy { it.name ?: it.value.accountID }.map { it.value }.map { GlobalSearchAdapter.Model.Contact(it, it.nickname ?: it.name, it.accountID == publicKey) }
+            }
+    }
+
+    private val GlobalSearchResult.contactAndGroupList: List<GlobalSearchAdapter.Model> get() =
+        contacts.map { GlobalSearchAdapter.Model.Contact(it, it.nickname ?: it.name, it.accountID == publicKey) } +
+            threads.map(GlobalSearchAdapter.Model::GroupConversation)
+
+    private val GlobalSearchResult.messageResults: List<GlobalSearchAdapter.Model> get() {
+        val unreadThreadMap = messages
+            .map { it.threadId }.toSet()
+            .associateWith { mmsSmsDatabase.getUnreadCount(it) }
+
+        return messages.map {
+            GlobalSearchAdapter.Model.Message(it, unreadThreadMap[it.threadId] ?: 0, it.conversationRecipient.isLocalNumber)
         }
     }
 
@@ -620,9 +634,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 }
 
-fun Context.startHomeActivity() {
+fun Context.startHomeActivity(isNewAccount: Boolean) {
     Intent(this, HomeActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        putExtra(HomeActivity.NEW_ACCOUNT, true)
         putExtra(HomeActivity.FROM_ONBOARDING, true)
     }.also(::startActivity)
 }

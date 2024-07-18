@@ -293,7 +293,7 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit> =
         suspendCoroutine { continuation ->
-            // Note: This sessionId could be the blinded Id
+            // Note: This accountId could be the blinded Id
             val accountID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
 

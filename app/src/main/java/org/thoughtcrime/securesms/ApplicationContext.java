@@ -154,8 +154,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
     private volatile boolean isAppVisible;
 
-    public boolean newAccount = false;
-
     public static ApplicationContext getInstance(Context context) {
         return (ApplicationContext) context.getApplicationContext();
     }

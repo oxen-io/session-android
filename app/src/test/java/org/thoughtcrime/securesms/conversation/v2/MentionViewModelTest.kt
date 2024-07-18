@@ -91,14 +91,14 @@ class MentionViewModelTest {
             contactDatabase = mock {
                 on { getContacts(any()) } doAnswer {
                     val ids = it.arguments[0] as Collection<String>
-                    memberContacts.filter { contact -> contact.accountID in ids }
+                    memberContacts.filter { it.accountID in ids }
                 }
             },
             memberDatabase = mock {
                 on { getGroupMembersRoles(eq(openGroup.id), any()) } doAnswer {
                     val memberIDs = it.arguments[1] as Collection<String>
                     memberIDs.associateWith { id ->
-                        threadMembers.first { m -> m.pubKey == id }.roles
+                        threadMembers.first { it.pubKey == id }.roles
                     }
                 }
             },

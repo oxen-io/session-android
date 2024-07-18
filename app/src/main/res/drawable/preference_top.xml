@@ -6,7 +6,7 @@
         android:top="@dimen/small_spacing"
         >
         <shape android:shape="rectangle">
-            <solid android:color="?colorSettingsBackground"/>
+            <solid android:color="?backgroundSecondary"/>
             <corners android:topLeftRadius="?preferenceCornerRadius"
                 android:topRightRadius="?preferenceCornerRadius"/>
         </shape>

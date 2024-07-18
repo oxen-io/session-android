@@ -168,9 +168,6 @@
     <string name="MediaOverviewActivity_Select_all">Zaznacz wszystko</string>
     <string name="MediaOverviewActivity_collecting_attachments">Zbieranie załączników...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Wiadomość multimedialna</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Pobieranie wiadomości MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Błąd podczas pobierania wiadomości MMS. Dotknij, aby spróbować ponownie.</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Wyślij do %s</string>
     <!-- MediaSendActivity -->

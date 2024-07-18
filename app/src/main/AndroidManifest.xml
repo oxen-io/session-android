@@ -125,7 +125,7 @@
         <activity
             android:name="org.thoughtcrime.securesms.home.HomeActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
             android:theme="@style/Theme.Session.DayNight.NoActionBar" />
         <activity
             android:name="org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity"

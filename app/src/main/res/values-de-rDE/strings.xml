@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Alle auswählen</string>
     <string name="MediaOverviewActivity_collecting_attachments">Anhänge werden gesammelt …</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">MMS</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS wird heruntergeladen …</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Fehler beim Herunterladen der MMS. Für erneuten Versuch antippen.</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">An %s senden</string>
     <!-- MediaSendActivity -->
@@ -569,7 +566,7 @@
     <string name="activity_create_private_chat_scan_qr_code_explanation">Scannen Sie den QR-Code eines Benutzers, um eine Session zu starten. QR-Codes finden Sie, indem Sie in den Einstellungen auf das QR-Code-Symbol tippen.</string>
     <string name="fragment_enter_public_key_edit_text_hint">Sitzungs-ID oder ONS-Name eingeben</string>
     <string name="fragment_enter_public_key_explanation">Benutzer können ihre Account ID freigeben, indem sie in ihren Einstellungen auf \"Account ID freigeben\" tippen oder ihren QR-Code freigeben.</string>
-    <string name="fragment_enter_public_key_error_message">Bitte überprüfe die Session-ID oder den ONS-Namen und versuche es erneut.</string>
+    <string name="fragment_enter_public_key_error_message">Bitte überprüfe die Account-ID oder den ONS-Namen und versuche es erneut.</string>
     <string name="fragment_scan_qr_code_camera_access_explanation">Session benötigt Kamerazugriff, um die QR-Codes scannen zu können.</string>
     <string name="fragment_scan_qr_code_grant_camera_access_button_title">Kamerazugriff gewähren</string>
     <string name="activity_create_closed_group_title">Neue geschlossene Gruppe</string>
@@ -641,7 +638,7 @@
     <string name="dialog_ui_mode_option_day">Tag</string>
     <string name="dialog_ui_mode_option_night">Nacht</string>
     <string name="dialog_ui_mode_option_system_default">Systemstandard</string>
-    <string name="activity_conversation_menu_copy_account_id">Session-ID kopieren</string>
+    <string name="activity_conversation_menu_copy_account_id">Account-ID kopieren</string>
     <string name="attachment">Anhang</string>
     <string name="attachment_type_voice_message">Sprachnachricht</string>
     <string name="details">Details</string>

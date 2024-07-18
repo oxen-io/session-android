@@ -15,7 +15,7 @@ geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_na
 226074,en,AF,Africa,UG,Uganda,0
 239880,en,AF,Africa,CF,"Central African Republic",0
 241170,en,AF,Africa,SC,Seychelles,0
-248816,en,AS,Asia,JO,"Hashemite Kingdom of Jordan",0
+248816,en,AS,Asia,JO,Jordan,0
 272103,en,AS,Asia,LB,Lebanon,0
 285570,en,AS,Asia,KW,Kuwait,0
 286963,en,AS,Asia,OM,Oman,0
@@ -23,7 +23,7 @@ geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_na
 290291,en,AS,Asia,BH,Bahrain,0
 290557,en,AS,Asia,AE,"United Arab Emirates",0
 294640,en,AS,Asia,IL,Israel,0
-298795,en,AS,Asia,TR,Turkey,0
+298795,en,AS,Asia,TR,Türkiye,0
 337996,en,AF,Africa,ET,Ethiopia,0
 338010,en,AF,Africa,ER,Eritrea,0
 357994,en,AF,Africa,EG,Egypt,0
@@ -33,13 +33,13 @@ geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_na
 453733,en,EU,Europe,EE,Estonia,1
 458258,en,EU,Europe,LV,Latvia,1
 587116,en,AS,Asia,AZ,Azerbaijan,0
-597427,en,EU,Europe,LT,"Republic of Lithuania",1
+597427,en,EU,Europe,LT,Lithuania,1
 607072,en,EU,Europe,SJ,"Svalbard and Jan Mayen",0
 614540,en,AS,Asia,GE,Georgia,0
-617790,en,EU,Europe,MD,"Republic of Moldova",0
+617790,en,EU,Europe,MD,Moldova,0
 630336,en,EU,Europe,BY,Belarus,0
 660013,en,EU,Europe,FI,Finland,1
-661882,en,EU,Europe,AX,"Åland",1
+661882,en,EU,Europe,AX,"Åland Islands",1
 690791,en,EU,Europe,UA,Ukraine,0
 718075,en,EU,Europe,MK,"North Macedonia",0
 719819,en,EU,Europe,HU,Hungary,1
@@ -77,8 +77,8 @@ geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_na
 1522867,en,AS,Asia,KZ,Kazakhstan,0
 1527747,en,AS,Asia,KG,Kyrgyzstan,0
 1546748,en,AN,Antarctica,TF,"French Southern Territories",0
-1547314,en,AN,Antarctica,HM,"Heard Island and McDonald Islands",0
-1547376,en,AS,Asia,CC,"Cocos [Keeling] Islands",0
+1547314,en,AN,Antarctica,HM,"Heard and McDonald Islands",0
+1547376,en,AS,Asia,CC,"Cocos (Keeling) Islands",0
 1559582,en,OC,Oceania,PW,Palau,0
 1562822,en,AS,Asia,VN,Vietnam,0
 1605651,en,AS,Asia,TH,Thailand,0
@@ -97,7 +97,7 @@ geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_na
 1873107,en,AS,Asia,KP,"North Korea",0
 1880251,en,AS,Asia,SG,Singapore,0
 1899402,en,OC,Oceania,CK,"Cook Islands",0
-1966436,en,OC,Oceania,TL,"East Timor",0
+1966436,en,OC,Oceania,TL,Timor-Leste,0
 2017370,en,EU,Europe,RU,Russia,0
 2029969,en,AS,Asia,MN,Mongolia,0
 2077456,en,OC,Oceania,AU,Australia,0
@@ -131,7 +131,7 @@ geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_na
 2400553,en,AF,Africa,GA,Gabon,0
 2403846,en,AF,Africa,SL,"Sierra Leone",0
 2410758,en,AF,Africa,ST,"São Tomé and Príncipe",0
-2411586,en,EU,Europe,GI,Gibraltar,1
+2411586,en,EU,Europe,GI,Gibraltar,0
 2413451,en,AF,Africa,GM,Gambia,0
 2420477,en,AF,Africa,GN,Guinea,0
 2434508,en,AF,Africa,TD,Chad,0
@@ -146,10 +146,10 @@ geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_na
 2622320,en,EU,Europe,FO,"Faroe Islands",0
 2623032,en,EU,Europe,DK,Denmark,1
 2629691,en,EU,Europe,IS,Iceland,0
-2635167,en,EU,Europe,GB,"United Kingdom",1
+2635167,en,EU,Europe,GB,"United Kingdom",0
 2658434,en,EU,Europe,CH,Switzerland,0
 2661886,en,EU,Europe,SE,Sweden,1
-2750405,en,EU,Europe,NL,Netherlands,1
+2750405,en,EU,Europe,NL,"The Netherlands",1
 2782113,en,EU,Europe,AT,Austria,1
 2802361,en,EU,Europe,BE,Belgium,1
 2921044,en,EU,Europe,DE,Germany,1
@@ -203,7 +203,7 @@ geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_na
 3576916,en,NA,"North America",TC,"Turks and Caicos Islands",0
 3577279,en,NA,"North America",AW,Aruba,0
 3577718,en,NA,"North America",VG,"British Virgin Islands",0
-3577815,en,NA,"North America",VC,"Saint Vincent and the Grenadines",0
+3577815,en,NA,"North America",VC,"St Vincent and Grenadines",0
 3578097,en,NA,"North America",MS,Montserrat,0
 3578421,en,NA,"North America",MF,"Saint Martin",1
 3578476,en,NA,"North America",BL,"Saint Barthélemy",0
@@ -238,7 +238,7 @@ geoname_id,locale_code,continent_code,continent_name,country_iso_code,country_na
 4043988,en,OC,Oceania,GU,Guam,0
 4566966,en,NA,"North America",PR,"Puerto Rico",0
 4796775,en,NA,"North America",VI,"U.S. Virgin Islands",0
-5854968,en,OC,Oceania,UM,"U.S. Minor Outlying Islands",0
+5854968,en,OC,Oceania,UM,"U.S. Outlying Islands",0
 5880801,en,OC,Oceania,AS,"American Samoa",0
 6251999,en,NA,"North America",CA,Canada,0
 6252001,en,NA,"North America",US,"United States",0

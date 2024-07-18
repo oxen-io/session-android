@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Velg alle</string>
     <string name="MediaOverviewActivity_collecting_attachments">Henter vedlegg …</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediemelding</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Laster ned MMS-melding</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Feil under nedlasting av MMS-melding. Trykk for å prøve igjen</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Send til %s</string>
     <!-- MediaSendActivity -->
@@ -554,7 +551,7 @@ nøkkelutvekslingsmelding.</string>
     <string name="activity_home_delete_conversation_dialog_message">Er du sikker på at du vil slette denne samtalen?</string>
     <string name="activity_home_conversation_deleted_message">Samtalen slettet</string>
     <string name="view_seed_reminder_subtitle_1">Sikre kontoen din ved å lagre din gjenopprettingsfrase</string>
-    <string name="view_seed_reminder_subtitle_2">Trykk og hold inne de overflødige ordene for å hente gjenopprettingsfrasen din, og lagre den trygt å sikre din Session-ID.</string>
+    <string name="view_seed_reminder_subtitle_2">Trykk og hold inne de overflødige ordene for å hente gjenopprettingsfrasen din, og lagre den trygt å sikre din Account-ID.</string>
     <string name="view_seed_reminder_subtitle_3">Pass på å lagre gjenopprettingsfrasen på et sikkert sted</string>
     <string name="activity_path_title">Bane</string>
     <string name="activity_path_explanation">Session skjuler din IP ved å laste ned meldingene dine gjennom flere Service Noder i Sessions desentraliserte nettverk. Disse er landene som koblingen din for øyeblikket blir kontaktet gjennom:</string>
@@ -568,9 +565,9 @@ nøkkelutvekslingsmelding.</string>
     <string name="activity_create_private_chat_enter_account_id_tab_title">Skriv inn Account ID</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">Skann QR-kode</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">Skann en brukers QR-kode for å starte en økt. QR-koder finnes ved å trykke på QR-koden i kontoinnstillingene.</string>
-    <string name="fragment_enter_public_key_edit_text_hint">Angi Session-ID eller ONS-navn</string>
-    <string name="fragment_enter_public_key_explanation">Brukere kan dele sin Session-ID ved å gå inn i sine kontoinnstillinger og trykke på \"Del Session-ID\", eller ved å dele sin QR-kode.</string>
-    <string name="fragment_enter_public_key_error_message">Vennligst sjekk Session-ID\'en eller ONS-navnet og prøv igjen.</string>
+    <string name="fragment_enter_public_key_edit_text_hint">Angi Account-ID eller ONS-navn</string>
+    <string name="fragment_enter_public_key_explanation">Brukere kan dele sin Account-ID ved å gå inn i sine kontoinnstillinger og trykke på \"Del Account-ID\", eller ved å dele sin QR-kode.</string>
+    <string name="fragment_enter_public_key_error_message">Vennligst sjekk Account-ID\'en eller ONS-navnet og prøv igjen.</string>
     <string name="fragment_scan_qr_code_camera_access_explanation">Session trenger kameratilgang for å skanne QR-koder</string>
     <string name="fragment_scan_qr_code_grant_camera_access_button_title">Gi kameratilgang</string>
     <string name="activity_create_closed_group_title">Ny lukket gruppe</string>
@@ -642,7 +639,7 @@ nøkkelutvekslingsmelding.</string>
     <string name="dialog_ui_mode_option_day">Dag</string>
     <string name="dialog_ui_mode_option_night">Natt</string>
     <string name="dialog_ui_mode_option_system_default">Systemstandard</string>
-    <string name="activity_conversation_menu_copy_account_id">Kopier Session-ID</string>
+    <string name="activity_conversation_menu_copy_account_id">Kopier Account-ID</string>
     <string name="attachment">Vedlegg</string>
     <string name="attachment_type_voice_message">Talemelding</string>
     <string name="details">Detaljer</string>

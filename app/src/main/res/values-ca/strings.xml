@@ -147,9 +147,6 @@
     <string name="MediaOverviewActivity_Select_all">Selecciona-ho tot</string>
     <string name="MediaOverviewActivity_collecting_attachments">S\'estan adjuntant els fitxers...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Missatge multimèdia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">S\'està baixant el missatge MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">S\'ha produït un error en baixar el missatge MMS. Toqueu per tornar a intentar-ho</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Envia-ho a %s</string>
     <!-- MediaSendActivity -->

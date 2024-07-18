@@ -136,29 +136,29 @@ class SodiumUtilitiesTest {
     }
 
     @Test
-    fun sessionIdSuccess() {
-        val result = SodiumUtilities.sessionId("05$publicKey", "15$blindedPublicKey", serverPublicKey)
+    fun accountIdSuccess() {
+        val result = SodiumUtilities.accountId("05$publicKey", "15$blindedPublicKey", serverPublicKey)
 
         assertTrue(result)
     }
 
     @Test
-    fun sessionIdFailureInvalidAccountId() {
-        val result = SodiumUtilities.sessionId("AB$publicKey", "15$blindedPublicKey", serverPublicKey)
+    fun accountIdFailureInvalidAccountId() {
+        val result = SodiumUtilities.accountId("AB$publicKey", "15$blindedPublicKey", serverPublicKey)
 
         assertFalse(result)
     }
 
     @Test
-    fun sessionIdFailureInvalidBlindedId() {
-        val result = SodiumUtilities.sessionId("05$publicKey", "AB$blindedPublicKey", serverPublicKey)
+    fun accountIdFailureInvalidBlindedId() {
+        val result = SodiumUtilities.accountId("05$publicKey", "AB$blindedPublicKey", serverPublicKey)
 
         assertFalse(result)
     }
 
     @Test
-    fun sessionIdFailureBlindingFactor() {
-        val result = SodiumUtilities.sessionId("05$publicKey", "15$blindedPublicKey", "Test")
+    fun accountIdFailureBlindingFactor() {
+        val result = SodiumUtilities.accountId("05$publicKey", "15$blindedPublicKey", "Test")
 
         assertFalse(result)
     }

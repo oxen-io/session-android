@@ -28,6 +28,8 @@ class GlobalSearchAdapter(private val modelCallback: (Model)->Unit): RecyclerVie
     private var data: List<Model> = listOf()
     private var query: String? = null
 
+    fun setNewData(data: Pair<String, List<Model>>) = setNewData(data.first, data.second)
+
     fun setNewData(query: String, newData: List<Model>) {
         val diffResult = DiffUtil.calculateDiff(GlobalSearchDiff(this.query, query, data, newData))
         this.query = query
@@ -134,7 +136,7 @@ class GlobalSearchAdapter(private val modelCallback: (Model)->Unit): RecyclerVie
             constructor(title: String): this(GetString(title))
         }
         data class SavedMessages(val currentUserPublicKey: String): Model()
-        data class Contact(val contact: ContactModel, val isSelf: Boolean): Model()
+        data class Contact(val contact: ContactModel, val name: String?, val isSelf: Boolean): Model()
         data class GroupConversation(val groupRecord: GroupRecord): Model()
         data class Message(val messageResult: MessageResult, val unread: Int, val isSelf: Boolean): Model()
     }

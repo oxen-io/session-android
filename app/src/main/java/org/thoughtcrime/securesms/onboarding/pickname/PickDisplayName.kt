@@ -40,7 +40,11 @@ internal fun PickDisplayName(
     quit: () -> Unit = {}
 ) {
 
-    if (state.showDialog) OnboardingBackPressAlertDialog(dismissDialog, quit)
+    if (state.showDialog) OnboardingBackPressAlertDialog(
+        dismissDialog,
+        R.string.you_cannot_go_back_further_cancel_account_creation,
+        quit
+    )
 
     Column(
         modifier = Modifier

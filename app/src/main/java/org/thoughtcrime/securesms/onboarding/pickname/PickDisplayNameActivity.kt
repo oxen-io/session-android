@@ -45,7 +45,7 @@ class PickDisplayNameActivity : BaseActionBarActivity() {
             viewModel.events.collect {
                 when (it) {
                     is Event.CreateAccount -> startMessageNotificationsActivity(it.profileName)
-                    Event.LoadAccountComplete -> startHomeActivity()
+                    Event.LoadAccountComplete -> startHomeActivity(isNewAccount = false)
                 }
             }
         }
@@ -72,8 +72,6 @@ class PickDisplayNameActivity : BaseActionBarActivity() {
 }
 
 fun Context.startPickDisplayNameActivity(loadFailed: Boolean = false, flags: Int = 0) {
-    ApplicationContext.getInstance(this).newAccount = !loadFailed
-
     Intent(this, PickDisplayNameActivity::class.java)
         .apply { putExtra(EXTRA_LOAD_FAILED, loadFailed) }
         .also { it.flags = flags }

@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Markera alla</string>
     <string name="MediaOverviewActivity_collecting_attachments">Samlar bifogade filer...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediameddelande</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Hämtning av MMS-meddelanden</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Fel vid hämtning av MMS-meddelanden, tryck för att försöka igen</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Skicka till %s</string>
     <!-- MediaSendActivity -->
@@ -554,7 +551,7 @@ för nyckelutbyte!</string>
     <string name="activity_home_delete_conversation_dialog_message">Är du säker på att du vill ta bort denna konversation?</string>
     <string name="activity_home_conversation_deleted_message">Konversationen har raderats</string>
     <string name="view_seed_reminder_subtitle_1">Säkra ditt konto genom att spara din återställningsfras</string>
-    <string name="view_seed_reminder_subtitle_2">Tryck på och håll ned de dolda orden för att avslöja din återställningsfras och lagra dem på ett säkert sätt för att säkra ditt Session-ID.</string>
+    <string name="view_seed_reminder_subtitle_2">Tryck på och håll ned de dolda orden för att avslöja din återställningsfras och lagra dem på ett säkert sätt för att säkra ditt Account-ID.</string>
     <string name="view_seed_reminder_subtitle_3">Se till att spara din återställningsfras på en säker plats</string>
     <string name="activity_path_title">Sökväg</string>
     <string name="activity_path_explanation">Session döljer din IP-adress genom att dirigera dina meddelanden genom flera Tjänstnoder i Sessions decentraliserade nätverk. Detta är de länder som din anslutning för närvarande går igenom:</string>
@@ -642,7 +639,7 @@ för nyckelutbyte!</string>
     <string name="dialog_ui_mode_option_day">Dag</string>
     <string name="dialog_ui_mode_option_night">Natt</string>
     <string name="dialog_ui_mode_option_system_default">Systemets inställning</string>
-    <string name="activity_conversation_menu_copy_account_id">Kopiera Session-ID</string>
+    <string name="activity_conversation_menu_copy_account_id">Kopiera Account-ID</string>
     <string name="attachment">Bilaga</string>
     <string name="attachment_type_voice_message">Röstmeddelande</string>
     <string name="details">Detaljer</string>

@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Hepsini seç</string>
     <string name="MediaOverviewActivity_collecting_attachments">Eklentiler toplanıyor...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Çoğulortam iletisi</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS iletisi indiriliyor</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">MMS iletisi indirilirken hata, yeniden denemek için dokunun</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">%s alıcısına gönder</string>
     <!-- MediaSendActivity -->

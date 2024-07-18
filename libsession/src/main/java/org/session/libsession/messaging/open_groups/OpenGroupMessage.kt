@@ -36,7 +36,7 @@ data class OpenGroupMessage(
             val base64EncodedData = json["data"] as? String ?: return null
             val sentTimestamp = json["posted"] as? Double ?: return null
             val serverID = json["id"] as? Int
-            val sender = json["account_id"] as? String
+            val sender = json["session_id"] as? String
             val base64EncodedSignature = json["signature"] as? String
             return OpenGroupMessage(
                 serverID = serverID?.toLong(),

@@ -83,8 +83,8 @@ class MnemonicCodec(private val loadFileContents: (String) -> String) {
         val prefixLength = languageConfiguration.prefixLength
         val n = truncatedWordSet.size.toLong()
 
-        if (mnemonic.isEmpty()) throw DecodingError.InputTooShort
-        if (words.isEmpty()) throw DecodingError.InputTooShort
+        // Check preconditions
+        if (words.size < 13) throw DecodingError.InputTooShort
 
         fun String.prefix() = substring(0 until prefixLength)
 
@@ -95,9 +95,6 @@ class MnemonicCodec(private val loadFileContents: (String) -> String) {
 
         val wordIndexes = wordPrefixes.map { truncatedWordSet.indexOf(it) }
             .onEach { if (it < 0) throw DecodingError.InvalidWord }
-
-        // Check preconditions
-        if (words.size < 13) throw DecodingError.InputTooShort
 
         // Verify checksum
         val checksumIndex = determineChecksumIndex(words.dropLast(1), prefixLength)
@@ -128,13 +125,12 @@ class MnemonicCodec(private val loadFileContents: (String) -> String) {
         decode(mnemonic = mnemonicOrHex).let(Hex::fromStringCondensed)
     } catch (decodeException: Exception) {
         // It's not a valid mnemonic, if it's pure-hexadecimal then we'll interpret it as a
-        // hexadecimal-byte encoded mnemonic.
-        if (!mnemonicOrHex.isHex()) throw decodeException
-        try {
-            Hex.fromStringCondensed(mnemonicOrHex)
-        } catch (_: Exception) {
-            throw decodeException
-        }
+        // hexadecimal-byte encoded mnemonic... unless it's 66 chars or longer, then it could be
+        // an account id.
+        mnemonicOrHex.takeIf { it.length < 66 && it.isHex() }
+            .runCatching { Hex.fromStringCondensed(this) }
+            .getOrNull()
+            ?: throw decodeException
     }
 }
 

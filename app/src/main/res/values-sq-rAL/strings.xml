@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Përzgjidhi krejt</string>
     <string name="MediaOverviewActivity_collecting_attachments">Po mblidhen bashkëngjitje…</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Mesazh multimedia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Po shkarkohet mesazh MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Gabim në shkarkim mesazhi MMS, prekeni që të riprovohet</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Dërgoje te %s</string>
     <!-- MediaSendActivity -->

@@ -35,14 +35,14 @@ class MnemonicCodecTest {
 
     @Test
     fun `decode one invalid word that is too short`() {
-        assertThrows(InvalidWord::class.java) {
+        assertThrows(InputTooShort::class.java) {
             codec.decode("a")
         }
     }
 
     @Test
     fun `decode one invalid word`() {
-        assertThrows(InvalidWord::class.java) {
+        assertThrows(InputTooShort::class.java) {
             codec.decode("abcd")
         }
     }
@@ -96,12 +96,20 @@ class MnemonicCodecTest {
 
         assertEquals("0f2ccde528622876b8f16e14db97dafc", result)
     }
+
+    @Test
+    fun `decodeMnemonicOrHexAsByteArray with account id throws`() {
+        assertThrows(InputTooShort::class.java) {
+            codec.decodeMnemonicOrHexAsByteArray("0582e1421da6f584a4795d30b654b4f25fed860afdf081075cb26a2b997e492f14").let(Hex::toStringCondensed)
+        }
+    }
+
     @Test
     fun `decodeMnemonicOrHexAsByteArray with bad hex`() {
         // throws InvalidWord as 0f2ccde528622876b8f16e14db97dafcg is not a valid word on the english wordlist.
         // It is also not a valid hex string, but we assume that a non-hex string is a recovery password.
 
-        assertThrows(InvalidWord::class.java) {
+        assertThrows(InputTooShort::class.java) {
             codec.decodeMnemonicOrHexAsByteArray("0f2ccde528622876b8f16e14db97dafcg").let(Hex::toStringCondensed)
         }
     }

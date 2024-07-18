@@ -56,7 +56,6 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
         val threadRecipient = threadDb.getRecipientForThreadId(threadID) ?: return dismiss()
         with(binding) {
             profilePictureView.publicKey = publicKey
-            profilePictureView.isLarge = true
             profilePictureView.update(recipient)
             nameTextViewContainer.visibility = View.VISIBLE
             nameTextViewContainer.setOnClickListener {

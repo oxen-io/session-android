@@ -49,17 +49,20 @@ internal fun StartConversationScreen(
                 ItemButton(
                     textId = R.string.messageNew,
                     icon = R.drawable.ic_message,
+                    modifier = Modifier.contentDescription(R.string.AccessibilityId_new_direct_message),
                     onClick = delegate::onNewMessageSelected)
                 Divider(startIndent = LocalDimensions.current.dividerIndent)
                 ItemButton(
                     textId = R.string.activity_create_group_title,
                     icon = R.drawable.ic_group,
+                    modifier = Modifier.contentDescription(R.string.AccessibilityId_create_group),
                     onClick = delegate::onCreateGroupSelected
                 )
                 Divider(startIndent = LocalDimensions.current.dividerIndent)
                 ItemButton(
                     textId = R.string.dialog_join_community_title,
                     icon = R.drawable.ic_globe,
+                    modifier = Modifier.contentDescription(R.string.AccessibilityId_join_community),
                     onClick = delegate::onJoinCommunitySelected
                 )
                 Divider(startIndent = LocalDimensions.current.dividerIndent)

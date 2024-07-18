@@ -1,6 +1,7 @@
 package org.session.libsignal.utilities
 
-import okhttp3.MediaType
+import android.util.Log
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -11,10 +12,12 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.X509TrustManager
 
+
 object HTTP {
     var isConnectedToNetwork: (() -> Boolean) = { false }
 
     private val seedNodeConnection by lazy {
+
         OkHttpClient().newBuilder()
             .callTimeout(timeout, TimeUnit.SECONDS)
             .connectTimeout(timeout, TimeUnit.SECONDS)
@@ -106,7 +109,7 @@ object HTTP {
             Verb.GET -> request.get()
             Verb.PUT, Verb.POST -> {
                 if (body == null) { throw Exception("Invalid request body.") }
-                val contentType = MediaType.get("application/json; charset=utf-8")
+                val contentType = "application/json; charset=utf-8".toMediaType()
                 @Suppress("NAME_SHADOWING") val body = RequestBody.create(contentType, body)
                 if (verb == Verb.PUT) request.put(body) else request.post(body)
             }
@@ -114,7 +117,7 @@ object HTTP {
         }
         lateinit var response: Response
         try {
-            val connection = if (timeout != HTTP.timeout) { // Custom timeout
+            val connection: OkHttpClient = if (timeout != HTTP.timeout) { // Custom timeout
                 if (useSeedNodeConnection) {
                     throw IllegalStateException("Setting a custom timeout is only allowed for requests to snodes.")
                 }
@@ -122,6 +125,7 @@ object HTTP {
             } else {
                 if (useSeedNodeConnection) seedNodeConnection else defaultConnection
             }
+
             response = connection.newCall(request.build()).execute()
         } catch (exception: Exception) {
             Log.d("Loki", "${verb.rawValue} request to $url failed due to error: ${exception.localizedMessage}.")
@@ -131,9 +135,9 @@ object HTTP {
             // Override the actual error so that we can correctly catch failed requests in OnionRequestAPI
             throw HTTPRequestFailedException(0, null, "HTTP request failed due to: ${exception.message}")
         }
-        return when (val statusCode = response.code()) {
+        return when (val statusCode = response.code) {
             200 -> {
-                response.body()?.bytes() ?: throw Exception("An error occurred.")
+                response.body!!.bytes()
             }
             else -> {
                 Log.d("Loki", "${verb.rawValue} request to $url failed with status code: $statusCode.")

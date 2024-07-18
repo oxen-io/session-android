@@ -186,9 +186,6 @@
     <string name="MediaOverviewActivity_Select_all">أختر الكل</string>
     <string name="MediaOverviewActivity_collecting_attachments">جارٍ جمع المرفقات...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">رسالة وسائط متعددة</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">تنزيل رسالة الوسائط المتعددة</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">خطأ في تنزيل رسالة الوسائط المتعددة، انقر لاعادة المحاولة</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">إرسال إلى %s</string>
     <!-- MediaSendActivity -->

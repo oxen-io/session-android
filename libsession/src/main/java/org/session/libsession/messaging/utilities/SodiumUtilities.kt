@@ -159,22 +159,22 @@ object SodiumUtilities {
         } else null
     }
 
-    /* This method should be used to check if a users standard sessionId matches a blinded one */
-    fun sessionId(
+    /* This method should be used to check if a users standard accountId matches a blinded one */
+    fun accountId(
         standardAccountId: String,
         blindedAccountId: String,
         serverPublicKey: String
     ): Boolean {
-        // Only support generating blinded keys for standard session ids
-        val sessionId = AccountId(standardAccountId)
-        if (sessionId.prefix != IdPrefix.STANDARD) return false
+        // Only support generating blinded keys for standard account ids
+        val accountId = AccountId(standardAccountId)
+        if (accountId.prefix != IdPrefix.STANDARD) return false
         val blindedId = AccountId(blindedAccountId)
         if (blindedId.prefix != IdPrefix.BLINDED) return false
         val k = generateBlindingFactor(serverPublicKey) ?: return false
 
-        // From the session id (ignoring 05 prefix) we have two possible ed25519 pubkeys;
+        // From the account id (ignoring 05 prefix) we have two possible ed25519 pubkeys;
         // the first is the positive (which is what Signal's XEd25519 conversion always uses)
-        val xEd25519Key = curve.convertToEd25519PublicKey(Key.fromHexString(sessionId.publicKey).asBytes)
+        val xEd25519Key = curve.convertToEd25519PublicKey(Key.fromHexString(accountId.publicKey).asBytes)
 
         // Blind the positive public key
         val pk1 = combineKeys(k, xEd25519Key) ?: return false

@@ -3,7 +3,7 @@
    <style name="Base.Theme.Session" parent="@style/Theme.AppCompat.DayNight">
        <item name="actionModeBackground">?colorPrimary</item>
        <item name="android:colorBackground">?colorPrimary</item>
-       <item name="dialog_background_color">?colorPrimary</item>
+       <item name="backgroundSecondary">@color/classic_dark_1</item>
        <item name="theme_preview_incoming">?message_received_background_color</item>
        <item name="theme_preview_outgoing">?message_sent_background_color</item>
        <item name="theme_preview_background">?colorPrimary</item>
@@ -33,7 +33,7 @@
        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
        <item name="elementBorderColor">?android:textColorSecondary</item>
        <item name="colorOnSurface">?android:textColorPrimary</item>
-       <item name="colorSurface">?dialog_background_color</item>
+       <item name="colorSurface">?backgroundSecondary</item>
        <item name="media_overview_toolbar_background">@color/transparent</item>
        <item name="media_overview_header_foreground">?android:textColorPrimary</item>
        <item name="menu_accept_icon">@drawable/ic_baseline_done_24</item>
@@ -193,8 +193,6 @@
 
         <item name="emoji_tab_strip_background">@color/compose_view_background</item>
         <item name="emoji_tab_indicator">?colorAccent</item>
-        <item name="emoji_tab_underline">@color/gray78</item>
-        <item name="emoji_tab_seperator">@color/gray70</item>
         <item name="emoji_drawer_background">@color/compose_text_view_background</item>
         <item name="emoji_text_color">@color/white</item>
 
@@ -249,7 +247,7 @@
     </style>
 
     <style name="Theme.TextSecure.Dialog.MediaSendProgress" parent="@android:style/Theme.Dialog">
-        <item name="android:colorBackground">?attr/dialog_background_color</item>
+        <item name="android:colorBackground">?backgroundSecondary</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
@@ -317,6 +315,7 @@
         <item name="sessionLogoTint">@color/classic_dark_6</item>
         <item name="colorPrimary">@color/classic_dark_0</item>
         <item name="colorPrimaryDark">@color/classic_dark_0</item>
+        <item name="backgroundSecondary">@color/classic_dark_1</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="android:textColorPrimary">@color/classic_dark_6</item>
@@ -326,12 +325,10 @@
         <item name="android:textColorHint">@color/gray27</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:navigationBarColor">@color/navigation_bar</item>
-        <item name="dialog_background_color">@color/classic_dark_1</item>
         <item name="bottomSheetDialogTheme">@style/Classic.Dark.BottomSheet</item>
         <item name="actionMenuTextColor">?android:textColorPrimary</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
         <item name="colorCellBackground">@color/classic_dark_1</item>
-        <item name="colorSettingsBackground">@color/classic_dark_1</item>
         <item name="colorDividerBackground">@color/classic_dark_3</item>
         <item name="android:colorControlHighlight">@color/classic_dark_3</item>
         <item name="colorControlHighlight">@color/classic_dark_3</item>
@@ -357,10 +354,10 @@
         <item name="home_gradient_start">#00000000</item>
         <item name="home_gradient_end">@color/classic_dark_1</item>
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
-        <item name="conversation_unread_background_color">@color/classic_dark_2</item>
+        <item name="conversation_unread_background_color">@color/classic_dark_1</item>
         <item name="conversation_pinned_icon_color">?android:textColorSecondary</item>
-        <item name="unreadIndicatorBackgroundColor">@color/classic_dark_3</item>
-        <item name="unreadIndicatorTextColor">@color/classic_dark_6</item>
+        <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
+        <item name="unreadIndicatorTextColor">@color/classic_dark_0</item>
         
         <!-- New conversation button -->
         <item name="conversation_color_non_main">@color/classic_dark_2</item>
@@ -372,7 +369,7 @@
         <item name="conversationMenuSearchBackgroundColor">@color/classic_dark_0</item>
 
         <!-- Conversation -->
-        <item name="message_received_background_color">@color/classic_dark_3</item>
+        <item name="message_received_background_color">@color/classic_dark_2</item>
         <item name="message_received_text_color">@color/classic_dark_6</item>
         <item name="message_sent_background_color">?colorAccent</item>
         <item name="message_sent_text_color">@color/classic_dark_0</item>
@@ -398,7 +395,7 @@
         <!-- Main styles -->
         <item name="sessionLogoTint">@color/classic_light_0</item>
         <item name="colorPrimary">@color/classic_light_6</item>
-        <item name="dialog_background_color">@color/classic_light_5</item>
+        <item name="backgroundSecondary">@color/classic_light_5</item>
         <item name="colorPrimaryDark">@color/classic_light_6</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
@@ -410,7 +407,6 @@
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:navigationBarColor">@color/classic_light_navigation_bar</item>
         <item name="colorCellBackground">@color/classic_light_6</item>
-        <item name="colorSettingsBackground">@color/classic_light_5</item>
         <item name="colorDividerBackground">@color/classic_light_3</item>
         <item name="android:colorControlHighlight">@color/classic_light_3</item>
         <item name="colorControlHighlight">@color/classic_light_3</item>
@@ -448,7 +444,7 @@
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
         <item name="conversation_unread_background_color">@color/classic_light_6</item>
         <item name="conversation_pinned_icon_color">?android:textColorSecondary</item>
-        <item name="unreadIndicatorBackgroundColor">@color/classic_light_3</item>
+        <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
         <item name="unreadIndicatorTextColor">@color/classic_light_0</item>
         <!-- New conversation button -->
         <item name="conversation_color_non_main">@color/classic_light_4</item>
@@ -461,7 +457,7 @@
         <item name="conversationMenuSearchBackgroundColor">@color/classic_light_6</item>
 
         <!-- Conversation -->
-        <item name="message_received_background_color">@color/classic_light_3</item>
+        <item name="message_received_background_color">@color/classic_light_4</item>
         <item name="message_received_text_color">@color/classic_light_0</item>
         <item name="message_sent_background_color">?colorAccent</item>
         <item name="message_sent_text_color">@color/classic_light_0</item>
@@ -489,6 +485,7 @@
         <item name="sessionLogoTint">@color/ocean_dark_7</item>
         <item name="colorPrimary">@color/ocean_dark_2</item>
         <item name="colorPrimaryDark">@color/ocean_dark_2</item>
+        <item name="backgroundSecondary">@color/ocean_dark_1</item>
         <item name="colorControlNormal">@color/ocean_dark_7</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="android:textColorPrimary">@color/ocean_dark_7</item>
@@ -501,7 +498,6 @@
         <item name="default_background_end">?colorPrimary</item>
         <item name="default_background_start">?colorPrimaryDark</item>
         <item name="colorCellBackground">@color/ocean_dark_3</item>
-        <item name="colorSettingsBackground">@color/ocean_dark_1</item>
         <item name="colorDividerBackground">@color/ocean_dark_4</item>
         <item name="android:colorControlHighlight">@color/ocean_dark_4</item>
         <item name="colorControlHighlight">@color/ocean_dark_4</item>
@@ -530,7 +526,7 @@
         <item name="home_gradient_start">#00000000</item>
         <item name="home_gradient_end">@color/ocean_dark_3</item>
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
-        <item name="conversation_unread_background_color">@color/ocean_dark_4</item>
+        <item name="conversation_unread_background_color">@color/ocean_dark_3</item>
         <item name="conversation_pinned_icon_color">?android:textColorSecondary</item>
         <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_dark_0</item>
@@ -575,6 +571,7 @@
         <item name="sessionLogoTint">@color/ocean_light_1</item>
         <item name="colorPrimary">@color/ocean_light_7</item>
         <item name="colorPrimaryDark">@color/ocean_light_6</item>
+        <item name="backgroundSecondary">@color/ocean_light_6</item>
         <item name="colorControlNormal">@color/ocean_light_1</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="android:textColorPrimary">@color/ocean_light_1</item>
@@ -587,7 +584,6 @@
         <item name="default_background_end">@color/ocean_light_7</item>
         <item name="default_background_start">@color/ocean_light_6</item>
         <item name="colorCellBackground">@color/ocean_light_5</item>
-        <item name="colorSettingsBackground">@color/ocean_light_6</item>
         <item name="colorDividerBackground">@color/ocean_light_3</item>
         <item name="android:colorControlHighlight">@color/ocean_light_4</item>
         <item name="colorControlHighlight">@color/ocean_light_4</item>
@@ -654,7 +650,7 @@
         <item name="scroll_to_bottom_button_border">?input_bar_button_background_opaque_border</item>
         <item name="conversation_unread_count_indicator_background">?colorAccent</item>
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
-        <item name="conversation_unread_background_color">@color/ocean_light_6</item>
+        <item name="conversation_unread_background_color">@color/ocean_light_5</item>
         <item name="conversation_pinned_icon_color">?android:textColorSecondary</item>
         <item name="message_selected">@color/ocean_light_5</item>
     </style>
@@ -668,6 +664,7 @@
         <item name="sessionLogoTint">@color/classic_dark_6</item>
         <item name="colorPrimary">@color/classic_dark_0</item>
         <item name="colorPrimaryDark">@color/classic_dark_0</item>
+        <item name="backgroundSecondary">@color/classic_dark_1</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="android:colorControlHighlight">?colorAccent</item>
@@ -678,12 +675,10 @@
         <item name="android:textColorHint">@color/gray27</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:navigationBarColor">@color/compose_view_background</item>
-        <item name="dialog_background_color">@color/classic_dark_1</item>
         <item name="bottomSheetDialogTheme">@style/Classic.Dark.BottomSheet</item>
         <item name="actionMenuTextColor">?android:textColorPrimary</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
         <item name="colorCellBackground">@color/classic_dark_1</item>
-        <item name="colorSettingsBackground">@color/classic_dark_1</item>
         <item name="colorDividerBackground">@color/classic_dark_3</item>
         <item name="actionBarPopupTheme">@style/Dark.Popup</item>
         <item name="actionBarWidgetTheme">@null</item>
@@ -701,10 +696,10 @@
         <item name="home_gradient_start">#00000000</item>
         <item name="home_gradient_end">@color/classic_dark_1</item>
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
-        <item name="conversation_unread_background_color">@color/classic_dark_2</item>
+        <item name="conversation_unread_background_color">@color/classic_dark_1</item>
         <item name="conversation_pinned_icon_color">?android:textColorSecondary</item>
-        <item name="unreadIndicatorBackgroundColor">@color/classic_dark_3</item>
-        <item name="unreadIndicatorTextColor">@color/classic_dark_6</item>
+        <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
+        <item name="unreadIndicatorTextColor">@color/classic_dark_0</item>
 
         <!-- New conversation button -->
         <item name="conversation_color_non_main">@color/classic_dark_2</item>
@@ -716,7 +711,7 @@
         <item name="conversationMenuSearchBackgroundColor">@color/classic_dark_0</item>
 
         <!-- Conversation -->
-        <item name="message_received_background_color">@color/classic_dark_3</item>
+        <item name="message_received_background_color">@color/classic_dark_2</item>
         <item name="message_received_text_color">@color/classic_dark_6</item>
         <item name="message_sent_background_color">?colorAccent</item>
         <item name="message_sent_text_color">@color/classic_dark_0</item>
