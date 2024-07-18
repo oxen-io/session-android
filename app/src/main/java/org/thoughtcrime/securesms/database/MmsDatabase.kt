@@ -47,7 +47,6 @@ import org.session.libsession.utilities.IdentityKeyMismatchList
 import org.session.libsession.utilities.NetworkFailure
 import org.session.libsession.utilities.NetworkFailureList
 import org.session.libsession.utilities.TextSecurePreferences.Companion.isReadReceiptsEnabled
-import org.session.libsession.utilities.Util.toIsoBytes
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
@@ -122,20 +121,10 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         ).use { cursor ->
             while (cursor.moveToNext()) {
                 if (MmsSmsColumns.Types.isOutgoingMessageType(
-                        cursor.getLong(
-                            cursor.getColumnIndexOrThrow(
-                                MESSAGE_BOX
-                            )
-                        )
+                        cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
                     )
                 ) {
-                    val theirAddress = fromSerialized(
-                        cursor.getString(
-                            cursor.getColumnIndexOrThrow(
-                                ADDRESS
-                            )
-                        )
-                    )
+                    val theirAddress = fromSerialized(cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS)))
                     val ourAddress = messageId.address
                     if (ourAddress.equals(theirAddress) || theirAddress.isGroup) {
                         val id = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
@@ -172,9 +161,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     fun getThreadIdForMessage(id: Long): Long = databaseHelper.readableDatabase.rawQuery(
         "SELECT $THREAD_ID FROM $TABLE_NAME WHERE $ID = ?",
         arrayOf(id.toString())
-    ).use {
-        it.takeIf { it.moveToFirst() }?.getLong(0) ?: -1
-    }
+    ).use { it.takeIf { it.moveToFirst() }?.getLong(0) ?: -1 }
 
     private fun rawQuery(where: String, arguments: Array<String>? = null): Cursor = databaseHelper.readableDatabase.rawQuery(
         "SELECT " + MMS_PROJECTION.joinToString(",") + " FROM " + TABLE_NAME +
@@ -183,11 +170,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 " WHERE " + where + " GROUP BY " + TABLE_NAME + "." + ID, arguments
     )
 
-    fun getMessage(messageId: Long): Cursor {
-        val cursor = rawQuery(RAW_ID_WHERE, arrayOf(messageId.toString()))
-        setNotifyConversationListeners(cursor, getThreadIdForMessage(messageId))
-        return cursor
-    }
+    fun getMessage(messageId: Long): Cursor = rawQuery(RAW_ID_WHERE, arrayOf(messageId.toString()))
+        .also { setNotifyConversationListeners(it, getThreadIdForMessage(messageId)) }
 
     fun getRecentChatMemberIDs(threadID: Long, limit: Int): List<String> = databaseHelper.readableDatabase.rawQuery(
         """
@@ -197,9 +181,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         LIMIT $limit
         """.trimIndent(),
         threadID
-    ).use { cursor ->
-        cursor.map { it.getString(0) }.toList()
-    }
+    ).use { it.map { it.getString(0) }.toList() }
 
     val expireStartedMessages: Reader get() = readerFor(rawQuery(where = "$EXPIRE_STARTED > 0"))
 
@@ -260,8 +242,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     override fun markUnidentified(messageId: Long, unidentified: Boolean) {
         val contentValues = ContentValues()
         contentValues.put(UNIDENTIFIED, if (unidentified) 1 else 0)
-        val db = databaseHelper.writableDatabase
-        db.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(messageId.toString()))
+        databaseHelper.writableDatabase.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(messageId.toString()))
     }
 
     override fun markAsDeleted(messageId: Long, read: Boolean, hasMention: Boolean) {
@@ -375,30 +356,22 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             val previewAttachments = previews.mapNotNull { it.getThumbnail().orNull() }
             val attachments = associatedAttachments.filterNot { it.isQuote || it in contactAttachments || it in previewAttachments }
             val recipient = Recipient.from(context, fromSerialized(address), false)
-            val quote: QuoteModel? = if (quoteId > 0 && (!quoteText.isNullOrEmpty() || quoteAttachments.isNotEmpty())) {
+            val quote = quoteId.takeIf { it > 0 && (!quoteText.isNullOrEmpty() || quoteAttachments.isNotEmpty()) }?.let {
                 QuoteModel(
-                    quoteId,
+                    it,
                     fromSerialized(quoteAuthor),
                     quoteText, // TODO: refactor this to use referenced quote
                     quoteMissing,
                     quoteAttachments
                 )
-            } else null
+            }
             val mismatches = mismatchDocument.takeUnless{ it.isNullOrEmpty() }?.let {
-                try {
-                    JsonUtil.fromJson(it, IdentityKeyMismatchList::class.java).list
-                } catch (e: IOException) {
-                    Log.w(TAG, e)
-                    emptyList()
-                }
+                runCatching { JsonUtil.fromJson(it, IdentityKeyMismatchList::class.java).list }
+                    .onFailure { Log.w(TAG, it) }.getOrNull()
             } ?: emptyList()
             val networkFailures = networkDocument?.takeUnless { it.isEmpty() }?.let {
-                try {
-                    JsonUtil.fromJson(it, NetworkFailureList::class.java).list
-                } catch (e: IOException) {
-                    Log.w(TAG, e)
-                    emptyList()
-                }
+                runCatching { JsonUtil.fromJson(it, NetworkFailureList::class.java).list }
+                    .onFailure { Log.w(TAG, it) }.getOrNull()
             } ?: emptyList()
             val message = OutgoingMediaMessage(
                 recipient,
@@ -424,49 +397,28 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     private fun getSharedContacts(
         cursor: Cursor,
         attachments: List<DatabaseAttachment>
-    ): List<Contact> = try {
+    ): List<Contact> = runCatching {
         val attachmentIdMap = attachments.associateBy { it.attachmentId }
         cursor.getString(cursor.getColumnIndexOrThrow(SHARED_CONTACTS))
-            ?.takeUnless { it.isEmpty() }
-            ?.let(::JSONArray)
-            ?.map(JSONArray::getString)
-            ?.map(Contact::deserialize)
-            ?.map { contact ->
+            .let(::JSONArray).map { getString(it) }.map(Contact::deserialize)
+            .map { contact ->
                 contact.avatar?.takeIf { it.attachmentId != null }
                     ?.run { Contact.Avatar(attachmentId, attachmentIdMap[attachmentId], isProfile) }
                     ?.let { Contact(contact, it) }
                     ?: contact
-            }?.toList() ?: emptyList()
-    } catch (e: JSONException) {
-        Log.w(TAG, "Failed to parse shared contacts.", e)
-        emptyList()
-    } catch (e: IOException) {
-        Log.w(TAG, "Failed to parse shared contacts.", e)
-        emptyList()
-    }
+            }.toList()
+    }.onFailure { Log.w(TAG, "Failed to parse shared contacts.", it) }.getOrNull() ?: emptyList()
 
     private fun getLinkPreviews(
         cursor: Cursor,
         attachments: List<DatabaseAttachment>
-    ): List<LinkPreview> = try {
+    ): List<LinkPreview> = runCatching {
         val attachmentIdMap = attachments.associateBy { it.attachmentId }
         cursor.getString(cursor.getColumnIndexOrThrow(LINK_PREVIEWS))
-            ?.takeUnless { it.isEmpty() }
-            ?.let(::JSONArray)
-            ?.map(JSONArray::getString)
-            ?.map(LinkPreview::deserialize)
-            ?.map { preview ->
-                preview.attachmentId?.let { id ->
-                    attachmentIdMap[id]?.let { LinkPreview(preview.url, preview.title, it) }
-                } ?: preview
-            }?.toList() ?: emptyList()
-    } catch (e: JSONException) {
-        Log.w(TAG, "Failed to parse shared contacts.", e)
-        emptyList()
-    } catch (e: IOException) {
-        Log.w(TAG, "Failed to parse shared contacts.", e)
-        emptyList()
-    }
+            .let(::JSONArray).map { getString(it) }.map(LinkPreview::deserialize)
+            .map { preview -> attachmentIdMap[preview.attachmentId]?.let { LinkPreview(preview.url, preview.title, it) } ?: preview }
+            .toList()
+    }.onFailure { Log.w(TAG, "Failed to parse link previews.", it) }.getOrNull() ?: emptyList()
 
     @Throws(MmsException::class)
     private fun insertMessageInbox(
@@ -558,25 +510,16 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         threadId: Long,
         serverTimestamp: Long = 0,
         runThreadUpdate: Boolean
-    ): Optional<InsertResult> {
-        var type = MmsSmsColumns.Types.BASE_INBOX_TYPE or MmsSmsColumns.Types.SECURE_MESSAGE_BIT
-        if (retrieved.isPushMessage) {
-            type = type or MmsSmsColumns.Types.PUSH_MESSAGE_BIT
-        }
-        if (retrieved.isExpirationUpdate) {
-            type = type or MmsSmsColumns.Types.EXPIRATION_TIMER_UPDATE_BIT
-        }
-        if (retrieved.isScreenshotDataExtraction) {
-            type = type or MmsSmsColumns.Types.SCREENSHOT_EXTRACTION_BIT
-        }
-        if (retrieved.isMediaSavedDataExtraction) {
-            type = type or MmsSmsColumns.Types.MEDIA_SAVED_EXTRACTION_BIT
-        }
-        if (retrieved.isMessageRequestResponse) {
-            type = type or MmsSmsColumns.Types.MESSAGE_REQUEST_RESPONSE_BIT
-        }
-        return insertMessageInbox(retrieved, "", threadId, type, serverTimestamp, runThreadUpdate)
-    }
+    ): Optional<InsertResult> = listOfNotNull(
+        MmsSmsColumns.Types.BASE_INBOX_TYPE,
+        MmsSmsColumns.Types.SECURE_MESSAGE_BIT,
+        MmsSmsColumns.Types.PUSH_MESSAGE_BIT.takeIf { retrieved.isPushMessage },
+        MmsSmsColumns.Types.EXPIRATION_TIMER_UPDATE_BIT.takeIf { retrieved.isExpirationUpdate },
+        MmsSmsColumns.Types.SCREENSHOT_EXTRACTION_BIT.takeIf { retrieved.isScreenshotDataExtraction },
+        MmsSmsColumns.Types.MEDIA_SAVED_EXTRACTION_BIT.takeIf { retrieved.isMediaSavedDataExtraction },
+        MmsSmsColumns.Types.MESSAGE_REQUEST_RESPONSE_BIT.takeIf { retrieved.isMessageRequestResponse }
+    ).reduce { type, flag -> type or flag }
+        .let { type -> insertMessageInbox(retrieved, "", threadId, type, serverTimestamp, runThreadUpdate) }
 
     @JvmOverloads
     @Throws(MmsException::class)
@@ -587,16 +530,13 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         serverTimestamp: Long = 0,
         runThreadUpdate: Boolean
     ): Long {
-        var type = MmsSmsColumns.Types.BASE_SENDING_TYPE
-        if (message.isSecure) type =
-            type or (MmsSmsColumns.Types.SECURE_MESSAGE_BIT or MmsSmsColumns.Types.PUSH_MESSAGE_BIT)
-        if (forceSms) type = type or MmsSmsColumns.Types.MESSAGE_FORCE_SMS_BIT
-        if (message.isGroup && message is OutgoingGroupMediaMessage) {
-            if (message.isUpdateMessage) type = type or MmsSmsColumns.Types.GROUP_UPDATE_MESSAGE_BIT
-        }
-        if (message.isExpirationUpdate) {
-            type = type or MmsSmsColumns.Types.EXPIRATION_TIMER_UPDATE_BIT
-        }
+        val type = listOfNotNull(
+            MmsSmsColumns.Types.BASE_SENDING_TYPE,
+            (MmsSmsColumns.Types.SECURE_MESSAGE_BIT or MmsSmsColumns.Types.PUSH_MESSAGE_BIT).takeIf { message.isSecure },
+            MmsSmsColumns.Types.MESSAGE_FORCE_SMS_BIT.takeIf { forceSms },
+            MmsSmsColumns.Types.GROUP_UPDATE_MESSAGE_BIT.takeIf { message.isGroup && message is OutgoingGroupMediaMessage },
+            MmsSmsColumns.Types.EXPIRATION_TIMER_UPDATE_BIT.takeIf { message.isExpirationUpdate }
+        ).reduce { type, flag -> type or flag }
         val earlyDeliveryReceipts = earlyDeliveryReceiptCache.remove(message.sentTimeMillis)
         val earlyReadReceipts = earlyReadReceiptCache.remove(message.sentTimeMillis)
         val contentValues = ContentValues()
@@ -615,18 +555,12 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         contentValues.put(EXPIRES_IN, message.expiresIn)
         contentValues.put(EXPIRE_STARTED, message.expireStartedAt)
         contentValues.put(ADDRESS, message.recipient.address.serialize())
-        contentValues.put(
-            DELIVERY_RECEIPT_COUNT,
-            Stream.of(earlyDeliveryReceipts.values).mapToLong { obj: Long -> obj }
-                .sum())
-        contentValues.put(
-            READ_RECEIPT_COUNT,
-            Stream.of(earlyReadReceipts.values).mapToLong { obj: Long -> obj }
-                .sum())
-        if (message.outgoingQuote != null) {
-            contentValues.put(QUOTE_ID, message.outgoingQuote!!.id)
-            contentValues.put(QUOTE_AUTHOR, message.outgoingQuote!!.author.serialize())
-            contentValues.put(QUOTE_MISSING, if (message.outgoingQuote!!.missing) 1 else 0)
+        contentValues.put(DELIVERY_RECEIPT_COUNT, earlyDeliveryReceipts.values.sumOf { it.toLong() })
+        contentValues.put(READ_RECEIPT_COUNT, earlyReadReceipts.values.sumOf { it.toLong() })
+        message.outgoingQuote?.run {
+            contentValues.put(QUOTE_ID, id)
+            contentValues.put(QUOTE_AUTHOR, author.serialize())
+            contentValues.put(QUOTE_MISSING, if (missing) 1 else 0)
         }
         val quoteAttachments = message.outgoingQuote?.attachments ?: emptyList()
         if (isDuplicate(message, threadId)) {
@@ -663,15 +597,11 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 -1
             )
         }
-        with (get(context).threadDatabase()) {
-            val lastSeen = getLastSeenAndHasSent(threadId).first()
-            if (lastSeen < message.sentTimeMillis) {
-                setLastSeen(threadId, message.sentTimeMillis)
-            }
+        get(context).threadDatabase().run {
+            message.sentTimeMillis.takeIf { getLastSeenAndHasSent(threadId).first() < it }
+                ?.let { setLastSeen(threadId, it) }
             setHasSent(threadId, true)
-            if (runThreadUpdate) {
-                update(threadId, true, true)
-            }
+            if (runThreadUpdate) update(threadId, true, true)
         }
         return messageId
     }
@@ -698,6 +628,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         contentValues.put(BODY, body)
         contentValues.put(PART_COUNT, allAttachments.size)
         db.beginTransaction()
+        db.transaction { this.transaction {  } }
         return try {
             val messageId = db.insert(TABLE_NAME, null, contentValues)
             val insertedAttachments = partsDatabase.insertAttachmentsForMessage(
@@ -705,8 +636,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 allAttachments,
                 quoteAttachments
             )
-            val serializedContacts =
-                getSerializedSharedContacts(insertedAttachments, sharedContacts)
+            val serializedContacts = getSerializedSharedContacts(insertedAttachments, sharedContacts)
             val serializedPreviews = getSerializedLinkPreviews(insertedAttachments, linkPreviews)
             if (!serializedContacts.isNullOrEmpty()) {
                 val contactValues = ContentValues()
@@ -755,11 +685,10 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             }
         }
         val query = queryBuilder.toString()
-        val db = databaseHelper.writableDatabase
         val values = ContentValues(2)
         values.put(QUOTE_MISSING, 1)
         values.put(QUOTE_AUTHOR, "")
-        db!!.update(TABLE_NAME, values, query, null)
+        databaseHelper.writableDatabase.update(TABLE_NAME, values, query, null)
     }
 
     /**
@@ -1108,13 +1037,15 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     message.subscriptionId,
                     message.expiresIn,
                     SnodeAPI.nowWithOffset, 0,
-                    if (message.outgoingQuote != null) Quote(
-                        message.outgoingQuote!!.id,
-                        message.outgoingQuote!!.author,
-                        message.outgoingQuote!!.text, // TODO: use the referenced message's content
-                        message.outgoingQuote!!.missing,
-                        SlideDeck(context, message.outgoingQuote!!.attachments!!)
-                    ) else null,
+                    message.outgoingQuote?.run {
+                        Quote(
+                            id,
+                            author,
+                            text, // TODO: use the referenced message's content
+                            missing,
+                            SlideDeck(context, attachments!!)
+                        )
+                    },
                     message.sharedContacts, message.linkPreviews, listOf(), false, false
                 )
             }
@@ -1401,7 +1332,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
 
         private const val TEMP_TABLE_NAME = "TEMP_TABLE_NAME"
 
-        const val COMMA_SEPARATED_COLUMNS = "$ID, $THREAD_ID, $DATE_SENT, $DATE_RECEIVED, $MESSAGE_BOX, $READ, m_id, sub, sub_cs, $BODY, $PART_COUNT, ct_t, $CONTENT_LOCATION, $ADDRESS, $ADDRESS_DEVICE_ID, $EXPIRY, m_cls, $MESSAGE_TYPE, v, $MESSAGE_SIZE, pri, rr,rpt_a, resp_st, $STATUS, $TRANSACTION_ID, retr_st, retr_txt, retr_txt_cs, read_status, ct_cls, resp_txt, d_tm, $DELIVERY_RECEIPT_COUNT, $MISMATCHED_IDENTITIES, $NETWORK_FAILURE, d_rpt, $SUBSCRIPTION_ID, $EXPIRES_IN, $EXPIRE_STARTED, $NOTIFIED, $READ_RECEIPT_COUNT, $QUOTE_ID, $QUOTE_AUTHOR, $QUOTE_BODY, $QUOTE_ATTACHMENT, $QUOTE_MISSING, $SHARED_CONTACTS, $UNIDENTIFIED, $LINK_PREVIEWS, $MESSAGE_REQUEST_RESPONSE, $REACTIONS_UNREAD, $REACTIONS_LAST_SEEN, $HAS_MENTION"
+        private const val COMMA_SEPARATED_COLUMNS = "$ID, $THREAD_ID, $DATE_SENT, $DATE_RECEIVED, $MESSAGE_BOX, $READ, m_id, sub, sub_cs, $BODY, $PART_COUNT, ct_t, $CONTENT_LOCATION, $ADDRESS, $ADDRESS_DEVICE_ID, $EXPIRY, m_cls, $MESSAGE_TYPE, v, $MESSAGE_SIZE, pri, rr,rpt_a, resp_st, $STATUS, $TRANSACTION_ID, retr_st, retr_txt, retr_txt_cs, read_status, ct_cls, resp_txt, d_tm, $DELIVERY_RECEIPT_COUNT, $MISMATCHED_IDENTITIES, $NETWORK_FAILURE, d_rpt, $SUBSCRIPTION_ID, $EXPIRES_IN, $EXPIRE_STARTED, $NOTIFIED, $READ_RECEIPT_COUNT, $QUOTE_ID, $QUOTE_AUTHOR, $QUOTE_BODY, $QUOTE_ATTACHMENT, $QUOTE_MISSING, $SHARED_CONTACTS, $UNIDENTIFIED, $LINK_PREVIEWS, $MESSAGE_REQUEST_RESPONSE, $REACTIONS_UNREAD, $REACTIONS_LAST_SEEN, $HAS_MENTION"
 
         @JvmField
         val ADD_AUTOINCREMENT = arrayOf(
