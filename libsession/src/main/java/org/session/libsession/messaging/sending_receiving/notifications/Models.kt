@@ -13,9 +13,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SubscriptionRequest(
-    /** the 33-byte account being subscribed to; typically a session ID */
+    /** the 33-byte account being subscribed to; typically an account ID */
     val pubkey: String,
-    /** when the pubkey starts with 05 (i.e. a session ID) this is the ed25519 32-byte pubkey associated with the session ID */
+    /** when the pubkey starts with 05 (i.e. an account ID) this is the ed25519 32-byte pubkey associated with the account ID */
     val session_ed25519: String?,
     /** 32-byte swarm authentication subkey; omitted (or null) when not using subkey auth (new closed groups) */
     val subkey_tag: String? = null,
@@ -38,9 +38,9 @@ data class SubscriptionRequest(
 
 @Serializable
 data class UnsubscriptionRequest(
-    /** the 33-byte account being subscribed to; typically a session ID */
+    /** the 33-byte account being subscribed to; typically a account ID */
     val pubkey: String,
-    /** when the pubkey starts with 05 (i.e. a session ID) this is the ed25519 32-byte pubkey associated with the session ID */
+    /** when the pubkey starts with 05 (i.e. an account ID) this is the ed25519 32-byte pubkey associated with the account ID */
     val session_ed25519: String?,
     /** 32-byte swarm authentication subkey; omitted (or null) when not using subkey auth (new closed groups) */
     val subkey_tag: String? = null,

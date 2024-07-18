@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Επιλογή όλων</string>
     <string name="MediaOverviewActivity_collecting_attachments">Τα συνημμένα συλλέγονται...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Μήνυμα πολυμέσων</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Το μήνυμα MMS λαμβάνεται</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Πρόβλημα κατά τη λήψη μηνύματος MMS, πατήστε για να ξαναδοκιμάσουμε</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Αποστολή σε %s</string>
     <!-- MediaSendActivity -->

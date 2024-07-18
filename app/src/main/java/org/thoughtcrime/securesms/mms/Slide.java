@@ -16,24 +16,23 @@
  */
 package org.thoughtcrime.securesms.mms;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY;
+
 import android.content.Context;
 import android.content.res.Resources.Theme;
 import android.net.Uri;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress;
-import org.thoughtcrime.securesms.util.MediaUtil;
-import org.session.libsignal.utilities.guava.Optional;
-
+import com.squareup.phrase.Phrase;
+import java.security.SecureRandom;
+import network.loki.messenger.R;
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
+import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress;
 import org.session.libsession.messaging.sending_receiving.attachments.UriAttachment;
 import org.session.libsession.utilities.Util;
-
-import java.security.SecureRandom;
-
-import network.loki.messenger.R;
+import org.session.libsignal.utilities.guava.Optional;
+import org.thoughtcrime.securesms.util.MediaUtil;
 
 public abstract class Slide {
 
@@ -72,20 +71,23 @@ public abstract class Slide {
         return Optional.fromNullable("🎤 " + attachmentString);
       }
     }
-    return Optional.fromNullable(emojiForMimeType() + attachmentString);
+    String txt = Phrase.from(context, R.string.attachmentsNotification)
+            .put(EMOJI_KEY, emojiForMimeType())
+            .format().toString();
+    return Optional.fromNullable(txt);
   }
 
   private String emojiForMimeType() {
     if (MediaUtil.isImage(attachment)) {
-      return "📷 ";
+      return "📷";
     } else if (MediaUtil.isVideo(attachment)) {
-      return "🎥 ";
+      return "🎥";
     } else if (MediaUtil.isAudio(attachment)) {
-      return "🎧 ";
+      return "🎧";
     } else if (MediaUtil.isFile(attachment)) {
-      return "📎 ";
+      return "📎";
     } else {
-      return "🎡 ";
+      return "🎡"; // `isGif`
     }
   }
 
@@ -155,20 +157,20 @@ public abstract class Slide {
     return false;
   }
 
-  protected static Attachment constructAttachmentFromUri(@NonNull  Context        context,
-                                                         @NonNull  Uri            uri,
-                                                         @NonNull  String         defaultMime,
-                                                                   long           size,
-                                                                   int            width,
-                                                                   int            height,
-                                                                   boolean        hasThumbnail,
-                                                         @Nullable String         fileName,
-                                                         @Nullable String         caption,
-                                                                   boolean        voiceNote,
-                                                                   boolean        quote)
+  protected static Attachment constructAttachmentFromUri(@NonNull  Context context,
+                                                         @NonNull  Uri     uri,
+                                                         @NonNull  String  defaultMime,
+                                                                   long    size,
+                                                                   int     width,
+                                                                   int     height,
+                                                                   boolean hasThumbnail,
+                                                         @Nullable String  fileName,
+                                                         @Nullable String  caption,
+                                                                   boolean voiceNote,
+                                                                   boolean quote)
   {
-    String                 resolvedType    = Optional.fromNullable(MediaUtil.getMimeType(context, uri)).or(defaultMime);
-    String                 fastPreflightId = String.valueOf(new SecureRandom().nextLong());
+    String resolvedType    = Optional.fromNullable(MediaUtil.getMimeType(context, uri)).or(defaultMime);
+    String fastPreflightId = String.valueOf(new SecureRandom().nextLong());
     return new UriAttachment(uri,
                              hasThumbnail ? uri : null,
                              resolvedType,

@@ -57,7 +57,7 @@ object ConversationMenuHelper {
         if (!isOpenGroup && (thread.hasApprovedMe() || thread.isClosedGroupRecipient || thread.isLocalNumber)) {
             inflater.inflate(R.menu.menu_conversation_expiration, menu)
         }
-        // One-on-one chat menu allows copying the session id
+        // One-on-one chat menu allows copying the account id
         if (thread.isContactRecipient) {
             inflater.inflate(R.menu.menu_conversation_copy_account_id, menu)
         }
@@ -325,7 +325,7 @@ object ConversationMenuHelper {
     interface ConversationMenuListener {
         fun block(deleteThread: Boolean = false)
         fun unblock()
-        fun copyAccountID(sessionId: String)
+        fun copyAccountID(accountId: String)
         fun copyOpenGroupUrl(thread: Recipient)
         fun showDisappearingMessages(thread: Recipient)
     }

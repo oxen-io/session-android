@@ -92,8 +92,8 @@ class ProfileManager(private val context: Context, private val configFactory: Co
     override fun contactUpdatedInternal(contact: Contact): String? {
         val contactConfig = configFactory.contacts ?: return null
         if (contact.accountID == TextSecurePreferences.getLocalNumber(context)) return null
-        val sessionId = AccountId(contact.accountID)
-        if (sessionId.prefix != IdPrefix.STANDARD) return null // only internally store standard session IDs
+        val accountId = AccountId(contact.accountID)
+        if (accountId.prefix != IdPrefix.STANDARD) return null // only internally store standard account IDs
         contactConfig.upsertContact(contact.accountID) {
             this.name = contact.name.orEmpty()
             this.nickname = contact.nickname.orEmpty()

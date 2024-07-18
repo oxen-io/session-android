@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Vælg alle</string>
     <string name="MediaOverviewActivity_collecting_attachments">Samler vedhæftninger...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimedie besked</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Downloader MMS...</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">MMS besked kunne ikke downloades, tap for at prøve igen</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Send til %s</string>
     <!-- MediaSendActivity -->

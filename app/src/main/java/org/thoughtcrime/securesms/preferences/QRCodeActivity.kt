@@ -72,7 +72,7 @@ class QRCodeActivity : PassphraseRequiredActionBarActivity() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun Tabs(sessionId: String, errors: Flow<String>, onScan: (String) -> Unit) {
+private fun Tabs(accountId: String, errors: Flow<String>, onScan: (String) -> Unit) {
     val pagerState = rememberPagerState { TITLES.size }
 
     Column {
@@ -82,7 +82,7 @@ private fun Tabs(sessionId: String, errors: Flow<String>, onScan: (String) -> Un
             modifier = Modifier.weight(1f)
         ) { page ->
             when (TITLES[page]) {
-                R.string.view -> QrPage(sessionId)
+                R.string.view -> QrPage(accountId)
                 R.string.scan -> MaybeScanQrCode(errors, onScan = onScan)
             }
         }

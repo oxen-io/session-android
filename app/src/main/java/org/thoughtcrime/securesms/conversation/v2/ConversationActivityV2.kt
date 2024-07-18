@@ -239,12 +239,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             intent.getParcelableExtra<Address>(ADDRESS)?.let { it ->
                 threadId = threadDb.getThreadIdIfExistsFor(it.serialize())
                 if (threadId == -1L) {
-                    val sessionId = AccountId(it.serialize())
+                    val accountId = AccountId(it.serialize())
                     val openGroup = lokiThreadDb.getOpenGroupChat(intent.getLongExtra(FROM_GROUP_THREAD_ID, -1))
-                    val address = if (sessionId.prefix == IdPrefix.BLINDED && openGroup != null) {
-                        storage.getOrCreateBlindedIdMapping(sessionId.hexString, openGroup.server, openGroup.publicKey).sessionId?.let {
+                    val address = if (accountId.prefix == IdPrefix.BLINDED && openGroup != null) {
+                        storage.getOrCreateBlindedIdMapping(accountId.hexString, openGroup.server, openGroup.publicKey).accountId?.let {
                             fromSerialized(it)
-                        } ?: GroupUtil.getEncodedOpenGroupInboxID(openGroup, sessionId)
+                        } ?: GroupUtil.getEncodedOpenGroupInboxID(openGroup, accountId)
                     } else {
                         it
                     }
@@ -1131,8 +1131,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    override fun copyAccountID(sessionId: String) {
-        val clip = ClipData.newPlainText("Account ID", sessionId)
+    override fun copyAccountID(accountId: String) {
+        val clip = ClipData.newPlainText("Account ID", accountId)
         val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
         manager.setPrimaryClip(clip)
         Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()

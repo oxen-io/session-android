@@ -33,6 +33,8 @@ import network.loki.messenger.databinding.ActivityWebrtcBinding
 import org.apache.commons.lang3.time.DurationFormatUtils
 import org.session.libsession.avatars.ProfileContactPhoto
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.truncateIdForDisplay
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -200,6 +202,16 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         }
 
         clipFloatingInsets()
+
+        // set up the user avatar
+        TextSecurePreferences.getLocalNumber(this)?.let{
+            val username = TextSecurePreferences.getProfileName(this) ?: truncateIdForDisplay(it)
+            binding.userAvatar.apply {
+                publicKey = it
+                displayName = username
+                update()
+            }
+        }
     }
 
     /**
@@ -254,8 +266,10 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                 else -> 0f
             }
 
-            remoteRecipient.animate().cancel()
-            remoteRecipient.animate().rotation(rotation).start()
+            userAvatar.animate().cancel()
+            userAvatar.animate().rotation(rotation).start()
+            contactAvatar.animate().cancel()
+            contactAvatar.animate().rotation(rotation).start()
 
             speakerPhoneButton.animate().cancel()
             speakerPhoneButton.animate().rotation(rotation).start()
@@ -328,44 +342,20 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
 
             launch {
                 viewModel.recipient.collect { latestRecipient ->
+                    binding.contactAvatar.recycle()
+
                     if (latestRecipient.recipient != null) {
-                        val publicKey = latestRecipient.recipient.address.serialize()
-                        val displayName = getUserDisplayName(publicKey)
-                        supportActionBar?.title = displayName
-                        val signalProfilePicture = latestRecipient.recipient.contactPhoto
-                        val avatar = (signalProfilePicture as? ProfileContactPhoto)?.avatarObject
-                        val sizeInPX =
-                            resources.getDimensionPixelSize(R.dimen.extra_large_profile_picture_size)
-                        binding.remoteRecipientName.text = displayName
-                        if (signalProfilePicture != null && avatar != "0" && avatar != "") {
-                            glide.clear(binding.remoteRecipient)
-                            glide.load(signalProfilePicture)
-                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                                .circleCrop()
-                                .error(
-                                    AvatarPlaceholderGenerator.generate(
-                                        this@WebRtcCallActivity,
-                                        sizeInPX,
-                                        publicKey,
-                                        displayName
-                                    )
-                                )
-                                .into(binding.remoteRecipient)
-                        } else {
-                            glide.clear(binding.remoteRecipient)
-                            glide.load(
-                                AvatarPlaceholderGenerator.generate(
-                                    this@WebRtcCallActivity,
-                                    sizeInPX,
-                                    publicKey,
-                                    displayName
-                                )
-                            )
-                                .diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop()
-                                .into(binding.remoteRecipient)
+                        val contactPublicKey = latestRecipient.recipient.address.serialize()
+                        val contactDisplayName = getUserDisplayName(contactPublicKey)
+                        supportActionBar?.title = contactDisplayName
+                        binding.remoteRecipientName.text = contactDisplayName
+
+                        // sort out the contact's avatar
+                        binding.contactAvatar.apply {
+                            publicKey = contactPublicKey
+                            displayName = contactDisplayName
+                            update()
                         }
-                    } else {
-                        glide.clear(binding.remoteRecipient)
                     }
                 }
             }
@@ -400,22 +390,16 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                     binding.floatingRenderer.removeAllViews()
                     binding.fullscreenRenderer.removeAllViews()
 
-                    // the floating video inset (empty or not) should be shown
-                    // the moment we have either of the video streams
-                    val showFloatingContainer = state.userVideoEnabled || state.remoteVideoEnabled
-                    binding.floatingRendererContainer.isVisible = showFloatingContainer
-                    binding.swapViewIcon.isVisible = showFloatingContainer
-
                     // handle fullscreen video window
                     if(state.showFullscreenVideo()){
                         viewModel.fullscreenRenderer?.let { surfaceView ->
                             binding.fullscreenRenderer.addView(surfaceView)
                             binding.fullscreenRenderer.isVisible = true
-                            binding.remoteRecipient.isVisible = false
+                            hideAvatar()
                         }
                     } else {
                         binding.fullscreenRenderer.isVisible = false
-                        binding.remoteRecipient.isVisible = true
+                        showAvatar(state.swapped)
                     }
 
                     // handle floating video window
@@ -429,11 +413,34 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                         binding.floatingRenderer.isVisible = false
                     }
 
+                    // the floating video inset (empty or not) should be shown
+                    // the moment we have either of the video streams
+                    val showFloatingContainer = state.userVideoEnabled || state.remoteVideoEnabled
+                    binding.floatingRendererContainer.isVisible = showFloatingContainer
+                    binding.swapViewIcon.isVisible = showFloatingContainer
+
+                    // make sure to default to the contact's avatar if the floating container is not visible
+                    if (!showFloatingContainer) showAvatar(false)
+
                     // handle buttons
                     binding.enableCameraButton.isSelected = state.userVideoEnabled
                 }
             }
         }
+    }
+
+    /**
+     * Shows the avatar image.
+     * If @showUserAvatar is true, the user's avatar is shown, otherwise the contact's avatar is shown.
+     */
+    private fun showAvatar(showUserAvatar: Boolean) {
+        binding.userAvatar.isVisible = showUserAvatar
+        binding.contactAvatar.isVisible = !showUserAvatar
+    }
+
+    private fun hideAvatar() {
+        binding.userAvatar.isVisible = false
+        binding.contactAvatar.isVisible = false
     }
 
     private fun getUserDisplayName(publicKey: String): String {

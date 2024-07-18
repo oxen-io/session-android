@@ -86,6 +86,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     companion object {
+        const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
         const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
     }
 
@@ -136,6 +137,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
     }
 
+    private val isNewAccount: Boolean get() = intent.getBooleanExtra(FROM_ONBOARDING, false)
+
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
@@ -176,7 +179,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
         // Set up empty state view
         binding.emptyStateContainer.setThemedContent {
-            EmptyView(ApplicationContext.getInstance(this).newAccount)
+            EmptyView(isNewAccount)
         }
 
         IP2Country.configureIfNeeded(this@HomeActivity)
@@ -636,9 +639,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 }
 
-fun Context.startHomeActivity() {
+fun Context.startHomeActivity(isNewAccount: Boolean) {
     Intent(this, HomeActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        putExtra(HomeActivity.NEW_ACCOUNT, true)
         putExtra(HomeActivity.FROM_ONBOARDING, true)
     }.also(::startActivity)
 }

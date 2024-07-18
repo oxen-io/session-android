@@ -83,4 +83,7 @@
 
     <string name="profileDisplayPictureRemoveError">Failed to remove display picture.</string>
     <string name="profileErrorUpdate">Failed to update profile.</string>
+  
+    <!-- Added for SS-40 -->
+    <string name="attachmentsNotification">{emoji} Attachment</string>
 </resources>

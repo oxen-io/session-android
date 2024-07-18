@@ -1,15 +1,12 @@
 package org.thoughtcrime.securesms.conversation.v2.utilities
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Range
-import androidx.core.content.res.ResourcesCompat
 import network.loki.messenger.R
 import nl.komponents.kovenant.combine.Tuple2
 import org.session.libsession.messaging.contacts.Contact
@@ -22,7 +19,6 @@ import org.session.libsession.utilities.truncateIdForDisplay
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.RoundedBackgroundSpan
 import org.thoughtcrime.securesms.util.getAccentColor
-import org.thoughtcrime.securesms.util.toPx
 import java.util.regex.Pattern
 
 object MentionUtilities {
@@ -161,7 +157,7 @@ object MentionUtilities {
     }
 
     private fun isYou(mentionedPublicKey: String, userPublicKey: String, openGroup: OpenGroup?): Boolean {
-        val isUserBlindedPublicKey = openGroup?.let { SodiumUtilities.sessionId(userPublicKey, mentionedPublicKey, it.publicKey) } ?: false
+        val isUserBlindedPublicKey = openGroup?.let { SodiumUtilities.accountId(userPublicKey, mentionedPublicKey, it.publicKey) } ?: false
         return mentionedPublicKey.equals(userPublicKey, ignoreCase = true) || isUserBlindedPublicKey
     }
 }

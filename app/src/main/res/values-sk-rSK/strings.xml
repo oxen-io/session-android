@@ -164,9 +164,6 @@
     <string name="MediaOverviewActivity_Select_all">Označiť všetko</string>
     <string name="MediaOverviewActivity_collecting_attachments">Ukladám prílohy...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediálna správa</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Preberanie MMS správy</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Chyba pri preberaní MMS správy, ťuknite pre opakovanie</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Poslať používateľovi %s</string>
     <!-- MediaSendActivity -->

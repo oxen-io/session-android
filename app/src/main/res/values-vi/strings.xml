@@ -103,8 +103,6 @@
     <string name="MediaOverviewActivity_Select_all">Chọn tất cả</string>
     <string name="MediaOverviewActivity_collecting_attachments">Đang thu thập đính kèm...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Tin nhắn đa phương tiện</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Đang tải xuống tin nhắn MMS</string>
     <!-- MediaPickerActivity -->
     <!-- MediaSendActivity -->
     <!-- MediaRepository -->

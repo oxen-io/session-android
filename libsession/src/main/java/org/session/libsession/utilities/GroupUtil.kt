@@ -17,9 +17,9 @@ object GroupUtil {
     }
 
     @JvmStatic
-    fun getEncodedOpenGroupInboxID(openGroup: OpenGroup, sessionId: AccountId): Address {
+    fun getEncodedOpenGroupInboxID(openGroup: OpenGroup, accountId: AccountId): Address {
         val openGroupInboxId =
-            "${openGroup.server}!${openGroup.publicKey}!${sessionId.hexString}".toByteArray()
+            "${openGroup.server}!${openGroup.publicKey}!${accountId.hexString}".toByteArray()
         return getEncodedOpenGroupInboxID(openGroupInboxId)
     }
 

@@ -61,49 +61,41 @@ class Contacts(pointer: Long) : ConfigBase(pointer) {
         external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): Contacts
     }
 
-    external fun get(sessionId: String): Contact?
-    external fun getOrConstruct(sessionId: String): Contact
+    external fun get(accountId: String): Contact?
+    external fun getOrConstruct(accountId: String): Contact
     external fun all(): List<Contact>
     external fun set(contact: Contact)
-    external fun erase(sessionId: String): Boolean
+    external fun erase(accountId: String): Boolean
 
     /**
      * Similar to [updateIfExists], but will create the underlying contact if it doesn't exist before passing to [updateFunction]
      */
-    fun upsertContact(sessionId: String, updateFunction: Contact.()->Unit = {}) {
-        if (sessionId.startsWith(IdPrefix.BLINDED.value)) {
-            Log.w("Loki", "Trying to create a contact with a blinded ID prefix")
-            return
-        } else if (sessionId.startsWith(IdPrefix.UN_BLINDED.value)) {
-            Log.w("Loki", "Trying to create a contact with an un-blinded ID prefix")
-            return
-        } else if (sessionId.startsWith(IdPrefix.BLINDEDV2.value)) {
-            Log.w("Loki", "Trying to create a contact with a blindedv2 ID prefix")
-            return
+    fun upsertContact(accountId: String, updateFunction: Contact.()->Unit = {}) {
+        when {
+            accountId.startsWith(IdPrefix.BLINDED.value) -> Log.w("Loki", "Trying to create a contact with a blinded ID prefix")
+            accountId.startsWith(IdPrefix.UN_BLINDED.value) -> Log.w("Loki", "Trying to create a contact with an un-blinded ID prefix")
+            accountId.startsWith(IdPrefix.BLINDEDV2.value) -> Log.w("Loki", "Trying to create a contact with a blindedv2 ID prefix")
+            else -> getOrConstruct(accountId).let {
+                updateFunction(it)
+                set(it)
+            }
         }
-        val contact = getOrConstruct(sessionId)
-        updateFunction(contact)
-        set(contact)
     }
 
     /**
-     * Updates the contact by sessionId with a given [updateFunction], and applies to the underlying config.
+     * Updates the contact by accountId with a given [updateFunction], and applies to the underlying config.
      * the [updateFunction] doesn't run if there is no contact
      */
-    fun updateIfExists(sessionId: String, updateFunction: Contact.()->Unit) {
-        if (sessionId.startsWith(IdPrefix.BLINDED.value)) {
-            Log.w("Loki", "Trying to create a contact with a blinded ID prefix")
-            return
-        } else if (sessionId.startsWith(IdPrefix.UN_BLINDED.value)) {
-            Log.w("Loki", "Trying to create a contact with an un-blinded ID prefix")
-            return
-        } else if (sessionId.startsWith(IdPrefix.BLINDEDV2.value)) {
-            Log.w("Loki", "Trying to create a contact with a blindedv2 ID prefix")
-            return
+    private fun updateIfExists(accountId: String, updateFunction: Contact.()->Unit) {
+        when {
+            accountId.startsWith(IdPrefix.BLINDED.value) -> Log.w("Loki", "Trying to create a contact with a blinded ID prefix")
+            accountId.startsWith(IdPrefix.UN_BLINDED.value) -> Log.w("Loki", "Trying to create a contact with an un-blinded ID prefix")
+            accountId.startsWith(IdPrefix.BLINDEDV2.value) -> Log.w("Loki", "Trying to create a contact with a blindedv2 ID prefix")
+            else -> get(accountId)?.let {
+                updateFunction(it)
+                set(it)
+            }
         }
-        val contact = get(sessionId) ?: return
-        updateFunction(contact)
-        set(contact)
     }
 }
 
@@ -184,14 +176,14 @@ class UserGroupsConfig(pointer: Long): ConfigBase(pointer) {
     }
 
     external fun getCommunityInfo(baseUrl: String, room: String): GroupInfo.CommunityGroupInfo?
-    external fun getLegacyGroupInfo(sessionId: String): GroupInfo.LegacyGroupInfo?
+    external fun getLegacyGroupInfo(accountId: String): GroupInfo.LegacyGroupInfo?
     external fun getOrConstructCommunityInfo(baseUrl: String, room: String, pubKeyHex: String): GroupInfo.CommunityGroupInfo
-    external fun getOrConstructLegacyGroupInfo(sessionId: String): GroupInfo.LegacyGroupInfo
+    external fun getOrConstructLegacyGroupInfo(accountId: String): GroupInfo.LegacyGroupInfo
     external fun set(groupInfo: GroupInfo)
     external fun erase(communityInfo: GroupInfo)
     external fun eraseCommunity(baseCommunityInfo: BaseCommunityInfo): Boolean
     external fun eraseCommunity(server: String, room: String): Boolean
-    external fun eraseLegacyGroup(sessionId: String): Boolean
+    external fun eraseLegacyGroup(accountId: String): Boolean
     external fun sizeCommunityInfo(): Int
     external fun sizeLegacyGroupInfo(): Int
     external fun size(): Int

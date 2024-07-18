@@ -49,7 +49,7 @@ class MessageNotificationsActivity : BaseActionBarActivity() {
             viewModel.events.collect {
                 when (it) {
                     Event.Loading -> start<LoadingActivity>()
-                    Event.OnboardingComplete -> startHomeActivity()
+                    Event.OnboardingComplete -> startHomeActivity(isNewAccount = true)
                 }
             }
         }

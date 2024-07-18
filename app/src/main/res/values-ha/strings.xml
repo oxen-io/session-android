@@ -134,9 +134,6 @@
     <string name="MediaOverviewActivity_Select_all">Gişan bibijêre</string>
     <string name="MediaOverviewActivity_collecting_attachments">...Servehî tên berhevkirin</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Peyama multîmedyayê</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Peyama MMS tê daxistin</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Peyama MMSê nehate daxistin, ji bo dîsa hewldanê bitepîne</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Ji %s re bişîne</string>
     <!-- MediaSendActivity -->

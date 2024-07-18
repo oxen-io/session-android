@@ -126,9 +126,6 @@
     <string name="MediaOverviewActivity_Select_all">Pilih semua</string>
     <string name="MediaOverviewActivity_collecting_attachments">Mengumpulkan semua lampiran...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Pesan Multimedia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Mengunduh pesan MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Gagal mengunduh pesan MMS, sentuh untuk coba kembali</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Kirim ke %s</string>
     <!-- MediaSendActivity -->

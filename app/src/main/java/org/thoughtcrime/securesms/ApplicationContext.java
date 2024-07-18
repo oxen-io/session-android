@@ -156,8 +156,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
     private volatile boolean isAppVisible;
 
-    public boolean newAccount = false;
-
     @Override
     public Object getSystemService(String name) {
         if (MessagingModuleConfiguration.MESSAGING_MODULE_SERVICE.equals(name)) {

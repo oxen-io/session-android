@@ -6,7 +6,7 @@ sealed class Conversation {
     abstract var unread: Boolean
 
     data class OneToOne(
-        val sessionId: String,
+        val accountId: String,
         override var lastRead: Long,
         override var unread: Boolean
     ): Conversation()
