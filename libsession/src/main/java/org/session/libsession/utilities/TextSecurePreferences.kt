@@ -40,6 +40,7 @@ fun Pref(name: String, default: Boolean) = Pref(name, default, SharedPreferences
 fun Pref(name: String, default: Int) = Pref(name, default, SharedPreferences::getInt, SharedPreferences.Editor::putInt)
 fun Pref(name: String, default: Long) = Pref(name, default, SharedPreferences::getLong, SharedPreferences.Editor::putLong)
 fun Pref(name: String, default: String) = Pref(name, default, { _, _ -> getString(name, null) ?: default }, SharedPreferences.Editor::putStringOrRemove)
+fun NullablePref(name: String, default: String?) = Pref(name, default, { _, _ -> getString(name, null) ?: default }, SharedPreferences.Editor::putStringOrRemove)
 fun Pref(name: String) = Pref(name, null, SharedPreferences::getString, SharedPreferences.Editor::putStringOrRemove)
 fun Pref(name: String, default: Set<String>) = Pref(name, default, SharedPreferences::getStringSet, SharedPreferences.Editor::putStringSet)
 
@@ -82,7 +83,7 @@ class TextSecurePreferences @Inject constructor(
         val DISABLE_PASSPHRASE_PREF = Pref("pref_disable_passphrase", true)
         val LANGUAGE_PREF = Pref("pref_language", "zz")
         val LAST_VERSION_CODE_PREF = Pref("last_version_code", 0)
-        val RINGTONE_PREF = Pref("pref_key_ringtone", Settings.System.DEFAULT_NOTIFICATION_URI.toString())
+        val RINGTONE_PREF = NullablePref("pref_key_ringtone", Settings.System.DEFAULT_NOTIFICATION_URI?.toString())
         val VIBRATE_PREF = Pref("pref_key_vibrate", true)
         val NOTIFICATION_PREF = Pref("pref_key_enable_notifications", true)
         val PASSPHRASE_TIMEOUT_INTERVAL_PREF = Pref("pref_timeout_interval", 5 * 60)
