@@ -22,11 +22,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Snackbar
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -56,10 +56,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.base
-import org.thoughtcrime.securesms.ui.color.LocalColors
-import org.thoughtcrime.securesms.ui.xl
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.LocalType
 import java.util.concurrent.Executors
 
 private const val TAG = "NewMessageFragment"
@@ -78,7 +77,6 @@ fun MaybeScanQrCode(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(LocalColors.current.background)
     ) {
         LocalSoftwareKeyboardController.current?.hide()
 
@@ -94,10 +92,10 @@ fun MaybeScanQrCode(
             ) {
                 Text(
                     stringResource(R.string.activity_link_camera_permission_permanently_denied_configure_in_settings),
-                    style = base,
+                    style = LocalType.current.base,
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.size(LocalDimensions.current.itemSpacing))
+                Spacer(modifier = Modifier.size(LocalDimensions.current.spacing))
                 OutlineButton(
                     stringResource(R.string.sessionSettings),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -107,14 +105,14 @@ fun MaybeScanQrCode(
         } else {
             Column(
                 modifier = Modifier
-                    .background(color = LocalColors.current.backgroundSecondary)
                     .fillMaxSize()
-                    .padding(LocalDimensions.current.largeMargin),
+                    .padding(LocalDimensions.current.xlargeSpacing),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                Text(stringResource(R.string.fragment_scan_qr_code_camera_access_explanation), style = xl, textAlign = TextAlign.Center)
-                Spacer(modifier = Modifier.height(LocalDimensions.current.itemSpacing))
+                Text(stringResource(R.string.fragment_scan_qr_code_camera_access_explanation),
+                    style = LocalType.current.xl, textAlign = TextAlign.Center)
+                Spacer(modifier = Modifier.height(LocalDimensions.current.spacing))
                 PrimaryOutlineButton(
                     stringResource(R.string.cameraGrantAccess),
                     modifier = Modifier.fillMaxWidth(),
@@ -158,13 +156,12 @@ fun ScanQrCode(errors: Flow<String>, onScan: (String) -> Unit) {
         }
     }
 
-    val scaffoldState = rememberScaffoldState()
-
+    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         errors.collect { error ->
-            scaffoldState.snackbarHostState
+            snackbarHostState
                 .takeIf { it.currentSnackbarData == null }
                 ?.run {
                     scope.launch {
@@ -175,22 +172,21 @@ fun ScanQrCode(errors: Flow<String>, onScan: (String) -> Unit) {
                         // Don't use debounce() because many QR scans can come through each second,
                         // and each scan could restart the timer which could mean no scan gets
                         // through until the user stops scanning; quite perplexing.
-                        showSnackbar(message = error)
+                        snackbarHostState.showSnackbar(message = error)
                     }
                 }
         }
     }
 
     Scaffold(
-        scaffoldState = scaffoldState,
         snackbarHost = {
             SnackbarHost(
-                hostState = scaffoldState.snackbarHostState,
-                modifier = Modifier.padding(LocalDimensions.current.smallItemSpacing)
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(LocalDimensions.current.smallSpacing)
             ) { data ->
                 Snackbar(
                     snackbarData = data,
-                    modifier = Modifier.padding(LocalDimensions.current.smallItemSpacing)
+                    modifier = Modifier.padding(LocalDimensions.current.smallSpacing)
                 )
             }
         }
@@ -204,7 +200,7 @@ fun ScanQrCode(errors: Flow<String>, onScan: (String) -> Unit) {
             Box(
                 Modifier
                     .aspectRatio(1f)
-                    .padding(LocalDimensions.current.itemSpacing)
+                    .padding(LocalDimensions.current.spacing)
                     .clip(shape = RoundedCornerShape(26.dp))
                     .background(Color(0x33ffffff))
                     .align(Alignment.Center)

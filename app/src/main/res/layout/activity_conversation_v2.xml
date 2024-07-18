@@ -228,7 +228,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:background="@color/destructive"
+        android:background="?danger"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -300,7 +300,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/AccessibilityId_block_message_request_button"
-            android:textColor="@color/destructive"
+            android:textColor="?danger"
             android:paddingHorizontal="@dimen/massive_spacing"
             android:paddingVertical="@dimen/small_spacing"
             android:textSize="@dimen/text_size"
@@ -334,7 +334,7 @@
 
             <Button
                 android:id="@+id/declineMessageRequestButton"
-                style="@style/Widget.Session.Button.Common.DestructiveOutline"
+                style="@style/Widget.Session.Button.Common.DangerOutline"
                 android:contentDescription="@string/AccessibilityId_decline_message_request_button"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/medium_button_height"

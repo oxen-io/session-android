@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,11 +17,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.onboarding.OnboardingBackPressAlertDialog
 import org.thoughtcrime.securesms.onboarding.ui.ContinuePrimaryOutlineButton
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.base
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
-import org.thoughtcrime.securesms.ui.h4
+import org.thoughtcrime.securesms.ui.theme.LocalType
 
 @Preview
 @Composable
@@ -52,18 +51,18 @@ internal fun PickDisplayName(
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.weight(1f))
-        Spacer(modifier = Modifier.height(LocalDimensions.current.smallItemSpacing))
+        Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
 
         Column(
-            modifier = Modifier.padding(horizontal = LocalDimensions.current.largeMargin)
+            modifier = Modifier.padding(horizontal = LocalDimensions.current.mediumSpacing)
         ) {
-            Text(stringResource(state.title), style = h4)
-            Spacer(Modifier.height(LocalDimensions.current.smallItemSpacing))
+            Text(stringResource(state.title), style = LocalType.current.h4)
+            Spacer(Modifier.height(LocalDimensions.current.smallSpacing))
             Text(
                 stringResource(state.description),
-                style = base,
-                modifier = Modifier.padding(bottom = LocalDimensions.current.xsItemSpacing))
-            Spacer(Modifier.height(LocalDimensions.current.itemSpacing))
+                style = LocalType.current.base,
+                modifier = Modifier.padding(bottom = LocalDimensions.current.xsSpacing))
+            Spacer(Modifier.height(LocalDimensions.current.spacing))
             SessionOutlinedTextField(
                 text = state.displayName,
                 modifier = Modifier.fillMaxWidth(),
@@ -76,7 +75,7 @@ internal fun PickDisplayName(
             )
         }
 
-        Spacer(modifier = Modifier.height(LocalDimensions.current.smallItemSpacing))
+        Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
         Spacer(Modifier.weight(2f))
 
         ContinuePrimaryOutlineButton(modifier = Modifier.align(Alignment.CenterHorizontally), onContinue)

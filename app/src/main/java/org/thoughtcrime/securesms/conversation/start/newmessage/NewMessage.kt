@@ -3,17 +3,19 @@ package org.thoughtcrime.securesms.conversation.start.newmessage
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,12 +25,13 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.onboarding.ui.ContinuePrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.LoadingArcOr
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.SessionColorsParameterProvider
-import org.thoughtcrime.securesms.ui.color.Colors
-import org.thoughtcrime.securesms.ui.color.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
+import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.components.AppBar
 import org.thoughtcrime.securesms.ui.components.BorderlessButtonWithIcon
 import org.thoughtcrime.securesms.ui.components.MaybeScanQrCode
@@ -36,7 +39,7 @@ import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
 import org.thoughtcrime.securesms.ui.components.SessionTabRow
 import org.thoughtcrime.securesms.ui.contentDescription
-import org.thoughtcrime.securesms.ui.small
+import org.thoughtcrime.securesms.ui.theme.LocalType
 
 private val TITLES = listOf(R.string.enter_account_id, R.string.qrScan)
 
@@ -52,7 +55,10 @@ internal fun NewMessage(
 ) {
     val pagerState = rememberPagerState { TITLES.size }
 
-    Column(modifier = Modifier.background(LocalColors.current.backgroundSecondary)) {
+    Column(modifier = Modifier.background(
+        LocalColors.current.backgroundSecondary,
+        shape = MaterialTheme.shapes.small
+    )) {
         AppBar(stringResource(R.string.messageNew), onClose = onClose, onBack = onBack)
         SessionTabRow(pagerState, TITLES)
         HorizontalPager(pagerState) {
@@ -70,7 +76,6 @@ private fun EnterAccountId(
     callbacks: Callbacks,
     onHelp: () -> Unit = {}
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,14 +83,13 @@ private fun EnterAccountId(
             .imePadding()
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = LocalDimensions.current.xxsMargin, vertical = LocalDimensions.current.xsMargin),
+            modifier = Modifier.padding(vertical = LocalDimensions.current.spacing),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.xsMargin)
         ) {
             SessionOutlinedTextField(
                 text = state.newMessageIdOrOns,
                 modifier = Modifier
-                    .padding(horizontal = LocalDimensions.current.smallMargin),
+                    .padding(horizontal = LocalDimensions.current.spacing),
                 contentDescription = "Session id input box",
                 placeholder = stringResource(R.string.accountIdOrOnsEnter),
                 onChange = callbacks::onChange,
@@ -94,31 +98,36 @@ private fun EnterAccountId(
                 isTextErrorColor = state.isTextErrorColor
             )
 
+            Spacer(modifier = Modifier.height(LocalDimensions.current.xxxsSpacing))
+
             BorderlessButtonWithIcon(
                 text = stringResource(R.string.messageNewDescription),
                 modifier = Modifier
                     .contentDescription(R.string.AccessibilityId_help_desk_link)
-                    .padding(horizontal = LocalDimensions.current.margin)
+                    .padding(horizontal = LocalDimensions.current.mediumSpacing)
                     .fillMaxWidth(),
-                style = small,
+                style = LocalType.current.small,
                 color = LocalColors.current.textSecondary,
                 iconRes = R.drawable.ic_circle_question_mark,
                 onClick = onHelp
             )
         }
 
-        AnimatedVisibility(state.isNextButtonVisible) {
-            PrimaryOutlineButton(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = LocalDimensions.current.largeMargin)
-                    .fillMaxWidth()
-                    .contentDescription(R.string.next),
-                onClick = callbacks::onContinue
-            ) {
-                LoadingArcOr(state.loading) {
-                    Text(stringResource(R.string.next))
-                }
+        Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
+        Spacer(Modifier.weight(2f))
+
+        PrimaryOutlineButton(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = LocalDimensions.current.xlargeSpacing)
+                .padding(bottom = LocalDimensions.current.smallSpacing)
+                .fillMaxWidth()
+                .contentDescription(R.string.next),
+            enabled = state.isNextButtonEnabled,
+            onClick = callbacks::onContinue
+        ) {
+            LoadingArcOr(state.loading) {
+                Text(stringResource(R.string.next))
             }
         }
     }
@@ -127,7 +136,7 @@ private fun EnterAccountId(
 @Preview
 @Composable
 private fun PreviewNewMessage(
-    @PreviewParameter(SessionColorsParameterProvider::class) colors: Colors
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
         NewMessage(State("z"))

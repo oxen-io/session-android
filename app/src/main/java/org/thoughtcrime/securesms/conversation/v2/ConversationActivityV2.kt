@@ -1120,7 +1120,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         showSessionDialog {
             title(R.string.RecipientPreferenceActivity_block_this_contact_question)
             text(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
-            destructiveButton(R.string.RecipientPreferenceActivity_block, R.string.AccessibilityId_block_confirm) {
+            dangerButton(R.string.RecipientPreferenceActivity_block, R.string.AccessibilityId_block_confirm) {
                 viewModel.block()
                 if (deleteThread) {
                     viewModel.deleteThread()
@@ -1163,7 +1163,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         showSessionDialog {
             title(R.string.ConversationActivity_unblock_this_contact_question)
             text(R.string.ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact)
-            destructiveButton(
+            dangerButton(
                 R.string.ConversationActivity_unblock,
                 R.string.AccessibilityId_block_confirm
             ) { viewModel.unblock() }

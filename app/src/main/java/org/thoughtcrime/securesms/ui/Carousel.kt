@@ -16,12 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,26 +33,27 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.ui.color.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.blackAlpha40
+import org.thoughtcrime.securesms.ui.theme.pillShape
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BoxScope.HorizontalPagerIndicator(pagerState: PagerState) {
-    if (pagerState.pageCount >= 2) Card(
-        shape = pillShape,
-        backgroundColor = Color.Black.copy(alpha = 0.4f),
+    if (pagerState.pageCount >= 2) Box(
         modifier = Modifier
+            .background(color = blackAlpha40, shape = pillShape)
             .align(Alignment.BottomCenter)
-            .padding(8.dp)
+            .padding(LocalDimensions.current.xxsSpacing)
     ) {
-        Box(modifier = Modifier.padding(8.dp)) {
+        Box(modifier = Modifier.padding(LocalDimensions.current.xxsSpacing)) {
             ClickableHorizontalPagerIndicator(
                 pagerState = pagerState,
-                pageCount = pagerState.pageCount,
-                activeColor = Color.White,
-                inactiveColor = LocalColors.current.textSecondary)
+                pageCount = pagerState.pageCount
+            )
         }
     }
 }
@@ -73,9 +70,9 @@ fun ClickableHorizontalPagerIndicator(
     pageCount: Int,
     modifier: Modifier = Modifier,
     pageIndexMapping: (Int) -> Int = { it },
-    activeColor: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
-    inactiveColor: Color = activeColor.copy(ContentAlpha.disabled),
-    indicatorWidth: Dp = 8.dp,
+    activeColor: Color = Color.White,
+    inactiveColor: Color = LocalColors.current.disabled,
+    indicatorWidth: Dp = LocalDimensions.current.xxsSpacing,
     indicatorHeight: Dp = indicatorWidth,
     spacing: Dp = indicatorWidth,
     indicatorShape: Shape = CircleShape,
@@ -115,9 +112,9 @@ private fun HorizontalPagerIndicator(
     pageCount: Int,
     modifier: Modifier = Modifier,
     pageIndexMapping: (Int) -> Int = { it },
-    activeColor: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
-    inactiveColor: Color = activeColor.copy(ContentAlpha.disabled),
-    indicatorWidth: Dp = 8.dp,
+    activeColor: Color = Color.White,
+    inactiveColor: Color = LocalColors.current.disabled,
+    indicatorWidth: Dp = LocalDimensions.current.xxsSpacing,
     indicatorHeight: Dp = indicatorWidth,
     spacing: Dp = indicatorWidth,
     indicatorShape: Shape = CircleShape,

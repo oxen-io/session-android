@@ -77,8 +77,8 @@ import org.thoughtcrime.securesms.ui.Cell
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.LargeItemButton
 import org.thoughtcrime.securesms.ui.LargeItemButtonWithDrawable
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.color.destructiveButtonColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.dangerButtonColors
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineCopyButton
 import org.thoughtcrime.securesms.ui.contentDescription
@@ -448,9 +448,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         Column {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = LocalDimensions.current.smallMargin)
-                    .padding(top = LocalDimensions.current.xxxsMargin),
-                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallItemSpacing),
+                    .padding(horizontal = LocalDimensions.current.spacing)
+                    .padding(top = LocalDimensions.current.xxsSpacing),
+                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing),
             ) {
                 PrimaryOutlineButton(
                     stringResource(R.string.share),
@@ -464,7 +464,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(LocalDimensions.current.itemSpacing))
+            Spacer(modifier = Modifier.height(LocalDimensions.current.spacing))
 
             val hasPaths by hasPaths().collectAsState(initial = false)
 
@@ -492,7 +492,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                     }
                     LargeItemButton(R.string.activity_settings_help_button, R.drawable.ic_help, Modifier.contentDescription(R.string.AccessibilityId_help)) { show<HelpSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_clear_all_data_button_title, R.drawable.ic_clear_data, Modifier.contentDescription(R.string.AccessibilityId_clear_data), destructiveButtonColors()) { ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog") }
+                    LargeItemButton(R.string.activity_settings_clear_all_data_button_title, R.drawable.ic_message_details__trash, Modifier.contentDescription(R.string.AccessibilityId_clear_data), dangerButtonColors()) { ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog") }
                 }
             }
         }

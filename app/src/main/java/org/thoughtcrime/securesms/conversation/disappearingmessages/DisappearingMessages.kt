@@ -14,7 +14,6 @@ import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.SSKEnvironment.MessageExpirationManagerProtocol
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.getExpirationTypeDisplayValue
-import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
@@ -57,7 +56,7 @@ class DisappearingMessages @Inject constructor(
                     context.getExpirationTypeDisplayValue(message.isNotDisappearAfterRead)
                 )
         })
-        destructiveButton(
+        dangerButton(
                 text = if (message.expiresIn == 0L) R.string.dialog_disappearing_messages_follow_setting_confirm else R.string.dialog_disappearing_messages_follow_setting_set,
                 contentDescription = if (message.expiresIn == 0L) R.string.AccessibilityId_confirm else R.string.AccessibilityId_set_button
         ) {

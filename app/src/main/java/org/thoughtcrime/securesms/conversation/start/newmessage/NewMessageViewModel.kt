@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,8 +21,6 @@ import org.session.libsignal.utilities.timeout
 import org.thoughtcrime.securesms.ui.GetString
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
-import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 internal class NewMessageViewModel @Inject constructor(
@@ -112,7 +109,7 @@ internal data class State(
     val error: GetString? = null,
     val loading: Boolean = false
 ) {
-    val isNextButtonVisible: Boolean get() = newMessageIdOrOns.isNotBlank()
+    val isNextButtonEnabled: Boolean get() = newMessageIdOrOns.isNotBlank()
 }
 
 internal data class Success(val publicKey: String)

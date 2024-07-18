@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationBinding
+import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.highlightMentions
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_ALL
@@ -67,7 +68,7 @@ class ConversationView : LinearLayout {
         }
         val unreadCount = thread.unreadCount
         if (thread.recipient.isBlocked) {
-            binding.accentView.setBackgroundResource(R.color.destructive)
+            binding.accentView.setBackgroundColor(ThemeUtil.getThemedColor(context, R.attr.danger))
             binding.accentView.visibility = View.VISIBLE
         } else {
             val accentColor = context.getAccentColor()
@@ -120,7 +121,7 @@ class ConversationView : LinearLayout {
             !thread.isOutgoing -> binding.statusIndicatorImageView.visibility = View.GONE
             thread.isFailed -> {
                 val drawable = ContextCompat.getDrawable(context, R.drawable.ic_error)?.mutate()
-                drawable?.setTint(ContextCompat.getColor(context, R.color.destructive))
+                drawable?.setTint(ThemeUtil.getThemedColor(context, R.attr.danger))
                 binding.statusIndicatorImageView.setImageDrawable(drawable)
             }
             thread.isPending -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_circle_dot_dot_dot)

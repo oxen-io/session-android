@@ -58,7 +58,7 @@
        <item name="prominentButtonColor">?colorAccent</item>
        <item name="attachment_document_icon_small">@drawable/ic_document_small_dark</item>
        <item name="attachment_document_icon_large">@drawable/ic_document_large_dark</item>
-       <item name="colorError">@color/destructive</item>
+       <item name="colorError">?danger</item>
     </style>
 
     <!-- This should be the default theme for the application. -->
@@ -318,6 +318,7 @@
         <item name="backgroundSecondary">@color/classic_dark_1</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
+        <item name="danger">@color/danger_dark</item>
         <item name="android:textColorPrimary">@color/classic_dark_6</item>
         <item name="android:textColorSecondary">?android:textColorPrimary</item>
         <item name="android:textColorTertiary">@color/classic_dark_5</item>
@@ -399,6 +400,7 @@
         <item name="colorPrimaryDark">@color/classic_light_6</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
+        <item name="danger">@color/danger_light</item>
         <item name="android:textColorPrimary">@color/classic_light_0</item>
         <item name="android:textColorSecondary">@color/classic_light_1</item>
         <item name="android:textColorTertiary">@color/classic_light_1</item>
@@ -488,6 +490,7 @@
         <item name="backgroundSecondary">@color/ocean_dark_1</item>
         <item name="colorControlNormal">@color/ocean_dark_7</item>
         <item name="colorControlActivated">?colorAccent</item>
+        <item name="danger">@color/danger_dark</item>
         <item name="android:textColorPrimary">@color/ocean_dark_7</item>
         <item name="android:textColorSecondary">@color/ocean_dark_5</item>
         <item name="android:textColorTertiary">@color/ocean_dark_5</item>
@@ -574,6 +577,7 @@
         <item name="backgroundSecondary">@color/ocean_light_6</item>
         <item name="colorControlNormal">@color/ocean_light_1</item>
         <item name="colorControlActivated">?colorAccent</item>
+        <item name="danger">@color/danger_light</item>
         <item name="android:textColorPrimary">@color/ocean_light_1</item>
         <item name="android:textColorSecondary">@color/ocean_light_2</item>
         <item name="android:textColorTertiary">@color/ocean_light_2</item>
@@ -686,6 +690,7 @@
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="prominentButtonColor">?colorAccent</item>
         <item name="elementBorderColor">@color/classic_dark_3</item>
+        <item name="danger">@color/danger_dark</item>
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">#1B1B1B</item>

@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,10 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,23 +39,22 @@ import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.AlertDialog
 import org.thoughtcrime.securesms.ui.DialogButtonModel
 import org.thoughtcrime.securesms.ui.GetString
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.SessionColorsParameterProvider
-import org.thoughtcrime.securesms.ui.color.Colors
-import org.thoughtcrime.securesms.ui.color.LocalColors
 import org.thoughtcrime.securesms.ui.components.BorderlessHtmlButton
 import org.thoughtcrime.securesms.ui.components.PrimaryFillButton
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.contentDescription
-import org.thoughtcrime.securesms.ui.h4
-import org.thoughtcrime.securesms.ui.large
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
 import kotlin.time.Duration.Companion.milliseconds
 
 @Preview
 @Composable
 private fun PreviewLandingScreen(
-    @PreviewParameter(SessionColorsParameterProvider::class) colors: Colors
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
         LandingScreen({}, {}, {}, {})
@@ -80,6 +78,7 @@ internal fun LandingScreen(
             onDismissRequest = { isUrlDialogVisible = false },
             title = stringResource(R.string.urlOpen),
             text = stringResource(R.string.urlOpenBrowser),
+            showCloseButton = true, // display the 'x' button
             buttons = listOf(
                 DialogButtonModel(
                     text = GetString(R.string.activity_landing_terms_of_service),
@@ -107,24 +106,24 @@ internal fun LandingScreen(
     Column {
         Column(modifier = Modifier
             .weight(1f)
-            .padding(horizontal = LocalDimensions.current.onboardingMargin)
+            .padding(horizontal = LocalDimensions.current.mediumSpacing)
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 stringResource(R.string.onboardingBubblePrivacyInYourPocket),
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                style = h4,
+                style = LocalType.current.h4,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(LocalDimensions.current.itemSpacing))
+            Spacer(modifier = Modifier.height(LocalDimensions.current.spacing))
 
             LazyColumn(
                 state = listState,
                 modifier = Modifier
-                    .heightIn(min = LocalDimensions.current.minScrollableViewHeight)
+                    .heightIn(min = 200.dp)
                     .fillMaxWidth()
                     .weight(3f),
-                verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallItemSpacing)
+                verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing)
             ) {
                 items(
                     MESSAGES.take(count),
@@ -140,7 +139,7 @@ internal fun LandingScreen(
             Spacer(modifier = Modifier.weight(1f))
         }
 
-        Column(modifier = Modifier.padding(horizontal = LocalDimensions.current.largeMargin)) {
+        Column(modifier = Modifier.padding(horizontal = LocalDimensions.current.xlargeSpacing)) {
             PrimaryFillButton(
                 text = stringResource(R.string.onboardingAccountCreate),
                 modifier = Modifier
@@ -149,7 +148,7 @@ internal fun LandingScreen(
                     .contentDescription(R.string.AccessibilityId_create_account_button),
                 onClick = createAccount
             )
-            Spacer(modifier = Modifier.height(LocalDimensions.current.smallItemSpacing))
+            Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
             PrimaryOutlineButton(
                 stringResource(R.string.onboardingAccountExists),
                 modifier = Modifier
@@ -166,7 +165,7 @@ internal fun LandingScreen(
                     .contentDescription(R.string.AccessibilityId_open_url),
                 onClick = { isUrlDialogVisible = true }
             )
-            Spacer(modifier = Modifier.height(LocalDimensions.current.xxsItemSpacing))
+            Spacer(modifier = Modifier.height(LocalDimensions.current.xxsSpacing))
         }
     }
 }
@@ -195,7 +194,7 @@ private fun MessageText(text: String, isOutgoing: Boolean, modifier: Modifier) {
     Box(modifier = modifier then Modifier.fillMaxWidth()) {
         MessageText(
             text,
-            color = if (isOutgoing) LocalColors.current.backgroundBubbleSent else LocalColors.current.backgroundBubbleReceived,
+            color = if (isOutgoing) LocalColors.current.primary else LocalColors.current.backgroundBubbleReceived,
             textColor = if (isOutgoing) LocalColors.current.textBubbleSent else LocalColors.current.textBubbleReceived,
             modifier = Modifier.align(if (isOutgoing) Alignment.TopEnd else Alignment.TopStart)
         )
@@ -209,19 +208,17 @@ private fun MessageText(
     modifier: Modifier = Modifier,
     textColor: Color = Color.Unspecified
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(0.666f),
-        shape = MaterialTheme.shapes.small,
-        backgroundColor = color,
-        elevation = 0.dp
+    Box(
+        modifier = modifier.fillMaxWidth(0.666f)
+            .background(color = color, shape = MaterialTheme.shapes.small)
     ) {
         Text(
             text,
-            style = large,
+            style = LocalType.current.large,
             color = textColor,
             modifier = Modifier.padding(
-                horizontal = LocalDimensions.current.smallItemSpacing,
-                vertical = LocalDimensions.current.xsItemSpacing
+                horizontal = LocalDimensions.current.smallSpacing,
+                vertical = LocalDimensions.current.xsSpacing
             )
         )
     }

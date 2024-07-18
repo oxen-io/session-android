@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,22 +22,15 @@ import network.loki.messenger.R
 import org.thoughtcrime.securesms.onboarding.OnboardingBackPressAlertDialog
 import org.thoughtcrime.securesms.onboarding.messagenotifications.MessageNotificationsViewModel.UiState
 import org.thoughtcrime.securesms.onboarding.ui.ContinuePrimaryOutlineButton
-import org.thoughtcrime.securesms.ui.AlertDialog
-import org.thoughtcrime.securesms.ui.DialogButtonModel
-import org.thoughtcrime.securesms.ui.GetString
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.SessionColorsParameterProvider
-import org.thoughtcrime.securesms.ui.base
-import org.thoughtcrime.securesms.ui.color.Colors
-import org.thoughtcrime.securesms.ui.color.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
+import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.components.CircularProgressIndicator
 import org.thoughtcrime.securesms.ui.components.RadioButton
 import org.thoughtcrime.securesms.ui.contentDescription
-import org.thoughtcrime.securesms.ui.h4
-import org.thoughtcrime.securesms.ui.h8
-import org.thoughtcrime.securesms.ui.h9
-import org.thoughtcrime.securesms.ui.small
+import org.thoughtcrime.securesms.ui.theme.LocalType
 
 @Composable
 internal fun MessageNotificationsScreen(
@@ -63,11 +56,11 @@ internal fun MessageNotificationsScreen(
     Column {
         Spacer(Modifier.weight(1f))
 
-        Column(modifier = Modifier.padding(horizontal = LocalDimensions.current.onboardingMargin)) {
-            Text(stringResource(R.string.notificationsMessage), style = h4)
-            Spacer(Modifier.height(LocalDimensions.current.xsMargin))
-            Text(stringResource(R.string.onboardingMessageNotificationExplaination), style = base)
-            Spacer(Modifier.height(LocalDimensions.current.itemSpacing))
+        Column(modifier = Modifier.padding(horizontal = LocalDimensions.current.mediumSpacing)) {
+            Text(stringResource(R.string.notificationsMessage), style = LocalType.current.h4)
+            Spacer(Modifier.height(LocalDimensions.current.smallSpacing))
+            Text(stringResource(R.string.onboardingMessageNotificationExplaination), style = LocalType.current.base)
+            Spacer(Modifier.height(LocalDimensions.current.spacing))
         }
 
         NotificationRadioButton(
@@ -107,8 +100,8 @@ private fun NotificationRadioButton(
     RadioButton(
         onClick = onClick,
         modifier = modifier,
-        checked = checked,
-        contentPadding = PaddingValues(horizontal = LocalDimensions.current.margin, vertical = 7.dp)
+        selected = checked,
+        contentPadding = PaddingValues(horizontal = LocalDimensions.current.mediumSpacing, vertical = 7.dp)
     ) {
         Box(
             modifier = Modifier
@@ -120,17 +113,18 @@ private fun NotificationRadioButton(
                 ),
         ) {
             Column(modifier = Modifier
-                .padding(horizontal = 15.dp)
-                .padding(top = 10.dp, bottom = 11.dp)) {
-                Text(stringResource(title), style = h8)
+                .padding(horizontal = LocalDimensions.current.smallSpacing,
+                    vertical = LocalDimensions.current.xsSpacing)
+                ) {
+                Text(stringResource(title), style = LocalType.current.h8)
 
-                Text(stringResource(explanation), style = small, modifier = Modifier.padding(top = 7.dp))
+                Text(stringResource(explanation), style = LocalType.current.small, modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing))
                 tag?.let {
                     Text(
                         stringResource(it),
-                        modifier = Modifier.padding(top = 6.dp),
+                        modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing),
                         color = LocalColors.current.primary,
-                        style = h9
+                        style = LocalType.current.h9
                     )
                 }
             }
@@ -141,7 +135,7 @@ private fun NotificationRadioButton(
 @Preview
 @Composable
 private fun MessageNotificationsScreenPreview(
-    @PreviewParameter(SessionColorsParameterProvider::class) colors: Colors
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
         MessageNotificationsScreen()

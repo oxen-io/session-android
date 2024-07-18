@@ -7,13 +7,13 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -24,14 +24,14 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,6 +52,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -61,14 +62,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsession.utilities.runIf
 import org.thoughtcrime.securesms.components.ProfilePictureView
-import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.OptionsCard
-import org.thoughtcrime.securesms.ui.color.LocalColors
-import org.thoughtcrime.securesms.ui.color.divider
-import org.thoughtcrime.securesms.ui.color.radioButtonColors
-import org.thoughtcrime.securesms.ui.color.transparentButtonColors
+import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.OptionsCardData
 import org.thoughtcrime.securesms.ui.components.SmallCircularProgressIndicator
+import org.thoughtcrime.securesms.ui.components.TitledRadioButton
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.transparentButtonColors
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -92,18 +94,25 @@ data class RadioOption<T>(
 )
 
 @Composable
-fun <T> OptionsCard(card: OptionsCard<T>, callbacks: Callbacks<T>) {
-    Text(
-        card.title(),
-        style = base
-    )
-    CellNoMargin {
-        LazyColumn(
-            modifier = Modifier.heightIn(max = 5000.dp)
-        ) {
-            itemsIndexed(card.options) { i, it ->
-                if (i != 0) Divider()
-                TitledRadioButton(it) { callbacks.setValue(it.value) }
+fun <T> OptionsCard(card: OptionsCardData<T>, callbacks: Callbacks<T>) {
+    Column {
+        Text(
+            modifier = Modifier.padding(start = LocalDimensions.current.smallSpacing),
+            text = card.title(),
+            style = LocalType.current.base,
+            color = LocalColors.current.textSecondary
+        )
+
+        Spacer(modifier = Modifier.height(LocalDimensions.current.xsSpacing))
+
+        CellNoMargin {
+            LazyColumn(
+                modifier = Modifier.heightIn(max = 5000.dp)
+            ) {
+                itemsIndexed(card.options) { i, it ->
+                    if (i != 0) Divider()
+                    TitledRadioButton(option = it) { callbacks.setValue(it.value) }
+                }
             }
         }
     }
@@ -117,7 +126,10 @@ fun LargeItemButtonWithDrawable(
     colors: ButtonColors = transparentButtonColors(),
     onClick: () -> Unit
 ) {
-    ItemButtonWithDrawable(textId, icon, modifier.heightIn(min = LocalDimensions.current.minLargeItemButtonHeight), h8, colors, onClick)
+    ItemButtonWithDrawable(
+        textId, icon, modifier.heightIn(min = LocalDimensions.current.minLargeItemButtonHeight),
+        LocalType.current.h8, colors, onClick
+    )
 }
 
 @Composable
@@ -125,7 +137,7 @@ fun ItemButtonWithDrawable(
     @StringRes textId: Int,
     @DrawableRes icon: Int,
     modifier: Modifier = Modifier,
-    textStyle: TextStyle = xl,
+    textStyle: TextStyle = LocalType.current.xl,
     colors: ButtonColors = transparentButtonColors(),
     onClick: () -> Unit
 ) {
@@ -155,7 +167,10 @@ fun LargeItemButton(
     colors: ButtonColors = transparentButtonColors(),
     onClick: () -> Unit
 ) {
-    ItemButton(textId, icon, modifier.heightIn(min = LocalDimensions.current.minLargeItemButtonHeight), h8, colors, onClick)
+    ItemButton(
+        textId, icon, modifier.heightIn(min = LocalDimensions.current.minLargeItemButtonHeight),
+        LocalType.current.h8, colors, onClick
+    )
 }
 
 /**
@@ -166,7 +181,7 @@ fun ItemButton(
     @StringRes textId: Int,
     @DrawableRes icon: Int,
     modifier: Modifier = Modifier,
-    textStyle: TextStyle = xl,
+    textStyle: TextStyle = LocalType.current.xl,
     colors: ButtonColors = transparentButtonColors(),
     onClick: () -> Unit
 ) {
@@ -196,7 +211,7 @@ fun ItemButton(
     text: String,
     icon: @Composable BoxScope.() -> Unit,
     modifier: Modifier = Modifier,
-    textStyle: TextStyle = xl,
+    textStyle: TextStyle = LocalType.current.xl,
     colors: ButtonColors = transparentButtonColors(),
     onClick: () -> Unit
 ) {
@@ -208,19 +223,34 @@ fun ItemButton(
     ) {
         Box(
             modifier = Modifier
-                .width(80.dp)
+                .width(50.dp)
                 .wrapContentHeight()
                 .align(Alignment.CenterVertically)
         ) {
             icon()
         }
+
+        Spacer(modifier = Modifier.width(LocalDimensions.current.smallSpacing))
+
         Text(
             text,
             Modifier
                 .fillMaxWidth()
-                .padding(vertical = LocalDimensions.current.xsItemSpacing)
+                .padding(vertical = LocalDimensions.current.xsSpacing)
                 .align(Alignment.CenterVertically),
             style = textStyle
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PrewviewItemButton() {
+    PreviewTheme {
+        ItemButton(
+            textId = R.string.activity_create_group_title,
+            icon = R.drawable.ic_group,
+            onClick = {}
         )
     }
 }
@@ -228,7 +258,7 @@ fun ItemButton(
 @Composable
 fun Cell(
     padding: Dp = 0.dp,
-    margin: Dp = LocalDimensions.current.margin,
+    margin: Dp = LocalDimensions.current.spacing,
     content: @Composable () -> Unit
 ) {
     CellWithPaddingAndMargin(padding, margin) { content() }
@@ -240,61 +270,19 @@ fun CellNoMargin(content: @Composable () -> Unit) {
 
 @Composable
 fun CellWithPaddingAndMargin(
-    padding: Dp = LocalDimensions.current.smallMargin,
-    margin: Dp = LocalDimensions.current.margin,
+    padding: Dp = LocalDimensions.current.spacing,
+    margin: Dp = LocalDimensions.current.spacing,
     content: @Composable () -> Unit
 ) {
-    Card(
-        backgroundColor = LocalColors.current.backgroundSecondary,
-        shape = MaterialTheme.shapes.medium,
-        elevation = 0.dp,
+    Box(
         modifier = Modifier
+            .padding(horizontal = margin)
+            .background(color = LocalColors.current.backgroundSecondary,
+                shape = MaterialTheme.shapes.small)
             .wrapContentHeight()
-            .fillMaxWidth()
-            .padding(horizontal = margin),
+            .fillMaxWidth(),
     ) {
         Box(Modifier.padding(padding)) { content() }
-    }
-}
-
-@Composable
-fun <T> TitledRadioButton(option: RadioOption<T>, onClick: () -> Unit) {
-    val color = if (option.enabled) LocalColors.current.text else LocalColors.current.disabled
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallItemSpacing),
-        modifier = Modifier
-            .runIf(option.enabled) { clickable { if (!option.selected) onClick() } }
-            .heightIn(min = 60.dp)
-            .padding(horizontal = LocalDimensions.current.margin)
-            .contentDescription(option.contentDescription)
-    ) {
-        Column(modifier = Modifier
-            .weight(1f)
-            .align(Alignment.CenterVertically)) {
-            Column {
-                Text(
-                    text = option.title(),
-                    style = large,
-                    color = color
-                )
-                option.subtitle?.let {
-                    Text(
-                        text = it(),
-                        style = extraSmall,
-                        color = color
-                    )
-                }
-            }
-        }
-        RadioButton(
-            selected = option.selected,
-            onClick = null,
-            modifier = Modifier
-                .height(26.dp)
-                .align(Alignment.CenterVertically),
-            enabled = option.enabled,
-            colors = LocalColors.current.radioButtonColors()
-        )
     }
 }
 
@@ -357,10 +345,10 @@ fun Modifier.fadingEdges(
 
 @Composable
 fun Divider(modifier: Modifier = Modifier, startIndent: Dp = 0.dp) {
-    androidx.compose.material.Divider(
-        modifier = modifier.padding(horizontal = LocalDimensions.current.xsMargin),
-        color = LocalColors.current.divider,
-        startIndent = startIndent
+    HorizontalDivider(
+        modifier = modifier.padding(horizontal = LocalDimensions.current.smallSpacing)
+            .padding(start = startIndent),
+        color = LocalColors.current.borders,
     )
 }
 
@@ -392,7 +380,7 @@ fun ProgressArc(progress: Float, modifier: Modifier = Modifier) {
             "${text}%",
             color = Color.White,
             modifier = Modifier.align(Alignment.Center),
-            style = h2
+            style = LocalType.current.h2
         )
     }
 }

@@ -108,9 +108,9 @@
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
-    <style name="Widget.Session.Button.Common.DestructiveOutline">
-        <item name="android:background">@drawable/destructive_outline_button_medium_background</item>
-        <item name="android:textColor">@color/button_destructive</item>
+    <style name="Widget.Session.Button.Common.DangerOutline">
+        <item name="android:background">@drawable/danger_outline_button_medium_background</item>
+        <item name="android:textColor">@color/button_danger</item>
     </style>
 
     <style name="Widget.Session.Button.Dialog" parent="">
@@ -125,9 +125,9 @@
         <item name="android:background">@drawable/unimportant_dialog_text_button_background</item>
     </style>
     
-    <style name="Widget.Session.Button.Dialog.DestructiveText">
-        <item name="android:background">@drawable/destructive_dialog_text_button_background</item>
-        <item name="android:textColor">@color/destructive</item>
+    <style name="Widget.Session.Button.Dialog.DangerText">
+        <item name="android:background">@drawable/danger_dialog_text_button_background</item>
+        <item name="android:textColor">?danger</item>
     </style>
 
     <style name="Widget.Session.EditText.Compose" parent="@style/Signal.Text.Body">

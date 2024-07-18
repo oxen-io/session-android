@@ -3,8 +3,8 @@ package org.thoughtcrime.securesms.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,24 +14,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.Divider
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.SessionColorsParameterProvider
-import org.thoughtcrime.securesms.ui.base
-import org.thoughtcrime.securesms.ui.color.Colors
-import org.thoughtcrime.securesms.ui.color.LocalColors
-import org.thoughtcrime.securesms.ui.h4
-import org.thoughtcrime.securesms.ui.h8
-import org.thoughtcrime.securesms.ui.small
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalType
 
 @Composable
 internal fun EmptyView(newAccount: Boolean) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(horizontal = LocalDimensions.current.homeEmptyViewMargin)
+            .padding(horizontal = 50.dp)
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Icon(
@@ -42,27 +40,27 @@ internal fun EmptyView(newAccount: Boolean) {
         if (newAccount) {
             Text(
                 stringResource(R.string.onboardingAccountCreated),
-                style = h4,
+                style = LocalType.current.h4,
                 textAlign = TextAlign.Center
             )
             Text(
                 stringResource(R.string.welcome_to_session),
-                style = base,
+                style = LocalType.current.base,
                 color = LocalColors.current.primary,
                 textAlign = TextAlign.Center
             )
         }
 
-        Divider(modifier = Modifier.padding(vertical = LocalDimensions.current.xsMargin))
+        Divider(modifier = Modifier.padding(vertical = LocalDimensions.current.smallSpacing))
 
         Text(
             stringResource(R.string.conversationsNone),
-            style = h8,
+            style = LocalType.current.h8,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = LocalDimensions.current.xsItemSpacing))
+            modifier = Modifier.padding(bottom = LocalDimensions.current.xsSpacing))
         Text(
             stringResource(R.string.onboardingHitThePlusButton),
-            style = small,
+            style = LocalType.current.small,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.weight(2f))
@@ -72,7 +70,7 @@ internal fun EmptyView(newAccount: Boolean) {
 @Preview
 @Composable
 fun PreviewEmptyView(
-    @PreviewParameter(SessionColorsParameterProvider::class) colors: Colors
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
         EmptyView(newAccount = false)
@@ -82,7 +80,7 @@ fun PreviewEmptyView(
 @Preview
 @Composable
 fun PreviewEmptyViewNew(
-    @PreviewParameter(SessionColorsParameterProvider::class) colors: Colors
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
         EmptyView(newAccount = true)

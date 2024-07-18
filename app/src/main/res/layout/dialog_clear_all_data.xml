@@ -44,7 +44,7 @@
         android:orientation="horizontal">
 
         <Button
-            style="@style/Widget.Session.Button.Dialog.DestructiveText"
+            style="@style/Widget.Session.Button.Dialog.DangerText"
             android:id="@+id/clearAllDataButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/dialog_button_height"

@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -21,23 +22,25 @@ import org.thoughtcrime.securesms.conversation.start.NullStartConversationDelega
 import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.ItemButton
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.SessionColorsParameterProvider
-import org.thoughtcrime.securesms.ui.color.Colors
-import org.thoughtcrime.securesms.ui.color.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
+import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.components.AppBar
 import org.thoughtcrime.securesms.ui.components.QrImage
 import org.thoughtcrime.securesms.ui.contentDescription
-import org.thoughtcrime.securesms.ui.small
-import org.thoughtcrime.securesms.ui.xl
+import org.thoughtcrime.securesms.ui.theme.LocalType
 
 @Composable
 internal fun StartConversationScreen(
     accountId: String,
     delegate: StartConversationDelegate
 ) {
-    Column(modifier = Modifier.background(LocalColors.current.backgroundSecondary)) {
+    Column(modifier = Modifier.background(
+        LocalColors.current.backgroundSecondary,
+        shape = MaterialTheme.shapes.small
+    )) {
         AppBar(stringResource(R.string.dialog_start_conversation_title), onClose = delegate::onDialogClosePressed)
         Surface(
             modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection()),
@@ -74,18 +77,18 @@ internal fun StartConversationScreen(
                 )
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = LocalDimensions.current.margin)
-                        .padding(top = LocalDimensions.current.itemSpacing)
-                        .padding(bottom = LocalDimensions.current.margin)
+                        .padding(horizontal = LocalDimensions.current.spacing)
+                        .padding(top = LocalDimensions.current.spacing)
+                        .padding(bottom = LocalDimensions.current.spacing)
                 ) {
-                    Text(stringResource(R.string.accountIdYours), style = xl)
-                    Spacer(modifier = Modifier.height(LocalDimensions.current.xxxsItemSpacing))
+                    Text(stringResource(R.string.accountIdYours), style = LocalType.current.xl)
+                    Spacer(modifier = Modifier.height(LocalDimensions.current.xxsSpacing))
                     Text(
                         text = stringResource(R.string.qrYoursDescription),
                         color = LocalColors.current.textSecondary,
-                        style = small
+                        style = LocalType.current.small
                     )
-                    Spacer(modifier = Modifier.height(LocalDimensions.current.smallItemSpacing))
+                    Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
                     QrImage(
                         string = accountId,
                         Modifier.contentDescription(R.string.AccessibilityId_qr_code),
@@ -100,7 +103,7 @@ internal fun StartConversationScreen(
 @Preview
 @Composable
 private fun PreviewStartConversationScreen(
-    @PreviewParameter(SessionColorsParameterProvider::class) colors: Colors
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
         StartConversationScreen(

@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,14 +27,14 @@ import org.session.libsignal.utilities.PublicKeyValidation
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.threadDatabase
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.color.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.components.MaybeScanQrCode
 import org.thoughtcrime.securesms.ui.components.QrImage
 import org.thoughtcrime.securesms.ui.components.SessionTabRow
 import org.thoughtcrime.securesms.ui.contentDescription
 import org.thoughtcrime.securesms.ui.setComposeContent
-import org.thoughtcrime.securesms.ui.small
+import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.util.start
 
 private val TITLES = listOf(R.string.view, R.string.scan)
@@ -95,14 +95,14 @@ private fun Tabs(accountId: String, errors: Flow<String>, onScan: (String) -> Un
 fun QrPage(string: String) {
     Column(
         modifier = Modifier
-            .background(LocalColors.current.backgroundSecondary)
-            .padding(horizontal = LocalDimensions.current.margin)
+            .background(LocalColors.current.background)
+            .padding(horizontal = LocalDimensions.current.mediumSpacing)
             .fillMaxSize()
     ) {
         QrImage(
             string = string,
             modifier = Modifier
-                .padding(top = LocalDimensions.current.margin, bottom = LocalDimensions.current.xxsMargin)
+                .padding(top = LocalDimensions.current.mediumSpacing, bottom = LocalDimensions.current.xsSpacing)
                 .contentDescription(R.string.AccessibilityId_qr_code),
             icon = R.drawable.session
         )
@@ -111,7 +111,7 @@ fun QrPage(string: String) {
             text = stringResource(R.string.this_is_your_account_id_other_users_can_scan_it_to_start_a_conversation_with_you),
             color = LocalColors.current.textSecondary,
             textAlign = TextAlign.Center,
-            style = small
+            style = LocalType.current.small
         )
     }
 }

@@ -17,9 +17,9 @@ import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.appendInlineContent
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,15 +37,15 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.base
-import org.thoughtcrime.securesms.ui.baseBold
-import org.thoughtcrime.securesms.ui.color.LocalColors
-import org.thoughtcrime.securesms.ui.color.borders
-import org.thoughtcrime.securesms.ui.color.text
-import org.thoughtcrime.securesms.ui.color.textSecondary
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.borders
+import org.thoughtcrime.securesms.ui.theme.text
+import org.thoughtcrime.securesms.ui.theme.textSecondary
 import org.thoughtcrime.securesms.ui.contentDescription
+import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.bold
 
 @Preview
 @Composable
@@ -85,7 +85,7 @@ fun SessionOutlinedTextField(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     onChange: (String) -> Unit = {},
-    textStyle: TextStyle = base,
+    textStyle: TextStyle = LocalType.current.base,
     placeholder: String = "",
     onContinue: () -> Unit = {},
     error: String? = null,
@@ -106,7 +106,7 @@ fun SessionOutlinedTextField(
             if (text.isEmpty()) {
                 Text(
                     text = placeholder,
-                    style = base,
+                    style = LocalType.current.base,
                     color = LocalColors.current.textSecondary(isTextErrorColor),
                     modifier = Modifier.wrapContentSize()
                         .align(Alignment.CenterStart)
@@ -130,13 +130,13 @@ fun SessionOutlinedTextField(
             )
         }
         error?.let {
-            Spacer(modifier = Modifier.height(LocalDimensions.current.xsItemSpacing))
+            Spacer(modifier = Modifier.height(LocalDimensions.current.xsSpacing))
             Text(
                 it,
                 modifier = Modifier.fillMaxWidth()
                     .contentDescription(R.string.AccessibilityId_error_message),
                 textAlign = TextAlign.Center,
-                style = baseBold,
+                style = LocalType.current.base.bold(),
                 color = LocalColors.current.danger
             )
         }
@@ -148,7 +148,7 @@ fun AnnotatedTextWithIcon(
     text: String,
     @DrawableRes iconRes: Int,
     modifier: Modifier = Modifier,
-    style: TextStyle = base,
+    style: TextStyle = LocalType.current.base,
     color: Color = Color.Unspecified,
     iconSize: TextUnit = 12.sp
 ) {
