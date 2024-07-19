@@ -168,9 +168,6 @@
     <string name="MediaOverviewActivity_Select_all">Обрати все</string>
     <string name="MediaOverviewActivity_collecting_attachments">Збираю вкладення...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Мультимедійне повідомлення</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Завантаження MMS...</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Виникла помилка при завантаженні MMS, натисніть щоб повторити</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Відправити %s</string>
     <!-- MediaSendActivity -->
@@ -553,27 +550,24 @@
     <string name="copied_to_clipboard">Скопійовано в буфер обміну</string>
     <string name="next">Далі</string>
     <string name="share">Поділитися</string>
-    <string name="invalid_session_id">Невірна Session ID адресса</string>
+    <string name="invalid_account_id">Невірна Account ID адресса</string>
     <string name="cancel">Відміна</string>
-    <string name="your_session_id">Ваша Session ID адресса</string>
-    <string name="activity_landing_title_2">Ваша сесія починається тут...</string>
-    <string name="activity_landing_register_button_title">Створити Session ID адрессу</string>
-    <string name="activity_landing_restore_button_title">Продовжити вашу сесію</string>
+    <string name="your_account_id">Ваша Account ID адресса</string>
     <string name="view_fake_chat_bubble_1">Що таке Session?</string>
     <string name="view_fake_chat_bubble_2">Це децентралізований, шифрований мессенджер обміну повідомленнями</string>
     <string name="view_fake_chat_bubble_3">Отже, він не збирає мою особисту інформацію чи мою метадані розмови? Як це працює?</string>
     <string name="view_fake_chat_bubble_4">Він використовує комбінацію анонімної мережі та скрізного енд-ту-енд шифрування.</string>
     <string name="view_fake_chat_bubble_5">Друзі не дозволяють друзям користуватися скомпромітованими мессенджерами. Ласкаво просимо.</string>
-    <string name="activity_register_title">Привітайтесь з вашою Session ID адрессою</string>
-    <string name="activity_register_explanation">Ваш Session ID є унікальною адресою, якою люди будуть зв’язуватимися з вами в Session. При відсутньому з\'єднанні з вашою реальною особистістю, Session ID є абсолютно анонімним та приватним, по дизайну.</string>
+
+
     <string name="activity_restore_title">Відновити обліковий запис</string>
     <string name="activity_restore_explanation">Введіть фразу відновлення, яку вам було сказано записати на папері під час реєстрації, для відновлення облікового запису.</string>
     <string name="activity_restore_seed_edit_text_hint">Введіть вашу фразу відновлення</string>
-    <string name="activity_display_name_title_2">Виберіть ваш псевдонім для показу</string>
-    <string name="activity_display_name_explanation">Це буде ваше ім\'я яке ви використовуєте в Session. Воно може бути вашим дійсним ім\'ям, альясом або чимусь іншим.</string>
-    <string name="activity_display_name_edit_text_hint">Введіть відображуватинимий псевдонім</string>
-    <string name="activity_display_name_display_name_missing_error">Будь ласка, виберіть відображуватимий псевдонім</string>
-    <string name="activity_display_name_display_name_too_long_error">Будь ласка, виберіть коротший псевдонім</string>
+    <string name="displayNamePick">Виберіть ваш псевдонім для показу</string>
+    <string name="displayNameDescription">Це буде ваше ім\'я яке ви використовуєте в Session. Воно може бути вашим дійсним ім\'ям, альясом або чимусь іншим.</string>
+    <string name="displayNameEnter">Введіть відображуватинимий псевдонім</string>
+    <string name="displayNameErrorDescription">Будь ласка, виберіть відображуватимий псевдонім</string>
+    <string name="displayNameErrorDescriptionShorter">Будь ласка, виберіть коротший псевдонім</string>
     <string name="activity_pn_mode_recommended_option_tag">Рекомендовано</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Будь ласка виберіть варіант</string>
     <string name="activity_home_empty_state_message">У вас ще немає Session контактів</string>
@@ -582,13 +576,8 @@
     <string name="activity_home_leaving_group_failed_message">"Не вдалося покинути групу"</string>
     <string name="activity_home_delete_conversation_dialog_message">Ви дійсно хочете видалити цю бесіду?</string>
     <string name="activity_home_conversation_deleted_message">Бесіду видалено</string>
-    <string name="activity_seed_title">Ваша фраза відновлення</string>
-    <string name="activity_seed_title_2">Знайомтесь з вашою фразою відновлення</string>
-    <string name="activity_seed_explanation">Ваша фраза відновлення - це головний ключ до вашогї Session ID адреси - ви можете використовувати її для відновлення вашої Session ID адреси якщо ви втратите доступ до пристрою. Запишіть на папері та зберігайте вашу фразу відновлення у безпечному місці і не дайте її нікому.</string>
-    <string name="activity_seed_reveal_button_title">Натисніть, щоб відобразити</string>
-    <string name="view_seed_reminder_title">Ви майже закінчили! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Захистіть свій обліковий запис, записавши на папері відновлювальну фразу</string>
-    <string name="view_seed_reminder_subtitle_2">Натисніть і втримуйте приховані слова, щоб розкрити вашу фразу відновлення, запишіть її на папері, щоб безпечно захистити вашу Session ID адресу.</string>
+    <string name="view_seed_reminder_subtitle_2">Натисніть і втримуйте приховані слова, щоб розкрити вашу фразу відновлення, запишіть її на папері, щоб безпечно захистити вашу Account ID адресу.</string>
     <string name="view_seed_reminder_subtitle_3">Переконайтеся, що ви записали свою фразу відновлення на папері і поклали її в безпечне місце</string>
     <string name="activity_path_title">Шлях</string>
     <string name="activity_path_explanation">Сесія приховує вашу IP-адресу, перенаправляючи ваші повідомлення через декілька сервісних вузлів в децентралізованій мережі Session. Це країни, через які зараз перенаправляєтся ваше з\'єднання:</string>
@@ -599,12 +588,12 @@
     <string name="activity_path_learn_more_button_title">Дізнатися більше</string>
     <string name="activity_path_resolving_progress">Визначаємо…</string>
     <string name="activity_create_private_chat_title">Новий діалог</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">Введіть Session ID адрессу</string>
+    <string name="activity_create_private_chat_enter_account_id_tab_title">Введіть Account ID адрессу</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">Сканувати QR-код</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">Проскануйте QR-код користувача, аби почати сессію. QR-код можна знайти, натиснувши на значок QR-коду в налаштуваннях облікового запису.</string>
-    <string name="fragment_enter_public_key_edit_text_hint">Введіть Session ID або ONS ім\'я</string>
-    <string name="fragment_enter_public_key_explanation">Користувачі можуть поділитися своїм Session ID, увійшовши в налаштування свого облікового запису та натиснувши \"Поділитися Session ID\", або поділившись своїм QR-кодом.</string>
-    <string name="fragment_enter_public_key_error_message">Будь ласка, перевірте Session ID або ONS ім\'я та спробуйте ще раз.</string>
+    <string name="fragment_enter_public_key_edit_text_hint">Введіть Account ID або ONS ім\'я</string>
+    <string name="fragment_enter_public_key_explanation">Користувачі можуть поділитися своїм Account ID, увійшовши в налаштування свого облікового запису та натиснувши \"Поділитися Account ID\", або поділившись своїм QR-кодом.</string>
+    <string name="fragment_enter_public_key_error_message">Будь ласка, перевірте Account ID або ONS ім\'я та спробуйте ще раз.</string>
     <string name="fragment_scan_qr_code_camera_access_explanation">Session потрібен дозвіл до камери, щоб сканувати QR-код</string>
     <string name="fragment_scan_qr_code_grant_camera_access_button_title">Дозволити доступ до камери</string>
     <string name="activity_create_closed_group_title">Нова Закрита Група</string>
@@ -631,7 +620,6 @@
     <string name="activity_settings_devices_button_title">Пристрої</string>
     <string name="activity_settings_invite_button_title">Запросити друга</string>
     <string name="activity_settings_faq_button_title">Часті питання</string>
-    <string name="activity_settings_recovery_phrase_button_title">Фраза відновлення</string>
     <string name="activity_settings_clear_all_data_button_title">Видалити дані</string>
     <string name="activity_settings_clear_all_data_and_network_button_title">Видалити дані та аккаунт</string>
     <string name="activity_settings_help_translate_session">Допоможіть нам перекласти Session</string>
@@ -644,8 +632,6 @@
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Вас надійно повідомлятимуть про нові сповіщення негайно, використовуючи сервери сповіщень Google.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Змінити їм’я</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Відв’язати цей пристрій</string>
-    <string name="dialog_seed_title">Ваша фраза відновлення</string>
-    <string name="dialog_seed_explanation">Запишіть це на папері. Це ваша фраза відновлення. З нею ви можете відновити або перенести ваш Session ID на новий пристрій.</string>
     <string name="dialog_clear_all_data_title">Видалити всі дані</string>
     <string name="dialog_clear_all_data_explanation">Це остаточно видалить ваші повідомлення, сеанси та контакти.</string>
     <string name="dialog_clear_all_data_network_explanation">Ви хочете видалити тільки цей пристрій або видалити весь обліковий запис?</string>
@@ -679,7 +665,7 @@
     <string name="dialog_ui_mode_option_day">День</string>
     <string name="dialog_ui_mode_option_night">Ніч</string>
     <string name="dialog_ui_mode_option_system_default">За замовчуванням системи</string>
-    <string name="activity_conversation_menu_copy_session_id">Скопіювати Session ID адрессу</string>
+    <string name="activity_conversation_menu_copy_account_id">Скопіювати Account ID адрессу</string>
     <string name="attachment">Вкладення</string>
     <string name="attachment_type_voice_message">Голосове повідомлення</string>
     <string name="details">Подробиці</string>
@@ -689,7 +675,6 @@
     <string name="activity_backup_restore_explanation_1">Виберіть файл резервної копії та введіть секретну фразу, з якою він був створений.</string>
     <string name="activity_backup_restore_passphrase">30-символьний пароль</string>
     <string name="activity_link_device_skip_prompt">Це займає деякий час, ви б хотіли це пропустити?</string>
-    <string name="activity_link_device_link_device">Зв\'язати пристрій</string>
     <string name="activity_link_device_recovery_phrase">Фраза відновлення</string>
     <string name="activity_link_device_scan_qr_code">Сканувати QR-код</string>
     <string name="activity_link_device_qr_message">Перейдіть до Налаштувань → Фраза відновлення на вашому іншому пристрої, щоб відобразити ваш QR-код.</string>
@@ -700,7 +685,6 @@
     <string name="activity_pn_mode_slow_mode">Медленний режим</string>
     <string name="activity_pn_mode_fast_mode_explanation">Вас надійно повідомлятимуть про нові сповіщщеня негайно, використовуючи сервери сповіщень Google.</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session буде періодично перевіряти наявність нових повідомлень у фоновому режимі.</string>
-    <string name="fragment_recovery_phrase_title">Фраза відновлення</string>
     <string name="activity_prompt_passphrase_session_locked">Ви заблоковали Session</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Торкніться, щоб розблокувати</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Введіть псевдонім</string>

@@ -53,8 +53,6 @@
 
     <attr name="emoji_tab_strip_background" format="color" />
     <attr name="emoji_tab_indicator" format="color" />
-    <attr name="emoji_tab_underline" format="color" />
-    <attr name="emoji_tab_seperator" format="color" />
     <attr name="emoji_drawer_background" format="color" />
     <attr name="emoji_text_color" format="color" />
 
@@ -93,7 +91,6 @@
 
     <attr name="dialog_info_icon" format="reference" />
     <attr name="dialog_alert_icon" format="reference" />
-    <attr name="dialog_background_color" format="reference|color" />
 
     <attr name="conversation_icon_attach_audio" format="reference"/>
     <attr name="conversation_icon_attach_video" format="reference" />

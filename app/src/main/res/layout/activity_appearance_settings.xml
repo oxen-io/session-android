@@ -25,7 +25,7 @@
             app:cardElevation="0dp"
             app:cardCornerRadius="@dimen/dialog_corner_radius"
             android:layout_marginHorizontal="@dimen/medium_spacing"
-            app:cardBackgroundColor="?colorSettingsBackground"
+            app:cardBackgroundColor="?backgroundSecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <LinearLayout
@@ -317,7 +317,7 @@
         <androidx.cardview.widget.CardView
             app:cardElevation="0dp"
             android:elevation="0dp"
-            app:cardBackgroundColor="?colorSettingsBackground"
+            app:cardBackgroundColor="?backgroundSecondary"
             app:cardCornerRadius="@dimen/dialog_corner_radius"
             android:layout_margin="@dimen/medium_spacing"
             android:layout_marginBottom="@dimen/massive_spacing"

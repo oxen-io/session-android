@@ -75,7 +75,6 @@
     <string name="MediaOverviewActivity_Documents">ದಾಖಲೆಗಳು</string>
     <string name="MediaOverviewActivity_Select_all">ಎಲ್ಲ ಆಯ್ದುಕೊಳ್ಳಿ</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">ಮಲ್ಟಿಮೀಡಿಯಾ ಸಂದೇಶ</string>
     <!-- MediaPickerActivity -->
     <!-- MediaSendActivity -->
     <!-- MediaRepository -->

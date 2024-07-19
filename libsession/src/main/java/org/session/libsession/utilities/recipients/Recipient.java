@@ -323,10 +323,8 @@ public class Recipient implements RecipientModifiedListener {
 
   public synchronized @Nullable String getName() {
     StorageProtocol storage = MessagingModuleConfiguration.getShared().getStorage();
-    String sessionID = this.address.toString();
-    if (isCommunityRecipient()) {
-      return this.name;
-    } else if (isLegacyClosedGroupRecipient() || isClosedGroupV2Recipient()) {
+    String accountID = this.address.toString();
+    if (isGroupRecipient()) {
       if (this.name == null) {
         List<String> names = new LinkedList<>();
         for (Recipient recipient : participants) {
@@ -337,13 +335,13 @@ public class Recipient implements RecipientModifiedListener {
         return this.name;
       }
     } else if (isOpenGroupInboxRecipient()){
-      String inboxID = GroupUtil.getDecodedOpenGroupInboxSessionId(sessionID);
-      Contact contact = storage.getContactWithSessionID(inboxID);
-      if (contact == null) { return sessionID; }
+      String inboxID = GroupUtil.getDecodedOpenGroupInboxAccountId(accountID);
+      Contact contact = storage.getContactWithAccountID(inboxID);
+      if (contact == null) return accountID;
       return contact.displayName(Contact.ContactContext.REGULAR);
     } else {
-      Contact contact = storage.getContactWithSessionID(sessionID);
-      if (contact == null) { return null; }
+      Contact contact = storage.getContactWithAccountID(accountID);
+      if (contact == null) return null;
       return contact.displayName(Contact.ContactContext.REGULAR);
     }
   }
@@ -524,11 +522,11 @@ public class Recipient implements RecipientModifiedListener {
   public synchronized String toShortString() {
     String name = getName();
     if (name != null) return name;
-    String sessionId = address.serialize();
-    if (sessionId.length() < 4) return sessionId; // so substrings don't throw out of bounds exceptions
+    String accountId = address.serialize();
+    if (accountId.length() < 4) return accountId; // so substrings don't throw out of bounds exceptions
     int takeAmount = 4;
-    String start = sessionId.substring(0, takeAmount);
-    String end = sessionId.substring(sessionId.length()-takeAmount);
+    String start = accountId.substring(0, takeAmount);
+    String end = accountId.substring(accountId.length()-takeAmount);
     return start+"..."+end;
   }
 

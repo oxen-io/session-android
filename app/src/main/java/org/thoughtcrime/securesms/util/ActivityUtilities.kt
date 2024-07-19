@@ -1,8 +1,10 @@
 package org.thoughtcrime.securesms.util
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.view.View
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +12,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_DARK
+import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_LIGHT
+import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_DARK
+import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_LIGHT
 import org.thoughtcrime.securesms.BaseActionBarActivity
 
 fun BaseActionBarActivity.setUpActionBarSessionLogo(hideBackButton: Boolean = false) {
@@ -82,20 +88,25 @@ fun TextSecurePreferences.themeState(): ThemeState {
 
 @StyleRes
 fun String.getThemeStyle(): Int = when (this) {
-    TextSecurePreferences.CLASSIC_DARK -> R.style.Classic_Dark
-    TextSecurePreferences.CLASSIC_LIGHT -> R.style.Classic_Light
-    TextSecurePreferences.OCEAN_DARK -> R.style.Ocean_Dark
-    TextSecurePreferences.OCEAN_LIGHT -> R.style.Ocean_Light
+    CLASSIC_DARK -> R.style.Classic_Dark
+    CLASSIC_LIGHT -> R.style.Classic_Light
+    OCEAN_DARK -> R.style.Ocean_Dark
+    OCEAN_LIGHT -> R.style.Ocean_Light
     else -> throw NullPointerException("The style [$this] is not supported")
 }
 
 @StyleRes
-fun Int.getDefaultAccentColor(): Int =
-    if (this == R.style.Ocean_Dark || this == R.style.Ocean_Light) R.style.PrimaryBlue
-    else R.style.PrimaryGreen
+fun Int.getDefaultAccentColor(): Int = when (this) {
+    R.style.Ocean_Dark, R.style.Ocean_Light -> R.style.PrimaryBlue
+    else -> R.style.PrimaryGreen
+}
 
 data class ThemeState (
     @StyleRes val theme: Int,
     @StyleRes val accentStyle: Int,
     val followSystem: Boolean
 )
+
+inline fun <reified T: Activity> Activity.show() = Intent(this, T::class.java).also(::startActivity).let { overridePendingTransition(R.anim.slide_from_bottom, R.anim.fade_scale_out) }
+inline fun <reified T: Activity> Activity.push(modify: Intent.() -> Unit = {}) = Intent(this, T::class.java).also(modify).also(::startActivity).let { overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out) }
+inline fun <reified T: Activity> Context.start(modify: Intent.() -> Unit = {}) = Intent(this, T::class.java).also(modify).apply { addFlags(FLAG_ACTIVITY_SINGLE_TOP) }.let(::startActivity)

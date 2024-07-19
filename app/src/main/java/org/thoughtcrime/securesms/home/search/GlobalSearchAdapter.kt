@@ -10,22 +10,27 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewGlobalSearchHeaderBinding
 import network.loki.messenger.databinding.ViewGlobalSearchResultBinding
 import network.loki.messenger.libsession_util.util.GroupInfo
+import network.loki.messenger.databinding.ViewGlobalSearchSubheaderBinding
 import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.search.model.MessageResult
+import org.thoughtcrime.securesms.ui.GetString
 import java.security.InvalidParameterException
 import org.session.libsession.messaging.contacts.Contact as ContactModel
 
-class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GlobalSearchAdapter(private val modelCallback: (Model)->Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val HEADER_VIEW_TYPE = 0
-        const val CONTENT_VIEW_TYPE = 1
+        const val SUB_HEADER_VIEW_TYPE = 1
+        const val CONTENT_VIEW_TYPE = 2
     }
 
     private var data: List<Model> = listOf()
     private var query: String? = null
+
+    fun setNewData(data: Pair<String, List<Model>>) = setNewData(data.first, data.second)
 
     fun setNewData(query: String, newData: List<Model>) {
         val diffResult = DiffUtil.calculateDiff(GlobalSearchDiff(this.query, query, data, newData))
@@ -35,21 +40,26 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
     }
 
     override fun getItemViewType(position: Int): Int =
-        if (data[position] is Model.Header) HEADER_VIEW_TYPE else CONTENT_VIEW_TYPE
+        when(data[position]) {
+             is Model.Header -> HEADER_VIEW_TYPE
+             is Model.SubHeader -> SUB_HEADER_VIEW_TYPE
+             else -> CONTENT_VIEW_TYPE
+        }
 
     override fun getItemCount(): Int = data.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        if (viewType == HEADER_VIEW_TYPE) {
-            HeaderView(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.view_global_search_header, parent, false)
+        when (viewType) {
+            HEADER_VIEW_TYPE -> HeaderView(
+                LayoutInflater.from(parent.context).inflate(R.layout.view_global_search_header, parent, false)
             )
-        } else {
-            ContentView(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.view_global_search_result, parent, false)
-            , modelCallback)
+            SUB_HEADER_VIEW_TYPE -> SubHeaderView(
+                LayoutInflater.from(parent.context).inflate(R.layout.view_global_search_subheader, parent, false)
+            )
+            else -> ContentView(
+                LayoutInflater.from(parent.context).inflate(R.layout.view_global_search_result, parent, false),
+                modelCallback
+            )
         }
 
     override fun onBindViewHolder(
@@ -62,10 +72,10 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
             holder.bindPayload(newUpdateQuery, data[position])
             return
         }
-        if (holder is HeaderView) {
-            holder.bind(data[position] as Model.Header)
-        } else if (holder is ContentView) {
-            holder.bind(query.orEmpty(), data[position])
+        when (holder) {
+            is HeaderView -> holder.bind(data[position] as Model.Header)
+            is SubHeaderView -> holder.bind(data[position] as Model.SubHeader)
+            is ContentView -> holder.bind(query.orEmpty(), data[position])
         }
     }
 
@@ -78,7 +88,16 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
         val binding = ViewGlobalSearchHeaderBinding.bind(view)
 
         fun bind(header: Model.Header) {
-            binding.searchHeader.setText(header.title)
+            binding.searchHeader.setText(header.title.string(binding.root.context))
+        }
+    }
+
+    class SubHeaderView(view: View) : RecyclerView.ViewHolder(view) {
+
+        val binding = ViewGlobalSearchSubheaderBinding.bind(view)
+
+        fun bind(header: Model.SubHeader) {
+            binding.searchHeader.text = header.title.string(binding.root.context)
         }
     }
 
@@ -103,26 +122,25 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
                 is Model.Contact -> bindModel(query, model)
                 is Model.Message -> bindModel(query, model)
                 is Model.SavedMessages -> bindModel(model)
-                is Model.Header -> throw InvalidParameterException("Can't display Model.Header as ContentView")
+                else -> throw InvalidParameterException("Can't display as ContentView")
             }
             binding.root.setOnClickListener { modelCallback(model) }
         }
-
     }
-
-    data class MessageModel(
-            val threadRecipient: Recipient,
-            val messageRecipient: Recipient,
-            val messageSnippet: String
-    )
 
     sealed class Model {
-        data class Header(@StringRes val title: Int) : Model()
+        data class Header(val title: GetString): Model() {
+            constructor(@StringRes title: Int): this(GetString(title))
+            constructor(title: String): this(GetString(title))
+        }
+        data class SubHeader(val title: GetString): Model() {
+            constructor(@StringRes title: Int): this(GetString(title))
+            constructor(title: String): this(GetString(title))
+        }
         data class SavedMessages(val currentUserPublicKey: String): Model()
-        data class Contact(val contact: ContactModel) : Model()
+        data class Contact(val contact: ContactModel, val name: String?, val isSelf: Boolean) : Model()
         data class LegacyGroupConversation(val groupRecord: GroupRecord) : Model()
         data class ClosedGroupConversation(val sessionId: SessionId)
-        data class Message(val messageResult: MessageResult, val unread: Int) : Model()
+        data class Message(val messageResult: MessageResult, val unread: Int, val isSelf: Boolean) : Model()
     }
-
 }

@@ -23,7 +23,7 @@
         android:drawableStart="@drawable/ic_content_copy_white_24dp"
         android:drawableTint="?attr/colorControlNormal"
         android:visibility="gone"
-        android:text="@string/activity_conversation_menu_copy_session_id" />
+        android:text="@string/activity_conversation_menu_copy_account_id" />
 
     <TextView
         android:id="@+id/copyCommunityUrl"

@@ -44,7 +44,7 @@ inline void deserialize_members_into(JNIEnv *env, jobject members_map, session::
 
 inline session::config::legacy_group_info deserialize_legacy_group_info(JNIEnv *env, jobject info, session::config::UserGroups* conf) {
     auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
-    auto id_field = env->GetFieldID(clazz, "sessionId", "Lorg/session/libsignal/utilities/SessionId;");
+    auto id_field = env->GetFieldID(clazz, "accountId", "Ljava/lang/String;");
     auto name_field = env->GetFieldID(clazz, "name", "Ljava/lang/String;");
     auto members_field = env->GetFieldID(clazz, "members", "Ljava/util/Map;");
     auto enc_pub_key_field = env->GetFieldID(clazz, "encPubKey", "[B");
@@ -103,16 +103,16 @@ inline jobject serialize_members(JNIEnv *env, std::map<std::string, bool> member
 
     jobject new_map = env->NewObject(map_class, map_constructor);
     for (auto it = members_map.begin(); it != members_map.end(); it++) {
-        auto session_id = env->NewStringUTF(it->first.data());
+        auto account_id = env->NewStringUTF(it->first.data());
         bool is_admin = it->second;
         auto jbool = env->NewObject(boxed_bool, new_bool, is_admin);
-        env->CallObjectMethod(new_map, insert, session_id, jbool);
+        env->CallObjectMethod(new_map, insert, account_id, jbool);
     }
     return new_map;
 }
 
 inline jobject serialize_legacy_group_info(JNIEnv *env, session::config::legacy_group_info info) {
-    jobject session_id = util::serialize_session_id(env, info.session_id);
+    jstring account_id = env->NewStringUTF(info.session_id.data());
     jstring name = env->NewStringUTF(info.name.data());
     jobject members = serialize_members(env, info.members());
     jbyteArray enc_pubkey = util::bytes_from_ustring(env, info.enc_pubkey);
@@ -121,8 +121,8 @@ inline jobject serialize_legacy_group_info(JNIEnv *env, session::config::legacy_
     long long joined_at = info.joined_at;
 
     jclass legacy_group_class = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
-    jmethodID constructor = env->GetMethodID(legacy_group_class, "<init>", "(Lorg/session/libsignal/utilities/SessionId;Ljava/lang/String;Ljava/util/Map;[B[BJJJ)V");
-    jobject serialized = env->NewObject(legacy_group_class, constructor, session_id, name, members, enc_pubkey, enc_seckey, priority, info.disappearing_timer.count(), joined_at);
+    jmethodID constructor = env->GetMethodID(legacy_group_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;[B[BIJJ)V");
+    jobject serialized = env->NewObject(legacy_group_class, constructor, account_id, name, members, enc_pubkey, enc_seckey, priority, (jlong) info.disappearing_timer.count(), joined_at);
     return serialized;
 }
 

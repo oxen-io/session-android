@@ -166,9 +166,6 @@
     <string name="MediaOverviewActivity_Select_all">בחר הכל</string>
     <string name="MediaOverviewActivity_collecting_attachments">אוסף צרופות...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">הודעת מולטימדיה</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">מוריד הודעת MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">שגיאה בהורדת הודעת MMS, הקש כדי לנסות שוב</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">שלח אל %s</string>
     <!-- MediaSendActivity -->

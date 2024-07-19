@@ -18,6 +18,7 @@ package org.thoughtcrime.securesms;
 import static nl.komponents.kovenant.android.KovenantAndroid.startKovenant;
 import static nl.komponents.kovenant.android.KovenantAndroid.stopKovenant;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -278,7 +279,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
         // If the user account hasn't been created or onboarding wasn't finished then don't start
         // the pollers
-        if (TextSecurePreferences.getLocalNumber(this) == null || !TextSecurePreferences.hasSeenWelcomeScreen(this)) {
+        if (textSecurePreferences.getLocalNumber() == null) {
             return;
         }
 
@@ -471,6 +472,13 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         LegacyClosedGroupPollerV2.getShared().start();
     }
 
+    public void retrieveUserProfile() {
+        setUpPollingIfNeeded();
+        if (poller != null) {
+            poller.retrieveUserProfile();
+        }
+    }
+
     private void resubmitProfilePictureIfNeeded() {
         // Files expire on the file server after a while, so we simply re-upload the user's profile picture
         // at a certain interval to ensure it's always available.
@@ -525,17 +533,11 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
     /**
      * Clear all local profile data and message history then restart the app after a brief delay.
-     * @param isMigratingToV2KeyPair whether we're upgrading to a more recent V2 key pair or not.
      * @return true on success, false otherwise.
      */
-    public boolean clearAllData(boolean isMigratingToV2KeyPair) {
-        String displayName = TextSecurePreferences.getProfileName(this);
-        boolean isUsingFCM = TextSecurePreferences.isPushEnabled(this);
+    @SuppressLint("ApplySharedPref")
+    public boolean clearAllData() {
         TextSecurePreferences.clearAll(this);
-        if (isMigratingToV2KeyPair) {
-            TextSecurePreferences.setPushEnabled(this, isUsingFCM);
-            TextSecurePreferences.setProfileName(this, displayName);
-        }
         getSharedPreferences(PREFERENCES_NAME, 0).edit().clear().commit();
         if (!deleteDatabase(SQLCipherOpenHelper.DATABASE_NAME)) {
             Log.d("Loki", "Failed to delete database.");

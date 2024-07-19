@@ -72,6 +72,7 @@ import org.session.libsession.messaging.sending_receiving.link_preview.LinkPrevi
 import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.messaging.sending_receiving.pollers.LegacyClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.snode.OnionRequestAPI
@@ -88,6 +89,7 @@ import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.SSKEnvironment
+import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol.Companion.NAME_PADDED_LENGTH
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.Recipient.DisappearingState
@@ -148,12 +150,12 @@ open class Storage(
             val groups = configFactory.userGroups ?: return
             when {
                 address.isLegacyClosedGroup -> {
-                    val sessionId = GroupUtil.doubleDecodeGroupId(address.serialize())
+                    val accountId = GroupUtil.doubleDecodeGroupId(address.serialize())
                     val closedGroup = getGroup(address.toGroupString())
                     if (closedGroup != null && closedGroup.isActive) {
-                        val legacyGroup = groups.getOrConstructLegacyGroupInfo(sessionId)
+                        val legacyGroup = groups.getOrConstructLegacyGroupInfo(accountId)
                         groups.set(legacyGroup)
-                        val newVolatileParams = volatile.getOrConstructLegacyGroup(sessionId).copy(
+                        val newVolatileParams = volatile.getOrConstructLegacyGroup(accountId).copy(
                             lastRead = SnodeAPI.nowWithOffset,
                         )
                         volatile.set(newVolatileParams)
@@ -174,7 +176,7 @@ open class Storage(
             }
         } else if (address.isContact) {
             // non-standard contact prefixes: 15, 00 etc shouldn't be stored in config
-            if (SessionId(address.serialize()).prefix != IdPrefix.STANDARD) return
+            if (AccountId(address.serialize()).prefix != IdPrefix.STANDARD) return
             // don't update our own address into the contacts DB
             if (getUserPublicKey() != address.serialize()) {
                 val contacts = configFactory.contacts ?: return
@@ -196,9 +198,9 @@ open class Storage(
         if (address.isGroup) {
             val groups = configFactory.userGroups ?: return
             if (address.isLegacyClosedGroup) {
-                val sessionId = GroupUtil.doubleDecodeGroupId(address.serialize())
-                volatile.eraseLegacyClosedGroup(sessionId)
-                groups.eraseLegacyGroup(sessionId)
+                val accountId = GroupUtil.doubleDecodeGroupId(address.serialize())
+                volatile.eraseLegacyClosedGroup(accountId)
+                groups.eraseLegacyGroup(accountId)
             } else if (address.isCommunity) {
                 // these should be removed in the group leave / handling new configs
                 Log.w("Loki", "Thread delete called for open group address, expecting to be handled elsewhere")
@@ -207,7 +209,7 @@ open class Storage(
             }
         } else {
             // non-standard contact prefixes: 15, 00 etc shouldn't be stored in config
-            if (SessionId(address.serialize()).prefix != IdPrefix.STANDARD) return
+            if (AccountId(address.serialize()).prefix != IdPrefix.STANDARD) return
             volatile.eraseOneToOne(address.serialize())
             if (getUserPublicKey() != address.serialize()) {
                 val contacts = configFactory.contacts ?: return
@@ -352,10 +354,8 @@ open class Storage(
                     }
                     // otherwise recipient is one to one
                     recipient.isContactRecipient -> {
-                        // don't process non-standard session IDs though
-                        val sessionId = SessionId(recipient.address.serialize())
-                        if (sessionId.prefix != IdPrefix.STANDARD) return
-
+                        // don't process non-standard account IDs though
+                        if (AccountId(recipient.address.serialize()).prefix != IdPrefix.STANDARD) return
                         config.getOrConstructOneToOne(recipient.address.serialize())
                     }
                     else -> throw NullPointerException("Weren't expecting to have a convo with address ${recipient.address.serialize()}")
@@ -386,8 +386,8 @@ open class Storage(
         var messageID: Long? = null
         val senderAddress = fromSerialized(message.sender!!)
         val isUserSender = (message.sender!! == getUserPublicKey())
-        val isUserBlindedSender = message.threadID?.takeIf { it >= 0 }?.let { getOpenGroup(it)?.publicKey }
-            ?.let { SodiumUtilities.sessionId(getUserPublicKey()!!, message.sender!!, it) } ?: false
+        val isUserBlindedSender = message.threadID?.takeIf { it >= 0 }?.let(::getOpenGroup)?.publicKey
+            ?.let { SodiumUtilities.accountId(getUserPublicKey()!!, message.sender!!, it) } ?: false
         val group: Optional<SignalServiceGroup> = when {
             openGroupID != null -> Optional.of(SignalServiceGroup(openGroupID.toByteArray(), SignalServiceGroup.GroupType.PUBLIC_CHAT))
             groupPublicKey != null && groupPublicKey.startsWith(IdPrefix.GROUP.value) -> {
@@ -577,9 +577,11 @@ open class Storage(
         val name = userProfile.getName() ?: return
         val userPic = userProfile.getPic()
         val profileManager = SSKEnvironment.shared.profileManager
-        if (name.isNotEmpty()) {
-            TextSecurePreferences.setProfileName(context, name)
-            profileManager.setName(context, recipient, name)
+
+        name.takeUnless { it.isEmpty() }?.truncate(NAME_PADDED_LENGTH)?.let {
+            TextSecurePreferences.setProfileName(context, it)
+            profileManager.setName(context, recipient, it)
+            if (it != name) userProfile.setName(it)
         }
 
         // Update profile picture
@@ -663,7 +665,7 @@ open class Storage(
         val extracted = convos.all()
         for (conversation in extracted) {
             val threadId = when (conversation) {
-                is Conversation.OneToOne -> getThreadIdFor(conversation.sessionId, null, null, createThread = false)
+                is Conversation.OneToOne -> getThreadIdFor(conversation.accountId, null, null, createThread = false)
                 is Conversation.LegacyGroup -> getThreadIdFor("", conversation.groupId,null, createThread = false)
                 is Conversation.Community -> getThreadIdFor("",null, "${conversation.baseCommunityInfo.baseUrl.removeSuffix("/")}.${conversation.baseCommunityInfo.room}", createThread = false)
                 is Conversation.ClosedGroup -> getThreadIdFor(conversation.sessionId, null, null, createThread = false) // New groups will be managed bia libsession
@@ -695,7 +697,7 @@ open class Storage(
         val existingJoinUrls = existingCommunities.values.map { it.joinURL }
 
         val existingLegacyClosedGroups = getAllGroups(includeInactive = true).filter { it.isLegacyClosedGroup }
-        val lgcIds = lgc.map { it.sessionId.hexString() }
+        val lgcIds = lgc.map { it.accountId }
         val toDeleteClosedGroups = existingLegacyClosedGroups.filter { group ->
             GroupUtil.doubleDecodeGroupId(group.encodedId) !in lgcIds
         }
@@ -745,8 +747,8 @@ open class Storage(
         }
 
         for (group in lgc) {
-            val groupId = GroupUtil.doubleEncodeGroupID(group.sessionId.hexString())
-            val existingGroup = existingLegacyClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.sessionId.hexString() }
+            val groupId = GroupUtil.doubleEncodeGroupID(group.accountId)
+            val existingGroup = existingLegacyClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.accountId }
             val existingThread = existingGroup?.let { getThreadId(existingGroup.encodedId) }
             if (existingGroup != null) {
                 if (group.priority == PRIORITY_HIDDEN && existingThread != null) {
@@ -765,19 +767,19 @@ open class Storage(
                 createGroup(groupId, title, admins + members, null, null, admins, formationTimestamp)
                 setProfileSharing(fromSerialized(groupId), true)
                 // Add the group to the user's set of public keys to poll for
-                addClosedGroupPublicKey(group.sessionId.hexString())
+                addClosedGroupPublicKey(group.accountId)
                 // Store the encryption key pair
                 val keyPair = ECKeyPair(DjbECPublicKey(group.encPubKey), DjbECPrivateKey(group.encSecKey))
-                addClosedGroupEncryptionKeyPair(keyPair, group.sessionId.hexString(), SnodeAPI.nowWithOffset)
+                addClosedGroupEncryptionKeyPair(keyPair, group.accountId, SnodeAPI.nowWithOffset)
                 // Notify the PN server
-                PushRegistryV1.subscribeGroup(group.sessionId.hexString(), publicKey = localUserPublicKey)
+                PushRegistryV1.subscribeGroup(group.accountId, publicKey = localUserPublicKey)
                 // Notify the user
                 val threadID = getOrCreateThreadIdFor(fromSerialized(groupId))
                 threadDb.setDate(threadID, formationTimestamp)
                 insertOutgoingInfoMessage(context, groupId, SignalServiceGroup.Type.CREATION, title, members.map { it.serialize() }, admins.map { it.serialize() }, threadID, formationTimestamp)
                 // Don't create config group here, it's from a config update
                 // Start polling
-                LegacyClosedGroupPollerV2.shared.startPolling(group.sessionId.hexString())
+                LegacyClosedGroupPollerV2.shared.startPolling(group.accountId)
             }
             getThreadId(fromSerialized(groupId))?.let {
                 setExpirationConfiguration(
@@ -1095,7 +1097,7 @@ open class Storage(
             LibSessionGroupMember(ourSessionId, getUserProfile().displayName, admin = true)
         )
 
-        members.forEach { groupMembers.set(LibSessionGroupMember(it.sessionID, it.name).setInvited()) }
+        members.forEach { groupMembers.set(LibSessionGroupMember(it.accountID, it.name).setInvited()) }
 
         val groupKeys = configFactory.constructGroupKeysConfig(group.groupSessionId,
             info = groupInfo,
@@ -1184,7 +1186,7 @@ open class Storage(
             groupMembers.free()
             pollerFactory.updatePollers()
 
-            val memberArray = members.map(Contact::sessionID).toTypedArray()
+            val memberArray = members.map(Contact::accountID).toTypedArray()
             val job = InviteContactsJob(group.groupSessionId.hexString(), memberArray)
             JobQueue.shared.add(job)
             return Optional.of(groupRecipient)
@@ -1206,7 +1208,7 @@ open class Storage(
         groupVolatileConfig.lastRead = formationTimestamp
         volatiles.set(groupVolatileConfig)
         val groupInfo = GroupInfo.LegacyGroupInfo(
-            sessionId = SessionId.from(groupPublicKey),
+            accountId = groupPublicKey,
             name = name,
             members = members,
             priority = PRIORITY_VISIBLE,
@@ -1542,7 +1544,7 @@ open class Storage(
         }
         // Create each member's contact info if we have it
         filteredMembers.forEach { memberSessionId ->
-            val contact = getContactWithSessionID(memberSessionId)
+            val contact = getContactWithAccountID(memberSessionId)
             val name = contact?.name
             val url = contact?.profilePictureURL
             val key = contact?.profilePictureEncryptionKey
@@ -2151,8 +2153,8 @@ open class Storage(
         return threadId ?: -1
     }
 
-    override fun getContactWithSessionID(sessionID: String): Contact? {
-        return DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(sessionID)
+    override fun getContactWithAccountID(accountID: String): Contact? {
+        return DatabaseComponent.get(context).sessionContactDatabase().getContactWithAccountID(accountID)
     }
 
     override fun getAllContacts(): Set<Contact> {
@@ -2161,7 +2163,7 @@ open class Storage(
 
     override fun setContact(contact: Contact) {
         DatabaseComponent.get(context).sessionContactDatabase().setContact(contact)
-        val address = fromSerialized(contact.sessionID)
+        val address = fromSerialized(contact.accountID)
         if (!getRecipientApproved(address)) return
         val recipientHash = SSKEnvironment.shared.profileManager.contactUpdatedInternal(contact)
         val recipient = Recipient.from(context, address, false)
@@ -2183,8 +2185,8 @@ open class Storage(
     override fun addLibSessionContacts(contacts: List<LibSessionContact>, timestamp: Long) {
         val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val moreContacts = contacts.filter { contact ->
-            val id = SessionId(contact.id)
-            id.prefix?.isBlinded() == false || mappingDb.getBlindedIdMapping(contact.id).none { it.sessionId != null }
+            val id = AccountId(contact.id)
+            id.prefix?.isBlinded() == false || mappingDb.getBlindedIdMapping(contact.id).none { it.accountId != null }
         }
         val profileManager = SSKEnvironment.shared.profileManager
         moreContacts.forEach { contact ->
@@ -2236,8 +2238,8 @@ open class Storage(
         val threadDatabase = DatabaseComponent.get(context).threadDatabase()
         val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val moreContacts = contacts.filter { contact ->
-            val id = SessionId(contact.publicKey)
-            id.prefix != IdPrefix.BLINDED || mappingDb.getBlindedIdMapping(contact.publicKey).none { it.sessionId != null }
+            val id = AccountId(contact.publicKey)
+            id.prefix != IdPrefix.BLINDED || mappingDb.getBlindedIdMapping(contact.publicKey).none { it.accountId != null }
         }
         for (contact in moreContacts) {
             val address = fromSerialized(contact.publicKey)
@@ -2326,11 +2328,11 @@ open class Storage(
             val groups = configFactory.userGroups ?: return
             when {
                 threadRecipient.isLegacyClosedGroupRecipient -> {
-                    val sessionId = GroupUtil.doubleDecodeGroupId(threadRecipient.address.serialize())
-                    val newGroupInfo = groups.getOrConstructLegacyGroupInfo(sessionId).copy (
-                        priority = if (isPinned) PRIORITY_PINNED else PRIORITY_VISIBLE
-                    )
-                    groups.set(newGroupInfo)
+                    threadRecipient.address.serialize()
+                        .let(GroupUtil::doubleDecodeGroupId)
+                        .let(groups::getOrConstructLegacyGroupInfo)
+                        .copy (priority = if (isPinned) PRIORITY_PINNED else PRIORITY_VISIBLE)
+                        .let(groups::set)
                 }
                 threadRecipient.isClosedGroupV2Recipient -> {
                     val newGroupInfo = groups.getOrConstructClosedGroup(threadRecipient.address.serialize()).copy (
@@ -2515,14 +2517,8 @@ open class Storage(
                     val address = recipient.address.serialize()
                     val blindedId = when {
                         recipient.isGroupRecipient -> null
-                        recipient.isOpenGroupInboxRecipient -> {
-                            GroupUtil.getDecodedOpenGroupInboxSessionId(address)
-                        }
-                        else -> {
-                            if (SessionId(address).prefix == IdPrefix.BLINDED) {
-                                address
-                            } else null
-                        }
+                        recipient.isOpenGroupInboxRecipient -> GroupUtil.getDecodedOpenGroupInboxAccountId(address)
+                        else -> address.takeIf { AccountId(it).prefix == IdPrefix.BLINDED }
                     } ?: continue
                     mappingDb.getBlindedIdMapping(blindedId).firstOrNull()?.let {
                         mappings[address] = it
@@ -2530,25 +2526,24 @@ open class Storage(
                 }
             }
             for (mapping in mappings) {
-                if (!SodiumUtilities.sessionId(senderPublicKey, mapping.value.blindedId, mapping.value.serverId)) {
+                if (!SodiumUtilities.accountId(senderPublicKey, mapping.value.blindedId, mapping.value.serverId)) {
                     continue
                 }
-                mappingDb.addBlindedIdMapping(mapping.value.copy(sessionId = senderPublicKey))
+                mappingDb.addBlindedIdMapping(mapping.value.copy(accountId = senderPublicKey))
 
                 val blindedThreadId = threadDB.getOrCreateThreadIdFor(Recipient.from(context, fromSerialized(mapping.key), false))
                 mmsDb.updateThreadId(blindedThreadId, threadId)
                 smsDb.updateThreadId(blindedThreadId, threadId)
                 threadDB.deleteConversation(blindedThreadId)
             }
-            recipientDb.setApproved(sender, true)
-            recipientDb.setApprovedMe(sender, true)
+            setRecipientApproved(sender, true)
+            setRecipientApprovedMe(sender, true)
 
             // Also update the config about this contact
             configFactory.contacts?.upsertContact(sender.address.serialize()) {
                 approved = true
                 approvedMe = true
             }
-
             val message = IncomingMediaMessage(
                 sender.address,
                 response.sentTimestamp!!,
@@ -2646,20 +2641,20 @@ open class Storage(
     ): BlindedIdMapping {
         val db = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val mapping = db.getBlindedIdMapping(blindedId).firstOrNull() ?: BlindedIdMapping(blindedId, null, server, serverPublicKey)
-        if (mapping.sessionId != null) {
+        if (mapping.accountId != null) {
             return mapping
         }
         getAllContacts().forEach { contact ->
-            val sessionId = SessionId(contact.sessionID)
-            if (sessionId.prefix == IdPrefix.STANDARD && SodiumUtilities.sessionId(sessionId.hexString(), blindedId, serverPublicKey)) {
-                val contactMapping = mapping.copy(sessionId = sessionId.hexString())
+            val accountId = AccountId(contact.accountID)
+            if (accountId.prefix == IdPrefix.STANDARD && SodiumUtilities.accountId(accountId.hexString, blindedId, serverPublicKey)) {
+                val contactMapping = mapping.copy(accountId = accountId.hexString)
                 db.addBlindedIdMapping(contactMapping)
                 return contactMapping
             }
         }
         db.getBlindedIdMappingsExceptFor(server).forEach {
-            if (SodiumUtilities.sessionId(it.sessionId!!, blindedId, serverPublicKey)) {
-                val otherMapping = mapping.copy(sessionId = it.sessionId)
+            if (SodiumUtilities.accountId(it.accountId!!, blindedId, serverPublicKey)) {
+                val otherMapping = mapping.copy(accountId = it.accountId)
                 db.addBlindedIdMapping(otherMapping)
                 return otherMapping
             }
@@ -2785,7 +2780,7 @@ open class Storage(
 
         if (recipient.isLegacyClosedGroupRecipient) {
             val userGroups = configFactory.userGroups ?: return
-            val groupPublicKey = GroupUtil.addressToGroupSessionId(recipient.address)
+            val groupPublicKey = GroupUtil.addressToGroupAccountId(recipient.address)
             val groupInfo = userGroups.getLegacyGroupInfo(groupPublicKey)
                 ?.copy(disappearingTimer = expiryMode.expirySeconds) ?: return
             userGroups.set(groupInfo)
@@ -2851,3 +2846,11 @@ open class Storage(
         }
     }
 }
+
+/**
+ * Truncate a string to a specified number of bytes
+ *
+ * This could split multi-byte characters/emojis.
+ */
+private fun String.truncate(sizeInBytes: Int): String =
+    toByteArray().takeIf { it.size > sizeInBytes }?.take(sizeInBytes)?.toByteArray()?.let(::String) ?: this

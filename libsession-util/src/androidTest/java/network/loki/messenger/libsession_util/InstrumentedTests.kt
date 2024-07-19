@@ -425,7 +425,7 @@ class InstrumentedTests {
         assertEquals(2, convos.sizeOneToOnes())
 
         val numErased = convos.eraseAll { convo ->
-            convo is Conversation.OneToOne && convo.sessionId == definitelyRealId
+            convo is Conversation.OneToOne && convo.accountId == definitelyRealId
         }
         assertEquals(1, numErased)
         assertEquals(1, convos.sizeOneToOnes())
@@ -510,7 +510,7 @@ class InstrumentedTests {
 
         val c = convos.getOrConstructOneToOne(definitelyRealId)
 
-        assertEquals(definitelyRealId, c.sessionId)
+        assertEquals(definitelyRealId, c.accountId)
         assertEquals(0, c.lastRead)
 
         assertFalse(convos.needsPush())
@@ -561,7 +561,7 @@ class InstrumentedTests {
 
         val x1 = convos2.getOneToOne(definitelyRealId)!!
         assertEquals(nowMs, x1.lastRead)
-        assertEquals(definitelyRealId, x1.sessionId)
+        assertEquals(definitelyRealId, x1.accountId)
         assertEquals(false, x1.unread)
 
         val x2 = convos2.getCommunity("http://EXAMPLE.org:5678", "sudokuRoom")!!
@@ -605,7 +605,7 @@ class InstrumentedTests {
             val allConvos = conv.all()
             for (convo in allConvos) {
                 when (convo) {
-                    is Conversation.OneToOne -> seen.add("1-to-1: ${convo.sessionId}")
+                    is Conversation.OneToOne -> seen.add("1-to-1: ${convo.accountId}")
                     is Conversation.Community -> seen.add("og: ${convo.baseCommunityInfo.baseUrl}/r/${convo.baseCommunityInfo.room}")
                     is Conversation.LegacyGroup -> seen.add("cl: ${convo.groupId}")
                     is Conversation.ClosedGroup -> TODO()
@@ -627,7 +627,7 @@ class InstrumentedTests {
 
         assertEquals(1, convos.allOneToOnes().size)
         assertEquals("051111111111111111111111111111111111111111111111111111111111111111",
-            convos.allOneToOnes().map(Conversation.OneToOne::sessionId).first()
+            convos.allOneToOnes().map(Conversation.OneToOne::accountId).first()
         )
         assertEquals(1, convos.allCommunities().size)
         assertEquals("http://example.org:5678",

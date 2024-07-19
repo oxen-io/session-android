@@ -14,14 +14,14 @@
         android:contentDescription="@string/AccessibilityId_delete_just_for_me"
         style="@style/BottomSheetActionItem"
         android:text="@string/delete_message_for_me"
-        android:textColor="@color/destructive"/>
+        android:textColor="?danger"/>
 
     <TextView
         android:id="@+id/deleteForEveryoneTextView"
         android:contentDescription="@string/delete_message_for_everyone"
         style="@style/BottomSheetActionItem"
         android:text="@string/delete_message_for_everyone"
-        android:textColor="@color/destructive"/>
+        android:textColor="?danger"/>
 
     <TextView
         android:id="@+id/cancelTextView"

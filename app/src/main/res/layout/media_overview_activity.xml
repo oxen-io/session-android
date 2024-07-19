@@ -21,7 +21,7 @@
             <TextView
                 android:visibility="gone"
                 android:layout_marginHorizontal="@dimen/medium_spacing"
-                android:textColor="@color/destructive"
+                android:textColor="?attr/danger"
                 android:layout_gravity="center_vertical|end"
                 android:id="@+id/clearMedia"
                 android:text="@string/media_overview_activity__clear_media"

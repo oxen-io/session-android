@@ -31,6 +31,7 @@ import org.session.libsession.messaging.sending_receiving.link_preview.LinkPrevi
 import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.messaging.sending_receiving.pollers.LegacyClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.WebRtcUtils
 import org.session.libsession.snode.SnodeAPI
@@ -308,7 +309,7 @@ fun MessageReceiver.handleVisibleMessage(
     val userBlindedKey = openGroupID?.let {
         val openGroup = storage.getOpenGroup(threadID) ?: return@let null
         val blindedKey = SodiumUtilities.blindedKeyPair(openGroup.publicKey, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) ?: return@let null
-        SessionId(
+        AccountId(
             IdPrefix.BLINDED, blindedKey.publicKey.asBytes
         ).hexString()
     }
@@ -459,7 +460,7 @@ fun MessageReceiver.handleOpenGroupReactions(
     val openGroup = storage.getOpenGroup(threadId)
     val blindedPublicKey = openGroup?.publicKey?.let { serverPublicKey ->
         SodiumUtilities.blindedKeyPair(serverPublicKey, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!)
-            ?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString() }
+            ?.let { AccountId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString() }
     }
     for ((emoji, reaction) in reactions) {
         val pendingUserReaction = OpenGroupApi.pendingReactions

@@ -127,9 +127,6 @@
     <string name="MediaOverviewActivity_Select_all">ជ្រើសរើសទាំងអស់</string>
     <string name="MediaOverviewActivity_collecting_attachments">កំពុងប្រមូលឯកសារភ្ជាប់...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">សារចម្រុះ</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">កំពុងទាញយកសារ MMS </string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">មានបញ្ហាទាញយកសារMMS សូមចុច ដើម្បីព្យាយាមម្តងទៀត</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">ផ្ញើទៅកាន់ %s</string>
     <!-- MediaSendActivity -->

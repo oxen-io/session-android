@@ -57,7 +57,7 @@ sealed class GroupInfo {
     }
 
     data class LegacyGroupInfo(
-        val sessionId: SessionId,
+        val accountId: String,
         val name: String,
         val members: Map<String, Boolean>,
         val encPubKey: ByteArray,
@@ -77,7 +77,7 @@ sealed class GroupInfo {
 
             other as LegacyGroupInfo
 
-            if (sessionId != other.sessionId) return false
+            if (accountId != other.accountId) return false
             if (name != other.name) return false
             if (members != other.members) return false
             if (!encPubKey.contentEquals(other.encPubKey)) return false
@@ -90,7 +90,7 @@ sealed class GroupInfo {
         }
 
         override fun hashCode(): Int {
-            var result = sessionId.hashCode()
+            var result = accountId.hashCode()
             result = 31 * result + name.hashCode()
             result = 31 * result + members.hashCode()
             result = 31 * result + encPubKey.contentHashCode()

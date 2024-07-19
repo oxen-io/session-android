@@ -539,13 +539,14 @@ class ConversationReactionOverlay : FrameLayout {
         if (!containsControlMessage && hasText) {
             items += ActionItem(R.attr.menu_copy_icon, R.string.copy, { handleActionItemClicked(Action.COPY_MESSAGE) })
         }
-        // Copy Session ID
+        // Copy Account ID
         if (recipient.isGroupRecipient && !recipient.isCommunityRecipient && message.recipient.address.toString() != userPublicKey) {
-            items += ActionItem(R.attr.menu_copy_icon, R.string.activity_conversation_menu_copy_session_id, { handleActionItemClicked(Action.COPY_SESSION_ID) })
+            items += ActionItem(R.attr.menu_copy_icon, R.string.activity_conversation_menu_copy_account_id, { handleActionItemClicked(Action.COPY_ACCOUNT_ID) })
         }
         // Delete message
         if (userCanDeleteSelectedItems(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) }, R.string.AccessibilityId_delete_message, message.subtitle, R.color.destructive)
+            items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) },
+                R.string.AccessibilityId_delete_message, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
         }
         // Ban user
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
@@ -689,7 +690,7 @@ class ConversationReactionOverlay : FrameLayout {
         RESYNC,
         DOWNLOAD,
         COPY_MESSAGE,
-        COPY_SESSION_ID,
+        COPY_ACCOUNT_ID,
         VIEW_INFO,
         SELECT,
         DELETE,

@@ -49,7 +49,7 @@ class UserView : LinearLayout {
         val isLocalUser = user.isLocalNumber
         fun getUserDisplayName(publicKey: String): String {
             if (isLocalUser) return context.getString(R.string.MessageRecord_you)
-            val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
+            val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithAccountID(publicKey)
             return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
         }
         val address = user.address.serialize()

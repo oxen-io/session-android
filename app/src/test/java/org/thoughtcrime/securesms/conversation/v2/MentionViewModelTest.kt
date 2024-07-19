@@ -5,7 +5,6 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -92,14 +91,14 @@ class MentionViewModelTest {
             contactDatabase = mock {
                 on { getContacts(any()) } doAnswer {
                     val ids = it.arguments[0] as Collection<String>
-                    memberContacts.filter { contact -> contact.sessionID in ids }
+                    memberContacts.filter { it.accountID in ids }
                 }
             },
             memberDatabase = mock {
                 on { getGroupMembersRoles(eq(openGroup.id), any()) } doAnswer {
                     val memberIDs = it.arguments[1] as Collection<String>
                     memberIDs.associateWith { id ->
-                        threadMembers.first { m -> m.pubKey == id }.roles
+                        threadMembers.first { it.pubKey == id }.roles
                     }
                 }
             },

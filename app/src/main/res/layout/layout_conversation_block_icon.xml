@@ -13,13 +13,13 @@
         android:layout_width="13dp"
         android:layout_height="13dp"
         android:src="@drawable/ic_baseline_block_24"
-        app:tint="@color/destructive" />
+        app:tint="?danger" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:textColor="@color/destructive"
+        android:textColor="?danger"
         android:textSize="16sp"
         android:text="@string/recipient_preferences__block"
         />

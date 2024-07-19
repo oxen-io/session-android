@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Valitse kaikki</string>
     <string name="MediaOverviewActivity_collecting_attachments">Kerätään liitetiedostoja...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediaviesti</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Ladataan MMS-viestiä</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Virhe ladattaessa MMS-viestiä. Yritä uudelleen napauttamalla.</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Lähetä yhteystiedolle %s</string>
     <!-- MediaSendActivity -->
@@ -526,27 +523,24 @@ on viallinen!</string>
     <string name="copied_to_clipboard">Kopioitu leikepöydälle</string>
     <string name="next">Seuraava</string>
     <string name="share">Jaa</string>
-    <string name="invalid_session_id">Virheellinen Session ID</string>
+    <string name="invalid_account_id">Virheellinen Account ID</string>
     <string name="cancel">Peruuta</string>
-    <string name="your_session_id">Sinun Session ID</string>
-    <string name="activity_landing_title_2">Session alkaa täältä...</string>
-    <string name="activity_landing_register_button_title">Tee Session ID</string>
-    <string name="activity_landing_restore_button_title">Jatka Istuntoasi</string>
+    <string name="your_account_id">Sinun Account ID</string>
     <string name="view_fake_chat_bubble_1">Mikä on Session?</string>
     <string name="view_fake_chat_bubble_2">Se on hajautettu, salattu viestisovellus</string>
     <string name="view_fake_chat_bubble_3">Joten se ei kerää henkilökohtaisia tietoja tai keskustelun metatietoja? Miten se toimii?</string>
     <string name="view_fake_chat_bubble_4">Käyttämällä kehittyneitä nimettömiä reititys- ja päästä päähän -salaustekniikoita.</string>
     <string name="view_fake_chat_bubble_5">Ystävät eivät anna ystävien käyttää vaarantunutta viestintäsovellusta. Olet tervetullut.</string>
-    <string name="activity_register_title">Sano tervehdys Session tunnuksellesi</string>
-    <string name="activity_register_explanation">Session ID on yksilöllinen osoite, jonka avulla muut voivat ottaa sinuun yhteyttä Sessionissa. Sillä ei ole yhteyttä todelliseen identiteettiisi, Session ID on täysin anonyymi ja yksityinen tarkoituksella.</string>
+
+
     <string name="activity_restore_title">Palauta sinun tili</string>
     <string name="activity_restore_explanation">Syötä palautuslause joka annettiin sinulle, kun olet rekisteröitynyt palauttamaan tilisi.</string>
     <string name="activity_restore_seed_edit_text_hint">Syötä palautuslauseesi</string>
-    <string name="activity_display_name_title_2">Valitse näyttönimi</string>
-    <string name="activity_display_name_explanation">Tämä on nimesi, kun käytät Sessionia. Se voi olla oikea nimesi, kutsumanimi tai mitä tahansa muuta haluat.</string>
-    <string name="activity_display_name_edit_text_hint">Syötä näyttönimi</string>
-    <string name="activity_display_name_display_name_missing_error">Valitse näyttönimi</string>
-    <string name="activity_display_name_display_name_too_long_error">Valitse lyhyempi näyttönimi</string>
+    <string name="displayNamePick">Valitse näyttönimi</string>
+    <string name="displayNameDescription">Tämä on nimesi, kun käytät Sessionia. Se voi olla oikea nimesi, kutsumanimi tai mitä tahansa muuta haluat.</string>
+    <string name="displayNameEnter">Syötä näyttönimi</string>
+    <string name="displayNameErrorDescription">Valitse näyttönimi</string>
+    <string name="displayNameErrorDescriptionShorter">Valitse lyhyempi näyttönimi</string>
     <string name="activity_pn_mode_recommended_option_tag">Suositeltu</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Valitse vaihtoehto</string>
     <string name="activity_home_empty_state_message">Sinulla ei ole yhteystietoja</string>
@@ -555,11 +549,6 @@ on viallinen!</string>
     <string name="activity_home_leaving_group_failed_message">"Ryhmästä ei voitu poistua"</string>
     <string name="activity_home_delete_conversation_dialog_message">Haluatko varmasti poistaa tämän keskustelun?</string>
     <string name="activity_home_conversation_deleted_message">Keskustelu poistettu</string>
-    <string name="activity_seed_title">Palautuslauseke</string>
-    <string name="activity_seed_title_2">Tutustu palautuslauseesi</string>
-    <string name="activity_seed_explanation">Sinun palautuslause on pääavain Session tunnukseesi — voit käyttää sitä palauttamaan Session tunnuksesi jos menetät pääsyn laitteeseen. Säilytä palautuslauseesi turvallisessa paikassa, ja älä anna sitä kenellekään.</string>
-    <string name="activity_seed_reveal_button_title">Pidä pohjassa paljastaaksesi</string>
-    <string name="view_seed_reminder_title">Olet melkein valmis! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Suojaa tilisi tallentamalla palautuslauseke</string>
     <string name="view_seed_reminder_subtitle_2">Napauta ja pidä piiloteettuja sanoja paljastaaksesi palautuslauseen, ja säästä se turvallisesti suojataksesi Session tilisi.</string>
     <string name="view_seed_reminder_subtitle_3">Varmista, että säilytät palautuslauseesi turvallisessa paikassa</string>
@@ -572,11 +561,11 @@ on viallinen!</string>
     <string name="activity_path_learn_more_button_title">Lisätietoja</string>
     <string name="activity_path_resolving_progress">Ratkaistaan…</string>
     <string name="activity_create_private_chat_title">Uusi Istunto</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">Anna Session ID</string>
+    <string name="activity_create_private_chat_enter_account_id_tab_title">Anna Account ID</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">Lue QR-koodi</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">Skannaa käyttäjän QR-koodi aloittaaksesi istunnon. QR-koodit löytyvät napauttamalla QR-koodin kuvaketta tilin asetuksista.</string>
-    <string name="fragment_enter_public_key_edit_text_hint">Syötä Session ID tai ONS-nimi</string>
-    <string name="fragment_enter_public_key_explanation">Käyttäjät voivat jakaa Session tunnuksensa menemällä tiliasetuksiinsa ja painamalla \"Jaa Session ID\" tai jakamalla QR-koodin.</string>
+    <string name="fragment_enter_public_key_edit_text_hint">Syötä Account ID tai ONS-nimi</string>
+    <string name="fragment_enter_public_key_explanation">Käyttäjät voivat jakaa Session tunnuksensa menemällä tiliasetuksiinsa ja painamalla \"Jaa Account ID\" tai jakamalla QR-koodin.</string>
     <string name="fragment_enter_public_key_error_message">Tarkista istunnon tunnus tai ONS nimi ja yritä uudelleen.</string>
     <string name="fragment_scan_qr_code_camera_access_explanation">Session tarvitsee kameran käyttöoikeuden skannatakseensa QR-koodit</string>
     <string name="fragment_scan_qr_code_grant_camera_access_button_title">Myönnä Kameran Käyttöoikeus</string>
@@ -604,7 +593,6 @@ on viallinen!</string>
     <string name="activity_settings_devices_button_title">Laitteet</string>
     <string name="activity_settings_invite_button_title">Kutsu ystäviä</string>
     <string name="activity_settings_faq_button_title">UKK</string>
-    <string name="activity_settings_recovery_phrase_button_title">Palautuslauseke</string>
     <string name="activity_settings_clear_all_data_button_title">Tyhjennä tiedot</string>
     <string name="activity_settings_clear_all_data_and_network_button_title">Tyhjennä Tiedot Mukaan Lukien Verkko</string>
     <string name="activity_settings_help_translate_session">Auta meitä kääntämään Session</string>
@@ -617,8 +605,6 @@ on viallinen!</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Sinulle ilmoitetaan uusista viesteistä luotettavasti ja viivyttelemättä Applen ilmoituspalvelua käyttäen.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Vaihda nimi</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Poista laitteen linkitys</string>
-    <string name="dialog_seed_title">Palautuslauseke</string>
-    <string name="dialog_seed_explanation">Tämä on palautuslause. Sen avulla voit palauttaa tai siirtää Session tunnuksesi uudelle laitteelle.</string>
     <string name="dialog_clear_all_data_title">Tyhjennä tiedot</string>
     <string name="dialog_clear_all_data_explanation">Tämä poistaa pysyvästi viestit, istunnot ja yhteystiedot.</string>
     <string name="dialog_clear_all_data_network_explanation">Haluatko tyhjentää datan vain tästä laitteesta vai poistaa koko tilin?</string>
@@ -652,7 +638,7 @@ on viallinen!</string>
     <string name="dialog_ui_mode_option_day">Päivä</string>
     <string name="dialog_ui_mode_option_night">Yö</string>
     <string name="dialog_ui_mode_option_system_default">Järjestelmän oletus</string>
-    <string name="activity_conversation_menu_copy_session_id">Kopioi Session ID</string>
+    <string name="activity_conversation_menu_copy_account_id">Kopioi Account ID</string>
     <string name="attachment">Liite</string>
     <string name="attachment_type_voice_message">Ääniviesti</string>
     <string name="details">Lisätiedot</string>
@@ -662,7 +648,6 @@ on viallinen!</string>
     <string name="activity_backup_restore_explanation_1">Valitse varmuuskopiotiedosto ja kirjoita salasana, jonka kanssa se on luotu.</string>
     <string name="activity_backup_restore_passphrase">30-merkkinen pääsykoodi</string>
     <string name="activity_link_device_skip_prompt">Tämä kestää jonkin aikaa, haluaisitko ohittaa?</string>
-    <string name="activity_link_device_link_device">Yhdistä laite</string>
     <string name="activity_link_device_recovery_phrase">Palautusvirke</string>
     <string name="activity_link_device_scan_qr_code">Skannaa QR-koodi</string>
     <string name="activity_link_device_qr_message">Siirry asetuksiin → palautusvirke toisella laitteellasi näyttääksesi QR-koodisi.</string>
@@ -673,7 +658,6 @@ on viallinen!</string>
     <string name="activity_pn_mode_slow_mode">Hidastila</string>
     <string name="activity_pn_mode_fast_mode_explanation">Sinulle ilmoitetaan uusista viesteistä luotettavasti ja viivyttelemättä Applen ilmoituspalvelua käyttäen.</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session tarkistaa taustalla ajoittain uudet viestit.</string>
-    <string name="fragment_recovery_phrase_title">Palautusvirke</string>
     <string name="activity_prompt_passphrase_session_locked">Session on lukittu</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Avaa napauttamalla</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Anna nimimerkki</string>

@@ -21,6 +21,11 @@ import androidx.test.platform.app.InstrumentationRegistry
 import network.loki.messenger.util.sendMessage
 import network.loki.messenger.util.setupLoggedInState
 import network.loki.messenger.util.waitFor
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import com.adevinta.android.barista.interaction.PermissionGranter
+import network.loki.messenger.util.InputBarButtonDrawableMatcher.Companion.inputButtonWithDrawable
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
@@ -43,15 +48,61 @@ class HomeActivityTests {
 
     private val activityMonitor = Instrumentation.ActivityMonitor(ConversationActivityV2::class.java.name, null, false)
 
+    private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
+
     @Before
     fun setUp() {
         InstrumentationRegistry.getInstrumentation().addMonitor(activityMonitor)
+
     }
 
     @After
     fun tearDown() {
         InstrumentationRegistry.getInstrumentation().removeMonitor(activityMonitor)
     }
+
+    private fun sendMessage(messageToSend: String, linkPreview: LinkPreview? = null) {
+        // assume in chat activity
+        onView(allOf(isDescendantOfA(withId(R.id.inputBar)),withId(R.id.inputBarEditText))).perform(ViewActions.replaceText(messageToSend))
+        if (linkPreview != null) {
+            val activity = activityMonitor.waitForActivity() as ConversationActivityV2
+            val glide = GlideApp.with(activity)
+            activity.findViewById<InputBar>(R.id.inputBar).updateLinkPreviewDraft(glide, linkPreview)
+        }
+        onView(allOf(isDescendantOfA(withId(R.id.inputBar)),inputButtonWithDrawable(R.drawable.ic_arrow_up))).perform(ViewActions.click())
+        // TODO: text can flaky on cursor reload, figure out a better way to wait for the UI to settle with new data
+        onView(isRoot()).perform(waitFor(500))
+    }
+
+    private fun objectFromDesc(id: Int) = device.findObject(By.desc(context.getString(id)))
+
+    private fun setupLoggedInState(hasViewedSeed: Boolean = false) {
+        // landing activity
+        objectFromDesc(R.string.onboardingAccountCreate).click()
+
+        // display name selection
+        objectFromDesc(R.string.displayNameEnter).click()
+        device.pressKeyCode(65)
+        device.pressKeyCode(66)
+        device.pressKeyCode(67)
+
+        // Continue with display name
+        objectFromDesc(R.string.continue_2).click()
+
+        // Continue with default push notification setting
+        objectFromDesc(R.string.continue_2).click()
+
+        // PN select
+        if (hasViewedSeed) {
+            // has viewed seed is set to false after register activity
+            TextSecurePreferences.setHasViewedSeed(InstrumentationRegistry.getInstrumentation().targetContext, true)
+        }
+        // allow notification permission
+        PermissionGranter.allowPermissionsIfNeeded(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
 
     private fun goToMyChat() {
         onView(withId(R.id.newConversationButton)).perform(ViewActions.click())
@@ -74,8 +125,8 @@ class HomeActivityTests {
     @Test
     fun testLaunches_dismiss_seedView() {
         setupLoggedInState()
-        onView(allOf(withId(R.id.button), isDescendantOfA(withId(R.id.seedReminderView)))).perform(ViewActions.click())
-        onView(withId(R.id.copyButton)).perform(ViewActions.click())
+        objectFromDesc(R.string.continue_2).click()
+        objectFromDesc(R.string.copy).click()
         pressBack()
         onView(withId(R.id.seedReminderView)).check(matches(not(isDisplayed())))
     }
@@ -96,7 +147,7 @@ class HomeActivityTests {
     fun testChat_withSelf() {
         setupLoggedInState()
         goToMyChat()
-        TextSecurePreferences.setLinkPreviewsEnabled(InstrumentationRegistry.getInstrumentation().targetContext, true)
+        TextSecurePreferences.setLinkPreviewsEnabled(context, true)
         with (activityMonitor.waitForActivity() as ConversationActivityV2) {
             sendMessage("howdy")
             sendMessage("test")

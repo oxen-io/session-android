@@ -15,11 +15,13 @@
         app:layout_constraintEnd_toStartOf="@+id/search_cancel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="40dp"
         android:orientation="horizontal">
         <ImageView
             android:layout_gravity="center_vertical"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/ic_baseline_search_24"
             android:scaleType="centerInside"
             app:tint="?searchIconColor"
@@ -42,8 +44,8 @@
             android:background="?selectableItemBackgroundBorderless"
             android:src="@drawable/ic_close_white_18dp"
             android:layout_gravity="center_vertical"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             app:tint="?searchIconColor" />
     </LinearLayout>
     <Button

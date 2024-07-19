@@ -216,7 +216,7 @@ interface StorageProtocol {
     fun clearMedia(threadID: Long, fromUser: Address? = null): Boolean
 
     // Contacts
-    fun getContactWithSessionID(sessionID: String): Contact?
+    fun getContactWithAccountID(accountID: String): Contact?
     fun getAllContacts(): Set<Contact>
     fun setContact(contact: Contact)
     fun getRecipientForThread(threadId: Long): Recipient?

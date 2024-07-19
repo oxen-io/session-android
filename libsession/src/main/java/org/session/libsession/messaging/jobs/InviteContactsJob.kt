@@ -121,7 +121,7 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                 when (failures.size) {
                     1 -> {
                         val first = failures.first()
-                        val firstString = first.memberSessionId.let { storage.getContactWithSessionID(it) }?.name
+                        val firstString = first.memberSessionId.let { storage.getContactWithAccountID(it) }?.name
                             ?: truncateIdForDisplay(first.memberSessionId)
                         withContext(Dispatchers.Main) {
                             toaster.toast(R.string.InviteContacts_failed_single, Toast.LENGTH_LONG,
@@ -134,9 +134,9 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                     }
                     2 -> {
                         val (first, second) = failures
-                        val firstString = first.memberSessionId.let { storage.getContactWithSessionID(it) }?.name
+                        val firstString = first.memberSessionId.let { storage.getContactWithAccountID(it) }?.name
                             ?: truncateIdForDisplay(first.memberSessionId)
-                        val secondString = second.memberSessionId.let { storage.getContactWithSessionID(it) }?.name
+                        val secondString = second.memberSessionId.let { storage.getContactWithAccountID(it) }?.name
                             ?: truncateIdForDisplay(second.memberSessionId)
 
                         withContext(Dispatchers.Main) {
@@ -151,7 +151,7 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                     }
                     else -> {
                         val first = failures.first()
-                        val firstString = first.memberSessionId.let { storage.getContactWithSessionID(it) }?.name
+                        val firstString = first.memberSessionId.let { storage.getContactWithAccountID(it) }?.name
                             ?: truncateIdForDisplay(first.memberSessionId)
                         val remaining = failures.size - 1
                         withContext(Dispatchers.Main) {

@@ -88,7 +88,7 @@ class LibSessionTests {
         val applicationContext = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
         val storage = applicationContext.applySpiedStorage()
 
-        val newContactId = randomSessionId()
+        val newContactId = randomAccountId()
         val singleContact = Contact(
             id = newContactId,
             approved = true,
@@ -109,7 +109,7 @@ class LibSessionTests {
         val storageSpy = spy(app.storage)
         app.storage = storageSpy
 
-        val randomRecipient = randomSessionId()
+        val randomRecipient = randomAccountId()
         val newContact = Contact(
             id = randomRecipient,
             approved = true,
@@ -144,7 +144,7 @@ class LibSessionTests {
         app.storage = storageSpy
 
         // Initial state
-        val randomRecipient = randomSessionId()
+        val randomRecipient = randomAccountId()
         val currentContact = Contact(
             id = randomRecipient,
             approved = true,

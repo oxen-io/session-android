@@ -116,10 +116,10 @@ object ConfigurationMessageUtilities {
         val storage = MessagingModuleConfiguration.shared.storage
         val localUserKey = storage.getUserPublicKey() ?: return null
         val contactsWithSettings = storage.getAllContacts().filter { recipient ->
-            recipient.sessionID != localUserKey && recipient.sessionID.startsWith(IdPrefix.STANDARD.value)
-                    && storage.getThreadId(recipient.sessionID) != null
+            recipient.accountID != localUserKey && recipient.accountID.startsWith(IdPrefix.STANDARD.value)
+                    && storage.getThreadId(recipient.accountID) != null
         }.map { contact ->
-            val address = Address.fromSerialized(contact.sessionID)
+            val address = Address.fromSerialized(contact.accountID)
             val thread = storage.getThreadId(address)
             val isPinned = if (thread != null) {
                 storage.isPinned(thread)
@@ -138,7 +138,7 @@ object ConfigurationMessageUtilities {
             }
 
             val contactInfo = Contact(
-                id = contact.sessionID,
+                id = contact.accountID,
                 name = contact.name.orEmpty(),
                 nickname = contact.nickname.orEmpty(),
                 blocked = settings.isBlocked,
@@ -231,7 +231,7 @@ object ConfigurationMessageUtilities {
             val admins = group.admins.map { it.serialize() to true }.toMap()
             val members = group.members.filterNot { it.serialize() !in admins.keys }.map { it.serialize() to false }.toMap()
             GroupInfo.LegacyGroupInfo(
-                sessionId = SessionId.from(groupPublicKey),
+                accountId = SessionId.from(groupPublicKey),
                 name = group.title,
                 members = admins + members,
                 priority = if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,

@@ -172,9 +172,6 @@
     <string name="MediaOverviewActivity_Select_all">Dewis popeth</string>
     <string name="MediaOverviewActivity_collecting_attachments">Casglu atodiadau...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Neges amlgyfrwng</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Llwytho i lawr neges MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Gwall wrth lawrlwytho neges MMS, tapio i geisio eto</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Anfon i %s</string>
     <!-- MediaSendActivity -->

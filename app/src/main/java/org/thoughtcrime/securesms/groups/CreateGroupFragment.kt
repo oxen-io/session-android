@@ -25,6 +25,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
+import network.loki.messenger.R
+import network.loki.messenger.databinding.FragmentCreateGroupBinding
+import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.successUi
+import org.session.libsession.messaging.sending_receiving.MessageSender
+import org.session.libsession.messaging.sending_receiving.groupSizeLimit
+import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.Device
+import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.recipients.Recipient
+import org.thoughtcrime.securesms.contacts.SelectContactsAdapter
+import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.groups.compose.CreateGroup
 import org.thoughtcrime.securesms.groups.compose.CreateGroupNavGraph
@@ -37,7 +49,13 @@ import org.thoughtcrime.securesms.ui.AppTheme
 @AndroidEntryPoint
 class CreateGroupFragment : Fragment() {
 
-    lateinit var delegate: NewConversationDelegate
+    @Inject
+    lateinit var device: Device
+
+    private lateinit var binding: FragmentCreateGroupBinding
+    private val viewModel: CreateGroupViewModel by viewModels()
+
+    lateinit var delegate: StartConversationDelegate
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -186,9 +186,6 @@
     <string name="MediaOverviewActivity_Select_all">أختر الكل</string>
     <string name="MediaOverviewActivity_collecting_attachments">جارٍ جمع المرفقات...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">رسالة وسائط متعددة</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">تنزيل رسالة الوسائط المتعددة</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">خطأ في تنزيل رسالة الوسائط المتعددة، انقر لاعادة المحاولة</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">إرسال إلى %s</string>
     <!-- MediaSendActivity -->
@@ -574,27 +571,24 @@
     <string name="copied_to_clipboard">تم النسخ الى الحافظة المؤقتة</string>
     <string name="next">التالي</string>
     <string name="share">شارك</string>
-    <string name="invalid_session_id">عنوان تعريف خاطئ</string>
+    <string name="invalid_account_id">عنوان تعريف خاطئ</string>
     <string name="cancel">إلغاء</string>
-    <string name="your_session_id">عنوان تعريفك</string>
-    <string name="activity_landing_title_2">اِبدأ من هنا...</string>
-    <string name="activity_landing_register_button_title">أنشئ عنوان تعريف</string>
-    <string name="activity_landing_restore_button_title">واصل بالحساب القديم</string>
+    <string name="your_account_id">عنوان تعريفك</string>
     <string name="view_fake_chat_bubble_1">ما هي الجلسة (Session)؟</string>
     <string name="view_fake_chat_bubble_2">هو تطبيق مراسلة مشفر, لامركزي</string>
     <string name="view_fake_chat_bubble_3">اِذن لا يقوم بجمع المعلومات الشخصية أو المعلومات الوصفية لمحادثاتي؟ كيف يعمل؟</string>
     <string name="view_fake_chat_bubble_4">باِستخدام مُركَب من تكنولوجيات التشفير من الطرفين و توجيه مجهول للمعلومات.</string>
     <string name="view_fake_chat_bubble_5">الأصدقاء لا يتركون أصدقائهم يستعملون تطبيق مراسلة مكشوف. مرحبا بك.</string>
-    <string name="activity_register_title">رحب بعنوان تعريفك</string>
-    <string name="activity_register_explanation">عنوان تعريفك هو عنوان وحيد خاص بك, يمكن للناس الاتصال بك عن طريقه. دون معرفة هويتك الحقيقية, هذا العنوان مصمم ليكون خاص و مجهول.</string>
+
+
     <string name="activity_restore_title">استرجع حسابك</string>
     <string name="activity_restore_explanation">أدخل عبارة الأسترجاع التي اعطيت لك عندما سجلت الدخول لاِسترجاع حسابك.</string>
     <string name="activity_restore_seed_edit_text_hint">ادخل عبارة الاسترجاع</string>
-    <string name="activity_display_name_title_2">أختر اِسم الاِظهار</string>
-    <string name="activity_display_name_explanation">هذا سيكون اِسمك عندما تستخدم Session. قد يكون اِسمك الحقيقي, اِسم مستعار أو اي شيئ ترغب به.</string>
-    <string name="activity_display_name_edit_text_hint">ادخل اسم الِاظهار</string>
-    <string name="activity_display_name_display_name_missing_error">اِختر اسم من فضلك</string>
-    <string name="activity_display_name_display_name_too_long_error">اِختر اسم اقصر من فضلك</string>
+    <string name="displayNamePick">أختر اِسم الاِظهار</string>
+    <string name="displayNameDescription">هذا سيكون اِسمك عندما تستخدم Session. قد يكون اِسمك الحقيقي, اِسم مستعار أو اي شيئ ترغب به.</string>
+    <string name="displayNameEnter">ادخل اسم الِاظهار</string>
+    <string name="displayNameErrorDescription">اِختر اسم من فضلك</string>
+    <string name="displayNameErrorDescriptionShorter">اِختر اسم اقصر من فضلك</string>
     <string name="activity_pn_mode_recommended_option_tag">محبذ</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">اِختر</string>
     <string name="activity_home_empty_state_message">لا تملك اي متصلين لحد الان</string>
@@ -603,11 +597,6 @@
     <string name="activity_home_leaving_group_failed_message">"لا يمكن مغادرة المجموعة"</string>
     <string name="activity_home_delete_conversation_dialog_message">هل أنت متأكد من حذفك المحادثة؟</string>
     <string name="activity_home_conversation_deleted_message">تم حذف المحادثة</string>
-    <string name="activity_seed_title">عبارة الاسترجاع</string>
-    <string name="activity_seed_title_2">هذه هي عبارة الاسترجاع</string>
-    <string name="activity_seed_explanation">عبارة الاسترجاع هي مفتاح عنوان تعريفك - يمكنك استخدامها لاسترجاع عنوان تعريفك اذا فقدت الوصول لجهازك. قم بحفظها في مكان امن و لا تعطها الى اي أحد.</string>
-    <string name="activity_seed_reveal_button_title">انقر مطولاً للكشف</string>
-    <string name="view_seed_reminder_title">انت على وشك الإنتهاء! ٨٠٪</string>
     <string name="view_seed_reminder_subtitle_1">أمّن حسابك بحفظ كلمات إسترجاع الحساب</string>
     <string name="view_seed_reminder_subtitle_2">انقر بإستمرار على الكلمات المغطاة للكشف عن كلمات إسترداد حسابك، ثم قم بتخزينها بأمان للحفاظ على معرّف الجلسة الخاص بك.</string>
     <string name="view_seed_reminder_subtitle_3">تأكد من الإحتفاظ بكلمات الإسترجاع الخاصة بك في مكان آمن</string>
@@ -620,7 +609,7 @@
     <string name="activity_path_learn_more_button_title">لمعرفة المزيد</string>
     <string name="activity_path_resolving_progress">جار ربط الاِتصال…</string>
     <string name="activity_create_private_chat_title">جلسة جديدة</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">أدخِل معرّف الجلسة</string>
+    <string name="activity_create_private_chat_enter_account_id_tab_title">أدخِل معرّف الجلسة</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">مسح رمز الاستجابة السريع\"QR\"</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">امسح رمز QR المستخدم لبدء جلسة معه. يمكن الحصول على رموز الـQR بالضغط على أيقونة رمز الـQR في إعدادات الحساب.</string>
     <string name="fragment_enter_public_key_edit_text_hint">أدخل عنوان التعريف أو اسم ONS</string>
@@ -652,7 +641,6 @@
     <string name="activity_settings_devices_button_title">الأجهزة</string>
     <string name="activity_settings_invite_button_title">أُدع صديق</string>
     <string name="activity_settings_faq_button_title">الأسئلة الأكثر طرحاً</string>
-    <string name="activity_settings_recovery_phrase_button_title">عبارة الإسترداد</string>
     <string name="activity_settings_clear_all_data_button_title">مسح البيانات</string>
     <string name="activity_settings_clear_all_data_and_network_button_title">مسح البيانات بما في ذلك الشبكة</string>
     <string name="activity_settings_help_translate_session">ساعدنا في ترجمة سيشن</string>
@@ -665,8 +653,6 @@
     <string name="preferences_notifications_strategy_category_fast_mode_summary">سوف يتم تنبيهك بالرسائل الجديدة بشكل موثوق و فوري بإستخدام خوادم غوغل.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">غَير الاسم</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">ألغي ربط الجهاز</string>
-    <string name="dialog_seed_title">عبارة الاسترجاع الخاصة بك</string>
-    <string name="dialog_seed_explanation">هذه هي عبارة الاِسترجاع, يمكن بواسطتها اِسترجاع عنوان التعريف أو الاِنتقال اِلى جهاز جديد.</string>
     <string name="dialog_clear_all_data_title">اِمسح جميع البيانات</string>
     <string name="dialog_clear_all_data_explanation">سيؤدي هذا إلى حذف رسائلك, محادثاتك و متصليك نهائيا.</string>
     <string name="dialog_clear_all_data_network_explanation">هل تريد مسح من هذا الجهاز فقط، أو حذف حسابك كليا ؟</string>
@@ -700,7 +686,7 @@
     <string name="dialog_ui_mode_option_day">نهار</string>
     <string name="dialog_ui_mode_option_night">ليل</string>
     <string name="dialog_ui_mode_option_system_default">اختيارات النضام</string>
-    <string name="activity_conversation_menu_copy_session_id">اِنسخ رابط التعريف</string>
+    <string name="activity_conversation_menu_copy_account_id">اِنسخ رابط التعريف</string>
     <string name="attachment">مُرفق</string>
     <string name="attachment_type_voice_message">رسالة صوتية</string>
     <string name="details">تفاصيل</string>
@@ -710,7 +696,6 @@
     <string name="activity_backup_restore_explanation_1">اِختر ملف النسخ الاحتياطي وأدخل عبارة المرور التي تم إنشاؤه بها.</string>
     <string name="activity_backup_restore_passphrase">جملة مرور مكونة من 30 عنصر</string>
     <string name="activity_link_device_skip_prompt">هذا يستغرق بعض الوقت، هل تريد أن تتخطى؟</string>
-    <string name="activity_link_device_link_device">اربط جهاز</string>
     <string name="activity_link_device_recovery_phrase">جملة الاسترجاع</string>
     <string name="activity_link_device_scan_qr_code">اِفحص رمز QR</string>
     <string name="activity_link_device_qr_message">اِذهب إلى التعديلات جملة الاِسترجاع في جهازك الاآخر لإظهار رمز QR الخاص بك.</string>
@@ -721,7 +706,6 @@
     <string name="activity_pn_mode_slow_mode">الوضع البطيء</string>
     <string name="activity_pn_mode_fast_mode_explanation">سوف يتم إشعارك بالرسائل بشكل موثوق و فوري بإستخدام خوادم جوجل للإشعارات.</string>
     <string name="activity_pn_mode_slow_mode_explanation">سيقوم سيشن بالتحقق من وجود رسائل جديدة بشكل دوري في الخلفية.</string>
-    <string name="fragment_recovery_phrase_title">عبارة الإسترداد</string>
     <string name="activity_prompt_passphrase_session_locked">إن سيشن مُقفَل</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">انقر للفتح</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">أدخل اسم</string>

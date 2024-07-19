@@ -142,9 +142,6 @@
     <string name="MediaOverviewActivity_Select_all">అన్నీ ఎంచుకో</string>
     <string name="MediaOverviewActivity_collecting_attachments">జోడింపుల సేకరణ ...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">మల్టీమీడియా సందేశం</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">ఎమ్మెమ్మెస్ సందేశం దిగుమతి </string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">ఎమ్మెమ్మెస్ సందేశం దిగుమతిలో లోపం, తట్టి మళ్ళీ ప్రయత్నించండి</string>
     <!-- MediaPickerActivity -->
     <!-- MediaSendActivity -->
     <string name="MediaSendActivity_camera_unavailable">కెమెరా అందుబాటులో లేదు.</string>
