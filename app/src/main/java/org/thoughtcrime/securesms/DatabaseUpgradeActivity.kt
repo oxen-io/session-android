@@ -16,36 +16,30 @@
  */
 package org.thoughtcrime.securesms
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import org.thoughtcrime.securesms.util.Util
 import org.thoughtcrime.securesms.util.VersionTracker.getLastSeenVersion
 import org.thoughtcrime.securesms.util.VersionTracker.updateLastSeenVersion
 
 class DatabaseUpgradeActivity : BaseActivity() {
-    public override fun onCreate(bundle: Bundle?) {
-        super.onCreate(bundle)
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         updateLastSeenVersion(this)
-        updateNotifications(this)
-        startActivity(intent.getParcelableExtra<Parcelable>("next_intent") as Intent?)
+        lifecycleScope.launch {
+            ApplicationContext.getInstance(this@DatabaseUpgradeActivity)
+                .messageNotifier.updateNotification(this@DatabaseUpgradeActivity)
+        }
+        startActivity(intent.getParcelableExtra<Parcelable>("next_intent") as? Intent)
         finish()
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private fun updateNotifications(context: Context) {
-        object : AsyncTask<Void?, Void?, Void?>() {
-            protected override fun doInBackground(vararg params: Void): Void? {
-                ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
-                return null
-            }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-    }
-
     companion object {
+        @JvmStatic
         fun isUpdate(context: Context?): Boolean {
             val currentVersionCode = Util.getCanonicalVersionCode()
             val previousVersionCode = getLastSeenVersion(context!!)
