@@ -22,6 +22,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
 import com.adevinta.android.barista.interaction.PermissionGranter
 import com.squareup.phrase.Phrase
 import network.loki.messenger.util.InputBarButtonDrawableMatcher.Companion.inputButtonWithDrawable
@@ -36,7 +38,7 @@ import org.junit.runner.RunWith
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.guava.Optional
-import org.session.util.StringSubstitutionConstants.URL_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.URL_KEY
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
@@ -51,9 +53,14 @@ class HomeActivityTests {
 
     private val activityMonitor = Instrumentation.ActivityMonitor(ConversationActivityV2::class.java.name, null, false)
 
+    private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
+
     @Before
     fun setUp() {
         InstrumentationRegistry.getInstrumentation().addMonitor(activityMonitor)
+
     }
 
     @After
@@ -74,24 +81,33 @@ class HomeActivityTests {
         onView(isRoot()).perform(waitFor(500))
     }
 
+    private fun objectFromDesc(id: Int) = device.findObject(By.desc(context.getString(id)))
+
     private fun setupLoggedInState(hasViewedSeed: Boolean = false) {
         // landing activity
-        onView(withId(R.id.registerButton)).perform(ViewActions.click())
-        // session ID - register activity
-        onView(withId(R.id.registerButton)).perform(ViewActions.click())
+        objectFromDesc(R.string.onboardingAccountCreate).click()
+
         // display name selection
-        onView(withId(R.id.displayNameEditText)).perform(ViewActions.typeText("test-user123"))
-        onView(withId(R.id.registerButton)).perform(ViewActions.click())
+        objectFromDesc(R.string.displayNameEnter).click()
+        device.pressKeyCode(65)
+        device.pressKeyCode(66)
+        device.pressKeyCode(67)
+
+        // Continue with display name
+        objectFromDesc(R.string.theContinue).click()
+
+        // Continue with default push notification setting
+        objectFromDesc(R.string.theContinue).click()
+
         // PN select
         if (hasViewedSeed) {
             // has viewed seed is set to false after register activity
             TextSecurePreferences.setHasViewedSeed(InstrumentationRegistry.getInstrumentation().targetContext, true)
         }
-        onView(withId(R.id.backgroundPollingOptionView)).perform(ViewActions.click())
-        onView(withId(R.id.registerButton)).perform(ViewActions.click())
         // allow notification permission
         PermissionGranter.allowPermissionsIfNeeded(Manifest.permission.POST_NOTIFICATIONS)
     }
+
 
     private fun goToMyChat() {
         onView(withId(R.id.newConversationButton)).perform(ViewActions.click())
@@ -113,8 +129,8 @@ class HomeActivityTests {
     @Test
     fun testLaunches_dismiss_seedView() {
         setupLoggedInState()
-        onView(allOf(withId(R.id.button), isDescendantOfA(withId(R.id.seedReminderView)))).perform(ViewActions.click())
-        onView(withId(R.id.copyButton)).perform(ViewActions.click())
+        objectFromDesc(R.string.theContinue).click()
+        objectFromDesc(R.string.copy).click()
         pressBack()
         onView(withId(R.id.seedReminderView)).check(matches(not(isDisplayed())))
     }
@@ -135,7 +151,7 @@ class HomeActivityTests {
     fun testChat_withSelf() {
         setupLoggedInState()
         goToMyChat()
-        TextSecurePreferences.setLinkPreviewsEnabled(InstrumentationRegistry.getInstrumentation().targetContext, true)
+        TextSecurePreferences.setLinkPreviewsEnabled(context, true)
         sendMessage("howdy")
         sendMessage("test")
         // tests url rewriter doesn't crash

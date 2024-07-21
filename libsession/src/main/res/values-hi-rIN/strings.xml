@@ -105,13 +105,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">भेजें</string>
-    <string name="contentDescriptionMessageComposition">संदेश संरचना</string>
     <string name="conversation_activity__attachment_thumbnail">अटैचमेंट थंबनेल </string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">त्वरित कैमरा अनुलग्नक दराज टॉगल करें</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">रद्द करने के लिए स्लाइड करें</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">मीडिया संदेश</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">पहुंचा दिया</string>
     <!-- conversation_item_received -->

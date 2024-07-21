@@ -105,13 +105,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Send</string>
-    <string name="contentDescriptionMessageComposition">Beskedsammensætning</string>
     <string name="conversation_activity__attachment_thumbnail">Vedhæftet skabelon</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Slå kamera til/fra</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Slide for at annullere</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Multimedie besked</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Besked leveret</string>
     <!-- conversation_item_received -->

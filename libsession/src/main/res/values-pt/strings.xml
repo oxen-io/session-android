@@ -105,13 +105,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Enviar</string>
-    <string name="contentDescriptionMessageComposition">Composição de mensagem</string>
     <string name="conversation_activity__attachment_thumbnail">Thumbnail de Anexo</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Alternar gaveta rápida de anexos de câmera</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Deslizar para cancelar</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Mensagem de mídia</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Entregue</string>
     <!-- conversation_item_received -->

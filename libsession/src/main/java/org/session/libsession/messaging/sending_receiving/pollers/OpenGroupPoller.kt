@@ -272,7 +272,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                         serverPublicKey,
                         true
                     )
-                    val syncTarget = mapping.sessionId ?: it.recipient
+                    val syncTarget = mapping.accountId ?: it.recipient
                     if (message is VisibleMessage) {
                         message.syncTarget = syncTarget
                     } else if (message is ExpirationTimerUpdate) {

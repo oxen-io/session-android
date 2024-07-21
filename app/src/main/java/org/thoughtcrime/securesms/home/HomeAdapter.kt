@@ -112,7 +112,7 @@ class HomeAdapter(
                 val offset = if (hasHeaderView()) position - 1 else position
                 val thread = data.threads[offset]
                 val isTyping = data.typingThreadIDs.contains(thread.threadId)
-                holder.view.bind(thread, isTyping, glide)
+                holder.view.bind(thread, isTyping)
             }
         }
     }

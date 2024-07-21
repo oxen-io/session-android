@@ -106,13 +106,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Küldés</string>
-    <string name="contentDescriptionMessageComposition">Üzenet írása</string>
     <string name="conversation_activity__attachment_thumbnail">Melléklet előnézet</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Gyorskamera kapcsoló</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Megszakításhoz csúsztasd</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Médiaüzenet</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Kézbesítve</string>
     <!-- conversation_item_received -->

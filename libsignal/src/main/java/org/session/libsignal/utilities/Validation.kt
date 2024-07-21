@@ -1,18 +1,11 @@
 package org.session.libsignal.utilities
 
 object PublicKeyValidation {
+    private val HEX_CHARACTERS = "0123456789ABCDEFabcdef".toSet()
+    private val INVALID_PREFIXES = setOf(IdPrefix.GROUP, IdPrefix.BLINDED, IdPrefix.BLINDEDV2)
 
-    @JvmStatic
-    fun isValid(candidate: String): Boolean {
-        return isValid(candidate, 66, true)
-    }
-
-    @JvmStatic
-    fun isValid(candidate: String, expectedLength: Int, isPrefixRequired: Boolean): Boolean {
-        val hexCharacters = "0123456789ABCDEF".toSet()
-        val isValidHexEncoding = hexCharacters.containsAll(candidate.uppercase().toSet())
-        val hasValidLength = candidate.length == expectedLength
-        val hasValidPrefix = if (isPrefixRequired) IdPrefix.fromValue(candidate) != null else true
-        return isValidHexEncoding && hasValidLength && hasValidPrefix
-    }
+    fun isValid(candidate: String, isPrefixRequired: Boolean = true): Boolean = hasValidLength(candidate) && isValidHexEncoding(candidate) && (!isPrefixRequired || IdPrefix.fromValue(candidate) != null)
+    fun hasValidPrefix(candidate: String) = IdPrefix.fromValue(candidate) !in INVALID_PREFIXES
+    private fun hasValidLength(candidate: String) = candidate.length == 66
+    private fun isValidHexEncoding(candidate: String) = HEX_CHARACTERS.containsAll(candidate.toSet())
 }

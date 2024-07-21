@@ -16,7 +16,7 @@
  */
 package org.thoughtcrime.securesms.conversation.v2.utilities;
 
-import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -32,12 +32,14 @@ import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.squareup.phrase.Phrase;
-
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import network.loki.messenger.R;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.ListenableFuture;
 import org.session.libsignal.utilities.Log;
@@ -58,13 +60,6 @@ import org.thoughtcrime.securesms.mms.VideoSlide;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.util.MediaUtil;
-
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import network.loki.messenger.R;
 
 public class AttachmentManager {
 

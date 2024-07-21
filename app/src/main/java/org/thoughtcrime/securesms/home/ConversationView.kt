@@ -21,7 +21,6 @@ import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_ALL
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_NONE
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
-import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getConversationUnread
@@ -49,7 +48,7 @@ class ConversationView : LinearLayout {
     // endregion
 
     // region Updating
-    fun bind(thread: ThreadRecord, isTyping: Boolean, glide: GlideRequests) {
+    fun bind(thread: ThreadRecord, isTyping: Boolean) {
         this.thread = thread
         if (thread.isPinned) {
             binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -140,11 +139,10 @@ class ConversationView : LinearLayout {
         else -> recipient.toShortString() // Internally uses the Contact API
     }
 
-    private fun ThreadRecord.getSnippet(): CharSequence =
-        concatSnippet(getSnippetPrefix(), getDisplayBody(context))
-
-    private fun concatSnippet(prefix: CharSequence?, body: CharSequence): CharSequence =
-        prefix?.let { TextUtils.concat(it, ": ", body) } ?: body
+    private fun ThreadRecord.getSnippet(): CharSequence = listOfNotNull(
+        getSnippetPrefix(),
+        getDisplayBody(context)
+    ).joinToString(": ")
 
     private fun ThreadRecord.getSnippetPrefix(): CharSequence? = when {
         recipient.isLocalNumber || lastMessage?.isControlMessage == true -> null

@@ -28,7 +28,7 @@ import org.session.libsession.messaging.sending_receiving.handleOpenGroupReactio
 import org.session.libsession.messaging.sending_receiving.handleUnsendRequest
 import org.session.libsession.messaging.sending_receiving.handleVisibleMessage
 import org.session.libsession.messaging.utilities.Data
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsignal.protos.UtilProtos
@@ -159,7 +159,7 @@ class BatchMessageReceiveJob(
                                                 MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
                                             )
                                         }?.let {
-                                            SessionId(
+                                            AccountId(
                                                 IdPrefix.BLINDED, it.publicKey.asBytes
                                             ).hexString
                                         }

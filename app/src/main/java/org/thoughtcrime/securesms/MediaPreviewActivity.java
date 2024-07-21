@@ -16,7 +16,7 @@
  */
 package org.thoughtcrime.securesms;
 
-import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -25,8 +25,8 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Build.VERSION;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -44,7 +44,6 @@ import android.view.WindowInsetsController;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -56,9 +55,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import com.squareup.phrase.Phrase;
-
+import java.io.IOException;
+import java.util.Locale;
+import java.util.WeakHashMap;
+import kotlin.Unit;
+import network.loki.messenger.R;
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment;
@@ -80,15 +82,8 @@ import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.util.AttachmentUtil;
 import org.thoughtcrime.securesms.util.DateUtils;
-import org.thoughtcrime.securesms.util.SaveAttachmentTask;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask.Attachment;
-
-import java.io.IOException;
-import java.util.Locale;
-import java.util.WeakHashMap;
-
-import kotlin.Unit;
-import network.loki.messenger.R;
+import org.thoughtcrime.securesms.util.SaveAttachmentTask;
 
 /**
  * Activity for displaying media attachments in-app

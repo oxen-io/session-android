@@ -94,12 +94,10 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Tuma</string>
-    <string name="contentDescriptionMessageComposition">utungaji wa ujumbe</string>
     <string name="conversation_activity__attachment_thumbnail">kiambatanisho thumbnail</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Toggle haraka kamera kiambatisho drawer</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Ujumbe wa vyombo vya habari</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">imefika</string>
     <!-- conversation_item_received -->

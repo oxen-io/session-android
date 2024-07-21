@@ -68,7 +68,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                 ?: return false
 
             // you can't be eligible without a contact entry
-            val contact = storage.getContactWithSessionID(sender) ?: return false
+            val contact = storage.getContactWithAccountID(sender) ?: return false
 
             // we are eligible if we are receiving a group message or the contact is trusted
             return threadRecipient.isGroupRecipient || contact.isTrusted

@@ -109,13 +109,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Отправить</string>
-    <string name="contentDescriptionMessageComposition">Написание сообщения</string>
     <string name="conversation_activity__attachment_thumbnail">Миниатюра вложения</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Включить быстрое показывание камеры в панели вложений</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Проведите для отмены</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">MMS-сообщение</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Доставлено</string>
     <!-- conversation_item_received -->

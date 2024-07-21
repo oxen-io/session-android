@@ -47,9 +47,9 @@
         android:id="@+id/menu_context_ban_user"
         app:showAsAction="never" />
 
-    <!-- ACL - This uses the same text as the above, which used to be "Ban and Deleta All" - removed in future? -->
+    <!-- ACL - we don't have a "Ban and delete all" string - ping Lucy -->
     <item
-        android:title="@string/banUser"
+        android:title="Ban and delete all NEED STRING!"
         android:id="@+id/menu_context_ban_and_delete_all"
         app:showAsAction="never" />
 

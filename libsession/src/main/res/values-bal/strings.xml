@@ -94,12 +94,10 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Kirim</string>
-    <string name="contentDescriptionMessageComposition">Penulisan pesan</string>
     <string name="conversation_activity__attachment_thumbnail">Gambar Mini Lampiran</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Jungkitkan laci lampiran kamera cepat</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Pesan media</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Terkirim</string>
     <!-- conversation_item_received -->

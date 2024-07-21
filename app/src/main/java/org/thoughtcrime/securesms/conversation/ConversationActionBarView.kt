@@ -20,6 +20,10 @@ import network.loki.messenger.libsession_util.util.ExpiryMode.AfterRead
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.utilities.ExpirationUtil
+import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.TIME_LARGE_KEY
 import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.GroupDatabase
@@ -27,11 +31,6 @@ import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.util.LocalisedTimeUtil
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
-
-import org.session.util.StringSubstitutionConstants.COUNT_KEY
-import org.session.util.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
-import org.session.util.StringSubstitutionConstants.TIME_KEY
-import org.session.util.StringSubstitutionConstants.TIME_LARGE_KEY
 
 @AndroidEntryPoint
 class ConversationActionBarView @JvmOverloads constructor(

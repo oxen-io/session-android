@@ -74,16 +74,16 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getLegacyGroupInfo(JNIEnv *env,
                                                                                  jobject thiz,
-                                                                                 jstring session_id) {
+                                                                                 jstring account_id) {
     std::lock_guard lock{util::util_mutex_};
     auto conf = ptrToUserGroups(env, thiz);
-    auto id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    auto id_bytes = env->GetStringUTFChars(account_id, nullptr);
     auto legacy_group = conf->get_legacy_group(id_bytes);
     jobject return_group = nullptr;
     if (legacy_group) {
         return_group = serialize_legacy_group_info(env, *legacy_group);
     }
-    env->ReleaseStringUTFChars(session_id, id_bytes);
+    env->ReleaseStringUTFChars(account_id, id_bytes);
     return return_group;
 }
 
@@ -108,12 +108,12 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getOrConstructComm
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getOrConstructLegacyGroupInfo(
-        JNIEnv *env, jobject thiz, jstring session_id) {
+        JNIEnv *env, jobject thiz, jstring account_id) {
     std::lock_guard lock{util::util_mutex_};
     auto conf = ptrToUserGroups(env, thiz);
-    auto id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    auto id_bytes = env->GetStringUTFChars(account_id, nullptr);
     auto group = conf->get_or_construct_legacy_group(id_bytes);
-    env->ReleaseStringUTFChars(session_id, id_bytes);
+    env->ReleaseStringUTFChars(account_id, id_bytes);
     return serialize_legacy_group_info(env, group);
 }
 
@@ -264,11 +264,11 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_eraseLegacyGroup(JNIEnv *env,
                                                                                jobject thiz,
-                                                                               jstring session_id) {
+                                                                               jstring account_id) {
     std::lock_guard lock{util::util_mutex_};
     auto conf = ptrToUserGroups(env, thiz);
-    auto session_id_bytes = env->GetStringUTFChars(session_id, nullptr);
-    bool return_bool = conf->erase_legacy_group(session_id_bytes);
-    env->ReleaseStringUTFChars(session_id, session_id_bytes);
+    auto account_id_bytes = env->GetStringUTFChars(account_id, nullptr);
+    bool return_bool = conf->erase_legacy_group(account_id_bytes);
+    env->ReleaseStringUTFChars(account_id, account_id_bytes);
     return return_bool;
 }

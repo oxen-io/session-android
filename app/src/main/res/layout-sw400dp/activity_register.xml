@@ -31,8 +31,8 @@
         android:textColor="?android:textColorPrimary"
         android:text="@string/activity_register_explanation" />
 
+    <!-- style="@style/AccountIDTextView" ACL FIX THIS - THIS NEEDS TO GO INTO THE BELOW TEXT VIEW -->
     <TextView
-        style="@style/SessionIDTextView"
         android:contentDescription="@string/AccessibilityId_session_id"
         android:id="@+id/publicKeyTextView"
         android:layout_width="match_parent"

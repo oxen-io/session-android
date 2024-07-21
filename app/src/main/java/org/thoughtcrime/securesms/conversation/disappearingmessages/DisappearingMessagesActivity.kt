@@ -18,7 +18,7 @@ import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.Disappear
 import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.UiState
 import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
-import org.thoughtcrime.securesms.ui.AppTheme
+import org.thoughtcrime.securesms.ui.setThemedContent
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,7 +45,7 @@ class DisappearingMessagesActivity: PassphraseRequiredActionBarActivity() {
 
         setUpToolbar()
 
-        binding.container.setContent { DisappearingMessagesScreen() }
+        binding.container.setThemedContent { DisappearingMessagesScreen() }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -87,8 +87,6 @@ class DisappearingMessagesActivity: PassphraseRequiredActionBarActivity() {
     @Composable
     fun DisappearingMessagesScreen() {
         val uiState by viewModel.uiState.collectAsState(UiState())
-        AppTheme {
-            DisappearingMessages(uiState, callbacks = viewModel)
-        }
+        DisappearingMessages(uiState, callbacks = viewModel)
     }
 }

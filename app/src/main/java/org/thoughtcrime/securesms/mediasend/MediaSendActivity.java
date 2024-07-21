@@ -1,6 +1,6 @@
 package org.thoughtcrime.securesms.mediasend;
 
-import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.Manifest;
 import android.content.Context;

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentScanQrCodePlaceholderBinding
-import org.session.util.StringSubstitutionConstants.APP_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 
 class ScanQRCodePlaceholderFragment: Fragment() {
     private lateinit var binding: FragmentScanQrCodePlaceholderBinding
@@ -30,6 +30,5 @@ class ScanQRCodePlaceholderFragment: Fragment() {
 }
 
 interface ScanQRCodePlaceholderFragmentDelegate {
-
     fun requestCameraAccess()
 }

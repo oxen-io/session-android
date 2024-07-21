@@ -30,8 +30,8 @@ sealed class Endpoint(val value: String) {
     data class RoomMessagesSince(val roomToken: String, val seqNo: Long) :
         Endpoint("room/$roomToken/messages/since/$seqNo")
 
-    data class RoomDeleteMessages(val roomToken: String, val sessionId: String) :
-        Endpoint("room/$roomToken/all/$sessionId")
+    data class RoomDeleteMessages(val roomToken: String, val accountId: String) :
+        Endpoint("room/$roomToken/all/$accountId")
 
     data class Reactors(val roomToken: String, val messageId: Long, val emoji: String):
         Endpoint("room/$roomToken/reactors/$messageId/$emoji")
@@ -67,15 +67,15 @@ sealed class Endpoint(val value: String) {
 
     object Inbox : Endpoint("inbox")
     data class InboxSince(val id: Long) : Endpoint("inbox/since/$id")
-    data class InboxFor(val sessionId: String) : Endpoint("inbox/$sessionId")
+    data class InboxFor(val accountId: String) : Endpoint("inbox/$accountId")
 
     object Outbox : Endpoint("outbox")
     data class OutboxSince(val id: Long) : Endpoint("outbox/since/$id")
 
     // Users
 
-    data class UserBan(val sessionId: String) : Endpoint("user/$sessionId/ban")
-    data class UserUnban(val sessionId: String) : Endpoint("user/$sessionId/unban")
-    data class UserModerator(val sessionId: String) : Endpoint("user/$sessionId/moderator")
+    data class UserBan(val accountId: String) : Endpoint("user/$accountId/ban")
+    data class UserUnban(val accountId: String) : Endpoint("user/$accountId/unban")
+    data class UserModerator(val accountId: String) : Endpoint("user/$accountId/moderator")
 
 }

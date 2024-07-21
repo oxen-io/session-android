@@ -99,12 +99,10 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Bişîne</string>
-    <string name="contentDescriptionMessageComposition">Peyam binivîse</string>
     <string name="conversation_activity__attachment_thumbnail">Wênoka Servehiyê</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Bijertina attachment drawer a kamera ya din</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Peyama medya</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Hat gihandin</string>
     <!-- conversation_item_received -->

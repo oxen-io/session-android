@@ -8,8 +8,8 @@ import androidx.core.content.ContextCompat
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewUntrustedAttachmentBinding
+import org.session.libsession.utilities.StringSubstitutionConstants.FILE_TYPE_KEY
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.util.StringSubstitutionConstants.FILE_TYPE_KEY
 import org.thoughtcrime.securesms.conversation.v2.dialogs.DownloadDialog
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 

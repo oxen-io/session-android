@@ -103,13 +103,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">发送</string>
-    <string name="contentDescriptionMessageComposition">消息编写</string>
     <string name="conversation_activity__attachment_thumbnail">附件缩略图</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">切换快速相机附件抽屉</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel"> 滑动以取消发送</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">媒体消息</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">已送达</string>
     <!-- conversation_item_received -->

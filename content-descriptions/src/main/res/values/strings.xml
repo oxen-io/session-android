@@ -3,6 +3,40 @@
 
     <!-- NOTE: Only non-translated Accessibility IDs for automated testing exist in this file. -->
 
+    <!-- ACL JUMBLE! Place into sections perhaps later -->
+    <string name="AccessibilityId_account_id_input">Account id input box</string>
+    <string name="AccessibilityId_confirm_button">Confirm button</string>
+    <string name="AccessibilityId_copy_account_id">Copy Account ID</string>
+    <string name="AccessibilityId_copy_button">Copy button</string>
+    <string name="AccessibilityId_error_message">Error message</string>
+    <string name="AccessibilityId_hide_recovery_password_button">Hide recovery password button</string>
+    <string name="AccessibilityId_qr_code">QR code</string>
+    <string name="AccessibilityId_recovery_password">Recovery password</string>
+    <string name="AccessibilityId_recovery_password_container">Recovery password container</string>
+    <string name="AccessibilityId_recovery_password_menu_item">Recovery password menu item</string>
+    <string name="AccessibilityId_view_qr_code">View QR code</string>
+    <string name="contentDescriptionMediaMessage">Multimedia message</string>
+    <string name="AccessibilityId_fast_mode_notifications_button">Fast mode notifications button</string>
+    <string name="AccessibilityId_slow_mode_notifications_button">Slow mode notifications button</string>
+    <string name="AccessibilityId_loading_animation">Loading animation</string>
+    <string name="AccessibilityId_create_account_button">Create account button</string>
+    <string name="AccessibilityId_restore_account_button">Restore your session button</string>
+    <string name="AccessibilityId_open_url">Open URL</string>
+    <string name="AccessibilityId_terms_of_service_button">Terms of service button</string>
+    <string name="AccessibilityId_privacy_policy_button">Privacy policy button</string>
+    <string name="AccessibilityId_recovery_phrase_input">Recovery phrase input</string>
+    <string name="AccessibilityId_reveal_recovery_phrase_button">Reveal recovery phrase button</string>
+    <string name="AccessibilityId_help_desk_link">Help desk link</string>
+    <string name="AccessibilityId_invite_friend_button">Invite friend button</string>
+
+
+    <!-- ACL NEW Settings activity -->
+    <string name="AccessibilityId_account_id">Account ID</string>
+    <string name="activity_settings_display_name_edit_text_hint">Enter a display name</string>
+
+
+
+
     <!-- Landing Page -->
     <string name="AccessibilityId_create_session_id">Create session ID</string>
     <string name="AccessibilityId_link_a_device">Link a device</string>

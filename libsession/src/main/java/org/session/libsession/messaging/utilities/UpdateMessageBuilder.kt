@@ -17,20 +17,20 @@ import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.getExpirationTypeDisplayValue
 import org.session.libsession.utilities.truncateIdForDisplay
 import org.session.libsignal.utilities.Log
-import org.session.util.StringSubstitutionConstants.COUNT_KEY
-import org.session.util.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
-import org.session.util.StringSubstitutionConstants.GROUP_NAME_KEY
-import org.session.util.StringSubstitutionConstants.MEMBERS_KEY
-import org.session.util.StringSubstitutionConstants.NAME_KEY
-import org.session.util.StringSubstitutionConstants.OTHER_NAME_KEY
-import org.session.util.StringSubstitutionConstants.TIME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.MEMBERS_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.OTHER_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
 
 object UpdateMessageBuilder {
     const val TAG = "libsession"
 
     val storage = MessagingModuleConfiguration.shared.storage
 
-    private fun getSenderName(senderId: String) = storage.getContactWithSessionID(senderId)
+    private fun getSenderName(senderId: String) = storage.getContactWithAccountID(senderId)
         ?.displayName(Contact.ContactContext.REGULAR)
         ?: truncateIdForDisplay(senderId)
 
@@ -231,7 +231,6 @@ object UpdateMessageBuilder {
                 .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
                 .format().toString()
         }
-
     }
 
     fun buildDataExtractionMessage(context: Context,
@@ -252,15 +251,12 @@ object UpdateMessageBuilder {
     }
 
     fun buildCallMessage(context: Context, type: CallMessageType, senderId: String): String {
-        val senderName = storage.getContactWithSessionID(senderId)?.displayName(Contact.ContactContext.REGULAR) ?: senderId
+        val senderName = storage.getContactWithAccountID(senderId)?.displayName(Contact.ContactContext.REGULAR) ?: senderId
 
         return when (type) {
             CALL_INCOMING -> Phrase.from(context, R.string.callsCalledYou).put(NAME_KEY, senderName).format().toString()
             CALL_OUTGOING -> Phrase.from(context, R.string.callsYouCalled).put(NAME_KEY, senderName).format().toString()
-
-            CALL_MISSED, CALL_FIRST_MISSED -> Phrase.from(context, R.string.callsMissedCallFrom)
-                .put(NAME_KEY, senderName)
-                .format().toString()
+            CALL_MISSED, CALL_FIRST_MISSED -> Phrase.from(context, R.string.callsMissedCallFrom).put(NAME_KEY, senderName).format().toString()
         }
     }
 }

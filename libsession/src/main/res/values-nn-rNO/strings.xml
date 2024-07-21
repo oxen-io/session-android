@@ -98,12 +98,10 @@
     <string name="attachment_type_selector__drawer_description">Vis/skjul vedleggspanel</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
-    <string name="contentDescriptionMessageComposition">Meldingsskriving</string>
     <string name="conversation_activity__attachment_thumbnail">Miniatyrbilete av vedlegg</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Vis/skjul vedleggspanel for snøggkamera</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Mediemelding</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Levert</string>
     <!-- conversation_item_received -->

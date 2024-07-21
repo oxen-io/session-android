@@ -105,13 +105,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Skicka</string>
-    <string name="contentDescriptionMessageComposition">Skapa meddelande</string>
     <string name="conversation_activity__attachment_thumbnail">Bifogad miniatyrbild</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Dölj/Visa snabbpanel för kamerabilaga</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Dra för att avbryta</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Mediameddelande</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Levererat</string>
     <!-- conversation_item_received -->

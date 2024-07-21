@@ -105,13 +105,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Ուղարկել</string>
-    <string name="contentDescriptionMessageComposition">Հաղորդագրության գրառում</string>
     <string name="conversation_activity__attachment_thumbnail">Հավելվածի մանրապատկեր</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Միացնել արագ տեսախցիկի պանակը</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Սահեցրե՛ք չեղարկման համար</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Մեդիա հաղորդագրություն</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Առաքված է</string>
     <!-- conversation_item_received -->

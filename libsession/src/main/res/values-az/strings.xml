@@ -105,13 +105,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Göndər</string>
-    <string name="contentDescriptionMessageComposition">Mesaj tərtib et</string>
     <string name="conversation_activity__attachment_thumbnail">Qoşma eskizi</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Cəld kamera qoşma siyirməsini aç/bağla</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">İmtina etmək üçün sürüşdür</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Media mesajı</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Çatdırıldı</string>
     <!-- conversation_item_received -->

@@ -104,13 +104,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Envia</string>
-    <string name="contentDescriptionMessageComposition">Cos del missatge</string>
     <string name="conversation_activity__attachment_thumbnail">Miniatura de l\'adjunt</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Desplega la pestanya d\'adjunts de càmera ràpida</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Llisqueu per cancel·lar-ho</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Missatge multimèdia</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Entregat</string>
     <!-- conversation_item_received -->

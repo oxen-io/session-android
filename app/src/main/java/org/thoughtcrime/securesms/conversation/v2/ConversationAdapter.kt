@@ -13,6 +13,8 @@ import androidx.core.util.set
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.squareup.phrase.Phrase
+import java.util.concurrent.atomic.AtomicLong
+import kotlin.math.min
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -20,8 +22,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
-import org.session.util.StringSubstitutionConstants.NAME_KEY
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
+import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
@@ -31,8 +33,6 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.showSessionDialog
-import java.util.concurrent.atomic.AtomicLong
-import kotlin.math.min
 
 class ConversationAdapter(
     context: Context,
@@ -72,7 +72,7 @@ class ConversationAdapter(
 
     @WorkerThread
     private fun getSenderInfo(sender: String): Contact? {
-        return contactDB.getContactWithSessionID(sender)
+        return contactDB.getContactWithAccountID(sender)
     }
 
     sealed class ViewType(val rawValue: Int) {

@@ -12,8 +12,8 @@ import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.utilities.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.util.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 
@@ -22,9 +22,9 @@ class BlockedDialog(private val recipient: Recipient, private val context: Conte
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
         val contactDB = DatabaseComponent.get(requireContext()).sessionContactDatabase()
-        val sessionID = recipient.address.toString()
-        val contact = contactDB.getContactWithSessionID(sessionID)
-        val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
+        val accountID = recipient.address.toString()
+        val contact = contactDB.getContactWithAccountID(accountID)
+        val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: accountID
 
         val explanation = Phrase.from(context, R.string.communityJoinDescription).put(COMMUNITY_NAME_KEY, name).format()
         val spannable = SpannableStringBuilder(explanation)

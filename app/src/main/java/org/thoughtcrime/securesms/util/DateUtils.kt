@@ -140,6 +140,8 @@ object DateUtils : android.text.format.DateUtils() {
         return SimpleDateFormat(dateFormatPattern, locale)
     }
 
+    // Method to get the String for a relative day in a locale-aware fashion, including using the
+    // auto-localised words for "today" and "yesterday" as appropriate.
     fun getRelativeDate(
         context: Context,
         locale: Locale,

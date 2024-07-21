@@ -16,7 +16,7 @@
  */
 package org.thoughtcrime.securesms;
 
-import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.animation.Animator;
 import android.app.KeyguardManager;
@@ -34,21 +34,17 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 import androidx.core.os.CancellationSignal;
-
 import com.squareup.phrase.Phrase;
-
+import java.security.Signature;
+import network.loki.messenger.R;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.components.AnimatingToggle;
 import org.thoughtcrime.securesms.crypto.BiometricSecretProvider;
 import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.AnimationCompleteListener;
-import java.security.Signature;
-
-import network.loki.messenger.R;
 
 //TODO Rename to ScreenLockActivity and refactor to Kotlin.
 public class PassphrasePromptActivity extends BaseActionBarActivity {

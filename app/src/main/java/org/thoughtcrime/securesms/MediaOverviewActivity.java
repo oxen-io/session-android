@@ -16,7 +16,7 @@
  */
 package org.thoughtcrime.securesms;
 
-import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

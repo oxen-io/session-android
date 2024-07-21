@@ -17,10 +17,10 @@
  */
 package org.thoughtcrime.securesms.database.model;
 
-import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
-import static org.session.util.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY;
-import static org.session.util.StringSubstitutionConstants.NAME_KEY;
-import static org.session.util.StringSubstitutionConstants.TIME_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY;
 
 import android.content.Context;
 import android.net.Uri;

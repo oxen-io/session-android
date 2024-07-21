@@ -1,21 +1,21 @@
 package org.thoughtcrime.securesms.notifications;
 
-import static org.session.util.StringSubstitutionConstants.CONVERSATION_COUNT_KEY;
-import static org.session.util.StringSubstitutionConstants.MESSAGE_COUNT_KEY;
-import static org.session.util.StringSubstitutionConstants.NAME_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.CONVERSATION_COUNT_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.MESSAGE_COUNT_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY;
 
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.text.SpannableStringBuilder;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-
 import com.squareup.phrase.Phrase;
-
+import java.util.LinkedList;
+import java.util.List;
+import network.loki.messenger.R;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -24,11 +24,6 @@ import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.database.SessionContactDatabase;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.home.HomeActivity;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import network.loki.messenger.R;
 
 public class MultipleRecipientNotificationBuilder extends AbstractNotificationBuilder {
 
@@ -130,11 +125,11 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
    */
   private String getGroupDisplayName(Recipient recipient, boolean openGroupRecipient) {
     SessionContactDatabase contactDB = DatabaseComponent.get(context).sessionContactDatabase();
-    String sessionID = recipient.getAddress().serialize();
-    Contact contact = contactDB.getContactWithSessionID(sessionID);
-    if (contact == null) { return sessionID; }
+    String accountID = recipient.getAddress().serialize();
+    Contact contact = contactDB.getContactWithAccountID(accountID);
+    if (contact == null) { return accountID; }
     String displayName = contact.displayName(openGroupRecipient ? Contact.ContactContext.OPEN_GROUP : Contact.ContactContext.REGULAR);
-    if (displayName == null) { return sessionID; }
+    if (displayName == null) { return accountID; }
     return displayName;
   }
 }

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ItemSelectableBinding
-import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.ui.GetString
 import java.util.Objects
@@ -68,7 +67,6 @@ class RadioOptionAdapter<T>(
             }
         }
     }
-
 }
 
 data class RadioOption<out T>(

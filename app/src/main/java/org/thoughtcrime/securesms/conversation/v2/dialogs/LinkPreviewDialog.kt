@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.util.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.createSessionDialog
 
 /** Shown the first time the user inputs a URL that could generate a link preview, to

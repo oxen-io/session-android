@@ -107,13 +107,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Odoslať</string>
-    <string name="contentDescriptionMessageComposition">Písanie správy</string>
     <string name="conversation_activity__attachment_thumbnail">Ikona prílohy</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Prepnúť na rýchlu prílohu fotoaparátom</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Potiahnite pre zrušenie</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Multimediálna správa</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Doručené</string>
     <!-- conversation_item_received -->

@@ -4,19 +4,17 @@ import android.content.Context
 import android.widget.Toast
 import androidx.annotation.WorkerThread
 import com.squareup.phrase.Phrase
+import java.util.concurrent.Executors
 import network.loki.messenger.R
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
+import org.session.libsession.utilities.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 import org.session.libsignal.utilities.Log
-import org.session.util.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import java.util.concurrent.Executors
 
 object OpenGroupManager {
     private val executorService = Executors.newScheduledThreadPool(4)
@@ -142,7 +140,7 @@ object OpenGroupManager {
             storage.removeLastOutboxMessageId(server)
             val lokiThreadDB = DatabaseComponent.get(context).lokiThreadDatabase()
             lokiThreadDB.removeOpenGroupChat(threadID)
-            storage.deleteConversation(threadID) // Must be invoked on a background thread
+            storage.deleteConversation(threadID)       // Must be invoked on a background thread
             GroupManager.deleteGroup(groupID, context) // Must be invoked on a background thread
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
         }

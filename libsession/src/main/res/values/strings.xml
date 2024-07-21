@@ -9,6 +9,7 @@
     <string name="groupNameAdded">{name} added {members} to the group.</string>
     <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
 
+    <string name="DateUtils_today">Today</string>
     <!-- RecipientProvider -->
 
     <!-- Everything in this section is used by the app but missing from the CrowdIn translations as of 2024-03-14 -ACL -->
@@ -83,7 +84,7 @@
     <string name="accountIdErrorInvalid">This Account ID is invalid. Please check and try again.</string>
     <string name="accountIdOrOnsEnter">Enter Account ID or ONS</string>
     <string name="accountIdOrOnsInvite">Invite Account ID or ONS</string>
-    <string name="accountIdShare">Hey, I\'ve been using {app_name} to chat with complete privacy and security. Come join me! My Account ID is<br/><br/>{account_id}<br/><br/>Download it at {download_url}</string>
+    <string name="accountIdShare">Hey, I\'ve been using {app_name} to chat with complete privacy and security. Come join me!\n\nMy Account ID is:\n{account_id}\n\nDownload it at:\n{download_url}</string>
     <string name="accountIdYours">Your Account ID</string>
     <string name="accountIdYoursDescription">This is your Account ID. Other users can scan it to start a conversation with you.</string>
     <string name="actualSize">Actual Size</string>
@@ -275,8 +276,6 @@
     <string name="contactUserDetails">User Details</string>
     <string name="contactsContacts">Contacts</string>
     <string name="contentDescriptionCamera">Camera</string>
-    <string name="contentDescriptionMediaMessage">Media message</string>
-    <string name="contentDescriptionMessageComposition">Message composition</string>
     <string name="conversationsAddToHome">Add to home screen</string>
     <string name="conversationsAddedToHome">Added to home screen</string>
     <string name="conversationsAudioMessages">Audio Messages</string>
@@ -578,7 +577,6 @@
     <string name="notificationsContentShowNoNameOrContent">No Name or Content</string>
     <string name="notificationsFastMode">Fast Mode</string>
     <string name="notificationsFastModeDescriptionAndroid">You\'ll be notified of new messages reliably and immediately using Google\'s notification Servers.</string>
-    <string name="notificationsFastModeDescriptionIos">You\'ll be notified of new messages reliably and immediately using Apple\'s notification Servers.</string>
     <string name="notificationsGoToAndroidSettings">Go to Android notification settings</string>
     <string name="notificationsGoToDevice">Go to device notification settings</string>
     <string name="notificationsLedColor">LED color</string>
@@ -604,6 +602,7 @@
     <string name="onboardingAccountCreate">Create account</string>
     <string name="onboardingAccountCreated">Account Created</string>
     <string name="onboardingAccountExists">I have an account</string>
+    <string name="onboardingBackAccountCreation">You cannot go back further. In order to cancel your account creation, Session needs to quit.</string>
     <string name="onboardingBubbleCreatingAnAccountIsEasy">Creating an account is instant, free, and anonymous</string>
     <string name="onboardingBubbleNoPhoneNumber">You don\'t even need a phone number to sign up.</string>
     <string name="onboardingBubblePrivacyInYourPocket">Privacy in your pocket.</string>
@@ -612,7 +611,7 @@
     <string name="onboardingHitThePlusButton">Hit the plus button to start a chat, create a group, or join an official community!</string>
     <string name="onboardingMessageNotificationExplanation">There are two ways {app_name} can notify you of new messages.</string>
     <string name="onboardingPrivacy">Privacy Policy</string>
-    <string name="onboardingToS">Terms of Service</string>
+    <string name="onboardingTos">Terms of Service</string>
     <string name="onboardingTosPrivacy">By using this service, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b></string>
     <string name="onionRoutingPath">Path</string>
     <string name="onionRoutingPathDescription">{app_name} hides your IP by routing your messages through multiple service nodes in {app_name}\'s decentralized network. This is your current path:</string>
@@ -674,6 +673,7 @@
     <string name="qrScan">Scan QR Code</string>
     <string name="qrView">View QR</string>
     <string name="qrYoursDescription">Friends can message you by scanning your QR code.</string>
+    <string name="quitButton">Quit</string>
     <string name="emojiReactsNotification">Reacted to your message {emoji}</string>
     <string name="read">Read</string>
     <string name="readReceipts">Read Receipts</string>

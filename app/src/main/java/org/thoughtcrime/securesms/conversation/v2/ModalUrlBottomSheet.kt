@@ -18,7 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentModalUrlBottomSheetBinding
-import org.session.util.StringSubstitutionConstants.URL_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.URL_KEY
 
 class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(), View.OnClickListener {
     private lateinit var binding: FragmentModalUrlBottomSheetBinding

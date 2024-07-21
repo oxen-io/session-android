@@ -39,7 +39,7 @@ class LibSessionTests {
 
     private fun randomSeedBytes() = (0 until 16).map { Random.nextInt(UByte.MAX_VALUE.toInt()).toByte() }
     private fun randomKeyPair() = KeyPairUtilities.generate(randomSeedBytes().toByteArray())
-    private fun randomSessionId() = randomKeyPair().x25519KeyPair.hexEncodedPublicKey
+    private fun randomAccountId() = randomKeyPair().x25519KeyPair.hexEncodedPublicKey
 
     private var fakeHashI = 0
     private val nextFakeHash: String
@@ -102,7 +102,7 @@ class LibSessionTests {
         val storageSpy = spy(app.storage)
         app.storage = storageSpy
 
-        val newContactId = randomSessionId()
+        val newContactId = randomAccountId()
         val singleContact = Contact(
             id = newContactId,
             approved = true,
@@ -123,7 +123,7 @@ class LibSessionTests {
         val storageSpy = spy(app.storage)
         app.storage = storageSpy
 
-        val randomRecipient = randomSessionId()
+        val randomRecipient = randomAccountId()
         val newContact = Contact(
             id = randomRecipient,
             approved = true,
@@ -158,7 +158,7 @@ class LibSessionTests {
         app.storage = storageSpy
 
         // Initial state
-        val randomRecipient = randomSessionId()
+        val randomRecipient = randomAccountId()
         val currentContact = Contact(
             id = randomRecipient,
             approved = true,

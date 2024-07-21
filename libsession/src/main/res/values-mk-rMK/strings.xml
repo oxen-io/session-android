@@ -84,12 +84,10 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">ပို့ပါ</string>
-    <string name="contentDescriptionMessageComposition">စာအနေအထား</string>
     <string name="conversation_activity__attachment_thumbnail">ပူးတွဲဖိုင် စီခြင်း </string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">ကင်မရာပူးတွဲဖိုင်စီစဉ်ခြင်း နှိပ်ရန် </string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">ရုပ်/သံ/ပုံပါစာ</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">ပေးပို့ပြီး</string>
     <!-- conversation_item_received -->

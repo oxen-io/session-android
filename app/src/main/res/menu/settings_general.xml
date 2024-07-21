@@ -6,6 +6,7 @@
     <item
         android:id="@+id/action_qr_code"
         android:title=""
+        android:contentDescription="@string/AccessibilityId_view_qr_code"
         android:icon="@drawable/ic_qr_code_24"
         app:showAsAction="always" />
 

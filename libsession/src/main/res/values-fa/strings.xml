@@ -105,13 +105,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">ارسال</string>
-    <string name="contentDescriptionMessageComposition">ترکیب پیام</string>
     <string name="conversation_activity__attachment_thumbnail">پیوست تصویر کوچک</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">تغییر حالت نگه دارنده پیوست دوربین سریع</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">برای لغو بکشید</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">پیام رسانه</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">تحویل</string>
     <!-- conversation_item_received -->

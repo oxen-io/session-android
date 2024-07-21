@@ -23,10 +23,10 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.OpenGroupUrlParser
+import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
-import org.session.util.StringSubstitutionConstants.GROUP_NAME_KEY
-import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
+import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 
@@ -35,7 +35,7 @@ class JoinCommunityFragment : Fragment() {
 
     private lateinit var binding: FragmentJoinCommunityBinding
 
-    lateinit var delegate: NewConversationDelegate
+    lateinit var delegate: StartConversationDelegate
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

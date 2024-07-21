@@ -16,6 +16,7 @@ import androidx.annotation.DimenRes
 import network.loki.messenger.R
 import org.session.libsession.utilities.getColorFromAttr
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.core.graphics.applyCanvas
@@ -111,3 +112,11 @@ fun Size.coerceAtMost(longestWidth: Int): Size =
             height.coerceAtMost(longestWidth).let { Size((it * aspect).roundToInt(), it) }
         }
     }
+
+fun EditText.addTextChangedListener(listener: (String) -> Unit) {
+    addTextChangedListener(object: SimpleTextWatcher() {
+        override fun onTextChanged(text: String) {
+            listener(text)
+        }
+    })
+}

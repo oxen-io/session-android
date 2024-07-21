@@ -103,13 +103,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">送信</string>
-    <string name="contentDescriptionMessageComposition">メッセージ新規作成</string>
     <string name="conversation_activity__attachment_thumbnail">添付のサムネイル</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">迅速カメラ添付用引き出しの切替</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">スライドしてキャンセル</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">メディアメッセージ</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">配信済み</string>
     <!-- conversation_item_received -->

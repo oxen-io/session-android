@@ -34,13 +34,13 @@ class MessageRequestView : LinearLayout {
     // region Updating
     fun bind(thread: ThreadRecord, glide: GlideRequests) {
         this.thread = thread
-        val senderDisplayName = getUserDisplayName(thread.recipient)
-            ?: thread.recipient.address.toString()
+
+        val senderDisplayName = getUserDisplayName(thread.recipient) ?: thread.recipient.address.toString()
+
         binding.displayNameTextView.text = senderDisplayName
         binding.timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), thread.date)
-        val rawSnippet = thread.getDisplayBody(context)
         val snippet = highlightMentions(
-            text = rawSnippet,
+            text = thread.getDisplayBody(context),
             formatOnly = true, // no styling here, only text formatting
             threadID = thread.threadId,
             context = context

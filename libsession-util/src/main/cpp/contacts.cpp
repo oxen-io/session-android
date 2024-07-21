@@ -5,15 +5,15 @@
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_Contacts_get(JNIEnv *env, jobject thiz,
-                                                          jstring session_id) {
+                                                          jstring account_id) {
     // If an exception is thrown, return nullptr
     return jni_utils::run_catching_cxx_exception_or<jobject>(
             [=]() -> jobject {
                 std::lock_guard lock{util::util_mutex_};
                 auto contacts = ptrToContacts(env, thiz);
-                auto session_id_chars = env->GetStringUTFChars(session_id, nullptr);
-                auto contact = contacts->get(session_id_chars);
-                env->ReleaseStringUTFChars(session_id, session_id_chars);
+                auto account_id_chars = env->GetStringUTFChars(account_id, nullptr);
+                auto contact = contacts->get(account_id_chars);
+                env->ReleaseStringUTFChars(account_id, account_id_chars);
                 if (!contact) return nullptr;
                 jobject j_contact = serialize_contact(env, contact.value());
                 return j_contact;
@@ -25,13 +25,13 @@ Java_network_loki_messenger_libsession_1util_Contacts_get(JNIEnv *env, jobject t
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_Contacts_getOrConstruct(JNIEnv *env, jobject thiz,
-                                                                     jstring session_id) {
+                                                                     jstring account_id) {
     return jni_utils::run_catching_cxx_exception_or_throws<jobject>(env, [=] {
         std::lock_guard lock{util::util_mutex_};
         auto contacts = ptrToContacts(env, thiz);
-        auto session_id_chars = env->GetStringUTFChars(session_id, nullptr);
-        auto contact = contacts->get_or_construct(session_id_chars);
-        env->ReleaseStringUTFChars(session_id, session_id_chars);
+        auto account_id_chars = env->GetStringUTFChars(account_id, nullptr);
+        auto contact = contacts->get_or_construct(account_id_chars);
+        env->ReleaseStringUTFChars(account_id, account_id_chars);
         return serialize_contact(env, contact);
     });
 }
@@ -51,14 +51,14 @@ Java_network_loki_messenger_libsession_1util_Contacts_set(JNIEnv *env, jobject t
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_Contacts_erase(JNIEnv *env, jobject thiz,
-                                                            jstring session_id) {
+                                                            jstring account_id) {
     return jni_utils::run_catching_cxx_exception_or_throws<jboolean>(env, [=] {
         std::lock_guard lock{util::util_mutex_};
         auto contacts = ptrToContacts(env, thiz);
-        auto session_id_chars = env->GetStringUTFChars(session_id, nullptr);
+        auto account_id_chars = env->GetStringUTFChars(account_id, nullptr);
 
-        bool result = contacts->erase(session_id_chars);
-        env->ReleaseStringUTFChars(session_id, session_id_chars);
+        bool result = contacts->erase(account_id_chars);
+        env->ReleaseStringUTFChars(account_id, account_id_chars);
         return result;
     });
 }

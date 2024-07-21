@@ -61,6 +61,7 @@ import org.webrtc.SurfaceViewRenderer
 import java.nio.ByteBuffer
 import java.util.ArrayDeque
 import java.util.UUID
+import kotlin.math.abs
 import org.thoughtcrime.securesms.webrtc.data.State as CallState
 
 class CallManager(
@@ -718,7 +719,7 @@ class CallManager(
 
         // apply the rotation to the streams
         peerConnection?.setDeviceRotation(rotation)
-        remoteRotationSink?.rotation = rotation
+        remoteRotationSink?.rotation = abs(rotation) // abs as we never need the remote video to be inverted
     }
 
     fun handleWiredHeadsetChanged(present: Boolean) {

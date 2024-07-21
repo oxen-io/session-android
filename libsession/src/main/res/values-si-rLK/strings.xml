@@ -77,7 +77,6 @@
     <string name="send">යවන්න</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">මාධ්‍යය පණිවිඩය</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">බාරදුනි</string>
     <!-- conversation_item_received -->

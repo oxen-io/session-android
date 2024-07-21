@@ -16,8 +16,9 @@
  */
 package org.thoughtcrime.securesms.notifications;
 
-import static org.session.util.StringSubstitutionConstants.EMOJI_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -26,25 +27,38 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.service.notification.StatusBarNotification;
+import android.text.SpannableString;
 import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.goterl.lazysodium.utils.KeyPair;
 import com.squareup.phrase.Phrase;
-
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import me.leolin.shortcutbadger.ShortcutBadger;
+import network.loki.messenger.R;
 import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
-import org.session.libsession.messaging.utilities.SessionId;
+import org.session.libsession.messaging.utilities.AccountId;
 import org.session.libsession.messaging.utilities.SodiumUtilities;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
@@ -72,21 +86,6 @@ import org.thoughtcrime.securesms.mms.SlideDeck;
 import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 import org.thoughtcrime.securesms.util.SpanUtil;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import me.leolin.shortcutbadger.ShortcutBadger;
-import network.loki.messenger.R;
 
 /**
  * Handles posting system notifications for new messages.
@@ -167,9 +166,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
       for (StatusBarNotification notification : activeNotifications) {
         boolean validNotification = false;
 
-        if (notification.getId() != SUMMARY_NOTIFICATION_ID &&
-            notification.getId() != KeyCachingService.SERVICE_RUNNING_ID          &&
-            notification.getId() != FOREGROUND_ID         &&
+        if (notification.getId() != SUMMARY_NOTIFICATION_ID              &&
+            notification.getId() != KeyCachingService.SERVICE_RUNNING_ID &&
+            notification.getId() != FOREGROUND_ID                        &&
             notification.getId() != PENDING_MESSAGES_ID)
         {
           for (NotificationItem item : notificationState.getNotifications()) {
@@ -179,9 +178,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
             }
           }
 
-          if (!validNotification) {
-            notifications.cancel(notification.getId());
-          }
+          if (!validNotification) { notifications.cancel(notification.getId()); }
         }
       }
     } catch (Throwable e) {
@@ -213,7 +210,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void updateNotification(@NonNull Context context, long threadId, boolean signal)
   {
-    boolean    isVisible  = visibleThread == threadId;
+    boolean isVisible = visibleThread == threadId;
 
     ThreadDatabase threads    = DatabaseComponent.get(context).threadDatabase();
     Recipient      recipient = threads.getRecipientForThreadId(threadId);
@@ -253,7 +250,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     try {
       telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread(); // TODO: add a notification specific lighter query here
 
-      if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
+      if ((telcoCursor == null || telcoCursor.isAfterLast()) || TextSecurePreferences.getLocalNumber(context) == null)
       {
         updateBadge(context, 0);
         cancelActiveNotifications(context);
@@ -330,14 +327,19 @@ public class DefaultMessageNotifier implements MessageNotifier {
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
 
-    // TODO: Removing highlighting mentions in the notification because this context is the libsession one which
-    // TODO: doesn't have access to the `R.attr.message_sent_text_color` and `R.attr.message_received_text_color`
-    // TODO: attributes to perform the colour lookup. Also, it makes little sense to highlight the mentions using
-    // TODO: the app theme as it may result in insufficient contrast with the notification background which will
-    // TODO: be using the SYSTEM theme.
-    builder.setPrimaryMessageBody(recipient, notifications.get(0).getIndividualRecipient(),
-                                  //MentionUtilities.highlightMentions(text == null ? "" : text, notifications.get(0).getThreadId(), context), // Removing hightlighting mentions -ACL
-                                  text == null ? "" : text,
+    CharSequence builderCS = text == null ? "" : text;
+    SpannableString ss = MentionUtilities.highlightMentions(
+            builderCS,
+            false,
+            false,
+            true,
+            bundled ? notifications.get(0).getThreadId() : 0,
+            context
+    );
+
+    builder.setPrimaryMessageBody(recipient,
+                                  notifications.get(0).getIndividualRecipient(),
+                                  ss,
                                   notifications.get(0).getSlideDeck());
 
     builder.setContentIntent(notifications.get(0).getPendingIntent(context));
@@ -383,7 +385,19 @@ public class DefaultMessageNotifier implements MessageNotifier {
     }
 
     Notification notification = builder.build();
-    NotificationManagerCompat.from(context).notify(notificationId, notification);
+
+    // ACL FIX THIS PROPERLY
+    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+          // TODO: Consider calling
+          //    ActivityCompat#requestPermissions
+          // here to request the missing permissions, and then overriding
+          //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+          //                                          int[] grantResults)
+          // to handle the case where the user grants the permission. See the documentation
+          // for ActivityCompat#requestPermissions for more details.
+          return;
+      }
+      NotificationManagerCompat.from(context).notify(notificationId, notification);
     Log.i(TAG, "Posted notification. " + notification.toString());
   }
 
@@ -452,6 +466,19 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
 
+
+    // ACL FIX THIS PROPERLY
+    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+          // TODO: Consider calling
+          //    ActivityCompat#requestPermissions
+          // here to request the missing permissions, and then overriding
+          //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+          //                                          int[] grantResults)
+          // to handle the case where the user grants the permission. See the documentation
+          // for ActivityCompat#requestPermissions for more details.
+          return;
+    }
+
     Notification notification = builder.build();
     NotificationManagerCompat.from(context).notify(SUMMARY_NOTIFICATION_ID, notification);
     Log.i(TAG, "Posted notification. " + notification);
@@ -487,22 +514,39 @@ public class DefaultMessageNotifier implements MessageNotifier {
           continue;
         }
       }
+
+      // If this is a message request from an unknown user..
       if (messageRequest) {
         body = SpanUtil.italic(context.getString(R.string.messageRequestsNew));
+
+      // If we received some manner of notification but Session is locked..
+      } else if (KeyCachingService.isLocked(context)) {
+        body = SpanUtil.italic(context.getString(R.string.messageNewYouveGotA));
+
+      // ----- All further cases assume we know the contact and that Session isn't locked -----
+
+      // If this is a notification about a multimedia message from a contact we know about..
       } else if (record.isMms() && !((MmsMessageRecord) record).getSharedContacts().isEmpty()) {
         Contact contact = ((MmsMessageRecord) record).getSharedContacts().get(0);
         body = ContactUtil.getStringSummary(context, contact);
+
+      // If this is a notification about a multimedia message which contains no text but DOES contain a slide deck with at least one slide..
       } else if (record.isMms() && TextUtils.isEmpty(body) && !((MmsMessageRecord) record).getSlideDeck().getSlides().isEmpty()) {
         slideDeck = ((MediaMmsMessageRecord)record).getSlideDeck();
         body = SpanUtil.italic(slideDeck.getBody());
+
+      // If this is a notification about a multimedia message, but it's not ITSELF a multimedia notification AND it contains a slide deck with at least one slide..
       } else if (record.isMms() && !record.isMmsNotification() && !((MmsMessageRecord) record).getSlideDeck().getSlides().isEmpty()) {
         slideDeck = ((MediaMmsMessageRecord)record).getSlideDeck();
         String message      = slideDeck.getBody() + ": " + record.getBody();
         int    italicLength = message.length() - body.length();
         body = SpanUtil.italic(message, italicLength);
+
+      // If this is a notification about an invitation to a community..
       } else if (record.isOpenGroupInvitation()) {
         body = SpanUtil.italic(context.getString(R.string.communityInvitation));
       }
+
       String userPublicKey = TextSecurePreferences.getLocalNumber(context);
       String blindedPublicKey = cache.get(threadId);
       if (blindedPublicKey == null) {
@@ -556,7 +600,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     if (openGroup != null && edKeyPair != null) {
       KeyPair blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup.getPublicKey(), edKeyPair);
       if (blindedKeyPair != null) {
-        return new SessionId(IdPrefix.BLINDED, blindedKeyPair.getPublicKey().getAsBytes()).getHexString();
+        return new AccountId(IdPrefix.BLINDED, blindedKeyPair.getPublicKey().getAsBytes()).getHexString();
       }
     }
     return null;

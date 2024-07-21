@@ -101,7 +101,6 @@
     <string name="send">Kirim</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Pesan media</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Terkirim</string>
     <!-- conversation_item_received -->

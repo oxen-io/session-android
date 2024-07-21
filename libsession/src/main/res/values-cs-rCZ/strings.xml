@@ -109,13 +109,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Odeslat</string>
-    <string name="contentDescriptionMessageComposition">Sestavení zprávy</string>
     <string name="conversation_activity__attachment_thumbnail">Připojený náhled</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Vytvořit rychlou přílohu kamerou</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Pro zrušení přejeďte</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Multimediální zpráva</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Doručeno</string>
     <!-- conversation_item_received -->

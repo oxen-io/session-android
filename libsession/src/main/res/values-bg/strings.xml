@@ -103,13 +103,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Изпращане</string>
-    <string name="contentDescriptionMessageComposition">Създаване на съобщение</string>
     <string name="conversation_activity__attachment_thumbnail">Изображение на прикачен файл</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Затворяне/отворяне на чекмеджето за прикчаване на файл от камера</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Плъзнете за отказ</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Медийно съобщение</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Доставено</string>
     <!-- conversation_item_received -->

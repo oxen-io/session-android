@@ -23,15 +23,27 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"/>
     </FrameLayout>
-    <ImageView
-        android:id="@+id/remote_recipient"
+
+    <org.thoughtcrime.securesms.components.ProfilePictureView
+        android:id="@+id/userAvatar"
         app:layout_constraintStart_toStartOf="@id/fullscreen_renderer_container"
         app:layout_constraintEnd_toEndOf="@id/fullscreen_renderer_container"
         app:layout_constraintTop_toTopOf="@id/fullscreen_renderer_container"
         app:layout_constraintBottom_toBottomOf="@id/fullscreen_renderer_container"
         app:layout_constraintVertical_bias="0.4"
         android:layout_width="@dimen/extra_large_profile_picture_size"
-        android:layout_height="@dimen/extra_large_profile_picture_size"/>
+        android:layout_height="@dimen/extra_large_profile_picture_size"
+        android:visibility="gone"/>
+
+    <org.thoughtcrime.securesms.components.ProfilePictureView
+        android:id="@+id/contactAvatar"
+        app:layout_constraintStart_toStartOf="@id/fullscreen_renderer_container"
+        app:layout_constraintEnd_toEndOf="@id/fullscreen_renderer_container"
+        app:layout_constraintTop_toTopOf="@id/fullscreen_renderer_container"
+        app:layout_constraintBottom_toBottomOf="@id/fullscreen_renderer_container"
+        app:layout_constraintVertical_bias="0.4"
+        android:layout_width="@dimen/extra_large_profile_picture_size"
+        android:layout_height="@dimen/extra_large_profile_picture_size" />
 
     <ImageView
         android:id="@+id/back_arrow"
@@ -71,9 +83,9 @@
         android:foregroundGravity="center"
         android:visibility="gone"
         app:SpinKit_Color="@color/core_white"
-        app:layout_constraintEnd_toEndOf="@+id/remote_recipient"
-        app:layout_constraintStart_toStartOf="@+id/remote_recipient"
-        app:layout_constraintTop_toBottomOf="@id/remote_recipient"
+        app:layout_constraintEnd_toEndOf="@+id/contactAvatar"
+        app:layout_constraintStart_toStartOf="@+id/contactAvatar"
+        app:layout_constraintTop_toBottomOf="@id/contactAvatar"
         tools:visibility="visible" />
 
     <TextView

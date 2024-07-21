@@ -1,7 +1,7 @@
 package org.thoughtcrime.securesms.reactions;
 
-import static org.session.util.StringSubstitutionConstants.COUNT_KEY;
-import static org.session.util.StringSubstitutionConstants.EMOJI_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY;
+import static org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.squareup.phrase.Phrase;
-
-import org.session.libsession.messaging.utilities.SessionId;
-import org.thoughtcrime.securesms.components.ProfilePictureView;
-import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
-import org.thoughtcrime.securesms.database.model.MessageId;
 import java.util.Collections;
 import java.util.List;
 import network.loki.messenger.R;
+import org.session.libsession.messaging.utilities.AccountId;
+import org.thoughtcrime.securesms.components.ProfilePictureView;
+import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
+import org.thoughtcrime.securesms.database.model.MessageId;
 
 final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecipientsAdapter.ViewHolder> {
 
@@ -166,7 +164,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
       } else {
         // TODO: The name we get here turns out to be null - Jira ticket: SES-2158
         String name = reaction.getSender().getName();
-        if (name != null && new SessionId(name).getPrefix() != null) {
+        if (name != null && new AccountId(name).getPrefix() != null) {
           name = name.substring(0, 4) + "..." + name.substring(name.length() - 4);
 
         }

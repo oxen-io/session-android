@@ -105,13 +105,11 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Sendi</string>
-    <string name="contentDescriptionMessageComposition">Mesaĝa redakto</string>
     <string name="conversation_activity__attachment_thumbnail">Kunsendaĵa miniaturo</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Baskuligi kunsendaĵon el rapida fotilo</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Deŝovu por nuligi</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Aŭdvida mesaĝo</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Liverita</string>
     <!-- conversation_item_received -->

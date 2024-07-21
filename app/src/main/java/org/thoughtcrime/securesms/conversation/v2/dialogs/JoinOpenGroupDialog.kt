@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2.dialogs
 
+import org.thoughtcrime.securesms.createSessionDialog
 import android.app.Dialog
 import android.graphics.Typeface
 import android.os.Bundle
@@ -12,10 +13,9 @@ import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.OpenGroupUrlParser
+import org.session.libsession.utilities.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
-import org.session.util.StringSubstitutionConstants.COMMUNITY_NAME_KEY
-import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 

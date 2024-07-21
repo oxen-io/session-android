@@ -107,12 +107,10 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">పంపించు</string>
-    <string name="contentDescriptionMessageComposition">సందేశాన్ని కూర్పుము</string>
     <string name="conversation_activity__attachment_thumbnail">జోడింపు సూక్ష్మచిత్రం</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">టోగుల్ శీఘ్ర కెమెరా అటాచ్మెంట్ సొరుగు</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">మీడియ సందేశం</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">పంపిణి ఐనది</string>
     <!-- conversation_item_received -->

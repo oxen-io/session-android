@@ -106,12 +106,10 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Пошаљи</string>
-    <string name="contentDescriptionMessageComposition">Састављање поруке</string>
     <string name="conversation_activity__attachment_thumbnail">Сличица прилога</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Фиока брзог прилога камере</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">Мултимедијална порука</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">Испоручена</string>
     <!-- conversation_item_received -->

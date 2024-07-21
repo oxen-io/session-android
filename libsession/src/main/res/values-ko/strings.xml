@@ -93,12 +93,10 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">보내기</string>
-    <string name="contentDescriptionMessageComposition">메시지 작성</string>
     <string name="conversation_activity__attachment_thumbnail">첨부파일 미리보기 이미지</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">취소하려면 슬라이드</string>
     <!-- conversation_item -->
-    <string name="contentDescriptionMediaMessage">미디어 메시지</string>
     <!-- conversation_item_sent -->
     <string name="conversation_item_sent__delivered_description">전송됨</string>
     <!-- conversation_item_received -->
