@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-     All localisable strings are now in the 'libsession' module (which will be renamed to
+    All localisable strings are now in the 'libsession' module (which will be renamed to
     'common' in the near future), and all content description / AccessibilityID_ strings are in
-    their own 'content-descriptions' module. -->
-    <string name="foo">bar</string>
+    their own 'content-descriptions' module.
+    -->
 </resources>

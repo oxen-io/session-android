@@ -14,11 +14,11 @@ object ExpirationUtil {
 
     @JvmStatic
     fun getExpirationDisplayValue(context: Context, duration: Duration): String =
-        LocalisedTimeUtil.getDurationWithLargestTimeUnit(context, duration)
+        LocalisedTimeUtil.getDurationWithSingleLargestTimeUnit(context, duration)
 
     @JvmStatic
     fun getExpirationDisplayValue(context: Context, expirationTimeSecs: Int) =
-        LocalisedTimeUtil.getDurationWithLargestTimeUnit(context, expirationTimeSecs.seconds)
+        LocalisedTimeUtil.getDurationWithSingleLargestTimeUnit(context, expirationTimeSecs.seconds)
 
     fun getExpirationAbbreviatedDisplayValue(expirationTimeSecs: Long): String {
         return if (expirationTimeSecs < TimeUnit.MINUTES.toSeconds(1)) {
