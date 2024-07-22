@@ -3,26 +3,21 @@ package org.thoughtcrime.securesms.conversation.v2
 import com.goterl.lazysodium.utils.KeyPair
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.endsWith
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.anyLong
-import org.mockito.Mockito.anySet
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.BaseViewModelTest
-import org.thoughtcrime.securesms.NoOpLogger
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -97,19 +92,19 @@ class ConversationViewModelTest: BaseViewModelTest() {
     fun `should delete locally`() {
         val messages = mock<Set<MessageRecord>>()
 
-        viewModel.deleteLocally(messages, threadId)
+        viewModel.deleteMessages(messages, threadId)
 
-        verify(repository).deleteLocally(messages, threadId)
+        verify(repository).deleteMessages(messages, threadId)
     }
 
     @Test
     fun `should emit error message on failure to delete a message for everyone`() = runBlockingTest {
         val message = mock<MessageRecord>()
         val error = Throwable()
-        whenever(repository.deleteForEveryone(anyLong(), any(), any()))
+        whenever(repository.markAsDeletedForEveryone(anyLong(), any(), any()))
             .thenReturn(ResultOf.Failure(error))
 
-        viewModel.deleteForEveryone(message)
+        viewModel.markAsDeletedForEveryone(message)
 
         assertThat(viewModel.uiState.first().uiMessages.first().message, endsWith("$error"))
     }

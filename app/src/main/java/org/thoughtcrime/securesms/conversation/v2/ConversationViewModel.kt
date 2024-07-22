@@ -157,22 +157,24 @@ class ConversationViewModel(
      * This will delete these messages from the db
      * Not to be confused with 'marking messages as deleted'
      */
-    fun deleteLocally(messages: Set<MessageRecord>, threadId: Long) {
-        repository.deleteLocally(messages, threadId)
+    fun deleteMessages(messages: Set<MessageRecord>, threadId: Long) {
+        repository.deleteMessages(messages, threadId)
     }
 
     /**
-     * This will mark the messages as deleted.
-     * They won't be removed from the db but instead will appear as a special type
-     * of message that says something like "This message was deleted"
+     * This will mark the messages as deleted, locally only.
+     * Attachments and other related data will be removed from the db,
+     * but the messages themselves won't be removed from the db.
+     * Instead they will appear as a special type of message
+     * that says something like "This message was deleted"
      */
-    fun markAsDeleted(messages: Set<MessageRecord>, threadId: Long) {
+    fun markAsDeletedLocally(messages: Set<MessageRecord>, threadId: Long) {
         // make sure to stop audio messages, if any
         messages.filterIsInstance<MmsMessageRecord>()
             .mapNotNull { it.slideDeck.audioSlide }
             .forEach(::stopMessageAudio)
 
-        repository.markMessagesAsDeleted(messages, threadId)
+        repository.markAsDeletedLocally(messages, threadId)
     }
 
     /**
@@ -192,11 +194,18 @@ class ConversationViewModel(
         repository.setApproved(recipient, true)
     }
 
-    fun deleteForEveryone(message: MessageRecord) = viewModelScope.launch {
+    /**
+     * This will mark the messages as deleted, for everyone.
+     * Attachments and other related data will be removed from the db,
+     * but the messages themselves won't be removed from the db.
+     * Instead they will appear as a special type of message
+     * that says something like "This message was deleted"
+     */
+    fun markAsDeletedForEveryone(message: MessageRecord) = viewModelScope.launch {
         val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
         stopMessageAudio(message)
 
-        repository.deleteForEveryone(threadId, recipient, message)
+        repository.markAsDeletedForEveryone(threadId, recipient, message)
             .onSuccess {
                 Log.d("Loki", "Deleted message ${message.id} ")
             }

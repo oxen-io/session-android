@@ -1968,7 +1968,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         // creating a reusable callback
         val deleteDeviceOnly = {
-            viewModel.markAsDeleted(messages = messages, threadId = viewModel.threadId)
+            viewModel.markAsDeletedLocally(messages = messages, threadId = viewModel.threadId)
             endActionMode()
             //todo DELETION show confirmation toast
         }
