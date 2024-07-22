@@ -73,7 +73,9 @@ import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.NavigationBar
 import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.bold
 
 @EditGroupNavGraph(start = true)
 @Composable
@@ -300,7 +302,8 @@ fun EditGroupView(
                     TextButton(onClick = { onBack() }) {
                         Text(
                             text = stringResource(id = R.string.menu_done_button),
-                            color = LocalColors.current.primary
+                            color = LocalColors.current.text,
+                            style = LocalType.current.large.bold()
                         )
                     }
                 }
