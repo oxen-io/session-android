@@ -1,7 +1,6 @@
 package org.session.libsession.messaging.sending_receiving
 
 import network.loki.messenger.libsession_util.util.ExpiryMode
-import network.loki.messenger.libsession_util.util.GroupInfo.ClosedGroupInfo.Companion.isAuthData
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -42,6 +41,7 @@ import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.defaultRequiresAuth
@@ -253,12 +253,17 @@ object MessageSender {
             namespaces.mapNotNull { namespace ->
                 if (destination is Destination.ClosedGroup) {
                     // possibly handle a failure for no user groups or no closed group signing key?
-                    val signingKey = configFactory.userGroups!!.getClosedGroup(destination.publicKey)!!.signingKey ?: return@mapNotNull null
-                    val callback = if (isAuthData(signingKey)) {
+                    val group = configFactory.userGroups?.getClosedGroup(destination.publicKey) ?: return@mapNotNull null
+                    val callback = if (group.authData != null) {
                         val keys = configFactory.getGroupKeysConfig(SessionId.from(destination.publicKey))!!
-                        val params = subkeyCallback(signingKey, keys)
-                        params
-                    } else signingKeyCallback(signingKey)
+                        subkeyCallback(group.authData!!, keys)
+                    } else if (group.adminKey != null) {
+                        signingKeyCallback(group.adminKey!!)
+                    } else {
+                        Log.w("MessageSender", "No auth data for group")
+                        return@mapNotNull null
+                    }
+
                     SnodeAPI.sendAuthenticatedMessage(snodeMessage, callback, namespace = namespace)
                 } else {
                     SnodeAPI.sendMessage(snodeMessage, requiresAuth = false, namespace = namespace)

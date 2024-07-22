@@ -514,11 +514,11 @@ object SnodeAPI {
         messageHashes: List<String>,
         newExpiry: Long,
         publicKey: String,
-        signingKey: ByteArray,
+        signCallback: SignCallback,
         pubKeyEd25519: String? = null,
         shorten: Boolean = false,
         extend: Boolean = false): SnodeBatchRequestInfo? {
-        val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, signingKey, pubKeyEd25519, extend, shorten) ?: return null
+        val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, signCallback, pubKeyEd25519, extend, shorten) ?: return null
         return SnodeBatchRequestInfo(
             Snode.Method.Expire.rawValue,
             params,
@@ -539,7 +539,7 @@ object SnodeAPI {
             messageHashes,
             newExpiry,
             publicKey,
-            signingKey,
+            signingKeyCallback(signingKey),
             pubKeyEd25519,
             shorten,
             extend
@@ -644,7 +644,7 @@ object SnodeAPI {
             )
             val signingKey = userEd25519KeyPair.secretKey.asBytes
             val pubKeyEd25519 = userEd25519KeyPair.publicKey.asHexString
-            val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, signingKey, pubKeyEd25519, extend, shorten)
+            val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, signingKeyCallback(signingKey), pubKeyEd25519, extend, shorten)
                 ?: return@retryIfNeeded Promise.ofFail(
                     Exception("Couldn't build signed params for alterTtl request for newExpiry=$newExpiry, extend=$extend, shorten=$shorten")
                 )
@@ -658,7 +658,7 @@ object SnodeAPI {
         messageHashes: List<String>,
         newExpiry: Long,
         publicKey: String,
-        signingKey: ByteArray,
+        signCallback: SignCallback,
         pubKeyEd25519: String? = null,
         extend: Boolean = false,
         shorten: Boolean = false): Map<String, Any>? {
@@ -674,16 +674,11 @@ object SnodeAPI {
         }
         val shortenOrExtend = if (extend) "extend" else if (shorten) "shorten" else ""
 
-        val signData = "${Snode.Method.Expire.rawValue}$shortenOrExtend$newExpiry${messageHashes.joinToString(separator = "")}".toByteArray()
+        val signData = "${Snode.Method.Expire.rawValue}$shortenOrExtend$newExpiry${messageHashes.joinToString(separator = "")}"
 
-        val signature = ByteArray(Sign.BYTES)
+        val signature: Map<String, Any>
         try {
-            sodium.cryptoSignDetached(
-                signature,
-                signData,
-                signData.size.toLong(),
-                signingKey
-            )
+            signature = signCallback(signData, nowWithOffset, null)
         } catch (e: Exception) {
             Log.e("Loki", "Signing data failed with user secret key", e)
             return null
@@ -692,8 +687,7 @@ object SnodeAPI {
         if (pubKeyEd25519 != null) {
             params["pubkey_ed25519"] = pubKeyEd25519
         }
-
-        params["signature"] = Base64.encodeBytes(signature)
+        params.putAll(signature)
 
         return params
     }
@@ -1191,7 +1185,7 @@ object SnodeAPI {
 /**
  * (String: message to sign, Long?: timestamp (optional), Int?: namespace (optional)
  */
-typealias SignCallback = (String, Long?, Int?)->Map<String,Any>
+typealias SignCallback = (message: String, timestamp: Long?, namespace: Int?) -> Map<String, Any>
 
 // Type Aliases
 typealias RawResponse = Map<*, *>

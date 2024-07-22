@@ -266,7 +266,7 @@ class GroupMembersConfig(pointer: Long): ConfigBase(pointer), Closeable {
         }
         external fun newInstance(
             pubKey: ByteArray,
-            secretKey: ByteArray = byteArrayOf(),
+            secretKey: ByteArray? = null,
             initialDump: ByteArray = byteArrayOf()
         ): GroupMembersConfig
     }
@@ -294,7 +294,7 @@ class GroupKeysConfig(pointer: Long): ConfigSig(pointer) {
         external fun newInstance(
             userSecretKey: ByteArray,
             groupPublicKey: ByteArray,
-            groupSecretKey: ByteArray = byteArrayOf(),
+            groupSecretKey: ByteArray? = null,
             initialDump: ByteArray = byteArrayOf(),
             info: GroupInfoConfig,
             members: GroupMembersConfig

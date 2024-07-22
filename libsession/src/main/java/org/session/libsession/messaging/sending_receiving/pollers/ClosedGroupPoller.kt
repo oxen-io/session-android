@@ -10,7 +10,6 @@ import network.loki.messenger.libsession_util.GroupInfoConfig
 import network.loki.messenger.libsession_util.GroupKeysConfig
 import network.loki.messenger.libsession_util.GroupMembersConfig
 import network.loki.messenger.libsession_util.util.GroupInfo
-import network.loki.messenger.libsession_util.util.GroupInfo.ClosedGroupInfo.Companion.isAuthData
 import network.loki.messenger.libsession_util.util.Sodium
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -124,10 +123,16 @@ class ClosedGroupPoller(
             val membersIndex = 3
             val messageIndex = 4
 
-            val authData = group.signingKey ?: return null
-            val signCallback = if (isAuthData(authData)) {
+            val authData = group.authData
+            val adminKey = group.adminKey
+            val signCallback = if (authData != null) {
                 SnodeAPI.subkeyCallback(authData, keys, false)
-            } else SnodeAPI.signingKeyCallback(authData)
+            } else if (adminKey != null) {
+                SnodeAPI.signingKeyCallback(adminKey)
+            } else {
+                Log.e("ClosedGroupPoller", "No auth data for group, polling is cancelled")
+                return null
+            }
 
             val revokedPoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                 snode,
@@ -171,7 +176,7 @@ class ClosedGroupPoller(
                 SnodeAPI.buildAuthenticatedAlterTtlBatchRequest(
                         messageHashes = hashesToExtend.toList(),
                         publicKey = closedGroupSessionId.hexString(),
-                        signingKey = authData,
+                        signCallback = signCallback,
                         newExpiry = SnodeAPI.nowWithOffset + 14.days.inWholeMilliseconds,
                         extend = true
                 )?.let { extensionRequest ->
