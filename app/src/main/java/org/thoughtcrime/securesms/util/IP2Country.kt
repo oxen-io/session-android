@@ -25,7 +25,7 @@ class IP2Country @Inject constructor(
     val countryNamesCache = mutableMapOf<String, String?>()
 
     private fun ipv4Int(ip: String) =
-        ip.takeWhile { it != '/' }.split('.').reversed()
+        ip.takeWhile { it != '/' }.split('.')
             .fold(0L) { acc, octet -> acc shl 8 or octet.toLong() }
 
     private val ipv4ToCountry by lazy {
