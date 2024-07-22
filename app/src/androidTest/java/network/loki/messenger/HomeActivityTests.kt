@@ -19,13 +19,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import network.loki.messenger.util.sendMessage
-import network.loki.messenger.util.setupLoggedInState
 import network.loki.messenger.util.waitFor
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import com.adevinta.android.barista.interaction.PermissionGranter
 import network.loki.messenger.util.InputBarButtonDrawableMatcher.Companion.inputButtonWithDrawable
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
@@ -37,7 +35,9 @@ import org.session.libsession.messaging.sending_receiving.link_preview.LinkPrevi
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
+import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
+import org.thoughtcrime.securesms.mms.GlideApp
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest

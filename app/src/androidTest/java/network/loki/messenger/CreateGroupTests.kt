@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.groups.compose.CreateGroup
 import org.thoughtcrime.securesms.groups.compose.ViewState
-import org.thoughtcrime.securesms.ui.AppTheme
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -35,7 +35,7 @@ class CreateGroupTests {
         var closePressed = false
 
         composeTest.setContent {
-            AppTheme {
+            PreviewTheme {
                 CreateGroup(
                     viewState = ViewState.DEFAULT,
                     onBack = { backPressed = true },
@@ -67,7 +67,7 @@ class CreateGroupTests {
         var closePressed = false
 
         composeTest.setContent {
-            AppTheme {
+            PreviewTheme {
                 CreateGroup(
                     viewState = ViewState.DEFAULT,
                     onBack = { backPressed = true },
@@ -95,7 +95,7 @@ class CreateGroupTests {
         var backPressed = false
 
         composeTest.setContent {
-            AppTheme {
+            PreviewTheme {
                 CreateGroup(
                     viewState = ViewState.DEFAULT,
                     onBack = { backPressed = true },
@@ -121,7 +121,7 @@ class CreateGroupTests {
         var closePressed = false
 
         composeTest.setContent {
-            AppTheme {
+            PreviewTheme {
                 CreateGroup(
                     viewState = ViewState.DEFAULT,
                     onBack = { },

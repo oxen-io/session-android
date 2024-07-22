@@ -19,7 +19,7 @@ import org.thoughtcrime.securesms.groups.compose.EditGroupView
 import org.thoughtcrime.securesms.groups.compose.EditGroupViewState
 import org.thoughtcrime.securesms.groups.compose.MemberState
 import org.thoughtcrime.securesms.groups.compose.MemberViewModel
-import org.thoughtcrime.securesms.ui.AppTheme
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -70,7 +70,7 @@ class EditGroupTests {
             )
 
             setContent {
-                AppTheme {
+                PreviewTheme {
                     EditGroupView(
                         onBack = {},
                         onInvite = {},
@@ -111,7 +111,7 @@ class EditGroupTests {
             )
 
             setContent {
-                AppTheme {
+                PreviewTheme {
                     EditGroupView(
                         onBack = {},
                         onInvite = {},
@@ -153,7 +153,7 @@ class EditGroupTests {
             )
 
             setContent {
-                AppTheme {
+                PreviewTheme {
                     EditGroupView(
                         onBack = {},
                         onInvite = {},
@@ -193,7 +193,7 @@ class EditGroupTests {
             )
 
             setContent {
-                AppTheme {
+                PreviewTheme {
                     EditGroupView(
                         onBack = {},
                         onInvite = {},
@@ -234,7 +234,7 @@ class EditGroupTests {
             )
 
             setContent {
-                AppTheme {
+                PreviewTheme {
                     EditGroupView(
                         onBack = {},
                         onInvite = {},
