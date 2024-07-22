@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,15 +32,15 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.color.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.util.QRCodeUtilities
 
 @Composable
 fun QrImage(
     string: String?,
     modifier: Modifier = Modifier,
-    contentPadding: Dp = LocalDimensions.current.smallItemSpacing,
+    contentPadding: Dp = LocalDimensions.current.smallSpacing,
     icon: Int = R.drawable.session_shield
 ) {
     var bitmap: Bitmap? by remember {
@@ -56,10 +56,9 @@ fun QrImage(
         }
     }
 
-    Card(
-        backgroundColor = LocalColors.current.qrCodeBackground,
-        elevation = 0.dp,
-        modifier = modifier
+    Box(
+        modifier = modifier.background(color = LocalColors.current.qrCodeBackground,
+            shape = MaterialTheme.shapes.small)
     ) { Content(bitmap, icon, Modifier.padding(contentPadding), backgroundColor = LocalColors.current.qrCodeBackground) }
 }
 

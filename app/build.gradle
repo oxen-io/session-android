@@ -241,6 +241,7 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:2.46.1")
     implementation project(':content-descriptions')
+    implementation 'androidx.compose.material3:material3-android:1.2.1'
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
@@ -382,7 +383,7 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"
     implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
     implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
-    implementation "androidx.compose.material:material:$composeVersion"
+    implementation "androidx.compose.material3:material3:1.2.1"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4-android:$composeVersion"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
 

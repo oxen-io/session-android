@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,20 +26,19 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
 import org.thoughtcrime.securesms.ui.SessionShieldIcon
-import org.thoughtcrime.securesms.ui.base
-import org.thoughtcrime.securesms.ui.color.Colors
-import org.thoughtcrime.securesms.ui.color.LocalColors
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
+import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.components.QrImage
 import org.thoughtcrime.securesms.ui.components.SlimOutlineButton
 import org.thoughtcrime.securesms.ui.components.SlimOutlineCopyButton
 import org.thoughtcrime.securesms.ui.components.border
 import org.thoughtcrime.securesms.ui.contentDescription
-import org.thoughtcrime.securesms.ui.extraSmallMonospace
-import org.thoughtcrime.securesms.ui.h8
+import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.monospace
 
 @Composable
 internal fun RecoveryPasswordScreen(
@@ -49,11 +48,11 @@ internal fun RecoveryPasswordScreen(
     onHide:() -> Unit = {}
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.xsMargin),
+        verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing),
         modifier = Modifier
             .contentDescription(R.string.AccessibilityId_recovery_password)
             .verticalScroll(rememberScrollState())
-            .padding(bottom = LocalDimensions.current.xsMargin)
+            .padding(bottom = LocalDimensions.current.smallSpacing)
     ) {
         RecoveryPasswordCell(mnemonic, seed, copyMnemonic)
         HideRecoveryPasswordCell(onHide)
@@ -75,17 +74,17 @@ private fun RecoveryPasswordCell(
             Row {
                 Text(
                     stringResource(R.string.sessionRecoveryPassword),
-                    style = h8
+                    style = LocalType.current.h8
                 )
-                Spacer(Modifier.width(LocalDimensions.current.xxsItemSpacing))
+                Spacer(Modifier.width(LocalDimensions.current.xxsSpacing))
                 SessionShieldIcon()
             }
 
-            Spacer(modifier = Modifier.height(LocalDimensions.current.xxxsMargin))
+            Spacer(modifier = Modifier.height(LocalDimensions.current.xxsSpacing))
 
             Text(
                 stringResource(R.string.recoveryPasswordDescription),
-                style = base
+                style = LocalType.current.base
             )
 
             AnimatedVisibility(!showQr) {
@@ -99,7 +98,7 @@ private fun RecoveryPasswordCell(
                 QrImage(
                     seed,
                     modifier = Modifier
-                        .padding(vertical = LocalDimensions.current.smallMargin)
+                        .padding(vertical = LocalDimensions.current.spacing)
                         .contentDescription(R.string.AccessibilityId_qr_code),
                     contentPadding = 10.dp,
                     icon = R.drawable.session_shield
@@ -108,7 +107,7 @@ private fun RecoveryPasswordCell(
 
             AnimatedVisibility(!showQr) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallItemSpacing),
+                    horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     SlimOutlineCopyButton(
@@ -138,11 +137,11 @@ private fun RecoveryPassword(mnemonic: String) {
         mnemonic,
         modifier = Modifier
             .contentDescription(R.string.AccessibilityId_recovery_password_container)
-            .padding(vertical = LocalDimensions.current.smallMargin)
+            .padding(vertical = LocalDimensions.current.spacing)
             .border()
-            .padding(LocalDimensions.current.smallMargin),
+            .padding(LocalDimensions.current.spacing),
         textAlign = TextAlign.Center,
-        style = extraSmallMonospace,
+        style = LocalType.current.extraSmall.monospace(),
         color = LocalColors.current.run { if (isLight) text else primary },
     )
 }
@@ -156,14 +155,14 @@ private fun HideRecoveryPasswordCell(onHide: () -> Unit = {}) {
             ) {
                 Text(
                     stringResource(R.string.recoveryPasswordHideRecoveryPassword),
-                    style = h8
+                    style = LocalType.current.h8
                 )
                 Text(
                     stringResource(R.string.recoveryPasswordHideRecoveryPasswordDescription),
-                    style = base
+                    style = LocalType.current.base
                 )
             }
-            Spacer(modifier = Modifier.width(LocalDimensions.current.xxsMargin))
+            Spacer(modifier = Modifier.width(LocalDimensions.current.xsSpacing))
             SlimOutlineButton(
                 text = stringResource(R.string.hide),
                 modifier = Modifier
@@ -180,7 +179,7 @@ private fun HideRecoveryPasswordCell(onHide: () -> Unit = {}) {
 @Preview
 @Composable
 private fun PreviewRecoveryPasswordScreen(
-    @PreviewParameter(SessionColorsParameterProvider::class) colors: Colors
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
         RecoveryPasswordScreen(mnemonic = "voyage  urban  toyed  maverick peculiar tuxedo penguin tree grass building listen speak withdraw terminal plane")

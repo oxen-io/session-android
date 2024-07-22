@@ -25,7 +25,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.MainCoroutineRule
 import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.ExpiryRadioOption
-import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.OptionsCard
+import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.OptionsCardData
 import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.UiState
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.Storage
@@ -87,7 +87,7 @@ class DisappearingMessagesViewModelTest {
             viewModel.uiState.value
         ).isEqualTo(
             UiState(
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_timer,
                     typeOption(ExpiryMode.NONE, selected = true),
                     timeOption(ExpiryType.AFTER_SEND, 12.hours),
@@ -126,7 +126,7 @@ class DisappearingMessagesViewModelTest {
             viewModel.uiState.value
         ).isEqualTo(
             UiState(
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_timer,
                     typeOption(ExpiryMode.NONE, selected = false),
                     timeOption(ExpiryType.LEGACY, 12.hours),
@@ -165,7 +165,7 @@ class DisappearingMessagesViewModelTest {
             viewModel.uiState.value
         ).isEqualTo(
             UiState(
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_timer,
                     typeOption(ExpiryMode.NONE, selected = true),
                     timeOption(ExpiryType.AFTER_SEND, 12.hours),
@@ -205,7 +205,7 @@ class DisappearingMessagesViewModelTest {
             viewModel.uiState.value
         ).isEqualTo(
             UiState(
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_timer,
                     typeOption(ExpiryMode.NONE, enabled = false, selected = true),
                     timeOption(ExpiryType.AFTER_SEND, 12.hours, enabled = false),
@@ -247,7 +247,7 @@ class DisappearingMessagesViewModelTest {
             viewModel.uiState.value
         ).isEqualTo(
             UiState(
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_delete_type,
                     typeOption(ExpiryMode.NONE, selected = true),
                     typeOption(12.hours, ExpiryType.AFTER_READ),
@@ -286,13 +286,13 @@ class DisappearingMessagesViewModelTest {
             viewModel.uiState.value
         ).isEqualTo(
             UiState(
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_delete_type,
                     typeOption(ExpiryMode.NONE),
                     typeOption(time, ExpiryType.AFTER_READ),
                     typeOption(time, ExpiryType.AFTER_SEND, selected = true)
                 ),
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_timer,
                     timeOption(ExpiryType.AFTER_SEND, 12.hours, selected = true),
                     timeOption(ExpiryType.AFTER_SEND, 1.days),
@@ -332,14 +332,14 @@ class DisappearingMessagesViewModelTest {
             viewModel.uiState.value
         ).isEqualTo(
             UiState(
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_delete_type,
                     typeOption(ExpiryMode.NONE),
                     typeOption(time, ExpiryType.LEGACY, selected = true),
                     typeOption(12.hours, ExpiryType.AFTER_READ, enabled = false),
                     typeOption(1.days, ExpiryType.AFTER_SEND, enabled = false)
                 ),
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_timer,
                     timeOption(ExpiryType.LEGACY, 12.hours, selected = true),
                     timeOption(ExpiryType.LEGACY, 1.days),
@@ -379,13 +379,13 @@ class DisappearingMessagesViewModelTest {
             viewModel.uiState.value
         ).isEqualTo(
             UiState(
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_delete_type,
                     typeOption(ExpiryMode.NONE),
                     typeOption(12.hours, ExpiryType.AFTER_READ),
                     typeOption(time, ExpiryType.AFTER_SEND, selected = true)
                 ),
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_timer,
                     timeOption(ExpiryType.AFTER_SEND, 12.hours),
                     timeOption(ExpiryType.AFTER_SEND, 1.days, selected = true),
@@ -426,13 +426,13 @@ class DisappearingMessagesViewModelTest {
             viewModel.uiState.value
         ).isEqualTo(
             UiState(
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_delete_type,
                     typeOption(ExpiryMode.NONE),
                     typeOption(1.days, ExpiryType.AFTER_READ, selected = true),
                     typeOption(time, ExpiryType.AFTER_SEND)
                 ),
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_timer,
                     timeOption(ExpiryType.AFTER_READ, 5.minutes),
                     timeOption(ExpiryType.AFTER_READ, 1.hours),
@@ -479,13 +479,13 @@ class DisappearingMessagesViewModelTest {
             viewModel.uiState.value
         ).isEqualTo(
             UiState(
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_delete_type,
                     typeOption(ExpiryMode.NONE),
                     typeOption(12.hours, ExpiryType.AFTER_READ),
                     typeOption(1.days, ExpiryType.AFTER_SEND, selected = true)
                 ),
-                OptionsCard(
+                OptionsCardData(
                     R.string.activity_disappearing_messages_timer,
                     timeOption(ExpiryType.AFTER_SEND, 12.hours),
                     timeOption(ExpiryType.AFTER_SEND, 1.days, selected = true),

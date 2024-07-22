@@ -52,6 +52,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.annimon.stream.Stream
 import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.ref.WeakReference
+import java.util.Locale
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicReference
+import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -181,17 +192,6 @@ import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import org.thoughtcrime.securesms.util.start
 import org.thoughtcrime.securesms.util.toPx
-import java.lang.ref.WeakReference
-import java.util.Locale
-import java.util.concurrent.ExecutionException
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicLong
-import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.min
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
 
 private const val TAG = "ConversationActivityV2"
 
@@ -1154,10 +1154,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val recipient = viewModel.recipient ?: return Log.w("Loki", "Recipient was null for block action")
         showSessionDialog {
             title(R.string.block)
-            text(Phrase.from(context, R.string.blockDescription)
+            text(
+                Phrase.from(context, R.string.blockDescription)
                 .put(NAME_KEY, recipient.name)
-                .format())
-            destructiveButton(R.string.block, R.string.AccessibilityId_block_confirm) {
+                .format()
+            )
+            dangerButton(R.string.block, R.string.AccessibilityId_block_confirm) {
                 viewModel.block()
 
                 // Block confirmation toast added as per SS-64
@@ -1203,23 +1205,31 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun unblock() {
         val recipient = viewModel.recipient ?: return Log.w("Loki", "Recipient was null for unblock action")
-        if (recipient.isContactRecipient) {
-            showSessionDialog {
-                title(R.string.blockUnblock)
-                text(Phrase.from(context, R.string.blockUnblockName).put(NAME_KEY, recipient.name).format())
-                destructiveButton(
-                    R.string.blockUnblock,
-                    R.string.AccessibilityId_block_confirm
-                ) {
-                    viewModel.unblock()
-                    // Unblock confirmation toast added as per SS-64
-                    val txt = Phrase.from(context, R.string.blockUnblockedUser).put(NAME_KEY, recipient.name).format().toString()
-                    Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
-                }
-                cancelButton()
+
+        if (!recipient.isContactRecipient) {
+            return Log.w("Loki", "Cannot unblock a user who is not a contact recipient - aborting unblock attempt.")
+        }
+
+        showSessionDialog {
+            title(R.string.blockUnblock)
+            text(
+                Phrase.from(context, R.string.blockUnblockName)
+                    .put(NAME_KEY, recipient.name)
+                    .format()
+            )
+            dangerButton(
+                R.string.blockUnblock,
+                R.string.AccessibilityId_unblock_confirm
+            ) {
+                viewModel.unblock()
+
+                // Unblock confirmation toast added as per SS-64
+                val txt = Phrase.from(context, R.string.blockUnblockedUser)
+                    .put(NAME_KEY, recipient.name).
+                    format().toString()
+                Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
             }
-        } else {
-            Log.w("Loki", "Cannot unblock a user who is not a contact recipient - aborting unblock attempt.")
+            cancelButton()
         }
     }
 

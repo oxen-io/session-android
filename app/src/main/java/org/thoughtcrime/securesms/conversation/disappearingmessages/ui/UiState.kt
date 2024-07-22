@@ -5,15 +5,15 @@ import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.thoughtcrime.securesms.ui.GetString
 import org.thoughtcrime.securesms.ui.RadioOption
 
-typealias ExpiryOptionsCard = OptionsCard<ExpiryMode>
+typealias ExpiryOptionsCardData = OptionsCardData<ExpiryMode>
 
 data class UiState(
-    val cards: List<ExpiryOptionsCard> = emptyList(),
+    val cards: List<ExpiryOptionsCardData> = emptyList(),
     val showGroupFooter: Boolean = false,
     val showSetButton: Boolean = true
 ) {
     constructor(
-        vararg cards: ExpiryOptionsCard,
+        vararg cards: ExpiryOptionsCardData,
         showGroupFooter: Boolean = false,
         showSetButton: Boolean = true,
     ): this(
@@ -23,7 +23,7 @@ data class UiState(
     )
 }
 
-data class OptionsCard<T>(
+data class OptionsCardData<T>(
     val title: GetString,
     val options: List<RadioOption<T>>
 ) {

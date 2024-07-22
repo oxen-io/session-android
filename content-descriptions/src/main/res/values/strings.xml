@@ -86,6 +86,7 @@
     <string name="AccessibilityId_all_media">All media</string>
     <string name="AccessibilityId_block">Block</string>
     <string name="AccessibilityId_block_confirm">Confirm block</string>
+    <string name="AccessibilityId_unblock_confirm">Confirm unblock</string>
     <string name="AccessibilityId_delete">Delete</string>
     <string name="AccessibilityId_disappearing_messages">Disappearing messages</string>
     <string name="AccessibilityId_enable">Enable</string>

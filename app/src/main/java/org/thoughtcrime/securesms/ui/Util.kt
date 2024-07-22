@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
 
 fun Activity.setComposeContent(content: @Composable () -> Unit) {
     ComposeView(this)

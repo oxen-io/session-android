@@ -26,6 +26,13 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Date
+import java.util.Locale
+import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewEmojiReactionsBinding
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
@@ -35,6 +42,7 @@ import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.ThemeUtil.getThemedColor
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.modifyLayoutParams
@@ -56,13 +64,6 @@ import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.toDp
 import org.thoughtcrime.securesms.util.toPx
-import java.util.Date
-import java.util.Locale
-import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.min
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
 
 private const val TAG = "VisibleMessageView"
 
@@ -381,7 +382,7 @@ class VisibleMessageView : FrameLayout {
     private fun getMessageStatusInfo(message: MessageRecord): MessageStatusInfo = when {
         message.isFailed ->
             MessageStatusInfo(R.drawable.ic_delivery_status_failed,
-                resources.getColor(R.color.destructive, context.theme),
+                getThemedColor(context, R.attr.danger),
                 R.string.messageStatusFailedToSend
             )
         message.isSyncFailed ->

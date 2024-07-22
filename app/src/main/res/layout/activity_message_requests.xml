@@ -51,7 +51,7 @@
         <Button
             android:contentDescription="@string/AccessibilityId_clear_all_message_requests"
             android:id="@+id/clearAllMessageRequestsButton"
-            style="@style/Widget.Session.Button.Common.DestructiveOutline"
+            style="@style/Widget.Session.Button.Common.DangerOutline"
             android:layout_width="196dp"
             android:layout_height="@dimen/medium_button_height"
             android:layout_alignParentBottom="true"

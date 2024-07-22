@@ -27,9 +27,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -63,20 +63,19 @@ import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.GetString
 import org.thoughtcrime.securesms.ui.HorizontalPagerIndicator
-import org.thoughtcrime.securesms.ui.ItemButton
 import org.thoughtcrime.securesms.ui.LargeItemButton
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
 import org.thoughtcrime.securesms.ui.TitledText
-import org.thoughtcrime.securesms.ui.base
-import org.thoughtcrime.securesms.ui.baseBold
-import org.thoughtcrime.securesms.ui.baseMonospace
-import org.thoughtcrime.securesms.ui.color.Colors
-import org.thoughtcrime.securesms.ui.color.LocalColors
-import org.thoughtcrime.securesms.ui.color.blackAlpha40
-import org.thoughtcrime.securesms.ui.color.destructiveButtonColors
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.blackAlpha40
+import org.thoughtcrime.securesms.ui.theme.dangerButtonColors
 import org.thoughtcrime.securesms.ui.setComposeContent
+import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.bold
+import org.thoughtcrime.securesms.ui.theme.monospace
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -152,12 +151,12 @@ fun MessageDetails(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .padding(vertical = LocalDimensions.current.smallItemSpacing),
-        verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallItemSpacing)
+            .padding(vertical = LocalDimensions.current.smallSpacing),
+        verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing)
     ) {
         state.record?.let { message ->
             AndroidView(
-                modifier = Modifier.padding(horizontal = LocalDimensions.current.margin),
+                modifier = Modifier.padding(horizontal = LocalDimensions.current.spacing),
                 factory = {
                     ViewVisibleMessageContentBinding.inflate(LayoutInflater.from(it)).mainContainerConstraint.apply {
                         bind(
@@ -193,7 +192,7 @@ fun CellMetadata(
     state.apply {
         if (listOfNotNull(sent, received, error, senderInfo).isEmpty()) return
         CellWithPaddingAndMargin {
-            Column(verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallItemSpacing)) {
+            Column(verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing)) {
                 TitledText(sent)
                 TitledText(received)
                 TitledErrorText(error)
@@ -237,7 +236,7 @@ fun CellButtons(
             LargeItemButton(
                 R.string.delete,
                 R.drawable.ic_message_details__trash,
-                colors = destructiveButtonColors(),
+                colors = dangerButtonColors(),
                 onClick = onDelete
             )
         }
@@ -251,7 +250,7 @@ fun Carousel(attachments: List<Attachment>, onClick: (Int) -> Unit) {
 
     val pagerState = rememberPagerState { attachments.size }
 
-    Column(verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallItemSpacing)) {
+    Column(verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing)) {
         Row {
             CarouselPrevButton(pagerState)
             Box(modifier = Modifier.weight(1f)) {
@@ -260,7 +259,7 @@ fun Carousel(attachments: List<Attachment>, onClick: (Int) -> Unit) {
                 ExpandButton(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(LocalDimensions.current.xxsItemSpacing)
+                        .padding(LocalDimensions.current.xxsSpacing)
                 ) { onClick(pagerState.currentPage) }
             }
             CarouselNextButton(pagerState)
@@ -313,7 +312,7 @@ fun ExpandButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
 @Preview
 @Composable
 fun PreviewMessageDetails(
-    @PreviewParameter(SessionColorsParameterProvider::class) colors: Colors
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
         MessageDetails(
@@ -340,8 +339,8 @@ fun FileDetails(fileDetails: List<TitledText>) {
 
     Cell {
         FlowRow(
-            modifier = Modifier.padding(horizontal = LocalDimensions.current.xsItemSpacing, vertical = LocalDimensions.current.itemSpacing),
-            verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallItemSpacing)
+            modifier = Modifier.padding(horizontal = LocalDimensions.current.xsSpacing, vertical = LocalDimensions.current.spacing),
+            verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing)
         ) {
             fileDetails.forEach {
                 BoxWithConstraints {
@@ -349,7 +348,7 @@ fun FileDetails(fileDetails: List<TitledText>) {
                         it,
                         modifier = Modifier
                             .widthIn(min = maxWidth.div(2))
-                            .padding(horizontal = LocalDimensions.current.xsItemSpacing)
+                            .padding(horizontal = LocalDimensions.current.xsSpacing)
                             .width(IntrinsicSize.Max)
                     )
                 }
@@ -362,7 +361,7 @@ fun FileDetails(fileDetails: List<TitledText>) {
 fun TitledErrorText(titledText: TitledText?) {
     TitledText(
         titledText,
-        style = base,
+        style = LocalType.current.base,
         color = LocalColors.current.danger
     )
 }
@@ -371,7 +370,7 @@ fun TitledErrorText(titledText: TitledText?) {
 fun TitledMonospaceText(titledText: TitledText?) {
     TitledText(
         titledText,
-        style = baseMonospace
+        style = LocalType.current.base.monospace()
     )
 }
 
@@ -379,7 +378,7 @@ fun TitledMonospaceText(titledText: TitledText?) {
 fun TitledText(
     titledText: TitledText?,
     modifier: Modifier = Modifier,
-    style: TextStyle = base,
+    style: TextStyle = LocalType.current.base,
     color: Color = Color.Unspecified
 ) {
     titledText?.apply {
@@ -396,8 +395,8 @@ fun TitledText(
 
 @Composable
 fun TitledView(title: GetString, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.xxxsItemSpacing)) {
-        Text(title.string(), style = baseBold)
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.xxxsSpacing)) {
+        Text(title.string(), style = LocalType.current.base.bold())
         content()
     }
 }

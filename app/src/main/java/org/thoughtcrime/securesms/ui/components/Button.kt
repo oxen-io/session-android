@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.Text
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,13 +37,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.LaunchedEffectAsync
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.SessionColorsParameterProvider
-import org.thoughtcrime.securesms.ui.baseBold
-import org.thoughtcrime.securesms.ui.buttonShape
-import org.thoughtcrime.securesms.ui.color.Colors
-import org.thoughtcrime.securesms.ui.color.LocalColors
 import org.thoughtcrime.securesms.ui.contentDescription
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
+import org.thoughtcrime.securesms.ui.theme.bold
+import org.thoughtcrime.securesms.ui.theme.buttonShape
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -65,16 +66,16 @@ fun Button(
     content: @Composable RowScope.() -> Unit
 ) {
     style.applyButtonConstraints {
-        androidx.compose.material.Button(
-            onClick,
-            modifier.heightIn(min = style.minHeight),
-            enabled,
-            interactionSource,
+        androidx.compose.material3.Button(
+            onClick = onClick,
+            modifier = modifier.heightIn(min = style.minHeight),
+            enabled = enabled,
+            interactionSource = interactionSource,
             elevation = null,
-            shape,
-            border,
-            colors,
-            contentPadding
+            shape = shape,
+            border = border,
+            colors = colors,
+            contentPadding = contentPadding
         ) {
             // Button sets LocalTextStyle, so text style is applied inside to override that.
             style.applyTextConstraints {
@@ -129,11 +130,11 @@ fun Button(
     Button(text, onClick, ButtonType.Outline(LocalColors.current.primaryButtonFill), modifier, enabled)
 }
 
-@Composable fun PrimaryOutlineButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true, content: @Composable RowScope.() -> Unit) {
+@Composable fun PrimaryOutlineButton(modifier: Modifier = Modifier, enabled: Boolean = true, onClick: () -> Unit, content: @Composable RowScope.() -> Unit) {
     Button(onClick, ButtonType.Outline(LocalColors.current.primaryButtonFill), modifier, enabled, content = content)
 }
 
-@Composable fun SlimOutlineButton(onClick: () -> Unit, modifier: Modifier = Modifier, color: Color = LocalColors.current.text, enabled: Boolean = true, content: @Composable RowScope.() -> Unit) {
+@Composable fun SlimOutlineButton(modifier: Modifier = Modifier, color: Color = LocalColors.current.text, enabled: Boolean = true, onClick: () -> Unit, content: @Composable RowScope.() -> Unit) {
     Button(onClick, ButtonType.Outline(color), modifier, enabled, ButtonStyle.Slim, content = content)
 }
 
@@ -257,7 +258,7 @@ fun BorderlessButtonWithIcon(
     text: String,
     @DrawableRes iconRes: Int,
     modifier: Modifier = Modifier,
-    style: TextStyle = baseBold,
+    style: TextStyle = LocalType.current.base.bold(),
     color: Color = LocalColors.current.text,
     onClick: () -> Unit
 ) {
@@ -292,7 +293,7 @@ val MutableInteractionSource.releases
 @Preview
 @Composable
 private fun VariousButtons(
-    @PreviewParameter(SessionColorsParameterProvider::class) colors: Colors
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
         FlowRow(

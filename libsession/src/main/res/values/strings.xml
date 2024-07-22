@@ -55,9 +55,6 @@
     <string name="conversation_context_image__save_attachment">Save attachment</string>
     <string name="conversation_item_sent__delivered_description">Delivered</string>
     <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
-    <string name="dialog_disappearing_messages_follow_setting_off_body">Messages you send will no longer disappear. Are you sure you want to turn off disappearing messages?</string>
-    <string name="dialog_disappearing_messages_follow_setting_on_body">Set your messages to disappear %1$s after they have been %2$s?</string>
-    <string name="dialog_disappearing_messages_follow_setting_title">Follow Setting</string>
     <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
     <string name="fragment_view_my_qr_code_share_title">Share QR Code</string>
     <string name="fragment_view_my_qr_code_title">Scan Me</string>

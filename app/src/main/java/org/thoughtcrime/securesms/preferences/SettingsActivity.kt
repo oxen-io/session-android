@@ -62,11 +62,11 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.ProfilePictureUtilities
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
+import org.session.libsession.utilities.StringSubstitutionConstants.VERSION_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.truncateIdForDisplay
 import org.session.libsignal.utilities.Log
-import org.session.libsession.utilities.StringSubstitutionConstants.VERSION_KEY
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
@@ -82,12 +82,12 @@ import org.thoughtcrime.securesms.ui.Cell
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.LargeItemButton
 import org.thoughtcrime.securesms.ui.LargeItemButtonWithDrawable
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.color.destructiveButtonColors
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineCopyButton
 import org.thoughtcrime.securesms.ui.contentDescription
 import org.thoughtcrime.securesms.ui.setThemedContent
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.dangerButtonColors
 import org.thoughtcrime.securesms.util.BitmapDecodingException
 import org.thoughtcrime.securesms.util.BitmapUtil
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
@@ -458,9 +458,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         Column {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = LocalDimensions.current.smallMargin)
-                    .padding(top = LocalDimensions.current.xxxsMargin),
-                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallItemSpacing),
+                    .padding(horizontal = LocalDimensions.current.spacing)
+                    .padding(top = LocalDimensions.current.xxsSpacing),
+                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing),
             ) {
                 PrimaryOutlineButton(
                     stringResource(R.string.share),
@@ -474,7 +474,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(LocalDimensions.current.itemSpacing))
+            Spacer(modifier = Modifier.height(LocalDimensions.current.spacing))
 
             val hasPaths by hasPaths().collectAsState(initial = false)
 
@@ -484,25 +484,61 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                         LargeItemButtonWithDrawable(R.string.onionRoutingPath, it) { show<PathActivity>() }
                     }
                     Divider()
-                    LargeItemButton(R.string.sessionPrivacy, R.drawable.ic_privacy_icon) { show<PrivacySettingsActivity>() }
+                    LargeItemButton(
+                        R.string.sessionPrivacy,
+                        R.drawable.ic_privacy_icon
+                    ) { show<PrivacySettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.sessionNotifications, R.drawable.ic_speaker, Modifier.contentDescription(R.string.AccessibilityId_notifications)) { show<NotificationSettingsActivity>() }
+                    LargeItemButton(
+                        R.string.sessionNotifications,
+                        R.drawable.ic_speaker,
+                        Modifier.contentDescription(R.string.AccessibilityId_notifications)
+                    ) { show<NotificationSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.sessionConversations, R.drawable.ic_conversations, Modifier.contentDescription(R.string.AccessibilityId_conversations)) { show<ChatSettingsActivity>() }
+                    LargeItemButton(
+                        R.string.sessionConversations,
+                        R.drawable.ic_conversations,
+                        Modifier.contentDescription(R.string.AccessibilityId_conversations)
+                    ) { show<ChatSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.sessionMessageRequests, R.drawable.ic_message_requests, Modifier.contentDescription(R.string.AccessibilityId_message_requests)) { show<MessageRequestsActivity>() }
+                    LargeItemButton(
+                        R.string.sessionMessageRequests,
+                        R.drawable.ic_message_requests,
+                        Modifier.contentDescription(R.string.AccessibilityId_message_requests)
+                    ) { show<MessageRequestsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.sessionAppearance, R.drawable.ic_appearance, Modifier.contentDescription(R.string.AccessibilityId_appearance)) { show<AppearanceSettingsActivity>() }
+                    LargeItemButton(
+                        R.string.sessionAppearance,
+                        R.drawable.ic_appearance,
+                        Modifier.contentDescription(R.string.AccessibilityId_appearance)
+                    ) { show<AppearanceSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.sessionInviteAFriend, R.drawable.ic_invite_friend, Modifier.contentDescription(R.string.AccessibilityId_invite_friend)) { sendInvitationToUseSession() }
+                    LargeItemButton(
+                        R.string.sessionInviteAFriend,
+                        R.drawable.ic_invite_friend,
+                        Modifier.contentDescription(R.string.AccessibilityId_invite_friend)
+                    ) { sendInvitationToUseSession() }
                     Divider()
                     if (!prefs.getHidePassword()) {
-                        LargeItemButton(R.string.sessionRecoveryPassword, R.drawable.ic_shield_outline, Modifier.contentDescription(R.string.AccessibilityId_recovery_password_menu_item)) { show<RecoveryPasswordActivity>() }
+                        LargeItemButton(
+                            R.string.sessionRecoveryPassword,
+                            R.drawable.ic_shield_outline,
+                            Modifier.contentDescription(R.string.AccessibilityId_recovery_password_menu_item)
+                        ) { show<RecoveryPasswordActivity>() }
                         Divider()
                     }
-                    LargeItemButton(R.string.sessionHelp, R.drawable.ic_help, Modifier.contentDescription(R.string.AccessibilityId_help)) { show<HelpSettingsActivity>() }
+                    LargeItemButton(
+                        R.string.sessionHelp,
+                        R.drawable.ic_help,
+                        Modifier.contentDescription(R.string.AccessibilityId_help)
+                    ) { show<HelpSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.sessionClearData, R.drawable.ic_clear_data, Modifier.contentDescription(R.string.AccessibilityId_clear_data), destructiveButtonColors()) { ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog") }
+                    LargeItemButton(
+                        R.string.sessionClearData,
+                        R.drawable.ic_message_details__trash,
+                        Modifier.contentDescription(R.string.AccessibilityId_clear_data),
+                        dangerButtonColors()
+                    ) { ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog") }
                 }
             }
         }

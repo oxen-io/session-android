@@ -1,28 +1,26 @@
-package org.thoughtcrime.securesms.ui
+package org.thoughtcrime.securesms.ui.theme
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Shapes
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import org.session.libsession.utilities.AppTextSecurePreferences
-import org.thoughtcrime.securesms.ui.color.ClassicDark
-import org.thoughtcrime.securesms.ui.color.ClassicLight
-import org.thoughtcrime.securesms.ui.color.Colors
-import org.thoughtcrime.securesms.ui.color.LocalColors
-import org.thoughtcrime.securesms.ui.color.OceanDark
-import org.thoughtcrime.securesms.ui.color.OceanLight
-import org.thoughtcrime.securesms.ui.color.colors
-import org.thoughtcrime.securesms.ui.color.textSelectionColors
+
+// Globally accessible composition local objects
+val LocalColors = compositionLocalOf <ThemeColors> { ClassicDark() }
+val LocalType = compositionLocalOf { sessionTypography }
+
+var selectedTheme: ThemeColors? = null
 
 /**
  * Apply a Material2 compose theme based on user selections in SharedPreferences.
@@ -31,24 +29,33 @@ import org.thoughtcrime.securesms.ui.color.textSelectionColors
 fun SessionMaterialTheme(
     content: @Composable () -> Unit
 ) {
-    SessionMaterialTheme(LocalContext.current.colors()) { content() }
+    // set the theme data if it hasn't been done yet
+    if(selectedTheme == null) {
+        // Some values can be set from the preferences, and if not should fallback to a default value
+        val context = LocalContext.current
+        val preferences = AppTextSecurePreferences(context)
+        selectedTheme = preferences.getComposeTheme()
+    }
+
+    SessionMaterialTheme(colors = selectedTheme ?: ClassicDark()) { content() }
 }
 
 /**
- * Apply a given [Colors], and our typography and shapes as a Material 2 Compose Theme.
+ * Apply a given [ThemeColors], and our typography and shapes as a Material 2 Compose Theme.
  **/
 @Composable
 fun SessionMaterialTheme(
-    colors: Colors,
+    colors: ThemeColors,
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colors = colors.toMaterialColors(),
-        typography = sessionTypography,
+        colorScheme = colors.toMaterialColors(),
+        typography = sessionTypography.asMaterialTypography(),
         shapes = sessionShapes,
     ) {
         CompositionLocalProvider(
             LocalColors provides colors,
+            LocalType provides sessionTypography,
             LocalContentColor provides colors.text,
             LocalTextSelectionColors provides colors.textSelectionColors,
         ) {
@@ -56,24 +63,6 @@ fun SessionMaterialTheme(
         }
     }
 }
-
-private fun Colors.toMaterialColors() = androidx.compose.material.Colors(
-    primary = background,
-    primaryVariant = backgroundSecondary,
-    secondary = background,
-    secondaryVariant = background,
-    background = background,
-    surface = background,
-    error = danger,
-    onPrimary = text,
-    onSecondary = text,
-    onBackground = text,
-    onSurface = text,
-    onError = text,
-    isLight = isLight
-)
-
-@Composable private fun Context.colors() = AppTextSecurePreferences(this).colors()
 
 val pillShape = RoundedCornerShape(percent = 50)
 val buttonShape = pillShape
@@ -88,7 +77,7 @@ val sessionShapes = Shapes(
  */
 @Composable
 fun PreviewTheme(
-    colors: Colors = LocalColors.current,
+    colors: ThemeColors = LocalColors.current,
     content: @Composable () -> Unit
 ) {
     SessionMaterialTheme(colors) {
@@ -98,6 +87,7 @@ fun PreviewTheme(
     }
 }
 
-class SessionColorsParameterProvider : PreviewParameterProvider<Colors> {
+// used for previews
+class SessionColorsParameterProvider : PreviewParameterProvider<ThemeColors> {
     override val values = sequenceOf(ClassicDark(), ClassicLight(), OceanDark(), OceanLight())
 }

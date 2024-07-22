@@ -2,13 +2,13 @@ package org.thoughtcrime.securesms.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.ButtonDefaults
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import org.thoughtcrime.securesms.ui.LocalDimensions
-import org.thoughtcrime.securesms.ui.color.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 
 private val disabledBorder @Composable get() = BorderStroke(
     width = LocalDimensions.current.borderStroke,
@@ -35,9 +35,9 @@ interface ButtonType {
         @Composable
         override fun buttonColors() = ButtonDefaults.buttonColors(
             contentColor = contentColor,
-            backgroundColor = Color.Unspecified,
+            containerColor = Color.Transparent,
             disabledContentColor = LocalColors.current.disabled,
-            disabledBackgroundColor = Color.Unspecified
+            disabledContainerColor = Color.Transparent
         )
     }
 
@@ -47,9 +47,9 @@ interface ButtonType {
         @Composable
         override fun buttonColors() = ButtonDefaults.buttonColors(
             contentColor = LocalColors.current.background,
-            backgroundColor = LocalColors.current.text,
+            containerColor = LocalColors.current.text,
             disabledContentColor = LocalColors.current.disabled,
-            disabledBackgroundColor = Color.Unspecified
+            disabledContainerColor = Color.Transparent
         )
     }
 
@@ -59,9 +59,9 @@ interface ButtonType {
         @Composable
         override fun buttonColors() = ButtonDefaults.buttonColors(
             contentColor = LocalColors.current.primaryButtonFillText,
-            backgroundColor = LocalColors.current.primaryButtonFill,
+            containerColor = LocalColors.current.primaryButtonFill,
             disabledContentColor = LocalColors.current.disabled,
-            disabledBackgroundColor = Color.Unspecified
+            disabledContainerColor = Color.Transparent
         )
     }
 
@@ -73,8 +73,9 @@ interface ButtonType {
         @Composable
         override fun buttonColors() = ButtonDefaults.outlinedButtonColors(
             contentColor = color,
-            backgroundColor = Color.Transparent,
-            disabledContentColor = LocalColors.current.disabled
+            containerColor = Color.Transparent,
+            disabledContentColor = LocalColors.current.disabled,
+            disabledContainerColor = Color.Transparent
         )
     }
 }

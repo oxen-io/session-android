@@ -1,4 +1,4 @@
-package org.thoughtcrime.securesms.ui.color
+package org.thoughtcrime.securesms.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

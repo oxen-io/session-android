@@ -114,14 +114,14 @@ class SessionDialogBuilder(val context: Context) {
         options,
     ) { dialog, it -> onSelect(it); dialog.dismiss() }
 
-    fun destructiveButton(
+    fun dangerButton(
         @StringRes text: Int,
         @StringRes contentDescription: Int = text,
         listener: () -> Unit = {}
     ) = button(
         text,
         contentDescription,
-        R.style.Widget_Session_Button_Dialog_DestructiveText,
+        R.style.Widget_Session_Button_Dialog_DangerText,
     ) { listener() }
 
     fun okButton(listener: (() -> Unit) = {}) = button(android.R.string.ok) { listener() }

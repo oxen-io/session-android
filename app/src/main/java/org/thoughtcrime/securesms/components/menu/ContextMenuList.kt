@@ -78,7 +78,7 @@ class ContextMenuList(recyclerView: RecyclerView, onItemClick: () -> Unit) {
 
     override fun bind(model: DisplayItem) {
       val item = model.item
-      val color = item.color?.let { ContextCompat.getColor(context, it) }
+      val color = item.color
 
       if (item.iconRes > 0) {
         val typedValue = TypedValue()
