@@ -25,7 +25,7 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_00024Companion_newI
     std::optional<session::ustring> secret_key_optional{std::nullopt};
     std::optional<session::ustring> initial_dump_optional{std::nullopt};
 
-    if (group_secret_key != nullptr && env->GetArrayLength(group_secret_key) > 0) {
+    if (group_secret_key && env->GetArrayLength(group_secret_key) > 0) {
         auto secret_key_bytes = util::ustring_from_bytes(env, group_secret_key);
         secret_key_optional = secret_key_bytes;
     }

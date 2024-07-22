@@ -166,23 +166,19 @@ class ConfigFactory(
     private fun getGroupInfo(groupSessionId: SessionId) = userGroups?.getClosedGroup(groupSessionId.hexString())
 
     override fun getGroupInfoConfig(groupSessionId: SessionId): GroupInfoConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
-        val sk = groupInfo.signingKey ?: return@let null
-
         // get any potential initial dumps
         val dump = configDatabase.retrieveConfigAndHashes(
             ConfigDatabase.INFO_VARIANT,
             groupSessionId.hexString()
         ) ?: byteArrayOf()
 
-        GroupInfoConfig.newInstance(Hex.fromStringCondensed(groupSessionId.publicKey), sk, dump)
+        GroupInfoConfig.newInstance(Hex.fromStringCondensed(groupSessionId.publicKey), groupInfo.adminKey, dump)
     }
 
     override fun getGroupKeysConfig(groupSessionId: SessionId,
                                     info: GroupInfoConfig?,
                                     members: GroupMembersConfig?,
                                     free: Boolean): GroupKeysConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
-        val sk = groupInfo.signingKey ?: return@let null
-
         // Get the user info or return early
         val (userSk, _) = maybeGetUserInfo() ?: return@let null
 
@@ -202,7 +198,7 @@ class ConfigFactory(
         val keys = GroupKeysConfig.newInstance(
             userSk,
             Hex.fromStringCondensed(groupSessionId.publicKey),
-            sk,
+            groupInfo.adminKey,
             dump,
             usedInfo,
             usedMembers
@@ -217,8 +213,6 @@ class ConfigFactory(
     }
 
     override fun getGroupMemberConfig(groupSessionId: SessionId): GroupMembersConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
-        val sk = groupInfo.signingKey ?: return@let null
-
         // Get initial dump if we have one
         val dump = configDatabase.retrieveConfigAndHashes(
             ConfigDatabase.MEMBER_VARIANT,
@@ -227,7 +221,7 @@ class ConfigFactory(
 
         GroupMembersConfig.newInstance(
             Hex.fromStringCondensed(groupSessionId.publicKey),
-            sk,
+            groupInfo.adminKey,
             dump
         )
     }
@@ -237,13 +231,11 @@ class ConfigFactory(
         info: GroupInfoConfig,
         members: GroupMembersConfig
     ): GroupKeysConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
-        val sk = groupInfo.signingKey ?: return@let null
-
         val (userSk, _) = maybeGetUserInfo() ?: return null
         GroupKeysConfig.newInstance(
             userSk,
             Hex.fromStringCondensed(groupSessionId.publicKey),
-            sk,
+            groupInfo.adminKey,
             info = info,
             members = members
         )
