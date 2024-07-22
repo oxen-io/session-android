@@ -151,9 +151,6 @@
     <string name="MediaOverviewActivity_Select_all">Összes kiválasztása</string>
     <string name="MediaOverviewActivity_collecting_attachments">Mellékletek összegyűjtése...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimédia üzenet</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS üzenet letöltése</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Hiba történt az MMS üzenet letöltése során, koppints az újrapróbálkozáshoz</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Küldés neki: %s</string>
     <!-- MediaSendActivity -->
@@ -529,27 +526,24 @@
     <string name="copied_to_clipboard">Vágólapra másolva</string>
     <string name="next">Következő</string>
     <string name="share">Megosztás</string>
-    <string name="invalid_session_id">Érvénytelen Session azonosító</string>
+    <string name="invalid_account_id">Érvénytelen Session azonosító</string>
     <string name="cancel">Mégse</string>
-    <string name="your_session_id">A session azonosítód</string>
-    <string name="activity_landing_title_2">A Session itt kezdődik...</string>
-    <string name="activity_landing_register_button_title">Session azonosító létrehozása</string>
-    <string name="activity_landing_restore_button_title">Session azonosító helyreállítása</string>
+    <string name="your_account_id">A session azonosítód</string>
     <string name="view_fake_chat_bubble_1">Mi az a Session?</string>
     <string name="view_fake_chat_bubble_2">Ez egy decentralizált, titkosított üzenetküldő alkalmazás</string>
     <string name="view_fake_chat_bubble_3">Tehát nem gyűjti a személyes adataimat vagy a beszélgetés metaadatait? Hogyan működik?</string>
     <string name="view_fake_chat_bubble_4">Fejlett anonim útválasztási és végponttól-végpontig titkosítási technológiák használatával.</string>
     <string name="view_fake_chat_bubble_5">A barátként nem engedhetem, hogy megbízhatatlan üzenetküldő appokat használj. Szívesen.</string>
-    <string name="activity_register_title">Ismerd meg a Session ID-d</string>
-    <string name="activity_register_explanation">A Session azonosító az az egyedi cím, amelyet az emberek használhatnak, hogy kapcsolatba lépjenek Önnel a Sessionon. Mivel nincs kapcsolat a valódi személyazonosságával, az Session azonosító teljesen névtelen, és privát.</string>
+
+
     <string name="activity_restore_title">Fiók visszaállítása</string>
     <string name="activity_restore_explanation">Írja be azt a helyreállítási kifejezést, amelyet a fiók visszaállításához regisztrálásakor kapott.</string>
     <string name="activity_restore_seed_edit_text_hint">Írja be a helyreállítási kifejezést</string>
-    <string name="activity_display_name_title_2">Válassza ki a megjelenítendő nevet</string>
-    <string name="activity_display_name_explanation">Ez lesz az ön neve, amikor használja a Session alkalmazást. Ez lehet a valódi neve, álneve, vagy bármi más, ami tetszik.</string>
-    <string name="activity_display_name_edit_text_hint">Írja be a megjelenítendő nevet</string>
-    <string name="activity_display_name_display_name_missing_error">Kérjük, válassza ki a megjelenítendő nevet</string>
-    <string name="activity_display_name_display_name_too_long_error">Válasszon rövidebb megjelenítési nevet</string>
+    <string name="displayNamePick">Válassza ki a megjelenítendő nevet</string>
+    <string name="displayNameDescription">Ez lesz az ön neve, amikor használja a Session alkalmazást. Ez lehet a valódi neve, álneve, vagy bármi más, ami tetszik.</string>
+    <string name="displayNameEnter">Írja be a megjelenítendő nevet</string>
+    <string name="displayNameErrorDescription">Kérjük, válassza ki a megjelenítendő nevet</string>
+    <string name="displayNameErrorDescriptionShorter">Válasszon rövidebb megjelenítési nevet</string>
     <string name="activity_pn_mode_recommended_option_tag">Ajánlott</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Kérjük, válasszon egy lehetőséget</string>
     <string name="activity_home_empty_state_message">Még nincsenek névjegyei</string>
@@ -558,11 +552,6 @@
     <string name="activity_home_leaving_group_failed_message">"Nem sikerült kilépni a csoportból"</string>
     <string name="activity_home_delete_conversation_dialog_message">Biztosan törli ezt a beszélgetést?</string>
     <string name="activity_home_conversation_deleted_message">A beszélgetés törölve</string>
-    <string name="activity_seed_title">A helyreállítási kifejezés</string>
-    <string name="activity_seed_title_2">Írja be a helyreállítási kifejezést</string>
-    <string name="activity_seed_explanation">A helyreállítási kifejezés a Session azonosító főkulcsa - használhatja a Session azonosító visszaállítására, ha elveszíti a hozzáférését eszközéhez. Tárolja helyreállítási mondatát biztonságos helyen, és ne adja át senkinek.</string>
-    <string name="activity_seed_reveal_button_title">Tartsa lenyomva, hogy felfedje</string>
-    <string name="view_seed_reminder_title">Már majdnem kész! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Biztosítsa fiókját a helyreállítási szöveg elmentésével</string>
     <string name="view_seed_reminder_subtitle_2">Érintse meg és tartsa lenyomva a szerkesztett szavakat, hogy felfedje a helyreállítási kifejezést, majd tárolja biztonságosan Session-azonosítója biztonsága érdekében.</string>
     <string name="view_seed_reminder_subtitle_3">Ügyeljen arra, hogy a helyreállítási szöveget biztonságos helyen tárolja</string>
@@ -575,7 +564,7 @@
     <string name="activity_path_learn_more_button_title">Tudj meg többet</string>
     <string name="activity_path_resolving_progress">Feloldás...</string>
     <string name="activity_create_private_chat_title">Új Session</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">Adja meg a Session azonosítóját</string>
+    <string name="activity_create_private_chat_enter_account_id_tab_title">Adja meg a Session azonosítóját</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">QR kód beolvasása</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">A beszélgetés elindításához olvassa be a felhasználó QR kódját. A QR kód a fiókbeállításokban található a QR kód ikonra koppintva.</string>
     <string name="fragment_enter_public_key_edit_text_hint">Írja be Session azonosítóját vagy ONS nevét</string>
@@ -607,7 +596,6 @@
     <string name="activity_settings_devices_button_title">Eszközök</string>
     <string name="activity_settings_invite_button_title">Barát meghívása</string>
     <string name="activity_settings_faq_button_title">Gyakori kérdések</string>
-    <string name="activity_settings_recovery_phrase_button_title">Helyreállítási kódmondat</string>
     <string name="activity_settings_clear_all_data_button_title">Adataid törlése</string>
     <string name="activity_settings_clear_all_data_and_network_button_title">Adatok törlése, beleértve a hálózatot is</string>
     <string name="activity_settings_help_translate_session">Segítsen nekünk a Session lefordításában</string>
@@ -620,8 +608,6 @@
     <string name="preferences_notifications_strategy_category_fast_mode_summary">A Google értesítési szerverein keresztül megbízhatóan és azonnal értesítést kap az új üzenetekről.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Név módosítása</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Eszköz társításának megszüntetése</string>
-    <string name="dialog_seed_title">A helyreállítási kifejezés</string>
-    <string name="dialog_seed_explanation">Ez a helyreállítási kódmondatod. Ezzel, visszaálíthatod, vagy migrálhatod a Session azonosítódat egy új eszközre.</string>
     <string name="dialog_clear_all_data_title">Az összes adat törlése</string>
     <string name="dialog_clear_all_data_explanation">Ez végleg törölni fogja üzeneteit, beszélgetéseit és ismerőseit.</string>
     <string name="dialog_clear_all_data_network_explanation">Csak ezt az eszközt szeretné törölni, vagy törölni szeretné az egész fiókját?</string>
@@ -655,7 +641,7 @@
     <string name="dialog_ui_mode_option_day">Ki</string>
     <string name="dialog_ui_mode_option_night">Be</string>
     <string name="dialog_ui_mode_option_system_default">Alapértelmezett</string>
-    <string name="activity_conversation_menu_copy_session_id">Az ön Session azonosító kimásolása</string>
+    <string name="activity_conversation_menu_copy_account_id">Az ön Session azonosító kimásolása</string>
     <string name="attachment">Csatolmány</string>
     <string name="attachment_type_voice_message">Hangüzenet</string>
     <string name="details">Részletek</string>
@@ -665,7 +651,6 @@
     <string name="activity_backup_restore_explanation_1">Válassz ki egy visszaállítási fájlt és add meg a hozzá tartozó visszaálítási kódmondatot.</string>
     <string name="activity_backup_restore_passphrase">30-betűs kódmondat</string>
     <string name="activity_link_device_skip_prompt">Ez eltarthat egy ideig, szeretnéd átugrani?</string>
-    <string name="activity_link_device_link_device">Eszköz társítása</string>
     <string name="activity_link_device_recovery_phrase">Visszaállítási kódmondat</string>
     <string name="activity_link_device_scan_qr_code">QR kód beolvasása</string>
     <string name="activity_link_device_qr_message">A QR-kód megjelenítéséhez nyissa meg a Beállítások → Helyreállítási kifejezés elemet másik eszközén. </string>
@@ -676,7 +661,6 @@
     <string name="activity_pn_mode_slow_mode">Lassított mód</string>
     <string name="activity_pn_mode_fast_mode_explanation">A Google értesítési szerverein keresztül megbízhatóan és azonnal értesítést kapsz az új üzenetekről.</string>
     <string name="activity_pn_mode_slow_mode_explanation">A Session alkalmanként, az új üzeneteket a háttérben fogja ellenőrizni.</string>
-    <string name="fragment_recovery_phrase_title">Visszaállítási kódmondat</string>
     <string name="activity_prompt_passphrase_session_locked">Session zárolva</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Koppintson a feloldáshoz</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Írjon be egy becenevet</string>

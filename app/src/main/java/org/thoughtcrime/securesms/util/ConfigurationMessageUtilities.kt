@@ -17,8 +17,6 @@ import org.session.libsession.messaging.jobs.ConfigurationSyncJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
-import org.session.libsession.messaging.sending_receiving.MessageSender
-import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
@@ -26,6 +24,7 @@ import org.session.libsession.utilities.WindowDebouncer
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
@@ -33,10 +32,12 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import java.util.Timer
 
 object ConfigurationMessageUtilities {
+    private const val TAG = "ConfigMessageUtils"
 
     private val debouncer = WindowDebouncer(3000, Timer())
 
     private fun scheduleConfigSync(userPublicKey: String) {
+
         debouncer.publish {
             // don't schedule job if we already have one
             val storage = MessagingModuleConfiguration.shared.storage
@@ -46,70 +47,22 @@ object ConfigurationMessageUtilities {
                 (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
                 return@publish
             }
-            val newConfigSync = ConfigurationSyncJob(ourDestination)
-            JobQueue.shared.add(newConfigSync)
+            val newConfigSyncJob = ConfigurationSyncJob(ourDestination)
+            JobQueue.shared.add(newConfigSyncJob)
         }
     }
 
     @JvmStatic
     fun syncConfigurationIfNeeded(context: Context) {
-        // add if check here to schedule new config job process and return early
-        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return
-        val forcedConfig = TextSecurePreferences.hasForcedNewConfig(context)
-        val currentTime = SnodeAPI.nowWithOffset
-        if (ConfigBase.isNewConfigEnabled(forcedConfig, currentTime)) {
-            scheduleConfigSync(userPublicKey)
-            return
-        }
-        val lastSyncTime = TextSecurePreferences.getLastConfigurationSyncTime(context)
-        val now = System.currentTimeMillis()
-        if (now - lastSyncTime < 7 * 24 * 60 * 60 * 1000) return
-        val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
-            !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
-        }.map { recipient ->
-            ConfigurationMessage.Contact(
-                publicKey = recipient.address.serialize(),
-                name = recipient.name!!,
-                profilePicture = recipient.profileAvatar,
-                profileKey = recipient.profileKey,
-                isApproved = recipient.isApproved,
-                isBlocked = recipient.isBlocked,
-                didApproveMe = recipient.hasApprovedMe()
-            )
-        }
-        val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return
-        MessageSender.send(configurationMessage, Address.fromSerialized(userPublicKey))
-        TextSecurePreferences.setLastConfigurationSyncTime(context, now)
+        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Log.w(TAG, "User Public Key is null")
+        scheduleConfigSync(userPublicKey)
     }
 
     fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
-        // add if check here to schedule new config job process and return early
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofFail(NullPointerException("User Public Key is null"))
-        val forcedConfig = TextSecurePreferences.hasForcedNewConfig(context)
-        val currentTime = SnodeAPI.nowWithOffset
-        if (ConfigBase.isNewConfigEnabled(forcedConfig, currentTime)) {
-            // schedule job if none exist
-            // don't schedule job if we already have one
-            scheduleConfigSync(userPublicKey)
-            return Promise.ofSuccess(Unit)
-        }
-        val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
-            !recipient.isGroupRecipient && !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
-        }.map { recipient ->
-            ConfigurationMessage.Contact(
-                publicKey = recipient.address.serialize(),
-                name = recipient.name!!,
-                profilePicture = recipient.profileAvatar,
-                profileKey = recipient.profileKey,
-                isApproved = recipient.isApproved,
-                isBlocked = recipient.isBlocked,
-                didApproveMe = recipient.hasApprovedMe()
-            )
-        }
-        val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return Promise.ofSuccess(Unit)
-        val promise = MessageSender.send(configurationMessage, Destination.from(Address.fromSerialized(userPublicKey)), isSyncMessage = true)
-        TextSecurePreferences.setLastConfigurationSyncTime(context, System.currentTimeMillis())
-        return promise
+        // Schedule a new job if one doesn't already exist (only)
+        scheduleConfigSync(userPublicKey)
+        return Promise.ofSuccess(Unit)
     }
 
     private fun maybeUserSecretKey() = MessagingModuleConfiguration.shared.getUserED25519KeyPair()?.secretKey?.asBytes
@@ -142,10 +95,10 @@ object ConfigurationMessageUtilities {
         val storage = MessagingModuleConfiguration.shared.storage
         val localUserKey = storage.getUserPublicKey() ?: return null
         val contactsWithSettings = storage.getAllContacts().filter { recipient ->
-            recipient.sessionID != localUserKey && recipient.sessionID.startsWith(IdPrefix.STANDARD.value)
-                    && storage.getThreadId(recipient.sessionID) != null
+            recipient.accountID != localUserKey && recipient.accountID.startsWith(IdPrefix.STANDARD.value)
+                    && storage.getThreadId(recipient.accountID) != null
         }.map { contact ->
-            val address = Address.fromSerialized(contact.sessionID)
+            val address = Address.fromSerialized(contact.accountID)
             val thread = storage.getThreadId(address)
             val isPinned = if (thread != null) {
                 storage.isPinned(thread)
@@ -164,7 +117,7 @@ object ConfigurationMessageUtilities {
             }
 
             val contactInfo = Contact(
-                id = contact.sessionID,
+                id = contact.accountID,
                 name = contact.name.orEmpty(),
                 nickname = contact.nickname.orEmpty(),
                 blocked = settings.isBlocked,
@@ -252,7 +205,7 @@ object ConfigurationMessageUtilities {
             val admins = group.admins.map { it.serialize() to true }.toMap()
             val members = group.members.filterNot { it.serialize() !in admins.keys }.map { it.serialize() to false }.toMap()
             GroupInfo.LegacyGroupInfo(
-                sessionId = groupPublicKey,
+                accountId = groupPublicKey,
                 name = group.title,
                 members = admins + members,
                 priority = if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,

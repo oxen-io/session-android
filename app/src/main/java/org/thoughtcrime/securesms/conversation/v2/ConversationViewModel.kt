@@ -1,45 +1,45 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.content.Context
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-
 import com.goterl.lazysodium.utils.KeyPair
-
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
+import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.database.MmsSmsDatabase
-
+import org.thoughtcrime.securesms.database.MmsDatabase
+import org.thoughtcrime.securesms.audio.AudioSlidePlayer
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.database.model.MmsMessageRecord
+import org.thoughtcrime.securesms.mms.AudioSlide
 import org.thoughtcrime.securesms.repository.ConversationRepository
-
 import java.util.UUID
 
 class ConversationViewModel(
     val threadId: Long,
     val edKeyPair: KeyPair?,
     private val repository: ConversationRepository,
-    private val storage: Storage
+    private val storage: Storage,
+    private val messageDataProvider: MessageDataProvider,
+    database: MmsDatabase,
 ) : ViewModel() {
 
     val showSendAfterApprovalText: Boolean
@@ -78,7 +78,7 @@ class ConversationViewModel(
     val blindedPublicKey: String?
         get() = if (openGroup == null || edKeyPair == null || !serverCapabilities.contains(OpenGroupApi.Capability.BLIND.name.lowercase())) null else {
             SodiumUtilities.blindedKeyPair(openGroup!!.publicKey, edKeyPair)?.publicKey?.asBytes
-                ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
+                ?.let { AccountId(IdPrefix.BLINDED, it) }?.hexString
         }
 
     val isMessageRequestThread : Boolean
@@ -91,6 +91,11 @@ class ConversationViewModel(
         // allow reactions if the open group is null (normal conversations) or the open group's capabilities include reactions
         get() = (openGroup == null || OpenGroupApi.Capability.REACTIONS.name.lowercase() in serverCapabilities)
 
+    private val attachmentDownloadHandler = AttachmentDownloadHandler(
+        storage = storage,
+        messageDataProvider = messageDataProvider,
+        scope = viewModelScope,
+    )
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -101,6 +106,13 @@ class ConversationViewModel(
                     }
                 }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        // Stop all voice message when exiting this page
+        AudioSlidePlayer.stopAll()
     }
 
     fun saveDraft(text: String) {
@@ -155,7 +167,19 @@ class ConversationViewModel(
      * of message that says something like "This message was deleted"
      */
     fun markAsDeleted(messages: Set<MessageRecord>, threadId: Long) {
+        // make sure to stop audio messages, if any
+        messages.filterIsInstance<MmsMessageRecord>()
+            .mapNotNull { it.slideDeck.audioSlide }
+            .forEach(::stopMessageAudio)
+
         repository.markMessagesAsDeleted(messages, threadId)
+    }
+
+    /**
+     * Stops audio player if its current playing is the one given in the message.
+     */
+    private fun stopMessageAudio(audioSlide: AudioSlide) {
+        AudioSlidePlayer.getInstance()?.takeIf { it.audioSlide == audioSlide }?.stop()
     }
 
     fun setRecipientApproved() {
@@ -165,10 +189,12 @@ class ConversationViewModel(
 
     fun deleteForEveryone(message: MessageRecord) = viewModelScope.launch {
         val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
+        stopPlayingAudioMessage(message)
 
         repository.deleteForEveryone(threadId, recipient, message)
             .onSuccess {
                 Log.d("Loki", "Deleted message ${message.id} ")
+                stopPlayingAudioMessage(message)
             }
             .onFailure {
                 Log.w("Loki", "FAILED TO delete message ${message.id} ")
@@ -227,7 +253,7 @@ class ConversationViewModel(
             currentUiState.copy(uiMessages = messages)
         }
     }
-    
+
     fun messageShown(messageId: Long) {
         _uiState.update { currentUiState ->
             val messages = currentUiState.uiMessages.filterNot { it.id == messageId }
@@ -250,6 +276,10 @@ class ConversationViewModel(
         storage.getLastLegacyRecipient(address.serialize())?.let { Recipient.from(context, Address.fromSerialized(it), false) }
     }
 
+    fun onAttachmentDownloadRequest(attachment: DatabaseAttachment) {
+        attachmentDownloadHandler.onAttachmentDownloadRequest(attachment)
+    }
+
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
         fun create(threadId: Long, edKeyPair: KeyPair?): Factory
@@ -260,11 +290,20 @@ class ConversationViewModel(
         @Assisted private val threadId: Long,
         @Assisted private val edKeyPair: KeyPair?,
         private val repository: ConversationRepository,
-        private val storage: Storage
+        private val storage: Storage,
+        private val mmsDatabase: MmsDatabase,
+        private val messageDataProvider: MessageDataProvider,
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ConversationViewModel(threadId, edKeyPair, repository, storage) as T
+            return ConversationViewModel(
+                threadId = threadId,
+                edKeyPair = edKeyPair,
+                repository = repository,
+                storage = storage,
+                messageDataProvider = messageDataProvider,
+                database = mmsDatabase
+            ) as T
         }
     }
 }

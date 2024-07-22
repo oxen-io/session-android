@@ -25,16 +25,15 @@ class ControlMessageView : LinearLayout {
 
     private val TAG = "ControlMessageView"
 
-    private lateinit var binding: ViewControlMessageBinding
+    private val binding = ViewControlMessageBinding.inflate(LayoutInflater.from(context), this, true)
 
-    constructor(context: Context) : super(context) { initialize() }
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { initialize() }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize() }
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     @Inject lateinit var disappearingMessages: DisappearingMessages
 
-    private fun initialize() {
-        binding = ViewControlMessageBinding.inflate(LayoutInflater.from(context), this, true)
+    init {
         layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
     }
 

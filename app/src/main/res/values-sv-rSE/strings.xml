@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Markera alla</string>
     <string name="MediaOverviewActivity_collecting_attachments">Samlar bifogade filer...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediameddelande</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Hämtning av MMS-meddelanden</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Fel vid hämtning av MMS-meddelanden, tryck för att försöka igen</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Skicka till %s</string>
     <!-- MediaSendActivity -->
@@ -527,27 +524,24 @@ för nyckelutbyte!</string>
     <string name="copied_to_clipboard">Kopierade till urklipp</string>
     <string name="next">Nästa</string>
     <string name="share">Dela</string>
-    <string name="invalid_session_id">Ogiltigt Sessions-ID</string>
+    <string name="invalid_account_id">Ogiltigt Sessions-ID</string>
     <string name="cancel">Avbryt</string>
-    <string name="your_session_id">Ditt Session ID</string>
-    <string name="activity_landing_title_2">Din Session börjar här...</string>
-    <string name="activity_landing_register_button_title">Skapa Session-ID</string>
-    <string name="activity_landing_restore_button_title">Fortsätt din Session</string>
+    <string name="your_account_id">Ditt Account ID</string>
     <string name="view_fake_chat_bubble_1">Vad är Session?</string>
     <string name="view_fake_chat_bubble_2">Det är en decentraliserad, krypterad meddelandeapp</string>
     <string name="view_fake_chat_bubble_3">Så det samlar inte in mina personuppgifter eller mina konversationers metadata? Hur fungerar det?</string>
     <string name="view_fake_chat_bubble_4">Med hjälp av en kombination av avancerad anonym routing och end-to-end-krypteringsteknik.</string>
     <string name="view_fake_chat_bubble_5">Vänner låter inte vänner använda osäkra meddelandeappar. Varsågod.</string>
-    <string name="activity_register_title">Säg hej till ditt Session-ID</string>
-    <string name="activity_register_explanation">Ditt Session-ID är den unika adress folk kan använda för att kontakta dig på Session. Ditt Session-ID är helt anonymt och privat rakt igenom, helt utan koppling till din riktiga identitet.</string>
+
+
     <string name="activity_restore_title">Återställ ditt konto</string>
     <string name="activity_restore_explanation">Ange den återställningsfras du fick när du skapade ditt konto för att kunna återställa ditt konto.</string>
     <string name="activity_restore_seed_edit_text_hint">Ange din återställningsfras</string>
-    <string name="activity_display_name_title_2">Välj visningsnamn</string>
-    <string name="activity_display_name_explanation">Detta blir ditt namn när du använder Session. Det kan vara ditt riktiga namn, ett alias eller något annat du gillar.</string>
-    <string name="activity_display_name_edit_text_hint">Ange ett visningsnamn</string>
-    <string name="activity_display_name_display_name_missing_error">Vänligen välj ett visningsnamn</string>
-    <string name="activity_display_name_display_name_too_long_error">Vänligen välj ett kortare visningsnamn</string>
+    <string name="displayNamePick">Välj visningsnamn</string>
+    <string name="displayNameDescription">Detta blir ditt namn när du använder Session. Det kan vara ditt riktiga namn, ett alias eller något annat du gillar.</string>
+    <string name="displayNameEnter">Ange ett visningsnamn</string>
+    <string name="displayNameErrorDescription">Vänligen välj ett visningsnamn</string>
+    <string name="displayNameErrorDescriptionShorter">Vänligen välj ett kortare visningsnamn</string>
     <string name="activity_pn_mode_recommended_option_tag">Rekommenderat</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Välj ett alternativ</string>
     <string name="activity_home_empty_state_message">Du har inga kontakter än</string>
@@ -556,13 +550,8 @@ för nyckelutbyte!</string>
     <string name="activity_home_leaving_group_failed_message">"Kunde inte lämna gruppen"</string>
     <string name="activity_home_delete_conversation_dialog_message">Är du säker på att du vill ta bort denna konversation?</string>
     <string name="activity_home_conversation_deleted_message">Konversationen har raderats</string>
-    <string name="activity_seed_title">Din Återställningsfras</string>
-    <string name="activity_seed_title_2">Möt din återställningsfras</string>
-    <string name="activity_seed_explanation">Din återställningsfras är huvudnyckeln till ditt Session-ID – du kan använda den för att återställa ditt Session-ID om du förlorar åtkomst till enheten. Förvara din återställningsfras på en säker plats, och ge den inte till någon.</string>
-    <string name="activity_seed_reveal_button_title">Håll ned för att visa</string>
-    <string name="view_seed_reminder_title">Du är nästan klar! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Säkra ditt konto genom att spara din återställningsfras</string>
-    <string name="view_seed_reminder_subtitle_2">Tryck på och håll ned de dolda orden för att avslöja din återställningsfras och lagra dem på ett säkert sätt för att säkra ditt Session-ID.</string>
+    <string name="view_seed_reminder_subtitle_2">Tryck på och håll ned de dolda orden för att avslöja din återställningsfras och lagra dem på ett säkert sätt för att säkra ditt Account-ID.</string>
     <string name="view_seed_reminder_subtitle_3">Se till att spara din återställningsfras på en säker plats</string>
     <string name="activity_path_title">Sökväg</string>
     <string name="activity_path_explanation">Session döljer din IP-adress genom att dirigera dina meddelanden genom flera Tjänstnoder i Sessions decentraliserade nätverk. Detta är de länder som din anslutning för närvarande går igenom:</string>
@@ -573,7 +562,7 @@ för nyckelutbyte!</string>
     <string name="activity_path_learn_more_button_title">Mer info</string>
     <string name="activity_path_resolving_progress">Laddar…</string>
     <string name="activity_create_private_chat_title">Ny Session</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">Ange Sessions-ID</string>
+    <string name="activity_create_private_chat_enter_account_id_tab_title">Ange Sessions-ID</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">Skanna QR-kod</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">Skanna en användares QR-kod för att starta en session. QR-koder kan finnas genom att trycka på ikonen för QR-kod i kontoinställningarna.</string>
     <string name="fragment_enter_public_key_edit_text_hint">Ange sessions-ID eller ONS-namn</string>
@@ -605,7 +594,6 @@ för nyckelutbyte!</string>
     <string name="activity_settings_devices_button_title">Enheter</string>
     <string name="activity_settings_invite_button_title">Bjud in en vän</string>
     <string name="activity_settings_faq_button_title">Vanliga frågor</string>
-    <string name="activity_settings_recovery_phrase_button_title">Återställningsfras</string>
     <string name="activity_settings_clear_all_data_button_title">Rensa data</string>
     <string name="activity_settings_clear_all_data_and_network_button_title">Rensa data inklusive nätverk</string>
     <string name="activity_settings_help_translate_session">Hjälp oss att översätta Session</string>
@@ -618,8 +606,6 @@ för nyckelutbyte!</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Du kommer att meddelas om nya meddelanden på ett tillförlitligt sätt och omedelbart genom att använda Googles aviseringsservrar.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Byt Namn</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Kopplar bort enhet</string>
-    <string name="dialog_seed_title">Din Återställningsfras</string>
-    <string name="dialog_seed_explanation">Detta är din återställningsfras. Med den kan du återställa eller migrera ditt Session-ID till en ny enhet.</string>
     <string name="dialog_clear_all_data_title">Rensa All Data</string>
     <string name="dialog_clear_all_data_explanation">Detta kommer att radera dina meddelanden, sessioner och kontakter permanent.</string>
     <string name="dialog_clear_all_data_network_explanation">Vill du rensa endast den här enheten eller ta bort hela ditt konto?</string>
@@ -653,7 +639,7 @@ för nyckelutbyte!</string>
     <string name="dialog_ui_mode_option_day">Dag</string>
     <string name="dialog_ui_mode_option_night">Natt</string>
     <string name="dialog_ui_mode_option_system_default">Systemets inställning</string>
-    <string name="activity_conversation_menu_copy_session_id">Kopiera Session-ID</string>
+    <string name="activity_conversation_menu_copy_account_id">Kopiera Account-ID</string>
     <string name="attachment">Bilaga</string>
     <string name="attachment_type_voice_message">Röstmeddelande</string>
     <string name="details">Detaljer</string>
@@ -663,7 +649,6 @@ för nyckelutbyte!</string>
     <string name="activity_backup_restore_explanation_1">Välj en säkerhetskopieringsfil och ange lösenfrasen som den skapades med.</string>
     <string name="activity_backup_restore_passphrase">30-siffrig lösenfras</string>
     <string name="activity_link_device_skip_prompt">Detta tar ett tag, vill du hoppa över?</string>
-    <string name="activity_link_device_link_device">Länka en enhet</string>
     <string name="activity_link_device_recovery_phrase">Återställningsfras</string>
     <string name="activity_link_device_scan_qr_code">Skanna QR-kod</string>
     <string name="activity_link_device_qr_message">Navigera till Inställningar → Återställningsfras på din andra enhet för att visa din QR-kod.</string>
@@ -674,7 +659,6 @@ för nyckelutbyte!</string>
     <string name="activity_pn_mode_slow_mode">Långsamt läge</string>
     <string name="activity_pn_mode_fast_mode_explanation">Du kommer att meddelas om nya meddelanden på ett tillförlitligt sätt och omedelbart genom att använda Googles aviseringsservrar.</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session kommer då och då att leta efter nya meddelanden i bakgrunden.</string>
-    <string name="fragment_recovery_phrase_title">Återställningsfras</string>
     <string name="activity_prompt_passphrase_session_locked">Session är låst</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Tryck om du vill låsa upp</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Ange smeknamn</string>

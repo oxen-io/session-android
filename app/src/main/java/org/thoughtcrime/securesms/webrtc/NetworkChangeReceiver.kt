@@ -7,12 +7,13 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.Network
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.util.NetworkUtils
 
 class NetworkChangeReceiver(private val onNetworkChangedCallback: (Boolean)->Unit) {
 
     private val networkList: MutableSet<Network> = mutableSetOf()
 
-    val broadcastDelegate = object: BroadcastReceiver() {
+    private val broadcastDelegate = object: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             receiveBroadcast(context, intent)
         }
@@ -41,14 +42,9 @@ class NetworkChangeReceiver(private val onNetworkChangedCallback: (Boolean)->Uni
     }
 
     fun receiveBroadcast(context: Context, intent: Intent) {
-        val connected = context.isConnected()
+        val connected = NetworkUtils.haveValidNetworkConnection(context)
         Log.i("Loki", "received broadcast, network connected: $connected")
         onNetworkChangedCallback(connected)
-    }
-
-    fun Context.isConnected() : Boolean {
-        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return cm.activeNetwork != null
     }
 
     fun register(context: Context) {

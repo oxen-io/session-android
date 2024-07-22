@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-    <color name="destructive">#FF453A</color>
     <color name="unimportant">#D8D8D8</color>
     <color name="profile_picture_background">#353535</color>
     <color name="cell_background">#1B1B1B</color>
@@ -40,7 +39,6 @@
     <color name="gray27">#ffbbbbbb</color>
     <color name="gray50">#ff808080</color>
     <color name="gray65">#ff595959</color>
-    <color name="gray70">#ff4d4d4d</color>
     <color name="gray78">#ff383838</color>
 
     <color name="transparent_black_30">#30000000</color>

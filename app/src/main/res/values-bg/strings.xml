@@ -142,9 +142,6 @@
     <string name="MediaOverviewActivity_Select_all">Избери всичко</string>
     <string name="MediaOverviewActivity_collecting_attachments">Събиране на прикачени файлове...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Мултимедийно съобщение</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Изтегляне на MMS съобщение</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Грешка при изтегляне на MMS съобщение, натиснете за да опитате повторно</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Изпрати на %s</string>
     <!-- MediaSendActivity -->
@@ -499,7 +496,6 @@
     <string name="activity_conversation_copy_public_key_button_title">Копиране на обществен ключ</string>
     <!-- Session -->
     <string name="continue_2">Продължи</string>
-    <string name="activity_landing_restore_button_title">Продължете Вашата Сесия</string>
     <string name="activity_restore_title">Възстановяване на профил</string>
     <string name="activity_path_device_row_title">Вие</string>
     <!-- Next round of translation -->

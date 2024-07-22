@@ -53,7 +53,7 @@ interface StorageProtocol {
     fun persistJob(job: Job)
     fun markJobAsSucceeded(jobId: String)
     fun markJobAsFailedPermanently(jobId: String)
-    fun getAllPendingJobs(type: String): Map<String,Job?>
+    fun getAllPendingJobs(vararg types: String): Map<String,Job?>
     fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob?
     fun getMessageSendJob(messageSendJobID: String): MessageSendJob?
     fun getMessageReceiveJob(messageReceiveJobID: String): Job?
@@ -181,7 +181,7 @@ interface StorageProtocol {
     fun setLastLegacyRecipient(threadRecipient: String, senderRecipient: String?)
 
     // Contacts
-    fun getContactWithSessionID(sessionID: String): Contact?
+    fun getContactWithAccountID(accountID: String): Contact?
     fun getAllContacts(): Set<Contact>
     fun setContact(contact: Contact)
     fun getRecipientForThread(threadId: Long): Recipient?

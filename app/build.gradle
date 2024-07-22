@@ -31,8 +31,8 @@ configurations.all {
     exclude module: "commons-logging"
 }
 
-def canonicalVersionCode = 373
-def canonicalVersionName = "1.18.4"
+def canonicalVersionCode = 374
+def canonicalVersionName = "1.18.5"
 
 def postFixSize = 10
 def abiPostFix = ['armeabi-v7a' : 1,
@@ -271,7 +271,7 @@ dependencies {
     if (project.hasProperty('huawei')) huaweiImplementation 'com.huawei.hms:push:6.7.0.300'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.1'
-    implementation 'org.conscrypt:conscrypt-android:2.0.0'
+    implementation 'org.conscrypt:conscrypt-android:2.5.2'
     implementation 'org.signal:aesgcmprovider:0.0.3'
     implementation 'org.webrtc:google-webrtc:1.0.32006'
     implementation "me.leolin:ShortcutBadger:1.1.16"
@@ -322,6 +322,7 @@ dependencies {
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.phrase:phrase:$phraseVersion"
     implementation 'app.cash.copper:copper-flow:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
@@ -368,18 +369,32 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.5.1'
     androidTestUtil 'androidx.test:orchestrator:1.4.2'
 
-    testImplementation 'org.robolectric:robolectric:4.4'
-    testImplementation 'org.robolectric:shadows-multidex:4.4'
+    testImplementation 'org.robolectric:robolectric:4.12.2'
+    testImplementation 'org.robolectric:shadows-multidex:4.12.2'
+    testImplementation 'org.conscrypt:conscrypt-openjdk-uber:2.5.2' // For Robolectric
+    testImplementation 'app.cash.turbine:turbine:1.1.0'
+
 
     implementation 'com.github.bumptech.glide:compose:1.0.0-alpha.5'
-    implementation 'androidx.compose.ui:ui:1.5.2'
-    implementation 'androidx.compose.ui:ui-tooling:1.5.2'
-    implementation "com.google.accompanist:accompanist-themeadapter-appcompat:0.33.1-alpha"
-    implementation "com.google.accompanist:accompanist-pager-indicators:0.33.1-alpha"
-    implementation "androidx.compose.runtime:runtime-livedata:1.5.2"
+    implementation "androidx.compose.ui:ui:$composeVersion"
+    implementation "androidx.compose.animation:animation:$composeVersion"
+    implementation "androidx.compose.ui:ui-tooling:$composeVersion"
+    implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
+    implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
+    implementation "androidx.compose.material3:material3:1.2.1"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4-android:$composeVersion"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
 
-    implementation 'androidx.compose.foundation:foundation-layout:1.5.2'
-    implementation 'androidx.compose.material:material:1.5.2'
+    implementation "com.google.accompanist:accompanist-themeadapter-appcompat:0.33.1-alpha"
+    implementation "com.google.accompanist:accompanist-permissions:0.33.1-alpha"
+    implementation "com.google.accompanist:accompanist-drawablepainter:0.33.1-alpha"
+
+    implementation "androidx.camera:camera-camera2:1.3.2"
+    implementation "androidx.camera:camera-lifecycle:1.3.2"
+    implementation "androidx.camera:camera-view:1.3.2"
+
+    implementation 'com.google.firebase:firebase-core:21.1.1'
+    implementation "com.google.mlkit:barcode-scanning:17.2.0"
 }
 
 static def getLastCommitTimestamp() {

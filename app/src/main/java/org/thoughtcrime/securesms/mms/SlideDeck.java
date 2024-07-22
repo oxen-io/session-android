@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import com.annimon.stream.Stream;
 
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
+import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.guava.Optional;
 import org.thoughtcrime.securesms.util.MediaUtil;
 
@@ -47,8 +48,7 @@ public class SlideDeck {
     if (slide != null) slides.add(slide);
   }
 
-  public SlideDeck() {
-  }
+  public SlideDeck() { }
 
   public void clear() {
     slides.clear();
@@ -65,7 +65,6 @@ public class SlideDeck {
         body = slideBody.get();
       }
     }
-
     return body;
   }
 

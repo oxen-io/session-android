@@ -14,7 +14,7 @@ interface Job {
         // Keys used for database storage
         private val ID_KEY = "id"
         private val FAILURE_COUNT_KEY = "failure_count"
-        internal const val MAX_BUFFER_SIZE = 1_000_000 // bytes
+        internal const val MAX_BUFFER_SIZE_BYTES = 1_000_000 // ~1MB
     }
 
     suspend fun execute(dispatcherName: String)

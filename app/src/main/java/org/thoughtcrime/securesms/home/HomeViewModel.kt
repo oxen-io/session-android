@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.home
 
 import android.content.ContentResolver
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
@@ -22,7 +21,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import org.session.libsession.utilities.TextSecurePreferences
@@ -60,12 +58,10 @@ class HomeViewModel @Inject constructor(
         observeTypingStatus(),
         messageRequests(),
         ::Data
-    )
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    ).stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private fun hasHiddenMessageRequests() = TextSecurePreferences.events
         .filter { it == TextSecurePreferences.HAS_HIDDEN_MESSAGE_REQUESTS }
-        .flowOn(Dispatchers.IO)
         .map { prefs.hasHiddenMessageRequests() }
         .onStart { emit(prefs.hasHiddenMessageRequests()) }
 
@@ -81,7 +77,7 @@ class HomeViewModel @Inject constructor(
         hasHiddenMessageRequests(),
         latestUnapprovedConversationTimestamp(),
         ::createMessageRequests
-    )
+    ).flowOn(Dispatchers.IO)
 
     private fun unapprovedConversationCount() = reloadTriggersAndContentChanges()
         .map { threadDb.unapprovedConversationCount }
@@ -96,13 +92,13 @@ class HomeViewModel @Inject constructor(
                 threadDb.readerFor(openCursor).run { generateSequence { next }.toList() }
             }
         }
+        .flowOn(Dispatchers.IO)
 
     @OptIn(FlowPreview::class)
     private fun reloadTriggersAndContentChanges() = merge(
         manualReloadTrigger,
         contentResolver.observeChanges(DatabaseContentProviders.ConversationList.CONTENT_URI)
     )
-        .flowOn(Dispatchers.IO)
         .debounce(CHANGE_NOTIFICATION_DEBOUNCE_MILLS)
         .onStart { emit(Unit) }
 
@@ -114,7 +110,7 @@ class HomeViewModel @Inject constructor(
         val messageRequests: MessageRequests? = null
     )
 
-    fun createMessageRequests(
+    private fun createMessageRequests(
         count: Int,
         hidden: Boolean,
         timestamp: Long

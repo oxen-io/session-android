@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.util.SparseArray
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.children
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,8 +30,8 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
 
     var currentTheme: ThemeState? = null
 
-    private val accentColors
-        get() = mapOf(
+    private val accentColors by lazy {
+        mapOf(
             binding.accentGreen to R.style.PrimaryGreen,
             binding.accentBlue to R.style.PrimaryBlue,
             binding.accentYellow to R.style.PrimaryYellow,
@@ -41,9 +40,10 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
             binding.accentOrange to R.style.PrimaryOrange,
             binding.accentRed to R.style.PrimaryRed
         )
+    }
 
-    private val themeViews
-        get() = listOf(
+    private val themeViews by lazy {
+        listOf(
             binding.themeOptionClassicDark,
             binding.themeRadioClassicDark,
             binding.themeOptionClassicLight,
@@ -53,6 +53,7 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
             binding.themeOptionOceanLight,
             binding.themeRadioOceanLight
         )
+    }
 
     override fun onClick(v: View?) {
         v ?: return

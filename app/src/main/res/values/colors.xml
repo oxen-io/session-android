@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-    <color name="destructive">#FF453A</color>
     <color name="unimportant">#D8D8D8</color>
     <color name="profile_picture_background">#353535</color>
     <color name="action_bar_background">#161616</color>
@@ -43,8 +42,6 @@
     <color name="gray27">#ffbbbbbb</color>
     <color name="gray50">#ff808080</color>
     <color name="gray65">#ff595959</color>
-    <color name="gray70">#ff4d4d4d</color>
-    <color name="gray78">#ff383838</color>
 
     <color name="transparent_black_6">#0f000000</color>
     <color name="transparent_black_15">#26000000</color>
@@ -126,7 +123,7 @@
 
     <color name="classic_accent">#31F196</color>
 
-    <color name="classic_dark_0">#111111</color>
+    <color name="classic_dark_0">#000000</color>
     <color name="classic_dark_1">#1B1B1B</color>
     <color name="classic_dark_2">#2D2D2D</color>
     <color name="classic_dark_3">#414141</color>

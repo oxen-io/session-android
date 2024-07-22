@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.home
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
@@ -12,8 +11,6 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewMessageRequestBannerBinding
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.mms.GlideRequests
-import org.thoughtcrime.securesms.util.DateUtils
-import java.util.Locale
 
 class HomeAdapter(
     private val context: Context,
@@ -115,7 +112,7 @@ class HomeAdapter(
                 val offset = if (hasHeaderView()) position - 1 else position
                 val thread = data.threads[offset]
                 val isTyping = data.typingThreadIDs.contains(thread.threadId)
-                holder.view.bind(thread, isTyping, glide)
+                holder.view.bind(thread, isTyping)
             }
         }
     }

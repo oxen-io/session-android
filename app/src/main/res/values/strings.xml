@@ -15,17 +15,13 @@
     <string name="expand">Expand</string>
 <!--Accessibility ID's-->
     <!-- Landing Page -->
-    <string name="AccessibilityId_create_session_id">Create session ID</string>
-    <string name="AccessibilityId_restore_your_session">Restore Your Session</string>
-    <string name="AccessibilityId_link_a_device">Link a device</string>
     <string name="AccessibilityId_link_device">Link Device</string>
-    <!-- Session ID Page-->
-    <string name="AccessibilityId_session_id">Session ID</string>
-    <string name="AccessibilityId_recovery_phrase_reminder">Recovery phrase reminder</string>
+    <!-- Account ID Page-->
+    <string name="AccessibilityId_account_id">Account ID</string>
     <string name="AccessibilityId_continue">Continue</string>
     <!-- Recovery phrase input -->
 
-    <string name="AccessibilityId_copy_session_id">Copy Session ID</string>
+    <string name="AccessibilityId_copy_account_id">Copy Account ID</string>
     <!--Restore by seed page-->
     <string name="AccessibilityId_enter_your_recovery_phrase">Enter your recovery phrase</string>
     <!--Create Display Name    -->
@@ -35,9 +31,6 @@
     <string name="AccessibilityId_fast_mode_notifications_option">Fast mode notifications option</string>
     <string name="AccessibilityId_slow_mode_notifications_option">Slow mode notifications option</string>
     <string name="AccessibilityId_continue_message_notifications">Continue with settings</string>
-    <!--Recovery Phrase reminder-->
-    <string name="AccessibilityId_recovery_phrase">Recovery Phrase</string>
-    <string name="AccessibilityId_copy_recovery_phrase">Copy Recovery Phrase</string>
     <!--Home Page-->
     <string name="AccessibilityId_profile_picture">User settings</string>
     <string name="AccessibilityId_search_icon">Search icon</string>
@@ -56,7 +49,7 @@
     <string name="AccessibilityId_new_conversation_button">New conversation button</string>
     <string name="AccessibilityId_new_direct_message">New direct message</string>
     <string name="AccessibilityId_create_group">Create group</string>
-    <string name="AccessibilityId_join_community">Join community button</string>
+    <string name="AccessibilityId_join_community">Join community</string>
     <!-- Join community pop up -->
     <string name="AccessibilityId_community_input_box">Community input</string>
     <string name="AccessibilityId_join_community_button">Join community button</string>
@@ -96,7 +89,7 @@
     <string name="AccessibilityId_blocked_banner">Blocked banner</string>
     <string name="AccessibilityId_blocked_banner_text">Blocked banner text</string>
     <!--New Session -->
-    <string name="AccessibilityId_session_id_input">Session id input box</string>
+    <string name="AccessibilityId_account_id_input">Account id input box</string>
     <string name="AccessibilityId_next">Next</string>
     <!--  New group -->
     <string name="AccessibilityId_group_name_input">Group name input</string>
@@ -137,7 +130,8 @@
     <string name="AccessibilityId_user_settings">User settings</string>
     <string name="AccessibilityId_username">Username</string>
     <string name="AccessibilityId_privacy">Privacy</string>
-    <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
+    <string name="AccessibilityId_recovery_password_menu_item">Recovery password menu item</string>
+    <string name="AccessibilityId_recovery_password">Recovery password</string>
     <string name="AccessibilityId_edit_user_nickname">Edit user nickname</string>
     <string name="AccessibilityId_apply">Apply</string>
     <string name="AccessibilityId_cancel">Cancel</string>
@@ -244,7 +238,7 @@
     <string name="ConversationActivity_search_position">%1$d of %2$d</string>
     <string name="ConversationActivity_call_title">Call Permissions Required</string>
     <string name="ConversationActivity_call_prompt">You can enable the \'Voice and video calls\' permission in the Privacy Settings.</string>
-    <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
+    <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request.</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="one">Delete selected message?</item>
@@ -316,9 +310,6 @@
     <string name="MediaOverviewActivity_Select_all">Select all</string>
     <string name="MediaOverviewActivity_collecting_attachments">Collecting attachments...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimedia message</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Downloading MMS message</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Error downloading MMS message, tap to retry</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Send to %s</string>
     <!-- MediaSendActivity -->
@@ -399,7 +390,7 @@
     <!-- KeyCachingService -->
     <string name="KeyCachingService_signal_passphrase_cached">Touch to open.</string>
     <string name="KeyCachingService_passphrase_cached">Session is unlocked</string>
-    <string name="KeyCachingService_lock">Lock Session</string>
+    <string name="KeyCachingService_lock">Lock App</string>
     <!-- MediaPreviewActivity -->
     <string name="MediaPreviewActivity_you">You</string>
     <string name="MediaPreviewActivity_unssuported_media_type">Unsupported media type</string>
@@ -718,7 +709,7 @@
     <string name="LocalBackupJob_creating_backup">Creating backup...</string>
     <string name="ProgressPreference_d_messages_so_far">%d messages so far</string>
     <string name="BackupUtil_never">Never</string>
-    <string name="preferences_app_protection__screen_lock">Lock Session</string>
+    <string name="preferences_app_protection__screen_lock">Lock App</string>
     <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Require fingerprint, PIN, pattern or password to unlock Session.</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Screen lock inactivity timeout</string>
     <string name="AppProtectionPreferenceFragment_none">None</string>
@@ -727,32 +718,26 @@
     <!-- Session -->
     <string name="continue_2">Continue</string>
     <string name="copy">Copy</string>
+    <string name="copied">Copied</string>
     <string name="close">Close</string>
     <string name="invalid_url">Invalid URL</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="next">Next</string>
     <string name="share">Share</string>
-    <string name="invalid_session_id">Invalid Session ID</string>
+    <string name="invalid_account_id">Invalid Account ID</string>
     <string name="cancel">Cancel</string>
-    <string name="your_session_id">Your Session ID</string>
-    <string name="activity_landing_title_2">Your Session begins here...</string>
-    <string name="activity_landing_register_button_title">Create Session ID</string>
-    <string name="activity_landing_restore_button_title">Continue Your Session</string>
-    <string name="view_fake_chat_bubble_1">What\'s Session?</string>
-    <string name="view_fake_chat_bubble_2">It\'s a decentralized, encrypted messaging app</string>
-    <string name="view_fake_chat_bubble_3">So it doesn\'t collect my personal information or my conversation metadata? How does it work?</string>
-    <string name="view_fake_chat_bubble_4">Using a combination of advanced anonymous routing and end-to-end encryption technologies.</string>
-    <string name="view_fake_chat_bubble_5">Friends don\'t let friends use compromised messengers. You\'re welcome.</string>
-    <string name="activity_register_title">Say hello to your Session ID</string>
-    <string name="activity_register_explanation">Your Session ID is the unique address people can use to contact you on Session. With no connection to your real identity, your Session ID is totally anonymous and private by design.</string>
-    <string name="activity_restore_title">Restore your account</string>
-    <string name="activity_restore_explanation">Enter the recovery phrase that was given to you when you signed up to restore your account.</string>
-    <string name="activity_restore_seed_edit_text_hint">Enter your recovery phrase</string>
-    <string name="activity_display_name_title_2">Pick your display name</string>
-    <string name="activity_display_name_explanation">This will be your name when you use Session. It can be your real name, an alias, or anything else you like.</string>
-    <string name="activity_display_name_edit_text_hint">Enter a display name</string>
-    <string name="activity_display_name_display_name_missing_error">Please pick a display name</string>
-    <string name="activity_display_name_display_name_too_long_error">Please pick a shorter display name</string>
+    <string name="your_account_id">Your Account ID</string>
+    <string name="urlOpen">Open URL</string>
+    <string name="urlOpenBrowser">This will open in your browser.</string>
+    <string name="activity_landing_terms_of_service">Terms of Service</string>
+    <string name="activity_landing_privacy_policy">Privacy Policy</string>
+    <string name="displayNamePick">Pick your display name</string>
+    <string name="displayNameNew">Pick a new display name</string>
+    <string name="displayNameDescription">It can be your real name, an alias, or anything else you like — and you can change it any time.</string>
+    <string name="displayNameErrorNew">We were unable to load your display name. Please enter a new display name to continue.</string>
+    <string name="displayNameEnter">Enter a display name</string>
+    <string name="displayNameErrorDescription">Please enter a display name.</string>
+    <string name="displayNameErrorDescriptionShorter">Please enter a shorter display name.</string>
     <string name="activity_pn_mode_recommended_option_tag">Recommended</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
     <string name="activity_home_empty_state_message">You don\'t have any contacts yet</string>
@@ -761,13 +746,8 @@
     <string name="activity_home_leaving_group_failed_message">"Couldn\'t leave group"</string>
     <string name="activity_home_delete_conversation_dialog_message">Are you sure you want to delete this conversation?</string>
     <string name="activity_home_conversation_deleted_message">Conversation deleted</string>
-    <string name="activity_seed_title">Your Recovery Phrase</string>
-    <string name="activity_seed_title_2">Meet your recovery phrase</string>
-    <string name="activity_seed_explanation">Your recovery phrase is the master key to your Session ID — you can use it to restore your Session ID if you lose access to your device. Store your recovery phrase in a safe place, and don\'t give it to anyone.</string>
-    <string name="activity_seed_reveal_button_title">Hold to reveal</string>
-    <string name="view_seed_reminder_title">You\'re almost finished! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Secure your account by saving your recovery phrase</string>
-    <string name="view_seed_reminder_subtitle_2">Tap and hold the redacted words to reveal your recovery phrase, then store it safely to secure your Session ID.</string>
+    <string name="view_seed_reminder_subtitle_2">Tap and hold the redacted words to reveal your recovery phrase, then store it safely to secure your Account ID.</string>
     <string name="view_seed_reminder_subtitle_3">Make sure to store your recovery phrase in a safe place</string>
     <string name="activity_path_title">Path</string>
     <string name="activity_path_explanation">Session hides your IP by bouncing your messages through several Service Nodes in Session\'s decentralized network. These are the countries your connection is currently being bounced through:</string>
@@ -778,12 +758,12 @@
     <string name="activity_path_learn_more_button_title">Learn More</string>
     <string name="activity_path_resolving_progress">Resolving…</string>
     <string name="activity_create_private_chat_title">New Session</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">Enter Session ID</string>
+    <string name="activity_create_private_chat_enter_account_id_tab_title">Enter Account ID</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">Scan QR Code</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">Scan a user\'s QR code to start a session. QR codes can be found by tapping the QR code icon in account settings.</string>
-    <string name="fragment_enter_public_key_edit_text_hint">Enter Session ID or ONS name</string>
-    <string name="fragment_enter_public_key_explanation">Users can share their Session ID by going into their account settings and tapping "Share Session ID", or by sharing their QR code.</string>
-    <string name="fragment_enter_public_key_error_message">Please check the Session ID or ONS name and try again.</string>
+    <string name="fragment_enter_public_key_edit_text_hint">Enter Account ID or ONS name</string>
+    <string name="fragment_enter_public_key_explanation">Users can share their Account ID by going into their account settings and tapping "Share Account ID", or by sharing their QR code.</string>
+    <string name="fragment_enter_public_key_error_message">Please check the Account ID or ONS name and try again.</string>
     <string name="fragment_scan_qr_code_camera_access_explanation">Session needs camera access to scan QR codes</string>
     <string name="fragment_scan_qr_code_grant_camera_access_button_title">Grant Camera Access</string>
     <string name="activity_create_closed_group_title">New Closed Group</string>
@@ -814,7 +794,6 @@
     <string name="activity_settings_devices_button_title">Devices</string>
     <string name="activity_settings_invite_button_title">Invite a Friend</string>
     <string name="activity_settings_faq_button_title">FAQ</string>
-    <string name="activity_settings_recovery_phrase_button_title">Recovery Phrase</string>
     <string name="activity_settings_clear_all_data_button_title">Clear Data</string>
     <string name="activity_settings_clear_all_data_and_network_button_title">Clear Data Including Network</string>
     <string name="activity_settings_help_translate_session">Help us Translate Session</string>
@@ -836,14 +815,10 @@
     <string name="preferences_notifications_strategy_category_fast_mode_summary">You\'ll be notified of new messages reliably and immediately using Google\'s notification servers.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Change name</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Unlink device</string>
-    <string name="dialog_seed_title">Your Recovery Phrase</string>
-    <string name="dialog_seed_explanation">You can use your recovery phrase to restore your account or link a device.</string>
     <string name="dialog_clear_all_data_title">Clear All Data</string>
     <string name="dialog_clear_all_data_explanation">This will permanently delete your messages, sessions, and contacts.</string>
     <string name="dialog_clear_all_data_network_explanation">Would you like to clear only this device, or delete your entire account?</string>
     <string name="dialog_clear_all_data_message">This will permanently delete your messages, sessions, and contacts. Would you like to clear only this device, or delete your entire account?</string>
-    <string name="dialog_clear_all_data_clear_device_only">Clear Device Only</string>
-    <string name="dialog_clear_all_data_clear_device_and_network">Clear Device and Network</string>
     <string name="dialog_clear_all_data_clear_device_and_network_confirmation">Are you sure you want to delete your data from the network? If you continue you will not be able to restore your messages or contacts.</string>
     <string name="dialog_clear_all_data_clear">Clear</string>
     <string name="dialog_clear_all_data_local_only">Delete Only</string>
@@ -876,7 +851,7 @@
     <string name="dialog_ui_mode_option_day">Day</string>
     <string name="dialog_ui_mode_option_night">Night</string>
     <string name="dialog_ui_mode_option_system_default">System default</string>
-    <string name="activity_conversation_menu_copy_session_id">Copy Session ID</string>
+    <string name="activity_conversation_menu_copy_account_id">Copy Account ID</string>
     <string name="attachment">Attachment</string>
     <string name="attachment_type_voice_message">Voice Message</string>
     <string name="details">Details</string>
@@ -885,19 +860,13 @@
     <string name="activity_backup_restore_select_file">Select a file</string>
     <string name="activity_backup_restore_explanation_1">Select a backup file and enter the passphrase it was created with.</string>
     <string name="activity_backup_restore_passphrase">30-digit passphrase</string>
-    <string name="activity_link_device_skip_prompt">This is taking a while, would you like to skip?</string>
-    <string name="activity_link_device_link_device">Link a Device</string>
-    <string name="activity_link_device_recovery_phrase">Recovery Phrase</string>
-    <string name="activity_link_device_scan_qr_code">Scan QR Code</string>
+    <string name="qrScan">Scan QR Code</string>
     <string name="activity_link_device_qr_message">Navigate to Settings → Recovery Phrase on your other device to show your QR code.</string>
     <string name="activity_join_public_chat_join_rooms">Or join one of these…</string>
-    <string name="activity_pn_mode_message_notifications">Message Notifications</string>
-    <string name="activity_pn_mode_explanation">There are two ways Session can notify you of new messages.</string>
     <string name="activity_pn_mode_fast_mode">Fast Mode</string>
     <string name="activity_pn_mode_slow_mode">Slow Mode</string>
     <string name="activity_pn_mode_fast_mode_explanation">You’ll be notified of new messages reliably and immediately using Google’s notification servers.</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session will occasionally check for new messages in the background.</string>
-    <string name="fragment_recovery_phrase_title">Recovery Phrase</string>
     <string name="activity_prompt_passphrase_session_locked">Session is Locked</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Tap to Unlock</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Enter a nickname</string>
@@ -947,7 +916,7 @@
     <string name="global_search_contacts_groups">Contacts and Groups</string>
     <string name="global_search_messages">Messages</string>
     <string name="activity_message_requests_title">Message Requests</string>
-    <string name="message_requests_send_notice">Sending a message to this user will automatically accept their message request and reveal your Session ID.</string>
+    <string name="message_requests_send_notice">Sending a message to this user will automatically accept their message request and reveal your Account ID.</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
     <string name="message_requests_clear_all">Clear All</string>
@@ -959,9 +928,9 @@
     <string name="message_requests_accepted">Your message request has been accepted.</string>
     <string name="message_requests_pending">Your message request is currently pending.</string>
     <string name="message_request_empty_state_message">No pending message requests</string>
-    <string name="NewConversationButton_SessionTooltip">Direct Message</string>
-    <string name="NewConversationButton_ClosedGroupTooltip">Closed Group</string>
-    <string name="NewConversationButton_OpenGroupTooltip">Open Group</string>
+    <string name="StartConversationButton_SessionTooltip">Direct Message</string>
+    <string name="StartConversationButton_ClosedGroupTooltip">Closed Group</string>
+    <string name="StartConversationButton_OpenGroupTooltip">Open Group</string>
     <string name="message_requests_notification">You have a new message request</string>
     <string name="CallNotificationBuilder_connecting">Connecting…</string>
     <string name="NotificationBarManager__incoming_signal_call">Incoming call</string>
@@ -1033,13 +1002,13 @@
         <item quantity="one">And %1$d other has reacted %2$s to this message</item>
         <item quantity="other">And %1$d others have reacted %2$s to this message</item>
     </plurals>
-    <string name="dialog_new_conversation_title">New Conversation</string>
+    <string name="dialog_start_conversation_title">Start Conversation</string>
     <string name="dialog_new_message_title">New Message</string>
     <string name="activity_create_group_title">Create Group</string>
     <string name="dialog_join_community_title">Join Community</string>
     <string name="new_conversation_contacts_title">Contacts</string>
     <string name="new_conversation_unknown_contacts_section_title">Unknown</string>
-    <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
+    <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Account ID or share your Account ID with them.</string>
     <string name="activity_create_group_create_button_title">Create</string>
     <string name="search_contacts_hint">Search contacts</string>
     <string name="activity_join_public_chat_enter_community_url_tab_title">Community URL</string>
@@ -1082,4 +1051,92 @@
     <string name="unread_marker">Unread Messages</string>
     <string name="auto_deletes_in">Auto-deletes in %1$s</string>
 
+    <string name="onboardingBubblePrivacyInYourPocket">Privacy in your pocket.</string>
+    <string name="onboardingBubbleWelcomeToSession">Welcome to Session 👋</string>
+    <string name="welcome_to_session">Welcome to Session</string>
+    <string name="onboardingBubbleSessionIsEngineered">Session is engineered to protect your privacy.</string>
+    <string name="onboardingBubbleNoPhoneNumber">"You don’t even need a phone number to sign up. "</string>
+    <string name="onboardingBubbleCreatingAnAccountIsEasy">Creating an account is \ninstant, free, and \nanonymous 👇</string>
+    <string name="onboardingAccountCreate">Create account</string>
+    <string name="onboardingAccountExists">I have an account</string>
+    <string name="onboardingTosPrivacy">By using this service, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b></string>
+
+    <string name="qrNotRecoveryPassword">This QR code does not contain a Recovery Password.</string>
+
+    <string name="recoveryPasswordErrorMessageShort">The Recovery Password you entered is not long enough. Please check and try again.</string>
+    <string name="recoveryPasswordErrorMessageIncorrect">Some of the words in your Recovery Password are incorrect. Please check and try again.</string>
+    <string name="recoveryPasswordErrorMessageGeneric">Please check your Recovery Password and try again.</string>
+
+    <string name="cameraGrantAccess">Grant Camera Access</string>
+    <string name="sessionRecoveryPassword">Recovery Password</string>
+    <string name="recoveryPasswordEnter">Enter your recovery password</string>
+
+    <string name="sessionSettings">Settings</string>
+
+    <string name="activity_link_load_account">Load Account</string>
+    <string name="activity_link_camera_permission_permanently_denied_configure_in_settings">Camera Permission permanently denied. Configure in settings.</string>
+    <string name="activity_link_enter_your_recovery_password_to_load_your_account_if_you_haven_t_saved_it_you_can_find_it_in_your_app_settings">Enter your recovery password to load your account. If you haven\'t saved it, you can find it in your app settings.</string>
+    <string name="waitOneMoment">One moment please..</string>
+    <string name="loadAccountProgressMessage">Loading your account</string>
+    <string name="notificationsMessage">Message notifications</string>
+    <string name="onboardingMessageNotificationExplaination">There are two ways Session can notify you of new messages.</string>
+    <string name="recoveryPasswordHidePermanently">Hide Recovery Password Permanently</string>
+    <string name="recoveryPasswordHidePermanentlyDescription1"><![CDATA[Without your recovery password, you cannot load your account on new devices.<br><br>We strongly recommend you save your recovery password in a safe and secure place before continuing.]]></string>
+    <string name="recoveryPasswordHidePermanentlyDescription2">Are you sure you want to permanently hide your recovery password on this device? This cannot be undone.</string>
+    <string name="recoveryPasswordDescription">Use your recovery password to load your account on new devices.\n\nYour account cannot be recovered without your recovery password. Make sure it\'s stored somewhere safe and secure — and don\'t share it with anyone.</string>
+    <string name="hide">Hide</string>
+    <string name="recoveryPasswordHideRecoveryPassword">Hide Recovery Password</string>
+    <string name="qrView">View QR</string>
+    <string name="view">View</string>
+    <string name="scan">Scan</string>
+    <string name="recoveryPasswordView">View Password</string>
+    <string name="recoveryPasswordHideRecoveryPasswordDescription">Permanently hide your recovery password on this device.</string>
+    <string name="conversationsNone">You don\'t have any conversations yet</string>
+    <string name="onboardingHitThePlusButton">Hit the plus button to start a chat, create a group, or join an official communitiy!</string>
+    <string name="admin_group_leave_warning">Because you are the creator of this group it will be deleted for everyone. This cannot be undone.</string>
+    <string name="hide_message_requests">Hide message requests?</string>
+    <string name="save_your_recovery_password">Save your recovery password</string>
+    <string name="save_your_recovery_password_to_make_sure_you_don_t_lose_access_to_your_account">Save your recovery password to make sure you don\'t lose access to your account.</string>
+    <string name="onboardingAccountCreated">Account Created</string>
+    <string name="AccessibilityId_fast_mode_notifications_button">Fast mode notifications button</string>
+    <string name="AccessibilityId_slow_mode_notifications_button">Slow mode notifications button</string>
+    <string name="AccessibilityId_reveal_recovery_phrase_button">Reveal recovery phrase button</string>
+    <string name="AccessibilityId_create_account_button">Create account button</string>
+    <string name="AccessibilityId_restore_account_button">Restore your session button</string>
+    <string name="AccessibilityId_privacy_policy_link">Privacy policy link</string>
+    <string name="AccessibilityId_terms_of_service_button">Terms of service button</string>
+    <string name="AccessibilityId_privacy_policy_button">Privacy policy button</string>
+    <string name="AccessibilityId_loading_animation">Loading animation</string>
+    <string name="AccessibilityId_recovery_phrase_input">Recovery phrase input</string>
+    <string name="AccessibilityId_error_message">Error message</string>
+    <string name="AccessibilityId_hide_recovery_password_button">Hide recovery password button</string>
+    <string name="AccessibilityId_recovery_password_container">Recovery password container</string>
+    <string name="AccessibilityId_confirm_button">Confirm button</string>
+    <string name="AccessibilityId_open_url">Open URL</string>
+    <string name="accountIdErrorInvalid">This Account ID is invalid. Please check and try again.</string>
+    <string name="enter_account_id">Enter Account ID</string>
+    <string name="accountIdOrOnsEnter">Enter Account ID or ONS</string>
+    <string name="messageNewDescription">Start a new conversation by entering your friend\'s Account ID, ONS or scanning their QR code.</string>
+    <string name="messageNew">New Message</string>
+    <string name="unknown">Unknown</string>
+    <string name="contacts">Contacts</string>
+    <string name="conversations">Conversations</string>
+    <string name="invite_your_friend_to_chat_with_you_on_session_by_sharing_your_account_id_with_them">Invite your friend to chat with you on Session by sharing your Account ID with them.</string>
+    <string name="invite_a_friend">Invite a Friend</string>
+    <string name="accountIdYours">Your Account ID</string>
+    <string name="qrYoursDescription">Friends can message you by scanning your QR code.</string>
+    <string name="onsErrorNotRecognized">We couldn’t recognize this ONS. Please check and try again.</string>
+    <string name="onsErrorUnableToSearch">We were unable to search for this ONS. Please try again later.</string>
+    <string name="this_is_your_account_id_other_users_can_scan_it_to_start_a_conversation_with_you">This is your Account ID. Other users can scan it to start a conversation with you.</string>
+    <string name="accountIdShare">Hey, I\'ve been using Session to chat with complete privacy and security. Come join me! My Account ID is \n\n%1$s\n\nDownload it at https://getsession.org/</string>
+    <string name="this_qr_code_does_not_contain_an_account_id">This QR code does not contain an Account ID.</string>
+    <string name="AccessibilityId_invite_friend_button">Invite friend button</string>
+    <string name="AccessibilityId_help_desk_link">Help desk link</string>
+    <string name="AccessibilityId_copy_button">Copy button</string>
+    <string name="AccessibilityId_view_qr_code">View QR code</string>
+    <string name="AccessibilityId_qr_code">QR code</string>
+    <string name="warning">Warning</string>
+    <string name="you_cannot_go_back_further_in_order_to_stop_loading_your_account_session_needs_to_quit">You cannot go back further. In order to stop loading your account, Session needs to quit.</string>
+    <string name="you_cannot_go_back_further_cancel_account_creation">You cannot go back further. In order to cancel your account creation, Session needs to quit.</string>
+    <string name="quit">Quit</string>
 </resources>

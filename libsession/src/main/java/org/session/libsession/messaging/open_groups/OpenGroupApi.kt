@@ -6,20 +6,18 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.databind.type.TypeFactory
-import com.goterl.lazysodium.LazySodiumAndroid
-import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.Sign
 import kotlinx.coroutines.flow.MutableSharedFlow
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
-import okhttp3.Headers
-import okhttp3.HttpUrl
-import okhttp3.MediaType
+import okhttp3.Headers.Companion.toHeaders
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller.Companion.maxInactivityPeriod
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsession.snode.OnionRequestAPI
@@ -273,7 +271,6 @@ object OpenGroupApi {
         val queryParameters: Map<String, String> = mapOf(),
         val parameters: Any? = null,
         val headers: Map<String, String> = mapOf(),
-        val isAuthRequired: Boolean = true,
         val body: ByteArray? = null,
         /**
          * Always `true` under normal circumstances. You might want to disable
@@ -283,10 +280,10 @@ object OpenGroupApi {
     )
 
     private fun createBody(body: ByteArray?, parameters: Any?): RequestBody? {
-        if (body != null) return RequestBody.create(MediaType.get("application/octet-stream"), body)
+        if (body != null) return RequestBody.create("application/octet-stream".toMediaType(), body)
         if (parameters == null) return null
         val parametersAsJSON = JsonUtil.toJson(parameters)
-        return RequestBody.create(MediaType.get("application/json"), parametersAsJSON)
+        return RequestBody.create("application/json".toMediaType(), parametersAsJSON)
     }
 
     private fun getResponseBody(request: Request): Promise<ByteArray, Exception> {
@@ -302,7 +299,7 @@ object OpenGroupApi {
     }
 
     private fun send(request: Request): Promise<OnionResponse, Exception> {
-        HttpUrl.parse(request.server) ?: return Promise.ofFail(Error.InvalidURL)
+        request.server.toHttpUrlOrNull() ?: return Promise.ofFail(Error.InvalidURL)
         val urlBuilder = StringBuilder("${request.server}/${request.endpoint.value}")
         if (request.verb == GET && request.queryParameters.isNotEmpty()) {
             urlBuilder.append("?")
@@ -319,77 +316,76 @@ object OpenGroupApi {
                 ?: return Promise.ofFail(Error.NoEd25519KeyPair)
             val urlRequest = urlBuilder.toString()
             val headers = request.headers.toMutableMap()
-            if (request.isAuthRequired) {
-                val nonce = sodium.nonce(16)
-                val timestamp = TimeUnit.MILLISECONDS.toSeconds(SnodeAPI.nowWithOffset)
-                var pubKey = ""
-                var signature = ByteArray(Sign.BYTES)
-                var bodyHash = ByteArray(0)
-                if (request.parameters != null) {
-                    val parameterBytes = JsonUtil.toJson(request.parameters).toByteArray()
-                    val parameterHash = ByteArray(GenericHash.BYTES_MAX)
-                    if (sodium.cryptoGenericHash(
-                            parameterHash,
-                            parameterHash.size,
-                            parameterBytes,
-                            parameterBytes.size.toLong()
-                        )
-                    ) {
-                        bodyHash = parameterHash
-                    }
-                } else if (request.body != null) {
-                    val byteHash = ByteArray(GenericHash.BYTES_MAX)
-                    if (sodium.cryptoGenericHash(
-                            byteHash,
-                            byteHash.size,
-                            request.body,
-                            request.body.size.toLong()
-                        )
-                    ) {
-                        bodyHash = byteHash
-                    }
-                }
-                val messageBytes = Hex.fromStringCondensed(publicKey)
-                    .plus(nonce)
-                    .plus("$timestamp".toByteArray(Charsets.US_ASCII))
-                    .plus(request.verb.rawValue.toByteArray())
-                    .plus("/${request.endpoint.value}".toByteArray())
-                    .plus(bodyHash)
-                if (serverCapabilities.isEmpty() || serverCapabilities.contains(Capability.BLIND.name.lowercase())) {
-                    SodiumUtilities.blindedKeyPair(publicKey, ed25519KeyPair)?.let { keyPair ->
-                        pubKey = SessionId(
-                            IdPrefix.BLINDED,
-                            keyPair.publicKey.asBytes
-                        ).hexString
 
-                        signature = SodiumUtilities.sogsSignature(
-                            messageBytes,
-                            ed25519KeyPair.secretKey.asBytes,
-                            keyPair.secretKey.asBytes,
-                            keyPair.publicKey.asBytes
-                        ) ?: return Promise.ofFail(Error.SigningFailed)
-                    } ?: return Promise.ofFail(Error.SigningFailed)
-                } else {
-                    pubKey = SessionId(
-                        IdPrefix.UN_BLINDED,
-                        ed25519KeyPair.publicKey.asBytes
-                    ).hexString
-                    sodium.cryptoSignDetached(
-                        signature,
-                        messageBytes,
-                        messageBytes.size.toLong(),
-                        ed25519KeyPair.secretKey.asBytes
+            val nonce = sodium.nonce(16)
+            val timestamp = TimeUnit.MILLISECONDS.toSeconds(SnodeAPI.nowWithOffset)
+            var pubKey = ""
+            var signature = ByteArray(Sign.BYTES)
+            var bodyHash = ByteArray(0)
+            if (request.parameters != null) {
+                val parameterBytes = JsonUtil.toJson(request.parameters).toByteArray()
+                val parameterHash = ByteArray(GenericHash.BYTES_MAX)
+                if (sodium.cryptoGenericHash(
+                        parameterHash,
+                        parameterHash.size,
+                        parameterBytes,
+                        parameterBytes.size.toLong()
                     )
+                ) {
+                    bodyHash = parameterHash
                 }
-                headers["X-SOGS-Nonce"] = encodeBytes(nonce)
-                headers["X-SOGS-Timestamp"] = "$timestamp"
-                headers["X-SOGS-Pubkey"] = pubKey
-                headers["X-SOGS-Signature"] = encodeBytes(signature)
+            } else if (request.body != null) {
+                val byteHash = ByteArray(GenericHash.BYTES_MAX)
+                if (sodium.cryptoGenericHash(
+                        byteHash,
+                        byteHash.size,
+                        request.body,
+                        request.body.size.toLong()
+                    )
+                ) {
+                    bodyHash = byteHash
+                }
             }
+            val messageBytes = Hex.fromStringCondensed(publicKey)
+                .plus(nonce)
+                .plus("$timestamp".toByteArray(Charsets.US_ASCII))
+                .plus(request.verb.rawValue.toByteArray())
+                .plus("/${request.endpoint.value}".toByteArray())
+                .plus(bodyHash)
+            if (serverCapabilities.isEmpty() || serverCapabilities.contains(Capability.BLIND.name.lowercase())) {
+                SodiumUtilities.blindedKeyPair(publicKey, ed25519KeyPair)?.let { keyPair ->
+                    pubKey = AccountId(
+                        IdPrefix.BLINDED,
+                        keyPair.publicKey.asBytes
+                    ).hexString
+
+                    signature = SodiumUtilities.sogsSignature(
+                        messageBytes,
+                        ed25519KeyPair.secretKey.asBytes,
+                        keyPair.secretKey.asBytes,
+                        keyPair.publicKey.asBytes
+                    ) ?: return Promise.ofFail(Error.SigningFailed)
+                } ?: return Promise.ofFail(Error.SigningFailed)
+            } else {
+                pubKey = AccountId(
+                    IdPrefix.UN_BLINDED,
+                    ed25519KeyPair.publicKey.asBytes
+                ).hexString
+                sodium.cryptoSignDetached(
+                    signature,
+                    messageBytes,
+                    messageBytes.size.toLong(),
+                    ed25519KeyPair.secretKey.asBytes
+                )
+            }
+            headers["X-SOGS-Nonce"] = encodeBytes(nonce)
+            headers["X-SOGS-Timestamp"] = "$timestamp"
+            headers["X-SOGS-Pubkey"] = pubKey
+            headers["X-SOGS-Signature"] = encodeBytes(signature)
 
             val requestBuilder = okhttp3.Request.Builder()
                 .url(urlRequest)
-                .headers(Headers.of(headers))
+                .headers(headers.toHeaders())
             when (request.verb) {
                 GET -> requestBuilder.get()
                 PUT -> requestBuilder.put(createBody(request.body, request.parameters)!!)
@@ -927,7 +923,7 @@ object OpenGroupApi {
     }
 
     fun getCapabilities(server: String): Promise<Capabilities, Exception> {
-        val request = Request(verb = GET, room = null, server = server, endpoint = Endpoint.Capabilities, isAuthRequired = false)
+        val request = Request(verb = GET, room = null, server = server, endpoint = Endpoint.Capabilities)
         return getResponseBody(request).map { response ->
             JsonUtil.fromJson(response, Capabilities::class.java)
         }
@@ -962,12 +958,12 @@ object OpenGroupApi {
         }
     }
 
-    fun sendDirectMessage(message: String, blindedSessionId: String, server: String): Promise<DirectMessage, Exception> {
+    fun sendDirectMessage(message: String, blindedAccountId: String, server: String): Promise<DirectMessage, Exception> {
         val request = Request(
             verb = POST,
             room = null,
             server = server,
-            endpoint = Endpoint.InboxFor(blindedSessionId),
+            endpoint = Endpoint.InboxFor(blindedAccountId),
             parameters = mapOf("message" to message)
         )
         return getResponseBody(request).map { response ->

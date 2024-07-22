@@ -132,9 +132,6 @@
     <string name="MediaOverviewActivity_Select_all">Vel alle</string>
     <string name="MediaOverviewActivity_collecting_attachments">Hentar vedlegg …</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediemelding</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Lastar ned MMS-melding</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Klarte ikkje lasta ned MMS-melding, trykk for å prøva igjen</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Send til %s</string>
     <!-- MediaSendActivity -->

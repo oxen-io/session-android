@@ -160,9 +160,6 @@
     <string name="MediaOverviewActivity_Select_all">Selectează tot</string>
     <string name="MediaOverviewActivity_collecting_attachments">Se colectează atașamentele...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Mesaj multimedia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Se descarcă mesajul MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Eroare la descărcarea mesajului MMS, apasă pentru reîncercare</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Trimiteți la %s</string>
     <!-- MediaSendActivity -->
@@ -542,33 +539,30 @@ schimbul de chei este corupt </string>
     <string name="copied_to_clipboard">Copiat în clipboard</string>
     <string name="next">Următorul</string>
     <string name="share">Distribuie</string>
-    <string name="invalid_session_id">ID sesiune nevalid</string>
+    <string name="invalid_account_id">ID sesiune nevalid</string>
     <string name="cancel">Anulare</string>
-    <string name="your_session_id">ID-ul sesiunii dvs</string>
-    <string name="activity_landing_title_2">Sesiunea dvs. începe aici...</string>
-    <string name="activity_landing_register_button_title">Creați ID sesiune</string>
-    <string name="activity_landing_restore_button_title">Continuați sesiunea</string>
+    <string name="your_account_id">ID-ul sesiunii dvs</string>
     <string name="view_fake_chat_bubble_1">Ce este Session?</string>
     <string name="view_fake_chat_bubble_2">Este o aplicație de mesagerie descentralizată, criptată</string>
     <string name="view_fake_chat_bubble_3">Deci nu colectează informaţii personale sau metadatele conversaţiei? Cum funcţionează?</string>
     <string name="view_fake_chat_bubble_4">Utilizarea unei combinații avansate de rutare anonimă și de tehnologii de criptare capăt-la-capăt.</string>
     <string name="view_fake_chat_bubble_5">Prietenii nu-și lasă prietenii să folosească mesageri compromiși. Cu plăcere.</string>
-    <string name="activity_register_title">Bun venit la noul tău ID Session</string>
-    <string name="activity_register_explanation">ID-ul de sesiune este adresa ta unică pe care persoanele o pot folosi pentru a te contacta în Session. Neavând conexiune la identitatea ta reală, ID-ul tău Session este complet anonim și privat prin design.</string>
+
+
     <string name="activity_restore_title">Recuperează-ți contul</string>
     <string name="activity_restore_explanation">Introduceți fraza de recuperare care v-a fost dată atunci când v-ați înregistrat pentru a vă restaura contul.</string>
     <string name="activity_restore_seed_edit_text_hint">Introduceți fraza de recuperare</string>
-    <string name="activity_display_name_title_2">Alegeți numele afișat</string>
-    <string name="activity_display_name_explanation">Acesta va fi numele tău când folosești Session. Poate fi numele tău, un pseudonim, sau orice altceva dorești.</string>
-    <string name="activity_display_name_edit_text_hint">Alege un nume de afișat</string>
-    <string name="activity_display_name_display_name_missing_error">Vă rugăm să alegeți un nume de afișare</string>
+    <string name="displayNamePick">Alegeți numele afișat</string>
+    <string name="displayNameDescription">Acesta va fi numele tău când folosești Session. Poate fi numele tău, un pseudonim, sau orice altceva dorești.</string>
+    <string name="displayNameEnter">Alege un nume de afișat</string>
+    <string name="displayNameErrorDescription">Vă rugăm să alegeți un nume de afișare</string>
     <string name="activity_path_guard_node_row_title">Nod de intrare</string>
     <string name="activity_path_service_node_row_title">Nod servicii</string>
     <string name="activity_path_destination_row_title">Destinație</string>
     <string name="activity_path_learn_more_button_title">Aflați mai multe</string>
     <string name="activity_path_resolving_progress">Se rezolvă…</string>
     <string name="activity_create_private_chat_title">Sesiune Nouă</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">Introduceți ID-ul Session</string>
+    <string name="activity_create_private_chat_enter_account_id_tab_title">Introduceți ID-ul Session</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">Scanați codul QR</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">Scanați codul QR al unui utilizator pentru a începe o sesiune. Codurile QR pot fi găsite prin atingerea pictogramei de cod QR din setările contului.</string>
     <string name="fragment_enter_public_key_edit_text_hint">Introduceți ID-ul Session sau numele ONS</string>

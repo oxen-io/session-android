@@ -35,6 +35,5 @@ public class AndroidLogger extends Log.Logger {
   }
 
   @Override
-  public void blockUntilAllWritesFinished() {
-  }
+  public void blockUntilAllWritesFinished() {  }
 }

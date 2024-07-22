@@ -31,7 +31,7 @@ class BlindedIdMappingDatabase(context: Context, helper: SQLCipherOpenHelper) : 
         private fun readBlindedIdMapping(cursor: Cursor): BlindedIdMapping {
             return BlindedIdMapping(
                 blindedId = cursor.getString(cursor.getColumnIndexOrThrow(BLINDED_PK)),
-                sessionId = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(SESSION_PK)),
+                accountId = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(SESSION_PK)),
                 serverUrl = cursor.getString(cursor.getColumnIndexOrThrow(SERVER_URL)),
                 serverId = cursor.getString(cursor.getColumnIndexOrThrow(SERVER_PK)),
             )
@@ -58,7 +58,7 @@ class BlindedIdMappingDatabase(context: Context, helper: SQLCipherOpenHelper) : 
         try {
             val values = ContentValues().apply {
                 put(BLINDED_PK, blindedIdMapping.blindedId)
-                put(SERVER_PK, blindedIdMapping.sessionId)
+                put(SERVER_PK, blindedIdMapping.accountId)
                 put(SERVER_URL, blindedIdMapping.serverUrl)
                 put(SERVER_PK, blindedIdMapping.serverId)
             }

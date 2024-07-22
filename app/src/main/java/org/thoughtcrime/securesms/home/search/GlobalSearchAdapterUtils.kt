@@ -10,11 +10,13 @@ import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsession.utilities.truncateIdForDisplay
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.ContentView
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.GroupConversation
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Header
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Message
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.SavedMessages
+import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.SubHeader
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.SearchUtil
 import java.util.Locale
@@ -63,7 +65,7 @@ fun ContentView.bindQuery(query: String, model: GlobalSearchAdapter.Model) {
             ))
             binding.searchResultSubtitle.text = textSpannable
             binding.searchResultSubtitle.isVisible = true
-            binding.searchResultTitle.text = model.messageResult.conversationRecipient.toShortString()
+            binding.searchResultTitle.text = model.messageResult.conversationRecipient.getSearchName()
         }
         is GroupConversation -> {
             binding.searchResultTitle.text = getHighlight(
@@ -72,12 +74,12 @@ fun ContentView.bindQuery(query: String, model: GlobalSearchAdapter.Model) {
             )
 
             val membersString = model.groupRecord.members.joinToString { address ->
-                val recipient = Recipient.from(binding.root.context, address, false)
-                recipient.name ?: "${address.serialize().take(4)}...${address.serialize().takeLast(4)}"
+                Recipient.from(binding.root.context, address, false).getSearchName()
             }
             binding.searchResultSubtitle.text = getHighlight(query, membersString)
         }
         is Header, // do nothing for header
+        is SubHeader, // do nothing for subheader
         is SavedMessages -> Unit // do nothing for saved messages (displays note to self)
     }
 }
@@ -88,7 +90,6 @@ private fun getHighlight(query: String?, toSearch: String): Spannable? {
 
 fun ContentView.bindModel(query: String?, model: GroupConversation) {
     binding.searchResultProfilePicture.isVisible = true
-    binding.searchResultSavedMessages.isVisible = false
     binding.searchResultSubtitle.isVisible = model.groupRecord.isClosedGroup
     binding.searchResultTimestamp.isVisible = false
     val threadRecipient = Recipient.from(binding.root.context, Address.fromSerialized(model.groupRecord.encodedId), false)
@@ -98,64 +99,65 @@ fun ContentView.bindModel(query: String?, model: GroupConversation) {
 
     val groupRecipients = model.groupRecord.members.map { Recipient.from(binding.root.context, it, false) }
 
-    val membersString = groupRecipients.joinToString {
-        val address = it.address.serialize()
-        it.name ?: "${address.take(4)}...${address.takeLast(4)}"
-    }
+    val membersString = groupRecipients.joinToString(transform = Recipient::getSearchName)
     if (model.groupRecord.isClosedGroup) {
         binding.searchResultSubtitle.text = getHighlight(query, membersString)
     }
 }
 
-fun ContentView.bindModel(query: String?, model: ContactModel) {
-    binding.searchResultProfilePicture.isVisible = true
-    binding.searchResultSavedMessages.isVisible = false
-    binding.searchResultSubtitle.isVisible = false
-    binding.searchResultTimestamp.isVisible = false
-    binding.searchResultSubtitle.text = null
-    val recipient =
-        Recipient.from(binding.root.context, Address.fromSerialized(model.contact.sessionID), false)
-    binding.searchResultProfilePicture.update(recipient)
-    val nameString = model.contact.getSearchName()
-    binding.searchResultTitle.text = getHighlight(query, nameString)
+fun ContentView.bindModel(query: String?, model: ContactModel) = binding.run {
+    searchResultProfilePicture.isVisible = true
+    searchResultSubtitle.isVisible = false
+    searchResultTimestamp.isVisible = false
+    searchResultSubtitle.text = null
+    val recipient = Recipient.from(root.context, Address.fromSerialized(model.contact.accountID), false)
+    searchResultProfilePicture.update(recipient)
+    val nameString = if (model.isSelf) root.context.getString(R.string.note_to_self)
+        else model.contact.getSearchName()
+    searchResultTitle.text = getHighlight(query, nameString)
 }
 
 fun ContentView.bindModel(model: SavedMessages) {
     binding.searchResultSubtitle.isVisible = false
     binding.searchResultTimestamp.isVisible = false
     binding.searchResultTitle.setText(R.string.note_to_self)
-    binding.searchResultProfilePicture.isVisible = false
-    binding.searchResultSavedMessages.isVisible = true
+    binding.searchResultProfilePicture.update(Address.fromSerialized(model.currentUserPublicKey))
+    binding.searchResultProfilePicture.isVisible = true
 }
 
-fun ContentView.bindModel(query: String?, model: Message) {
-    binding.searchResultProfilePicture.isVisible = true
-    binding.searchResultSavedMessages.isVisible = false
-    binding.searchResultTimestamp.isVisible = true
+fun ContentView.bindModel(query: String?, model: Message) = binding.apply {
+    searchResultProfilePicture.isVisible = true
+    searchResultTimestamp.isVisible = true
 //    val hasUnreads = model.unread > 0
-//    binding.unreadCountIndicator.isVisible = hasUnreads
+//    unreadCountIndicator.isVisible = hasUnreads
 //    if (hasUnreads) {
-//        binding.unreadCountTextView.text = model.unread.toString()
+//        unreadCountTextView.text = model.unread.toString()
 //    }
-    binding.searchResultTimestamp.text = DateUtils.getDisplayFormattedTimeSpanString(binding.root.context, Locale.getDefault(), model.messageResult.sentTimestampMs)
-    binding.searchResultProfilePicture.update(model.messageResult.conversationRecipient)
+    searchResultTimestamp.text = DateUtils.getDisplayFormattedTimeSpanString(root.context, Locale.getDefault(), model.messageResult.sentTimestampMs)
+    searchResultProfilePicture.update(model.messageResult.conversationRecipient)
     val textSpannable = SpannableStringBuilder()
     if (model.messageResult.conversationRecipient != model.messageResult.messageRecipient) {
         // group chat, bind
-        val text = "${model.messageResult.messageRecipient.getSearchName()}: "
+        val text = "${model.messageResult.messageRecipient.toShortString()}: "
         textSpannable.append(text)
     }
     textSpannable.append(getHighlight(
             query,
             model.messageResult.bodySnippet
     ))
-    binding.searchResultSubtitle.text = textSpannable
-    binding.searchResultTitle.text = model.messageResult.conversationRecipient.toShortString()
-    binding.searchResultSubtitle.isVisible = true
+    searchResultSubtitle.text = textSpannable
+    searchResultTitle.text = if (model.isSelf) root.context.getString(R.string.note_to_self)
+        else model.messageResult.conversationRecipient.getSearchName()
+    searchResultSubtitle.isVisible = true
 }
 
-fun Recipient.getSearchName(): String = name ?: address.serialize().let { address -> "${address.take(4)}...${address.takeLast(4)}" }
+fun Recipient.getSearchName(): String =
+    name?.takeIf { it.isNotEmpty() && !it.looksLikeAccountId }
+    ?: address.serialize().let(::truncateIdForDisplay)
 
 fun Contact.getSearchName(): String =
-        if (nickname.isNullOrEmpty()) name ?: "${sessionID.take(4)}...${sessionID.takeLast(4)}"
-        else "${name ?: "${sessionID.take(4)}...${sessionID.takeLast(4)}"} ($nickname)"
+    nickname?.takeIf { it.isNotEmpty() && !it.looksLikeAccountId }
+    ?: name?.takeIf { it.isNotEmpty() && !it.looksLikeAccountId }
+    ?: truncateIdForDisplay(accountID)
+
+private val String.looksLikeAccountId: Boolean get() = length > 60 && all { it.isDigit() || it.isLetter() }

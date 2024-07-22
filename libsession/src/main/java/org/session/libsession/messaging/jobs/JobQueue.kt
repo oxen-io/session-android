@@ -102,7 +102,7 @@ class JobQueue : JobDelegate {
             execute(dispatcherName)
         }
         catch (e: Exception) {
-            Log.d(dispatcherName, "unhandledJobException: ${javaClass.simpleName} (id: $id)")
+            Log.d(dispatcherName, "unhandledJobException: ${javaClass.simpleName} (id: $id)", e)
             this@JobQueue.handleJobFailed(this, dispatcherName, e)
         }
     }

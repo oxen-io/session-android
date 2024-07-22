@@ -61,8 +61,6 @@
     <string name="MediaOverviewActivity_Media">මාධ්‍යය</string>
     <string name="MediaOverviewActivity_Documents">ලේඛන</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">බහුමාධ්‍ය පණිවිඩය</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">මාධ්‍ය පණිවිඩය බාගතවෙමින්</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">%s ට යවන්න</string>
     <!-- MediaSendActivity -->

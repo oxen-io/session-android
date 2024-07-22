@@ -94,7 +94,7 @@
                 android:background="?android:dividerHorizontal"
                 android:elevation="1dp" />
 
-            <org.thoughtcrime.securesms.onboarding.SeedReminderView
+            <androidx.compose.ui.platform.ComposeView
                 tools:visibility="gone"
                 android:id="@+id/seedReminderView"
                 android:layout_width="match_parent"
@@ -158,32 +158,11 @@
             tools:itemCount="6"
             tools:listitem="@layout/view_global_search_result" />
 
-        <LinearLayout
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/emptyStateContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingBottom="32dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/activity_home_empty_state_message"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="@dimen/medium_font_size" />
-
-            <Button
-                android:id="@+id/createNewPrivateChatButton"
-                style="@style/Widget.Session.Button.Common.ProminentOutline"
-                android:layout_width="196dp"
-                android:layout_height="@dimen/medium_button_height"
-                android:layout_marginTop="@dimen/medium_spacing"
-                android:text="@string/activity_home_empty_state_button_title" />
-
-        </LinearLayout>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/newConversationButton"

@@ -15,8 +15,10 @@ import org.session.libsession.avatars.ProfileContactPhoto
 import org.session.libsession.avatars.ResourceContactPhoto
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.AppTextSecurePreferences
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -24,13 +26,16 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 class ProfilePictureView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : RelativeLayout(context, attrs) {
+    private val TAG = "ProfilePictureView"
+
     private val binding = ViewProfilePictureBinding.inflate(LayoutInflater.from(context), this)
     private val glide: GlideRequests = GlideApp.with(this)
+    private val prefs = AppTextSecurePreferences(context)
+    private val userPublicKey = prefs.getLocalNumber()
     var publicKey: String? = null
     var displayName: String? = null
     var additionalPublicKey: String? = null
     var additionalDisplayName: String? = null
-    var isLarge = false
 
     private val profilePicturesCache = mutableMapOf<View, Recipient>()
     private val unknownRecipientDrawable by lazy { ResourceContactPhoto(R.drawable.ic_profile_default)
@@ -38,25 +43,28 @@ class ProfilePictureView @JvmOverloads constructor(
     private val unknownOpenGroupDrawable by lazy { ResourceContactPhoto(R.drawable.ic_notification)
         .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false) }
 
-    // endregion
-
     constructor(context: Context, sender: Recipient): this(context) {
         update(sender)
     }
 
-    // region Updating
     fun update(recipient: Recipient) {
-        fun getUserDisplayName(publicKey: String): String {
-            val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
-            return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
-        }
+        recipient.run { update(address, isClosedGroupRecipient, isOpenGroupInboxRecipient) }
+    }
 
-        if (recipient.isClosedGroupRecipient) {
+    fun update(
+        address: Address,
+        isClosedGroupRecipient: Boolean = false,
+        isOpenGroupInboxRecipient: Boolean = false
+    ) {
+        fun getUserDisplayName(publicKey: String): String = prefs.takeIf { userPublicKey == publicKey }?.getProfileName()
+            ?: DatabaseComponent.get(context).sessionContactDatabase().getContactWithAccountID(publicKey)?.displayName(Contact.ContactContext.REGULAR)
+            ?: publicKey
+
+        if (isClosedGroupRecipient) {
             val members = DatabaseComponent.get(context).groupDatabase()
-                    .getGroupMemberAddresses(recipient.address.toGroupString(), true)
-                    .sorted()
-                    .take(2)
-                    .toMutableList()
+                .getGroupMemberAddresses(address.toGroupString(), true)
+                .sorted()
+                .take(2)
             if (members.size <= 1) {
                 publicKey = ""
                 displayName = ""
@@ -70,13 +78,13 @@ class ProfilePictureView @JvmOverloads constructor(
                 additionalPublicKey = apk
                 additionalDisplayName = getUserDisplayName(apk)
             }
-        } else if(recipient.isOpenGroupInboxRecipient) {
-            val publicKey = GroupUtil.getDecodedOpenGroupInboxSessionId(recipient.address.serialize())
+        } else if(isOpenGroupInboxRecipient) {
+            val publicKey = GroupUtil.getDecodedOpenGroupInboxAccountId(address.serialize())
             this.publicKey = publicKey
             displayName = getUserDisplayName(publicKey)
             additionalPublicKey = null
         } else {
-            val publicKey = recipient.address.toString()
+            val publicKey = address.serialize()
             this.publicKey = publicKey
             displayName = getUserDisplayName(publicKey)
             additionalPublicKey = null
@@ -85,31 +93,27 @@ class ProfilePictureView @JvmOverloads constructor(
     }
 
     fun update() {
-        val publicKey = publicKey ?: return
+        val publicKey = publicKey ?: return Log.w(TAG, "Could not find public key to update profile picture")
         val additionalPublicKey = additionalPublicKey
+        // if we have a multi avatar setup
         if (additionalPublicKey != null) {
             setProfilePictureIfNeeded(binding.doubleModeImageView1, publicKey, displayName)
             setProfilePictureIfNeeded(binding.doubleModeImageView2, additionalPublicKey, additionalDisplayName)
             binding.doubleModeImageViewContainer.visibility = View.VISIBLE
-        } else {
+
+            // clear single image
+            glide.clear(binding.singleModeImageView)
+            binding.singleModeImageView.visibility = View.INVISIBLE
+        } else { // single image mode
+            setProfilePictureIfNeeded(binding.singleModeImageView, publicKey, displayName)
+            binding.singleModeImageView.visibility = View.VISIBLE
+
+            // clear multi image
             glide.clear(binding.doubleModeImageView1)
             glide.clear(binding.doubleModeImageView2)
             binding.doubleModeImageViewContainer.visibility = View.INVISIBLE
         }
-        if (additionalPublicKey == null && !isLarge) {
-            setProfilePictureIfNeeded(binding.singleModeImageView, publicKey, displayName)
-            binding.singleModeImageView.visibility = View.VISIBLE
-        } else {
-            glide.clear(binding.singleModeImageView)
-            binding.singleModeImageView.visibility = View.INVISIBLE
-        }
-        if (additionalPublicKey == null && isLarge) {
-            setProfilePictureIfNeeded(binding.largeSingleModeImageView, publicKey, displayName)
-            binding.largeSingleModeImageView.visibility = View.VISIBLE
-        } else {
-            glide.clear(binding.largeSingleModeImageView)
-            binding.largeSingleModeImageView.visibility = View.INVISIBLE
-        }
+
     }
 
     private fun setProfilePictureIfNeeded(imageView: ImageView, publicKey: String, displayName: String?) {

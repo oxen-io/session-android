@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.text.SpannableString
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -23,7 +22,6 @@ import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_ALL
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_NONE
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
-import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getConversationUnread
@@ -51,7 +49,7 @@ class ConversationView : LinearLayout {
     // endregion
 
     // region Updating
-    fun bind(thread: ThreadRecord, isTyping: Boolean, glide: GlideRequests) {
+    fun bind(thread: ThreadRecord, isTyping: Boolean) {
         this.thread = thread
         if (thread.isPinned) {
             binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -104,7 +102,12 @@ class ConversationView : LinearLayout {
             R.drawable.ic_notifications_mentions
         }
         binding.muteIndicatorImageView.setImageResource(drawableRes)
-        binding.snippetTextView.text = highlightMentions(thread.getSnippet(), thread.threadId, context)
+        binding.snippetTextView.text = highlightMentions(
+            text = thread.getSnippet(),
+            formatOnly = true, // no styling here, only text formatting
+            threadID = thread.threadId,
+            context = context
+        )
         binding.snippetTextView.typeface = if (unreadCount > 0 && !thread.isRead) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         binding.snippetTextView.visibility = if (isTyping) View.GONE else View.VISIBLE
         if (isTyping) {
@@ -137,11 +140,10 @@ class ConversationView : LinearLayout {
         else -> recipient.toShortString() // Internally uses the Contact API
     }
 
-    private fun ThreadRecord.getSnippet(): CharSequence =
-        concatSnippet(getSnippetPrefix(), getDisplayBody(context))
-
-    private fun concatSnippet(prefix: CharSequence?, body: CharSequence): CharSequence =
-        prefix?.let { TextUtils.concat(it, ": ", body) } ?: body
+    private fun ThreadRecord.getSnippet(): CharSequence = listOfNotNull(
+        getSnippetPrefix(),
+        getDisplayBody(context)
+    ).joinToString(": ")
 
     private fun ThreadRecord.getSnippetPrefix(): CharSequence? = when {
         recipient.isLocalNumber || lastMessage?.isControlMessage == true -> null

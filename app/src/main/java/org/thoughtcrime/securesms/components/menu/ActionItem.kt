@@ -3,7 +3,7 @@ package org.thoughtcrime.securesms.components.menu
 import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
+
 
 /**
  * Represents an action to be rendered

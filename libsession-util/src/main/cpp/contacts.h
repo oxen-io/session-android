@@ -43,8 +43,8 @@ inline session::config::contact_info deserialize_contact(JNIEnv *env, jobject in
                                  "Lnetwork/loki/messenger/libsession_util/util/UserPic;");
     getPriority = env->GetFieldID(contactClass, "priority", "I");
     getExpiry = env->GetFieldID(contactClass, "expiryMode", "Lnetwork/loki/messenger/libsession_util/util/ExpiryMode;");
-    jstring name, nickname, session_id;
-    session_id = static_cast<jstring>(env->GetObjectField(info, getId));
+    jstring name, nickname, account_id;
+    account_id = static_cast<jstring>(env->GetObjectField(info, getId));
     name = static_cast<jstring>(env->GetObjectField(info, getName));
     nickname = static_cast<jstring>(env->GetObjectField(info, getNick));
     bool approved, approvedMe, blocked, hidden;
@@ -69,11 +69,11 @@ inline session::config::contact_info deserialize_contact(JNIEnv *env, jobject in
         key = util::ustring_from_bytes(env, deserialized_pic.second);
     }
 
-    auto session_id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    auto account_id_bytes = env->GetStringUTFChars(account_id, nullptr);
     auto name_bytes = name ? env->GetStringUTFChars(name, nullptr) : nullptr;
     auto nickname_bytes = nickname ? env->GetStringUTFChars(nickname, nullptr) : nullptr;
 
-    auto contact_info = conf->get_or_construct(session_id_bytes);
+    auto contact_info = conf->get_or_construct(account_id_bytes);
     if (name_bytes) {
         contact_info.name = name_bytes;
     }
@@ -89,7 +89,7 @@ inline session::config::contact_info deserialize_contact(JNIEnv *env, jobject in
         contact_info.profile_picture = session::config::profile_pic();
     }
 
-    env->ReleaseStringUTFChars(session_id, session_id_bytes);
+    env->ReleaseStringUTFChars(account_id, account_id_bytes);
     if (name_bytes) {
         env->ReleaseStringUTFChars(name, name_bytes);
     }

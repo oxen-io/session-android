@@ -4,28 +4,35 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
-import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 
 object QRCodeUtilities {
 
-    fun encode(data: String, size: Int, isInverted: Boolean = false, hasTransparentBackground: Boolean = true): Bitmap {
-        try {
-            val hints = hashMapOf( EncodeHintType.MARGIN to 1 )
-            val result = QRCodeWriter().encode(data, BarcodeFormat.QR_CODE, size, size, hints)
-            val bitmap = Bitmap.createBitmap(result.width, result.height, Bitmap.Config.ARGB_8888)
+    fun encode(
+        data: String,
+        size: Int,
+        isInverted: Boolean = false,
+        hasTransparentBackground: Boolean = true,
+        dark: Int = Color.BLACK,
+        light: Int = Color.WHITE,
+    ): Bitmap? = runCatching {
+        val hints = hashMapOf(
+            EncodeHintType.MARGIN to 0,
+            EncodeHintType.ERROR_CORRECTION to ErrorCorrectionLevel.M
+        )
+        val color = if (isInverted) light else dark
+        val background = if (isInverted) dark else light
+        val result = QRCodeWriter().encode(data, BarcodeFormat.QR_CODE, size, size, hints)
+        Bitmap.createBitmap(result.width, result.height, Bitmap.Config.ARGB_8888).apply {
             for (y in 0 until result.height) {
                 for (x in 0 until result.width) {
-                    if (result.get(x, y)) {
-                        bitmap.setPixel(x, y, if (isInverted) Color.WHITE else Color.BLACK)
-                    } else if (!hasTransparentBackground) {
-                        bitmap.setPixel(x, y, if (isInverted) Color.BLACK else Color.WHITE)
+                    when {
+                        result.get(x, y) -> setPixel(x, y, color)
+                        !hasTransparentBackground -> setPixel(x, y, background)
                     }
                 }
             }
-            return bitmap
-        } catch (e: WriterException) {
-            return Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888)
         }
-    }
+    }.getOrNull()
 }

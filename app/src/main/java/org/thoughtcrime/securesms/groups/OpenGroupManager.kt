@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.groups
 import android.content.Context
 import androidx.annotation.WorkerThread
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.session.libsession.messaging.open_groups.OpenGroup
@@ -143,9 +144,9 @@ object OpenGroupManager {
 
     @WorkerThread
     fun addOpenGroup(urlAsString: String, context: Context): OpenGroupApi.RoomInfo? {
-        val url = HttpUrl.parse(urlAsString) ?: return null
+        val url = urlAsString.toHttpUrlOrNull() ?: return null
         val server = OpenGroup.getServer(urlAsString)
-        val room = url.pathSegments().firstOrNull() ?: return null
+        val room = url.pathSegments.firstOrNull() ?: return null
         val publicKey = url.queryParameter("public_key") ?: return null
 
         return add(server.toString().removeSuffix("/"), room, publicKey, context).second // assume migrated from calling function
@@ -162,13 +163,7 @@ object OpenGroupManager {
         val memberDatabase = DatabaseComponent.get(context).groupMemberDatabase()
         val standardRoles = memberDatabase.getGroupMemberRoles(groupId, standardPublicKey)
         val blindedRoles = blindedPublicKey?.let { memberDatabase.getGroupMemberRoles(groupId, it) } ?: emptyList()
-
-        // roles to check against
-        val moderatorRoles = listOf(
-            GroupMemberRole.MODERATOR, GroupMemberRole.ADMIN,
-            GroupMemberRole.HIDDEN_MODERATOR, GroupMemberRole.HIDDEN_ADMIN
-        )
-        return standardRoles.any { it in moderatorRoles } || blindedRoles.any { it in moderatorRoles }
+        return standardRoles.any { it.isModerator } || blindedRoles.any { it.isModerator }
     }
 
 }

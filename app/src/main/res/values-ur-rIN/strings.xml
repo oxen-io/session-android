@@ -87,8 +87,6 @@
     <string name="MediaOverviewActivity_Select_all">تمام منتخب کریں</string>
     <string name="MediaOverviewActivity_collecting_attachments">منسلکات کو جمع کرنے کا عمل جاری ہے...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">ملٹی میڈیا پیغام</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS پیغام ڈاؤن لوڈ ہو رہا ہے</string>
     <!-- MediaPickerActivity -->
     <!-- MediaSendActivity -->
     <!-- MediaRepository -->

@@ -125,9 +125,6 @@
     <string name="MediaOverviewActivity_Documents">Pankakuna</string>
     <string name="MediaOverviewActivity_Select_all">Tukuyta akllana</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimedia chaski</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS chaskita uryakuchikun</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">MMS chaski mana uryakurkachu, kutinlla rurapay</string>
     <!-- MediaPickerActivity -->
     <!-- MediaSendActivity -->
     <!-- MediaRepository -->

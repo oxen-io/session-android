@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import org.json.JSONArray
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
@@ -50,14 +51,18 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         databaseHelper.writableDatabase.delete(sessionJobTable, "${Companion.jobID} = ?", arrayOf( jobID ))
     }
 
-    fun getAllJobs(type: String): Map<String, Job?> {
+    fun getAllJobs(vararg types: String): Map<String, Job?> {
         val database = databaseHelper.readableDatabase
-        return database.getAll(sessionJobTable, "$jobType = ?", arrayOf( type )) { cursor ->
+        return database.getAll(
+            sessionJobTable,
+            "$jobType IN (SELECT value FROM json_each(?))", // Use json_each to bypass limitation of SQLite's IN operator binding
+            arrayOf( JSONArray(types).toString() )
+        ) { cursor ->
             val jobID = cursor.getString(jobID)
             try {
                 jobID to jobFromCursor(cursor)
             } catch (e: Exception) {
-                Log.e("Loki", "Error deserializing job of type: $type.", e)
+                Log.e("Loki", "Error deserializing job of type: $types.", e)
                 jobID to null
             }
         }.toMap()

@@ -68,7 +68,7 @@ class VoiceMessageView : RelativeLayout, AudioSlidePlayer.Listener {
             return
         }
 
-        val player = AudioSlidePlayer.createFor(context, audio, this)
+        val player = AudioSlidePlayer.createFor(context.applicationContext, audio, this)
         this.player = player
 
         (audio.asAttachment() as? DatabaseAttachment)?.let { attachment ->

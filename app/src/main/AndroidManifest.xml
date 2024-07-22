@@ -100,31 +100,32 @@
             android:value="false" />
 
         <activity
-            android:name="org.thoughtcrime.securesms.onboarding.LandingActivity"
+            android:name="org.thoughtcrime.securesms.onboarding.landing.LandingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
         <activity
-            android:name="org.thoughtcrime.securesms.onboarding.RegisterActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
-        <activity
-            android:name="org.thoughtcrime.securesms.onboarding.LinkDeviceActivity"
+            android:name="org.thoughtcrime.securesms.onboarding.loadaccount.LoadAccountActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
         <activity
-            android:name="org.thoughtcrime.securesms.onboarding.DisplayNameActivity"
+            android:name="org.thoughtcrime.securesms.onboarding.loading.LoadingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
         <activity
-            android:name="org.thoughtcrime.securesms.onboarding.PNModeActivity"
+            android:name="org.thoughtcrime.securesms.onboarding.pickname.PickDisplayNameActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
+        <activity
+            android:name="org.thoughtcrime.securesms.onboarding.messagenotifications.MessageNotificationsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
         <activity
             android:name="org.thoughtcrime.securesms.home.HomeActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
             android:theme="@style/Theme.Session.DayNight.NoActionBar" />
         <activity
             android:name="org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity"
@@ -153,7 +154,7 @@
             android:label="@string/activity_edit_closed_group_title"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.thoughtcrime.securesms.onboarding.SeedActivity"
+            android:name="org.thoughtcrime.securesms.recoverypassword.RecoveryPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.contacts.SelectContactsActivity"
