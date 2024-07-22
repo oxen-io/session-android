@@ -42,6 +42,7 @@ public interface MmsSmsColumns {
     protected static final long JOINED_TYPE                        = 4;
     protected static final long FIRST_MISSED_CALL_TYPE             = 5;
 
+    protected static final long BASE_DELETED_INCOMING_TYPE         = 19;
     protected static final long BASE_INBOX_TYPE                    = 20;
     protected static final long BASE_OUTBOX_TYPE                   = 21;
     protected static final long BASE_SENDING_TYPE                  = 22;
@@ -54,7 +55,6 @@ public interface MmsSmsColumns {
     protected static final long BASE_SYNCING_TYPE                  = 29;
     protected static final long BASE_RESYNCING_TYPE                = 30;
     protected static final long BASE_SYNC_FAILED_TYPE              = 31;
-    protected static final long BASE_DELETED_INCOMING_TYPE         = 32;
 
     protected static final long[] OUTGOING_MESSAGE_TYPES = {BASE_OUTBOX_TYPE, BASE_SENT_TYPE,
                                                             BASE_SYNCING_TYPE, BASE_RESYNCING_TYPE,
@@ -185,8 +185,7 @@ public interface MmsSmsColumns {
     }
 
     public static boolean isDeletedMessage(long type) {
-      return (type & BASE_TYPE_MASK) == BASE_DELETED_OUTGOING_TYPE ||
-              (type & BASE_TYPE_MASK) == BASE_DELETED_INCOMING_TYPE;
+      return (type & BASE_TYPE_MASK) == BASE_DELETED_OUTGOING_TYPE || (type & BASE_TYPE_MASK) == BASE_DELETED_INCOMING_TYPE;
     }
 
     public static boolean isJoinedType(long type) {

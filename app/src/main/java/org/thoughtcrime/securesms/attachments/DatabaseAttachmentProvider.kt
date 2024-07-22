@@ -240,7 +240,6 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         else DatabaseComponent.get(context).mmsDatabase()
 
         //todo DELETION can this be batched?
-        //todo DELETION we need to have different types of "marked as deleted": incoming and outgoing
         //todo DELETION we need to have customisable text for "marked as deleted" message
         messages.forEach { message ->
             messagingDatabase.markAsDeleted(message.messageId, message.isOutgoing)
