@@ -10,7 +10,7 @@ import network.loki.messenger.libsession_util.GroupMembersConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
 import org.session.libsession.messaging.messages.Destination
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 
 interface ConfigFactoryProtocol {
 
@@ -19,9 +19,9 @@ interface ConfigFactoryProtocol {
     val convoVolatile: ConversationVolatileConfig?
     val userGroups: UserGroupsConfig?
 
-    fun getGroupInfoConfig(groupSessionId: SessionId): GroupInfoConfig?
-    fun getGroupMemberConfig(groupSessionId: SessionId): GroupMembersConfig?
-    fun getGroupKeysConfig(groupSessionId: SessionId,
+    fun getGroupInfoConfig(groupSessionId: AccountId): GroupInfoConfig?
+    fun getGroupMemberConfig(groupSessionId: AccountId): GroupMembersConfig?
+    fun getGroupKeysConfig(groupSessionId: AccountId,
                            info: GroupInfoConfig? = null,
                            members: GroupMembersConfig? = null,
                            free: Boolean = true): GroupKeysConfig?
@@ -36,20 +36,20 @@ interface ConfigFactoryProtocol {
         groupInfo: GroupInfoConfig,
         groupMembers: GroupMembersConfig
     )
-    fun removeGroup(closedGroupId: SessionId)
+    fun removeGroup(closedGroupId: AccountId)
 
     fun scheduleUpdate(destination: Destination)
     fun constructGroupKeysConfig(
-        groupSessionId: SessionId,
+        groupSessionId: AccountId,
         info: GroupInfoConfig,
         members: GroupMembersConfig
     ): GroupKeysConfig?
 
     fun maybeDecryptForUser(encoded: ByteArray,
                             domain: String,
-                            closedGroupSessionId: SessionId): ByteArray?
+                            closedGroupSessionId: AccountId): ByteArray?
 
-    fun userSessionId(): SessionId?
+    fun userSessionId(): AccountId?
 
 }
 

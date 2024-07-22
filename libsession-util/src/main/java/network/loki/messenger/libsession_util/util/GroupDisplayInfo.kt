@@ -1,9 +1,9 @@
 package network.loki.messenger.libsession_util.util
 
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 
 data class GroupDisplayInfo(
-    val id: SessionId,
+    val id: AccountId,
     val created: Long?,
     val expiryTimer: Long?,
     val name: String?,

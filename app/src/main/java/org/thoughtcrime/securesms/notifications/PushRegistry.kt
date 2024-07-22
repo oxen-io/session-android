@@ -12,9 +12,9 @@ import nl.komponents.kovenant.combine.and
 import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
-import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.emptyPromise
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
@@ -71,8 +71,8 @@ class PushRegistry @Inject constructor(
         }
     }
 
-    fun registerForGroup(groupSessionId: SessionId) {
-        val groupHexString = groupSessionId.hexString()
+    fun registerForGroup(groupSessionId: AccountId) {
+        val groupHexString = groupSessionId.hexString
         val authData = configFactory.userGroups?.getClosedGroup(groupHexString)?.authData ?: return
         val keysConfig = configFactory.getGroupKeysConfig(groupSessionId) ?: return
 
@@ -96,8 +96,8 @@ class PushRegistry @Inject constructor(
         }
     }
 
-    fun unregisterForGroup(groupSessionId: SessionId) {
-        val groupHexString = groupSessionId.hexString()
+    fun unregisterForGroup(groupSessionId: AccountId) {
+        val groupHexString = groupSessionId.hexString
         val authData = configFactory.userGroups?.getClosedGroup(groupHexString)?.authData
             ?.takeIf { it.isNotEmpty() } ?: return
         val keysConfig = configFactory.getGroupKeysConfig(groupSessionId) ?: return

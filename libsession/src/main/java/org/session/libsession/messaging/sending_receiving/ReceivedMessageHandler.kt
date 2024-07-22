@@ -31,7 +31,6 @@ import org.session.libsession.messaging.sending_receiving.link_preview.LinkPrevi
 import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.messaging.sending_receiving.pollers.LegacyClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.WebRtcUtils
 import org.session.libsession.snode.SnodeAPI
@@ -50,10 +49,10 @@ import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
@@ -68,7 +67,7 @@ internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
     return recipient.isBlocked
 }
 
-fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, threadId: Long, openGroupID: String?, closedGroup: SessionId?) {
+fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, threadId: Long, openGroupID: String?, closedGroup: AccountId?) {
     // Do nothing if the message was outdated
     if (MessageReceiver.messageIsOutdated(message, threadId, openGroupID)) { return }
 
@@ -311,7 +310,7 @@ fun MessageReceiver.handleVisibleMessage(
         val blindedKey = SodiumUtilities.blindedKeyPair(openGroup.publicKey, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) ?: return@let null
         AccountId(
             IdPrefix.BLINDED, blindedKey.publicKey.asBytes
-        ).hexString()
+        ).hexString
     }
     // Update profile if needed
     val recipient = Recipient.from(context, Address.fromSerialized(messageSender!!), false)
@@ -358,7 +357,7 @@ fun MessageReceiver.handleVisibleMessage(
         storage.setGroupInviteCompleteIfNeeded(
             approved = true,
             recipient.address.serialize(),
-            SessionId.from(threadRecipient.address.serialize())
+            AccountId(threadRecipient.address.serialize())
         )
     }
     // Parse quote if needed
@@ -460,7 +459,7 @@ fun MessageReceiver.handleOpenGroupReactions(
     val openGroup = storage.getOpenGroup(threadId)
     val blindedPublicKey = openGroup?.publicKey?.let { serverPublicKey ->
         SodiumUtilities.blindedKeyPair(serverPublicKey, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!)
-            ?.let { AccountId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString() }
+            ?.let { AccountId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
     }
     for ((emoji, reaction) in reactions) {
         val pendingUserReaction = OpenGroupApi.pendingReactions
@@ -552,7 +551,7 @@ private fun ClosedGroupControlMessage.getPublicKey(): String = kind!!.let { when
     is ClosedGroupControlMessage.Kind.NameChange -> groupPublicKey!!
 }}
 
-private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGroup: SessionId?) {
+private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGroup: AccountId?) {
     val inner = message.inner
     if (closedGroup == null &&
         !inner.hasInviteMessage() && !inner.hasPromoteMessage()) {
@@ -570,18 +569,18 @@ private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGrou
     }
 }
 
-private fun handleDeleteMemberContent(message: GroupUpdated, closedGroup: SessionId) {
+private fun handleDeleteMemberContent(message: GroupUpdated, closedGroup: AccountId) {
     val storage = MessagingModuleConfiguration.shared.storage
     val deleteMemberContent = message.inner.deleteMemberContent
     val adminSig = if (deleteMemberContent.hasAdminSignature()) deleteMemberContent.adminSignature.toByteArray()!! else byteArrayOf()
 
     val memberIds = deleteMemberContent.memberSessionIdsList
     val hashes = deleteMemberContent.messageHashesList
-    val threadId = storage.getThreadId(Address.fromSerialized(closedGroup.hexString()))!!
+    val threadId = storage.getThreadId(Address.fromSerialized(closedGroup.hexString))!!
 
     if (hashes.isNotEmpty()) {
         // Delete all hashes conditionally
-        if (storage.ensureMessageHashesAreSender(hashes.toSet(), message.sender!!, closedGroup.hexString())) {
+        if (storage.ensureMessageHashesAreSender(hashes.toSet(), message.sender!!, closedGroup.hexString)) {
             // ensure that all message hashes belong to user
             // storage delete
             storage.deleteMessagesByHash(threadId, hashes)
@@ -608,7 +607,7 @@ private fun handleDeleteMemberContent(message: GroupUpdated, closedGroup: Sessio
     }
 }
 
-private fun handleMemberChange(message: GroupUpdated, closedGroup: SessionId) {
+private fun handleMemberChange(message: GroupUpdated, closedGroup: AccountId) {
     val storage = MessagingModuleConfiguration.shared.storage
     val memberChange = message.inner.memberChangeMessage
     val type = memberChange.type.name
@@ -619,16 +618,16 @@ private fun handleMemberChange(message: GroupUpdated, closedGroup: SessionId) {
     storage.insertGroupInfoChange(message, closedGroup)
 }
 
-private fun handleMemberLeft(message: GroupUpdated, closedGroup: SessionId) {
+private fun handleMemberLeft(message: GroupUpdated, closedGroup: AccountId) {
     val storage = MessagingModuleConfiguration.shared.storage
     storage.handleMemberLeft(message, closedGroup)
 }
 
-private fun handleMemberLeftNotification(message: GroupUpdated, closedGroup: SessionId) {
+private fun handleMemberLeftNotification(message: GroupUpdated, closedGroup: AccountId) {
     MessagingModuleConfiguration.shared.storage.handleMemberLeftNotification(message, closedGroup)
 }
 
-private fun handleGroupInfoChange(message: GroupUpdated, closedGroup: SessionId) {
+private fun handleGroupInfoChange(message: GroupUpdated, closedGroup: AccountId) {
     val storage = MessagingModuleConfiguration.shared.storage
     val inner = message.inner
     val infoChanged = inner.infoChangeMessage ?: return
@@ -646,9 +645,9 @@ private fun handlePromotionMessage(message: GroupUpdated) {
     val seed = promotion.groupIdentitySeed.toByteArray()
     val keyPair = Sodium.ed25519KeyPair(seed)
     val sender = message.sender!!
-    val adminId = SessionId.from(sender)
+    val adminId = AccountId(sender)
     storage.addClosedGroupInvite(
-        groupId = SessionId(IdPrefix.GROUP, keyPair.pubKey),
+        groupId = AccountId(IdPrefix.GROUP, keyPair.pubKey),
         name = promotion.name,
         authData = null,
         adminKey = keyPair.secretKey,
@@ -657,7 +656,7 @@ private fun handlePromotionMessage(message: GroupUpdated) {
     )
 }
 
-private fun MessageReceiver.handleInviteResponse(message: GroupUpdated, closedGroup: SessionId) {
+private fun MessageReceiver.handleInviteResponse(message: GroupUpdated, closedGroup: AccountId) {
     val sender = message.sender!!
     // val profile = message // maybe we do need data to be the inner so we can access profile
     val storage = MessagingModuleConfiguration.shared.storage
@@ -669,10 +668,10 @@ private fun MessageReceiver.handleNewLibSessionClosedGroupMessage(message: Group
     val storage = MessagingModuleConfiguration.shared.storage
     val ourUserId = storage.getUserPublicKey()!!
     val invite = message.inner.inviteMessage
-    val groupId = SessionId.from(invite.groupSessionId)
+    val groupId = AccountId(invite.groupSessionId)
     verifyAdminSignature(groupId, invite.adminSignature.toByteArray(), "INVITE"+ourUserId+message.sentTimestamp!!)
     val sender = message.sender!!
-    val adminId = SessionId.from(sender)
+    val adminId = AccountId(sender)
     // add the group
     storage.addClosedGroupInvite(
         groupId,
@@ -687,12 +686,12 @@ private fun MessageReceiver.handleNewLibSessionClosedGroupMessage(message: Group
 /**
  * Does nothing on successful signature verification, throws otherwise.
  * Assumes the signer is using the ed25519 group key signing key
- * @param groupSessionId the SessionId of the group to check the signature against
+ * @param groupSessionId the AccountId of the group to check the signature against
  * @param signatureData the byte array supplied to us through a protobuf message from the admin
  * @param messageToValidate the expected values used for this signature generation, often something like `INVITE||{inviteeSessionId}||{timestamp}`
  * @throws SignatureException if signature cannot be verified with given parameters
  */
-private fun verifyAdminSignature(groupSessionId: SessionId, signatureData: ByteArray, messageToValidate: String) {
+private fun verifyAdminSignature(groupSessionId: AccountId, signatureData: ByteArray, messageToValidate: String) {
     val groupPubKey = groupSessionId.pubKeyBytes
     if (!SodiumUtilities.verifySignature(signatureData, groupPubKey, messageToValidate.encodeToByteArray())) {
         throw SignatureException("Verification failed for signature data")

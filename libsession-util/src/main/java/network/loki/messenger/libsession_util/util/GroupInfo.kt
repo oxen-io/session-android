@@ -1,13 +1,13 @@
 package network.loki.messenger.libsession_util.util
 
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 
 sealed class GroupInfo {
 
     data class CommunityGroupInfo(val community: BaseCommunityInfo, val priority: Long) : GroupInfo()
 
     data class ClosedGroupInfo(
-        val groupSessionId: SessionId,
+        val groupAccountId: AccountId,
         val adminKey: ByteArray?,
         val authData: ByteArray?,
         val priority: Long,
@@ -34,13 +34,13 @@ sealed class GroupInfo {
 
             other as ClosedGroupInfo
 
-            if (groupSessionId != other.groupSessionId) return false
+            if (groupAccountId != other.groupAccountId) return false
             if (!adminKey.contentEquals(other.adminKey)) return false
             return authData.contentEquals(other.authData)
         }
 
         override fun hashCode(): Int {
-            var result = groupSessionId.hashCode()
+            var result = groupAccountId.hashCode()
             result = 31 * result + adminKey.contentHashCode()
             result = 31 * result + authData.contentHashCode()
             return result

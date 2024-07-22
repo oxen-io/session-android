@@ -27,8 +27,8 @@ namespace util {
     session::config::groups::member deserialize_group_member(JNIEnv* env, jobject member);
     jobject jlongFromOptional(JNIEnv* env, std::optional<long long> optional);
     jstring jstringFromOptional(JNIEnv* env, std::optional<std::string_view> optional);
-    jobject serialize_session_id(JNIEnv* env, std::string_view session_id);
-    std::string deserialize_session_id(JNIEnv* env, jobject session_id);
+    jobject serialize_account_id(JNIEnv* env, std::string_view session_id);
+    std::string deserialize_account_id(JNIEnv* env, jobject account_id);
     jobject build_string_stack(JNIEnv* env, std::vector<std::string> to_add);
     jobject deserialize_swarm_auth(JNIEnv *env, session::config::groups::Keys::swarm_auth auth);}
 

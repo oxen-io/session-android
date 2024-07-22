@@ -29,7 +29,7 @@ import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Snode
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.prettifiedDescription
@@ -1022,7 +1022,7 @@ object SnodeAPI {
                                  namespace: Int = 0,
                                  updateLatestHash: Boolean = true,
                                  updateStoredHashes: Boolean = true,
-                                 decrypt: ((ByteArray) -> Pair<ByteArray, SessionId>?)? = null
+                                 decrypt: ((ByteArray) -> Pair<ByteArray, AccountId>?)? = null
                                  ): List<Pair<SignalServiceProtos.Envelope, String?>> {
         val messages = rawResponse["messages"] as? List<*>
         return if (messages != null) {
@@ -1067,7 +1067,7 @@ object SnodeAPI {
         return result
     }
 
-    private fun parseEnvelopes(rawMessages: List<*>, decrypt: ((ByteArray)->Pair<ByteArray, SessionId>?)?): List<Pair<SignalServiceProtos.Envelope, String?>> {
+    private fun parseEnvelopes(rawMessages: List<*>, decrypt: ((ByteArray)->Pair<ByteArray, AccountId>?)?): List<Pair<SignalServiceProtos.Envelope, String?>> {
         return rawMessages.mapNotNull { rawMessage ->
             val rawMessageAsJSON = rawMessage as? Map<*, *>
             val base64EncodedData = rawMessageAsJSON?.get("data") as? String
@@ -1077,7 +1077,7 @@ object SnodeAPI {
                     if (decrypt != null) {
                         val (decrypted, sender) = decrypt(data)!!
                         val envelope = SignalServiceProtos.Envelope.parseFrom(decrypted).toBuilder()
-                        envelope.source = sender.hexString()
+                        envelope.source = sender.hexString
                         Pair(envelope.build(),rawMessageAsJSON.get("hash") as? String)
                     }
                     else Pair(MessageWrapper.unwrap(data), rawMessageAsJSON.get("hash") as? String)

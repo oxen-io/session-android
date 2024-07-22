@@ -9,11 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewGlobalSearchHeaderBinding
 import network.loki.messenger.databinding.ViewGlobalSearchResultBinding
-import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.databinding.ViewGlobalSearchSubheaderBinding
 import org.session.libsession.utilities.GroupRecord
-import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 import org.thoughtcrime.securesms.search.model.MessageResult
 import org.thoughtcrime.securesms.ui.GetString
 import java.security.InvalidParameterException
@@ -140,7 +138,7 @@ class GlobalSearchAdapter(private val modelCallback: (Model)->Unit): RecyclerVie
         data class SavedMessages(val currentUserPublicKey: String): Model()
         data class Contact(val contact: ContactModel, val name: String?, val isSelf: Boolean) : Model()
         data class LegacyGroupConversation(val groupRecord: GroupRecord) : Model()
-        data class ClosedGroupConversation(val sessionId: SessionId)
+        data class ClosedGroupConversation(val sessionId: AccountId)
         data class Message(val messageResult: MessageResult, val unread: Int, val isSelf: Boolean) : Model()
     }
 }

@@ -21,17 +21,17 @@ import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsignal.messages.SignalServiceGroup
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
-import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.Snode
 import kotlin.time.Duration.Companion.days
 
 class ClosedGroupPoller(
     private val scope: CoroutineScope,
     private val executor: CoroutineDispatcher,
-    private val closedGroupSessionId: SessionId,
+    private val closedGroupSessionId: AccountId,
     private val configFactoryProtocol: ConfigFactoryProtocol,
     private val storageProtocol: StorageProtocol = MessagingModuleConfiguration.shared.storage) {
 
@@ -72,13 +72,13 @@ class ClosedGroupPoller(
     fun start() {
         if (isRunning) return // already started, don't restart
 
-        if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Starting closed group poller for ${closedGroupSessionId.hexString().take(4)}")
+        if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Starting closed group poller for ${closedGroupSessionId.hexString.take(4)}")
         job?.cancel()
         job = scope.launch(executor) {
             val closedGroups = configFactoryProtocol.userGroups ?: return@launch
             isRunning = true
             while (isActive && isRunning) {
-                val group = closedGroups.getClosedGroup(closedGroupSessionId.hexString()) ?: break
+                val group = closedGroups.getClosedGroup(closedGroupSessionId.hexString) ?: break
                 val nextPoll = poll(group)
                 if (nextPoll != null) {
                     delay(nextPoll)
@@ -100,7 +100,7 @@ class ClosedGroupPoller(
 
     fun poll(group: GroupInfo.ClosedGroupInfo): Long? {
         try {
-            val snode = SnodeAPI.getSingleTargetSnode(closedGroupSessionId.hexString()).get()
+            val snode = SnodeAPI.getSingleTargetSnode(closedGroupSessionId.hexString).get()
             val info = configFactoryProtocol.getGroupInfoConfig(closedGroupSessionId) ?: return null
             val members = configFactoryProtocol.getGroupMemberConfig(closedGroupSessionId)
                     ?: return null
@@ -136,35 +136,35 @@ class ClosedGroupPoller(
 
             val revokedPoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                 snode,
-                closedGroupSessionId.hexString(),
+                closedGroupSessionId.hexString,
                 Namespace.REVOKED_GROUP_MESSAGES(),
                 maxSize = null,
                 signCallback
             ) ?: return null
             val messagePoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                     snode,
-                    closedGroupSessionId.hexString(),
+                    closedGroupSessionId.hexString,
                     Namespace.CLOSED_GROUP_MESSAGES(),
                     maxSize = null,
                     signCallback
             ) ?: return null
             val infoPoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                     snode,
-                    closedGroupSessionId.hexString(),
+                    closedGroupSessionId.hexString,
                     info.namespace(),
                     maxSize = null,
                     signCallback
             ) ?: return null
             val membersPoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                     snode,
-                    closedGroupSessionId.hexString(),
+                    closedGroupSessionId.hexString,
                     members.namespace(),
                     maxSize = null,
                     signCallback
             ) ?: return null
             val keysPoll = SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                     snode,
-                    closedGroupSessionId.hexString(),
+                    closedGroupSessionId.hexString,
                     keys.namespace(),
                     maxSize = null,
                     signCallback
@@ -175,7 +175,7 @@ class ClosedGroupPoller(
             if (hashesToExtend.isNotEmpty()) {
                 SnodeAPI.buildAuthenticatedAlterTtlBatchRequest(
                         messageHashes = hashesToExtend.toList(),
-                        publicKey = closedGroupSessionId.hexString(),
+                        publicKey = closedGroupSessionId.hexString,
                         signCallback = signCallback,
                         newExpiry = SnodeAPI.nowWithOffset + 14.days.inWholeMilliseconds,
                         extend = true
@@ -186,12 +186,12 @@ class ClosedGroupPoller(
 
             val pollResult = SnodeAPI.getRawBatchResponse(
                     snode,
-                    closedGroupSessionId.hexString(),
+                    closedGroupSessionId.hexString,
                     requests
             ).get()
 
             // If we no longer have a group, stop poller
-            if (configFactoryProtocol.userGroups?.getClosedGroup(closedGroupSessionId.hexString()) == null) return null
+            if (configFactoryProtocol.userGroups?.getClosedGroup(closedGroupSessionId.hexString) == null) return null
 
             // if poll result body is null here we don't have any things ig
             if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Poll results @${SnodeAPI.nowWithOffset}:")
@@ -215,7 +215,7 @@ class ClosedGroupPoller(
             members.free()
 
             if (requiresSync) {
-                configFactoryProtocol.scheduleUpdate(Destination.ClosedGroup(closedGroupSessionId.hexString()))
+                configFactoryProtocol.scheduleUpdate(Destination.ClosedGroup(closedGroupSessionId.hexString))
             }
         } catch (e: Exception) {
             if (ENABLE_LOGGING) Log.e("GroupPoller", "Polling failed for group", e)
@@ -270,12 +270,12 @@ class ClosedGroupPoller(
                 val message = decoded.decodeToString()
                 if (Sodium.KICKED_REGEX.matches(message)) {
                     val (sessionId, generation) = message.split("-")
-                    if (sessionId == userSessionId.hexString() && generation.toInt() >= keys.currentGeneration()) {
+                    if (sessionId == userSessionId.hexString && generation.toInt() >= keys.currentGeneration()) {
                         Log.d("GroupPoller", "We were kicked from the group, delete and stop polling")
                         stop()
 
                         configFactoryProtocol.userGroups?.let { userGroups ->
-                            userGroups.getClosedGroup(closedGroupSessionId.hexString())?.let { group ->
+                            userGroups.getClosedGroup(closedGroupSessionId.hexString)?.let { group ->
                                 // Retrieve the group name one last time from the group info,
                                 // as we are going to clear the keys, we won't have the chance to
                                 // read the group name anymore.
@@ -298,7 +298,7 @@ class ClosedGroupPoller(
                         MessagingModuleConfiguration.shared.storage.insertIncomingInfoMessage(
                             context = MessagingModuleConfiguration.shared.context,
                             senderPublicKey = userSessionId.publicKey,
-                            groupID = closedGroupSessionId.hexString(),
+                            groupID = closedGroupSessionId.hexString,
                             type = SignalServiceGroup.Type.KICKED,
                             name = "",
                             members = emptyList(),
@@ -324,7 +324,7 @@ class ClosedGroupPoller(
             if (keysConfig.loadKey(message, hash, timestamp, infoConfig, membersConfig)) {
                 total++
             }
-            if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Merged $hash for keys on ${closedGroupSessionId.hexString()}")
+            if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Merged $hash for keys on ${closedGroupSessionId.hexString}")
         }
         if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Total key messages consumed: $total")
     }
@@ -334,7 +334,7 @@ class ClosedGroupPoller(
         val messages = parseMessages(response)
         messages.forEach { (message, hash, _) ->
             infoConfig.merge(hash to message)
-            if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Merged $hash for info on ${closedGroupSessionId.hexString()}")
+            if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Merged $hash for info on ${closedGroupSessionId.hexString}")
         }
         if (messages.isNotEmpty()) {
             val lastTimestamp = messages.maxOf { it.timestamp }
@@ -346,7 +346,7 @@ class ClosedGroupPoller(
                               membersConfig: GroupMembersConfig) {
         parseMessages(response).forEach { (message, hash, _) ->
             membersConfig.merge(hash to message)
-            if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Merged $hash for members on ${closedGroupSessionId.hexString()}")
+            if (ENABLE_LOGGING) Log.d("ClosedGroupPoller", "Merged $hash for members on ${closedGroupSessionId.hexString}")
         }
     }
 
@@ -355,12 +355,12 @@ class ClosedGroupPoller(
         val messages = SnodeAPI.parseRawMessagesResponse(
             body,
             snode,
-            closedGroupSessionId.hexString()
+            closedGroupSessionId.hexString
         ) {
             return@parseRawMessagesResponse keysConfig.decrypt(it)
         }
         val parameters = messages.map { (envelope, serverHash) ->
-            MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash, closedGroup = Destination.ClosedGroup(closedGroupSessionId.hexString()))
+            MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash, closedGroup = Destination.ClosedGroup(closedGroupSessionId.hexString))
         }
         parameters.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { chunk ->
             val job = BatchMessageReceiveJob(chunk)

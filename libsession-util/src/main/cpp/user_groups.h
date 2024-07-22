@@ -52,7 +52,7 @@ inline session::config::legacy_group_info deserialize_legacy_group_info(JNIEnv *
     auto priority_field = env->GetFieldID(clazz, "priority", "J");
     auto disappearing_timer_field = env->GetFieldID(clazz, "disappearingTimer", "J");
     auto joined_at_field = env->GetFieldID(clazz, "joinedAt", "J");
-    jobject id = env->GetObjectField(info, id_field);
+    auto id = static_cast<jstring>(env->GetObjectField(info, id_field));
     jstring name = static_cast<jstring>(env->GetObjectField(info, name_field));
     jobject members_map = env->GetObjectField(info, members_field);
     jbyteArray enc_pub_key = static_cast<jbyteArray>(env->GetObjectField(info, enc_pub_key_field));
@@ -60,7 +60,7 @@ inline session::config::legacy_group_info deserialize_legacy_group_info(JNIEnv *
     int priority = env->GetLongField(info, priority_field);
     long joined_at = env->GetLongField(info, joined_at_field);
 
-    auto id_bytes = util::deserialize_session_id(env, id);
+    auto id_bytes = util::string_from_jstring(env, id);
     auto name_bytes = env->GetStringUTFChars(name, nullptr);
     auto enc_pub_key_bytes = util::ustring_from_bytes(env, enc_pub_key);
     auto enc_sec_key_bytes = util::ustring_from_bytes(env, enc_sec_key);
@@ -121,19 +121,19 @@ inline jobject serialize_legacy_group_info(JNIEnv *env, session::config::legacy_
     long long joined_at = info.joined_at;
 
     jclass legacy_group_class = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
-    jmethodID constructor = env->GetMethodID(legacy_group_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;[B[BIJJ)V");
+    jmethodID constructor = env->GetMethodID(legacy_group_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;[B[BJJJ)V");
     jobject serialized = env->NewObject(legacy_group_class, constructor, account_id, name, members, enc_pubkey, enc_seckey, priority, (jlong) info.disappearing_timer.count(), joined_at);
     return serialized;
 }
 
 inline jobject serialize_closed_group_info(JNIEnv* env, session::config::group_info info) {
-    auto session_id = util::serialize_session_id(env, info.id);
+    auto session_id = util::serialize_account_id(env, info.id);
     jbyteArray admin_bytes = info.secretkey.empty() ? nullptr : util::bytes_from_ustring(env, info.secretkey);
     jbyteArray auth_bytes = info.auth_data.empty() ? nullptr : util::bytes_from_ustring(env, info.auth_data);
     jstring name = util::jstringFromOptional(env, info.name);
 
     jclass group_info_class = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$ClosedGroupInfo");
-    jmethodID constructor = env->GetMethodID(group_info_class, "<init>","(Lorg/session/libsignal/utilities/SessionId;[B[BJZLjava/lang/String;)V");
+    jmethodID constructor = env->GetMethodID(group_info_class, "<init>","(Lorg/session/libsignal/utilities/AccountId;[B[BJZLjava/lang/String;)V");
     jobject return_object = env->NewObject(group_info_class,constructor,
                                            session_id, admin_bytes, auth_bytes, (jlong)info.priority, info.invited, name);
     return return_object;
@@ -141,7 +141,7 @@ inline jobject serialize_closed_group_info(JNIEnv* env, session::config::group_i
 
 inline session::config::group_info deserialize_closed_group_info(JNIEnv* env, jobject info_serialized) {
     jclass closed_group_class = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$ClosedGroupInfo");
-    jfieldID id_field = env->GetFieldID(closed_group_class, "groupSessionId", "Lorg/session/libsignal/utilities/SessionId;");
+    jfieldID id_field = env->GetFieldID(closed_group_class, "groupAccountId", "Lorg/session/libsignal/utilities/AccountId;");
     jfieldID secret_field = env->GetFieldID(closed_group_class, "adminKey", "[B");
     jfieldID auth_field = env->GetFieldID(closed_group_class, "authData", "[B");
     jfieldID priority_field = env->GetFieldID(closed_group_class, "priority", "J");
@@ -154,7 +154,7 @@ inline session::config::group_info deserialize_closed_group_info(JNIEnv* env, jo
     jbyteArray auth_jBytes = (jbyteArray)env->GetObjectField(info_serialized, auth_field);
     jstring name_jstring = (jstring)env->GetObjectField(info_serialized, name_field);
 
-    auto id_bytes = util::deserialize_session_id(env, id_jobject);
+    auto id_bytes = util::deserialize_account_id(env, id_jobject);
     auto secret_bytes = util::ustring_from_bytes(env, secret_jBytes);
     auto auth_bytes = util::ustring_from_bytes(env, auth_jBytes);
     auto name = util::string_from_jstring(env, name_jstring);

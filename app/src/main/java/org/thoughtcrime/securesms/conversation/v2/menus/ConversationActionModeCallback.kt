@@ -6,11 +6,10 @@ import android.view.Menu
 import android.view.MenuItem
 import network.loki.messenger.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 import org.thoughtcrime.securesms.conversation.v2.ConversationAdapter
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord

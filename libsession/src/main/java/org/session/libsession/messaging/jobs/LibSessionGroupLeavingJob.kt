@@ -3,9 +3,9 @@ package org.session.libsession.messaging.jobs
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.messaging.utilities.UpdateMessageData
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 
-class LibSessionGroupLeavingJob(val sessionId: SessionId, val deleteOnLeave: Boolean): Job {
+class LibSessionGroupLeavingJob(val accountId: AccountId, val deleteOnLeave: Boolean): Job {
 
 
     override var delegate: JobDelegate? = null
@@ -17,7 +17,7 @@ class LibSessionGroupLeavingJob(val sessionId: SessionId, val deleteOnLeave: Boo
         val storage = MessagingModuleConfiguration.shared.storage
         // start leaving
         // create message ID with leaving state
-        val messageId = storage.insertGroupInfoLeaving(sessionId) ?: run {
+        val messageId = storage.insertGroupInfoLeaving(accountId) ?: run {
             delegate?.handleJobFailedPermanently(
                 this,
                 dispatcherName,
@@ -28,7 +28,7 @@ class LibSessionGroupLeavingJob(val sessionId: SessionId, val deleteOnLeave: Boo
         // do actual group leave request
 
         // on success
-        if (storage.leaveGroup(sessionId.hexString(), deleteOnLeave)) {
+        if (storage.leaveGroup(accountId.hexString, deleteOnLeave)) {
             // message is already deleted, succeed
             delegate?.handleJobSucceeded(this, dispatcherName)
         } else {
@@ -39,14 +39,14 @@ class LibSessionGroupLeavingJob(val sessionId: SessionId, val deleteOnLeave: Boo
 
     override fun serialize(): Data =
         Data.Builder()
-            .putString(SESSION_ID_KEY, sessionId.hexString())
+            .putString(SESSION_ID_KEY, accountId.hexString)
             .putBoolean(DELETE_ON_LEAVE_KEY, deleteOnLeave)
             .build()
 
     class Factory : Job.Factory<LibSessionGroupLeavingJob> {
         override fun create(data: Data): LibSessionGroupLeavingJob {
             return LibSessionGroupLeavingJob(
-                SessionId.from(data.getString(SESSION_ID_KEY)),
+                AccountId(data.getString(SESSION_ID_KEY)),
                 data.getBoolean(DELETE_ON_LEAVE_KEY)
             )
         }

@@ -188,7 +188,7 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_decrypt(JNIEnv *env
         auto sender = decrypted.first;
         auto plaintext = decrypted.second;
         auto plaintext_bytes = util::bytes_from_ustring(env, plaintext);
-        auto sender_session_id = util::serialize_session_id(env, sender.data());
+        auto sender_session_id = util::serialize_account_id(env, sender.data());
         auto pair_class = env->FindClass("kotlin/Pair");
         auto pair_constructor = env->GetMethodID(pair_class, "<init>", "(Ljava/lang/Object;Ljava/lang/Object;)V");
         auto pair_obj = env->NewObject(pair_class, pair_constructor, plaintext_bytes, sender_session_id);
@@ -242,7 +242,7 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_makeSubAccount(JNIE
                                                                             jboolean can_delete) {
     std::lock_guard lock{util::util_mutex_};
     auto ptr = ptrToKeys(env, thiz);
-    auto deserialized_id = util::deserialize_session_id(env, session_id);
+    auto deserialized_id = util::deserialize_account_id(env, session_id);
     auto new_subaccount_key = ptr->swarm_make_subaccount(deserialized_id.data(), can_write, can_delete);
     auto jbytes = util::bytes_from_ustring(env, new_subaccount_key);
     return jbytes;
@@ -257,7 +257,7 @@ Java_network_loki_messenger_libsession_1util_GroupKeysConfig_getSubAccountToken(
                                                                                 jboolean can_delete) {
     std::lock_guard lock{util::util_mutex_};
     auto ptr = ptrToKeys(env, thiz);
-    auto deserialized_id = util::deserialize_session_id(env, session_id);
+    auto deserialized_id = util::deserialize_account_id(env, session_id);
     auto token = ptr->swarm_subaccount_token(deserialized_id, can_write, can_delete);
     auto jbytes = util::bytes_from_ustring(env, token);
     return jbytes;

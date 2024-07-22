@@ -9,10 +9,10 @@ import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.GroupMember
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage.Kind
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
-import org.session.libsignal.utilities.SessionId
 import java.io.Closeable
 import java.util.Stack
 
@@ -235,7 +235,7 @@ class GroupInfoConfig(pointer: Long): ConfigBase(pointer), Closeable {
 
     override fun namespace() = Namespace.CLOSED_GROUP_INFO()
 
-    external fun id(): SessionId
+    external fun id(): AccountId
     external fun destroyGroup()
     external fun getCreated(): Long?
     external fun getDeleteAttachmentsBefore(): Long?
@@ -322,12 +322,12 @@ class GroupKeysConfig(pointer: Long): ConfigSig(pointer) {
     }
 
     external fun encrypt(plaintext: ByteArray): ByteArray
-    external fun decrypt(ciphertext: ByteArray): Pair<ByteArray, SessionId>?
+    external fun decrypt(ciphertext: ByteArray): Pair<ByteArray, AccountId>?
 
     external fun keys(): Stack<ByteArray>
 
-    external fun makeSubAccount(sessionId: SessionId, canWrite: Boolean = true, canDelete: Boolean = false): ByteArray
-    external fun getSubAccountToken(sessionId: SessionId, canWrite: Boolean = true, canDelete: Boolean = false): ByteArray
+    external fun makeSubAccount(sessionId: AccountId, canWrite: Boolean = true, canDelete: Boolean = false): ByteArray
+    external fun getSubAccountToken(sessionId: AccountId, canWrite: Boolean = true, canDelete: Boolean = false): ByteArray
 
     external fun subAccountSign(message: ByteArray, signingValue: ByteArray): SwarmAuth
 

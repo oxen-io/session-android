@@ -38,7 +38,7 @@ import org.session.libsession.utilities.recipients.Recipient.RecipientSettings
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.guava.Optional
 import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 import network.loki.messenger.libsession_util.util.GroupMember as LibSessionGroupMember
@@ -171,19 +171,19 @@ interface StorageProtocol {
     fun createNewGroup(groupName: String, groupDescription: String, members: Set<Contact>): Optional<Recipient>
     fun getMembers(groupPublicKey: String): List<LibSessionGroupMember>
     fun respondToClosedGroupInvitation(threadId: Long, groupRecipient: Recipient, approved: Boolean)
-    fun addClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray?, adminKey: ByteArray?, invitingAdmin: SessionId, invitingMessageHash: String?)
-    fun setGroupInviteCompleteIfNeeded(approved: Boolean, invitee: String, closedGroup: SessionId)
-    fun getLibSessionClosedGroup(groupSessionId: String): GroupInfo.ClosedGroupInfo?
-    fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo?
-    fun inviteClosedGroupMembers(groupSessionId: String, invitees: List<String>)
-    fun insertGroupInfoChange(message: GroupUpdated, closedGroup: SessionId): Long?
-    fun insertGroupInfoLeaving(closedGroup: SessionId): Long?
+    fun addClosedGroupInvite(groupId: AccountId, name: String, authData: ByteArray?, adminKey: ByteArray?, invitingAdmin: AccountId, invitingMessageHash: String?)
+    fun setGroupInviteCompleteIfNeeded(approved: Boolean, invitee: String, closedGroup: AccountId)
+    fun getLibSessionClosedGroup(groupAccountId: String): GroupInfo.ClosedGroupInfo?
+    fun getClosedGroupDisplayInfo(groupAccountId: String): GroupDisplayInfo?
+    fun inviteClosedGroupMembers(groupAccountId: String, invitees: List<String>)
+    fun insertGroupInfoChange(message: GroupUpdated, closedGroup: AccountId): Long?
+    fun insertGroupInfoLeaving(closedGroup: AccountId): Long?
     fun updateGroupInfoChange(messageId: Long, newType: UpdateMessageData.Kind)
-    fun promoteMember(groupSessionId: String, promotions: Array<String>)
-    fun removeMember(groupSessionId: String, removedMembers: Array<String>)
-    fun handleMemberLeft(message: GroupUpdated, closedGroupId: SessionId)
-    fun handleMemberLeftNotification(message: GroupUpdated, closedGroupId: SessionId)
-    fun handleKicked(groupSessionId: SessionId)
+    fun promoteMember(groupAccountId: String, promotions: Array<String>)
+    fun removeMember(groupAccountId: String, removedMembers: Array<String>)
+    fun handleMemberLeft(message: GroupUpdated, closedGroupId: AccountId)
+    fun handleMemberLeftNotification(message: GroupUpdated, closedGroupId: AccountId)
+    fun handleKicked(groupAccountId: AccountId)
     fun leaveGroup(groupSessionId: String, deleteOnLeave: Boolean): Boolean
     fun setName(groupSessionId: String, newName: String)
     fun sendGroupUpdateDeleteMessage(groupSessionId: String, messageHashes: List<String>): Promise<Unit, Exception>

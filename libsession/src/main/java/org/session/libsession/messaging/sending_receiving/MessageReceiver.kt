@@ -14,15 +14,14 @@ import org.session.libsession.messaging.messages.control.SharedConfigurationMess
 import org.session.libsession.messaging.messages.control.TypingIndicator
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.VisibleMessage
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.protos.SignalServiceProtos.Envelope
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.SessionId
 
 object MessageReceiver {
 
@@ -100,7 +99,7 @@ object MessageReceiver {
                 }
                 SignalServiceProtos.Envelope.Type.CLOSED_GROUP_MESSAGE -> {
                     val hexEncodedGroupPublicKey = closedGroupSessionId ?: envelope.source
-                    val sessionId = SessionId.from(hexEncodedGroupPublicKey)
+                    val sessionId = AccountId(hexEncodedGroupPublicKey)
                     if (sessionId.prefix == IdPrefix.GROUP) {
                         plaintext = envelopeContent.toByteArray()
                         sender = envelope.source
@@ -159,7 +158,7 @@ object MessageReceiver {
         if (isBlocked(sender!!) && message.shouldDiscardIfBlocked()) {
             throw Error.SenderBlocked
         }
-        val isUserBlindedSender = sender == openGroupPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { AccountId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString() }
+        val isUserBlindedSender = sender == openGroupPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { AccountId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
         val isUserSender = sender == userPublicKey
 
         if (isUserSender || isUserBlindedSender) {

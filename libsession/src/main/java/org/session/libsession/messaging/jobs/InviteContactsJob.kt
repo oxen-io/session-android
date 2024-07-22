@@ -17,7 +17,7 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.truncateIdForDisplay
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteMessage
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.prettifiedDescription
 
 class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<String>) : Job {
@@ -50,7 +50,7 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
             )
 
         withContext(Dispatchers.IO) {
-            val sessionId = SessionId.from(groupSessionId)
+            val sessionId = AccountId(groupSessionId)
             val members = configs.getGroupMemberConfig(sessionId)
             val info = configs.getGroupInfoConfig(sessionId)
             val keys = configs.getGroupKeysConfig(sessionId, info, members, free = false)
@@ -75,7 +75,7 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                     members.set(member.setInvited())
                     configs.saveGroupConfigs(keys, info, members)
 
-                    val subAccount = keys.makeSubAccount(SessionId.from(memberSessionId))
+                    val subAccount = keys.makeSubAccount(AccountId(memberSessionId))
 
                     val timestamp = SnodeAPI.nowWithOffset
                     val messageToSign = "INVITE$memberSessionId$timestamp"

@@ -88,7 +88,6 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
@@ -104,7 +103,7 @@ import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.ListenableFuture
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.ApplicationContext
@@ -261,7 +260,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     val accountId = AccountId(it.serialize())
                     val openGroup = lokiThreadDb.getOpenGroupChat(intent.getLongExtra(FROM_GROUP_THREAD_ID, -1))
                     val address = if (accountId.prefix == IdPrefix.BLINDED && openGroup != null) {
-                        storage.getOrCreateBlindedIdMapping(accountId.hexString(), openGroup.server, openGroup.publicKey).accountId?.let {
+                        storage.getOrCreateBlindedIdMapping(accountId.hexString, openGroup.server, openGroup.publicKey).accountId?.let {
                             fromSerialized(it)
                         } ?: GroupUtil.getEncodedOpenGroupInboxID(openGroup, accountId)
                     } else {

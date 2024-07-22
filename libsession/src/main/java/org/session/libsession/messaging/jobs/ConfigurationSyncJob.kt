@@ -4,7 +4,6 @@ import network.loki.messenger.libsession_util.Config
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.GroupKeysConfig
 import java.util.concurrent.atomic.AtomicBoolean
-import network.loki.messenger.libsession_util.ConfigBase.Companion.protoKindFor
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Destination
@@ -15,9 +14,9 @@ import org.session.libsession.snode.SnodeAPI.SnodeBatchRequestInfo
 import org.session.libsession.snode.SnodeAPI.signingKeyCallback
 import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.utilities.ConfigFactoryProtocol
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.SessionId
 
 class InvalidDestination :
         Exception("Trying to push configs somewhere other than our swarm or a closed group")
@@ -54,7 +53,7 @@ data class ConfigurationSyncJob(val destination: Destination) : Job {
         val configsRequiringPush =
                 if (destination is Destination.ClosedGroup) {
                     // destination is a closed group, get all configs requiring push here
-                    val groupId = SessionId.from(destination.publicKey)
+                    val groupId = AccountId(destination.publicKey)
 
                     // Get the signing key for pushing configs
                     val signingKey = configFactoryProtocol

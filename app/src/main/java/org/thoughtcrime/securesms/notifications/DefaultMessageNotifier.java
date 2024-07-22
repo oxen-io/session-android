@@ -43,7 +43,6 @@ import com.goterl.lazysodium.utils.KeyPair;
 
 import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
-import org.session.libsession.messaging.utilities.AccountId;
 import org.session.libsession.messaging.utilities.SodiumUtilities;
 import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
@@ -51,9 +50,9 @@ import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsignal.utilities.AccountId;
 import org.session.libsignal.utilities.IdPrefix;
 import org.session.libsignal.utilities.Log;
-import org.session.libsignal.utilities.SessionId;
 import org.session.libsignal.utilities.Util;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.contacts.ContactUtil;

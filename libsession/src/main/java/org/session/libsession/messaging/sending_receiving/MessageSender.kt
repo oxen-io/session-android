@@ -24,7 +24,6 @@ import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupApi.Capability
 import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.messaging.utilities.MessageWrapper
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
@@ -39,11 +38,11 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
-import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.defaultRequiresAuth
 import org.session.libsignal.utilities.hasNamespaces
 import org.session.libsignal.utilities.hexEncodedPublicKey
@@ -185,7 +184,7 @@ object MessageSender {
                 MessageEncrypter.encrypt(plaintext, encryptionKeyPair.hexEncodedPublicKey)
             }
             is Destination.ClosedGroup -> {
-                val groupKeys = configFactory.getGroupKeysConfig(SessionId.from(destination.publicKey)) ?: throw Error.NoKeyPair
+                val groupKeys = configFactory.getGroupKeysConfig(AccountId(destination.publicKey)) ?: throw Error.NoKeyPair
                 val envelope = MessageWrapper.createEnvelope(kind, message.sentTimestamp!!, senderPublicKey, proto.build().toByteArray())
                 groupKeys.use { keys ->
                     if (keys.keys().isEmpty()) {
@@ -255,7 +254,7 @@ object MessageSender {
                     // possibly handle a failure for no user groups or no closed group signing key?
                     val group = configFactory.userGroups?.getClosedGroup(destination.publicKey) ?: return@mapNotNull null
                     val callback = if (group.authData != null) {
-                        val keys = configFactory.getGroupKeysConfig(SessionId.from(destination.publicKey))!!
+                        val keys = configFactory.getGroupKeysConfig(AccountId(destination.publicKey))!!
                         subkeyCallback(group.authData!!, keys)
                     } else if (group.adminKey != null) {
                         signingKeyCallback(group.adminKey!!)
@@ -373,9 +372,9 @@ object MessageSender {
             else -> {}
         }
         val messageSender = if (serverCapabilities.contains(Capability.BLIND.name.lowercase()) && blindedPublicKey != null) {
-            AccountId(IdPrefix.BLINDED, blindedPublicKey!!).hexString()
+            AccountId(IdPrefix.BLINDED, blindedPublicKey!!).hexString
         } else {
-            AccountId(IdPrefix.UN_BLINDED, userEdKeyPair.publicKey.asBytes).hexString()
+            AccountId(IdPrefix.UN_BLINDED, userEdKeyPair.publicKey.asBytes).hexString
         }
         message.sender = messageSender
         // Set the failure handler (need it here already for precondition failure handling)

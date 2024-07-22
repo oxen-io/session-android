@@ -23,7 +23,7 @@ import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 import org.thoughtcrime.securesms.database.ConfigDatabase
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
 import org.thoughtcrime.securesms.groups.GroupManager
@@ -66,7 +66,7 @@ class ConfigFactory(
 
     private val listeners: MutableList<ConfigFactoryUpdateListener> = mutableListOf()
 
-    private val _configUpdateNotifications = Channel<SessionId>()
+    private val _configUpdateNotifications = Channel<AccountId>()
     val configUpdateNotifications = _configUpdateNotifications.receiveAsFlow()
 
     fun registerListener(listener: ConfigFactoryUpdateListener) {
@@ -163,19 +163,19 @@ class ConfigFactory(
             _userGroups
         }
 
-    private fun getGroupInfo(groupSessionId: SessionId) = userGroups?.getClosedGroup(groupSessionId.hexString())
+    private fun getGroupInfo(groupSessionId: AccountId) = userGroups?.getClosedGroup(groupSessionId.hexString)
 
-    override fun getGroupInfoConfig(groupSessionId: SessionId): GroupInfoConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
+    override fun getGroupInfoConfig(groupSessionId: AccountId): GroupInfoConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
         // get any potential initial dumps
         val dump = configDatabase.retrieveConfigAndHashes(
             ConfigDatabase.INFO_VARIANT,
-            groupSessionId.hexString()
+            groupSessionId.hexString
         ) ?: byteArrayOf()
 
         GroupInfoConfig.newInstance(Hex.fromStringCondensed(groupSessionId.publicKey), groupInfo.adminKey, dump)
     }
 
-    override fun getGroupKeysConfig(groupSessionId: SessionId,
+    override fun getGroupKeysConfig(groupSessionId: AccountId,
                                     info: GroupInfoConfig?,
                                     members: GroupMembersConfig?,
                                     free: Boolean): GroupKeysConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
@@ -191,7 +191,7 @@ class ConfigFactory(
         // Get the dump or empty
         val dump = configDatabase.retrieveConfigAndHashes(
             ConfigDatabase.KEYS_VARIANT,
-            groupSessionId.hexString()
+            groupSessionId.hexString
         ) ?: byteArrayOf()
 
         // Put it all together
@@ -212,11 +212,11 @@ class ConfigFactory(
         keys
     }
 
-    override fun getGroupMemberConfig(groupSessionId: SessionId): GroupMembersConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
+    override fun getGroupMemberConfig(groupSessionId: AccountId): GroupMembersConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
         // Get initial dump if we have one
         val dump = configDatabase.retrieveConfigAndHashes(
             ConfigDatabase.MEMBER_VARIANT,
-            groupSessionId.hexString()
+            groupSessionId.hexString
         ) ?: byteArrayOf()
 
         GroupMembersConfig.newInstance(
@@ -227,7 +227,7 @@ class ConfigFactory(
     }
 
     override fun constructGroupKeysConfig(
-        groupSessionId: SessionId,
+        groupSessionId: AccountId,
         info: GroupInfoConfig,
         members: GroupMembersConfig
     ): GroupKeysConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
@@ -241,11 +241,11 @@ class ConfigFactory(
         )
     }
 
-    override fun userSessionId(): SessionId? {
-        return maybeGetUserInfo()?.second?.let(SessionId::from)
+    override fun userSessionId(): AccountId? {
+        return maybeGetUserInfo()?.second?.let(::AccountId)
     }
 
-    override fun maybeDecryptForUser(encoded: ByteArray, domain: String, closedGroupSessionId: SessionId): ByteArray? {
+    override fun maybeDecryptForUser(encoded: ByteArray, domain: String, closedGroupSessionId: AccountId): ByteArray? {
         val secret = maybeGetUserInfo()?.first ?: run {
             Log.e("ConfigFactory", "No user ed25519 secret key decrypting a message for us")
             return null
@@ -306,7 +306,7 @@ class ConfigFactory(
         )
     }
 
-    fun persistGroupConfigDump(forConfigObject: ConfigBase, groupSessionId: SessionId, timestamp: Long) = synchronized(userGroupsLock) {
+    fun persistGroupConfigDump(forConfigObject: ConfigBase, groupSessionId: AccountId, timestamp: Long) = synchronized(userGroupsLock) {
         val dumped = forConfigObject.dump()
         val variant = when (forConfigObject) {
             is GroupMembersConfig -> ConfigDatabase.MEMBER_VARIANT
@@ -315,7 +315,7 @@ class ConfigFactory(
         }
         configDatabase.storeConfig(
             variant,
-            groupSessionId.hexString(),
+            groupSessionId.hexString,
             dumped,
             timestamp
         )
@@ -336,8 +336,8 @@ class ConfigFactory(
                 is Contacts -> persistContactsConfigDump(timestamp)
                 is ConversationVolatileConfig -> persistConvoVolatileConfigDump(timestamp)
                 is UserGroupsConfig -> persistUserGroupsConfigDump(timestamp)
-                is GroupMembersConfig -> persistGroupConfigDump(forConfigObject, SessionId.from(forPublicKey!!), timestamp)
-                is GroupInfoConfig -> persistGroupConfigDump(forConfigObject, SessionId.from(forPublicKey!!), timestamp)
+                is GroupMembersConfig -> persistGroupConfigDump(forConfigObject, AccountId(forPublicKey!!), timestamp)
+                is GroupInfoConfig -> persistGroupConfigDump(forConfigObject, AccountId(forPublicKey!!), timestamp)
                 else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
             }
         } catch (e: Exception) {
@@ -401,7 +401,7 @@ class ConfigFactory(
         groupInfo: GroupInfoConfig,
         groupMembers: GroupMembersConfig
     ) {
-        val pubKey = groupInfo.id().hexString()
+        val pubKey = groupInfo.id().hexString
         val timestamp = SnodeAPI.nowWithOffset
 
         // this would be nicer with a .any iteration or something but the base types don't line up
@@ -413,9 +413,9 @@ class ConfigFactory(
         _configUpdateNotifications.trySend(groupInfo.id())
     }
 
-    override fun removeGroup(closedGroupId: SessionId) {
+    override fun removeGroup(closedGroupId: AccountId) {
         val groups = userGroups ?: return
-        groups.eraseClosedGroup(closedGroupId.hexString())
+        groups.eraseClosedGroup(closedGroupId.hexString)
         persist(groups, SnodeAPI.nowWithOffset)
         configDatabase.deleteGroupConfigs(closedGroupId)
     }

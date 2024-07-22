@@ -14,7 +14,7 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.LibSessionGroupLeavingJob
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 
 class ConversationSettingsViewModel(
     val threadId: Long,
@@ -78,7 +78,7 @@ class ConversationSettingsViewModel(
         val recipient = recipient ?: return
         return withContext(Dispatchers.IO) {
             val groupLeave = LibSessionGroupLeavingJob(
-                SessionId.from(recipient.address.serialize()),
+                AccountId(recipient.address.serialize()),
                 true
             )
             JobQueue.shared.add(groupLeave)

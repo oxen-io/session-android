@@ -40,8 +40,8 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfilePictureModifiedEvent
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
@@ -616,7 +616,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         }
                     }
                     if (recipient.address.isClosedGroupV2) {
-                        val groupLeave = LibSessionGroupLeavingJob(SessionId.from(recipient.address.serialize()), true)
+                        val groupLeave = LibSessionGroupLeavingJob(AccountId(recipient.address.serialize()), true)
                         JobQueue.shared.add(groupLeave)
                     }
                     // Delete the conversation

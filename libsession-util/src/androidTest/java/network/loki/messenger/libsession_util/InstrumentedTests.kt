@@ -27,7 +27,7 @@ import org.junit.runner.RunWith
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.SessionId
+import org.session.libsignal.utilities.AccountId
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -110,7 +110,7 @@ class InstrumentedTests {
         val groups = UserGroupsConfig.newInstance(user.secretKey)
         val group = groups.createGroup()
         val groupSk = group.adminKey!!
-        val groupPub = group.groupSessionId.pubKeyBytes
+        val groupPub = group.groupAccountId.pubKeyBytes
         val groupXPub = Sodium.ed25519PkToCurve25519(groupPub)
 
         val test = "test"
@@ -677,9 +677,9 @@ class InstrumentedTests {
         val groupSecret = checkNotNull(group.adminKey) {
             "adminKey must exist for created group"
         }
-        val groupPublic = Hex.fromStringCondensed(group.groupSessionId.publicKey)
+        val groupPublic = Hex.fromStringCondensed(group.groupAccountId.publicKey)
         groupConfig.set(group)
-        val setGroup = groupConfig.getClosedGroup(group.groupSessionId.hexString())
+        val setGroup = groupConfig.getClosedGroup(group.groupAccountId.hexString)
         assertThat(setGroup, notNullValue())
         assertTrue(setGroup?.adminKey?.isNotEmpty() == true)
         val infoConf = GroupInfoConfig.newInstance(groupPublic, group.adminKey)
@@ -708,17 +708,17 @@ class InstrumentedTests {
     @Test
     fun testGroupMembership() {
         val (userPublic, userSecret) = keyPair
-        val userSessionId = SessionId(IdPrefix.STANDARD, Sodium.ed25519PkToCurve25519(userPublic))
+        val userSessionId = AccountId(IdPrefix.STANDARD, Sodium.ed25519PkToCurve25519(userPublic))
         val groupConfig = UserGroupsConfig.newInstance(userSecret)
         val group = groupConfig.createGroup()
         groupConfig.set(group)
         val groupMembersConfig = GroupMembersConfig.newInstance(
-            group.groupSessionId.pubKeyBytes,
+            group.groupAccountId.pubKeyBytes,
             checkNotNull(group.adminKey) {
                 "signing key must exist for the group"
             }
         )
-        val toAdd = GroupMember(userSessionId.hexString(), "user", admin = true)
+        val toAdd = GroupMember(userSessionId.hexString, "user", admin = true)
         groupMembersConfig.set(
             toAdd
         )
@@ -743,7 +743,7 @@ class InstrumentedTests {
         val groupConfig = UserGroupsConfig.newInstance(userSecret)
         val group = groupConfig.createGroup()
         groupConfig.set(group)
-        val groupInfo = GroupInfoConfig.newInstance(group.groupSessionId.pubKeyBytes, group.adminKey)
+        val groupInfo = GroupInfoConfig.newInstance(group.groupAccountId.pubKeyBytes, group.adminKey)
         groupInfo.setName("Test Group")
         groupInfo.setDescription("This is a test group")
         assertThat(groupInfo.getName(), equalTo("Test Group"))
@@ -756,12 +756,12 @@ class InstrumentedTests {
         val groupConfig = UserGroupsConfig.newInstance(userSecret)
         val group = groupConfig.createGroup()
         groupConfig.set(group)
-        val groupInfo = GroupInfoConfig.newInstance(group.groupSessionId.pubKeyBytes, group.adminKey)
+        val groupInfo = GroupInfoConfig.newInstance(group.groupAccountId.pubKeyBytes, group.adminKey)
         groupInfo.setName("test")
-        val groupMembers = GroupMembersConfig.newInstance(group.groupSessionId.pubKeyBytes, group.adminKey)
+        val groupMembers = GroupMembersConfig.newInstance(group.groupAccountId.pubKeyBytes, group.adminKey)
         groupMembers.set(
             GroupMember(
-                sessionId = SessionId(IdPrefix.STANDARD, Sodium.ed25519PkToCurve25519(userPubKey)).hexString(),
+                sessionId = AccountId(IdPrefix.STANDARD, Sodium.ed25519PkToCurve25519(userPubKey)).hexString,
                 name = "admin",
                 admin = true
             )
@@ -771,7 +771,7 @@ class InstrumentedTests {
 
         val ourKeyConfig = GroupKeysConfig.newInstance(
             userSecretKey = userSecret,
-            groupPublicKey = group.groupSessionId.pubKeyBytes,
+            groupPublicKey = group.groupAccountId.pubKeyBytes,
             groupSecretKey = group.adminKey,
             info = groupInfo,
             members = groupMembers
@@ -784,9 +784,9 @@ class InstrumentedTests {
         assertThat(ourKeyConfig.needsDump(), equalTo(true))
         ourKeyConfig.dump()
         assertThat(ourKeyConfig.needsRekey(), equalTo(false))
-        val mergeInfo = GroupInfoConfig.newInstance(group.groupSessionId.pubKeyBytes, group.adminKey, infoDump)
-        val mergeMembers = GroupMembersConfig.newInstance(group.groupSessionId.pubKeyBytes, group.adminKey, membersDump)
-        val mergeConfig = GroupKeysConfig.newInstance(userSecret, group.groupSessionId.pubKeyBytes, group.adminKey, info = mergeInfo, members = mergeMembers)
+        val mergeInfo = GroupInfoConfig.newInstance(group.groupAccountId.pubKeyBytes, group.adminKey, infoDump)
+        val mergeMembers = GroupMembersConfig.newInstance(group.groupAccountId.pubKeyBytes, group.adminKey, membersDump)
+        val mergeConfig = GroupKeysConfig.newInstance(userSecret, group.groupAccountId.pubKeyBytes, group.adminKey, info = mergeInfo, members = mergeMembers)
         mergeConfig.loadKey(pushed, "testabc", messageTimestamp, mergeInfo, mergeMembers)
         assertThat(mergeConfig.needsRekey(), equalTo(false))
         assertThat(mergeConfig.keys().size, equalTo(1))
@@ -805,7 +805,7 @@ class InstrumentedTests {
         groupConfig.set(group)
         val volatiles = ConversationVolatileConfig.newInstance(userSecret)
         val conversation = Conversation.ClosedGroup(
-            group.groupSessionId.hexString(),
+            group.groupAccountId.hexString,
             System.currentTimeMillis(),
             false
         )

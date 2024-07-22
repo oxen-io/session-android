@@ -24,7 +24,7 @@ sealed class Conversation {
     ): Conversation()
 
     data class ClosedGroup(
-        val sessionId: String,
+        val accountId: String,
         override var lastRead: Long,
         override var unread: Boolean
     ): Conversation()

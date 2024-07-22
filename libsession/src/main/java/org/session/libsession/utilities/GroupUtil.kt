@@ -1,11 +1,10 @@
 package org.session.libsession.utilities
 
 import org.session.libsession.messaging.open_groups.OpenGroup
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsignal.messages.SignalServiceGroup
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.SessionId
 import java.io.IOException
 
 object GroupUtil {
@@ -21,7 +20,7 @@ object GroupUtil {
     @JvmStatic
     fun getEncodedOpenGroupInboxID(openGroup: OpenGroup, accountId: AccountId): Address {
         val openGroupInboxId =
-            "${openGroup.server}!${openGroup.publicKey}!${accountId.hexString()}".toByteArray()
+            "${openGroup.server}!${openGroup.publicKey}!${accountId.hexString}".toByteArray()
         return getEncodedOpenGroupInboxID(openGroupInboxId)
     }
 

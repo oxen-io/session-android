@@ -3,13 +3,11 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import androidx.core.database.getStringOrNull
 import org.json.JSONArray
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.messaging.utilities.AccountId
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 
 class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper) {

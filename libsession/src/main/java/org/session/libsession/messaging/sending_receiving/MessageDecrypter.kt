@@ -1,19 +1,16 @@
 package org.session.libsession.messaging.sending_receiving
 
-import com.goterl.lazysodium.LazySodiumAndroid
-import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.Box
 import com.goterl.lazysodium.interfaces.Sign
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.MessageReceiver.Error
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsignal.crypto.ecc.ECKeyPair
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 
@@ -60,7 +57,7 @@ object MessageDecrypter {
         sodium.convertPublicKeyEd25519ToCurve25519(senderX25519PublicKey, senderED25519PublicKey)
 
         val id = AccountId(IdPrefix.STANDARD, senderX25519PublicKey)
-        return Pair(plaintext, id.hexString())
+        return Pair(plaintext, id.hexString)
     }
 
     fun decryptBlinded(

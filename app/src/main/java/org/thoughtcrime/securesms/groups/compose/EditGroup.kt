@@ -64,7 +64,6 @@ import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.InviteContactsJob
 import org.session.libsession.messaging.jobs.JobQueue
-import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.groups.ContactList
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupInviteScreenDestination
@@ -192,7 +191,7 @@ class EditGroupViewModel @AssistedInject constructor(
             )
         }
 
-        val closedGroupInfo by configFactory.configUpdateNotifications.map(SessionId::hexString).filter(groupSessionId::equals)
+        val closedGroupInfo by configFactory.configUpdateNotifications.map { it.hexString} .filter(groupSessionId::equals)
             .map {
                 storage.getClosedGroupDisplayInfo(it)!! to getMembers()
             }.collectAsState(initial = storage.getClosedGroupDisplayInfo(groupSessionId)!! to getMembers())

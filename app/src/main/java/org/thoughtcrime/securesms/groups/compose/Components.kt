@@ -44,6 +44,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.home.search.getSearchName
 import org.thoughtcrime.securesms.ui.Avatar
 import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 
@@ -74,12 +75,12 @@ fun GroupMinimumVersionBanner(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(LocalColors.current.borders)
+            .background(LocalColors.current.warning)
     ) {
         Text(
             text = text,
-            color = Color.Black,
-            fontSize = 11.sp,
+            color = LocalColors.current.textAlert,
+            style = LocalType.current.small,
             maxLines = 2,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp))

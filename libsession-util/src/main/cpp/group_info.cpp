@@ -183,7 +183,7 @@ JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_GroupInfoConfig_id(JNIEnv *env, jobject thiz) {
     std::lock_guard guard{util::util_mutex_};
     auto group_info = ptrToInfo(env, thiz);
-    return util::serialize_session_id(env, group_info->id);
+    return util::serialize_account_id(env, group_info->id);
 }
 
 extern "C"

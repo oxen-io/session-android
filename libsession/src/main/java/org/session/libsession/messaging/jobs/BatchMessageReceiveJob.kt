@@ -29,13 +29,12 @@ import org.session.libsession.messaging.sending_receiving.handleOpenGroupReactio
 import org.session.libsession.messaging.sending_receiving.handleUnsendRequest
 import org.session.libsession.messaging.sending_receiving.handleVisibleMessage
 import org.session.libsession.messaging.utilities.Data
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsignal.protos.UtilProtos
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.SessionId
 import kotlin.math.max
 
 data class MessageReceiveParameters(
@@ -171,7 +170,7 @@ class BatchMessageReceiveJob(
                                         }?.let {
                                             AccountId(
                                                 IdPrefix.BLINDED, it.publicKey.asBytes
-                                            ).hexString()
+                                            ).hexString
                                         }
                                     if (message.sender == localUserPublicKey || isUserBlindedSender) {
                                         // use sent timestamp here since that is technically the last one we have
@@ -211,7 +210,7 @@ class BatchMessageReceiveJob(
                                     proto,
                                     threadId,
                                     openGroupID,
-                                    closedGroup = parameters.closedGroup?.publicKey?.let(SessionId::from)
+                                    closedGroup = parameters.closedGroup?.publicKey?.let(::AccountId)
                                 )
                             }
                         } catch (e: Exception) {
