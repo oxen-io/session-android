@@ -8,12 +8,8 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.media.AudioManager
-import android.os.Build
 import android.os.ResultReceiver
-import android.telephony.PhoneStateListener
-import android.telephony.PhoneStateListener.LISTEN_NONE
 import android.telephony.TelephonyManager
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LifecycleService
@@ -36,8 +32,6 @@ import org.thoughtcrime.securesms.util.CallNotificationBuilder.Companion.TYPE_OU
 import org.thoughtcrime.securesms.webrtc.AudioManagerCommand
 import org.thoughtcrime.securesms.webrtc.CallManager
 import org.thoughtcrime.securesms.webrtc.CallViewModel
-import org.thoughtcrime.securesms.webrtc.HangUpRtcOnPstnCallAnsweredListener
-import org.thoughtcrime.securesms.webrtc.HangUpRtcTelephonyCallback
 import org.thoughtcrime.securesms.webrtc.IncomingPstnCallReceiver
 import org.thoughtcrime.securesms.webrtc.NetworkChangeReceiver
 import org.thoughtcrime.securesms.webrtc.PeerConnectionException
@@ -59,7 +53,6 @@ import org.webrtc.RtpReceiver
 import org.webrtc.SessionDescription
 import java.util.UUID
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -228,10 +221,7 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
     private val timeoutExecutor = Executors.newScheduledThreadPool(1)
 
     private val telephonyHandler = TelephonyHandler(serviceExecutor) {
-        ContextCompat.startForegroundService(
-            this@WebRtcCallService,
-            hangupIntent(this@WebRtcCallService)
-        )
+        ContextCompat.startForegroundService(this, hangupIntent(this))
     }
 
     private var networkChangedReceiver: NetworkChangeReceiver? = null
@@ -291,11 +281,11 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
             val callId = ((intent.getSerializableExtra(EXTRA_CALL_ID) as? UUID)?.toString() ?: "No callId")
             Log.i("Loki", "Handling ${intent.action} for call: ${callId}")
             when (action) {
-                ACTION_INCOMING_RING -> if (isSameCall(intent) && callManager.currentConnectionState == CallState.Reconnecting) {
-                    handleNewOffer(intent)
-                }
                 ACTION_PRE_OFFER -> if (isIdle()) handlePreOffer(intent)
                 ACTION_INCOMING_RING -> when {
+                    isSameCall(intent) && callManager.currentConnectionState == CallState.Reconnecting -> {
+                        handleNewOffer(intent)
+                    }
                     isBusy(intent) -> handleBusyCall(intent)
                     isPreOffer() -> handleIncomingRing(intent)
                 }
@@ -309,9 +299,6 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
                 ACTION_FLIP_CAMERA -> handleSetCameraFlip(intent)
                 ACTION_WIRED_HEADSET_CHANGE -> handleWiredHeadsetChanged(intent)
                 ACTION_SCREEN_OFF -> handleScreenOffChange(intent)
-                ACTION_RESPONSE_MESSAGE -> if (isSameCall(intent) && callManager.currentConnectionState == CallState.Reconnecting) {
-                    handleResponseMessage(intent)
-                }
                 ACTION_RESPONSE_MESSAGE -> handleResponseMessage(intent)
                 ACTION_ICE_MESSAGE -> handleRemoteIceCandidate(intent)
                 ACTION_ICE_CONNECTED -> handleIceConnected(intent)
