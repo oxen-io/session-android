@@ -178,6 +178,11 @@ class ConversationViewModel(
     /**
      * Stops audio player if its current playing is the one given in the message.
      */
+    private fun stopMessageAudio(message: MessageRecord) {
+        val mmsMessage = message as? MmsMessageRecord ?: return
+        val audioSlide = mmsMessage.slideDeck.audioSlide ?: return
+        stopMessageAudio(audioSlide)
+    }
     private fun stopMessageAudio(audioSlide: AudioSlide) {
         AudioSlidePlayer.getInstance()?.takeIf { it.audioSlide == audioSlide }?.stop()
     }
@@ -189,12 +194,11 @@ class ConversationViewModel(
 
     fun deleteForEveryone(message: MessageRecord) = viewModelScope.launch {
         val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
-        stopPlayingAudioMessage(message)
+        stopMessageAudio(message)
 
         repository.deleteForEveryone(threadId, recipient, message)
             .onSuccess {
                 Log.d("Loki", "Deleted message ${message.id} ")
-                stopPlayingAudioMessage(message)
             }
             .onFailure {
                 Log.w("Loki", "FAILED TO delete message ${message.id} ")
