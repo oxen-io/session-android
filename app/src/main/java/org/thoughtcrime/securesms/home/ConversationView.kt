@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -56,7 +55,7 @@ class ConversationView : LinearLayout {
             binding.snippetTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorSecondary))
         } else if (thread.isErrorLeavingGroup) {
             binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
-            binding.snippetTextView.setTextColor(context.getColor(R.color.destructive))
+            binding.snippetTextView.setTextColor(context.getColorFromAttr(R.attr.danger))
         } else {
             binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
             binding.snippetTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))

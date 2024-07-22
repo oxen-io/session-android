@@ -15,6 +15,7 @@ import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.utilities.UpdateMessageData
+import org.session.libsession.utilities.getColorFromAttr
 import org.thoughtcrime.securesms.conversation.disappearingmessages.DisappearingMessages
 import org.thoughtcrime.securesms.conversation.disappearingmessages.expiryMode
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -99,7 +100,7 @@ class ControlMessageView : LinearLayout {
             message.isGroupUpdateMessage -> {
                 val updateMessageData: UpdateMessageData? = UpdateMessageData.fromJSON(message.body)
                 if (updateMessageData?.isGroupErrorQuitKind() == true) {
-                    binding.textView.setTextColor(context.getColor(R.color.destructive))
+                    binding.textView.setTextColor(context.getColorFromAttr(R.attr.danger))
                 }
             }
         }

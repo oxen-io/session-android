@@ -14,11 +14,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +38,7 @@ import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.CloseIcon
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.NavigationBar
-import org.thoughtcrime.securesms.ui.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.LocalColors
 
 
 @Composable
@@ -168,7 +168,7 @@ fun CreateGroup(
                 Text(
                     text = stringResource(id = R.string.activity_create_group_create_button_title),
                     // TODO: colours of everything here probably needs to be redone
-                    color = MaterialTheme.colors.onBackground,
+                    color = LocalColors.current.text,
                     modifier = Modifier.width(160.dp),
                     textAlign = TextAlign.Center
                 )
@@ -181,7 +181,7 @@ fun CreateGroup(
                 .background(Color.Gray.copy(alpha = 0.5f))) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colors.secondary
+                    color = LocalColors.current.textSecondary
                 )
             }
         }
@@ -198,18 +198,16 @@ fun ClosedGroupPreview(
             name = "Person"
         }
     )
-    PreviewTheme(R.style.Base_Theme_Session_ForceDark) {
-        CreateGroup(
-            viewState = ViewState.DEFAULT.copy(
-                // override any preview parameters
-                members = previewMembers.toList()
-            ),
-            updateState = {},
-            onSelectContact = {},
-            onBack = {},
-            onClose = {},
-        )
-    }
+    CreateGroup(
+        viewState = ViewState.DEFAULT.copy(
+            // override any preview parameters
+            members = previewMembers.toList()
+        ),
+        updateState = {},
+        onSelectContact = {},
+        onBack = {},
+        onClose = {},
+    )
 }
 
 data class ViewState(

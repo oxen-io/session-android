@@ -15,9 +15,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Text
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -27,13 +26,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.squareup.phrase.Phrase
@@ -44,10 +43,8 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.home.search.getSearchName
 import org.thoughtcrime.securesms.ui.Avatar
-import org.thoughtcrime.securesms.ui.LocalExtraColors
-import org.thoughtcrime.securesms.ui.LocalPreviewMode
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.ThemeResPreviewParameterProvider
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 
 @Composable
@@ -77,7 +74,7 @@ fun GroupMinimumVersionBanner(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(LocalExtraColors.current.warning)
+            .background(LocalColors.current.borders)
     ) {
         Text(
             text = text,
@@ -112,7 +109,7 @@ fun LazyListScope.multiSelectMemberList(
             verticalAlignment = CenterVertically
         ) {
             ContactPhoto(
-                contact.sessionID,
+                contact.accountID,
                 modifier = Modifier
                     .size(48.dp)
             )
@@ -144,7 +141,7 @@ fun LazyListScope.deleteMemberList(
     item {
         Text(
             text = stringResource(id = R.string.conversation_settings_group_members),
-            style = MaterialTheme.typography.subtitle2,
+            color = LocalColors.current.text,
             modifier = modifier
                 .padding(vertical = 8.dp)
         )
@@ -157,7 +154,7 @@ fun LazyListScope.deleteMemberList(
         items(contacts) { contact ->
             Row(modifier.fillMaxWidth()) {
                 ContactPhoto(
-                    contact.sessionID,
+                    contact.accountID,
                     modifier = Modifier
                         .size(48.dp)
                         .align(CenterVertically)
@@ -181,16 +178,16 @@ fun LazyListScope.deleteMemberList(
 
 @Composable
 fun RowScope.ContactPhoto(sessionId: String, modifier: Modifier = Modifier) {
-    return if (LocalPreviewMode.current) {
+    return if (LocalInspectionMode.current) {
         Image(
             painterResource(id = R.drawable.ic_profile_default),
-            colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary),
+            colorFilter = ColorFilter.tint(LocalColors.current.textSecondary),
             contentScale = ContentScale.Inside,
             contentDescription = null,
             modifier = modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .border(1.dp, MaterialTheme.colors.onPrimary, CircleShape)
+                .border(1.dp, LocalColors.current.borders, CircleShape)
         )
     } else {
         val context = LocalContext.current
@@ -205,16 +202,14 @@ fun RowScope.ContactPhoto(sessionId: String, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun PreviewMemberList(
-    @PreviewParameter(ThemeResPreviewParameterProvider::class) themeResId: Int
-) {
+fun PreviewMemberList() {
     val random = "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234"
     val previewMembers = setOf(
         Contact(random).apply {
             name = "Person"
         }
     )
-    PreviewTheme(themeResId = themeResId) {
+    PreviewTheme {
         LazyColumn {
             multiSelectMemberList(
                 contacts = previewMembers.toList(),

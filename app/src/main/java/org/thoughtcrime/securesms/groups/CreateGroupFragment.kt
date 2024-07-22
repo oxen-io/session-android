@@ -13,6 +13,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
@@ -23,19 +24,9 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultRecipient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
-import org.session.libsession.messaging.contacts.Contact
-import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
-import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentCreateGroupBinding
-import nl.komponents.kovenant.ui.failUi
-import nl.komponents.kovenant.ui.successUi
-import org.session.libsession.messaging.sending_receiving.MessageSender
-import org.session.libsession.messaging.sending_receiving.groupSizeLimit
-import org.session.libsession.utilities.Address
+import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Device
-import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.contacts.SelectContactsAdapter
 import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.groups.compose.CreateGroup
@@ -44,7 +35,8 @@ import org.thoughtcrime.securesms.groups.compose.SelectContacts
 import org.thoughtcrime.securesms.groups.compose.StateUpdate
 import org.thoughtcrime.securesms.groups.compose.ViewState
 import org.thoughtcrime.securesms.groups.destinations.SelectContactsScreenDestination
-import org.thoughtcrime.securesms.ui.AppTheme
+import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateGroupFragment : Fragment() {
@@ -64,7 +56,7 @@ class CreateGroupFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             val getDelegate = { delegate }
             setContent {
-                AppTheme {
+                SessionMaterialTheme {
                     DestinationsNavHost(
                         navGraph = NavGraphs.createGroup,
                         dependenciesContainerBuilder = {
@@ -86,7 +78,7 @@ fun CreateGroupScreen(
     navigator: DestinationsNavigator,
     resultSelectContact: ResultRecipient<SelectContactsScreenDestination, ContactList>,
     viewModel: CreateGroupViewModel = hiltViewModel(),
-    getDelegate: () -> NewConversationDelegate
+    getDelegate: () -> StartConversationDelegate
 ) {
     val viewState by viewModel.viewState.observeAsState(ViewState.DEFAULT)
 
@@ -133,7 +125,7 @@ fun CreateGroupScreen(
 fun SelectContactsScreen(
     resultNavigator: ResultBackNavigator<ContactList>,
     viewModel: CreateGroupViewModel = hiltViewModel(),
-    getDelegate: () -> NewConversationDelegate
+    getDelegate: () -> StartConversationDelegate
 ) {
 
     val viewState by viewModel.viewState.observeAsState(ViewState.DEFAULT)

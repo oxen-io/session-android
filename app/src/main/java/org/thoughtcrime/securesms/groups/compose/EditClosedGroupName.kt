@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,16 +22,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.ui.LocalExtraColors
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.ThemeResPreviewParameterProvider
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 @EditGroupNavGraph
 @Composable
@@ -64,7 +61,7 @@ fun EditClosedGroupNameView(navigateBack: (String) -> Unit) {
         Modifier
             .fillMaxWidth()
             .shadow(8.dp)
-            .background(MaterialTheme.colors.surface)
+            .background(LocalColors.current.background)
     ) {
         Column(
             modifier = Modifier
@@ -76,7 +73,7 @@ fun EditClosedGroupNameView(navigateBack: (String) -> Unit) {
             Text(
                 text = stringResource(id = R.string.dialog_edit_group_information_title),
                 modifier = Modifier.padding(bottom = 8.dp),
-                style = MaterialTheme.typography.subtitle1,
+//                style = MaterialTheme.typography.subtitle1,
                 fontWeight = FontWeight.Bold
             )
             Text(
@@ -139,7 +136,7 @@ fun EditClosedGroupNameView(navigateBack: (String) -> Unit) {
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = LocalExtraColors.current.destructive
+                    color = LocalColors.current.danger
                 )
             }
         }
@@ -150,12 +147,10 @@ fun EditClosedGroupNameView(navigateBack: (String) -> Unit) {
 
 @Preview
 @Composable
-fun PreviewDialogChange(@PreviewParameter(ThemeResPreviewParameterProvider::class) styleRes: Int) {
-
-    PreviewTheme(themeResId = styleRes) {
+fun PreviewDialogChange() {
+    PreviewTheme() {
         EditClosedGroupNameView {
 
         }
     }
-
 }

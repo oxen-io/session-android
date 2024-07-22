@@ -18,12 +18,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -74,7 +72,8 @@ import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupNameScreenD
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.NavigationBar
-import org.thoughtcrime.securesms.ui.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 @EditGroupNavGraph(start = true)
 @Composable
@@ -124,7 +123,7 @@ fun EditClosedGroupScreen(
             context.showSessionDialog {
                 title(R.string.activity_settings_remove)
                 text(string)
-                destructiveButton(R.string.activity_settings_remove) {
+                dangerButton(R.string.activity_settings_remove) {
                     eventSink(EditGroupEvent.RemoveContact(contact.memberSessionId))
                 }
                 cancelButton()
@@ -160,7 +159,7 @@ fun EditClosedGroupInviteScreen(
 
     SelectContacts(
         viewState.allContacts
-            .filterNot { it.sessionID in currentMemberSessionIds }
+            .filterNot { it.accountID in currentMemberSessionIds }
             .toSet(),
         onBack = { resultNavigator.navigateBack() },
         onContactsSelected = {
@@ -214,7 +213,7 @@ class EditGroupViewModel @AssistedInject constructor(
                     val sessionIds = event.contacts
                     storage.inviteClosedGroupMembers(
                         groupSessionId,
-                        sessionIds.contacts.map(Contact::sessionID)
+                        sessionIds.contacts.map(Contact::accountID)
                     )
                 }
                 is EditGroupEvent.ReInviteContact -> {
@@ -291,10 +290,8 @@ fun EditGroupView(
     onMemberSelected: (MemberViewModel) -> Unit,
     viewState: EditGroupViewState,
 ) {
-    val scaffoldState = rememberScaffoldState()
 
     Scaffold(
-        scaffoldState = scaffoldState,
         topBar = {
             NavigationBar(
                 title = stringResource(id = R.string.activity_edit_closed_group_title),
@@ -303,7 +300,7 @@ fun EditGroupView(
                     TextButton(onClick = { onBack() }) {
                         Text(
                             text = stringResource(id = R.string.menu_done_button),
-                            color = MaterialTheme.colors.onPrimary
+                            color = LocalColors.current.primary
                         )
                     }
                 }
@@ -378,7 +375,7 @@ fun EditGroupView(
             // members header
             Text(
                 text = stringResource(id = R.string.conversation_settings_group_members),
-                style = MaterialTheme.typography.subtitle2,
+//                style = MaterialTheme.typography.subtitle2,
                 modifier = Modifier
                     .padding(vertical = 8.dp, horizontal = 32.dp)
             )
@@ -470,7 +467,7 @@ fun MemberItem(modifier: Modifier = Modifier,
             ) {
                 Text(
                     stringResource(id = R.string.EditGroup_resend_action),
-                    color = MaterialTheme.colors.onPrimary
+                    color = LocalColors.current.text
                 )
             }
         } else if (isAdmin && member.memberState == MemberState.Member) {
@@ -490,7 +487,7 @@ fun MemberItem(modifier: Modifier = Modifier,
             ) {
                 Text(
                     stringResource(R.string.EditGroup_promote_action),
-                    color = MaterialTheme.colors.onPrimary
+                    color = LocalColors.current.text
                 )
             }
         }
@@ -504,7 +501,7 @@ fun Modifier.controlHighlightBackground() = this.background(
         MaterialColors.getColor(
             LocalContext.current,
             R.attr.colorControlHighlight,
-            MaterialTheme.colors.onPrimary.toArgb()
+            LocalColors.current.text.toArgb()
         )
     )
 )
@@ -580,9 +577,7 @@ data class EditGroupInviteViewState(
 @Preview
 @Composable
 fun PreviewList() {
-
-    PreviewTheme(themeResId = R.style.Classic_Dark) {
-
+    PreviewTheme {
         val oneMember = MemberViewModel(
             "Test User",
             "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234",

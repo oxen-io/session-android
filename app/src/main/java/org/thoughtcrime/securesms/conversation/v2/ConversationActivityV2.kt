@@ -811,7 +811,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     title(R.string.dialog_open_url_title)
                     text(R.string.dialog_open_url_explanation)
                     cancelButton()
-                    destructiveButton(R.string.open) {
+                    dangerButton(R.string.open) {
                         // open the URL (tbc)
                     }
                 }

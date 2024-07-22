@@ -9,7 +9,7 @@ import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.groups.compose.EditGroupInviteViewModel
 import org.thoughtcrime.securesms.groups.compose.EditGroupViewModel
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupScreenDestination
-import org.thoughtcrime.securesms.ui.AppTheme
+import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -29,7 +29,7 @@ class EditClosedGroupActivity: PassphraseRequiredActionBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?, ready: Boolean) {
         setContent {
 
-            AppTheme {
+            SessionMaterialTheme {
                 DestinationsNavHost(
                     navGraph = NavGraphs.editGroup,
                     dependenciesContainerBuilder = {

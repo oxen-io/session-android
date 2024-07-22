@@ -322,7 +322,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private val GlobalSearchResult.contactAndGroupList: List<GlobalSearchAdapter.Model> get() =
         contacts.map { GlobalSearchAdapter.Model.Contact(it, it.nickname ?: it.name, it.accountID == publicKey) } +
-            threads.map(GlobalSearchAdapter.Model::GroupConversation)
+            threads.map(GlobalSearchAdapter.Model::LegacyGroupConversation)
 
     private val GlobalSearchResult.messageResults: List<GlobalSearchAdapter.Model> get() {
         val unreadThreadMap = messages

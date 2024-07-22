@@ -166,7 +166,7 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                 showSessionDialog {
                     title(R.string.dialog_clear_all_messages_title)
                     text(R.string.dialog_clear_all_messages_message)
-                    destructiveButton(
+                    dangerButton(
                         R.string.dialog_clear_all_messages_clear,
                         R.string.dialog_clear_all_messages_clear) {
                         viewModel.clearMessages(false)
@@ -194,7 +194,7 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                                     .format()
                             }
                             text(textWithArgs)
-                            destructiveButton(
+                            dangerButton(
                                 R.string.conversation_settings_leave_group,
                                 R.string.conversation_settings_leave_group
                             ) {
@@ -228,7 +228,7 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                                 .format()
                         }
                         text(textWithArgs)
-                        destructiveButton(
+                        dangerButton(
                             R.string.conversation_settings_leave_group,
                             R.string.conversation_settings_leave_group
                         ) {

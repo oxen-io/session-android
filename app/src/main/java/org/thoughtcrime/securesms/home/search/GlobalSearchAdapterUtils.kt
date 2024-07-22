@@ -90,7 +90,6 @@ private fun getHighlight(query: String?, toSearch: String): Spannable? {
 
 fun ContentView.bindModel(query: String?, model: LegacyGroupConversation) {
     binding.searchResultProfilePicture.isVisible = true
-    binding.searchResultSavedMessages.isVisible = false
     binding.searchResultSubtitle.isVisible = model.groupRecord.isLegacyClosedGroup
     binding.searchResultTimestamp.isVisible = false
     val threadRecipient = Recipient.from(binding.root.context, Address.fromSerialized(model.groupRecord.encodedId), false)
@@ -123,12 +122,10 @@ fun ContentView.bindModel(model: SavedMessages) {
     binding.searchResultTimestamp.isVisible = false
     binding.searchResultTitle.setText(R.string.note_to_self)
     binding.searchResultProfilePicture.isVisible = false
-    binding.searchResultSavedMessages.isVisible = true
 }
 
 fun ContentView.bindModel(query: String?, model: Message) = binding.apply {
     searchResultProfilePicture.isVisible = true
-    searchResultSavedMessages.isVisible = false
     searchResultTimestamp.isVisible = true
     searchResultTimestamp.text = DateUtils.getDisplayFormattedTimeSpanString(root.context, Locale.getDefault(), model.messageResult.sentTimestampMs)
     searchResultProfilePicture.update(model.messageResult.conversationRecipient)

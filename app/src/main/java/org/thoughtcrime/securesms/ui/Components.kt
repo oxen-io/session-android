@@ -8,6 +8,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -16,7 +18,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -27,7 +28,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.ripple.rememberRipple
@@ -40,7 +40,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -57,7 +56,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -67,9 +65,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -262,7 +258,7 @@ fun ItemButton(
 
 @Preview
 @Composable
-fun PrewviewItemButton() {
+fun PreviewItemButton() {
     PreviewTheme {
         ItemButton(
             textId = R.string.activity_create_group_title,
@@ -467,37 +463,6 @@ fun LoadingArcOr(loading: Boolean, content: @Composable () -> Unit) {
 
 
 @Composable
-fun EditableAvatar(
-    // TODO: add attachment-based state for current view rendering?
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier
-        .size(110.dp)
-        .padding(15.dp)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.avatar_placeholder),
-            contentDescription = stringResource(
-                id = R.string.arrays__default
-            ),
-            Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.cellColor, shape = CircleShape)
-                .padding(16.dp)
-        )
-        Image(
-            painter = painterResource(id = R.drawable.ic_plus),
-            contentDescription = null,
-            Modifier
-                .align(Alignment.BottomEnd)
-                .size(24.dp)
-                .background(colorDestructive, shape = CircleShape)
-                .padding(6.dp)
-        )
-    }
-}
-
-@Composable
 fun SearchBar(
     query: String,
     onValueChanged: (String) -> Unit,
@@ -508,13 +473,13 @@ fun SearchBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp, vertical = 4.dp)
-            .background(MaterialTheme.colors.primaryVariant, RoundedCornerShape(100))
+            .background(LocalColors.current.background, RoundedCornerShape(100))
     ) {
         Image(
             painterResource(id = R.drawable.ic_search_24),
             contentDescription = null,
             colorFilter = ColorFilter.tint(
-                MaterialTheme.colors.onPrimary
+                LocalColors.current.text
             ),
             modifier = Modifier.size(20.dp)
         )
@@ -624,75 +589,47 @@ fun RowScope.WeightedOptionButton(
         textAlign = TextAlign.Center,
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
-        color = if (destructive) LocalExtraColors.current.destructive else Color.Unspecified
+        color = if (destructive) LocalColors.current.danger else Color.Unspecified
     )
 }
 
 @Preview
 @Composable
-fun PreviewWeightedOptionButtons(
-    @PreviewParameter(ThemeResPreviewParameterProvider::class) themeResId: Int,
-) {
-    PreviewTheme(themeResId) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            // two equal sized
-            Row(modifier = Modifier.fillMaxWidth()) {
-                WeightedOptionButton(label = R.string.ok) {
+fun PreviewWeightedOptionButtons() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        // two equal sized
+        Row(modifier = Modifier.fillMaxWidth()) {
+            WeightedOptionButton(label = R.string.ok) {
 
-                }
-                WeightedOptionButton(label = R.string.cancel, destructive = true) {
-
-                }
             }
-            // single left justified
-            Row(modifier = Modifier.fillMaxWidth()) {
-                WeightedOptionButton(label = R.string.cancel, destructive = true, weight = 1f) {
+            WeightedOptionButton(label = R.string.cancel, destructive = true) {
 
-                }
-                // press F to pay respects to `android:weightSum`
-                Box(Modifier.weight(1f))
             }
+        }
+        // single left justified
+        Row(modifier = Modifier.fillMaxWidth()) {
+            WeightedOptionButton(label = R.string.cancel, destructive = true, weight = 1f) {
+
+            }
+            // press F to pay respects to `android:weightSum`
+            Box(Modifier.weight(1f))
         }
     }
 }
 
-@Preview
-@Composable
-fun PreviewWeightedOptionButtonsBidi(
-    @PreviewParameter(BidiPreviewParameterProvider::class) direction: LayoutDirection
-) {
-    PreviewTheme(themeResId = R.style.Classic_Dark) {
-        CompositionLocalProvider(LocalLayoutDirection provides direction) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    WeightedOptionButton(label = R.string.ok, weight = 1f) {}
-                    WeightedOptionButton(label = R.string.cancel, destructive = true, weight = 1f) {}
-                }
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Box(Modifier.weight(1f))
-                    WeightedOptionButton(label = R.string.cancel, destructive = true, weight = 1f) {
 
-                    }
-                }
-            }
-        }
-    }
+@Composable
+@Preview
+fun PreviewNavigationBar() {
+    NavigationBar(title = "Create Group", onBack = {}, actionElement = {
+        CloseIcon {}
+    })
 }
 
 @Composable
 @Preview
-fun PreviewNavigationBar(@PreviewParameter(provider = ThemeResPreviewParameterProvider::class) themeResId: Int) {
-    PreviewTheme(themeResId = themeResId) {
-        NavigationBar(title = "Create Group", onBack = {}, actionElement = {
-            CloseIcon {}
-        })
-    }
-}
-
-@Composable
-@Preview
-fun PreviewSearchBar(@PreviewParameter(provider = ThemeResPreviewParameterProvider::class) themeResId: Int) {
-    PreviewTheme(themeResId = themeResId) {
+fun PreviewSearchBar() {
+    PreviewTheme {
         SearchBar("", {})
     }
 }
