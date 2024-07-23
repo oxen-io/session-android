@@ -17,8 +17,8 @@ import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.push
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), ConversationClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private lateinit var binding: ActivityMessageRequestsBinding
-    private lateinit var glide: GlideRequests
+    private lateinit var glide: RequestManager
 
     @Inject lateinit var threadDb: ThreadDatabase
 
@@ -43,7 +43,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         binding = ActivityMessageRequestsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        glide = GlideApp.with(this)
+        glide = Glide.with(this)
 
         adapter.setHasStableIds(true)
         adapter.glide = glide

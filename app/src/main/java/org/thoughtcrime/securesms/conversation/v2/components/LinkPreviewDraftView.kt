@@ -7,7 +7,7 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import network.loki.messenger.databinding.ViewLinkPreviewDraftBinding
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.mms.ImageSlide
 import org.thoughtcrime.securesms.util.toPx
 
@@ -27,7 +27,7 @@ class LinkPreviewDraftView : LinearLayout {
         binding.linkPreviewDraftCancelButton.setOnClickListener { cancel() }
     }
 
-    fun update(glide: GlideRequests, linkPreview: LinkPreview) {
+    fun update(glide: RequestManager, linkPreview: LinkPreview) {
         // Hide the loader and show the content view
         binding.linkPreviewDraftContainer.isVisible = true
         binding.linkPreviewDraftLoader.isVisible = false

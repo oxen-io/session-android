@@ -37,13 +37,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 
 import network.loki.messenger.R;
-import org.thoughtcrime.securesms.mms.GlideApp;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 public class StickerSelectFragment extends Fragment implements LoaderManager.LoaderCallbacks<String[]> {
 
   private RecyclerView             recyclerView;
-  private GlideRequests glideRequests;
+  private RequestManager glideRequests;
   private String                   assetDirectory;
   private StickerSelectionListener listener;
 
@@ -71,7 +71,7 @@ public class StickerSelectFragment extends Fragment implements LoaderManager.Loa
   public void onActivityCreated(Bundle bundle) {
     super.onActivityCreated(bundle);
 
-    this.glideRequests  = GlideApp.with(this);
+    this.glideRequests  = Glide.with(this);
     this.assetDirectory = getArguments().getString("assetDirectory");
 
     getLoaderManager().initLoader(0, null, this);
@@ -99,11 +99,11 @@ public class StickerSelectFragment extends Fragment implements LoaderManager.Loa
 
   class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.StickerViewHolder> {
 
-    private final GlideRequests  glideRequests;
+    private final RequestManager  glideRequests;
     private final String[]       stickerFiles;
     private final LayoutInflater layoutInflater;
 
-    StickersAdapter(@NonNull Context context, @NonNull GlideRequests glideRequests, @NonNull String[] stickerFiles) {
+    StickersAdapter(@NonNull Context context, @NonNull RequestManager glideRequests, @NonNull String[] stickerFiles) {
       this.glideRequests  = glideRequests;
       this.stickerFiles   = stickerFiles;
       this.layoutInflater = LayoutInflater.from(context);

@@ -36,7 +36,7 @@ import com.bumptech.glide.request.transition.Transition;
 
 import network.loki.messenger.R;
 import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 import org.session.libsession.utilities.ServiceUtil;
 import org.thoughtcrime.securesms.util.Stopwatch;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -236,7 +236,7 @@ public class Camera1Fragment extends Fragment implements TextureView.SurfaceText
       Transformation<Bitmap> transformation = frontFacing ? new MultiTransformation<>(new CenterCrop(), new FlipTransformation())
                                                           : new CenterCrop();
 
-      GlideApp.with(this)
+      Glide.with(this)
               .asBitmap()
               .load(jpegData)
               .transform(transformation)

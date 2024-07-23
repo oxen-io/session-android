@@ -17,13 +17,15 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
         classpath "com.squareup:javapoet:1.13.0"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
         if (project.hasProperty('huawei')) classpath 'com.huawei.agconnect:agcp:1.9.1.300'
     }
 }
 
-plugins{
-    id("com.google.dagger.hilt.android") version "2.44" apply false
+// List plugins AND their versions here, but don't apply. This allows you to use the plugin
+// in your module without specifying the version.
+plugins {
+    id 'com.google.devtools.ksp' version "$kotlinVersion-1.0.20" apply false
+    id 'com.google.dagger.hilt.android' version "$daggerHiltVersion" apply false
 }
 
 allprojects {

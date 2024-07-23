@@ -156,7 +156,7 @@ import org.thoughtcrime.securesms.mediasend.Media
 import org.thoughtcrime.securesms.mediasend.MediaSendActivity
 import org.thoughtcrime.securesms.mms.AudioSlide
 import org.thoughtcrime.securesms.mms.GifSlide
-import org.thoughtcrime.securesms.mms.GlideApp
+import com.bumptech.glide.Glide
 import org.thoughtcrime.securesms.mms.ImageSlide
 import org.thoughtcrime.securesms.mms.MediaConstraints
 import org.thoughtcrime.securesms.mms.Slide
@@ -349,7 +349,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         adapter
     }
 
-    private val glide by lazy { GlideApp.with(this) }
+    private val glide by lazy { Glide.with(this) }
     private val lockViewHitMargin by lazy { toPx(40, resources) }
     private val gifButton by lazy { InputBarButton(this, R.drawable.ic_gif_white_24dp, hasOpaqueBackground = true, isGIFButton = true) }
     private val documentButton by lazy { InputBarButton(this, R.drawable.ic_document_small_dark, hasOpaqueBackground = true) }

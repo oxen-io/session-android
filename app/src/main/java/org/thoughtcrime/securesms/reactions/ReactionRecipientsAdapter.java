@@ -13,7 +13,7 @@ import org.session.libsession.messaging.utilities.AccountId;
 import org.thoughtcrime.securesms.components.ProfilePictureView;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 
 import java.util.Collections;
 import java.util.List;
