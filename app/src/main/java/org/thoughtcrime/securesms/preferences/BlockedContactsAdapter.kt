@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
 import network.loki.messenger.databinding.BlockedContactLayoutBinding
 import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.mms.GlideApp
+import com.bumptech.glide.Glide
 import org.thoughtcrime.securesms.util.adapter.SelectableItem
 
 typealias SelectableRecipient = SelectableItem<Recipient>
@@ -43,7 +43,7 @@ class BlockedContactsAdapter(val viewModel: BlockedContactsViewModel) : ListAdap
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
-        val glide = GlideApp.with(itemView)
+        val glide = Glide.with(itemView)
         val binding = BlockedContactLayoutBinding.bind(itemView)
 
         fun bind(selectable: SelectableRecipient, toggle: (SelectableRecipient) -> Unit) {

@@ -64,6 +64,7 @@ import org.session.libsession.utilities.task.ProgressDialogAsyncTask;
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
 import org.thoughtcrime.securesms.database.MediaDatabase;
 import org.thoughtcrime.securesms.database.loaders.ThreadMediaLoader;
+import com.bumptech.glide.Glide;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.util.AttachmentUtil;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask;

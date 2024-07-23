@@ -15,7 +15,7 @@ import org.session.libsession.utilities.ThemeUtil
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 
 class MessageRequestsAdapter(
     context: Context,
@@ -23,7 +23,7 @@ class MessageRequestsAdapter(
     val listener: ConversationClickListener
 ) : CursorRecyclerViewAdapter<MessageRequestsAdapter.ViewHolder>(context, cursor) {
     private val threadDatabase = DatabaseComponent.get(context).threadDatabase()
-    lateinit var glide: GlideRequests
+    lateinit var glide: RequestManager
 
     class ViewHolder(val view: MessageRequestView) : RecyclerView.ViewHolder(view)
 

@@ -36,6 +36,7 @@ import org.thoughtcrime.securesms.groups.compose.StateUpdate
 import org.thoughtcrime.securesms.groups.compose.ViewState
 import org.thoughtcrime.securesms.groups.destinations.SelectContactsScreenDestination
 import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
+import com.bumptech.glide.Glide
 import javax.inject.Inject
 
 @AndroidEntryPoint

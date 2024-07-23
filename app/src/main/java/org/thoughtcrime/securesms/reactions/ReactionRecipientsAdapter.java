@@ -13,6 +13,7 @@ import org.session.libsignal.utilities.AccountId;
 import org.thoughtcrime.securesms.components.ProfilePictureView;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
+import com.bumptech.glide.Glide;
 
 import java.util.Collections;
 import java.util.List;

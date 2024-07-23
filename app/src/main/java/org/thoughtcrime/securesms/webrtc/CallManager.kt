@@ -118,7 +118,7 @@ class CallManager(
             remoteVideoEnabled = false
         )
     )
-    val videoState = _videoState
+    val videoState = _videoState.asStateFlow()
 
     private val stateProcessor = StateProcessor(CallState.Idle)
 
@@ -137,7 +137,7 @@ class CallManager(
     val currentCallState
         get() = _callStateEvents.value
 
-    var iceState = IceConnectionState.CLOSED
+    private var iceState = IceConnectionState.CLOSED
 
     private var eglBase: EglBase? = null
 
@@ -151,7 +151,6 @@ class CallManager(
         _recipientEvents.value = RecipientUpdate(value)
     }
     var callStartTime: Long = -1
-    var isReestablishing: Boolean = false
 
     private var peerConnection: PeerConnectionWrapper? = null
     private var dataChannel: DataChannel? = null
@@ -628,12 +627,10 @@ class CallManager(
 
         if (_videoState.value.swapped) {
             peerConnection?.rotationVideoSink?.setSink(fullscreenRenderer)
-            floatingRenderer?.let{remoteRotationSink?.setSink(it) }
+            floatingRenderer?.let { remoteRotationSink?.setSink(it) }
         } else {
-            peerConnection?.rotationVideoSink?.apply {
-                setSink(floatingRenderer)
-            }
-            fullscreenRenderer?.let{ remoteRotationSink?.setSink(it) }
+            peerConnection?.rotationVideoSink?.setSink(floatingRenderer)
+            fullscreenRenderer?.let { remoteRotationSink?.setSink(it) }
         }
     }
 
@@ -645,12 +642,12 @@ class CallManager(
     /**
      * Returns the renderer currently showing the user's video, not the contact's
      */
-    private fun getUserRenderer() = if(_videoState.value.swapped) fullscreenRenderer else floatingRenderer
+    private fun getUserRenderer() = if (_videoState.value.swapped) fullscreenRenderer else floatingRenderer
 
     /**
      * Returns the renderer currently showing the contact's video, not the user's
      */
-    private fun getRemoteRenderer() = if(_videoState.value.swapped) floatingRenderer else fullscreenRenderer
+    private fun getRemoteRenderer() = if (_videoState.value.swapped) floatingRenderer else fullscreenRenderer
 
     /**
      * Makes sure the user's renderer applies mirroring if necessary
@@ -659,12 +656,12 @@ class CallManager(
         val videoState = _videoState.value
 
         // if we have user video and the camera is front facing, make sure to mirror stream
-        if(videoState.userVideoEnabled) {
+        if (videoState.userVideoEnabled) {
             getUserRenderer()?.setMirror(isCameraFrontFacing())
         }
 
         // the remote video is never mirrored
-        if(videoState.remoteVideoEnabled){
+        if (videoState.remoteVideoEnabled){
             getRemoteRenderer()?.setMirror(false)
         }
     }
