@@ -15,6 +15,7 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
+    namespace 'org.session.libsignal'
 }
 
 dependencies {

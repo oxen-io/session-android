@@ -25,7 +25,7 @@ apply plugin: 'witness'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlinx-serialization'
 
-configurations.all {
+configurations.configureEach {
     exclude module: "commons-logging"
 }
 
@@ -65,14 +65,11 @@ android {
     }
 
     packagingOptions {
-        exclude 'LICENSE.txt'
-        exclude 'LICENSE'
-        exclude 'NOTICE'
-        exclude 'asm-license.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/proguard/androidx-annotations.pro'
+        resources {
+            excludes += ['LICENSE.txt', 'LICENSE', 'NOTICE', 'asm-license.txt', 'META-INF/LICENSE', 'META-INF/NOTICE', 'META-INF/proguard/androidx-annotations.pro']
+        }
     }
+
 
     splits {
         abi {
@@ -85,7 +82,10 @@ android {
 
     buildFeatures {
         compose true
+        viewBinding true
+        buildConfig true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.14'
     }
@@ -109,8 +109,8 @@ android {
         buildConfigField "String", "USER_AGENT", "\"OWA\""
         buildConfigField "String[]", "LANGUAGES", "new String[]{\"" + autoResConfig().collect { s -> s.replace('-r', '_') }.join('", "') + '"}'
         buildConfigField "int", "CANONICAL_VERSION_CODE", "$canonicalVersionCode"
+        resourceConfigurations += []
 
-        resConfigs autoResConfig()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
         // "pm clear" command after each test invocation. This command ensures
@@ -170,7 +170,7 @@ android {
         }
     }
 
-    applicationVariants.all { variant ->
+    applicationVariants.configureEach { variant ->
         variant.outputs.each { output ->
             def abiName = output.getFilter("ABI") ?: 'universal'
             def postFix = abiPostFix.get(abiName, 0)
@@ -181,10 +181,6 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError true
-        baseline file("lint-baseline.xml")
-    }
 
     testOptions {
         unitTests {
@@ -192,12 +188,11 @@ android {
         }
     }
 
-    buildFeatures {
-        dataBinding true
-        viewBinding true
-    }
-
     def huaweiEnabled = project.properties['huawei'] != null
+    lint {
+        abortOnError true
+        baseline file('lint-baseline.xml')
+    }
 
     applicationVariants.configureEach { variant ->
         if (variant.flavorName == 'huawei') {
@@ -213,9 +208,11 @@ android {
         }
     }
 
-    task testPlayDebugUnitTestCoverageReport(type: JacocoReport, dependsOn: "testPlayDebugUnitTest") {
+    tasks.register("testPlayDebugUnitTestCoverageReport", JacocoReport) {
+        dependsOn("testPlayDebugUnitTest")
+
         reports {
-            xml.enabled = true
+            xml.enabled(true)
         }
 
         // Add files that should not be listed in the report (e.g. generated Files from dagger)
