@@ -443,6 +443,7 @@ fun MemberItem(modifier: Modifier = Modifier,
                 val stateDesc = stringResource(R.string.AccessibilityId_member_state)
                 Text(
                     text = displayString,
+                    color = member.memberState.toDisplayColor(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(1.dp)
@@ -544,6 +545,12 @@ fun MemberState.toDisplayString(): String? = when(this) {
     MemberState.Promoting -> stringResource(id = R.string.groupMemberStatePromoting)
     MemberState.PromotionFailed -> stringResource(id = R.string.groupMemberStatePromotionFailed)
     else -> null
+}
+
+@Composable
+fun MemberState.toDisplayColor(): Color = when (this) {
+    MemberState.InviteFailed, MemberState.PromotionFailed -> LocalColors.current.danger
+    else -> LocalColors.current.text
 }
 
 fun memberStateOf(member: GroupMember): MemberState = when {
