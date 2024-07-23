@@ -216,33 +216,34 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         threadId?.let{ MessagingModuleConfiguration.shared.lastSentTimestampCache.delete(it, messages.map { it.timestamp }) }
     }
 
-    override fun updateMessageAsDeleted(timestamp: Long, author: String): Long? {
+    override fun markMessageAsDeleted(timestamp: Long, author: String, displayedMessage: String): Long? {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val address = Address.fromSerialized(author)
         val message = database.getMessageFor(timestamp, address) ?: return null
-        val messagingDatabase: MessagingDatabase = if (message.isMms)  DatabaseComponent.get(context).mmsDatabase()
-                                                   else DatabaseComponent.get(context).smsDatabase()
 
-        messagingDatabase.markAsDeleted(message.id, message.isOutgoing)
-        if (message.isOutgoing) {
-            messagingDatabase.deleteMessage(message.id)
-        }
-//todo DELETION might need to change this with new logic
+        markMessagesAsDeleted(
+            messages = listOf(MarkAsDeletedMessage(
+                messageId = message.id,
+                isOutgoing = message.isOutgoing
+            )),
+            isSms = !message.isMms,
+            displayedMessage = displayedMessage
+        )
+
         return message.id
     }
 
     override fun markMessagesAsDeleted(
         messages: List<MarkAsDeletedMessage>,
-        threadId: Long,
-        isSms: Boolean
+        isSms: Boolean,
+        displayedMessage: String
     ) {
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
         else DatabaseComponent.get(context).mmsDatabase()
 
         //todo DELETION can this be batched?
-        //todo DELETION we need to have customisable text for "marked as deleted" message
         messages.forEach { message ->
-            messagingDatabase.markAsDeleted(message.messageId, message.isOutgoing)
+            messagingDatabase.markAsDeleted(message.messageId, message.isOutgoing, displayedMessage)
         }
     }
 

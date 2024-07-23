@@ -57,7 +57,7 @@ interface ConversationRepository {
     fun clearDrafts(threadId: Long)
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
     fun setBlocked(recipient: Recipient, blocked: Boolean)
-    fun markAsDeletedLocally(messages: Set<MessageRecord>, threadId: Long)
+    fun markAsDeletedLocally(messages: Set<MessageRecord>, displayedMessage: String)
     fun deleteMessages(messages: Set<MessageRecord>, threadId: Long)
     fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
@@ -182,7 +182,7 @@ class DefaultConversationRepository @Inject constructor(
      * They won't be removed from the db but instead will appear as a special type
      * of message that says something like "This message was deleted"
      */
-    override fun markAsDeletedLocally(messages: Set<MessageRecord>, threadId: Long) {
+    override fun markAsDeletedLocally(messages: Set<MessageRecord>, displayedMessage: String) {
         // split the messages into mms and sms
         val (mms, sms) = messages.partition { it.isMms }
 
@@ -190,14 +190,20 @@ class DefaultConversationRepository @Inject constructor(
             messageDataProvider.markMessagesAsDeleted(mms.map { MarkAsDeletedMessage(
                 messageId = it.id,
                 isOutgoing = it.isOutgoing
-            ) }, threadId, isSms = false)
+            ) },
+                isSms = false,
+                displayedMessage = displayedMessage
+            )
         }
 
         if(sms.isNotEmpty()){
             messageDataProvider.markMessagesAsDeleted(sms.map { MarkAsDeletedMessage(
                 messageId = it.id,
                 isOutgoing = it.isOutgoing
-            ) }, threadId, isSms = true)
+            ) },
+                isSms = true,
+                displayedMessage = displayedMessage
+            )
         }
 
         //todo DELETION delete attachments and links

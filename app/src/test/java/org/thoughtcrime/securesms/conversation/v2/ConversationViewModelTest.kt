@@ -28,7 +28,6 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     private val repository = mock<ConversationRepository>()
     private val storage = mock<Storage>()
-    private val mmsDatabase = mock<MmsDatabase>()
 
     private val threadId = 123L
     private val edKeyPair = mock<KeyPair>()
@@ -36,7 +35,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private lateinit var messageRecord: MessageRecord
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, edKeyPair, repository, storage, mock(), mmsDatabase)
+        ConversationViewModel(threadId, edKeyPair, repository, storage, mock())
     }
 
     @Before

@@ -38,8 +38,7 @@ class ConversationViewModel(
     val edKeyPair: KeyPair?,
     private val repository: ConversationRepository,
     private val storage: Storage,
-    private val messageDataProvider: MessageDataProvider,
-    database: MmsDatabase,
+    private val messageDataProvider: MessageDataProvider
 ) : ViewModel() {
 
     val showSendAfterApprovalText: Boolean
@@ -167,14 +166,17 @@ class ConversationViewModel(
      * but the messages themselves won't be removed from the db.
      * Instead they will appear as a special type of message
      * that says something like "This message was deleted"
+     *
+     * @displayedMessage is the message that will be displayed in place of the deleted message.
      */
-    fun markAsDeletedLocally(messages: Set<MessageRecord>, threadId: Long) {
+    fun markAsDeletedLocally(messages: Set<MessageRecord>, displayedMessage: String) {
         // make sure to stop audio messages, if any
         messages.filterIsInstance<MmsMessageRecord>()
             .mapNotNull { it.slideDeck.audioSlide }
             .forEach(::stopMessageAudio)
 
-        repository.markAsDeletedLocally(messages, threadId)
+
+        repository.markAsDeletedLocally(messages, displayedMessage)
     }
 
     /**
@@ -304,7 +306,6 @@ class ConversationViewModel(
         @Assisted private val edKeyPair: KeyPair?,
         private val repository: ConversationRepository,
         private val storage: Storage,
-        private val mmsDatabase: MmsDatabase,
         private val messageDataProvider: MessageDataProvider,
     ) : ViewModelProvider.Factory {
 
@@ -314,8 +315,7 @@ class ConversationViewModel(
                 edKeyPair = edKeyPair,
                 repository = repository,
                 storage = storage,
-                messageDataProvider = messageDataProvider,
-                database = mmsDatabase
+                messageDataProvider = messageDataProvider
             ) as T
         }
     }
