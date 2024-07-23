@@ -31,11 +31,11 @@ object LocalisedTimeUtil {
     private const val SECOND_KEY  = "Second"
     private const val SECONDS_KEY = "Seconds"
 
-    private const val TIME_STRINGS_PATH_PREFIX = "csv/time_strings/time_strings_dict_"
+    private const val TIME_STRINGS_PATH_PREFIX = "json/time_strings/time_strings_dict_"
     private const val TIME_STRINGS_PATH_SUFFIX = ".json"
 
     // If we couldn't open the specific time strings map then we'll fall back to English
-    private const val FALLBACK_ENGLISH_TIME_STRINGS = "csv/time_strings/time_strings_dict_en.json"
+    private const val FALLBACK_ENGLISH_TIME_STRINGS = "json/time_strings/time_strings_dict_en.json"
 
     // The map containing key->value pairs such as "Minutes" -> "minutos" and
     // "Hours" -> "horas" for Spanish etc.
@@ -45,15 +45,34 @@ object LocalisedTimeUtil {
     private val Duration.inWholeWeeks: Long
         get() { return this.inWholeDays.floorDiv(7) }
 
-    private fun isRtlLanguage(context: Context) = context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
 
-    private fun isLtrLanguage(context: Context) = context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR
+    // Instrumented tests don't fire up the app in RTL mode when we change the context so we have to
+    // force RTL mode for tests of RTL languages such as Arabic.
+    private var forcedRtl = false
+    public fun forceUseOfRtlForTests(value: Boolean) { forcedRtl = value }
+
+    private fun isRtlLanguage(context: Context) =
+        context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL || forcedRtl
+
+    private fun isLtrLanguage(context: Context): Boolean {
+
+        Log.w("ACL", "fucking layout direction is: " + context.resources.configuration.layoutDirection)
+        Log.w("ACL", "fucking view direction is: " + View.LAYOUT_DIRECTION_LTR)
+        Log.w("ACL", "fucking !forcedRtl is: " + !forcedRtl)
+        val result  = context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR && !forcedRtl
+        Log.w("ACL", "WILL WE ACT AS LTR? " + result)
+        return result
+
+
+
+        //context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR && !forcedRtl
+    }
 
     // Method to load the time string map for a given locale
     fun loadTimeStringMap(context: Context, locale: Locale) {
         // Attempt to load the appropriate time strings map based on the language code of our locale, i.e., "en" for English, "fr" for French etc.
         val filename = TIME_STRINGS_PATH_PREFIX + locale.language + TIME_STRINGS_PATH_SUFFIX
-        var inputStream = try {
+        val inputStream = try {
             context.assets.open(filename)
         }
         catch (ioe: IOException) {
@@ -109,10 +128,10 @@ object LocalisedTimeUtil {
 
         // Return the duration string in the correct order
         return if (isLtrLanguage(context)) {
-            Log.w("ACL", "We think LTR - Returning: " + durationMap.first + " " + durationMap.second)
+            Log.w("ACL", "We think LTR - Returning: " + durationMap.first + " &&& " + durationMap.second)
             durationMap.first + " " + durationMap.second // e.g., "3 minutes"
         } else {
-            Log.w("ACL", "We think RTL - Returning: " + durationMap.first + " " + durationMap.second)
+            Log.w("ACL", "We think RTL - Returning: " + durationMap.second + " !!! " + durationMap.first)
             durationMap.second + " " + durationMap.first // e.g., "minutes 3"
         }
     }
