@@ -24,37 +24,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.result.ResultBackNavigator
-import com.ramcosta.composedestinations.spec.DestinationStyle
+import kotlinx.serialization.Serializable
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
-@EditGroupNavGraph
-@Composable
-@Destination(style = DestinationStyle.Dialog::class)
-fun EditClosedGroupNameScreen(
-    resultNavigator: ResultBackNavigator<String>
-) {
-    EditClosedGroupNameView { name ->
-        if (name.isEmpty()) {
-            resultNavigator.navigateBack()
-        } else {
-            resultNavigator.navigateBack(name)
-        }
-    }
-}
+@Serializable
+data class RouteEditGroupName(val name: String?, val description: String?)
 
 @Composable
-fun EditClosedGroupNameView(navigateBack: (String) -> Unit) {
+fun EditGroupNameScreen(
+    name: String?,
+    description: String?,
+    navigateBackWithName: (name: String) -> Unit) {
 
     var newName by remember {
-        mutableStateOf("")
+        mutableStateOf(name.orEmpty())
     }
 
     var newDescription by remember {
-        mutableStateOf("")
+        mutableStateOf(description.orEmpty())
     }
 
     Box(
@@ -119,7 +108,7 @@ fun EditClosedGroupNameView(navigateBack: (String) -> Unit) {
                         .padding(16.dp)
                         .weight(1f)
                         .clickable {
-                            navigateBack(newName)
+                            navigateBackWithName(newName)
                         },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
@@ -131,7 +120,7 @@ fun EditClosedGroupNameView(navigateBack: (String) -> Unit) {
                         .padding(16.dp)
                         .weight(1f)
                         .clickable {
-                            navigateBack("")
+                            navigateBackWithName("")
                         },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
@@ -149,7 +138,7 @@ fun EditClosedGroupNameView(navigateBack: (String) -> Unit) {
 @Composable
 fun PreviewDialogChange() {
     PreviewTheme() {
-        EditClosedGroupNameView {
+        EditGroupNameScreen(name = null, description = null) {
 
         }
     }

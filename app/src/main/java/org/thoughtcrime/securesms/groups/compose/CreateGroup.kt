@@ -28,6 +28,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.serialization.Serializable
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsignal.utilities.Log
@@ -39,6 +40,8 @@ import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.NavigationBar
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 
+@Serializable
+object RouteCreateGroup
 
 @Composable
 fun CreateGroup(

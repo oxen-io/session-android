@@ -45,6 +45,11 @@ class CreateGroupViewModel @Inject constructor(
     val contacts
         get() = liveData { emit(storage.getAllContacts()) }
 
+    val availableContactsToSelect: List<Contact>
+        get() = contacts.value.orEmpty().filterNot { contact ->
+            _viewState.value?.members.orEmpty().any { it.accountID == contact.accountID }
+        }
+
     suspend fun tryCreateGroup() {
 
         val currentState = _viewState.value!!
@@ -85,6 +90,10 @@ class CreateGroupViewModel @Inject constructor(
             )
         }
     }
+
+    fun onContactsSelected(contacts: List<Contact>) {
+        updateState(StateUpdate.AddContacts(contacts))
+    }
 }
 
 data class ViewState(
@@ -110,5 +119,5 @@ sealed class StateUpdate {
     data class Name(val value: String): StateUpdate()
     data class Description(val value: String): StateUpdate()
     data class RemoveContact(val value: Contact): StateUpdate()
-    data class AddContacts(val value: Set<Contact>): StateUpdate()
+    data class AddContacts(val value: List<Contact>): StateUpdate()
 }

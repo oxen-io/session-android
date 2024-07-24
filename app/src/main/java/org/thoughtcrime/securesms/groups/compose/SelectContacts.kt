@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.serialization.Serializable
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.home.search.getSearchName
@@ -35,27 +36,29 @@ import org.thoughtcrime.securesms.ui.SearchBar
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
+@Serializable
+object RouteSelectContacts
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SelectContacts(
-    contactListState: Set<Contact>,
+    selectFrom: List<Contact>,
     onBack: ()->Unit,
     onClose: (()->Unit)? = null,
-    onContactsSelected: (Set<Contact>) -> Unit,
+    onContactsSelected: (List<Contact>) -> Unit,
     @StringRes okButtonResId: Int = R.string.ok
 ) {
 
     var queryFilter by remember { mutableStateOf("") }
 
     // May introduce more advanced filters
-    val filtered = if (queryFilter.isEmpty()) contactListState.toList()
+    val filtered = if (queryFilter.isEmpty()) selectFrom
         else {
-            contactListState
+            selectFrom
             .filter { contact ->
                 contact.getSearchName().lowercase()
                     .contains(queryFilter.lowercase())
             }
-                .toList()
         }
 
     var selected by remember {
@@ -97,7 +100,7 @@ fun SelectContacts(
                 )
         ) {
             OutlinedButton(
-                onClick = { onContactsSelected(selected) },
+                onClick = { onContactsSelected(selected.toList()) },
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp).defaultMinSize(minWidth = 128.dp),
                 border = BorderStroke(1.dp, LocalColors.current.borders),
                 shape = CircleShape,
@@ -118,9 +121,8 @@ fun SelectContacts(
 @Preview
 @Composable
 fun PreviewSelectContacts() {
-    val empty = emptySet<Contact>()
     PreviewTheme() {
-        SelectContacts(contactListState = empty, onBack = {  }, onContactsSelected = {})
+        SelectContacts(selectFrom = emptyList(), onBack = {  }, onContactsSelected = {})
     }
 }
 
