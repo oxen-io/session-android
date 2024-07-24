@@ -370,6 +370,9 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4-android:$composeVersion"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
 
+    // Navigation
+    implementation "androidx.navigation:navigation-compose:$navVersion"
+
     implementation "com.google.accompanist:accompanist-themeadapter-appcompat:0.33.1-alpha"
     implementation "com.google.accompanist:accompanist-permissions:0.33.1-alpha"
     implementation "com.google.accompanist:accompanist-drawablepainter:0.33.1-alpha"

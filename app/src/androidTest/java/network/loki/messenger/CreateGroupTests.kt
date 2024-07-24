@@ -14,7 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.groups.compose.CreateGroup
-import org.thoughtcrime.securesms.groups.compose.ViewState
+import org.thoughtcrime.securesms.groups.ViewState
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 @RunWith(AndroidJUnit4::class)

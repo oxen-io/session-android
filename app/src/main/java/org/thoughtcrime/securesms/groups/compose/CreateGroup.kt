@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.groups.compose
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -32,8 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.groups.StateUpdate
+import org.thoughtcrime.securesms.groups.ViewState
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.CloseIcon
 import org.thoughtcrime.securesms.ui.Divider
@@ -210,28 +209,3 @@ fun ClosedGroupPreview(
     )
 }
 
-data class ViewState(
-    val isLoading: Boolean,
-    @StringRes val error: Int?,
-    val name: String = "",
-    val description: String = "",
-    val members: List<Contact> = emptyList(),
-    val createdGroup: Recipient? = null,
-    ) {
-
-    val canCreate
-        get() = name.isNotEmpty() && members.isNotEmpty()
-
-    companion object {
-        val DEFAULT = ViewState(false, null)
-    }
-
-}
-
-sealed class StateUpdate {
-    data object Create: StateUpdate()
-    data class Name(val value: String): StateUpdate()
-    data class Description(val value: String): StateUpdate()
-    data class RemoveContact(val value: Contact): StateUpdate()
-    data class AddContacts(val value: Set<Contact>): StateUpdate()
-}

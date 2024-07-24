@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.groups
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,9 +10,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
+import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.Storage
-import org.thoughtcrime.securesms.groups.compose.StateUpdate
-import org.thoughtcrime.securesms.groups.compose.ViewState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -84,4 +85,30 @@ class CreateGroupViewModel @Inject constructor(
             )
         }
     }
+}
+
+data class ViewState(
+    val isLoading: Boolean,
+    @StringRes val error: Int?,
+    val name: String = "",
+    val description: String = "",
+    val members: List<Contact> = emptyList(),
+    val createdGroup: Recipient? = null,
+    ) {
+
+    val canCreate
+        get() = name.isNotEmpty() && members.isNotEmpty()
+
+    companion object {
+        val DEFAULT = ViewState(false, null)
+    }
+
+}
+
+sealed class StateUpdate {
+    data object Create: StateUpdate()
+    data class Name(val value: String): StateUpdate()
+    data class Description(val value: String): StateUpdate()
+    data class RemoveContact(val value: Contact): StateUpdate()
+    data class AddContacts(val value: Set<Contact>): StateUpdate()
 }
