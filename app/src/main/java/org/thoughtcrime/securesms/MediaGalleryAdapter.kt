@@ -5,10 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import network.loki.messenger.R
 import network.loki.messenger.databinding.MediaOverviewGalleryItemBinding
 import org.thoughtcrime.securesms.database.MediaDatabase.MediaRecord
-import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.util.MediaUtil
 
 class MediaGalleryAdapter(private val itemClickListener: ItemClickListener): RecyclerView.Adapter<MediaGalleryAdapter.ViewHolder>() {
@@ -61,7 +61,7 @@ class MediaGalleryAdapter(private val itemClickListener: ItemClickListener): Rec
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         private val binding = MediaOverviewGalleryItemBinding.bind(itemView)
-        private val glide = GlideApp.with(itemView)
+        private val glide = Glide.with(itemView)
 
         fun bind(item: MediaRecord, isSelected: Boolean, itemClickListener: ItemClickListener) {
             val slide = MediaUtil.getSlideForAttachment(itemView.context, item.attachment)
