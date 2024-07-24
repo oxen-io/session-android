@@ -3,7 +3,7 @@
 
     <!-- NOTE: Only non-translated Accessibility IDs for automated testing exist in this file. -->
 
-    <!-- ACL JUMBLE! Place into sections perhaps later -->
+    <!-- Onboarding related -->
     <string name="AccessibilityId_account_id_input">Account id input box</string>
     <string name="AccessibilityId_confirm_button">Confirm button</string>
     <string name="AccessibilityId_copy_account_id">Copy Account ID</string>
@@ -28,15 +28,6 @@
     <string name="AccessibilityId_reveal_recovery_phrase_button">Reveal recovery phrase button</string>
     <string name="AccessibilityId_help_desk_link">Help desk link</string>
     <string name="AccessibilityId_invite_friend_button">Invite friend button</string>
-
-
-    <!-- ACL NEW Settings activity -->
-    <string name="AccessibilityId_account_id">Account ID</string>
-    <string name="activity_settings_display_name_edit_text_hint">Enter a display name</string>
-
-
-
-
     <!-- Landing Page -->
     <string name="AccessibilityId_create_session_id">Create session ID</string>
     <string name="AccessibilityId_link_a_device">Link a device</string>
@@ -68,6 +59,8 @@
     <string name="AccessibilityId_search_icon">Search icon</string>
     <!--Settings Page -->
     <string name="AccessibilityId_blocked_contacts">Blocked contacts</string>
+    <string name="AccessibilityId_account_id">Account ID</string>
+    <string name="activity_settings_display_name_edit_text_hint">Enter a display name</string>
     <!--Message requests-->
     <string name="AccessibilityId_clear_all_message_requests">Clear all</string>
     <string name="AccessibilityId_empty_message_request_folder">No pending message requests</string>
