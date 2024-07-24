@@ -1,9 +1,11 @@
 package org.session.libsignal.utilities
 
-class Snode(val address: String, val port: Int, val publicKeySet: KeySet?) {
-    val ip: String get() = address.removePrefix("https://")
+import org.thoughtcrime.securesms.util.Ip
 
-    public enum class Method(val rawValue: String) {
+class Snode(val address: String, val port: Int, val publicKeySet: KeySet?) {
+    val ip: Ip get() = address.removePrefix("https://").let(::Ip)
+
+    enum class Method(val rawValue: String) {
         GetSwarm("get_snodes_for_pubkey"),
         Retrieve("retrieve"),
         SendMessage("store"),

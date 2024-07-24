@@ -14,9 +14,9 @@ import org.session.libsession.snode.SnodeAPI.nowWithOffset
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.TextSecurePreferences.Companion.isReadReceiptsEnabled
-import org.session.libsession.utilities.associateByNotNull
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.associateByNotNull
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.conversation.disappearingmessages.ExpiryType
 import org.thoughtcrime.securesms.database.ExpirationInfo

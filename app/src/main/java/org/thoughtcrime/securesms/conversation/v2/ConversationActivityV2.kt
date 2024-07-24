@@ -1826,7 +1826,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // there's no way to test our client -> destination connectivity (unless we abuse the typing
         // indicators?)
         val paths = OnionRequestAPI.paths
-        if (paths.isNullOrEmpty() || paths.count() != 2) {
+        if (paths.isEmpty() || paths.count() != 2) {
             // TODO: Adjust to display error to user with official localised string when SES-2319 is addressed
             Log.e(TAG, "Cannot send voice message - bad Session Node path.")
         }
