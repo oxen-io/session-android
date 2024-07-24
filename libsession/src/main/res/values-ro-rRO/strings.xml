@@ -21,7 +21,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Azi</string>
     <string name="BucketedThreadMedia_Yesterday">Ieri</string>
-    <string name="BucketedThreadMedia_This_week">Săptămâna aceasta</string>
     <string name="attachmentsThisMonth">Luna asta</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

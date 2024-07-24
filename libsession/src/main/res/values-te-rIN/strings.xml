@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">నేడు</string>
     <string name="BucketedThreadMedia_Yesterday">నిన్న</string>
-    <string name="BucketedThreadMedia_This_week">ఈ వారం</string>
     <string name="attachmentsThisMonth">ఈ నెల</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

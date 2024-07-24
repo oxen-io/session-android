@@ -19,7 +19,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">오늘</string>
     <string name="BucketedThreadMedia_Yesterday">어제</string>
-    <string name="BucketedThreadMedia_This_week">이번주</string>
     <string name="attachmentsThisMonth">이번달</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

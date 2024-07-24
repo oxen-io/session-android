@@ -19,7 +19,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">今天</string>
     <string name="BucketedThreadMedia_Yesterday">昨天</string>
-    <string name="BucketedThreadMedia_This_week">本週</string>
     <string name="attachmentsThisMonth">本月</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

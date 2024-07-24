@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Heute</string>
     <string name="BucketedThreadMedia_Yesterday">Gestern</string>
-    <string name="BucketedThreadMedia_This_week">Diese Woche</string>
     <string name="attachmentsThisMonth">Diesen Monat</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

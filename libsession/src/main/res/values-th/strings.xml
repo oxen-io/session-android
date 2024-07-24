@@ -17,7 +17,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">วันนี้</string>
     <string name="BucketedThreadMedia_Yesterday">เมื่อวานนี้</string>
-    <string name="BucketedThreadMedia_This_week">สัปดาห์นี้</string>
     <string name="attachmentsThisMonth">เดือนนี้</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

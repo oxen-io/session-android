@@ -191,11 +191,8 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
 
         // We display the first 5 people to react w/ a given emoji so we'll subtract that to get the 'others' count
         int othersCount = emoji.getCount() - 5;
-        CharSequence cs = Phrase.from(itemView.getContext(), R.string.emojiReactsCountOthers)
-                .put(COUNT_KEY, othersCount)
-                .put(EMOJI_KEY, emoji.getBaseEmoji())
-                .format();
-        count.setText(cs);
+        String s = itemView.getResources().getQuantityString(R.plurals.emojiReactsCountOthers, othersCount, emoji.getBaseEmoji());
+        count.setText(s);
 
         itemView.setVisibility(View.VISIBLE);
       } else {

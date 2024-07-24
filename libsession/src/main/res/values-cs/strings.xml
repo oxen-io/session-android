@@ -22,7 +22,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Dnes</string>
     <string name="BucketedThreadMedia_Yesterday">Včera</string>
-    <string name="BucketedThreadMedia_This_week">Tento týden</string>
     <string name="attachmentsThisMonth">Tento měsíc</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

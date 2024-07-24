@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Hoxe</string>
     <string name="BucketedThreadMedia_Yesterday">Onte</string>
-    <string name="BucketedThreadMedia_This_week">Esta semana</string>
     <string name="attachmentsThisMonth">Este mes</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

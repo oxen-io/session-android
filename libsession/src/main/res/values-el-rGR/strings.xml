@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Σήμερα</string>
     <string name="BucketedThreadMedia_Yesterday">Χθες</string>
-    <string name="BucketedThreadMedia_This_week">Αυτή την εβδομάδα</string>
     <string name="attachmentsThisMonth">Αυτό το μήνα</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

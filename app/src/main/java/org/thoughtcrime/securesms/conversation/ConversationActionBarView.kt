@@ -141,10 +141,10 @@ class ConversationActionBarView @JvmOverloads constructor(
         if (recipient.isGroupRecipient) {
             val title = if (recipient.isCommunityRecipient) {
                 val userCount = openGroup?.let { lokiApiDb.getUserCount(it.room, it.server) } ?: 0
-                Phrase.from(context, R.string.membersActive).put(COUNT_KEY, userCount).format().toString()
+                resources.getQuantityString(R.plurals.membersActive, userCount)
             } else {
                 val userCount = groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size
-                Phrase.from(context.getString(R.string.members)).put(COUNT_KEY, userCount).format().toString()
+                resources.getQuantityString(R.plurals.members, userCount)
             }
             settings += ConversationSetting(title, ConversationSettingType.MEMBER_COUNT)
         }

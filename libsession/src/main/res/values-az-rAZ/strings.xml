@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Bu gün</string>
     <string name="BucketedThreadMedia_Yesterday">Dünən</string>
-    <string name="BucketedThreadMedia_This_week">Bu həftə</string>
     <string name="attachmentsThisMonth">Bu ay</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

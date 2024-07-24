@@ -115,7 +115,7 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
 
         // Update the group member count
         val memberCountTV = findViewById<TextView>(R.id.editGroupMemberCount)
-        memberCountTV.text = Phrase.from(applicationContext, R.string.members).put(COUNT_KEY, groupInfo.members.size).format().toString()
+        memberCountTV.text = resources.getQuantityString(R.plurals.members, members.size)
 
         mainContentContainer = findViewById(R.id.mainContentContainer)
         cntGroupNameEdit     = findViewById(R.id.cntGroupNameEdit)

@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Avui</string>
     <string name="BucketedThreadMedia_Yesterday">Ahir</string>
-    <string name="BucketedThreadMedia_This_week">Aquesta setmana</string>
     <string name="attachmentsThisMonth">Aquest mes</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

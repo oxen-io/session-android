@@ -19,7 +19,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Îro</string>
     <string name="BucketedThreadMedia_Yesterday">Doh</string>
-    <string name="BucketedThreadMedia_This_week">Ev hefte</string>
     <string name="attachmentsThisMonth">Ev meh</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

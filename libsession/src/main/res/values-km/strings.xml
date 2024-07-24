@@ -19,7 +19,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">ថ្ងៃនេះ</string>
     <string name="BucketedThreadMedia_Yesterday">ម្សិលមិញ</string>
-    <string name="BucketedThreadMedia_This_week">សប្តាហ៍នេះ</string>
     <string name="attachmentsThisMonth">ខែនេះ</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

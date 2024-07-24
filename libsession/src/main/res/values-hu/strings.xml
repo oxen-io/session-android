@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Ma</string>
     <string name="BucketedThreadMedia_Yesterday">Tegnap</string>
-    <string name="BucketedThreadMedia_This_week">Ezen a héten</string>
     <string name="attachmentsThisMonth">Ebben a hónapban</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

@@ -22,7 +22,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">היום</string>
     <string name="BucketedThreadMedia_Yesterday">אתמול</string>
-    <string name="BucketedThreadMedia_This_week">השבוע</string>
     <string name="attachmentsThisMonth">החודש</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

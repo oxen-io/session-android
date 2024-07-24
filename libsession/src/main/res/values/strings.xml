@@ -1,22 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- NUKE THESE PLURALS! TODO! -ACL -->
+    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
+        <item quantity="one">%d message per conversation</item>
+        <item quantity="other">%d messages per conversation</item>
+    </plurals>
+
+
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="one">%d message per conversation</item>
+        <item quantity="other">%d messages per conversation</item>
+    </plurals>
+
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="one">%d message per conversation</item>
+        <item quantity="other">%d messages per conversation</item>
+    </plurals>
+
+    <plurals name="hours_ago">
+        <item quantity="one">%d message per conversation</item>
+        <item quantity="other">%d messages per conversation</item>
+    </plurals>
+
+    <string name="BucketedThreadMedia_Today">Vandag</string>
+    <string name="BucketedThreadMedia_Yesterday">Gister</string>
+    <!-- END OF NUKE BLOCK! -->
+
+
+    <!-- New CrowdIn plurals from Morgan - 2024/07/24 -->
+    <plurals name="members">
+        <item quantity="one">%1$d member</item>
+        <item quantity="other">%1$d members</item>
+    </plurals>
+    <!-- Old for above was: <string name="members">{count} members</string> -->
+
+    <plurals name="membersActive">
+        <item quantity="one">%1$d active member</item>
+        <item quantity="other">%1$d active members</item>
+    </plurals>
+    <!-- Old for above was: <string name="activeMembers">{count} active members</string> -->
+
+    <plurals name="searchMatches">
+        <item quantity="one">%1$d of %2$d match</item>
+        <item quantity="other">%1$d of %2$d matches</item>
+    </plurals>
+    <!-- Old for above was: <string name="searchMatches">{count} of {total_count} matches</string> -->
+
+    <plurals name="messageNewYouveGot">
+        <item quantity="one">You\'ve got a new message.</item>
+        <item quantity="other">You\'ve got %1$d new messages.</item>
+    </plurals>
+    <!-- Currently unused and no 'old' string for this as of 2024/07/24 -ACL -->
+
+    <plurals name="emojiReactsCountOthers">
+        <item quantity="one">And %1$d other has reacted %2$s to this message.</item>
+        <item quantity="other">And %1$d others have reacted %2$s to this message.</item>
+    </plurals>
+    <!-- Old for above was: <string name="emojiReactsCountOthers">And {count} others have reacted {emoji} to this message.</string> -->
+
+    <plurals name="deleteMessagesFailed">
+        <item quantity="one">Failed to delete message</item>
+        <item quantity="other">Failed to delete messages</item>
+    </plurals>
+    <!-- Currently unused and no 'old' string for this as of 2024/07/24 -ACL -->
+
+    <plurals name="clearDataErrorDescription">
+        <item quantity="one">Data not deleted by %1$d Service Node. Service Node ID: %2$s.</item>
+        <item quantity="other">Data not deleted by %1$d Service Nodes. Service Node IDs: %2$s.</item>
+    </plurals>
+    <!-- End of plurals -->
+
+
     <string name="app_name">Session</string>
 
     <!-- ACL - All of the below below need to be updated to match the new serialised string names -->
 
-    <string name="groupNameUpdatedBy">{name} renamed the group to: {group_name}</string>
-    <string name="groupYouAdded">You added {members} to the group.</string>
-    <string name="groupNameAdded">{name} added {members} to the group.</string>
-    <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
 
-    <string name="DateUtils_today">Today</string>
     <!-- RecipientProvider -->
 
     <!-- Everything in this section is used by the app but missing from the CrowdIn translations as of 2024-03-14 -ACL -->
     <!-- ======================================================================================= -->
 
     <!-- Old naming convention strings that need to me renamed to their modern equivalents and have any % substitution modified to use {braces} -->
-    <string name="BucketedThreadMedia_This_week">This week</string>
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
     <string name="DateUtils_just_now">Now</string>
@@ -104,7 +170,6 @@
     <string name="adminRemoveAsAdmin">Remove as Admin</string>
     <string name="adminRemoveCommunityNone">There are no Admins in this Community.</string>
     <string name="adminRemoveFailed">Failed to remove {name} as Admin.</string>
-    <string name="adminRemovedUser"><b>{name}</b> was removed as Admin.</string>
     <string name="adminSendingPromotion">Sending admin promotion</string>
     <string name="adminSettings">Admin Settings</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> and <b>{other_name}</b> were promoted to Admin.</string>
@@ -121,8 +186,6 @@
     <string name="appearanceThemesOceanDark">Ocean Dark</string>
     <string name="appearanceThemesOceanLight">Ocean Light</string>
     <string name="appearanceZoom">Zoom</string>
-    <string name="appearanceZoomIn">Zoom In</string>
-    <string name="appearanceZoomOut">Zoom Out</string>
     <string name="attachment">Attachment</string>
     <string name="attachmentsNotification">{emoji} Attachment</string>
     <string name="attachmentsAdd">Add attachment</string>
@@ -158,11 +221,10 @@
     <string name="attachmentsMedia">{name} on {date_time}</string>
     <string name="attachmentsMediaEmpty">You don\'t have any media in this conversation.</string>
     <string name="attachmentsMediaSaved">Media saved by {name}</string>
-    <string name="attachmentsMoveAndScale">Move and Scale</string>
-    <string name="attachmentsNa">N/A</string>
     <string name="attachmentsResolution">Resolution:</string>
     <string name="attachmentsSaveError">Unable to save file.</string>
     <string name="attachmentsTapToDownload">Tap to download {file_type}</string>
+    <string name="attachmentsThisWeek">This Week</string>
     <string name="attachmentsThisMonth">This Month</string>
     <string name="attachmentsWarning">Attachments you save can be accessed by other apps on your device.</string>
     <string name="audio">Audio</string>
@@ -228,12 +290,9 @@
     <string name="clearDataAll">Clear All Data</string>
     <string name="clearDataAllDescription">This will permanently delete your messages and contacts. Would you like to clear this device only, or delete your data from the network as well?</string>
     <string name="clearDataError">Data Not Deleted</string>
-    <string name="clearDataErrorDescription1">Data not deleted by 1 Service Node. Service Node ID: {service_node_id}.</string>
-    <string name="clearDataErrorDescription2">Data not deleted by {count} Service Nodes. Service Node IDs: {service_node_id}.</string>
     <string name="clearDataErrorDescriptionGeneric">An unknown error occurred and your data was not deleted. Do you want to delete your data from just this device instead?</string>
     <string name="clearDevice">Clear Device</string>
     <string name="clearDeviceAndNetwork">Clear device and network</string>
-    <!-- ACL -->
     <string name="clearDeviceAndNetworkConfirm">Are you sure you want to delete your data from the network? If you continue, you will not be able to restore your messages or contacts.</string>
     <string name="clearDeviceDescription">Are you sure you want to clear your device?</string>
     <string name="clearDeviceOnly">Clear device only</string>
@@ -350,6 +409,7 @@
     <string name="disappearingMessagesTypeSent">sent</string>
     <string name="disappearingMessagesUpdated"><b>{admin_name}</b> updated disappearing message settings.</string>
     <string name="disappearingMessagesUpdatedYou"><b>You</b> updated disappearing message settings.</string>
+    <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="dismiss">Dismiss</string>
     <string name="displayNameDescription">It can be your real name, an alias, or anything else you like — and you can change it at any time.</string>
     <string name="displayNameEnter">Enter your display name</string>
@@ -378,7 +438,6 @@
     <string name="emojiReactsHoverTwoNameMultiple">{name}, {other_name} and {count} others reacted with {emoji}</string>
     <string name="emojiReactsHoverTwoNameOne">{name}, {other_name} and 1 other reacted with {emoji}</string>
     <string name="emojiReactsCoolDown">Slow down! You\'ve sent too many emoji reacts. Try again soon</string>
-    <string name="emojiReactsCountOthers">And {count} others have reacted {emoji} to this message.</string>
     <string name="enable">Enable</string>
     <string name="error">Error</string>
     <string name="errorConnection">Please check your internet connection and try again.</string>
@@ -434,11 +493,13 @@
     <string name="groupMembers">Group Members</string>
     <string name="groupMembersNone">There are no other members in this group.</string>
     <string name="groupName">Group Name</string>
+    <string name="groupNameAdded">{name} added {members} to the group.</string>
     <string name="groupNameEnter">Enter a group name</string>
     <string name="groupNameEnterPlease">Please enter a group name.</string>
     <string name="groupNameEnterShorter">Please enter a shorter group name.</string>
     <string name="groupNameNew">Group name is now {group_name}.</string>
     <string name="groupNameUpdated">Group name updated.</string>
+    <string name="groupNameUpdatedBy">{name} renamed the group to: {group_name}</string>
     <string name="groupNoMessages">You have no messages from <b>{group_name}</b>. Send a message to start the conversation!</string>
     <string name="groupOnlyAdmin">You are the only admin in <b>{group_name}</b>.\nGroup members and settings cannot be changed without an admin.</string>
     <string name="groupPromotedYou"><b>You</b> were promoted to Admin.</string>
@@ -457,6 +518,7 @@
     <string name="groupUnknown">Unknown Group</string>
     <string name="groupUnnamed">Unnamed group</string>
     <string name="groupUpdated">Group updated</string>
+    <string name="groupYouAdded">You added {members} to the group.</string>
     <string name="helpFAQ">FAQ</string>
     <string name="helpHelpUsTranslateSession">Help us translate {app_name}</string>
     <string name="helpReportABug">Report a bug</string>
@@ -501,8 +563,6 @@
     <string name="max">Max</string>
     <string name="media">Media</string>
     <string name="mediaMessage">Media message</string> <!-- ACL to confirm we are adding this - used to be `ThreadRecord_media_message` -->
-    <string name="members">{count} members</string>
-    <string name="membersActive">{count} active members</string>
     <string name="membersAddAccountIdOrOns">Add Account ID or ONS</string>
     <string name="membersInvite">Invite Contacts</string>
     <string name="membersInviteSend">Send Invite</string>
@@ -776,4 +836,8 @@
     <string name="window">Window</string>
     <string name="yes">Yes</string>
     <string name="you">You</string>
+    <string name="DateUtils_today">dasdas</string>
+    <string name="DateUtils_yesterday">dsadas</string>
+    <string name="onionRoutingPathYou">fsdfsdfsd</string>
+    <string name="preferences_notifications__content_message">fsdfsdfs</string>
 </resources>

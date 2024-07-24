@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Sot</string>
     <string name="BucketedThreadMedia_Yesterday">Dje</string>
-    <string name="BucketedThreadMedia_This_week">Këtë javë</string>
     <string name="attachmentsThisMonth">Këtë muaj</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

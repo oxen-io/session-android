@@ -14,7 +14,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">ယနေ့ </string>
     <string name="BucketedThreadMedia_Yesterday">မနေ့က </string>
-    <string name="BucketedThreadMedia_This_week">ဒီအပတ် </string>
     <string name="attachmentsThisMonth">ဒီလ </string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

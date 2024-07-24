@@ -24,7 +24,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">اليوم</string>
     <string name="BucketedThreadMedia_Yesterday">البارحة</string>
-    <string name="BucketedThreadMedia_This_week">هذا الأسبوع</string>
     <string name="attachmentsThisMonth">هذا الشهر</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

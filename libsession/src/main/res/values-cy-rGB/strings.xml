@@ -23,7 +23,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Heddiw</string>
     <string name="BucketedThreadMedia_Yesterday">Ddoe</string>
-    <string name="BucketedThreadMedia_This_week">Wythnos hon</string>
     <string name="attachmentsThisMonth">Mis yma</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

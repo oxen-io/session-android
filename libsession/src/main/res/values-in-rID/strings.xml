@@ -19,7 +19,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Hari ini</string>
     <string name="BucketedThreadMedia_Yesterday">Kemarin</string>
-    <string name="BucketedThreadMedia_This_week">Minggu ini</string>
     <string name="attachmentsThisMonth">Bulan Ini</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

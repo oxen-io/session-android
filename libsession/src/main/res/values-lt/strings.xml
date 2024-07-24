@@ -22,7 +22,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Šiandien</string>
     <string name="BucketedThreadMedia_Yesterday">Vakar</string>
-    <string name="BucketedThreadMedia_This_week">Ši savaitė</string>
     <string name="attachmentsThisMonth">Šis mėnuo</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

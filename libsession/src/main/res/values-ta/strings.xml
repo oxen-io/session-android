@@ -16,7 +16,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">இன்று</string>
     <string name="BucketedThreadMedia_Yesterday">நேற்று</string>
-    <string name="BucketedThreadMedia_This_week">இந்த வாரம்</string>
     <string name="attachmentsThisMonth">இந்த மாதம்</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

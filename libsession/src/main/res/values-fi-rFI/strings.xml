@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">tänään</string>
     <string name="BucketedThreadMedia_Yesterday">eilen</string>
-    <string name="BucketedThreadMedia_This_week">Tällä viikolla</string>
     <string name="attachmentsThisMonth">Tässä kuussa</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

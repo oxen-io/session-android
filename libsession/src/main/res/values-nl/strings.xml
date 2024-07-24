@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Vandaag</string>
     <string name="BucketedThreadMedia_Yesterday">Gisteren</string>
-    <string name="BucketedThreadMedia_This_week">Deze week</string>
     <string name="attachmentsThisMonth">Deze maand</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

@@ -22,7 +22,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Dzisiaj</string>
     <string name="BucketedThreadMedia_Yesterday">Wczoraj</string>
-    <string name="BucketedThreadMedia_This_week">W tym tygodniu</string>
     <string name="attachmentsThisMonth">W tym miesiącu</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

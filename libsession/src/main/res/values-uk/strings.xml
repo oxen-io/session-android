@@ -22,7 +22,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Сьогодні</string>
     <string name="BucketedThreadMedia_Yesterday">Вчора</string>
-    <string name="BucketedThreadMedia_This_week">Цього тижня</string>
     <string name="attachmentsThisMonth">Цього місяця</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

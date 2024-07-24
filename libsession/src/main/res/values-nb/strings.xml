@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">I dag</string>
     <string name="BucketedThreadMedia_Yesterday">I går</string>
-    <string name="BucketedThreadMedia_This_week">Denne uken</string>
     <string name="attachmentsThisMonth">Denne måneden</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

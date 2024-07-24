@@ -19,7 +19,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Täna</string>
     <string name="BucketedThreadMedia_Yesterday">Eile</string>
-    <string name="BucketedThreadMedia_This_week">See nädal</string>
     <string name="attachmentsThisMonth">See kuu</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

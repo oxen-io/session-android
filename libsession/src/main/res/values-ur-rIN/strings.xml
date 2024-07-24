@@ -16,7 +16,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">آج</string>
     <string name="BucketedThreadMedia_Yesterday">کل</string>
-    <string name="BucketedThreadMedia_This_week">اس ہفتے</string>
     <string name="attachmentsThisMonth">اس مہینے</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

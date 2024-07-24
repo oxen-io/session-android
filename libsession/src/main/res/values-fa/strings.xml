@@ -20,7 +20,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">امروز</string>
     <string name="BucketedThreadMedia_Yesterday">دیروز</string>
-    <string name="BucketedThreadMedia_This_week">این هفته</string>
     <string name="attachmentsThisMonth">این ماه</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

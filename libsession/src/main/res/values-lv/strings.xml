@@ -21,7 +21,6 @@
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Šodien</string>
     <string name="BucketedThreadMedia_Yesterday">Vakar</string>
-    <string name="BucketedThreadMedia_This_week">Šonedēļ</string>
     <string name="attachmentsThisMonth">Šomēnes</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
