@@ -6,8 +6,6 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.dependency
 import dagger.hilt.android.AndroidEntryPoint
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
-import org.thoughtcrime.securesms.groups.compose.EditGroupInviteViewModel
-import org.thoughtcrime.securesms.groups.compose.EditGroupViewModel
 import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupScreenDestination
 import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
 import javax.inject.Inject
