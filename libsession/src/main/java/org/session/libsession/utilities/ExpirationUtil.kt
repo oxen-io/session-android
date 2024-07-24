@@ -1,11 +1,11 @@
 package org.session.libsession.utilities
 
 import android.content.Context
-import org.session.libsession.R
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
-import org.thoughtcrime.securesms.util.LocalisedTimeUtil
 import kotlin.time.Duration.Companion.seconds
+import org.session.libsession.LocalisedTimeUtil
+import org.session.libsession.R
 
 fun Context.getExpirationTypeDisplayValue(sent: Boolean) = if (sent) getString(R.string.disappearingMessagesTypeSent)
                                                            else      getString(R.string.disappearingMessagesTypeRead)

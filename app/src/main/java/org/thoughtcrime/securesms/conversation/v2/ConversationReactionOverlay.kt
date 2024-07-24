@@ -26,12 +26,7 @@ import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import javax.inject.Inject
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -39,6 +34,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
+import org.session.libsession.LocalisedTimeUtil.toShortTwoPartString
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.StringSubstitutionConstants.TIME_LARGE_KEY
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getLocalNumber
@@ -706,10 +702,6 @@ class ConversationReactionOverlay : FrameLayout {
     }
 }
 
-private fun Duration.to2partString(): String? =
-    toComponents { days, hours, minutes, seconds, nanoseconds -> listOf(days.days, hours.hours, minutes.minutes, seconds.seconds) }
-        .filter { it.inWholeSeconds > 0L }.take(2).takeIf { it.isNotEmpty() }?.joinToString(" ")
-
 private val MessageRecord.subtitle: ((Context) -> CharSequence?)?
     get() = if (expiresIn <= 0) {
         null
@@ -717,8 +709,8 @@ private val MessageRecord.subtitle: ((Context) -> CharSequence?)?
         (expiresIn - (SnodeAPI.nowWithOffset - (expireStarted.takeIf { it > 0 } ?: timestamp)))
             .coerceAtLeast(0L)
             .milliseconds
-            .to2partString()
-            ?.let {
+            .toShortTwoPartString()
+            .let {
                 Phrase.from(context, R.string.disappearingMessagesCountdownBigMobile)
                     .put(TIME_LARGE_KEY, it)
                     .format().toString()

@@ -1,7 +1,6 @@
-package org.thoughtcrime.securesms.util
+package org.session.libsession
 
 import android.content.Context
-import android.content.res.Configuration
 import android.view.View
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -16,7 +15,6 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
 object LocalisedTimeUtil {
-
     private const val TAG = "LocalisedTimeUtil"
 
     // Keys for the map lookup
@@ -31,6 +29,7 @@ object LocalisedTimeUtil {
     private const val SECOND_KEY  = "Second"
     private const val SECONDS_KEY = "Seconds"
 
+    // Prefix & suffix for the specific language / locale that we're loading time strings for
     private const val TIME_STRINGS_PATH_PREFIX = "json/time_strings/time_strings_dict_"
     private const val TIME_STRINGS_PATH_SUFFIX = ".json"
 
@@ -45,28 +44,39 @@ object LocalisedTimeUtil {
     private val Duration.inWholeWeeks: Long
         get() { return this.inWholeDays.floorDiv(7) }
 
-
     // Instrumented tests don't fire up the app in RTL mode when we change the context so we have to
-    // force RTL mode for tests of RTL languages such as Arabic.
+    // force RTL mode for languages such as Arabic.
     private var forcedRtl = false
-    public fun forceUseOfRtlForTests(value: Boolean) { forcedRtl = value }
+    fun forceUseOfRtlForTests(value: Boolean) { forcedRtl = value }
 
-    private fun isRtlLanguage(context: Context) =
+    fun isRtlLanguage(context: Context) =
         context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL || forcedRtl
 
-    private fun isLtrLanguage(context: Context): Boolean {
+    fun isLtrLanguage(context: Context): Boolean =
+        context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR && !forcedRtl
 
-        Log.w("ACL", "fucking layout direction is: " + context.resources.configuration.layoutDirection)
-        Log.w("ACL", "fucking view direction is: " + View.LAYOUT_DIRECTION_LTR)
-        Log.w("ACL", "fucking !forcedRtl is: " + !forcedRtl)
-        val result  = context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR && !forcedRtl
-        Log.w("ACL", "WILL WE ACT AS LTR? " + result)
-        return result
-
-
-
-        //context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR && !forcedRtl
-    }
+    // Method to get shortened two-part strings for durations like "2h 14m"
+    // Note: As designed, we do not provide localisation for shortened strings.
+    // Also: We'll provide durations like "0m 30s" for 30s as this is a "toShortTwoPartString"
+    // method - if we really want _just_ "30s" or similar for durations less than 1 minute then we
+    // can create a "toShortString" method, otherwise the name of this method and what it actually
+    // does are at odds.
+    fun Duration.toShortTwoPartString(): String =
+        if (this.inWholeWeeks > 0) {
+            val daysRemaining = this.minus(7.days.times(this.inWholeWeeks.toInt())).inWholeDays
+            "${this.inWholeWeeks}w ${daysRemaining}d"
+        } else if (this.inWholeDays > 0) {
+            val hoursRemaining = this.minus(1.days.times(this.inWholeDays.toInt())).inWholeHours
+            "${this.inWholeDays}d ${hoursRemaining}h"
+        } else if (this.inWholeHours > 0) {
+            val minutesRemaining = this.minus(1.hours.times(this.inWholeHours.toInt())).inWholeMinutes
+            "${this.inWholeHours}h ${minutesRemaining}m"
+        } else if (this.inWholeMinutes > 0) {
+            val secondsRemaining = this.minus(1.minutes.times(this.inWholeMinutes.toInt())).inWholeSeconds
+            "${this.inWholeMinutes}m ${secondsRemaining}s"
+        } else {
+            "0m ${this.inWholeSeconds}s"
+        }
 
     // Method to load the time string map for a given locale
     fun loadTimeStringMap(context: Context, locale: Locale) {
@@ -128,10 +138,8 @@ object LocalisedTimeUtil {
 
         // Return the duration string in the correct order
         return if (isLtrLanguage(context)) {
-            Log.w("ACL", "We think LTR - Returning: " + durationMap.first + " &&& " + durationMap.second)
             durationMap.first + " " + durationMap.second // e.g., "3 minutes"
         } else {
-            Log.w("ACL", "We think RTL - Returning: " + durationMap.second + " !!! " + durationMap.first)
             durationMap.second + " " + durationMap.first // e.g., "minutes 3"
         }
     }

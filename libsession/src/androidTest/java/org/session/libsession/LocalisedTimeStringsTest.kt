@@ -1,19 +1,17 @@
 package org.session.libsession
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import junit.framework.TestCase
-
-import org.junit.Test
-import org.junit.runner.RunWith
-
-import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.util.LocalisedTimeUtil
+import androidx.test.platform.app.InstrumentationRegistry
 import java.util.Locale
+import junit.framework.TestCase
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.session.libsession.LocalisedTimeUtil.toShortTwoPartString
+import org.session.libsignal.utilities.Log
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -22,7 +20,7 @@ import kotlin.time.Duration.Companion.seconds
  */
 @RunWith(AndroidJUnit4::class)
 class LocalisedTimeStringTests {
-    private val TAG = "LocalisedTimeStringTests"
+    private val TAG = "LocalisedTimeStringTest"
 
     // Whether or not to print debug info during the test - can be useful
     private val printDebug = true
@@ -59,156 +57,79 @@ class LocalisedTimeStringTests {
         twoWeekTwoDays
     )
 
-    // Short descriptions of each duration.
-    // Note: When using short durations like this we don't localise them.
-    private val shortTimeDescriptions = listOf(
-        "1s",
-        "2s",
-        "1m",
-        "2m",
-        "1h",
-        "2h",
-        "1d",
-        "2d",
-        "1d 7h",
-        "4d 23h",
-        "1w 2d",
-        "2w 2d"
-    )
-
-
-
-
-    // Expected single largest time unit outputs for Arabic
-    // Note: As Arabic is a Right-to-Left language the number goes on the right!
-    // Also: This is not a PERFECT mapping to the correct time unit plural phrasings for Arabic
-    // because they have six separate time units based on 0, 1..2, 3..9, 11.12, 21..99, as well as
-    // round values of 10 in the range 10..90 (i.e., 10, 20, 30, ..., 80, 90). Our custom time unit
-    // phrases only handle singular & plural - so we're not going to be perfect, but we'll be good
-    // enough to get our point across, like if you said to me "I'm going on holiday for 7 day" I'd
-    // know what you meant even though you didn't says "7 dayS".
-    // Further reading: https://www.fluentarabic.net/numbers-in-arabic/
-    private val expectedOutputsSingle_AR = listOf(
-        "1 ثانية",    // 1 second
-        "2 ثانية",    // 2 seconds
-        "1 دقيقة",    // 1 minute
-        "2 دقائق",    // 2 minutes
-        "1 ساعة",     // 1 hour
-        "2 ساعات",    // 2 hours
-        "1 يوم",      // 1 day
-        "2 أيام",     // 2 days
-        "1 يوم",      // 1 day 7 hours as single unit (1 day)
-        "4 أيام",     // 4 days 23 hours as single unit (4 days)
-        "1 أسبوع",   // 1 week 2 days as single unit (1 week)
-        "2 أسابيع"
-    )   // 2 weeks 2 days as single unit (2 weeks)
-
-    // Arabic dual unit times (largest time unit is on the right!)
-    private val expectedOutputsDual_AR = listOf(
-        "0 دقائق 1 ثانية",  // 0 minutes 1 second
-        "0 دقائق 2 ثانية",  // 0 minutes 2 seconds
-        "1 دقيقة 0 ثانية",  // 1 minute 0 seconds
-        "2 دقيقة 0 ثانية",  // 2 minutes 0 seconds // ACL HEREEEEEEEEE!
-        "1 ساعة",   // 1 hour
-        "2 ساعات",  // 2 hours
-        "1 يوم",    // 1 day
-        "2 أيام",   // 2 days
-        "1 يوم",    // 1 day 7 hours as single unit (1 day)
-        "4 أيام",   // 4 days 23 hours as single unit (4 days)
-        "1 أسبوع",  // 1 week 2 days as single unit (1 week)
-        "2 أسابيع"
-    ) // 2 weeks 2 days as single unit (2 weeks)
-
-
-
-
-
-    // The map containing key->value pairs such as "Minutes" -> "minutos" and "Hours" -> "horas" for Spanish etc.
-    //var timeUnitStringsMap: Map<String, String> = loadTimeStringMap(context, Locale.ENGLISH)
-
-
-    // Method to load the time string map for a given locale
-    /*
-    private fun loadTimeStringMap(context: Context, locale: Locale): Map<String, String> {
-        // Attempt to load the appropriate time strings map based on the language code of our locale, i.e., "en" for English, "fr" for French etc.
-        val filename = "csv/time_string_maps/time_strings_dict_" + locale.language + ".json"
-        var inputStream: InputStream? = null
-        try {
-            inputStream = context.assets.open(filename)
-        }
-        catch (ioe: IOException) {
-            Log.e(TAG, "Failed to open time string map file: $filename - attempting to use English!", ioe)
-            inputStream = context.assets.open("csv/time_string_maps/time_strings_dict_en.json")
-        }
-        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-        val jsonString = bufferedReader.use { it.readText() }
-        return Json.decodeFromString(jsonString)
-    }
-    */
-
-    // ACL Note: This `to2partString` method is from Andy and will print things like "2h 14m" but it does NOT localise at all!
-    /*
-    private fun Duration.to2partString(): String? =
-        toComponents { days, hours, minutes, seconds, nanoseconds -> listOf(days.days, hours.hours, minutes.minutes, seconds.seconds) }
-            .filter { it.inWholeSeconds > 0L }.take(2).takeIf { it.isNotEmpty() }?.joinToString(" ")
-    */
-
-    // Note: For locales from language codes:
-    // - Arabic is "ar"
-    // - Japanese is "ja"
-    // - Urdu is "ur"
-
-
-    private fun performSingleTimeUnitStringComparison(
-        expectedOutputsList: List<String>,
-        printDebug: Boolean = false
-    ) {
-        val lastIndex = allDurations.count() - 1
-        for (i in 0..lastIndex) {
-            var txt =
-                LocalisedTimeUtil.getDurationWithSingleLargestTimeUnit(context, allDurations[i])
-            if (printDebug) println("Single time unit - expected: ${expectedOutputsList[i]} - got: $txt")
+    // Method to get the localised time as the single largest time unit in the duration, e.g.,
+    //  - 90.minutes -> 1 hour
+    //  - 30.hours   -> 1 day
+    //  - 170.hours  -> 1 week
+    private fun performSingleTimeUnitStringComparison(expectedOutputsList: List<String>) {
+        for (i in 0 until allDurations.count()) {
+            var txt = LocalisedTimeUtil.getDurationWithSingleLargestTimeUnit(context, allDurations[i])
+            if (printDebug) println("$i: Single time unit - expected: ${expectedOutputsList[i]} - got: $txt")
             TestCase.assertEquals(expectedOutputsList[i], txt)
         }
     }
 
-    private fun performDualTimeUnitStringComparison(
-        expectedOutputsList: List<String>,
-        printDebug: Boolean = false
-    ) {
-        val lastIndex = allDurations.count() - 1
-        for (i in 0..lastIndex) {
-            var txt = LocalisedTimeUtil.getDurationWithDualTimeUnits(context, allDurations[i])
-            if (printDebug) println("Dual time units - expected: ${expectedOutputsList[i]} - got: $txt")
+    // Method to get the localised time as the two largest time units in the duration, e.g.,
+    //  - 90.minutes -> 1 hour 30 minutes
+    //  - 30.hours   -> 1 day 6 hours
+    //  - 170.hours  -> 1 week 0 days
+    private fun performDualTimeUnitStringComparison(expectedOutputsList: List<String>) {
+        for (i in 0 until allDurations.count()) {
+            val txt = LocalisedTimeUtil.getDurationWithDualTimeUnits(context, allDurations[i])
+            if (printDebug) println("$i: Dual time units - expected: ${expectedOutputsList[i]} - got: $txt")
             TestCase.assertEquals(expectedOutputsList[i], txt)
+        }
+    }
+
+    @Test
+    fun testShortTimeDurations() {
+        // Non-localised short time descriptions. Note: We never localise shortened durations like these.
+        val shortTimeDescriptions = listOf(
+            "0m 1s",
+            "0m 2s",
+            "1m 0s",
+            "2m 0s",
+            "1h 0m",
+            "2h 0m",
+            "1d 0h",
+            "2d 0h",
+            "1d 7h",
+            "4d 23h",
+            "1w 2d",
+            "2w 2d"
+        )
+
+        for (i in 0 until shortTimeDescriptions.count()) {
+            val txt = allDurations[i].toShortTwoPartString()
+            if (printDebug) println("Short time strings - expected: ${shortTimeDescriptions[i]} - got: $txt")
+            TestCase.assertEquals(shortTimeDescriptions[i], txt)
         }
     }
 
     // Unit test for durations in the English language. Note: We can pre-load the time-units string
     // map via `LocalisedTimeUtil.loadTimeStringMap`, or alternatively they'll get loaded for the
     // current context / locale on first use.
-    //@Test
+    @Test
     fun timeSpanStrings_EN() {
-
         // Expected single largest time unit outputs for English
         // Note: For all single largest time unit durations we may discard smaller time unit information as appropriate.
-        val expectedOutputsSingle_EN = listOf(
-            "1 second",     // 1 second
-            "2 seconds",    // 2 seconds
-            "1 minute",     // 1 minute
-            "2 minutes",    // 2 minutes
-            "1 hour",       // 1 hour
-            "2 hours",      // 2 hours
-            "1 day",        // 1 day
-            "2 days",       // 2 days
-            "1 day",        // 1 day   7 hours as single unit is: 1 day
-            "4 days",       // 4 days 23 hours as single unit is: 4 days
-            "1 week",       // 1 week  2 days  as single unit is: 1 week
-            "2 weeks"       // 2 weeks 2 days  as single unit is: 2 weeks
+        val expectedOutputsSingleEN = listOf(
+            "1 second",  // 1 second
+            "2 seconds", // 2 seconds
+            "1 minute",  // 1 minute
+            "2 minutes", // 2 minutes
+            "1 hour",    // 1 hour
+            "2 hours",   // 2 hours
+            "1 day",     // 1 day
+            "2 days",    // 2 days
+            "1 day",     // 1 day   7 hours as single unit is: 1 day
+            "4 days",    // 4 days 23 hours as single unit is: 4 days
+            "1 week",    // 1 week  2 days  as single unit is: 1 week
+            "2 weeks"    // 2 weeks 2 days  as single unit is: 2 weeks
         )
 
         // Expected dual largest time unit outputs for English
-        val expectedOutputsDual_EN = listOf(
+        val expectedOutputsDualEN = listOf(
             "0 minutes 1 second",   // 1 second
             "0 minutes 2 seconds",  // 2 seconds
             "1 minute 0 seconds",   // 1 minute
@@ -225,12 +146,12 @@ class LocalisedTimeStringTests {
 
         Locale.setDefault(Locale.ENGLISH)
         if (printDebug) Log.w(TAG, "EN tests - current locale is: " + Locale.getDefault())
-        performSingleTimeUnitStringComparison(expectedOutputsSingle_EN, printDebug)
-        performDualTimeUnitStringComparison(expectedOutputsDual_EN, printDebug)
+        performSingleTimeUnitStringComparison(expectedOutputsSingleEN)
+        performDualTimeUnitStringComparison(expectedOutputsDualEN)
     }
 
     // Unit test for durations in the French language
-    //@Test
+    @Test
     fun timeSpanStrings_FR() {
         // Expected single largest time unit outputs for French
         val expectedOutputsSingle_FR = listOf(
@@ -266,8 +187,19 @@ class LocalisedTimeStringTests {
 
         Locale.setDefault(Locale.FRENCH)
         if (printDebug) Log.w(TAG, "FR tests - current locale is: " + Locale.getDefault())
-        performSingleTimeUnitStringComparison(expectedOutputsSingle_FR, printDebug)
-        performDualTimeUnitStringComparison(expectedOutputsDual_FR, printDebug)
+        performSingleTimeUnitStringComparison(expectedOutputsSingle_FR)
+        performDualTimeUnitStringComparison(expectedOutputsDual_FR)
+    }
+
+    // Method to reverse the order of words in a string, separating on spaces.
+    // It is genuinely easier to do this with the RTL strings that fight through the chaos that is
+    // trying to use a mixed LTR/RTL mode in Android Studio, which is quite frankly a nightmare.
+    //
+    // Also: If you find yourself fighting with RTL stuff you can disable it in the Android Studio
+    // editor by finding your `idea.properties` file and adding the line `editor.disable.rtl=true`
+    // My file was at: ~/.local/share/JetBrains/Toolbox/apps/android-studio-2/bin/idea.properties
+    private fun String.reverseWordOrder(): String {
+        return this.split(" ").reversed().joinToString(" ")
     }
 
     // Unit test for durations in the Arabic language
@@ -275,9 +207,7 @@ class LocalisedTimeStringTests {
     fun timeSpanStrings_AR() {
         // Expected single largest time unit outputs for Arabic.
         //
-        // Note: As Arabic is a Right-to-Left language the number goes on the right - BUT this
-        // FILE uses LTR (not RTL) so anything we put HERE is actually reversed in the app (so if we
-        // put "one two" in this file it would print as "two one" in the app as it's running RTL!).
+        // Note: As Arabic is a Right-to-Left language the number goes on the right!
         //
         // Also: This is not a PERFECT mapping to the correct time unit plural phrasings for Arabic
         // because they have six separate time units based on 0, 1..2, 3..9, 11.12, 21..99, as well
@@ -286,34 +216,36 @@ class LocalisedTimeStringTests {
         // we'll be good enough to get our point across, like if you said to me "See you in 3 day"
         // I'd know that you means "See you in 3 dayS".
         // Further reading: https://www.fluentarabic.net/numbers-in-arabic/
-        val expectedOutputsSingle_AR = listOf(
-            "ثانية 1",    // 1 second
-            "ثانية 2",    // 2 seconds
-            "1 دقيقة",    // 1 minute
-            "2 دقائق",    // 2 minutes
-            "1 ساعة",     // 1 hour
-            "2 ساعات",    // 2 hours
-            "1 يوم",      // 1 day
-            "2 أيام",     // 2 days
-            "1 يوم",      // 1 day 7 hours as single unit (1 day)
-            "4 أيام",     // 4 days 23 hours as single unit (4 days)
-            "1 أسبوع",   // 1 week 2 days as single unit (1 week)
-            "2 أسابيع")   // 2 weeks 2 days as single unit (2 weeks)
+        val expectedOutputsSingleAR = listOf(
+            "1 ثانية".reverseWordOrder(), // 1 second
+            "2 ثانية".reverseWordOrder(), // 2 seconds
+            "1 دقيقة".reverseWordOrder(), // 1 minute
+            "2 دقائق".reverseWordOrder(), // 2 minutes
+            "1 ساعة".reverseWordOrder(),  // 1 hour
+            "2 ساعات".reverseWordOrder(), // 2 hours
+            "1 يوم".reverseWordOrder(),   // 1 day
+            "2 أيام".reverseWordOrder(),  // 2 days
+            "1 يوم".reverseWordOrder(),   // 1 day 7 hours as single unit (1 day)
+            "4 أيام".reverseWordOrder(),  // 4 days 23 hours as single unit (4 days)
+            "1 أسبوع".reverseWordOrder(), // 1 week 2 days as single unit (1 week)
+            "2 أسابيع".reverseWordOrder() // 2 weeks 2 days as single unit (2 weeks)
+        )
 
         // Arabic dual unit times (largest time unit is on the right!)
-        val expectedOutputsDual_AR = listOf(
-            "0 دقائق 1 ثانية",  // 0 minutes 1 second
-            "0 دقائق 2 ثانية",  // 0 minutes 2 seconds
-            "1 دقيقة 0 ثانية",  // 1 minute 0 seconds
-            "2 دقيقة 0 ثانية",  // 2 minutes 0 seconds // ACL HEREEEEEEEEE!
-            "1 دقائق 0 دقيقة",   // 1 hour 0 minutes
-            "2 ساعات",  // 2 hours
-            "1 يوم",    // 1 day
-            "2 أيام",   // 2 days
-            "1 يوم",    // 1 day 7 hours as single unit (1 day)
-            "4 أيام",   // 4 days 23 hours as single unit (4 days)
-            "1 أسبوع",  // 1 week 2 days as single unit (1 week)
-            "2 أسابيع") // 2 weeks 2 days as single unit (2 weeks)
+        val expectedOutputsDualAR = listOf(
+            "0 دقائق 1 ثانية".reverseWordOrder(), // 0 minutes 1 second
+            "0 دقائق 2 ثانية".reverseWordOrder(), // 0 minutes 2 seconds
+            "1 دقيقة 0 ثانية".reverseWordOrder(), // 1 minute 0 seconds
+            "2 دقائق 0 ثانية".reverseWordOrder(), // 2 minutes 0 seconds
+            "1 ساعة 0 دقائق".reverseWordOrder(),  // 1 hour 0 minutes
+            "2 ساعات 0 دقائق".reverseWordOrder(), // 2 hours 0 minutes
+            "1 يوم 0 ساعات".reverseWordOrder(),   // 1 day 0 hours
+            "2 أيام 0 ساعات".reverseWordOrder(),  // 2 days 0 hours
+            "1 يوم 7 ساعات".reverseWordOrder(),   // 1 day 7 hours as single unit (1 day)
+            "4 أيام 23 ساعات".reverseWordOrder(), // 4 days 23 hours as single unit (4 days)
+            "1 أسبوع 2 أيام".reverseWordOrder(),  // 1 week 2 days as single unit (1 week)
+            "2 أسابيع 2 أيام".reverseWordOrder()  // 2 weeks 2 days as single unit (2 weeks)
+        )
 
         Locale.setDefault(Locale.forLanguageTag("ar"))
         if (printDebug) Log.w(TAG, "AR tests - current locale is: " + Locale.getDefault())
@@ -322,7 +254,98 @@ class LocalisedTimeStringTests {
         // force LocalisedTimeUtils to respond in RTL mode just for this instrumented test.
         LocalisedTimeUtil.forceUseOfRtlForTests(true)
 
-        performSingleTimeUnitStringComparison(expectedOutputsSingle_AR, printDebug)
-        performDualTimeUnitStringComparison(expectedOutputsDual_AR, printDebug)
+        performSingleTimeUnitStringComparison(expectedOutputsSingleAR)
+        performDualTimeUnitStringComparison(expectedOutputsDualAR)
+    }
+
+    // Unit test for durations in the Japanese language
+    @Test
+    fun timeSpanStrings_JA() {
+        // Expected single largest time unit outputs for Japanese.
+        // Note: The plural for multiple days below is technically incorrect because we only get
+        // the added symbol (日間) for 5 days and above - but this will be correct more of the time
+        // than just using the '1..4 days' symbol (日) for day plurals.
+        val expectedOutputsSingle_JA = listOf(
+            "1 秒",    // 1 second
+            "2 秒",    // 2 seconds
+            "1 分",    // 1 minute
+            "2 分",    // 2 minutes
+            "1 時間",  // 1 hour
+            "2 時間",  // 2 hours
+            "1 日",    // 1 day
+            "2 日間",  // 2 days.
+            "1 日",   // 1 day   7 hours as single unit is: 1 day
+            "4 日間", // 4 days 23 hours as single unit is: 4 days
+            "1 週間", // 1 week  2 days  as single unit is: 1 week
+            "2 週間"  // 2 weeks 2 days  as single unit is: 2 weeks
+        )
+
+        // Expected dual largest time unit outputs for Japanese
+        val expectedOutputsDual_JA = listOf(
+            "0 分 1 秒",      // 1 second
+            "0 分 2 秒",      // 2 seconds
+            "1 分 0 秒",      // 1 minute
+            "2 分 0 秒",      // 2 minutes
+            "1 時間 0 分",    // 1 hour
+            "2 時間 0 分",    // 2 hours
+            "1 日 0 時間",    // 1 day
+            "2 日間 0 時間",  // 2 days
+            "1 日 7 時間",    // 1 day 7 hours
+            "4 日間 23 時間", // 4 days 23 hours
+            "1 週間 2 日間",  // 1 week 2 days
+            "2 週間 2 日間"   // 2 weeks 2 days
+        )
+
+        Locale.setDefault(Locale.forLanguageTag("ja"))
+        if (printDebug) Log.w(TAG, "JA tests - current locale is: " + Locale.getDefault())
+
+        performSingleTimeUnitStringComparison(expectedOutputsSingle_JA)
+        performDualTimeUnitStringComparison(expectedOutputsDual_JA)
+    }
+
+    // Unit test for durations in the Urdu language (RTL language)
+    @Test
+    fun timeSpanStrings_UR() {
+        // Expected single largest time unit outputs for Urdu
+        val expectedOutputsSingle_UR = listOf(
+            "1 سیکنڈ".reverseWordOrder(), // 1 second
+            "2 سیکنڈ".reverseWordOrder(), // 2 seconds
+            "1 منٹ".reverseWordOrder(),   // 1 minute
+            "2 منٹ".reverseWordOrder(),   // 2 minutes
+            "1 گھنٹہ".reverseWordOrder(), // 1 hour
+            "2 گھنٹے".reverseWordOrder(), // 2 hours
+            "1 دن".reverseWordOrder(),    // 1 day
+            "2 دن".reverseWordOrder(),    // 2 days.
+            "1 دن".reverseWordOrder(),    // 1 day   7 hours as single unit is: 1 day
+            "4 دن".reverseWordOrder(),    // 4 days 23 hours as single unit is: 4 days
+            "1 ہفتہ".reverseWordOrder(),  // 1 week  2 days  as single unit is: 1 week
+            "2 ہفتے".reverseWordOrder()   // 2 weeks 2 days  as single unit is: 2 weeks
+        )
+
+        // Expected dual largest time unit outputs for Urdu
+        val expectedOutputsDual_UR = listOf(
+            "0 منٹ 1 سیکنڈ".reverseWordOrder(), // 1 second -> 0 minutes 1 second
+            "0 منٹ 2 سیکنڈ".reverseWordOrder(), // 2 seconds -> 0 minutes 2 seconds
+            "1 منٹ 0 سیکنڈ".reverseWordOrder(), // 1 minute -> 1 minute 0 seconds
+            "2 منٹ 0 سیکنڈ".reverseWordOrder(), // 2 minutes -> 2 minutes 0 seconds
+            "1 گھنٹہ 0 منٹ".reverseWordOrder(), // 1 hour -> 1 hour 0 minutes
+            "2 گھنٹے 0 منٹ".reverseWordOrder(), // 2 hours -> 2 hours 0 minutes
+            "1 دن 0 گھنٹے".reverseWordOrder(),  // 1 day -> 1 day 0 hours
+            "2 دن 0 گھنٹے".reverseWordOrder(),  // 2 days -> 2 days 0 hours
+            "1 دن 7 گھنٹے".reverseWordOrder(),  // 1 day 7 hours
+            "4 دن 23 گھنٹے".reverseWordOrder(), // 4 days 23 hours
+            "1 ہفتہ 2 دن".reverseWordOrder(),   // 1 week 2 days
+            "2 ہفتے 2 دن".reverseWordOrder()    // 2 weeks 2 days
+        )
+
+        Locale.setDefault(Locale.forLanguageTag("ur"))
+        if (printDebug) Log.w(TAG, "UR tests - current locale is: " + Locale.getDefault())
+
+        // Just changing the context language won't result in the app being in RTL mode so we'll
+        // force LocalisedTimeUtils to respond in RTL mode just for this instrumented test.
+        LocalisedTimeUtil.forceUseOfRtlForTests(true)
+
+        performSingleTimeUnitStringComparison(expectedOutputsSingle_UR)
+        performDualTimeUnitStringComparison(expectedOutputsDual_UR)
     }
 }
