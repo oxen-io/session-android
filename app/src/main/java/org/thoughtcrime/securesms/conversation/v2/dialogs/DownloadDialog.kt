@@ -26,9 +26,9 @@ class DownloadDialog(private val recipient: Recipient) : DialogFragment() {
     @Inject lateinit var contactDB: SessionContactDatabase
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
-        val sessionID = recipient.address.toString()
-        val contact = contactDB.getContactWithSessionID(sessionID)
-        val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
+        val accountID = recipient.address.toString()
+        val contact = contactDB.getContactWithAccountID(accountID)
+        val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: accountID
         title(resources.getString(R.string.dialog_download_title, name))
 
         val explanation = resources.getString(R.string.dialog_download_explanation, name)
@@ -42,8 +42,8 @@ class DownloadDialog(private val recipient: Recipient) : DialogFragment() {
     }
 
     private fun trust() {
-        val sessionID = recipient.address.toString()
-        val contact = contactDB.getContactWithSessionID(sessionID) ?: return
+        val accountID = recipient.address.toString()
+        val contact = contactDB.getContactWithAccountID(accountID) ?: return
         val threadID = DatabaseComponent.get(requireContext()).threadDatabase().getThreadIdIfExistsFor(recipient)
         contactDB.setContactIsTrusted(contact, true, threadID)
         JobQueue.shared.resumePendingJobs(AttachmentDownloadJob.KEY)

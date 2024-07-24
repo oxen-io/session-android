@@ -365,6 +365,34 @@ object Util {
         val digitGroups = (Math.log10(sizeBytes.toDouble()) / Math.log10(1024.0)).toInt()
         return DecimalFormat("#,##0.#").format(sizeBytes / Math.pow(1024.0, digitGroups.toDouble())) + " " + units[digitGroups]
     }
+
+    /**
+     * Compares two version strings (for example "1.8.0")
+     *
+     * @param version1 the first version string to compare.
+     * @param version2 the second version string to compare.
+     * @return an integer indicating the result of the comparison:
+     *         - 0 if the versions are equal
+     *         - a positive number if version1 is greater than version2
+     *         - a negative number if version1 is less than version2
+     */
+    @JvmStatic
+    fun compareVersions(version1: String, version2: String): Int {
+        val parts1 = version1.split(".").map { it.toIntOrNull() ?: 0 }
+        val parts2 = version2.split(".").map { it.toIntOrNull() ?: 0 }
+
+        val maxLength = maxOf(parts1.size, parts2.size)
+        val paddedParts1 = parts1 + List(maxLength - parts1.size) { 0 }
+        val paddedParts2 = parts2 + List(maxLength - parts2.size) { 0 }
+
+        for (i in 0 until maxLength) {
+            val compare = paddedParts1[i].compareTo(paddedParts2[i])
+            if (compare != 0) {
+                return compare
+            }
+        }
+        return 0
+    }
 }
 
 fun <T, R> T.runIf(condition: Boolean, block: T.() -> R): R where T: R = if (condition) block() else this

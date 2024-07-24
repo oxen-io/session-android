@@ -39,7 +39,7 @@
         />
 
     <TextView
-        style="@style/Widget.Session.Button.Common.DestructiveOutline"
+        style="@style/Widget.Session.Button.Common.DangerOutline"
         android:paddingHorizontal="@dimen/large_spacing"
         android:paddingVertical="@dimen/small_spacing"
         android:text="@string/ConversationActivity_unblock"

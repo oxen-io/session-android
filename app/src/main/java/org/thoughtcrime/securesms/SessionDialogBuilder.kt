@@ -1,6 +1,8 @@
 package org.thoughtcrime.securesms
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -15,7 +17,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.setMargins
+import androidx.core.text.HtmlCompat
 import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
 import network.loki.messenger.R
@@ -80,6 +82,10 @@ class SessionDialogBuilder(val context: Context) {
         }.let(topView::addView)
     }
 
+    fun htmlText(@StringRes id: Int, @StyleRes style: Int = 0, modify: TextView.() -> Unit = {}) {
+        text(HtmlCompat.fromHtml(context.resources.getString(id), 0))
+    }
+
     fun view(view: View) = contentView.addView(view)
 
     fun view(@LayoutRes layout: Int): View = LayoutInflater.from(context).inflate(layout, contentView)
@@ -108,14 +114,14 @@ class SessionDialogBuilder(val context: Context) {
         options,
     ) { dialog, it -> onSelect(it); dialog.dismiss() }
 
-    fun destructiveButton(
+    fun dangerButton(
         @StringRes text: Int,
         @StringRes contentDescription: Int = text,
         listener: () -> Unit = {}
     ) = button(
         text,
         contentDescription,
-        R.style.Widget_Session_Button_Dialog_DestructiveText,
+        R.style.Widget_Session_Button_Dialog_DangerText,
     ) { listener() }
 
     fun okButton(listener: (() -> Unit) = {}) = button(android.R.string.ok) { listener() }
@@ -143,6 +149,20 @@ class SessionDialogBuilder(val context: Context) {
 
 fun Context.showSessionDialog(build: SessionDialogBuilder.() -> Unit): AlertDialog =
     SessionDialogBuilder(this).apply { build() }.show()
+fun Context.showOpenUrlDialog(build: SessionDialogBuilder.() -> Unit): AlertDialog =
+    SessionDialogBuilder(this).apply {
+        title(R.string.urlOpen)
+        text(R.string.urlOpenBrowser)
+        build()
+    }.show()
+
+fun Context.showOpenUrlDialog(url: String): AlertDialog =
+    showOpenUrlDialog {
+        okButton { openUrl(url) }
+        cancelButton()
+    }
+
+fun Context.openUrl(url: String) = Intent(Intent.ACTION_VIEW, Uri.parse(url)).let(::startActivity)
 
 fun Fragment.showSessionDialog(build: SessionDialogBuilder.() -> Unit): AlertDialog =
     SessionDialogBuilder(requireContext()).apply { build() }.show()

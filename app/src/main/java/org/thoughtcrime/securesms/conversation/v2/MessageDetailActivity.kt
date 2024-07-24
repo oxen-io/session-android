@@ -27,10 +27,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,15 +37,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -59,7 +54,6 @@ import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAt
 import org.thoughtcrime.securesms.MediaPreviewActivity.getPreviewIntent
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.database.Storage
-import org.thoughtcrime.securesms.ui.AppTheme
 import org.thoughtcrime.securesms.ui.Avatar
 import org.thoughtcrime.securesms.ui.CarouselNextButton
 import org.thoughtcrime.securesms.ui.CarouselPrevButton
@@ -69,13 +63,19 @@ import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.GetString
 import org.thoughtcrime.securesms.ui.HorizontalPagerIndicator
-import org.thoughtcrime.securesms.ui.ItemButton
-import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.ThemeResPreviewParameterProvider
+import org.thoughtcrime.securesms.ui.LargeItemButton
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
 import org.thoughtcrime.securesms.ui.TitledText
-import org.thoughtcrime.securesms.ui.blackAlpha40
-import org.thoughtcrime.securesms.ui.colorDestructive
-import org.thoughtcrime.securesms.ui.destructiveButtonColors
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.blackAlpha40
+import org.thoughtcrime.securesms.ui.theme.dangerButtonColors
+import org.thoughtcrime.securesms.ui.setComposeContent
+import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.bold
+import org.thoughtcrime.securesms.ui.theme.monospace
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -102,9 +102,7 @@ class MessageDetailActivity : PassphraseRequiredActionBarActivity() {
 
         viewModel.timestamp = intent.getLongExtra(MESSAGE_TIMESTAMP, -1L)
 
-        ComposeView(this)
-            .apply { setContent { MessageDetailsScreen() } }
-            .let(::setContentView)
+        setComposeContent { MessageDetailsScreen() }
 
         lifecycleScope.launch {
             viewModel.eventFlow.collect {
@@ -121,16 +119,14 @@ class MessageDetailActivity : PassphraseRequiredActionBarActivity() {
     @Composable
     private fun MessageDetailsScreen() {
         val state by viewModel.stateFlow.collectAsState()
-        AppTheme {
-            MessageDetails(
-                state = state,
-                onReply = if (state.canReply) { { setResultAndFinish(ON_REPLY) } } else null,
-                onResend = state.error?.let { { setResultAndFinish(ON_RESEND) } },
-                onDelete = { setResultAndFinish(ON_DELETE) },
-                onClickImage = { viewModel.onClickImage(it) },
-                onAttachmentNeedsDownload = viewModel::onAttachmentNeedsDownload,
-            )
-        }
+        MessageDetails(
+            state = state,
+            onReply = if (state.canReply) { { setResultAndFinish(ON_REPLY) } } else null,
+            onResend = state.error?.let { { setResultAndFinish(ON_RESEND) } },
+            onDelete = { setResultAndFinish(ON_DELETE) },
+            onClickImage = { viewModel.onClickImage(it) },
+            onAttachmentNeedsDownload = viewModel::onAttachmentNeedsDownload,
+        )
     }
 
     private fun setResultAndFinish(code: Int) {
@@ -155,12 +151,12 @@ fun MessageDetails(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .padding(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(vertical = LocalDimensions.current.smallSpacing),
+        verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing)
     ) {
         state.record?.let { message ->
             AndroidView(
-                modifier = Modifier.padding(horizontal = 32.dp),
+                modifier = Modifier.padding(horizontal = LocalDimensions.current.spacing),
                 factory = {
                     ViewVisibleMessageContentBinding.inflate(LayoutInflater.from(it)).mainContainerConstraint.apply {
                         bind(
@@ -196,7 +192,7 @@ fun CellMetadata(
     state.apply {
         if (listOfNotNull(sent, received, error, senderInfo).isEmpty()) return
         CellWithPaddingAndMargin {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing)) {
                 TitledText(sent)
                 TitledText(received)
                 TitledErrorText(error)
@@ -222,25 +218,25 @@ fun CellButtons(
     Cell {
         Column {
             onReply?.let {
-                ItemButton(
-                    stringResource(R.string.reply),
+                LargeItemButton(
+                    R.string.reply,
                     R.drawable.ic_message_details__reply,
                     onClick = it
                 )
                 Divider()
             }
             onResend?.let {
-                ItemButton(
-                    stringResource(R.string.resend),
+                LargeItemButton(
+                    R.string.resend,
                     R.drawable.ic_message_details__refresh,
                     onClick = it
                 )
                 Divider()
             }
-            ItemButton(
-                stringResource(R.string.delete),
+            LargeItemButton(
+                R.string.delete,
                 R.drawable.ic_message_details__trash,
-                colors = destructiveButtonColors(),
+                colors = dangerButtonColors(),
                 onClick = onDelete
             )
         }
@@ -254,7 +250,7 @@ fun Carousel(attachments: List<Attachment>, onClick: (Int) -> Unit) {
 
     val pagerState = rememberPagerState { attachments.size }
 
-    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing)) {
         Row {
             CarouselPrevButton(pagerState)
             Box(modifier = Modifier.weight(1f)) {
@@ -263,7 +259,7 @@ fun Carousel(attachments: List<Attachment>, onClick: (Int) -> Unit) {
                 ExpandButton(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(8.dp)
+                        .padding(LocalDimensions.current.xxsSpacing)
                 ) { onClick(pagerState.currentPage) }
             }
             CarouselNextButton(pagerState)
@@ -316,9 +312,9 @@ fun ExpandButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
 @Preview
 @Composable
 fun PreviewMessageDetails(
-    @PreviewParameter(ThemeResPreviewParameterProvider::class) themeResId: Int
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
-    PreviewTheme(themeResId) {
+    PreviewTheme(colors) {
         MessageDetails(
             state = MessageDetailsState(
                 nonImageAttachmentFileDetails = listOf(
@@ -341,10 +337,10 @@ fun PreviewMessageDetails(
 fun FileDetails(fileDetails: List<TitledText>) {
     if (fileDetails.isEmpty()) return
 
-    CellWithPaddingAndMargin(padding = 0.dp) {
+    Cell {
         FlowRow(
-            modifier = Modifier.padding(vertical = 24.dp, horizontal = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(horizontal = LocalDimensions.current.xsSpacing, vertical = LocalDimensions.current.spacing),
+            verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing)
         ) {
             fileDetails.forEach {
                 BoxWithConstraints {
@@ -352,7 +348,7 @@ fun FileDetails(fileDetails: List<TitledText>) {
                         it,
                         modifier = Modifier
                             .widthIn(min = maxWidth.div(2))
-                            .padding(horizontal = 12.dp)
+                            .padding(horizontal = LocalDimensions.current.xsSpacing)
                             .width(IntrinsicSize.Max)
                     )
                 }
@@ -365,7 +361,8 @@ fun FileDetails(fileDetails: List<TitledText>) {
 fun TitledErrorText(titledText: TitledText?) {
     TitledText(
         titledText,
-        valueStyle = LocalTextStyle.current.copy(color = colorDestructive)
+        style = LocalType.current.base,
+        color = LocalColors.current.danger
     )
 }
 
@@ -373,7 +370,7 @@ fun TitledErrorText(titledText: TitledText?) {
 fun TitledMonospaceText(titledText: TitledText?) {
     TitledText(
         titledText,
-        valueStyle = LocalTextStyle.current.copy(fontFamily = FontFamily.Monospace)
+        style = LocalType.current.base.monospace()
     )
 }
 
@@ -381,24 +378,25 @@ fun TitledMonospaceText(titledText: TitledText?) {
 fun TitledText(
     titledText: TitledText?,
     modifier: Modifier = Modifier,
-    valueStyle: TextStyle = LocalTextStyle.current,
+    style: TextStyle = LocalType.current.base,
+    color: Color = Color.Unspecified
 ) {
     titledText?.apply {
         TitledView(title, modifier) {
-            Text(text, style = valueStyle, modifier = Modifier.fillMaxWidth())
+            Text(
+                text,
+                style = style,
+                color = color,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
 
 @Composable
 fun TitledView(title: GetString, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Title(title)
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.xxxsSpacing)) {
+        Text(title.string(), style = LocalType.current.base.bold())
         content()
     }
-}
-
-@Composable
-fun Title(title: GetString) {
-    Text(title.string(), fontWeight = FontWeight.Bold)
 }

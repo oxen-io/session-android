@@ -2,7 +2,7 @@ package org.session.libsignal.utilities
 
 import org.thoughtcrime.securesms.util.Ip
 
-class Snode(val address: String, val port: Int, val publicKeySet: KeySet?) {
+class Snode(val address: String, val port: Int, val publicKeySet: KeySet?, val version: String) {
     val ip: Ip get() = address.removePrefix("https://").let(::Ip)
 
     enum class Method(val rawValue: String) {

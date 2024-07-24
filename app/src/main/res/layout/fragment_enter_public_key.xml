@@ -33,7 +33,7 @@
                 android:layout_height="64dp"
                 android:layout_marginHorizontal="@dimen/large_spacing"
                 android:layout_marginTop="@dimen/large_spacing"
-                android:contentDescription="@string/AccessibilityId_session_id_input"
+                android:contentDescription="@string/AccessibilityId_account_id_input"
                 android:gravity="center_vertical"
                 android:hint="@string/fragment_enter_public_key_edit_text_hint"
                 android:imeOptions="actionDone"

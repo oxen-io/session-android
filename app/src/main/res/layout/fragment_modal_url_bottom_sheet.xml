@@ -46,7 +46,7 @@
         />
 
     <TextView
-        android:textColor="@color/destructive"
+        android:textColor="?danger"
         android:id="@+id/cancelButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -523,17 +523,14 @@
     <string name="copied_to_clipboard">Kopjo në klipbord</string>
     <string name="next">Tutje</string>
     <string name="share">Shpërndaje</string>
-    <string name="invalid_session_id">Session ID e gabuar</string>
+    <string name="invalid_account_id">Account ID e gabuar</string>
     <string name="cancel">Anuloje</string>
-    <string name="your_session_id">Session ID e juaj</string>
-    <string name="activity_landing_title_2">Sessioni juaj fillon ketu...</string>
-    <string name="activity_landing_register_button_title">Krijo një Session ID</string>
-    <string name="activity_landing_restore_button_title">Vazhdo tek Session-i juaj</string>
+    <string name="your_account_id">Account ID e juaj</string>
     <string name="view_fake_chat_bubble_1">Si është Sessioni juaj?</string>
     <string name="view_fake_chat_bubble_2">Është një app për mesazhe të koduara dhe decentralizuara</string>
     <string name="view_fake_chat_bubble_3">I bije që të dhënat personale dhe informacionet e mesazheve nuk do të grumbullohen? Si funksionon kjo?</string>
-    <string name="activity_register_title">Thuaj Tungjatjeta Session-it tuaj</string>
-    <string name="activity_register_explanation">Session ID juaj është një adresë unike që mund t\'ju kontaktojnë përmes Session. Pa ndonjë ndërlidhje me identitetin tuaj real, Session ID juaj është totalisht anonim dhe privat.</string>
+
+
     <string name="activity_restore_title">Rikthe llogarinë tuaj</string>
     <string name="activity_restore_explanation">Shkruanj frazen e rikthimit qe iu është gjatë regjistrimit të llogarisë.</string>
     <!-- Next round of translation -->

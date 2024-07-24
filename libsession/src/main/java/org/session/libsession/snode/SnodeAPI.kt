@@ -88,8 +88,16 @@ object SnodeAPI {
 
     const val useTestnet = false
 
+    const val KEY_IP = "public_ip"
+    const val KEY_PORT = "storage_port"
+    const val KEY_X25519 = "pubkey_x25519"
+    const val KEY_ED25519 = "pubkey_ed25519"
+    const val KEY_VERSION = "storage_server_version"
+
+    const val EMPTY_VERSION = "0.0.0"
+
     // Error
-    internal sealed class Error(val description: String) : Exception(description) {
+    sealed class Error(val description: String) : Exception(description) {
         object Generic : Error("An error occurred.")
         object ClockOutOfSync : Error("Your clock is out of sync with the Service Node network.")
         object NoKeyPair : Error("Missing user key pair.")
@@ -146,6 +154,7 @@ object SnodeAPI {
 
     internal fun getRandomSnode(): Promise<Snode, Exception> {
         val snodePool = this.snodePool
+
         if (snodePool.count() < minimumSnodePoolCount) {
             val target = seedNodePool.random()
             val url = "$target/json_rpc"
@@ -154,8 +163,11 @@ object SnodeAPI {
                 "method" to "get_n_service_nodes",
                 "params" to mapOf(
                     "active_only" to true,
-                    "limit" to 256,
-                    "fields" to mapOf("public_ip" to true, "storage_port" to true, "pubkey_x25519" to true, "pubkey_ed25519" to true)
+                    "fields" to mapOf(
+                        KEY_IP to true, KEY_PORT to true,
+                        KEY_X25519 to true, KEY_ED25519 to true,
+                        KEY_VERSION to true
+                    )
                 )
             )
             val deferred = deferred<Snode, Exception>()
@@ -173,12 +185,22 @@ object SnodeAPI {
                     if (rawSnodes != null) {
                         val snodePool = rawSnodes.mapNotNull { rawSnode ->
                             val rawSnodeAsJSON = rawSnode as? Map<*, *>
-                            val address = rawSnodeAsJSON?.get("public_ip") as? String
-                            val port = rawSnodeAsJSON?.get("storage_port") as? Int
-                            val ed25519Key = rawSnodeAsJSON?.get("pubkey_ed25519") as? String
-                            val x25519Key = rawSnodeAsJSON?.get("pubkey_x25519") as? String
-                            if (address != null && port != null && ed25519Key != null && x25519Key != null && address != "0.0.0.0") {
-                                Snode("https://$address", port, Snode.KeySet(ed25519Key, x25519Key))
+                            val address = rawSnodeAsJSON?.get(KEY_IP) as? String
+                            val port = rawSnodeAsJSON?.get(KEY_PORT) as? Int
+                            val ed25519Key = rawSnodeAsJSON?.get(KEY_ED25519) as? String
+                            val x25519Key = rawSnodeAsJSON?.get(KEY_X25519) as? String
+                            val version = (rawSnodeAsJSON?.get(KEY_VERSION) as? ArrayList<*>)
+                                ?.filterIsInstance<Int>() // get the array as Integers
+                                ?.joinToString(separator = ".") // turn it int a version string
+
+                            if (address != null && port != null && ed25519Key != null && x25519Key != null
+                                && address != "0.0.0.0" && version != null) {
+                                Snode(
+                                    address = "https://$address",
+                                    port = port,
+                                    publicKeySet = Snode.KeySet(ed25519Key, x25519Key),
+                                    version = version
+                                )
                             } else {
                                 Log.d("Loki", "Failed to parse: ${rawSnode?.prettifiedDescription()}.")
                                 null
@@ -206,6 +228,10 @@ object SnodeAPI {
         }
     }
 
+    private fun extractVersionString(jsonVersion: String): String{
+        return jsonVersion.removeSurrounding("[", "]").split(", ").joinToString(separator = ".")
+    }
+
     internal fun dropSnodeFromSwarmIfNeeded(snode: Snode, publicKey: String) {
         val swarm = database.getSwarm(publicKey)?.toMutableSet()
         if (swarm != null && swarm.contains(snode)) {
@@ -220,11 +246,11 @@ object SnodeAPI {
     }
 
     // Public API
-    fun getSessionID(onsName: String): Promise<String, Exception> {
+    fun getAccountID(onsName: String): Promise<String, Exception> {
         val deferred = deferred<String, Exception>()
         val promise = deferred.promise
         val validationCount = 3
-        val sessionIDByteCount = 33
+        val accountIDByteCount = 33
         // Hash the ONS name using BLAKE2b
         val onsName = onsName.toLowerCase(Locale.US)
         val nameAsData = onsName.toByteArray()
@@ -234,7 +260,7 @@ object SnodeAPI {
             return promise
         }
         val base64EncodedNameHash = Base64.encodeBytes(nameHash)
-        // Ask 3 different snodes for the Session ID associated with the given name hash
+        // Ask 3 different snodes for the Account ID associated with the given name hash
         val parameters = mapOf(
                 "endpoint" to "ons_resolve",
                 "params" to mapOf( "type" to 0, "name_hash" to base64EncodedNameHash )
@@ -247,7 +273,7 @@ object SnodeAPI {
             }
         }
         all(promises).success { results ->
-            val sessionIDs = mutableListOf<String>()
+            val accountIDs = mutableListOf<String>()
             for (json in results) {
                 val intermediate = json["result"] as? Map<*, *>
                 val hexEncodedCiphertext = intermediate?.get("encrypted_value") as? String
@@ -259,18 +285,18 @@ object SnodeAPI {
                         val salt = ByteArray(PwHash.SALTBYTES)
                         val key: ByteArray
                         val nonce = ByteArray(SecretBox.NONCEBYTES)
-                        val sessionIDAsData = ByteArray(sessionIDByteCount)
+                        val accountIDAsData = ByteArray(accountIDByteCount)
                         try {
                             key = Key.fromHexString(sodium.cryptoPwHash(onsName, SecretBox.KEYBYTES, salt, PwHash.OPSLIMIT_MODERATE, PwHash.MEMLIMIT_MODERATE, PwHash.Alg.PWHASH_ALG_ARGON2ID13)).asBytes
                         } catch (e: SodiumException) {
                             deferred.reject(Error.HashingFailed)
                             return@success
                         }
-                        if (!sodium.cryptoSecretBoxOpenEasy(sessionIDAsData, ciphertext, ciphertext.size.toLong(), nonce, key)) {
+                        if (!sodium.cryptoSecretBoxOpenEasy(accountIDAsData, ciphertext, ciphertext.size.toLong(), nonce, key)) {
                             deferred.reject(Error.DecryptionFailed)
                             return@success
                         }
-                        sessionIDs.add(Hex.toStringCondensed(sessionIDAsData))
+                        accountIDs.add(Hex.toStringCondensed(accountIDAsData))
                     } else {
                         val hexEncodedNonce = intermediate["nonce"] as? String
                         if (hexEncodedNonce == null) {
@@ -283,20 +309,20 @@ object SnodeAPI {
                             deferred.reject(Error.HashingFailed)
                             return@success
                         }
-                        val sessionIDAsData = ByteArray(sessionIDByteCount)
-                        if (!sodium.cryptoAeadXChaCha20Poly1305IetfDecrypt(sessionIDAsData, null, null, ciphertext, ciphertext.size.toLong(), null, 0, nonce, key)) {
+                        val accountIDAsData = ByteArray(accountIDByteCount)
+                        if (!sodium.cryptoAeadXChaCha20Poly1305IetfDecrypt(accountIDAsData, null, null, ciphertext, ciphertext.size.toLong(), null, 0, nonce, key)) {
                             deferred.reject(Error.DecryptionFailed)
                             return@success
                         }
-                        sessionIDs.add(Hex.toStringCondensed(sessionIDAsData))
+                        accountIDs.add(Hex.toStringCondensed(accountIDAsData))
                     }
                 } else {
                     deferred.reject(Error.Generic)
                     return@success
                 }
             }
-            if (sessionIDs.size == validationCount && sessionIDs.toSet().size == 1) {
-                deferred.resolve(sessionIDs.first())
+            if (accountIDs.size == validationCount && accountIDs.toSet().size == 1) {
+                deferred.resolve(accountIDs.first())
             } else {
                 deferred.reject(Error.ValidationFailed)
             }
@@ -520,7 +546,7 @@ object SnodeAPI {
                     Log.w("Loki", "response code was not 200")
                     handleSnodeError(
                         response["code"] as? Int ?: 0,
-                        response,
+                        response["body"] as? Map<*, *>,
                         snode,
                         publicKey
                     )
@@ -716,10 +742,11 @@ object SnodeAPI {
                 val address = rawSnodeAsJSON?.get("ip") as? String
                 val portAsString = rawSnodeAsJSON?.get("port") as? String
                 val port = portAsString?.toInt()
-                val ed25519Key = rawSnodeAsJSON?.get("pubkey_ed25519") as? String
-                val x25519Key = rawSnodeAsJSON?.get("pubkey_x25519") as? String
+                val ed25519Key = rawSnodeAsJSON?.get(KEY_ED25519) as? String
+                val x25519Key = rawSnodeAsJSON?.get(KEY_X25519) as? String
+
                 if (address != null && port != null && ed25519Key != null && x25519Key != null && address != "0.0.0.0") {
-                    Snode("https://$address", port, Snode.KeySet(ed25519Key, x25519Key))
+                    Snode("https://$address", port, Snode.KeySet(ed25519Key, x25519Key), EMPTY_VERSION)
                 } else {
                     Log.d("Loki", "Failed to parse snode from: ${rawSnode?.prettifiedDescription()}.")
                     null

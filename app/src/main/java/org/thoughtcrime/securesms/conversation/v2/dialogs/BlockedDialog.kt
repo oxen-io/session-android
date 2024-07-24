@@ -20,9 +20,9 @@ class BlockedDialog(private val recipient: Recipient, private val context: Conte
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
         val contactDB = DatabaseComponent.get(requireContext()).sessionContactDatabase()
-        val sessionID = recipient.address.toString()
-        val contact = contactDB.getContactWithSessionID(sessionID)
-        val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
+        val accountID = recipient.address.toString()
+        val contact = contactDB.getContactWithAccountID(accountID)
+        val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: accountID
 
         val explanation = resources.getString(R.string.dialog_blocked_explanation, name)
         val spannable = SpannableStringBuilder(explanation)

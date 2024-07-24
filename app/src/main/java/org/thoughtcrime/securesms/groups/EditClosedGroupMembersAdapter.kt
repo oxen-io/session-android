@@ -5,13 +5,13 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import org.session.libsession.utilities.Address
 import org.thoughtcrime.securesms.contacts.UserView
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.TextSecurePreferences
 
 class EditClosedGroupMembersAdapter(
     private val context: Context,
-    private val glide: GlideRequests,
+    private val glide: RequestManager,
     private val admin: Boolean,
     private val memberClickListener: ((String) -> Unit)? = null
 ) : RecyclerView.Adapter<EditClosedGroupMembersAdapter.ViewHolder>() {

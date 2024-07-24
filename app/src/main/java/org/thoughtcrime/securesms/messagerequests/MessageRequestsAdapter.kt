@@ -10,10 +10,11 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
+import org.session.libsession.utilities.ThemeUtil
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 
 class MessageRequestsAdapter(
     context: Context,
@@ -21,7 +22,7 @@ class MessageRequestsAdapter(
     val listener: ConversationClickListener
 ) : CursorRecyclerViewAdapter<MessageRequestsAdapter.ViewHolder>(context, cursor) {
     private val threadDatabase = DatabaseComponent.get(context).threadDatabase()
-    lateinit var glide: GlideRequests
+    lateinit var glide: RequestManager
 
     class ViewHolder(val view: MessageRequestView) : RecyclerView.ViewHolder(view)
 
@@ -60,8 +61,9 @@ class MessageRequestsAdapter(
         for (i in 0 until popupMenu.menu.size()) {
             val item = popupMenu.menu.getItem(i)
             val s = SpannableString(item.title)
-            s.setSpan(ForegroundColorSpan(context.getColor(R.color.destructive)), 0, s.length, 0)
-            item.iconTintList = ColorStateList.valueOf(context.getColor(R.color.destructive))
+            val danger = ThemeUtil.getThemedColor(context, R.attr.danger)
+            s.setSpan(ForegroundColorSpan(danger), 0, s.length, 0)
+            item.iconTintList = ColorStateList.valueOf(danger)
             item.title = s
         }
         popupMenu.setForceShowIcon(true)

@@ -25,8 +25,8 @@ import org.session.libsignal.utilities.SettableFuture
 import org.thoughtcrime.securesms.components.GlideBitmapListeningTarget
 import org.thoughtcrime.securesms.components.GlideDrawableListeningTarget
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader.DecryptableUri
-import org.thoughtcrime.securesms.mms.GlideRequest
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.mms.Slide
 
 open class ThumbnailView @JvmOverloads constructor(
@@ -104,13 +104,13 @@ open class ThumbnailView @JvmOverloads constructor(
     }
 
     fun setImageResource(
-        glide: GlideRequests,
+        glide: RequestManager,
         slide: Slide,
         isPreview: Boolean
     ): ListenableFuture<Boolean> = setImageResource(glide, slide, isPreview, 0, 0)
 
     fun setImageResource(
-        glide: GlideRequests, slide: Slide,
+        glide: RequestManager, slide: Slide,
         isPreview: Boolean, naturalWidth: Int,
         naturalHeight: Int
     ): ListenableFuture<Boolean> {
@@ -152,9 +152,9 @@ open class ThumbnailView @JvmOverloads constructor(
     }
 
     private fun buildThumbnailGlideRequest(
-        glide: GlideRequests,
+        glide: RequestManager,
         slide: Slide
-    ): GlideRequest<Drawable> = glide.load(DecryptableUri(slide.thumbnailUri!!))
+    ): RequestBuilder<Drawable> = glide.load(DecryptableUri(slide.thumbnailUri!!))
         .diskCacheStrategy(DiskCacheStrategy.NONE)
         .overrideDimensions()
         .transition(DrawableTransitionOptions.withCrossFade())
@@ -162,21 +162,21 @@ open class ThumbnailView @JvmOverloads constructor(
         .missingThumbnailPicture(slide.isInProgress)
 
     private fun buildPlaceholderGlideRequest(
-        glide: GlideRequests,
+        glide: RequestManager,
         slide: Slide
-    ): GlideRequest<Bitmap> = glide.asBitmap()
+    ): RequestBuilder<Bitmap> = glide.asBitmap()
         .load(slide.getPlaceholderRes(context.theme))
         .diskCacheStrategy(DiskCacheStrategy.NONE)
         .overrideDimensions()
         .fitCenter()
 
-    open fun clear(glideRequests: GlideRequests) {
+    open fun clear(glideRequests: RequestManager) {
         glideRequests.clear(binding.thumbnailImage)
         slide = null
     }
 
     fun setImageResource(
-        glideRequests: GlideRequests,
+        glideRequests: RequestManager,
         uri: Uri
     ): ListenableFuture<Boolean> = glideRequests.load(DecryptableUri(uri))
         .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -184,19 +184,19 @@ open class ThumbnailView @JvmOverloads constructor(
         .transform(CenterCrop())
         .intoDrawableTargetAsFuture()
 
-    private fun GlideRequest<Drawable>.intoDrawableTargetAsFuture() =
+    private fun RequestBuilder<Drawable>.intoDrawableTargetAsFuture() =
         SettableFuture<Boolean>().also {
             binding.run {
                 GlideDrawableListeningTarget(thumbnailImage, thumbnailLoadIndicator, it)
             }.let { into(it) }
         }
 
-    private fun <T> GlideRequest<T>.overrideDimensions() =
+    private fun <T> RequestBuilder<T>.overrideDimensions() =
         dimensDelegate.resourceSize().takeIf { 0 !in it }
             ?.let { override(it[WIDTH], it[HEIGHT]) }
             ?: override(getDefaultWidth(), getDefaultHeight())
 }
 
-private fun <T> GlideRequest<T>.missingThumbnailPicture(
+private fun <T> RequestBuilder<T>.missingThumbnailPicture(
     inProgress: Boolean
 ) = takeIf { inProgress } ?: apply(RequestOptions.errorOf(R.drawable.ic_missing_thumbnail_picture))

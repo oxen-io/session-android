@@ -507,7 +507,7 @@
     <string name="AppProtectionPreferenceFragment_none">Ништа</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="activity_display_name_display_name_too_long_error">Молимо вас да изаберете краће приказно име</string>
+    <string name="displayNameErrorDescriptionShorter">Молимо вас да изаберете краће приказно име</string>
     <string name="activity_pn_mode_recommended_option_tag">Препоручено</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Молимо Вас да одаберете опцију</string>
     <string name="activity_home_empty_state_message">Још увек немате ниједан контакт</string>
@@ -516,10 +516,6 @@
     <string name="activity_home_leaving_group_failed_message">"Неуспешан излазак из групе"</string>
     <string name="activity_home_delete_conversation_dialog_message">Да ли сте сигурни да желите да обришете овај разговор?</string>
     <string name="activity_home_conversation_deleted_message">Конверзација је избрисана</string>
-    <string name="activity_seed_title">Фраза за опоравак</string>
-    <string name="activity_seed_title_2">Сретни своју фразу за опоравак</string>
-    <string name="activity_seed_reveal_button_title">Држи да откријеш</string>
-    <string name="view_seed_reminder_title">Скоро си завршио! 80%</string>
     <string name="activity_path_device_row_title">Ти</string>
     <!-- Next round of translation -->
 </resources>

@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"/>
         <TextView
             android:text="@string/message_requests_clear_all"
-            android:textColor="@color/destructive"
+            android:textColor="?danger"
             android:visibility="gone"
             android:id="@+id/header_view_clear_all"
             android:layout_width="wrap_content"

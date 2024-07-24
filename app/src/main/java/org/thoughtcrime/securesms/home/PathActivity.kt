@@ -20,7 +20,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
@@ -75,7 +74,6 @@ class PathActivity: PassphraseRequiredActionBarActivity() {
     private fun update(countryNames: List<String?>) {
         binding.pathRowsContainer.removeAllViews()
 
-        binding.pathAttribution.isVisible = countryNames.isNotEmpty()
         binding.spinner.isVisible = countryNames.isEmpty()
 
         if (countryNames.isEmpty()) return

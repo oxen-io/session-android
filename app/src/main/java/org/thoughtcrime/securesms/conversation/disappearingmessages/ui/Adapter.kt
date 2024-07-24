@@ -13,8 +13,8 @@ import kotlin.time.Duration.Companion.seconds
 
 fun State.toUiState() = UiState(
     cards = listOfNotNull(
-        typeOptions()?.let { ExpiryOptionsCard(GetString(R.string.activity_disappearing_messages_delete_type), it) },
-        timeOptions()?.let { ExpiryOptionsCard(GetString(R.string.activity_disappearing_messages_timer), it) }
+        typeOptions()?.let { ExpiryOptionsCardData(GetString(R.string.activity_disappearing_messages_delete_type), it) },
+        timeOptions()?.let { ExpiryOptionsCardData(GetString(R.string.activity_disappearing_messages_timer), it) }
     ),
     showGroupFooter = isGroup && isNewConfigEnabled,
     showSetButton = isSelfAdmin

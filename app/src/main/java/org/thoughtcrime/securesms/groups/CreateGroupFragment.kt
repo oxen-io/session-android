@@ -25,11 +25,11 @@ import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.contacts.SelectContactsAdapter
-import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
+import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.keyboard.emoji.KeyboardPageSearchView
-import org.thoughtcrime.securesms.mms.GlideApp
+import com.bumptech.glide.Glide
 import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
 import javax.inject.Inject
@@ -43,7 +43,7 @@ class CreateGroupFragment : Fragment() {
     private lateinit var binding: FragmentCreateGroupBinding
     private val viewModel: CreateGroupViewModel by viewModels()
 
-    lateinit var delegate: NewConversationDelegate
+    lateinit var delegate: StartConversationDelegate
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +55,7 @@ class CreateGroupFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = SelectContactsAdapter(requireContext(), GlideApp.with(requireContext()))
+        val adapter = SelectContactsAdapter(requireContext(), Glide.with(requireContext()))
         binding.backButton.setOnClickListener { delegate.onDialogBackPressed() }
         binding.closeButton.setOnClickListener { delegate.onDialogClosePressed() }
         binding.contactSearch.callbacks = object : KeyboardPageSearchView.Callbacks {

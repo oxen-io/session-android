@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.text.SpannableString
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -16,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationBinding
+import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.highlightMentions
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_ALL
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_NONE
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
-import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getConversationUnread
@@ -50,7 +49,7 @@ class ConversationView : LinearLayout {
     // endregion
 
     // region Updating
-    fun bind(thread: ThreadRecord, isTyping: Boolean, glide: GlideRequests) {
+    fun bind(thread: ThreadRecord, isTyping: Boolean) {
         this.thread = thread
         if (thread.isPinned) {
             binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -69,7 +68,7 @@ class ConversationView : LinearLayout {
         }
         val unreadCount = thread.unreadCount
         if (thread.recipient.isBlocked) {
-            binding.accentView.setBackgroundResource(R.color.destructive)
+            binding.accentView.setBackgroundColor(ThemeUtil.getThemedColor(context, R.attr.danger))
             binding.accentView.visibility = View.VISIBLE
         } else {
             val accentColor = context.getAccentColor()
@@ -122,7 +121,7 @@ class ConversationView : LinearLayout {
             !thread.isOutgoing -> binding.statusIndicatorImageView.visibility = View.GONE
             thread.isFailed -> {
                 val drawable = ContextCompat.getDrawable(context, R.drawable.ic_error)?.mutate()
-                drawable?.setTint(ContextCompat.getColor(context, R.color.destructive))
+                drawable?.setTint(ThemeUtil.getThemedColor(context, R.attr.danger))
                 binding.statusIndicatorImageView.setImageDrawable(drawable)
             }
             thread.isPending -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_circle_dot_dot_dot)
@@ -141,11 +140,10 @@ class ConversationView : LinearLayout {
         else -> recipient.toShortString() // Internally uses the Contact API
     }
 
-    private fun ThreadRecord.getSnippet(): CharSequence =
-        concatSnippet(getSnippetPrefix(), getDisplayBody(context))
-
-    private fun concatSnippet(prefix: CharSequence?, body: CharSequence): CharSequence =
-        prefix?.let { TextUtils.concat(it, ": ", body) } ?: body
+    private fun ThreadRecord.getSnippet(): CharSequence = listOfNotNull(
+        getSnippetPrefix(),
+        getDisplayBody(context)
+    ).joinToString(": ")
 
     private fun ThreadRecord.getSnippetPrefix(): CharSequence? = when {
         recipient.isLocalNumber || lastMessage?.isControlMessage == true -> null

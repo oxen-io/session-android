@@ -36,6 +36,7 @@ import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.ThemeUtil.getThemedColor
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.modifyLayoutParams
@@ -51,8 +52,8 @@ import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.toDp
@@ -140,10 +141,10 @@ class VisibleMessageView : FrameLayout {
         message: MessageRecord,
         previous: MessageRecord? = null,
         next: MessageRecord? = null,
-        glide: GlideRequests = GlideApp.with(this),
+        glide: RequestManager = Glide.with(this),
         searchQuery: String? = null,
         contact: Contact? = null,
-        senderSessionID: String,
+        senderAccountID: String,
         lastSeen: Long,
         delegate: VisibleMessageViewDelegate? = null,
         onAttachmentNeedsDownload: (DatabaseAttachment) -> Unit,
@@ -178,30 +179,30 @@ class VisibleMessageView : FrameLayout {
 
         if (isGroupThread && !message.isOutgoing) {
             if (isEndOfMessageCluster) {
-                binding.profilePictureView.publicKey = senderSessionID
+                binding.profilePictureView.publicKey = senderAccountID
                 binding.profilePictureView.update(message.individualRecipient)
                 binding.profilePictureView.setOnClickListener {
                     if (thread.isCommunityRecipient) {
                         val openGroup = lokiThreadDb.getOpenGroupChat(threadID)
-                        if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED && openGroup?.canWrite == true) {
+                        if (IdPrefix.fromValue(senderAccountID) == IdPrefix.BLINDED && openGroup?.canWrite == true) {
                             // TODO: support v2 soon
                             val intent = Intent(context, ConversationActivityV2::class.java)
                             intent.putExtra(ConversationActivityV2.FROM_GROUP_THREAD_ID, threadID)
-                            intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderSessionID))
+                            intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderAccountID))
                             context.startActivity(intent)
                         }
                     } else {
-                        maybeShowUserDetails(senderSessionID, threadID)
+                        maybeShowUserDetails(senderAccountID, threadID)
                     }
                 }
                 if (thread.isCommunityRecipient) {
                     val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
                     var standardPublicKey = ""
                     var blindedPublicKey: String? = null
-                    if (IdPrefix.fromValue(senderSessionID)?.isBlinded() == true) {
-                        blindedPublicKey = senderSessionID
+                    if (IdPrefix.fromValue(senderAccountID)?.isBlinded() == true) {
+                        blindedPublicKey = senderAccountID
                     } else {
-                        standardPublicKey = senderSessionID
+                        standardPublicKey = senderAccountID
                     }
                     val isModerator = OpenGroupManager.isUserModerator(context, openGroup.groupId, standardPublicKey, blindedPublicKey)
                     binding.moderatorIconImageView.isVisible = !message.isOutgoing && isModerator
@@ -211,7 +212,7 @@ class VisibleMessageView : FrameLayout {
         binding.senderNameTextView.isVisible = !message.isOutgoing && (isStartOfMessageCluster && (isGroupThread || snIsSelected))
         val contactContext =
             if (thread.isCommunityRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
-        binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
+        binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderAccountID
 
         // Unread marker
         val shouldShowUnreadMarker = lastSeen != -1L && message.timestamp > lastSeen && (previous == null || previous.timestamp <= lastSeen) && !message.isOutgoing
@@ -382,7 +383,7 @@ class VisibleMessageView : FrameLayout {
     private fun getMessageStatusInfo(message: MessageRecord): MessageStatusInfo = when {
         message.isFailed ->
             MessageStatusInfo(R.drawable.ic_delivery_status_failed,
-                resources.getColor(R.color.destructive, context.theme),
+                getThemedColor(context, R.attr.danger),
                 R.string.delivery_status_failed
             )
         message.isSyncFailed ->

@@ -28,7 +28,7 @@ import com.bumptech.glide.signature.MediaStoreSignature;
 import network.loki.messenger.R;
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
 import org.thoughtcrime.securesms.database.loaders.RecentPhotosLoader;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 
 import org.session.libsession.utilities.ViewUtil;
 
@@ -118,7 +118,7 @@ public class RecentPhotoViewRail extends FrameLayout implements LoaderManager.Lo
 
       Key signature = new MediaStoreSignature(mimeType, dateModified, orientation);
 
-      GlideApp.with(getContext().getApplicationContext())
+      Glide.with(getContext().getApplicationContext())
               .load(uri)
               .signature(signature)
               .diskCacheStrategy(DiskCacheStrategy.NONE)

@@ -20,7 +20,7 @@ import org.thoughtcrime.securesms.MediaPreviewActivity
 import org.thoughtcrime.securesms.components.CornerMask
 import org.thoughtcrime.securesms.conversation.v2.utilities.ThumbnailView
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.mms.Slide
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 
@@ -80,7 +80,7 @@ class AlbumThumbnailView : RelativeLayout {
         slideSize = -1
     }
 
-    fun bind(glideRequests: GlideRequests, message: MmsMessageRecord,
+    fun bind(glideRequests: RequestManager, message: MmsMessageRecord,
              isStart: Boolean, isEnd: Boolean) {
         slides = message.slideDeck.thumbnailSlides
         if (slides.isEmpty()) {
