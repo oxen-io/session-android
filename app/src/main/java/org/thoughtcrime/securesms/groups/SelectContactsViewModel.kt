@@ -20,14 +20,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.utilities.ConfigFactoryProtocol
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.home.search.getSearchName
 
 @OptIn(FlowPreview::class)
 @HiltViewModel(assistedFactory = SelectContactsViewModel.Factory::class)
 class SelectContactsViewModel @AssistedInject constructor(
     private val storageProtocol: StorageProtocol,
-    private val configFactoryProtocol: ConfigFactoryProtocol,
+    private val configFactory: ConfigFactory,
     @Assisted private val onlySelectedFromAccountIDs: Set<String>?,
 ) : ViewModel() {
     // Input: The search query
@@ -55,7 +55,7 @@ class SelectContactsViewModel @AssistedInject constructor(
             .map { it.accountID }
             .toList()
 
-    private fun observeContacts() = (configFactoryProtocol.configUpdateNotifications as Flow<Any>)
+    private fun observeContacts() = (configFactory.configUpdateNotifications as Flow<Any>)
         .debounce(100L)
         .onStart { emit(Unit) }
         .map {

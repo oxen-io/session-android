@@ -16,7 +16,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
@@ -42,7 +41,7 @@ data class RouteSelectContacts(
      * If set, only select contacts from these account IDs.
      * If null, select from all contacts.
      */
-    val onlySelectFromAccountIDs: Set<String>? = null
+    val onlySelectFromAccountIDs: List<String>? = null
 )
 
 @Composable

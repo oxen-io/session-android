@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.groups.CreateGroupViewModel
 import org.thoughtcrime.securesms.groups.ViewState
@@ -28,14 +29,16 @@ fun CreateGroupScreen(
                 viewState = viewState,
                 updateState = viewModel::updateState,
                 onClose = onCancelCreation,
-                onSelectContact = { navController.navigate(RouteSelectContacts) },
+                onSelectContact = { navController.navigate(RouteSelectContacts(viewModel.availableContactAccountIDsToSelect)) },
                 onBack = onCancelCreation
             )
         }
 
-        composable<RouteSelectContacts> {
+        composable<RouteSelectContacts> { entry ->
+            val route: RouteSelectContacts = entry.toRoute()
+
             SelectContactsScreen(
-                onlySelectFromAccountIDs = viewModel.availableContactAccountIDsToSelect.toSet(),
+                onlySelectFromAccountIDs = route.onlySelectFromAccountIDs?.toSet(),
                 onDoneClicked = viewModel::onContactsSelected,
                 onBackClicked = navController::popBackStack
             )

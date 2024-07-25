@@ -118,7 +118,7 @@ fun EditGroupScreen(
             val route: RouteSelectContacts = entry.toRoute()
 
             SelectContactsScreen(
-                onlySelectFromAccountIDs = route.onlySelectFromAccountIDs,
+                onlySelectFromAccountIDs = route.onlySelectFromAccountIDs?.toSet(),
                 onDoneClicked = viewModel::onContactSelected,
                 onBackClicked = { navController.popBackStack() },
             )
