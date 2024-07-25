@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.database.Cursor
+import android.graphics.Bitmap
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
@@ -1227,7 +1228,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             visibleMessageView.messageContentView.drawToBitmap()
         } catch (e: Exception) {
             Log.e("Loki", "Failed to show emoji picker", e)
-            return
+            Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
         }
         emojiPickerVisible = true
         ViewUtil.hideKeyboard(this, visibleMessageView)
