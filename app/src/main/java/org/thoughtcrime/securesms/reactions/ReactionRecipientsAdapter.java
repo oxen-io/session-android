@@ -1,8 +1,5 @@
 package org.thoughtcrime.securesms.reactions;
 
-import static org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY;
-import static org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.squareup.phrase.Phrase;
 import java.util.Collections;
 import java.util.List;
 import network.loki.messenger.R;

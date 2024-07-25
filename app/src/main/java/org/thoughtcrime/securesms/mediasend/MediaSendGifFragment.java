@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import network.loki.messenger.R;
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 
 public class MediaSendGifFragment extends Fragment implements MediaSendPageFragment {
 
@@ -40,7 +40,7 @@ public class MediaSendGifFragment extends Fragment implements MediaSendPageFragm
     super.onViewCreated(view, savedInstanceState);
 
     uri = getArguments().getParcelable(KEY_URI);
-    GlideApp.with(this).load(new DecryptableStreamUriLoader.DecryptableUri(uri)).into((ImageView) view);
+    Glide.with(this).load(new DecryptableStreamUriLoader.DecryptableUri(uri)).into((ImageView) view);
   }
 
   @Override

@@ -19,7 +19,7 @@ import org.thoughtcrime.securesms.ShareActivity;
 import org.thoughtcrime.securesms.database.ThreadDatabase;
 import org.thoughtcrime.securesms.database.model.ThreadRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 import org.thoughtcrime.securesms.util.BitmapUtil;
 
 import java.util.LinkedList;
@@ -50,7 +50,7 @@ public class DirectShareService extends ChooserTargetService {
 
               if (recipient.getContactPhoto() != null) {
                   try {
-                      avatar = GlideApp.with(this)
+                      avatar = Glide.with(this)
                               .asBitmap()
                               .load(recipient.getContactPhoto())
                               .circleCrop()

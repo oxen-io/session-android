@@ -25,8 +25,8 @@ import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.ThemeUtil;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsession.utilities.recipients.RecipientExporter;
-import org.thoughtcrime.securesms.mms.GlideApp;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import org.thoughtcrime.securesms.util.AvatarPlaceholderGenerator;
 
 import java.util.Objects;
@@ -117,10 +117,10 @@ public class AvatarImageView extends AppCompatImageView {
   }
 
   private void updateAvatar(Recipient recipient) {
-    setAvatar(GlideApp.with(getContext()), recipient, false);
+    setAvatar(Glide.with(getContext()), recipient, false);
   }
 
-  public void setAvatar(@NonNull GlideRequests requestManager, @Nullable Recipient recipient, boolean quickContactEnabled) {
+  public void setAvatar(@NonNull RequestManager requestManager, @Nullable Recipient recipient, boolean quickContactEnabled) {
     if (recipient != null) {
       if (recipient.isLocalNumber()) {
         setImageDrawable(new ResourceContactPhoto(R.drawable.ic_note_to_self).asDrawable(getContext(), recipient.getColor().toAvatarColor(getContext()), inverted));
@@ -156,7 +156,7 @@ public class AvatarImageView extends AppCompatImageView {
     }
   }
 
-  public void clear(@NonNull GlideRequests glideRequests) {
+  public void clear(@NonNull RequestManager glideRequests) {
     glideRequests.clear(this);
   }
 

@@ -25,7 +25,7 @@ import network.loki.messenger.R;
 import org.thoughtcrime.securesms.components.subsampling.AttachmentBitmapDecoder;
 import org.thoughtcrime.securesms.components.subsampling.AttachmentRegionDecoder;
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader.DecryptableUri;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.RequestManager;
 import org.thoughtcrime.securesms.mms.PartAuthority;
 import org.thoughtcrime.securesms.util.BitmapDecodingException;
 import org.thoughtcrime.securesms.util.BitmapUtil;
@@ -62,7 +62,7 @@ public class ZoomingImageView extends FrameLayout {
   }
 
   @SuppressLint("StaticFieldLeak")
-  public void setImageUri(@NonNull GlideRequests glideRequests, @NonNull Uri uri, @NonNull String contentType)
+  public void setImageUri(@NonNull RequestManager glideRequests, @NonNull Uri uri, @NonNull String contentType)
   {
     final Context context        = getContext();
     final int     maxTextureSize = BitmapUtil.getMaxTextureSize();
@@ -97,7 +97,7 @@ public class ZoomingImageView extends FrameLayout {
     }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
-  private void setImageViewUri(@NonNull GlideRequests glideRequests, @NonNull Uri uri) {
+  private void setImageViewUri(@NonNull RequestManager glideRequests, @NonNull Uri uri) {
     photoView.setVisibility(View.VISIBLE);
     subsamplingImageView.setVisibility(View.GONE);
 

@@ -29,7 +29,7 @@ import com.codewaves.stickyheadergrid.StickyHeaderGridAdapter;
 import org.thoughtcrime.securesms.conversation.v2.utilities.ThumbnailView;
 import org.thoughtcrime.securesms.database.MediaDatabase.MediaRecord;
 import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader.BucketedThreadMedia;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.RequestManager;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.util.MediaUtil;
 
@@ -46,7 +46,7 @@ class MediaGalleryAdapter extends StickyHeaderGridAdapter {
   private static final String TAG = MediaGalleryAdapter.class.getSimpleName();
 
   private final Context             context;
-  private final GlideRequests glideRequests;
+  private final RequestManager glideRequests;
   private final Locale              locale;
   private final ItemClickListener   itemClickListener;
   private final Set<MediaRecord>    selected;
@@ -74,7 +74,7 @@ class MediaGalleryAdapter extends StickyHeaderGridAdapter {
   }
 
   MediaGalleryAdapter(@NonNull Context context,
-                      @NonNull GlideRequests glideRequests,
+                      @NonNull RequestManager glideRequests,
                       BucketedThreadMedia media,
                       Locale locale,
                       ItemClickListener clickListener)

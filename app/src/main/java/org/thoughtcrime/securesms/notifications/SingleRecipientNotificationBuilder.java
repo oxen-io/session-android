@@ -38,7 +38,7 @@ import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.SessionContactDatabase;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.mms.SlideDeck;
 import org.thoughtcrime.securesms.util.AvatarPlaceholderGenerator;
@@ -89,7 +89,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
         try {
           // AC: For some reason, if not use ".asBitmap()" method, the returned BitmapDrawable
           // wraps a recycled bitmap and leads to a crash.
-          Bitmap iconBitmap = GlideApp.with(context.getApplicationContext())
+          Bitmap iconBitmap = Glide.with(context.getApplicationContext())
                   .asBitmap()
                   .load(contactPhoto)
                   .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -291,7 +291,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
       @SuppressWarnings("ConstantConditions")
       Uri uri = slideDeck.getThumbnailSlide().getThumbnailUri();
 
-      return GlideApp.with(context.getApplicationContext())
+      return Glide.with(context.getApplicationContext())
                      .asBitmap()
                      .load(new DecryptableStreamUriLoader.DecryptableUri(uri))
                      .diskCacheStrategy(DiskCacheStrategy.NONE)

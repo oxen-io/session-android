@@ -38,8 +38,8 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.TextUtilities.getInt
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.getAccentColor
@@ -63,7 +63,7 @@ class VisibleMessageContentView : ConstraintLayout {
         message: MessageRecord,
         isStartOfMessageCluster: Boolean = true,
         isEndOfMessageCluster: Boolean = true,
-        glide: GlideRequests = GlideApp.with(this),
+        glide: RequestManager = Glide.with(this),
         thread: Recipient,
         searchQuery: String? = null,
         contactIsTrusted: Boolean = true,
