@@ -1,46 +1,31 @@
 package org.thoughtcrime.securesms.groups
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.navigation.dependency
-import dagger.hilt.android.AndroidEntryPoint
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
-import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupScreenDestination
+import org.thoughtcrime.securesms.groups.compose.EditGroupScreen
 import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class EditClosedGroupActivity: PassphraseRequiredActionBarActivity() {
 
     companion object {
-        const val groupIDKey = "EditClosedGroupActivity_groupID"
-    }
+        private const val EXTRA_GROUP_ID = "EditClosedGroupActivity_groupID"
 
-    @Inject lateinit var editFactory: EditGroupViewModel.Factory
-    @Inject lateinit var inviteFactory: EditGroupInviteViewModel.Factory
-
-    private fun onFinish() {
-        finish()
+        fun createIntent(context: Context, groupSessionId: String): Intent {
+            return Intent(context, EditClosedGroupActivity::class.java).apply {
+                putExtra(EXTRA_GROUP_ID, groupSessionId)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?, ready: Boolean) {
         setContent {
-
             SessionMaterialTheme {
-                DestinationsNavHost(
-                    navGraph = NavGraphs.editGroup,
-                    dependenciesContainerBuilder = {
-                        dependency(NavGraphs.editGroup) {
-                            editFactory.create(intent.getStringExtra(groupIDKey)!!)
-                        }
-                        dependency(NavGraphs.editGroup) {
-                            inviteFactory.create(intent.getStringExtra(groupIDKey)!!)
-                        }
-                        dependency(EditClosedGroupScreenDestination) {
-                            ::onFinish
-                        }
-                    }
+                EditGroupScreen(
+                    groupSessionId = intent.getStringExtra(EXTRA_GROUP_ID)!!,
+                    onFinish = this::finish
                 )
             }
         }

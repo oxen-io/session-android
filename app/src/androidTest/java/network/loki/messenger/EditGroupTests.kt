@@ -15,7 +15,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.thoughtcrime.securesms.ApplicationContext
-import org.thoughtcrime.securesms.groups.compose.EditGroupView
+import org.thoughtcrime.securesms.groups.compose.EditGroup
 import org.thoughtcrime.securesms.groups.EditGroupViewState
 import org.thoughtcrime.securesms.groups.MemberState
 import org.thoughtcrime.securesms.groups.MemberViewModel
@@ -71,7 +71,7 @@ class EditGroupTests {
 
             setContent {
                 PreviewTheme {
-                    EditGroupView(
+                    EditGroup(
                         onBack = {},
                         onInvite = {},
                         onReinvite = {},
@@ -112,7 +112,7 @@ class EditGroupTests {
 
             setContent {
                 PreviewTheme {
-                    EditGroupView(
+                    EditGroup(
                         onBack = {},
                         onInvite = {},
                         onReinvite = { reinvited = true },
@@ -154,7 +154,7 @@ class EditGroupTests {
 
             setContent {
                 PreviewTheme {
-                    EditGroupView(
+                    EditGroup(
                         onBack = {},
                         onInvite = {},
                         onReinvite = {},
@@ -194,7 +194,7 @@ class EditGroupTests {
 
             setContent {
                 PreviewTheme {
-                    EditGroupView(
+                    EditGroup(
                         onBack = {},
                         onInvite = {},
                         onReinvite = {},
@@ -235,7 +235,7 @@ class EditGroupTests {
 
             setContent {
                 PreviewTheme {
-                    EditGroupView(
+                    EditGroup(
                         onBack = {},
                         onInvite = {},
                         onReinvite = {},

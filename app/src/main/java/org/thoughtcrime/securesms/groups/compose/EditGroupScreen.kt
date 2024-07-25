@@ -18,12 +18,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,25 +41,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.google.android.material.color.MaterialColors
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.result.NavResult
-import com.ramcosta.composedestinations.result.ResultBackNavigator
-import com.ramcosta.composedestinations.result.ResultRecipient
 import com.squareup.phrase.Phrase
+import kotlinx.serialization.Serializable
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.groups.ContactList
-import org.thoughtcrime.securesms.groups.EditGroupEvent
-import org.thoughtcrime.securesms.groups.EditGroupInviteViewModel
 import org.thoughtcrime.securesms.groups.EditGroupViewModel
 import org.thoughtcrime.securesms.groups.EditGroupViewState
 import org.thoughtcrime.securesms.groups.MemberState
 import org.thoughtcrime.securesms.groups.MemberViewModel
-import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupInviteScreenDestination
-import org.thoughtcrime.securesms.groups.destinations.EditClosedGroupNameScreenDestination
-import org.thoughtcrime.securesms.groups.toDisplayColor
-import org.thoughtcrime.securesms.groups.toDisplayString
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
 import org.thoughtcrime.securesms.ui.NavigationBar
@@ -66,119 +62,96 @@ import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 import org.thoughtcrime.securesms.ui.theme.bold
 
-@EditGroupNavGraph(start = true)
 @Composable
-@Destination
-fun EditClosedGroupScreen(
-    navigator: DestinationsNavigator,
-    resultSelectContact: ResultRecipient<EditClosedGroupInviteScreenDestination, ContactList>,
-    resultEditName: ResultRecipient<EditClosedGroupNameScreenDestination, String>,
-    viewModel: EditGroupViewModel,
-    onFinish: () -> Unit
+fun EditGroupScreen(
+    groupSessionId: String,
+    onFinish: () -> Unit,
 ) {
-    val group by viewModel.viewState.collectAsState()
+    val navController = rememberNavController()
     val context = LocalContext.current
-    val viewState = group.viewState
-    val eventSink = group.eventSink
+    val viewModel = hiltViewModel<EditGroupViewModel, EditGroupViewModel.Factory> { factory ->
+        factory.create(groupSessionId)
+    }
 
-    resultSelectContact.onNavResult { navResult ->
-        if (navResult is NavResult.Value) {
-            eventSink(EditGroupEvent.InviteContacts(context, navResult.value))
+    NavHost(navController = navController, startDestination = RouteEditGroup) {
+        composable<RouteEditGroup> {
+            EditGroup(
+                onBack = onFinish,
+                onInvite = {
+                    navController.navigate(RouteSelectContacts)
+                },
+                onReinvite = viewModel::onReInviteContact,
+                onPromote = viewModel::onPromoteContact,
+                onRemove = { contact ->
+                    val string = Phrase.from(context, R.string.activity_edit_closed_group_remove_users_single)
+                        .put("user", contact.memberName)
+                        .put("group", viewModel.viewState.value.groupName)
+                        .format()
+                    context.showSessionDialog {
+                        title(R.string.activity_settings_remove)
+                        text(string)
+                        dangerButton(R.string.activity_settings_remove) {
+                            viewModel.onRemoveContact(contact.memberSessionId)
+                        }
+                        cancelButton()
+                    }
+                },
+                onMemberSelected = { member ->
+                    if (member.memberState == MemberState.Admin) {
+                        // show toast saying we can't remove them
+                        Toast.makeText(context,
+                            R.string.ConversationItem_group_member_admin_cannot_remove,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                },
+                viewState = viewModel.viewState.collectAsState().value,
+                onEditNameClicked = viewModel::onEditNameClicked,
+                onEditNameCancelClicked = viewModel::onCancelEditingNameClicked,
+                onEditNameConfirmed = viewModel::onEditNameConfirmClicked,
+                onEditingNameValueChanged = viewModel::onEditingNameChanged,
+                editingName = viewModel.editingName.collectAsState().value,
+            )
+        }
+
+        composable<RouteSelectContacts> { entry ->
+            val route: RouteSelectContacts = entry.toRoute()
+
+            SelectContactsScreen(
+                onlySelectFromAccountIDs = route.onlySelectFromAccountIDs,
+                onDoneClicked = viewModel::onContactSelected,
+                onBackClicked = { navController.popBackStack() },
+            )
         }
     }
 
-    resultEditName.onNavResult { navResult ->
-        if (navResult is NavResult.Value) {
-            eventSink(EditGroupEvent.ChangeName(navResult.value))
-        }
-    }
-
-    EditGroupView(
-        onBack = {
-            onFinish()
-        },
-        onInvite = {
-            navigator.navigate(EditClosedGroupInviteScreenDestination)
-        },
-        onReinvite = { contact ->
-            eventSink(EditGroupEvent.ReInviteContact(contact))
-        },
-        onPromote = { contact ->
-            eventSink(EditGroupEvent.PromoteContact(contact))
-        },
-        onRemove = { contact ->
-            val string = Phrase.from(context, R.string.activity_edit_closed_group_remove_users_single)
-                .put("user", contact.memberName)
-                .put("group", viewState.groupName)
-                .format()
-            context.showSessionDialog {
-                title(R.string.activity_settings_remove)
-                text(string)
-                dangerButton(R.string.activity_settings_remove) {
-                    eventSink(EditGroupEvent.RemoveContact(contact.memberSessionId))
-                }
-                cancelButton()
-            }
-        },
-        onEditName = {
-            navigator.navigate(EditClosedGroupNameScreenDestination)
-        },
-        onMemberSelected = { member ->
-            if (member.memberState == MemberState.Admin) {
-                // show toast saying we can't remove them
-                Toast.makeText(context,
-                    R.string.ConversationItem_group_member_admin_cannot_remove,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        },
-        viewState = viewState
-    )
 }
 
-@EditGroupNavGraph
-@Composable
-@Destination
-fun EditClosedGroupInviteScreen(
-    resultNavigator: ResultBackNavigator<ContactList>,
-    viewModel: EditGroupInviteViewModel,
-) {
-
-    val state by viewModel.viewState.collectAsState()
-    val viewState = state.viewState
-    val currentMemberSessionIds = viewState.currentMembers.map { it.memberSessionId }
-
-    SelectContacts(
-        viewState.allContacts
-            .filterNot { it.accountID in currentMemberSessionIds }
-            .toSet(),
-        onBack = { resultNavigator.navigateBack() },
-        onContactsSelected = {
-            resultNavigator.navigateBack(ContactList(it))
-        },
-    )
-}
-
+@Serializable
+private object RouteEditGroup
 
 @Composable
-fun EditGroupView(
-    onBack: ()->Unit,
-    onInvite: ()->Unit,
-    onReinvite: (String)->Unit,
-    onPromote: (String)->Unit,
-    onRemove: (MemberViewModel)->Unit,
-    onEditName: ()->Unit,
+fun EditGroup(
+    onBack: () -> Unit,
+    onInvite: () -> Unit,
+    onReinvite: (accountId: String) -> Unit,
+    onPromote: (accountId: String) -> Unit,
+    onRemove: (MemberViewModel) -> Unit,
+    onEditingNameValueChanged: (String) -> Unit,
+    editingName: String?,
+    onEditNameClicked: () -> Unit,
+    onEditNameConfirmed: () -> Unit,
+    onEditNameCancelClicked: () -> Unit,
     onMemberSelected: (MemberViewModel) -> Unit,
     viewState: EditGroupViewState,
 ) {
-
     Scaffold(
         topBar = {
             NavigationBar(
                 title = stringResource(id = R.string.activity_edit_closed_group_title),
                 onBack = onBack,
                 actionElement = {
-                    TextButton(onClick = { onBack() }) {
+                    TextButton(onClick = onBack) {
                         Text(
                             text = stringResource(id = R.string.menu_done_button),
                             color = LocalColors.current.text,
@@ -198,29 +171,51 @@ fun EditGroupView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
             ) {
-                val nameDesc = stringResource(R.string.AccessibilityId_group_name)
-                Text(
-                    text = viewState.groupName,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.semantics {
-                        contentDescription = nameDesc
+                if (editingName != null) {
+                    IconButton(onClick = onEditNameCancelClicked) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_x),
+                            contentDescription = stringResource(R.string.AccessibilityId_cancel_name_change),
+                            tint = LocalColors.current.text,
+                        )
                     }
-                )
-                if (viewState.admin) {
-                    Icon(
-                        painterResource(R.drawable.ic_baseline_edit_24),
-                        null,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .size(16.dp)
-                            .clip(CircleShape)
-                            .align(CenterVertically)
-                            .clickable { onEditName() }
+
+                    TextField(
+                        value = editingName,
+                        onValueChange = onEditingNameValueChanged,
+                        textStyle = LocalType.current.base
                     )
+
+                    IconButton(onClick = onEditNameConfirmed) {
+                        Icon(
+                            painter = painterResource(R.drawable.check),
+                            contentDescription = stringResource(R.string.AccessibilityId_accept_name_change),
+                            tint = LocalColors.current.text,
+                        )
+                    }
+                } else {
+                    val nameDesc = stringResource(R.string.AccessibilityId_group_name)
+                    Text(
+                        text = viewState.groupName,
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.semantics {
+                            contentDescription = nameDesc
+                        }
+                    )
+
+                    if (viewState.canEditName) {
+                        IconButton(onClick = onEditNameClicked) {
+                            Icon(
+                                painterResource(R.drawable.ic_baseline_edit_24),
+                                contentDescription = stringResource(R.string.AccessibilityId_closed_group_edit_group_name),
+                                tint = LocalColors.current.text,
+                            )
+                        }
+                    }
                 }
             }
             // Description
@@ -239,7 +234,7 @@ fun EditGroupView(
             }
 
             // Invite
-            if (viewState.admin) {
+            if (viewState.canInvite) {
                 CellWithPaddingAndMargin(margin = 16.dp, padding = 16.dp) {
                     Row(
                         modifier = Modifier
@@ -267,7 +262,8 @@ fun EditGroupView(
                 items(viewState.memberStateList) { member ->
                     // Each member's view
                     MemberItem(
-                        isAdmin = viewState.admin,
+                        canInvite = viewState.canInvite,
+                        canPromote = viewState.canPromote,
                         member = member,
                         onReinvite = onReinvite,
                         onPromote = onPromote,
@@ -283,7 +279,8 @@ fun EditGroupView(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MemberItem(modifier: Modifier = Modifier,
-               isAdmin: Boolean,
+               canInvite: Boolean,
+               canPromote: Boolean,
                member: MemberViewModel,
                onReinvite: (String) -> Unit,
                onPromote: (String) -> Unit,
@@ -334,7 +331,7 @@ fun MemberItem(modifier: Modifier = Modifier,
             }
         }
         // Resend button
-        if (isAdmin && member.memberState == MemberState.InviteFailed) {
+        if (canInvite && member.memberState == MemberState.InviteFailed) {
             val reinviteDesc = stringResource(R.string.AccessibilityId_reinvite_member)
             TextButton(
                 onClick = {
@@ -353,7 +350,7 @@ fun MemberItem(modifier: Modifier = Modifier,
                     color = LocalColors.current.text
                 )
             }
-        } else if (isAdmin && member.memberState == MemberState.Member) {
+        } else if (canPromote && member.memberState == MemberState.Member) {
             // Promotion button
             val promoteDesc = stringResource(R.string.AccessibilityId_promote_member)
             TextButton(
@@ -419,15 +416,36 @@ fun PreviewList() {
             true
         )
 
-        EditGroupView(
+        EditGroup(
             onBack = {},
             onInvite = {},
             onReinvite = {},
             onPromote = {},
             onRemove = {},
-            onEditName = {},
             onMemberSelected = {},
-            viewState = viewState
+            viewState = viewState,
+            onEditNameCancelClicked = {},
+            onEditNameConfirmed = {},
+            onEditNameClicked = {},
+            editingName = null,
+            onEditingNameValueChanged = {},
         )
     }
+}
+
+@Composable
+fun MemberState.toDisplayString(): String? = when(this) {
+    MemberState.InviteSent -> stringResource(id = R.string.groupMemberStateInviteSent)
+    MemberState.Inviting -> stringResource(id = R.string.groupMemberStateInviting)
+    MemberState.InviteFailed -> stringResource(id = R.string.groupMemberStateInviteFailed)
+    MemberState.PromotionSent -> stringResource(id = R.string.groupMemberStatePromotionSent)
+    MemberState.Promoting -> stringResource(id = R.string.groupMemberStatePromoting)
+    MemberState.PromotionFailed -> stringResource(id = R.string.groupMemberStatePromotionFailed)
+    else -> null
+}
+
+@Composable
+fun MemberState.toDisplayColor(): Color = when (this) {
+    MemberState.InviteFailed, MemberState.PromotionFailed -> LocalColors.current.danger
+    else -> LocalColors.current.text
 }

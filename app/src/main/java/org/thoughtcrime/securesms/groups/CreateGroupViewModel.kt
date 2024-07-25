@@ -30,7 +30,7 @@ class CreateGroupViewModel @Inject constructor(
 
     fun updateState(stateUpdate: StateUpdate) {
         when (stateUpdate) {
-            is StateUpdate.AddContacts -> _viewState.update { copy(members = members + stateUpdate.value) }
+            is StateUpdate.AddContacts -> _viewState.update { copy(members = members + contacts.value.orEmpty().filter { it.accountID in stateUpdate.accountIDs }) }
             is StateUpdate.Description -> _viewState.update { copy(description = stateUpdate.value) }
             is StateUpdate.Name -> _viewState.update { copy(name = stateUpdate.value) }
             is StateUpdate.RemoveContact -> _viewState.update { copy(members = members - stateUpdate.value) }
@@ -45,12 +45,12 @@ class CreateGroupViewModel @Inject constructor(
     val contacts
         get() = liveData { emit(storage.getAllContacts()) }
 
-    val availableContactsToSelect: List<Contact>
+    val availableContactAccountIDsToSelect: List<String>
         get() = contacts.value.orEmpty().filterNot { contact ->
             _viewState.value?.members.orEmpty().any { it.accountID == contact.accountID }
-        }
+        }.map { it.accountID }
 
-    suspend fun tryCreateGroup() {
+    private fun tryCreateGroup() {
 
         val currentState = _viewState.value!!
 
@@ -91,8 +91,8 @@ class CreateGroupViewModel @Inject constructor(
         }
     }
 
-    fun onContactsSelected(contacts: List<Contact>) {
-        updateState(StateUpdate.AddContacts(contacts))
+    fun onContactsSelected(accountIDs: List<String>) {
+        updateState(StateUpdate.AddContacts(accountIDs))
     }
 }
 
@@ -119,5 +119,5 @@ sealed class StateUpdate {
     data class Name(val value: String): StateUpdate()
     data class Description(val value: String): StateUpdate()
     data class RemoveContact(val value: Contact): StateUpdate()
-    data class AddContacts(val value: List<Contact>): StateUpdate()
+    data class AddContacts(val accountIDs: List<String>): StateUpdate()
 }

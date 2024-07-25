@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -22,25 +23,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.BuildConfig
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
+import org.thoughtcrime.securesms.groups.ContactItem
 import org.thoughtcrime.securesms.home.search.getSearchName
 import org.thoughtcrime.securesms.ui.Avatar
 import org.thoughtcrime.securesms.ui.theme.LocalColors
@@ -88,24 +89,16 @@ fun GroupMinimumVersionBanner(modifier: Modifier = Modifier) {
 }
 
 fun LazyListScope.multiSelectMemberList(
-    contacts: List<Contact>,
+    contacts: List<ContactItem>,
     modifier: Modifier = Modifier,
-    selectedContacts: Set<Contact> = emptySet(),
-    onListUpdated: (Set<Contact>)->Unit = {},
+    onContactItemClicked: (accountId: String) -> Unit,
 ) {
     items(contacts) { contact ->
-        val isSelected = selectedContacts.contains(contact)
-
-        val update = {
-            val newList =
-                if (isSelected) selectedContacts - contact
-                else selectedContacts + contact
-            onListUpdated(newList)
-        }
+        val onClick = { onContactItemClicked(contact.accountID) }
 
         Row(modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = update)
+            .toggleable(value = contact.selected, onValueChange = { onClick() }, role = Role.Checkbox)
             .padding(vertical = 8.dp, horizontal = 24.dp),
             verticalAlignment = CenterVertically
         ) {
@@ -114,8 +107,8 @@ fun LazyListScope.multiSelectMemberList(
                 modifier = Modifier
                     .size(48.dp)
             )
-            MemberName(name = contact.getSearchName(), modifier = Modifier.padding(16.dp))
-            RadioButton(selected = isSelected, onClick = update)
+            MemberName(name = contact.name, modifier = Modifier.padding(16.dp))
+            RadioButton(selected = contact.selected, onClick = null)
         }
     }
 }
@@ -205,15 +198,23 @@ fun RowScope.ContactPhoto(sessionId: String, modifier: Modifier = Modifier) {
 @Composable
 fun PreviewMemberList() {
     val random = "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234"
-    val previewMembers = setOf(
-        Contact(random).apply {
-            name = "Person"
-        }
-    )
+
     PreviewTheme {
         LazyColumn {
             multiSelectMemberList(
-                contacts = previewMembers.toList(),
+                contacts = listOf(
+                    ContactItem(
+                        accountID = random,
+                        name = "Person",
+                        selected = false,
+                    ),
+                    ContactItem(
+                        accountID = random,
+                        name = "Cow",
+                        selected = true,
+                    )
+                ),
+                onContactItemClicked = {}
             )
         }
     }

@@ -1,101 +1,110 @@
 package org.thoughtcrime.securesms.groups
 
-import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.cash.molecule.RecompositionMode
-import app.cash.molecule.launchMolecule
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
-import network.loki.messenger.R
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.withContext
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
-import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.InviteContactsJob
 import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsignal.utilities.AccountId
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
-import org.thoughtcrime.securesms.ui.theme.LocalColors
 
+private const val MAX_GROUP_NAME_LENGTH = 100
+
+@HiltViewModel(assistedFactory = EditGroupViewModel.Factory::class)
 class EditGroupViewModel @AssistedInject constructor(
     @Assisted private val groupSessionId: String,
     private val storage: StorageProtocol,
-    private val configFactory: ConfigFactory
+    configFactory: ConfigFactory
 ): ViewModel() {
+    // Input/Output state
+    private val mutableEditingName = MutableStateFlow<String?>(null)
 
-    val viewState = viewModelScope.launchMolecule(RecompositionMode.Immediate) {
+    // Output: The name of the group being edited. Null if it's not in edit mode, not to be confused
+    // with empty string, where it's a valid editing state.
+    val editingName: StateFlow<String?> get() = mutableEditingName
 
-        val currentUserId = rememberSaveable {
-            storage.getUserPublicKey()!!
-        }
+    // Output: the overall view state
+    val viewState = configFactory.configUpdateNotifications
+        .filter { it.hexString == groupSessionId }
+        .onStart { emit(AccountId(groupSessionId)) }
+        .map { _ ->
+            withContext(Dispatchers.Default) {
+                val currentUserId = checkNotNull(storage.getUserPublicKey()) {
+                    "User public key is null"
+                }
 
-        fun getMembers() = storage.getMembers(groupSessionId).map { member ->
-            MemberViewModel(
-                memberName = member.name,
-                memberSessionId = member.sessionId,
-                currentUser = member.sessionId == currentUserId,
-                memberState = memberStateOf(member)
-            )
-        }
-
-        val closedGroupInfo by configFactory.configUpdateNotifications.map { it.hexString} .filter(groupSessionId::equals)
-            .map {
-                storage.getClosedGroupDisplayInfo(it)!! to getMembers()
-            }.collectAsState(initial = storage.getClosedGroupDisplayInfo(groupSessionId)!! to getMembers())
-
-        val (closedGroup, closedGroupMembers) = closedGroupInfo
-
-        val name = closedGroup.name
-        val description = closedGroup.description
-
-        EditGroupState(
-            EditGroupViewState(
-                groupName = name.orEmpty(),
-                groupDescription = description,
-                memberStateList = closedGroupMembers,
-                admin = closedGroup.isUserAdmin
-            )
-        ) { event ->
-            when (event) {
-                is EditGroupEvent.InviteContacts -> {
-                    val sessionIds = event.contacts
-                    storage.inviteClosedGroupMembers(
-                        groupSessionId,
-                        sessionIds.contacts.map(Contact::accountID)
+                val members = storage.getMembers(groupSessionId).map { member ->
+                    MemberViewModel(
+                        memberName = member.name,
+                        memberSessionId = member.sessionId,
+                        memberState = memberStateOf(member),
+                        currentUser = member.sessionId == currentUserId
                     )
                 }
 
-                is EditGroupEvent.ReInviteContact -> {
-                    // do a buffer
-                    JobQueue.shared.add(
-                        InviteContactsJob(
-                            groupSessionId,
-                            arrayOf(event.contactSessionId)
-                        )
-                    )
-                }
-
-                is EditGroupEvent.PromoteContact -> {
-                    // do a buffer
-                    storage.promoteMember(groupSessionId, arrayOf(event.contactSessionId))
-                }
-
-                is EditGroupEvent.RemoveContact -> {
-                    storage.removeMember(groupSessionId, arrayOf(event.contactSessionId))
-                }
-
-                is EditGroupEvent.ChangeName -> {
-                    storage.setName(groupSessionId, event.newName)
-                }
+                val displayInfo = storage.getClosedGroupDisplayInfo(groupSessionId)
+                EditGroupViewState(
+                    groupName = displayInfo?.name.orEmpty(),
+                    groupDescription = displayInfo?.description,
+                    memberStateList = members,
+                    admin = displayInfo?.isUserAdmin == true,
+                )
             }
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, EditGroupViewState())
+
+    fun onContactSelected(contactAccountIDs: List<String>) {
+        storage.inviteClosedGroupMembers(groupSessionId, contactAccountIDs)
+    }
+
+    fun onReInviteContact(contactSessionId: String) {
+        JobQueue.shared.add(InviteContactsJob(groupSessionId, arrayOf(contactSessionId)))
+    }
+
+    fun onPromoteContact(contactSessionId: String) {
+        storage.promoteMember(groupSessionId, arrayOf(contactSessionId))
+    }
+
+    fun onRemoveContact(contactSessionId: String) {
+        storage.removeMember(groupSessionId, arrayOf(contactSessionId))
+    }
+
+    fun onEditNameClicked() {
+        mutableEditingName.value = viewState.value.groupName
+    }
+
+    fun onCancelEditingNameClicked() {
+        mutableEditingName.value = null
+    }
+
+    fun onEditingNameChanged(value: String) {
+        // Cut off the group name so we don't exceed max length
+        if (value.length > MAX_GROUP_NAME_LENGTH) {
+            mutableEditingName.value = value.substring(0, MAX_GROUP_NAME_LENGTH)
+        } else {
+            mutableEditingName.value = value
+        }
+    }
+
+    fun onEditNameConfirmClicked() {
+        val newName = mutableEditingName.value
+        if (newName != null) {
+            storage.setName(groupSessionId, newName.trim())
+            mutableEditingName.value = null
         }
     }
 
@@ -105,11 +114,6 @@ class EditGroupViewModel @AssistedInject constructor(
     }
 
 }
-
-data class EditGroupState(
-    val viewState: EditGroupViewState,
-    val eventSink: (EditGroupEvent) -> Unit
-)
 
 data class MemberViewModel(
     val memberName: String?,
@@ -129,23 +133,6 @@ enum class MemberState {
     Member
 }
 
-@Composable
-fun MemberState.toDisplayString(): String? = when(this) {
-    MemberState.InviteSent -> stringResource(id = R.string.groupMemberStateInviteSent)
-    MemberState.Inviting -> stringResource(id = R.string.groupMemberStateInviting)
-    MemberState.InviteFailed -> stringResource(id = R.string.groupMemberStateInviteFailed)
-    MemberState.PromotionSent -> stringResource(id = R.string.groupMemberStatePromotionSent)
-    MemberState.Promoting -> stringResource(id = R.string.groupMemberStatePromoting)
-    MemberState.PromotionFailed -> stringResource(id = R.string.groupMemberStatePromotionFailed)
-    else -> null
-}
-
-@Composable
-fun MemberState.toDisplayColor(): Color = when (this) {
-    MemberState.InviteFailed, MemberState.PromotionFailed -> LocalColors.current.danger
-    else -> LocalColors.current.text
-}
-
 fun memberStateOf(member: GroupMember): MemberState = when {
     member.inviteFailed -> MemberState.InviteFailed
     member.invitePending -> MemberState.InviteSent
@@ -156,18 +143,17 @@ fun memberStateOf(member: GroupMember): MemberState = when {
 }
 
 data class EditGroupViewState(
-    val groupName: String,
-    val groupDescription: String?,
-    val memberStateList: List<MemberViewModel>,
-    val admin: Boolean
-)
+    val groupName: String = "",
+    val groupDescription: String? = null,
+    val memberStateList: List<MemberViewModel> = emptyList(),
+    private val admin: Boolean = false
+) {
+    val canEditName: Boolean
+        get() = admin
 
-sealed class EditGroupEvent {
-    data class InviteContacts(val context: Context,
-                              val contacts: ContactList
-    ): EditGroupEvent()
-    data class ReInviteContact(val contactSessionId: String): EditGroupEvent()
-    data class PromoteContact(val contactSessionId: String): EditGroupEvent()
-    data class RemoveContact(val contactSessionId: String): EditGroupEvent()
-    data class ChangeName(val newName: String): EditGroupEvent()
+    val canInvite: Boolean
+        get() = admin
+
+    val canPromote: Boolean
+        get() = admin
 }

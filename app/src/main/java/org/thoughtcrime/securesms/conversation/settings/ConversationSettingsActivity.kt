@@ -249,10 +249,11 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                         val groupID: String = recipient.address.toGroupString()
                         putExtra(EditLegacyClosedGroupActivity.groupIDKey, groupID)
                     }
-                    recipient.isClosedGroupV2Recipient -> Intent(this, EditClosedGroupActivity::class.java).apply {
-                        val groupID = recipient.address.serialize()
-                        putExtra(EditClosedGroupActivity.groupIDKey, groupID)
-                    }
+
+                    recipient.isClosedGroupV2Recipient -> EditClosedGroupActivity.createIntent(
+                        context = this,
+                        groupSessionId = recipient.address.serialize()
+                    )
 
                     else -> return
                 }

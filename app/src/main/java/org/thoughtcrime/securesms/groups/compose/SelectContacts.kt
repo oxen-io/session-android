@@ -15,10 +15,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
@@ -26,45 +24,59 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.serialization.Serializable
 import network.loki.messenger.R
-import org.session.libsession.messaging.contacts.Contact
-import org.thoughtcrime.securesms.home.search.getSearchName
+import org.thoughtcrime.securesms.groups.ContactItem
+import org.thoughtcrime.securesms.groups.SelectContactsViewModel
 import org.thoughtcrime.securesms.ui.CloseIcon
 import org.thoughtcrime.securesms.ui.NavigationBar
 import org.thoughtcrime.securesms.ui.SearchBar
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
+
 @Serializable
-object RouteSelectContacts
+data class RouteSelectContacts(
+    /**
+     * If set, only select contacts from these account IDs.
+     * If null, select from all contacts.
+     */
+    val onlySelectFromAccountIDs: Set<String>? = null
+)
+
+@Composable
+fun SelectContactsScreen(
+    onlySelectFromAccountIDs: Set<String>?,
+    onDoneClicked: (selectedContactAccountIDs: List<String>) -> Unit,
+    onBackClicked: () -> Unit,
+) {
+    val viewModel = hiltViewModel<SelectContactsViewModel, SelectContactsViewModel.Factory> { factory ->
+        factory.create(onlySelectFromAccountIDs)
+    }
+
+    SelectContacts(
+        contacts = viewModel.contacts.collectAsState().value,
+        onContactItemClicked = viewModel::onContactItemClicked,
+        searchQuery = viewModel.searchQuery.collectAsState().value,
+        onSearchQueryChanged = viewModel::onSearchQueryChanged,
+        onDoneClicked = { onDoneClicked(viewModel.currentSelectedAccountIDs) },
+        onBack = onBackClicked,
+    )
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SelectContacts(
-    selectFrom: List<Contact>,
-    onBack: ()->Unit,
-    onClose: (()->Unit)? = null,
-    onContactsSelected: (List<Contact>) -> Unit,
+    contacts: List<ContactItem>,
+    onContactItemClicked: (accountId: String) -> Unit,
+    searchQuery: String,
+    onSearchQueryChanged: (String) -> Unit,
+    onDoneClicked: () -> Unit,
+    onBack: () -> Unit,
+    onClose: (() -> Unit)? = null,
     @StringRes okButtonResId: Int = R.string.ok
 ) {
-
-    var queryFilter by remember { mutableStateOf("") }
-
-    // May introduce more advanced filters
-    val filtered = if (queryFilter.isEmpty()) selectFrom
-        else {
-            selectFrom
-            .filter { contact ->
-                contact.getSearchName().lowercase()
-                    .contains(queryFilter.lowercase())
-            }
-        }
-
-    var selected by remember {
-        mutableStateOf(emptySet<Contact>())
-    }
-
     Column {
         NavigationBar(
             title = stringResource(id = R.string.activity_create_closed_group_select_contacts),
@@ -80,18 +92,18 @@ fun SelectContacts(
             stickyHeader {
                 GroupMinimumVersionBanner()
                 // Search Bar
-                SearchBar(queryFilter, onValueChanged = { value -> queryFilter = value })
+                SearchBar(query = searchQuery, onValueChanged = onSearchQueryChanged)
             }
 
             multiSelectMemberList(
-                contacts = filtered.toList(),
-                selectedContacts = selected,
-                onListUpdated = { selected = it },
+                contacts = contacts,
+                onContactItemClicked = onContactItemClicked,
             )
         }
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .background(
                     verticalGradient(
                         0f to Color.Transparent,
@@ -100,15 +112,17 @@ fun SelectContacts(
                 )
         ) {
             OutlinedButton(
-                onClick = { onContactsSelected(selected.toList()) },
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp).defaultMinSize(minWidth = 128.dp),
+                onClick = onDoneClicked,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 4.dp)
+                    .defaultMinSize(minWidth = 128.dp),
                 border = BorderStroke(1.dp, LocalColors.current.borders),
                 shape = CircleShape,
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = Color.Transparent,
                     contentColor = LocalColors.current.text,
                 )
-                ) {
+            ) {
                 Text(
                     stringResource(id = okButtonResId)
                 )
@@ -122,7 +136,15 @@ fun SelectContacts(
 @Composable
 fun PreviewSelectContacts() {
     PreviewTheme() {
-        SelectContacts(selectFrom = emptyList(), onBack = {  }, onContactsSelected = {})
+        SelectContacts(
+            contacts = emptyList(),
+            onContactItemClicked = {},
+            searchQuery = "",
+            onSearchQueryChanged = {},
+            onDoneClicked = {},
+            onBack = {},
+            onClose = null
+        )
     }
 }
 

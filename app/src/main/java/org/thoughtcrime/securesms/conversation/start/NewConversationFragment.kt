@@ -62,7 +62,7 @@ class StartConversationFragment : BottomSheetDialogFragment(), StartConversation
     }
 
     override fun onCreateGroupSelected() {
-        replaceFragment(CreateGroupFragment().also { it.delegate = this })
+        replaceFragment(CreateGroupFragment())
     }
 
     override fun onJoinCommunitySelected() {

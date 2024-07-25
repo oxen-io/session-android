@@ -20,7 +20,6 @@ fun CreateGroupScreen(
     onCancelCreation: () -> Unit,
 ) {
     val viewState by viewModel.viewState.observeAsState(ViewState.DEFAULT)
-
     val navController = rememberNavController()
 
     NavHost(navController, startDestination = RouteCreateGroup) {
@@ -35,10 +34,10 @@ fun CreateGroupScreen(
         }
 
         composable<RouteSelectContacts> {
-            SelectContacts(
-                selectFrom = viewModel.availableContactsToSelect,
-                onBack = { navController.popBackStack() },
-                onContactsSelected = viewModel::onContactsSelected
+            SelectContactsScreen(
+                onlySelectFromAccountIDs = viewModel.availableContactAccountIDsToSelect.toSet(),
+                onDoneClicked = viewModel::onContactsSelected,
+                onBackClicked = navController::popBackStack
             )
         }
 

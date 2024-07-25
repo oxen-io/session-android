@@ -67,7 +67,7 @@ class ConfigFactory(
     private val listeners: MutableList<ConfigFactoryUpdateListener> = mutableListOf()
 
     private val _configUpdateNotifications = Channel<AccountId>()
-    val configUpdateNotifications = _configUpdateNotifications.receiveAsFlow()
+    override val configUpdateNotifications = _configUpdateNotifications.receiveAsFlow()
 
     fun registerListener(listener: ConfigFactoryUpdateListener) {
         listeners += listener

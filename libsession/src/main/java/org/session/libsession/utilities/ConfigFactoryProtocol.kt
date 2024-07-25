@@ -1,5 +1,6 @@
 package org.session.libsession.utilities
 
+import kotlinx.coroutines.flow.Flow
 import network.loki.messenger.libsession_util.Config
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
@@ -18,6 +19,8 @@ interface ConfigFactoryProtocol {
     val contacts: Contacts?
     val convoVolatile: ConversationVolatileConfig?
     val userGroups: UserGroupsConfig?
+
+    val configUpdateNotifications: Flow<AccountId>
 
     fun getGroupInfoConfig(groupSessionId: AccountId): GroupInfoConfig?
     fun getGroupMemberConfig(groupSessionId: AccountId): GroupMembersConfig?
