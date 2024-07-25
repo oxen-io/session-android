@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,10 +17,10 @@ import org.thoughtcrime.securesms.groups.ViewState
 
 @Composable
 fun CreateGroupScreen(
-    viewModel: CreateGroupViewModel,
     onFinishCreation: () -> Unit,
     onCancelCreation: () -> Unit,
 ) {
+    val viewModel = hiltViewModel<CreateGroupViewModel>()
     val viewState by viewModel.viewState.observeAsState(ViewState.DEFAULT)
     val navController = rememberNavController()
 

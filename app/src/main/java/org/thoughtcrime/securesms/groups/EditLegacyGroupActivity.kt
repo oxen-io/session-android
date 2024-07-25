@@ -40,7 +40,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class EditLegacyClosedGroupActivity : PassphraseRequiredActionBarActivity() {
+class EditLegacyGroupActivity : PassphraseRequiredActionBarActivity() {
 
     @Inject
     lateinit var groupConfigFactory: ConfigFactory
@@ -72,9 +72,9 @@ class EditLegacyClosedGroupActivity : PassphraseRequiredActionBarActivity() {
 
     private val memberListAdapter by lazy {
         if (isSelfAdmin)
-            EditClosedGroupMembersAdapter(this, Glide.with(this), isSelfAdmin, this::onMemberClick)
+            EditLegacyGroupMembersAdapter(this, Glide.with(this), isSelfAdmin, this::onMemberClick)
         else
-            EditClosedGroupMembersAdapter(this, Glide.with(this), isSelfAdmin)
+            EditLegacyGroupMembersAdapter(this, Glide.with(this), isSelfAdmin)
     }
 
     private lateinit var mainContentContainer: LinearLayout
@@ -121,7 +121,7 @@ class EditLegacyClosedGroupActivity : PassphraseRequiredActionBarActivity() {
 
         findViewById<RecyclerView>(R.id.rvUserList).apply {
             adapter = memberListAdapter
-            layoutManager = LinearLayoutManager(this@EditLegacyClosedGroupActivity)
+            layoutManager = LinearLayoutManager(this@EditLegacyGroupActivity)
         }
 
         lblGroupNameDisplay.text = originalName
@@ -142,13 +142,13 @@ class EditLegacyClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         LoaderManager.getInstance(this).initLoader(loaderID, null, object : LoaderManager.LoaderCallbacks<GroupMembers> {
 
             override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<GroupMembers> {
-                return EditClosedGroupLoader(this@EditLegacyClosedGroupActivity, groupID)
+                return EditLegacyClosedGroupLoader(this@EditLegacyGroupActivity, groupID)
             }
 
             override fun onLoadFinished(loader: Loader<GroupMembers>, groupMembers: GroupMembers) {
                 // We no longer need any subsequent loading events
                 // (they will occur on every activity resume).
-                LoaderManager.getInstance(this@EditLegacyClosedGroupActivity).destroyLoader(loaderID)
+                LoaderManager.getInstance(this@EditLegacyGroupActivity).destroyLoader(loaderID)
 
                 members.clear()
                 members.addAll(groupMembers.members.toHashSet())
@@ -231,7 +231,7 @@ class EditLegacyClosedGroupActivity : PassphraseRequiredActionBarActivity() {
     }
 
     private fun onAddMembersClick() {
-        val intent = Intent(this@EditLegacyClosedGroupActivity, SelectContactsActivity::class.java)
+        val intent = Intent(this@EditLegacyGroupActivity, SelectContactsActivity::class.java)
         intent.putExtra(SelectContactsActivity.usersToExcludeKey, allMembers.toTypedArray())
         intent.putExtra(SelectContactsActivity.emptyStateTextKey, "No contacts to add")
         startActivityForResult(intent, addUsersRequestCode)
@@ -291,7 +291,7 @@ class EditLegacyClosedGroupActivity : PassphraseRequiredActionBarActivity() {
 
         if (!members.contains(userAsRecipient) && !members.map { it.address.toString() }.containsAll(originalMembers.minus(userPublicKey))) {
             val message = "Can't leave while adding or removing other members."
-            return Toast.makeText(this@EditLegacyClosedGroupActivity, message, Toast.LENGTH_LONG).show()
+            return Toast.makeText(this@EditLegacyGroupActivity, message, Toast.LENGTH_LONG).show()
         }
 
         if (isClosedGroup) {
@@ -317,7 +317,7 @@ class EditLegacyClosedGroupActivity : PassphraseRequiredActionBarActivity() {
                 finish()
             } catch (exception: Exception) {
                 val message = if (exception is MessageSender.Error) exception.description else "An error occurred"
-                Toast.makeText(this@EditLegacyClosedGroupActivity, message, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@EditLegacyGroupActivity, message, Toast.LENGTH_LONG).show()
                 loaderContainer.fadeOut()
                 isLoading = false
             }

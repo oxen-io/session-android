@@ -23,8 +23,8 @@ import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
-import org.thoughtcrime.securesms.groups.EditClosedGroupActivity
-import org.thoughtcrime.securesms.groups.EditLegacyClosedGroupActivity
+import org.thoughtcrime.securesms.groups.EditGroupActivity
+import org.thoughtcrime.securesms.groups.EditLegacyGroupActivity
 import org.thoughtcrime.securesms.showSessionDialog
 import java.io.IOException
 import javax.inject.Inject
@@ -245,12 +245,12 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                 val recipient = viewModel.recipient ?: return
 
                 val intent = when {
-                    recipient.isLegacyClosedGroupRecipient -> Intent(this, EditLegacyClosedGroupActivity::class.java).apply {
+                    recipient.isLegacyClosedGroupRecipient -> Intent(this, EditLegacyGroupActivity::class.java).apply {
                         val groupID: String = recipient.address.toGroupString()
-                        putExtra(EditLegacyClosedGroupActivity.groupIDKey, groupID)
+                        putExtra(EditLegacyGroupActivity.groupIDKey, groupID)
                     }
 
-                    recipient.isClosedGroupV2Recipient -> EditClosedGroupActivity.createIntent(
+                    recipient.isClosedGroupV2Recipient -> EditGroupActivity.createIntent(
                         context = this,
                         groupSessionId = recipient.address.serialize()
                     )

@@ -8,13 +8,13 @@ import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.groups.compose.EditGroupScreen
 import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
 
-class EditClosedGroupActivity: PassphraseRequiredActionBarActivity() {
+class EditGroupActivity: PassphraseRequiredActionBarActivity() {
 
     companion object {
         private const val EXTRA_GROUP_ID = "EditClosedGroupActivity_groupID"
 
         fun createIntent(context: Context, groupSessionId: String): Intent {
-            return Intent(context, EditClosedGroupActivity::class.java).apply {
+            return Intent(context, EditGroupActivity::class.java).apply {
                 putExtra(EXTRA_GROUP_ID, groupSessionId)
             }
         }
