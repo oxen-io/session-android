@@ -23,8 +23,8 @@
         <item quantity="other">%d messages per conversation</item>
     </plurals>
 
-    <string name="BucketedThreadMedia_Today">Vandag</string>
-    <string name="BucketedThreadMedia_Yesterday">Gister</string>
+    <string name="BucketedThreadMedia_Today">Foo</string>
+    <string name="BucketedThreadMedia_Yesterday">Bar</string>
     <!-- END OF NUKE BLOCK! -->
 
 
@@ -216,9 +216,6 @@
     <string name="attachmentsFileType">File Type:</string>
     <string name="attachmentsFilesEmpty">You don\'t have any files in this conversation.</string>
     <string name="attachmentsImageErrorMetadata">Unable to remove metadata from file.</string>
-    <string name="attachmentsLoadingNewerFiles">Loading Newer Files...</string>
-    <string name="attachmentsLoadingOlderFiles">Loading Older Files...</string>
-    <string name="attachmentsMedia">{name} on {date_time}</string>
     <string name="attachmentsMediaEmpty">You don\'t have any media in this conversation.</string>
     <string name="attachmentsMediaSaved">Media saved by {name}</string>
     <string name="attachmentsResolution">Resolution:</string>

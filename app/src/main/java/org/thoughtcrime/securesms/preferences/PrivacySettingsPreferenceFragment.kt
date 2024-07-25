@@ -106,7 +106,7 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        addPreferencesFromResource(R.xml.preferences_app_protection)
+        addPreferencesFromResource(R.xml.preferences_privacy)
     }
 
     override fun onResume() {

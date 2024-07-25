@@ -3,8 +3,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/screenSecurity"
-        >
+        android:title="@string/screenSecurity">
 
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:key="pref_android_screen_lock"
@@ -40,6 +39,7 @@
             android:key="pref_typing_indicators"
             android:title="@string/typingIndicators"
             android:summary="@string/typingIndicatorsDescription" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/linkPreviews">
