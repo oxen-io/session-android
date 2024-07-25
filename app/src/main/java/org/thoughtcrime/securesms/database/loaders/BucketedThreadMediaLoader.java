@@ -90,19 +90,18 @@ public class BucketedThreadMediaLoader extends AsyncTaskLoader<BucketedThreadMed
 
     private final TimeBucket[] TIME_SECTIONS;
 
-    private String localisedYesterdayString = DateUtils.INSTANCE.getLocalisedRelativeDayString(RelativeDay.YESTERDAY);
-    private String localisedTodayString     = DateUtils.INSTANCE.getLocalisedRelativeDayString(RelativeDay.TODAY);
-
-    public BucketedThreadMedia(@NonNull Context context) {
-
-      this.TODAY         = new TimeBucket(localisedTodayString, TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -1), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, 1000));
-      this.YESTERDAY     = new TimeBucket(localisedYesterdayString, TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -2), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -1));
-      this.THIS_WEEK     = new TimeBucket(context.getString(R.string.attachmentsThisWeek), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -7), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -2));
-      this.THIS_MONTH    = new TimeBucket(context.getString(R.string.attachmentsThisMonth), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -30), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -7));
-      this.TIME_SECTIONS = new TimeBucket[] { TODAY, YESTERDAY, THIS_WEEK, THIS_MONTH };
-      this.OLDER         = new MonthBuckets();
+      public BucketedThreadMedia(@NonNull Context context) {
+        String localisedTodayString = DateUtils.INSTANCE.getLocalisedRelativeDayString(RelativeDay.TODAY);
+        String localisedYesterdayString = DateUtils.INSTANCE.getLocalisedRelativeDayString(RelativeDay.YESTERDAY);
+        
+        this.TODAY         = new TimeBucket(localisedTodayString, TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -1), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, 1000));
+        this.YESTERDAY     = new TimeBucket(localisedYesterdayString, TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -2), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -1));
+        this.THIS_WEEK     = new TimeBucket(context.getString(R.string.attachmentsThisWeek), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -7), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -2));
+        this.THIS_MONTH    = new TimeBucket(context.getString(R.string.attachmentsThisMonth), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -30), TimeBucket.addToCalendar(Calendar.DAY_OF_YEAR, -7));
+        this.TIME_SECTIONS = new TimeBucket[] { TODAY, YESTERDAY, THIS_WEEK, THIS_MONTH };
+        this.OLDER         = new MonthBuckets();
     }
-    
+
     public void add(MediaDatabase.MediaRecord mediaRecord) {
       for (TimeBucket timeSection : TIME_SECTIONS) {
         if (timeSection.inRange(mediaRecord.getDate())) {
