@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import dagger.hilt.android.AndroidEntryPoint
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.groups.compose.EditGroupScreen
 import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
 
+@AndroidEntryPoint
 class EditGroupActivity: PassphraseRequiredActionBarActivity() {
 
     companion object {
