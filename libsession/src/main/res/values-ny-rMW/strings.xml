@@ -8,16 +8,10 @@
     <string name="messageNew">Mushuk chaski</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%drimariypi chaski.</item>
-        <item quantity="other">%drimariypi chaskikuna</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Kunan</string>
-    <string name="BucketedThreadMedia_Yesterday">Kayna</string>
     <string name="attachmentsThisMonth">Kay killa</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

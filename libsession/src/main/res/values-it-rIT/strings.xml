@@ -10,16 +10,10 @@
     <string name="messageNew">Nuovo messaggio</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d messaggio per conversazione</item>
-        <item quantity="other">%d messaggi per conversazione</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Oggi</string>
-    <string name="BucketedThreadMedia_Yesterday">Ieri</string>
     <string name="attachmentsThisMonth">Questo mese</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

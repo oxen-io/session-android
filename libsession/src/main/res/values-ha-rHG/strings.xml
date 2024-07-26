@@ -9,16 +9,10 @@
     <string name="messageNew">Peyama nû</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">Serê gotûbêjê %d peyam</item>
-        <item quantity="other">Serê gotûbêjê %d peyam </item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Îro</string>
-    <string name="BucketedThreadMedia_Yesterday">Doh</string>
     <string name="attachmentsThisMonth">Ev meh</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

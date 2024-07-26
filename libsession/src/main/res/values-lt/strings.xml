@@ -10,18 +10,10 @@
     <string name="messageNew">Nauja žinutė</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d žinutė pokalbyje</item>
-        <item quantity="few">%d žinutės pokalbyje</item>
-        <item quantity="many">%d žinučių pokalbyje</item>
-        <item quantity="other">%d žinučių pokalbyje</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Šiandien</string>
-    <string name="BucketedThreadMedia_Yesterday">Vakar</string>
     <string name="attachmentsThisMonth">Šis mėnuo</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

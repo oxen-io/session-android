@@ -10,15 +10,10 @@
     <string name="messageNew">新着メッセージ</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="other">会話ごとに%d件のメッセージ</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">今日</string>
-    <string name="BucketedThreadMedia_Yesterday">昨日</string>
     <string name="attachmentsThisMonth">今月</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

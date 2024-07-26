@@ -8,15 +8,10 @@
     <string name="messageNew">ข้อความใหม่</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="other">%d ข้อความต่อบทสนทนา</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">วันนี้</string>
-    <string name="BucketedThreadMedia_Yesterday">เมื่อวานนี้</string>
     <string name="attachmentsThisMonth">เดือนนี้</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

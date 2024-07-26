@@ -10,16 +10,10 @@
     <string name="messageNew">కొత్త సందేశం</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">సంభాషణకు %d సందేశం</item>
-        <item quantity="other">సంభాషణకు %d సందేశం</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">నేడు</string>
-    <string name="BucketedThreadMedia_Yesterday">నిన్న</string>
     <string name="attachmentsThisMonth">ఈ నెల</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

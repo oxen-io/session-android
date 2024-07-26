@@ -10,16 +10,10 @@
     <string name="messageNew">नया सन्देश</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d संदेश प्रति बातचीत</item>
-        <item quantity="other">%d संदेश प्रति बातचीत</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">आज</string>
-    <string name="BucketedThreadMedia_Yesterday">कल</string>
     <string name="attachmentsThisMonth">इस महीना</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

@@ -10,16 +10,10 @@
     <string name="messageNew">Új üzenet</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d üzenet beszélgetésenként</item>
-        <item quantity="other">%d üzenet beszélgetésenként</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Ma</string>
-    <string name="BucketedThreadMedia_Yesterday">Tegnap</string>
     <string name="attachmentsThisMonth">Ebben a hónapban</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

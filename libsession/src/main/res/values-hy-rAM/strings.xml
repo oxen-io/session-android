@@ -10,16 +10,10 @@
     <string name="messageNew">Նոր հաղորդագրություն</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d հաղորդագրություն խոսակցությունում</item>
-        <item quantity="other">%d նամակներ մի զրույցի համար</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Այսօր</string>
-    <string name="BucketedThreadMedia_Yesterday">Երեկ</string>
     <string name="attachmentsThisMonth">Այս ամիս</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

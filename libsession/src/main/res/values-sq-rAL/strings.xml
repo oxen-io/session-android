@@ -10,16 +10,10 @@
     <string name="messageNew">Mesazh i ri</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d mesazh për bisedë</item>
-        <item quantity="other">%d mesazhe për bisedë</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Sot</string>
-    <string name="BucketedThreadMedia_Yesterday">Dje</string>
     <string name="attachmentsThisMonth">Këtë muaj</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

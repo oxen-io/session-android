@@ -50,12 +50,8 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
                 title(R.string.permissionsRequired)
                 iconAttribute(R.attr.dialog_alert_icon)
 
-                // ACL TODO - Need a replacement for the below, which was:
-                //<plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-                //  <item quantity="one">Saving this media to storage will allow any other apps on your device to access it.\n\nContinue?</item>
-                //  <item quantity="other">Saving all %1$d media to storage will allow any other apps on your device to access them.\n\nContinue?</item>
-                //</plurals>
-                val txt = "Saving this media to storage will allow any other apps on your device to access it.\n\nContinue?"
+                // ACL TODO - Need a replacement plurals string for the below!
+                val txt = context.resources.getQuantityString(R.plurals.ConversationFragment_saving_n_media_to_storage_warning, count, count)
                 text(txt)
 
                 button(R.string.yes) { onAcceptListener() }

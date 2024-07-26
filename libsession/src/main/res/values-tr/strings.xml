@@ -10,16 +10,10 @@
     <string name="messageNew">Yeni ileti</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">Sohbet başına %d ileti</item>
-        <item quantity="other">Sohbet başına %d ileti</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Bugün</string>
-    <string name="BucketedThreadMedia_Yesterday">Dün</string>
     <string name="attachmentsThisMonth">Bu Ay</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

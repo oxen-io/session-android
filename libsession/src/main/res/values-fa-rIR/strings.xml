@@ -9,16 +9,10 @@
     <string name="messageNew">پیام جدید</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d پیام در هر گفتگو</item>
-        <item quantity="other">%d پیام در هر گفتگو</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">امروز</string>
-    <string name="BucketedThreadMedia_Yesterday">دیروز</string>
     <string name="attachmentsThisMonth">این ماه</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

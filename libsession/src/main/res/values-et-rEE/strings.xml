@@ -9,16 +9,10 @@
     <string name="messageNew">Uus sõnum</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d sõnum vestluse kohta</item>
-        <item quantity="other">%d sõnumit vestluse kohta</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Täna</string>
-    <string name="BucketedThreadMedia_Yesterday">Eile</string>
     <string name="attachmentsThisMonth">See kuu</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

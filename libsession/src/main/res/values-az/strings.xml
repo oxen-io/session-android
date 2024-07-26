@@ -10,16 +10,10 @@
     <string name="messageNew">Yeni mesaj</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">Danışıq başına %d mesaj</item>
-        <item quantity="other">Danışıq başına %d mesaj</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Bu gün</string>
-    <string name="BucketedThreadMedia_Yesterday">Dünən</string>
     <string name="attachmentsThisMonth">Bu ay</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

@@ -10,15 +10,10 @@
     <string name="messageNew">Pesan baru</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="other">%d pesan setiap percakapan</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Hari ini</string>
-    <string name="BucketedThreadMedia_Yesterday">Kemarin</string>
     <string name="attachmentsThisMonth">Bulan Ini</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

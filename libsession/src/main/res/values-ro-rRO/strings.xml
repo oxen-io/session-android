@@ -10,17 +10,10 @@
     <string name="messageNew">Mesaj nou</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d mesaj per conversație</item>
-        <item quantity="few">%d mesaje per conversație</item>
-        <item quantity="other">%d  mesaje per conversație</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Azi</string>
-    <string name="BucketedThreadMedia_Yesterday">Ieri</string>
     <string name="attachmentsThisMonth">Luna asta</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

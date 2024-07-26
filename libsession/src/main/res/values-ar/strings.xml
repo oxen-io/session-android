@@ -10,20 +10,10 @@
     <string name="messageNew">رسالة جديدة</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="zero">%d رسالة في كل محادثة</item>
-        <item quantity="one">%d رسالة في كل محادثة</item>
-        <item quantity="two">%d رسائل في كل محادثة</item>
-        <item quantity="few">%d رسائل في كل محادثة</item>
-        <item quantity="many">%d</item>
-        <item quantity="other">%d رسائل في كل محادثة</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">اليوم</string>
-    <string name="BucketedThreadMedia_Yesterday">البارحة</string>
     <string name="attachmentsThisMonth">هذا الشهر</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

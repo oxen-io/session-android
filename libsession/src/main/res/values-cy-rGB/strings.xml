@@ -9,20 +9,10 @@
     <string name="messageNew">Neges newydd</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="zero">%d neges i bob sgwrs</item>
-        <item quantity="one">%d neges i bob sgwrs</item>
-        <item quantity="two">%d neges i bob sgwrs</item>
-        <item quantity="few">%d neges i bob sgwrs</item>
-        <item quantity="many">%d neges i bob sgwrs</item>
-        <item quantity="other">%d neges i bob sgwrs</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Heddiw</string>
-    <string name="BucketedThreadMedia_Yesterday">Ddoe</string>
     <string name="attachmentsThisMonth">Mis yma</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

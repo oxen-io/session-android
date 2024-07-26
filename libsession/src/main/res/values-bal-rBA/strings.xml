@@ -13,8 +13,6 @@
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Hari ini</string>
-    <string name="BucketedThreadMedia_Yesterday">Kemarin</string>
     <string name="attachmentsThisMonth">Bulan ini</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

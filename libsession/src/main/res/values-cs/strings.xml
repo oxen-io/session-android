@@ -10,18 +10,10 @@
     <string name="messageNew">Nová zpráva</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d zpráva na konverzaci</item>
-        <item quantity="few">%d zprávy na konverzaci</item>
-        <item quantity="many">%d zpráv na konverzaci</item>
-        <item quantity="other">%d zpráv na konverzaci</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Dnes</string>
-    <string name="BucketedThreadMedia_Yesterday">Včera</string>
     <string name="attachmentsThisMonth">Tento měsíc</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

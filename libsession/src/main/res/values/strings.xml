@@ -1,34 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- NUKE THESE PLURALS! TODO! -ACL -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d message per conversation</item>
-        <item quantity="other">%d messages per conversation</item>
-    </plurals>
-
-
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">%d message per conversation</item>
-        <item quantity="other">%d messages per conversation</item>
-    </plurals>
-
-    <plurals name="Unblock_dialog__message_multiple_overflow">
-        <item quantity="one">%d message per conversation</item>
-        <item quantity="other">%d messages per conversation</item>
-    </plurals>
-
-    <plurals name="hours_ago">
-        <item quantity="one">%d message per conversation</item>
-        <item quantity="other">%d messages per conversation</item>
-    </plurals>
-
-    <string name="BucketedThreadMedia_Today">Foo</string>
-    <string name="BucketedThreadMedia_Yesterday">Bar</string>
-    <!-- END OF NUKE BLOCK! -->
-
-
-    <!-- New CrowdIn plurals from Morgan - 2024/07/24 -->
+    <!-- ==========  New CrowdIn plurals from Morgan - 2024/07/24 ========== -->
     <plurals name="members">
         <item quantity="one">%1$d member</item>
         <item quantity="other">%1$d members</item>
@@ -45,13 +18,13 @@
         <item quantity="one">%1$d of %2$d match</item>
         <item quantity="other">%1$d of %2$d matches</item>
     </plurals>
-    <!-- Old for above was: <string name="searchMatches">{count} of {total_count} matches</string> -->
+    <!-- CURRENTLY UNUSED: Old for above was: <string name="searchMatches">{count} of {total_count} matches</string> -->
 
     <plurals name="messageNewYouveGot">
         <item quantity="one">You\'ve got a new message.</item>
         <item quantity="other">You\'ve got %1$d new messages.</item>
     </plurals>
-    <!-- Currently unused and no 'old' string for this as of 2024/07/24 -ACL -->
+    <!-- CURRENTLY UNUSED and no 'old' string for this as of 2024/07/24 -ACL -->
 
     <plurals name="emojiReactsCountOthers">
         <item quantity="one">And %1$d other has reacted %2$s to this message.</item>
@@ -63,26 +36,27 @@
         <item quantity="one">Failed to delete message</item>
         <item quantity="other">Failed to delete messages</item>
     </plurals>
-    <!-- Currently unused and no 'old' string for this as of 2024/07/24 -ACL -->
+    <!-- CURRENTLY UNUSED and no 'old' string for this as of 2024/07/24 -ACL -->
 
     <plurals name="clearDataErrorDescription">
         <item quantity="one">Data not deleted by %1$d Service Node. Service Node ID: %2$s.</item>
         <item quantity="other">Data not deleted by %1$d Service Nodes. Service Node IDs: %2$s.</item>
     </plurals>
-    <!-- End of plurals -->
+    <!-- CURRENTLY UNUSED and no 'old' string for this as of 2024/07/24 -ACL -->
 
+    <!-- ========== End of new plurals ========== -->
 
+    <!-- This specific `app_name` string (only) gets a pass to keep its underscore -->
     <string name="app_name">Session</string>
 
-    <!-- ACL - All of the below below need to be updated to match the new serialised string names -->
-
-
-    <!-- RecipientProvider -->
-
-    <!-- Everything in this section is used by the app but missing from the CrowdIn translations as of 2024-03-14 -ACL -->
-    <!-- ======================================================================================= -->
-
     <!-- Old naming convention strings that need to me renamed to their modern equivalents and have any % substitution modified to use {braces} -->
+
+    <!-- We won't be using the curly brace notation on plurals strings like this one -->
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="one">Saving this media to storage will allow any other apps on your device to access it.\n\nContinue?</item>
+        <item quantity="other">Saving all %1$d media to storage will allow any other apps on your device to access them.\n\nContinue?</item>
+    </plurals>
+
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
     <string name="DateUtils_just_now">Now</string>
@@ -134,7 +108,7 @@
     <string name="view_seed_reminder_subtitle_2">Tap and hold the redacted words to reveal your recovery phrase, then store it safely to secure your Session ID.</string>
     <string name="view_seed_reminder_title">You\'re almost finished! 80%</string>
 
-    <!-- Strings with modern names and {braced} substitution markers-->
+    <!-- Strings with modern names and {braced} substitution markers -->
     <string name="andMore">+{count}</string>
     <string name="theContinue">Continue</string>
     <string name="theDefault">Default</string>

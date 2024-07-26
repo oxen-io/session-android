@@ -10,17 +10,10 @@
     <string name="messageNew">Jauns ziņojums</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="zero">sarakstē ir %d ziņojumu</item>
-        <item quantity="one">Sarakstē ir %d ziņojums</item>
-        <item quantity="other">sarakstē ir %d ziņojumi</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Šodien</string>
-    <string name="BucketedThreadMedia_Yesterday">Vakar</string>
     <string name="attachmentsThisMonth">Šomēnes</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

@@ -10,15 +10,10 @@
     <string name="messageNew">សារថ្មី</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="other">%d សារក្នុងពេលសន្ទនា</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">ថ្ងៃនេះ</string>
-    <string name="BucketedThreadMedia_Yesterday">ម្សិលមិញ</string>
     <string name="attachmentsThisMonth">ខែនេះ</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

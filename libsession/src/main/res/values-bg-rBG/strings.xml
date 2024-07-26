@@ -10,16 +10,10 @@
     <string name="messageNew">Ново съобщение</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%dсъобщение на разговор</item>
-        <item quantity="other">%d съобщения на разговор</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Днес</string>
-    <string name="BucketedThreadMedia_Yesterday">Вчера</string>
     <string name="attachmentsThisMonth">Този месец</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

@@ -20,16 +20,10 @@
     <string name="messageNew">Nouveau message</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d message par conversation</item>
-        <item quantity="other">%d messages par conversation</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Aujourd’hui</string>
-    <string name="BucketedThreadMedia_Yesterday">Hier</string>
     <string name="attachmentsThisMonth">Ce mois</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
@@ -297,10 +291,6 @@
     <string name="KeyboardPagerfragment_back_to_emoji">Retour à l\'émoticône</string>
     <string name="KeyboardPagerfragment_clear_search_entry">Effacer la recherche</string>
     <string name="appearanceAutoDarkMode">Thème sombre automatique</string>
-    <plurals name="Unblock_dialog__message_multiple_overflow">
-        <item quantity="one">et %d autre</item>
-        <item quantity="other">et %d autres</item>
-    </plurals>
     <string name="fragment_enter_public_key_prompt">Commencez une nouvelle conversation en entrant l\'ID Session de quelqu\'un ou en lui partageant votre ID Session.</string>
     <string name="ErrorNotifier_migration">Échec de la mise à jour de la base de données</string>
     <string name="ErrorNotifier_migration_downgrade">Veuillez contacter le support pour signaler l\'erreur.</string>

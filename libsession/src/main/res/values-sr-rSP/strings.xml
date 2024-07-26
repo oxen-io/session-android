@@ -9,17 +9,10 @@
     <string name="messageNew">Нова порука</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d порука по преписци</item>
-        <item quantity="few">%d поруке по преписци</item>
-        <item quantity="other">%d порука по преписци</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Данас</string>
-    <string name="BucketedThreadMedia_Yesterday">Јуче</string>
     <string name="attachmentsThisMonth">Овог месеца</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

@@ -10,15 +10,10 @@
     <string name="messageNew">새 메시지</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="other">대화방당 %d개의 메시지</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">오늘</string>
-    <string name="BucketedThreadMedia_Yesterday">어제</string>
     <string name="attachmentsThisMonth">이번달</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

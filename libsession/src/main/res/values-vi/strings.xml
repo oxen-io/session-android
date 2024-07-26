@@ -10,15 +10,10 @@
     <string name="messageNew">Tin nhắn mới</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="other">%d tin nhắn trong mỗi cuộc trò chuyện</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Hôm nay</string>
-    <string name="BucketedThreadMedia_Yesterday">Ngày hôm qua</string>
     <string name="attachmentsThisMonth">Tháng này</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

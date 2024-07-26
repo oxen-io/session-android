@@ -10,16 +10,10 @@
     <string name="messageNew">Nieuw bericht</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d bericht per gesprek</item>
-        <item quantity="other">%d berichten per gesprek</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Vandaag</string>
-    <string name="BucketedThreadMedia_Yesterday">Gisteren</string>
     <string name="attachmentsThisMonth">Deze maand</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

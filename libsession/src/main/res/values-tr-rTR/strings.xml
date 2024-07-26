@@ -10,16 +10,10 @@
     <string name="messageNew">Yeni ileti</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">Sohbet başına %d ileti</item>
-        <item quantity="other">Sohbet başına %d ileti</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Bugün</string>
-    <string name="BucketedThreadMedia_Yesterday">Dün</string>
     <string name="attachmentsThisMonth">Bu Ay</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
@@ -140,11 +134,6 @@
     <string name="audio">Ses</string>
     <string name="video">Video</string>
     <string name="max">En Yüksek</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d saat</item>
-        <item quantity="other">%d saat</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Bağlantı ön izlemelerini gönder</string>
     <string name="screenSecurity">Ekran güvenliği</string>

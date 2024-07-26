@@ -10,18 +10,10 @@
     <string name="messageNew">הודעה חדשה</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">הודעה %d לשיחה</item>
-        <item quantity="two">%d הודעות לשיחה</item>
-        <item quantity="many">%d הודעות לשיחה</item>
-        <item quantity="other">%d הודעות לשיחה</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">היום</string>
-    <string name="BucketedThreadMedia_Yesterday">אתמול</string>
     <string name="attachmentsThisMonth">החודש</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

@@ -10,16 +10,10 @@
     <string name="messageNew">Uusi viesti</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d viesti per keskustelu</item>
-        <item quantity="other">%d viestiä per keskustelu</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">tänään</string>
-    <string name="BucketedThreadMedia_Yesterday">eilen</string>
     <string name="attachmentsThisMonth">Tässä kuussa</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

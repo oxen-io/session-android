@@ -14,8 +14,6 @@
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">آج</string>
-    <string name="BucketedThreadMedia_Yesterday">کل</string>
     <string name="attachmentsThisMonth">اس مہینے</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

@@ -12,8 +12,6 @@
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">අද</string>
-    <string name="BucketedThreadMedia_Yesterday">ඊයේ</string>
     <string name="attachmentsThisMonth">මෙම මාසය</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

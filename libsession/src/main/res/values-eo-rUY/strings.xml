@@ -10,16 +10,10 @@
     <string name="messageNew">Nova mesaĝo</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">Po %d mesaĝo en interparolado</item>
-        <item quantity="other">Po %d mesaĝoj en interparolo</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Hodiaŭ</string>
-    <string name="BucketedThreadMedia_Yesterday">Hieraŭ</string>
     <string name="attachmentsThisMonth">Ĉi tiu monato</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

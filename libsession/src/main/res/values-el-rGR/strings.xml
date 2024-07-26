@@ -10,16 +10,10 @@
     <string name="messageNew">Νέο μήνυμα</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d μήνυμα ανά συνομιλία</item>
-        <item quantity="other">%d μηνύματα ανά συνομιλία</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">Σήμερα</string>
-    <string name="BucketedThreadMedia_Yesterday">Χθες</string>
     <string name="attachmentsThisMonth">Αυτό το μήνα</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->

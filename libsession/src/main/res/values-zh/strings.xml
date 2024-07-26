@@ -10,15 +10,10 @@
     <string name="messageNew">新消息</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="other">每个会话限制 %d 条消息</item>
-    </plurals>
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
-    <string name="BucketedThreadMedia_Today">今天</string>
-    <string name="BucketedThreadMedia_Yesterday">昨天</string>
     <string name="attachmentsThisMonth">本月</string>
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
