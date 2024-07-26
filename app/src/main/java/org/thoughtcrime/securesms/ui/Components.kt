@@ -10,6 +10,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -52,6 +53,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
@@ -77,6 +79,7 @@ import network.loki.messenger.R
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.components.ProfilePictureView
 import org.thoughtcrime.securesms.conversation.disappearingmessages.ui.OptionsCardData
+import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
 import org.thoughtcrime.securesms.ui.components.SmallCircularProgressIndicator
 import org.thoughtcrime.securesms.ui.components.TitledRadioButton
 import org.thoughtcrime.securesms.ui.theme.LocalColors
@@ -92,7 +95,7 @@ interface Callbacks<in T> {
     fun setValue(value: T)
 }
 
-object NoOpCallbacks: Callbacks<Any> {
+object NoOpCallbacks : Callbacks<Any> {
     override fun onSetClick() {}
     override fun setValue(value: Any) {}
 }
@@ -161,7 +164,12 @@ fun ItemButtonWithDrawable(
         modifier = modifier,
         icon = {
             Image(
-                painter = rememberDrawablePainter(drawable = AppCompatResources.getDrawable(context, icon)),
+                painter = rememberDrawablePainter(
+                    drawable = AppCompatResources.getDrawable(
+                        context,
+                        icon
+                    )
+                ),
                 contentDescription = null,
                 modifier = Modifier.align(Alignment.Center)
             )
@@ -215,10 +223,10 @@ fun ItemButton(
 }
 
 /**
-* Base [ItemButton] implementation.
+ * Base [ItemButton] implementation.
  *
  * A button to be used in a list of buttons, usually in a [Cell] or [Card]
-*/
+ */
 @Composable
 fun ItemButton(
     text: String,
@@ -276,6 +284,7 @@ fun Cell(
 ) {
     CellWithPaddingAndMargin(padding, margin) { content() }
 }
+
 @Composable
 fun CellNoMargin(content: @Composable () -> Unit) {
     CellWithPaddingAndMargin(padding = 0.dp, margin = 0.dp) { content() }
@@ -290,8 +299,10 @@ fun CellWithPaddingAndMargin(
     Box(
         modifier = Modifier
             .padding(horizontal = margin)
-            .background(color = LocalColors.current.backgroundSecondary,
-                shape = MaterialTheme.shapes.small)
+            .background(
+                color = LocalColors.current.backgroundSecondary,
+                shape = MaterialTheme.shapes.small
+            )
             .wrapContentHeight()
             .fillMaxWidth(),
     ) {
@@ -466,13 +477,13 @@ fun LoadingArcOr(loading: Boolean, content: @Composable () -> Unit) {
 fun SearchBar(
     query: String,
     onValueChanged: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    placeholder: String? = null,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 4.dp)
             .background(LocalColors.current.background, RoundedCornerShape(100))
     ) {
         Image(
@@ -481,18 +492,26 @@ fun SearchBar(
             colorFilter = ColorFilter.tint(
                 LocalColors.current.text
             ),
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).size(24.dp)
         )
 
         BasicTextField(
             singleLine = true,
-//            label = { Text(text = stringResource(id = R.string.search_contacts_hint),modifier=Modifier.padding(0.dp)) },
             value = query,
             onValueChange = onValueChanged,
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .padding(4.dp)
-                .weight(1f),
+            decorationBox = { innerTextField ->
+                innerTextField()
+                if (query.isEmpty() && placeholder != null) {
+                    Text(
+                        text = placeholder,
+                        color = LocalColors.current.textSecondary,
+                        style = LocalType.current.base
+                    )
+                }
+            },
+            textStyle = LocalType.current.base.copy(color = LocalColors.current.text),
+            modifier = Modifier.weight(1f),
+            cursorBrush = SolidColor(LocalColors.current.text)
         )
     }
 }
@@ -507,12 +526,14 @@ fun NavigationBar(
     Row(
         Modifier
             .fillMaxWidth()
-            .height(64.dp)) {
+            .height(64.dp)
+    ) {
         // Optional back button, layout should still take up space
-        Box(modifier = Modifier
-            .fillMaxHeight()
-            .aspectRatio(1.0f, true)
-            .padding(16.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .aspectRatio(1.0f, true)
+                .padding(16.dp)
         ) {
             if (onBack != null) {
                 Icon(
@@ -530,10 +551,12 @@ fun NavigationBar(
             }
         }
         //Main title
-        Box(modifier = Modifier
-            .fillMaxHeight()
-            .weight(1f)
-            .padding(8.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
+                .padding(8.dp)
+        ) {
             Text(
                 text = title,
                 Modifier.align(titleAlignment),
@@ -544,10 +567,11 @@ fun NavigationBar(
         }
         // Optional action
         if (actionElement != null) {
-            Box(modifier = Modifier
-                .fillMaxHeight()
-                .align(Alignment.CenterVertically)
-                .aspectRatio(1.0f, true),
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .align(Alignment.CenterVertically)
+                    .aspectRatio(1.0f, true),
                 contentAlignment = Alignment.Center
             ) {
                 actionElement(this)
@@ -557,7 +581,7 @@ fun NavigationBar(
 }
 
 @Composable
-fun BoxScope.CloseIcon(onClose: ()->Unit) {
+fun BoxScope.CloseIcon(onClose: () -> Unit) {
     Icon(
         painter = painterResource(id = R.drawable.ic_baseline_close_24),
         contentDescription = stringResource(
@@ -630,6 +654,9 @@ fun PreviewNavigationBar() {
 @Preview
 fun PreviewSearchBar() {
     PreviewTheme {
-        SearchBar("", {})
+        Column(Modifier.background(LocalColors.current.backgroundSecondary)) {
+            SearchBar("Search query", {})
+            SearchBar("", {}, placeholder = "Hint text")
+        }
     }
 }

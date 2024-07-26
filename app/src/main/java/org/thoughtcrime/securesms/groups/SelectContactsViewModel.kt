@@ -6,8 +6,11 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,6 +32,7 @@ class SelectContactsViewModel @AssistedInject constructor(
     private val storageProtocol: StorageProtocol,
     private val configFactory: ConfigFactory,
     @Assisted private val onlySelectedFromAccountIDs: Set<String>?,
+    @Assisted private val scope: CoroutineScope
 ) : ViewModel() {
     // Input: The search query
     private val mutableSearchQuery = MutableStateFlow("")
@@ -55,6 +59,12 @@ class SelectContactsViewModel @AssistedInject constructor(
             .map { it.accountID }
             .toList()
 
+    override fun onCleared() {
+        super.onCleared()
+
+        scope.cancel()
+    }
+
     private fun observeContacts() = (configFactory.configUpdateNotifications as Flow<Any>)
         .debounce(100L)
         .onStart { emit(Unit) }
@@ -79,6 +89,7 @@ class SelectContactsViewModel @AssistedInject constructor(
         return contacts
             .asSequence()
             .filter {
+                query.isBlank() ||
                 it.name?.contains(query, ignoreCase = true) == true ||
                 it.nickname?.contains(query, ignoreCase = true) == true
             }
@@ -106,7 +117,10 @@ class SelectContactsViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(onlySelectedFromAccountIDs: Set<String>?): SelectContactsViewModel
+        fun create(
+            onlySelectedFromAccountIDs: Set<String>?,
+            scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate),
+        ): SelectContactsViewModel
     }
 }
 

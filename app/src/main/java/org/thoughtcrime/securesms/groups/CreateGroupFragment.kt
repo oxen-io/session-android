@@ -25,8 +25,9 @@ class CreateGroupFragment : Fragment() {
             setContent {
                 SessionMaterialTheme {
                     CreateGroupScreen(
-                        onFinishCreation = delegate::onDialogClosePressed,
-                        onCancelCreation = delegate::onDialogBackPressed
+                        onNavigateToConversationScreen = { },
+                        onBack = delegate::onDialogBackPressed,
+                        onClose = delegate::onDialogClosePressed
                     )
                 }
             }

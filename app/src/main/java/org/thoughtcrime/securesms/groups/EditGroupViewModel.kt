@@ -22,7 +22,7 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsignal.utilities.AccountId
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 
-private const val MAX_GROUP_NAME_LENGTH = 100
+const val MAX_GROUP_NAME_LENGTH = 100
 
 @HiltViewModel(assistedFactory = EditGroupViewModel.Factory::class)
 class EditGroupViewModel @AssistedInject constructor(

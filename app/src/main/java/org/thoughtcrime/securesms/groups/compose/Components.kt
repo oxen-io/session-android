@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +17,11 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -44,6 +49,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.groups.ContactItem
 import org.thoughtcrime.securesms.home.search.getSearchName
 import org.thoughtcrime.securesms.ui.Avatar
+import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
@@ -84,7 +90,8 @@ fun GroupMinimumVersionBanner(modifier: Modifier = Modifier) {
             style = LocalType.current.small,
             maxLines = 2,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp))
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp)
+        )
     }
 }
 
@@ -94,21 +101,31 @@ fun LazyListScope.multiSelectMemberList(
     onContactItemClicked: (accountId: String) -> Unit,
 ) {
     items(contacts) { contact ->
-        val onClick = { onContactItemClicked(contact.accountID) }
+        Column {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .toggleable(
+                        value = contact.selected,
+                        onValueChange = { onContactItemClicked(contact.accountID) },
+                        role = Role.Checkbox
+                    )
+                    .padding(vertical = 8.dp, horizontal = 24.dp),
+                verticalAlignment = CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ContactPhoto(
+                    contact.accountID,
+                )
+                MemberName(name = contact.name)
+                Checkbox(
+                    checked = contact.selected,
+                    onCheckedChange = null,
+                    colors = CheckboxDefaults.colors(checkedColor = LocalColors.current.primary)
+                )
+            }
 
-        Row(modifier = modifier
-            .fillMaxWidth()
-            .toggleable(value = contact.selected, onValueChange = { onClick() }, role = Role.Checkbox)
-            .padding(vertical = 8.dp, horizontal = 24.dp),
-            verticalAlignment = CenterVertically
-        ) {
-            ContactPhoto(
-                contact.accountID,
-                modifier = Modifier
-                    .size(48.dp)
-            )
-            MemberName(name = contact.name, modifier = Modifier.padding(16.dp))
-            RadioButton(selected = contact.selected, onClick = null)
+            HorizontalDivider(color = LocalColors.current.borders)
         }
     }
 }
@@ -147,12 +164,7 @@ fun LazyListScope.deleteMemberList(
     } else {
         items(contacts) { contact ->
             Row(modifier.fillMaxWidth()) {
-                ContactPhoto(
-                    contact.accountID,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .align(CenterVertically)
-                )
+                ContactPhoto(contact.accountID)
                 MemberName(name = contact.getSearchName(), modifier = Modifier.padding(16.dp))
                 Image(
                     painterResource(id = R.drawable.ic_baseline_close_24),
@@ -171,14 +183,14 @@ fun LazyListScope.deleteMemberList(
 
 
 @Composable
-fun RowScope.ContactPhoto(sessionId: String, modifier: Modifier = Modifier) {
+fun RowScope.ContactPhoto(sessionId: String) {
     return if (LocalInspectionMode.current) {
         Image(
             painterResource(id = R.drawable.ic_profile_default),
             colorFilter = ColorFilter.tint(LocalColors.current.textSecondary),
             contentScale = ContentScale.Inside,
             contentDescription = null,
-            modifier = modifier
+            modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
                 .border(1.dp, LocalColors.current.borders, CircleShape)

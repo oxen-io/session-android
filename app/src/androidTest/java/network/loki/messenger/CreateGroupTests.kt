@@ -40,7 +40,7 @@ class CreateGroupTests {
                     viewState = ViewState.DEFAULT,
                     onBack = { backPressed = true },
                     onClose = { closePressed = true },
-                    onSelectContact = {},
+                    onContactItemClicked = {},
                     updateState = {}
                 )
             }
@@ -73,7 +73,7 @@ class CreateGroupTests {
                     onBack = { backPressed = true },
                     onClose = { closePressed = true },
                     updateState = {},
-                    onSelectContact = {}
+                    onContactItemClicked = {}
                 )
             }
         }
@@ -100,7 +100,7 @@ class CreateGroupTests {
                     viewState = ViewState.DEFAULT,
                     onBack = { backPressed = true },
                     onClose = {},
-                    onSelectContact = {},
+                    onContactItemClicked = {},
                     updateState = {}
                 )
             }
@@ -126,7 +126,7 @@ class CreateGroupTests {
                     viewState = ViewState.DEFAULT,
                     onBack = { },
                     onClose = { closePressed = true },
-                    onSelectContact = {},
+                    onContactItemClicked = {},
                     updateState = {}
                 )
             }
