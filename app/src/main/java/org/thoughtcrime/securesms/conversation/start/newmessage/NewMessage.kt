@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import kotlinx.coroutines.flow.Flow
@@ -89,11 +91,13 @@ private fun EnterAccountId(
             SessionOutlinedTextField(
                 text = state.newMessageIdOrOns,
                 modifier = Modifier
-                    .padding(horizontal = LocalDimensions.current.spacing),
-                contentDescription = "Session id input box",
+                    .padding(horizontal = LocalDimensions.current.spacing)
+                    .semantics {
+                        contentDescription = "Session id input box"
+                    },
                 placeholder = stringResource(R.string.accountIdOrOnsEnter),
                 onChange = callbacks::onChange,
-                onContinue = callbacks::onContinue,
+                onContinue = { callbacks.onContinue() },
                 error = state.error?.string(),
                 isTextErrorColor = state.isTextErrorColor
             )

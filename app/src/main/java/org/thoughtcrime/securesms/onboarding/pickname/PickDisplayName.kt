@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.onboarding.OnboardingBackPressAlertDialog
@@ -63,10 +65,13 @@ internal fun PickDisplayName(
                 style = LocalType.current.base,
                 modifier = Modifier.padding(bottom = LocalDimensions.current.xsSpacing))
             Spacer(Modifier.height(LocalDimensions.current.spacing))
+
+            val contentDescription = stringResource(R.string.AccessibilityId_enter_display_name)
             SessionOutlinedTextField(
                 text = state.displayName,
-                modifier = Modifier.fillMaxWidth(),
-                contentDescription = stringResource(R.string.AccessibilityId_enter_display_name),
+                modifier = Modifier.fillMaxWidth().semantics {
+                    this.contentDescription = contentDescription
+                },
                 placeholder = stringResource(R.string.displayNameEnter),
                 onChange = onChange,
                 onContinue = onContinue,

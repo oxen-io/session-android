@@ -20,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.Flow
 import network.loki.messenger.R
@@ -97,10 +99,13 @@ private fun RecoveryPassword(state: State, onChange: (String) -> Unit = {}, onCo
                 style = LocalType.current.base
             )
             Spacer(Modifier.height(LocalDimensions.current.spacing))
+
+            val contentDescription = stringResource(R.string.AccessibilityId_recovery_phrase_input)
             SessionOutlinedTextField(
                 text = state.recoveryPhrase,
-                modifier = Modifier.fillMaxWidth(),
-                contentDescription = stringResource(R.string.AccessibilityId_recovery_phrase_input),
+                modifier = Modifier.fillMaxWidth().semantics {
+                    this.contentDescription = contentDescription
+                },
                 placeholder = stringResource(R.string.recoveryPasswordEnter),
                 onChange = onChange,
                 onContinue = onContinue,
