@@ -21,6 +21,9 @@ class AppearanceSettingsViewModel @Inject constructor(private val prefs: TextSec
         prefs.setAccentColorStyle(newAccentColorStyle)
         // update UI state
         _uiState.value = prefs.themeState()
+
+        // force compose to refresh its style reference
+        selectedTheme = null
     }
 
     fun setNewStyle(newThemeStyle: String) {
