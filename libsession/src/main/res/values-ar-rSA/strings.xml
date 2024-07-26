@@ -38,7 +38,6 @@
     <string name="none">لا شيء </string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">الآن</string>
-    <string name="DateUtils_yesterday">البارحة</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -74,7 +73,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session غير مقفول</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">أنت</string>
     <string name="draft">مسودة:</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">اعتبرها مقروءة</string>
@@ -133,7 +131,6 @@
     <string name="notificationsMute2Hours">كتم لمدة ساعتين</string>
     <string name="notificationsMute1Day">كتم لمدة يوم</string>
     <string name="notificationsContentShowNameOnly">الاسم فقط</string>
-    <string name="arrays__images">صور</string>
     <string name="audio">صوت</string>
     <string name="video">فيديو</string>
     <string name="max">الأقصى</string>
@@ -219,7 +216,6 @@
     <string name="qrCode">رمز QR</string>
     <string name="contactsContacts">متصلين</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">طبِق</string>
     <string name="done">تم</string>
     <string name="groupEdit">عَدِل المجموعة</string>
     <string name="contactSelect">اِختر متصلين</string>

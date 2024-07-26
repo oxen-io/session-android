@@ -149,10 +149,8 @@ object DateUtils : android.text.format.DateUtils() {
     ): String {
         return if (isToday(timestamp)) {
             getLocalisedRelativeDayString(RelativeDay.TODAY)
-            //context.getString(R.string.DateUtils_today) // ACL REMOVE WHEN HAPPY
         } else if (isYesterday(timestamp)) {
             getLocalisedRelativeDayString(RelativeDay.YESTERDAY)
-            //context.getString(R.string.DateUtils_yesterday) // ACL REMOVE WHEN HAPPY
         } else {
             getFormattedDateTime(timestamp, "EEE, MMM d, yyyy", locale)
         }

@@ -34,7 +34,6 @@
     <string name="none">Geen</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nu</string>
-    <string name="DateUtils_yesterday">Gisteren</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session is ontgrendeld</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Jij</string>
     <string name="draft">Concept</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Markeren als gelezen</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">Demp voor 2 uur</string>
     <string name="notificationsMute1Day">Demp voor 1 dag</string>
     <string name="notificationsContentShowNameOnly">Alleen naam</string>
-    <string name="arrays__images">Afbeeldingen</string>
     <string name="audio">Geluid</string>
     <string name="video">Video</string>
     <string name="max">Maximaal</string>
@@ -215,7 +212,6 @@
     <string name="qrCode">QR-code</string>
     <string name="contactsContacts">Contacten</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Toepassen</string>
     <string name="done">Klaar</string>
     <string name="groupEdit">Groep bewerken</string>
     <string name="contactSelect">Contacten selecteren</string>

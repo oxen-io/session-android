@@ -37,7 +37,6 @@
     <string name="none">ఏదీ కాదు</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">ఇప్పుడు</string>
-    <string name="DateUtils_yesterday">నిన్న</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -71,7 +70,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session తాళం తీయబడినది</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">మీరు</string>
     <string name="draft">చిత్తు పత్రం</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">చదివినట్టు గుర్తుపెట్టు</string>
@@ -128,7 +126,6 @@
     <string name="notificationsMute2Hours">2 గంటలు నిశబ్దంగా ఉంచు</string>
     <string name="notificationsMute1Day">1 రోజు నిశబ్దంగా ఉంచు</string>
     <string name="notificationsContentShowNameOnly">పేరు మాత్రమే </string>
-    <string name="arrays__images">చిత్రాలు</string>
     <string name="audio">ఆడియో</string>
     <string name="video">వీడియో</string>
     <string name="max">గరిష్టం</string>

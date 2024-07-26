@@ -318,7 +318,7 @@ fun PreviewMessageDetails(
         MessageDetails(
             state = MessageDetailsState(
                 nonImageAttachmentFileDetails = listOf(
-                    TitledText(R.string.message_details_header__file_id, "Screen Shot 2023-07-06 at 11.35.50 am.png"),
+                    TitledText(R.string.attachmentsFileId, "Screen Shot 2023-07-06 at 11.35.50 am.png"),
                     TitledText(R.string.attachmentsFileType, "image/png"),
                     TitledText(R.string.attachmentsFileSize, "195.6kB"),
                     TitledText(R.string.attachmentsResolution, "342x312"),

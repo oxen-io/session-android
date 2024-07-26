@@ -31,7 +31,6 @@
     <string name="none">Puudub</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nüüd</string>
-    <string name="DateUtils_yesterday">Eile</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -67,7 +66,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session on avatud</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Sina</string>
     <string name="draft">Mustand</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Märgi loetuks</string>
@@ -123,7 +121,6 @@
     <string name="notificationsMute2Hours">Vaigista 2 tunniks</string>
     <string name="notificationsMute1Day">Vaigista 1 päevaks</string>
     <string name="notificationsContentShowNameOnly">Ainult nimi</string>
-    <string name="arrays__images">Pildid</string>
     <string name="audio">Heli</string>
     <string name="max">Maksimaalne</string>
     <!-- preferences.xml -->

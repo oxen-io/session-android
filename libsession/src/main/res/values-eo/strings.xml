@@ -34,7 +34,6 @@
     <string name="none">Neniu</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nun</string>
-    <string name="DateUtils_yesterday">Hieraŭ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session estas malŝlosita</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Vi</string>
     <string name="draft">Malneto</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marki legita</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">Silentigi dum 2 horoj</string>
     <string name="notificationsMute1Day">Silentigi dum 1 tago</string>
     <string name="notificationsContentShowNameOnly">Nur nomon</string>
-    <string name="arrays__images">Bildoj</string>
     <string name="audio">Sonaĵo</string>
     <string name="video">Videaĵo</string>
     <string name="max">Maksimuma</string>
@@ -215,7 +212,6 @@
     <string name="qrCode">QR-Kodo</string>
     <string name="contactsContacts">Kontaktoj</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Apliki</string>
     <string name="done">Farite</string>
     <string name="groupEdit">Redakti Grupon</string>
     <string name="contactSelect">Elekti Kontaktojn</string>

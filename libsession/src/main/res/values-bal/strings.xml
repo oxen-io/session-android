@@ -27,7 +27,6 @@
     <string name="none">Kosong</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Sekarang</string>
-    <string name="DateUtils_yesterday">Kemarin</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -63,7 +62,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session tidak terkunci</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Anda</string>
     <string name="draft">Draf</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Tandai sudah dibaca</string>
@@ -118,7 +116,6 @@
     <string name="notificationsMute2Hours">Bisukan selama 2 jam</string>
     <string name="notificationsMute1Day">Bisukan selama 1 hari</string>
     <string name="notificationsContentShowNameOnly">Nama saja</string>
-    <string name="arrays__images">Gambar</string>
     <string name="max">Maks</string>
     <!-- plurals.xml -->
     <!-- preferences.xml -->

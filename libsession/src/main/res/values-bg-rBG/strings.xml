@@ -33,7 +33,6 @@
     <string name="none">Нищо</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Току що</string>
-    <string name="DateUtils_yesterday">Вчера</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -69,7 +68,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session е отключен</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Ти</string>
     <string name="draft">Чернова</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Прочетено</string>
@@ -125,7 +123,6 @@
     <string name="notificationsMute2Hours">Тих режим за 2 часа</string>
     <string name="notificationsMute1Day">Тих режим за 1 ден</string>
     <string name="notificationsContentShowNameOnly">Само име</string>
-    <string name="arrays__images">Изображения</string>
     <string name="audio">Аудио</string>
     <string name="video">Видео</string>
     <string name="max">Максимално</string>

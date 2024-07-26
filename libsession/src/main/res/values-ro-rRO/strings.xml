@@ -35,7 +35,6 @@
     <string name="none">Niciuna</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Acum</string>
-    <string name="DateUtils_yesterday">Ieri</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -71,7 +70,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session este deblocat</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Tu</string>
     <string name="draft">Ciornă</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marchează ca citit</string>
@@ -130,7 +128,6 @@
     <string name="notificationsMute2Hours">Fără sunet pentru 2 ore</string>
     <string name="notificationsMute1Day">Fără sunet pentru o zi</string>
     <string name="notificationsContentShowNameOnly">Doar numele</string>
-    <string name="arrays__images">Imagini</string>
     <string name="audio">Audio</string>
     <string name="video">Video</string>
     <string name="max">Maximă</string>

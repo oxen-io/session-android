@@ -34,7 +34,6 @@
     <string name="none">هیچ کدام</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">اکنون</string>
-    <string name="DateUtils_yesterday">دیروز</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session قفل شده است</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">شما</string>
     <string name="draft">پیش نویس</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">علامت گذاری به عنوان خوانده شده</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">بی صدا به مدت 2 ساعت</string>
     <string name="notificationsMute1Day">بی صدا برای 1 روز</string>
     <string name="notificationsContentShowNameOnly">تنها نام</string>
-    <string name="arrays__images">تصویر</string>
     <string name="audio">صدا</string>
     <string name="video">ویدئو</string>
     <string name="max">حداکثر</string>
@@ -215,7 +212,6 @@
     <string name="qrCode">کد QR</string>
     <string name="contactsContacts">مخاطبین</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">اعمال</string>
     <string name="done">انجام شد</string>
     <string name="groupEdit">ویرایش گروه</string>
     <string name="contactSelect">انتخاب مخاطب‌ها</string>

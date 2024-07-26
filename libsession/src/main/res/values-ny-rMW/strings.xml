@@ -30,7 +30,6 @@
     <string name="none">Nimaykan</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Kunan</string>
-    <string name="DateUtils_yesterday">Kayna</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -62,7 +61,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session yaykunallami kan.</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Kikin</string>
     <string name="draft">Pichak</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Killkakatishkami nishpa unanchay</string>
@@ -117,7 +115,6 @@
     <string name="notificationsMute2Hours">2 pachata upallayachina</string>
     <string name="notificationsMute1Day">1 punchata upallayachina</string>
     <string name="notificationsContentShowNameOnly">Shutilla</string>
-    <string name="arrays__images">Shuyukuna</string>
     <string name="audio">Uyariy</string>
     <string name="video">Shuyurikuchik</string>
     <string name="max">Chaykamanlla</string>

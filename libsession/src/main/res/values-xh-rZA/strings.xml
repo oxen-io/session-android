@@ -54,7 +54,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session eggudwa</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Gwe</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">lamba osome</string>
     <!-- Notification Channels -->
@@ -98,7 +97,6 @@
     <string name="notificationsMute2Hours">Silisa okumala esawa bbiri </string>
     <string name="notificationsMute1Day">Silisa okumala olunaku 1</string>
     <string name="notificationsContentShowNameOnly">Linnya lyoka</string>
-    <string name="arrays__images">Ebifaananyi</string>
     <string name="audio">Doboozi</string>
     <string name="video">Vidiyo</string>
     <!-- preferences.xml -->

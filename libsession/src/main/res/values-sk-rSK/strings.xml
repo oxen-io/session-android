@@ -34,7 +34,6 @@
     <string name="none">Žiadna</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Teraz</string>
-    <string name="DateUtils_yesterday">Včera</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session je odomknutý</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Vy</string>
     <string name="draft">Koncept</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Označiť ako prečítané</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">Stlmiť na 2 hodiny</string>
     <string name="notificationsMute1Day">Stlmiť na 1 deň</string>
     <string name="notificationsContentShowNameOnly">Iba meno</string>
-    <string name="arrays__images">Obrázky</string>
     <string name="audio">Zvuk</string>
     <string name="video">Video</string>
     <string name="max">Maximálna</string>
@@ -208,7 +205,6 @@
     <string name="qrCode">QR kód</string>
     <string name="contactsContacts">Kontakty</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Použiť</string>
     <string name="done">Dokončené</string>
     <string name="groupEdit">Upraviť skupinu</string>
     <string name="contactSelect">Vyberte kontakty</string>

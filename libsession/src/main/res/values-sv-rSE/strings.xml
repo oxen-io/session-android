@@ -34,7 +34,6 @@
     <string name="none">Inga</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nu</string>
-    <string name="DateUtils_yesterday">Igår</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session är olåst</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Du</string>
     <string name="draft">Utkast</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Läst</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">Tysta i 2 timmar</string>
     <string name="notificationsMute1Day">Tysta i 1 dag</string>
     <string name="notificationsContentShowNameOnly">Endast namn</string>
-    <string name="arrays__images">Bilder</string>
     <string name="audio">Ljud</string>
     <string name="video">Filmer</string>
     <string name="max">Max</string>
@@ -215,7 +212,6 @@
     <string name="qrCode">QR-kod</string>
     <string name="contactsContacts">Kontakter</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Tillämpa</string>
     <string name="done">Klar</string>
     <string name="groupEdit">Redigera Grupp</string>
     <string name="contactSelect">Välj Kontakter</string>

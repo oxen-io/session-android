@@ -33,7 +33,6 @@
     <string name="none">なし</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">今</string>
-    <string name="DateUtils_yesterday">昨日</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -69,7 +68,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Sessionのロック解除</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">あなた</string>
     <string name="draft">下書き</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">既読にする</string>
@@ -128,7 +126,6 @@
     <string name="notificationsMute2Hours">2時間ミュート</string>
     <string name="notificationsMute1Day">1日間ミュート</string>
     <string name="notificationsContentShowNameOnly">名前のみ</string>
-    <string name="arrays__images">画像</string>
     <string name="audio">音声</string>
     <string name="video">動画</string>
     <string name="max">最大</string>
@@ -214,7 +211,6 @@
     <string name="qrCode">QR コード</string>
     <string name="contactsContacts">連絡先</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">適用する</string>
     <string name="done">完了</string>
     <string name="groupEdit">グループを編集</string>
     <string name="contactSelect">連絡先を選択</string>

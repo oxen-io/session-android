@@ -34,7 +34,6 @@
     <string name="none">Ingen</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nu</string>
-    <string name="DateUtils_yesterday">I går</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session er låst op</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Dig</string>
     <string name="draft">Kladde</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Markér som læst</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">Udsæt 2 timer</string>
     <string name="notificationsMute1Day">Udsæt 1 dag</string>
     <string name="notificationsContentShowNameOnly">Kun navn</string>
-    <string name="arrays__images">Billeder</string>
     <string name="audio">Lyd</string>
     <string name="video">Video</string>
     <string name="max">Max.</string>
@@ -209,7 +206,6 @@
     <string name="qrCode">QR-kode</string>
     <string name="contactsContacts">Kontakter</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Anvend</string>
     <string name="done">Færdig</string>
     <string name="groupEdit">Rediger Gruppe</string>
     <string name="contactSelect">Vælg Kontakter</string>

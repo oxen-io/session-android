@@ -28,7 +28,6 @@
     <string name="none">ಯಾವುದೂ ಇಲ್ಲ</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">ಈಗ</string>
-    <string name="DateUtils_yesterday">ನಿನ್ನೆ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -98,7 +97,6 @@
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsContentShowNameOnly">ಹೆಸರು ಮಾತ್ರ</string>
-    <string name="arrays__images">ಚಿತ್ರಗಳು</string>
     <string name="audio">ಆಡಿಯೋ</string>
     <string name="video">ವೀಡಿಯೊ</string>
     <!-- plurals.xml -->

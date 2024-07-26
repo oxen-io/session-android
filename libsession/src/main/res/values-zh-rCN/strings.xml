@@ -33,7 +33,6 @@
     <string name="none">没有</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">现在</string>
-    <string name="DateUtils_yesterday">昨天</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -69,7 +68,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked"> Session 已解锁</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">您</string>
     <string name="draft">草稿</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">标记为已读</string>
@@ -128,7 +126,6 @@
     <string name="notificationsMute2Hours">静音 2 小时</string>
     <string name="notificationsMute1Day">静音 1 天</string>
     <string name="notificationsContentShowNameOnly">仅名称</string>
-    <string name="arrays__images">图片</string>
     <string name="audio">音频</string>
     <string name="video">视频</string>
     <string name="max">最大</string>
@@ -214,7 +211,6 @@
     <string name="qrCode">二维码</string>
     <string name="contactsContacts">联系人</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">应用</string>
     <string name="done">完成</string>
     <string name="groupEdit">编辑群组</string>
     <string name="contactSelect">选择联系人</string>

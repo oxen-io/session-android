@@ -31,7 +31,6 @@
     <string name="none">គ្មាន</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">ឥឡូវនេះ</string>
-    <string name="DateUtils_yesterday">ម្សិលមិញ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -67,7 +66,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked"> Session បានដោះសោ</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">អ្នក</string>
     <string name="draft">ព្រាង</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">សម្គាល់ថាបានអាន</string>
@@ -123,7 +121,6 @@
     <string name="notificationsMute2Hours">បិទសំឡេង 2 ម៉ោង</string>
     <string name="notificationsMute1Day">បិទសំឡេង 1 ថ្ងៃ</string>
     <string name="notificationsContentShowNameOnly">ឈ្មោះតែប៉ុណ្ណោះ</string>
-    <string name="arrays__images">រូបភាព</string>
     <string name="audio">សំឡេង</string>
     <string name="video">វីដេអូ</string>
     <string name="max">អតិបរិមា</string>

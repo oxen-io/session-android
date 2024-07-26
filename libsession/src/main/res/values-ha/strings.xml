@@ -31,7 +31,6 @@
     <string name="none">Hîç</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Niha</string>
-    <string name="DateUtils_yesterday">Doh</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -65,7 +64,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session vekirî ye</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Tu</string>
     <string name="draft">Reşnivîs</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Xwendî nîşan bike</string>
@@ -120,7 +118,6 @@
     <string name="notificationsMute2Hours">Heta 2 demjimêran bêdeng bike</string>
     <string name="notificationsMute1Day">Heta 1 rojê bêdeng bike</string>
     <string name="notificationsContentShowNameOnly">Tenê nav</string>
-    <string name="arrays__images">Wêne</string>
     <string name="audio">Deng</string>
     <string name="video">Vîdyo</string>
     <string name="max">Herî bilind</string>

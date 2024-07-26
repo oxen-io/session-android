@@ -34,7 +34,6 @@
     <string name="none">Nessuna</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Ora</string>
-    <string name="DateUtils_yesterday">Ieri</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session è sbloccato</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Tu</string>
     <string name="draft">Bozza</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Segna come già letto</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">Silenzia per 2 ore</string>
     <string name="notificationsMute1Day">Silenzia per 1 giorno</string>
     <string name="notificationsContentShowNameOnly">Solo nome</string>
-    <string name="arrays__images">Immagini</string>
     <string name="audio">Audio</string>
     <string name="video">Video</string>
     <string name="max">Massima</string>
@@ -215,7 +212,6 @@
     <string name="qrCode">Codice QR</string>
     <string name="contactsContacts">Contatti</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Applica</string>
     <string name="done">Fatto</string>
     <string name="groupEdit">Modifica Gruppo</string>
     <string name="contactSelect">Seleziona Contatti</string>

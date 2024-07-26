@@ -27,7 +27,6 @@
     <string name="none">Hakuna</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Sasa</string>
-    <string name="DateUtils_yesterday">Jana</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -62,7 +61,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session imefunguliwa</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Wewe</string>
     <string name="draft">rasimu</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">soma nakili</string>
@@ -119,7 +117,6 @@
     <string name="notificationsMute2Hours">nyamaza kwa masaa 2</string>
     <string name="notificationsMute1Day">toa sauti kwa siku moja</string>
     <string name="notificationsContentShowNameOnly">jina tu</string>
-    <string name="arrays__images">picha</string>
     <string name="audio">Sauti</string>
     <string name="max">mwisho</string>
     <!-- plurals.xml -->

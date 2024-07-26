@@ -35,7 +35,6 @@
     <string name="none">אין</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">עכשיו</string>
-    <string name="DateUtils_yesterday">אתמול</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -71,7 +70,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session אינו נעול</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">אתה</string>
     <string name="draft">טיוטה</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">סמן כנקרא</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">השתק למשך שעתיים</string>
     <string name="notificationsMute1Day">השתק למשך יום 1</string>
     <string name="notificationsContentShowNameOnly">שם בלבד</string>
-    <string name="arrays__images">תמונות</string>
     <string name="audio">שמע</string>
     <string name="video">וידיאו</string>
     <string name="max">מרבי</string>

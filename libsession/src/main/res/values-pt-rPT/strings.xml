@@ -34,7 +34,6 @@
     <string name="none">Nenhum</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Agora</string>
-    <string name="DateUtils_yesterday">Ontem</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">O Session está desbloqueado</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Você</string>
     <string name="draft">Rascunho</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marcar como lida</string>
@@ -130,7 +128,6 @@
     <string name="notificationsMute2Hours">Silenciar por 2 horas</string>
     <string name="notificationsMute1Day">Silenciar por 1 dia</string>
     <string name="notificationsContentShowNameOnly">Apenas o nome</string>
-    <string name="arrays__images">Imagens</string>
     <string name="audio">Áudio</string>
     <string name="video">Vídeo</string>
     <string name="max">Máxima</string>

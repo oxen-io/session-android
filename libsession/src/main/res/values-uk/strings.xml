@@ -36,7 +36,6 @@
     <string name="none">Жодного</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Зараз</string>
-    <string name="DateUtils_yesterday">Вчора</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -73,7 +72,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session розблоковано</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Ви</string>
     <string name="draft">Чернетка</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Позначити як прочитане</string>
@@ -132,7 +130,6 @@
     <string name="notificationsMute2Hours">Вимкнути звук на 2 години</string>
     <string name="notificationsMute1Day">Вимкнути звук на 1 день</string>
     <string name="notificationsContentShowNameOnly">Тільки ім\'я</string>
-    <string name="arrays__images">Зображення</string>
     <string name="audio">Аудіо</string>
     <string name="video">Відео</string>
     <string name="max">Максимум</string>
@@ -218,7 +215,6 @@
     <string name="qrCode">QR-код</string>
     <string name="contactsContacts">Контакти</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Застосувати</string>
     <string name="done">Готово</string>
     <string name="groupEdit">Редагувати Групу</string>
     <string name="contactSelect">Обрати контакти</string>

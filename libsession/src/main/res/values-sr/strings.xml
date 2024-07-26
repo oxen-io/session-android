@@ -34,7 +34,6 @@
     <string name="none">Ништа</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Сад</string>
-    <string name="DateUtils_yesterday">Јуче</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session је откључан</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Ви</string>
     <string name="draft">Нацрт</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Означи прочитаним</string>
@@ -128,7 +126,6 @@
     <string name="notificationsMute2Hours">Утишај 2 сата</string>
     <string name="notificationsMute1Day">Утишај 1 дан</string>
     <string name="notificationsContentShowNameOnly">Само име</string>
-    <string name="arrays__images">Слике</string>
     <string name="audio">Звук</string>
     <string name="video">Видео</string>
     <string name="max">Највиши</string>

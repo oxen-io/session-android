@@ -86,7 +86,6 @@
     <string name="activity_seed_reveal_button_title">Hold to reveal</string>
     <string name="activity_seed_title_2">Meet your recovery phrase</string>
     <string name="activity_settings_upload">Upload</string>
-    <string name="arrays__images">Images</string>
     <string name="attachment_type_selector__drawer_description">Toggle attachment drawer</string>
     <string name="attachment_type_selector__gallery">Gallery</string>
     <string name="attachment_type_selector__gallery_description">Image or video</string>
@@ -100,11 +99,9 @@
     <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
     <string name="fragment_view_my_qr_code_share_title">Share QR Code</string>
     <string name="fragment_view_my_qr_code_title">Scan Me</string>
-    <string name="menu_apply_button">Apply</string>
     <string name="message_details_header__disappears">Disappears</string>
-    <string name="message_details_header__file_id">File Id:</string>
-    <string name="registration_activity__skip">Skip</string> <!-- Replaced during onboarding -->
-    
+    <string name="registration_activity__skip">Skip</string>
+
 
     <!-- RENAMED! -->
     <string name="deleteAfterGroupFirstReleaseConfigOutdated">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
@@ -445,7 +442,6 @@
     <string name="groupInviteFailedUser">Failed to invite {name} to {group_name}</string>
     <string name="groupInviteSending">Sending invite</string>
     <string name="groupInviteSent">Invite sent</string>
-    <string name="groupInviteSuccessful">Group invite successful</string>
     <string name="groupInviteVersion">Users must have version {version} or higher to receive invitations</string>
     <string name="groupInviteYou"><b>You</b> were invited to join the group.</string>
     <string name="groupLeave">Leave Group</string>
@@ -574,7 +570,6 @@
     <string name="messageRequestsNonePending">No pending message requests</string>
     <string name="messageRequestsTurnedOff"><b>{name}</b> has message requests from Community conversations turned off, so you cannot send them a message.</string>
     <string name="messageSelect">Select Message</string>
-    <string name="messageStatusFailedToSend">Failed to send</string>
     <string name="messageStatusFailedToSync">Failed to sync</string>
     <string name="messageStatusSyncing">Syncing</string>
     <string name="messageUnread">Unread messages</string>
@@ -691,7 +686,6 @@
     <string name="preview">Preview</string>
     <string name="profile">Profile</string>
     <string name="profileDisplayPicture">Display Picture</string>
-    <string name="profileDisplayPictureRemoveError">Failed to remove display picture.</string>
     <string name="profileDisplayPictureSet">Set Display Picture</string>
     <string name="profileErrorUpdate">Failed to update profile.</string>
     <string name="promote">Promote</string>

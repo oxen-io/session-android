@@ -24,7 +24,6 @@
     <!-- CustomDefaultPreference -->
     <!-- DateUtils -->
     <string name="DateUtils_just_now">දැන්</string>
-    <string name="DateUtils_yesterday">ඊයේ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -53,7 +52,6 @@
     <!-- MuteDialog -->
     <!-- KeyCachingService -->
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">ඔබ</string>
     <!-- MessageNotifier -->
     <!-- Notification Channels -->
     <string name="updateApp">යෙදුම් යාවත්කාල</string>
@@ -132,7 +130,6 @@
     <string name="sessionPrivacy">පෞද්ගලිකත්වය</string>
     <string name="contactsContacts">සබඳතා</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">යොදන්න</string>
     <string name="groupEdit">සමූහය සංස්කරණය</string>
     <string name="appearanceThemes">තේමාව</string>
     <string name="messageVoice">හඬ පණිවිඩය</string>

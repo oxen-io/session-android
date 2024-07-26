@@ -35,7 +35,6 @@
     <string name="none">Egyik sem</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Most</string>
-    <string name="DateUtils_yesterday">Tegnap</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -71,7 +70,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session feloldva</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Te</string>
     <string name="draft">Piszkozat</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Olvasottnak jelöl</string>
@@ -130,7 +128,6 @@
     <string name="notificationsMute2Hours">Némítás 2 órára</string>
     <string name="notificationsMute1Day">Némítás 1 napra</string>
     <string name="notificationsContentShowNameOnly">Csak név</string>
-    <string name="arrays__images">Képek</string>
     <string name="audio">Hang</string>
     <string name="video">Videó</string>
     <string name="max">Legmagasabb</string>
@@ -216,7 +213,6 @@
     <string name="qrCode">QR kód</string>
     <string name="contactsContacts">Kapcsolatok</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Alkalmaz</string>
     <string name="done">Kész</string>
     <string name="groupEdit">Csoport szerkesztése</string>
     <string name="contactSelect">Névjegyek kiválasztása</string>

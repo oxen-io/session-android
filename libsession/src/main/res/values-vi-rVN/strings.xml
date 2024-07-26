@@ -27,7 +27,6 @@
     <string name="none">Không</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Bây giờ</string>
-    <string name="DateUtils_yesterday">Ngày hôm qua</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -57,7 +56,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session đã mở khóa</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Bạn</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Đánh dấu đã đọc</string>
     <!-- Notification Channels -->
@@ -101,7 +99,6 @@
     <string name="notificationsMute2Hours">Tạm im 2 tiếng</string>
     <string name="notificationsMute1Day">Tạm im 1 ngày</string>
     <string name="notificationsContentShowNameOnly">Tên thôi</string>
-    <string name="arrays__images">Hình ảnh</string>
     <string name="audio">Nhạc</string>
     <string name="video">Đoạn phim</string>
     <!-- preferences.xml -->

@@ -45,7 +45,6 @@
     <string name="none">Aucun</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">À l’instant</string>
-    <string name="DateUtils_yesterday">Hier</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -81,7 +80,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session est déverrouillé</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Vous</string>
     <string name="draft">Brouillon</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marquer comme lu</string>
@@ -140,7 +138,6 @@
     <string name="notificationsMute2Hours">Sourdine pendant 2 heures</string>
     <string name="notificationsMute1Day">Sourdine pendant 1 jour</string>
     <string name="notificationsContentShowNameOnly">Nom uniquement</string>
-    <string name="arrays__images">Images</string>
     <string name="audio">Son</string>
     <string name="video">Vidéo</string>
     <string name="max">Maximale</string>
@@ -156,7 +153,6 @@
     <string name="readReceipts">Accusés de lecture</string>
     <string name="typingIndicators">Indicateurs de saisie</string>
     <string name="conversationsMessageTrimming">Élagage des messages</string>
-    <string name="preferences_notifications__content_message">Afficher :</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -229,7 +225,6 @@
     <string name="qrCode">QR Code</string>
     <string name="contactsContacts">Contacts</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Appliquer</string>
     <string name="done">Terminé</string>
     <string name="groupEdit">Modifier le groupe</string>
     <string name="contactSelect">Sélectionner des contacts</string>

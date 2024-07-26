@@ -35,7 +35,6 @@
     <string name="none">Dim</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nawr</string>
-    <string name="DateUtils_yesterday">Ddoe</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -71,7 +70,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Mae Session wedi\'i ddatgloi</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Chi</string>
     <string name="draft">Drafft</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marcio wedi\'i ddarllen</string>
@@ -126,7 +124,6 @@
     <string name="notificationsMute2Hours">Tewi am 2 awr</string>
     <string name="notificationsMute1Day">Tewi am 1 diwrnod</string>
     <string name="notificationsContentShowNameOnly">Enw yn unig</string>
-    <string name="arrays__images">Lluniau</string>
     <string name="audio">Sain</string>
     <string name="video">Fideo</string>
     <string name="max">Mwyaf</string>

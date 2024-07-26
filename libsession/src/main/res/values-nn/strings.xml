@@ -31,7 +31,6 @@
     <string name="none">Ingen</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">No</string>
-    <string name="DateUtils_yesterday">I går</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -65,7 +64,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session er låst opp</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Deg</string>
     <string name="draft">Kladd</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Merk lesen</string>
@@ -118,7 +116,6 @@
     <string name="notificationsMute2Hours">Demp i 2 timar</string>
     <string name="notificationsMute1Day">Demp i 1 dag</string>
     <string name="notificationsContentShowNameOnly">Berre namn</string>
-    <string name="arrays__images">Bilete</string>
     <string name="audio">Lyd</string>
     <string name="max">Maks</string>
     <!-- preferences.xml -->

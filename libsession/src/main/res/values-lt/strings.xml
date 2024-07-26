@@ -36,7 +36,6 @@
     <string name="none">Nėra</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Dabar</string>
-    <string name="DateUtils_yesterday">Vakar</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -72,7 +71,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session yra atrakinta</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Jūs</string>
     <string name="draft">Juodraštis</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Žymėti kaip skaitytą</string>
@@ -131,7 +129,6 @@
     <string name="notificationsMute2Hours">Nutildyti 2 valandoms</string>
     <string name="notificationsMute1Day">Nutildyti 1 dienai</string>
     <string name="notificationsContentShowNameOnly">Tik vardą</string>
-    <string name="arrays__images">Paveikslai</string>
     <string name="audio">Garso įrašai</string>
     <string name="video">Vaizdo įrašai</string>
     <string name="max">Maksimali</string>
@@ -209,7 +206,6 @@
     <string name="qrCode">QR kodas</string>
     <string name="contactsContacts">Adresatai</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Taikyti</string>
     <string name="done">Atlikta</string>
     <string name="groupEdit">Taisyti grupę</string>
     <string name="appearanceThemes">Apipavidalinimas</string>

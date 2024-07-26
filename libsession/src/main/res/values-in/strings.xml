@@ -30,7 +30,6 @@
     <string name="none">Tidak ada</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Sekarang</string>
-    <string name="DateUtils_yesterday">Kemarin</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -66,7 +65,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session terbuka</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Anda</string>
     <string name="draft">Draf</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Tandai dibaca</string>
@@ -120,7 +118,6 @@
     <string name="notificationsMute2Hours">Senyapkan selama 2 jam</string>
     <string name="notificationsMute1Day">Senyapkan selama 1 hari</string>
     <string name="notificationsContentShowNameOnly">Hanya nama</string>
-    <string name="arrays__images">Gambar</string>
     <string name="audio">Suara</string>
     <string name="video">Video</string>
     <string name="max">Maksimal</string>
@@ -180,7 +177,6 @@
     <string name="qrCode">Kode QR</string>
     <string name="contactsContacts">Kontak</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Terapkan</string>
     <string name="done">Selesai</string>
     <string name="groupEdit">Ubah Grup</string>
     <string name="appearanceThemes">Tema</string>

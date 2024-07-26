@@ -34,7 +34,6 @@
     <string name="none">Heç biri</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">İndi</string>
-    <string name="DateUtils_yesterday">Dünən</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session-ın kilidi açıldı</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Siz</string>
     <string name="draft">Qaralama</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Oxundu olaraq işarələ</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">2 saatlıq səssizə al</string>
     <string name="notificationsMute1Day">1 günlük səssizə al</string>
     <string name="notificationsContentShowNameOnly">Yalnız ad</string>
-    <string name="arrays__images">Təsvirlər</string>
     <string name="audio">Səs</string>
     <string name="video">Video</string>
     <string name="max">Maksimum</string>
@@ -215,7 +212,6 @@
     <string name="qrCode">QR Kod</string>
     <string name="contactsContacts">Əlaqələr</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Tətbiq et</string>
     <string name="done">Bitdi</string>
     <string name="groupEdit">Qrupa düzəliş et</string>
     <string name="contactSelect">Əlaqələri seç</string>

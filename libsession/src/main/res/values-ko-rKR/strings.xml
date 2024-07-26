@@ -33,7 +33,6 @@
     <string name="none">없음</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">방금 전</string>
-    <string name="DateUtils_yesterday">어제</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -68,7 +67,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session 잠금 해제 됨</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">나</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">읽음으로 표시</string>
     <!-- Notification Channels -->
@@ -113,7 +111,6 @@
     <string name="notificationsMute2Hours">2시간 동안 알림 끄기</string>
     <string name="notificationsMute1Day">하루 동안 알림 끄기</string>
     <string name="notificationsContentShowNameOnly">이름</string>
-    <string name="arrays__images">이미지</string>
     <string name="audio">오디오</string>
     <string name="video">동영상</string>
     <!-- preferences.xml -->

@@ -34,7 +34,6 @@
     <string name="none">Չկա</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Հիմա</string>
-    <string name="DateUtils_yesterday">Երեկ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session֊ը ապակողպված է</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Դուք</string>
     <string name="draft">Սևագիր</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Նշել որպես ընթերցված</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">Խլացնել 2 ժամով</string>
     <string name="notificationsMute1Day">Անջատել 1 օր</string>
     <string name="notificationsContentShowNameOnly">Միայն անունը</string>
-    <string name="arrays__images">Նկարներ</string>
     <string name="audio">Աուդիո</string>
     <string name="video">Վիդեո</string>
     <string name="max">Մաքսիմում</string>
@@ -215,7 +212,6 @@
     <string name="qrCode">QR կոդ</string>
     <string name="contactsContacts">Կոնտակտներ</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Հաստատել</string>
     <string name="done">Վերջ</string>
     <string name="groupEdit">Խմբագրել խումբը</string>
     <string name="contactSelect">Ընտրել Կոնտակտներ</string>

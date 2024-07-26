@@ -34,7 +34,6 @@
     <string name="none">Ei asetettu</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nyt</string>
-    <string name="DateUtils_yesterday">eilen</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Sessionin lukitus on auki</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Sinä</string>
     <string name="draft">Luonnos</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Luettu</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">2 tunniksi</string>
     <string name="notificationsMute1Day">1 vuorokaudeksi</string>
     <string name="notificationsContentShowNameOnly">Vain nimi</string>
-    <string name="arrays__images">Kuvat</string>
     <string name="audio">Äänitallenteet</string>
     <string name="video">Videot</string>
     <string name="max">Maksimi</string>
@@ -215,7 +212,6 @@
     <string name="qrCode">QR-koodi</string>
     <string name="contactsContacts">Yhteystiedot</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Käytä</string>
     <string name="done">Valmis</string>
     <string name="groupEdit">Muokkaa ryhmää</string>
     <string name="contactSelect">Valitse Yhteystiedot</string>

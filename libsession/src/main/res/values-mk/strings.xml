@@ -24,7 +24,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">မည်သည့်အရာမှ မဟုတ်သော</string>
     <!-- DateUtils -->
-    <string name="DateUtils_yesterday">မနေ့က </string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -58,7 +57,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session ကိုဖွင့်လိုက်ပါပြီ</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">သင်</string>
     <string name="draft">မူကြမ်း</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">ဖတ်ပြီးသား</string>
@@ -108,7 +106,6 @@
     <string name="notificationsMute2Hours">အသံကို ၂ နာရီ ပိတ်ထားပါ။</string>
     <string name="notificationsMute1Day">အသံကို ၁ ရက် ပိတ်ထားပါ</string>
     <string name="notificationsContentShowNameOnly">အမည်တစ်ခုတည်းသာ</string>
-    <string name="arrays__images">ပုံများ</string>
     <string name="audio">အသံ</string>
     <string name="video">ဗီဒီယို</string>
     <string name="max">အများဆုံး</string>

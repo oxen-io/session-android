@@ -29,7 +29,6 @@
     <string name="none">ไม่มี</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">เดี๋ยวนี้</string>
-    <string name="DateUtils_yesterday">เมื่อวานนี้</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -63,7 +62,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Session ถูกปลดล็อก</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">คุณ</string>
     <string name="draft">ร่าง</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">ทำเครื่องหมายว่าอ่านแล้ว</string>
@@ -118,7 +116,6 @@
     <string name="notificationsMute2Hours">ปิดเสียง 2 ชั่วโมง</string>
     <string name="notificationsMute1Day">ปิดเสียง 1 วัน</string>
     <string name="notificationsContentShowNameOnly">ชื่อเท่านั้น</string>
-    <string name="arrays__images">ภาพ</string>
     <string name="audio">เสียง</string>
     <string name="video">วิดีโอ</string>
     <string name="max">สูงสุด</string>

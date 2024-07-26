@@ -90,7 +90,7 @@ class MessageDetailsViewModel @Inject constructor(
 
     private val Slide.details: List<TitledText>
         get() = listOfNotNull(
-            fileName.orNull()?.let { TitledText(R.string.message_details_header__file_id, it) },
+            fileName.orNull()?.let { TitledText(R.string.attachmentsFileId, it) },
             TitledText(R.string.attachmentsFileType, asAttachment().contentType),
             TitledText(R.string.attachmentsFileSize, Util.getPrettyFileSize(fileSize)),
             takeIf { it is ImageSlide }

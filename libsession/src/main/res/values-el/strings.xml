@@ -34,7 +34,6 @@
     <string name="none">Κανένα</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Τώρα</string>
-    <string name="DateUtils_yesterday">Χθες</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -70,7 +69,6 @@
     <!-- KeyCachingService -->
     <string name="lockAppUnlocked">Το Session ξεκλειδώθηκε</string>
     <!-- MediaPreviewActivity -->
-    <string name="onionRoutingPathYou">Εσείς</string>
     <string name="draft">Πρόχειρο</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Σημείωση ως αναγνωσμένο</string>
@@ -129,7 +127,6 @@
     <string name="notificationsMute2Hours">Σίγαση για 2 ώρες</string>
     <string name="notificationsMute1Day">Σίγαση για 1 ημέρα</string>
     <string name="notificationsContentShowNameOnly">Μόνο όνομα</string>
-    <string name="arrays__images">Εικόνες</string>
     <string name="audio">Ήχοι</string>
     <string name="video">Βίντεο</string>
     <string name="max">Μέγιστο</string>
@@ -215,7 +212,6 @@
     <string name="qrCode">QR κωδικός</string>
     <string name="contactsContacts">Επαφές</string>
     <!-- Next round of translation -->
-    <string name="menu_apply_button">Εφαρμογή</string>
     <string name="done">Τέλος</string>
     <string name="groupEdit">Επεξεργασία Ομάδας</string>
     <string name="contactSelect">Επιλογή Επαφών</string>
