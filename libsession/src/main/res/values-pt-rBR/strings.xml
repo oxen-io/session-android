@@ -169,7 +169,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Permissão requerida</string>
     <string name="notNow">Agora não</string>
-    <string name="registration_activity__skip">Pular</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Continuar</string>

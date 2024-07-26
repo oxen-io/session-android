@@ -170,7 +170,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">مجوز لازم است</string>
     <string name="notNow">حالا نه</string>
-    <string name="registration_activity__skip">پرش</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">ادامه </string>

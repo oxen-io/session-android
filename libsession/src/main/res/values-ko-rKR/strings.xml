@@ -146,7 +146,6 @@
     <string name="deleting">이전 메시지 삭제</string>
     <!-- transport_selection_list_item -->
     <string name="notNow">나중에</string>
-    <string name="registration_activity__skip">건너뛰기</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="copy">복사</string>

@@ -170,7 +170,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">E nevoie de permisiune</string>
     <string name="notNow">Nu acum</string>
-    <string name="registration_activity__skip">Omite</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Continuă</string>

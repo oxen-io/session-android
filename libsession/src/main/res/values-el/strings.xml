@@ -169,7 +169,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Χρειάζονται δικαιώματα πρόσβασης</string>
     <string name="notNow">Όχι τώρα</string>
-    <string name="registration_activity__skip">Παράλειψη</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Συνέχεια</string>

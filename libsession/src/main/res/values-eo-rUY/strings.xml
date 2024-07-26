@@ -169,7 +169,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Permeso bezonata</string>
     <string name="notNow">Ne nun</string>
-    <string name="registration_activity__skip">Preterpasi</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Daŭrigi</string>

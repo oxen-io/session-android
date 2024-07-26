@@ -169,7 +169,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">İcazə tələb edilir</string>
     <string name="notNow">İndi yox</string>
-    <string name="registration_activity__skip">Ötür</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Davam</string>

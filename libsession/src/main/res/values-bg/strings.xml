@@ -165,7 +165,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Нужда от разрешение за достъп</string>
     <string name="notNow">Не сега</string>
-    <string name="registration_activity__skip">Пропусни</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Продължи</string>

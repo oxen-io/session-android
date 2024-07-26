@@ -172,7 +172,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Необхідний дозвіл</string>
     <string name="notNow">Не зараз</string>
-    <string name="registration_activity__skip">Пропустити</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Далі</string>

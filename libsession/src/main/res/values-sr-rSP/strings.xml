@@ -164,7 +164,6 @@
     <string name="deleting">Брисање</string>
     <!-- transport_selection_list_item -->
     <string name="notNow">Не сада</string>
-    <string name="registration_activity__skip">Прескочи</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="recommended">Препоручено</string>

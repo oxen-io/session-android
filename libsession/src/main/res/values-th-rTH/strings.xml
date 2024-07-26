@@ -155,7 +155,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">ต้องได้รับอนุญาตก่อน</string>
     <string name="notNow">ไม่ใช่ตอนนี้</string>
-    <string name="registration_activity__skip">ข้าม</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->

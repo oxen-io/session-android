@@ -58,11 +58,12 @@
     </plurals>
 
 
-    <!-- USED! -->
+    <!-- USED AND WE NEED NEW STRING NAMES! -->
     <string name="activity_home_empty_state_button_title">Start a Session</string>
+    <string name="fragment_view_my_qr_code_title">Scan Me</string>
 
 
-
+    <!-- INVESTIGATING -->
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
     <string name="DateUtils_just_now">Now</string>
@@ -98,9 +99,7 @@
     <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
     <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
     <string name="fragment_view_my_qr_code_share_title">Share QR Code</string>
-    <string name="fragment_view_my_qr_code_title">Scan Me</string>
     <string name="message_details_header__disappears">Disappears</string>
-    <string name="registration_activity__skip">Skip</string>
 
 
     <!-- RENAMED! -->
@@ -570,6 +569,7 @@
     <string name="messageRequestsNonePending">No pending message requests</string>
     <string name="messageRequestsTurnedOff"><b>{name}</b> has message requests from Community conversations turned off, so you cannot send them a message.</string>
     <string name="messageSelect">Select Message</string>
+    <string name="messageStatusFailedToSend">Failed to send</string>
     <string name="messageStatusFailedToSync">Failed to sync</string>
     <string name="messageStatusSyncing">Syncing</string>
     <string name="messageUnread">Unread messages</string>
@@ -686,6 +686,7 @@
     <string name="preview">Preview</string>
     <string name="profile">Profile</string>
     <string name="profileDisplayPicture">Display Picture</string>
+    <string name="profileDisplayPictureRemoveError">Failed to remove display picture.</string>
     <string name="profileDisplayPictureSet">Set Display Picture</string>
     <string name="profileErrorUpdate">Failed to update profile.</string>
     <string name="promote">Promote</string>

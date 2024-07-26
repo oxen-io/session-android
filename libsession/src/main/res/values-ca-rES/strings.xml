@@ -168,7 +168,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Cal permís</string>
     <string name="notNow">Ara no</string>
-    <string name="registration_activity__skip">Omet</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Continua</string>

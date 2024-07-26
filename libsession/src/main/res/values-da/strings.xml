@@ -169,7 +169,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Tilladelse krævet</string>
     <string name="notNow">Ikke nu</string>
-    <string name="registration_activity__skip">Spring over</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Fortsæt</string>

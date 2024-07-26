@@ -168,7 +168,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">需要權限</string>
     <string name="notNow">稍後</string>
-    <string name="registration_activity__skip">略過</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">繼續</string>

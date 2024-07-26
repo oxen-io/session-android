@@ -168,7 +168,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">דרושה הרשאה</string>
     <string name="notNow">לא עכשיו</string>
-    <string name="registration_activity__skip">דלג</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">המשך</string>

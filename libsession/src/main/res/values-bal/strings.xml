@@ -156,7 +156,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Memerlukan izin akses</string>
     <string name="notNow">Nanti saja</string>
-    <string name="registration_activity__skip">Lewati</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Lanjut</string>

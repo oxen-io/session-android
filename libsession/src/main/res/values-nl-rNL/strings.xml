@@ -169,7 +169,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Toestemming vereist</string>
     <string name="notNow">Niet nu</string>
-    <string name="registration_activity__skip">Overslaan</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Doorgaan</string>

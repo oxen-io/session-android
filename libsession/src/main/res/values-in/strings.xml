@@ -154,7 +154,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Izin dibutuhkan</string>
     <string name="notNow">Lain kali</string>
-    <string name="registration_activity__skip">Lewati</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Lanjutkan</string>

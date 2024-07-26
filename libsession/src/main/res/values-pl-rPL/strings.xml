@@ -171,7 +171,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Wymagane uprawnienia</string>
     <string name="notNow">Nie teraz</string>
-    <string name="registration_activity__skip">Pomiń</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Kontynuuj</string>

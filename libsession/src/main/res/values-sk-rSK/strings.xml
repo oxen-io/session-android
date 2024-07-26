@@ -169,7 +169,6 @@
     <!-- transport_selection_list_item -->
     <string name="permissionsRequired">Potrebné povolenie</string>
     <string name="notNow">Teraz nie</string>
-    <string name="registration_activity__skip">Preskočiť</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="theContinue">Pokračovať</string>
