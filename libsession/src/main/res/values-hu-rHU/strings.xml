@@ -35,7 +35,6 @@
     <string name="none">Egyik sem</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Most</string>
-    <string name="DateUtils_today">Ma</string>
     <string name="DateUtils_yesterday">Tegnap</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -184,8 +183,6 @@
     <string name="next">Következő</string>
     <string name="share">Megosztás</string>
     <string name="cancel">Mégse</string>
-    <string name="view_fake_chat_bubble_4">Fejlett anonim útválasztási és végponttól-végpontig titkosítási technológiák használatával.</string>
-    <string name="view_fake_chat_bubble_5">A barátként nem engedhetem, hogy megbízhatatlan üzenetküldő appokat használj. Szívesen.</string>
     <string name="displayNamePick">Válassza ki a megjelenítendő nevet</string>
     <string name="recommended">Ajánlott</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Kérjük, válasszon egy lehetőséget</string>
@@ -194,9 +191,6 @@
     <string name="activity_seed_title_2">Írja be a helyreállítási kifejezést</string>
     <string name="activity_seed_explanation">A helyreállítási kifejezés a Session azonosító főkulcsa - használhatja a Session azonosító visszaállítására, ha elveszíti a hozzáférését eszközéhez. Tárolja helyreállítási mondatát biztonságos helyen, és ne adja át senkinek.</string>
     <string name="activity_seed_reveal_button_title">Tartsa lenyomva, hogy felfedje</string>
-    <string name="view_seed_reminder_title">Már majdnem kész! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Biztosítsa fiókját a helyreállítási szöveg elmentésével</string>
-    <string name="view_seed_reminder_subtitle_2">Érintse meg és tartsa lenyomva a szerkesztett szavakat, hogy felfedje a helyreállítási kifejezést, majd tárolja biztonságosan Session-azonosítója biztonsága érdekében.</string>
     <string name="onionRoutingPath">Útvonal</string>
     <string name="onionRoutingPathEntryNode">Belépési csomópont</string>
     <string name="onionRoutingPathServiceNode">Szolgáltatási csomópont</string>

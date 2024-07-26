@@ -36,7 +36,6 @@
     <string name="none">Nėra</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Dabar</string>
-    <string name="DateUtils_today">Šiandien</string>
     <string name="DateUtils_yesterday">Vakar</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -184,17 +183,12 @@
     <string name="next">Kitas</string>
     <string name="share">Bendrinti</string>
     <string name="cancel">Atsisakyti</string>
-    <string name="view_fake_chat_bubble_4">Naudodama išplėstinio anoniminio nukreipimo ir ištisinio šifravimo technologijų kombinaciją.</string>
-    <string name="view_fake_chat_bubble_5">Draugai neleidžia savo draugams naudotis į pavojų statančiomis programėlėmis. Prašom.</string>
     <string name="displayNamePick">Pasirinkite savo rodomą vardą</string>
     <string name="recommended">Rekomenduojama</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Pasirinkite parinktį</string>
     <string name="conversationsDeleted">Pokalbis ištrintas</string>
     <string name="activity_seed_title_2">Pasitikite savo atkūrimo frazę</string>
     <string name="activity_seed_explanation">Jūsų atkūrimo frazė yra pagrindinis raktas į jūsų Session ID — galite ją naudoti, kad atkurtumėte savo Session ID tuo atveju, jei prarasite prieigą prie savo įrenginio. Laikykite savo atkūrimo frazę saugioje vietoje ir niekam jos nerodykite.</string>
-    <string name="view_seed_reminder_title">Beveik užbaigėte! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Apsaugokite savo paskyrą įsirašydami atkūrimo frazę</string>
-    <string name="view_seed_reminder_subtitle_2">Bakstelėkite ir laikykite ant redaguotų žodžių, kad būtų atskleista jūsų atkūrimo frazė. Tuomet, laikykite ją saugioje vietoje, kad apsaugotumėte savo Session ID.</string>
     <string name="onionRoutingPath">Kelias</string>
     <string name="onionRoutingPathEntryNode">Įėjimo mazgas</string>
     <string name="onionRoutingPathServiceNode">Aptarnavimo mazgas</string>

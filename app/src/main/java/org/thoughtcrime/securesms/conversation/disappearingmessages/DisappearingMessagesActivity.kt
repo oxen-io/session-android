@@ -74,7 +74,7 @@ class DisappearingMessagesActivity: PassphraseRequiredActionBarActivity() {
     private fun setUpToolbar() {
         setSupportActionBar(binding.searchToolbar)
         supportActionBar?.apply {
-            title = getString(R.string.activity_disappearing_messages_title)
+            title = getString(R.string.disappearingMessages)
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
         }

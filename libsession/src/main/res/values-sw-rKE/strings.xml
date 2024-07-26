@@ -27,7 +27,6 @@
     <string name="none">Hakuna</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Sasa</string>
-    <string name="DateUtils_today">Leo</string>
     <string name="DateUtils_yesterday">Jana</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

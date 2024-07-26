@@ -34,7 +34,6 @@
     <string name="none">Ei asetettu</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nyt</string>
-    <string name="DateUtils_today">tänään</string>
     <string name="DateUtils_yesterday">eilen</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Seuraava</string>
     <string name="share">Jaa</string>
     <string name="cancel">Peruuta</string>
-    <string name="view_fake_chat_bubble_4">Käyttämällä kehittyneitä nimettömiä reititys- ja päästä päähän -salaustekniikoita.</string>
-    <string name="view_fake_chat_bubble_5">Ystävät eivät anna ystävien käyttää vaarantunutta viestintäsovellusta. Olet tervetullut.</string>
     <string name="displayNamePick">Valitse näyttönimi</string>
     <string name="recommended">Suositeltu</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Valitse vaihtoehto</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">Tutustu palautuslauseesi</string>
     <string name="activity_seed_explanation">Sinun palautuslause on pääavain Session tunnukseesi — voit käyttää sitä palauttamaan Session tunnuksesi jos menetät pääsyn laitteeseen. Säilytä palautuslauseesi turvallisessa paikassa, ja älä anna sitä kenellekään.</string>
     <string name="activity_seed_reveal_button_title">Pidä pohjassa paljastaaksesi</string>
-    <string name="view_seed_reminder_title">Olet melkein valmis! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Suojaa tilisi tallentamalla palautuslauseke</string>
-    <string name="view_seed_reminder_subtitle_2">Napauta ja pidä piiloteettuja sanoja paljastaaksesi palautuslauseen, ja säästä se turvallisesti suojataksesi Session tilisi.</string>
     <string name="onionRoutingPath">Polku</string>
     <string name="onionRoutingPathEntryNode">Sisääntulon Solmu</string>
     <string name="onionRoutingPathServiceNode">Palvelu Solmu</string>

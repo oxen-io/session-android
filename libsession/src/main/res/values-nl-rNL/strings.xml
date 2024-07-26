@@ -34,7 +34,6 @@
     <string name="none">Geen</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nu</string>
-    <string name="DateUtils_today">Vandaag</string>
     <string name="DateUtils_yesterday">Gisteren</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Volgende</string>
     <string name="share">Delen</string>
     <string name="cancel">Annuleren</string>
-    <string name="view_fake_chat_bubble_4">Met behulp van een combinatie van geavanceerde anonieme routing en end-to-end encryptietechnologieën.</string>
-    <string name="view_fake_chat_bubble_5">Vrienden laten vrienden geen gecomprimeerde berichten apps gebruiken. Graag gedaan.</string>
     <string name="displayNamePick">Kies je weergavenaam</string>
     <string name="recommended">Aanbevolen</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Gelieve een optie te selecteren</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">Maak kennis met uw herstel zin</string>
     <string name="activity_seed_explanation">Uw herstel zin is de hoofdsleutel van uw Sessie-ID - u kunt deze gebruiken om uw Sessie-ID te herstellen als u de toegang tot uw apparaat verliest. Sla uw herstel zin op op een veilige plaats op en geef het aan niemand anders.</string>
     <string name="activity_seed_reveal_button_title">Ingedrukt houden om te onthullen</string>
-    <string name="view_seed_reminder_title">Je bent bijna klaar! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Beveilig uw account door uw herstel zin op te slaan</string>
-    <string name="view_seed_reminder_subtitle_2">Hou de herschreven woorden ingedrukt om uw herstelzin te onthullen, en sla het vervolgens veilig op om uw Sessie-ID te beveiligen.</string>
     <string name="onionRoutingPath">Locatie</string>
     <string name="onionRoutingPathEntryNode">Invoer node</string>
     <string name="onionRoutingPathServiceNode">Service node</string>

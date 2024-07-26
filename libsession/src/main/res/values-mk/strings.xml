@@ -24,7 +24,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">မည်သည့်အရာမှ မဟုတ်သော</string>
     <!-- DateUtils -->
-    <string name="DateUtils_today">ယနေ့ </string>
     <string name="DateUtils_yesterday">မနေ့က </string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

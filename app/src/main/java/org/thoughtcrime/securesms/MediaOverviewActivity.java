@@ -51,12 +51,14 @@ import com.bumptech.glide.Glide;
 import com.codewaves.stickyheadergrid.StickyHeaderGridLayoutManager;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.phrase.Phrase;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import kotlin.Unit;
 import network.loki.messenger.R;
+
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.snode.SnodeAPI;
@@ -335,10 +337,10 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
                         .put(APP_NAME_KEY, getString(R.string.app_name))
                         .format().toString())
                 .onAnyDenied(() -> Toast.makeText(getContext(),
-                                                  Phrase.from(context, R.string.permissionsStorageSaveDenied)
-                                                    .put(APP_NAME_KEY, getString(R.string.app_name))
-                                                    .format().toString(),
-                                                  Toast.LENGTH_LONG).show())
+                                       Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                                           .put(APP_NAME_KEY, getString(R.string.app_name))
+                                           .format().toString(),
+                                       Toast.LENGTH_LONG).show())
                 .onAllGranted(() -> {
                   new ProgressDialogAsyncTask<Void, Void, List<SaveAttachmentTask.Attachment>>(
                           context,

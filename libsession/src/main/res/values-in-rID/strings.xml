@@ -30,7 +30,6 @@
     <string name="none">Tidak ada</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Sekarang</string>
-    <string name="DateUtils_today">Hari ini</string>
     <string name="DateUtils_yesterday">Kemarin</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -173,7 +172,6 @@
     <string name="conversationsDeleted">Percakapan dihapus</string>
     <string name="activity_seed_title_2">Inilah kata pemulihan anda</string>
     <string name="activity_seed_reveal_button_title">Tekan untuk melihat</string>
-    <string name="view_seed_reminder_title">Hampir selesai! 80%</string>
     <string name="onionRoutingPathDestination">Tujuan</string>
     <string name="learnMore">Selengkapnya</string>
     <string name="qrScan">Pindai kode QR</string>

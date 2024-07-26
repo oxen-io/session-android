@@ -33,7 +33,6 @@
     <string name="none">없음</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">방금 전</string>
-    <string name="DateUtils_today">오늘</string>
     <string name="DateUtils_yesterday">어제</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

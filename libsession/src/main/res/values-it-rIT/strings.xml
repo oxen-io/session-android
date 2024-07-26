@@ -34,7 +34,6 @@
     <string name="none">Nessuna</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Ora</string>
-    <string name="DateUtils_today">Oggi</string>
     <string name="DateUtils_yesterday">Ieri</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Successivo</string>
     <string name="share">Condividi</string>
     <string name="cancel">Annulla</string>
-    <string name="view_fake_chat_bubble_4">Utilizza una combinazione di tecnologie avanzate come instradamento anonimo e crittografia end-to-end.</string>
-    <string name="view_fake_chat_bubble_5">Gli amici non lasciano che i propri amici utilizzino app di messaggistica compromesse. Benvenuto/a.</string>
     <string name="displayNamePick">Scegli il nome da visualizzare</string>
     <string name="recommended">Consigliato</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Scegli un\'opzione</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">La frase di recupero</string>
     <string name="activity_seed_explanation">La frase di recupero è la chiave principale per l\'ID Sessione: puoi usarla per ripristinare l\'ID Sessione se perdi l\'accesso al dispositivo. Conserva la frase di recupero in un luogo sicuro e non rivelarla a nessuno.</string>
     <string name="activity_seed_reveal_button_title">Tieni premuto per rivelare</string>
-    <string name="view_seed_reminder_title">Hai quasi finito! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Proteggi il tuo account salvando la frase di recupero</string>
-    <string name="view_seed_reminder_subtitle_2">Tocca e tieni premute le parole redatte per rivelare la frase di recupero, salva in modo sicuro per proteggere il tuo ID Sessione.</string>
     <string name="onionRoutingPath">Percorso</string>
     <string name="onionRoutingPathEntryNode">Nodo di entrata</string>
     <string name="onionRoutingPathServiceNode">Nodo di servizio</string>

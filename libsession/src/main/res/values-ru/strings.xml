@@ -36,7 +36,6 @@
     <string name="none">Нет</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Только что</string>
-    <string name="DateUtils_today">Сегодня</string>
     <string name="DateUtils_yesterday">Вчера</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -185,8 +184,6 @@
     <string name="next">Далее</string>
     <string name="share">Поделиться</string>
     <string name="cancel">Отмена</string>
-    <string name="view_fake_chat_bubble_4">С использованием комбинации передовых технологий анонимной маршрутизации и сквозного шифрования.</string>
-    <string name="view_fake_chat_bubble_5">Друзья не позволят друзьям использовать ненадежные мессенджеры. Пользуйтесь на здоровье.</string>
     <string name="displayNamePick">Выберите ваше отображаемое имя</string>
     <string name="recommended">Рекомендуется</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Пожалуйста, выберите метод</string>
@@ -195,9 +192,6 @@
     <string name="activity_seed_title_2">А вот и ваша секретная фраза для восстановления</string>
     <string name="activity_seed_explanation">Ваша секретная фраза является главным ключом к вашему Session ID. Вы можете использовать ее для восстановления Session ID, если потеряете доступ к своему устройству. Сохраните свою секретную фразу в безопасном месте, и никому ее не передавайте.</string>
     <string name="activity_seed_reveal_button_title">Удерживайте, чтобы показать</string>
-    <string name="view_seed_reminder_title">Вы почти закончили! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Защитите свой аккаунт, сохранив секретную фразу</string>
-    <string name="view_seed_reminder_subtitle_2">Нажмите и удерживайте сокращенные слова, чтобы открыть секретную фразу, а затем сохраните ее в надежном месте, чтобы защитить свой Session ID.</string>
     <string name="onionRoutingPath">Маршрут</string>
     <string name="onionRoutingPathEntryNode">Узел входа</string>
     <string name="onionRoutingPathServiceNode">Служебный узел</string>

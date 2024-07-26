@@ -34,7 +34,6 @@
     <string name="none">Neniu</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nun</string>
-    <string name="DateUtils_today">Hodiaŭ</string>
     <string name="DateUtils_yesterday">Hieraŭ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Sekva</string>
     <string name="share">Kunhavigi</string>
     <string name="cancel">Nuligi</string>
-    <string name="view_fake_chat_bubble_4">Uzante kombinon de progresinta anonima enkursigo kaj tutvoje ĉifraj teknologioj.</string>
-    <string name="view_fake_chat_bubble_5">Amikoj ne permesas amikojn uzi kompromititajn mesaĝilojn. Nedankinde.</string>
     <string name="displayNamePick">Elektu vian vidigan nomon</string>
     <string name="recommended">Rekomendate</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Bonvolu Elekti Opcion</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">Ekkonu vian riparan frazon</string>
     <string name="activity_seed_explanation">Via ripara frazo estas la ĉefŝlosilo de via Session ID — vi povas uzi ĝin por restaŭri vian Session ID-on se vi malgajros aliron al via aparato. Konservu vian riparan frazon en sekura loko, kaj donu ĝin al neniu.</string>
     <string name="activity_seed_reveal_button_title">Tuŝadu por malkaŝi</string>
-    <string name="view_seed_reminder_title">Vi preskaŭ estas fininta! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Sekurigi vian konton per konservi vian riparan frazon</string>
-    <string name="view_seed_reminder_subtitle_2">Tuŝadu la kaŝitajn vortojn por malkaŝi vian riparan frazon, tiam konservi ĝin sekure por sekurigi vian Session ID-on.</string>
     <string name="onionRoutingPath">Vojo</string>
     <string name="onionRoutingPathEntryNode">Enira Nodo</string>
     <string name="onionRoutingPathServiceNode">Serva Nodo</string>

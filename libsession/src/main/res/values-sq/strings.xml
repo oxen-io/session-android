@@ -34,7 +34,6 @@
     <string name="none">Asnjë</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Tani</string>
-    <string name="DateUtils_today">Sot</string>
     <string name="DateUtils_yesterday">Dje</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

@@ -31,7 +31,6 @@
     <string name="none">Hîç</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Niha</string>
-    <string name="DateUtils_today">Îro</string>
     <string name="DateUtils_yesterday">Doh</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

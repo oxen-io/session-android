@@ -34,7 +34,6 @@
     <string name="none">Heç biri</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">İndi</string>
-    <string name="DateUtils_today">Bu gün</string>
     <string name="DateUtils_yesterday">Dünən</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Növbəti</string>
     <string name="share">Paylaş</string>
     <string name="cancel">İmtina</string>
-    <string name="view_fake_chat_bubble_4">Qabaqcıl anonim yönləndirmə və bir ucdan digərinə qədər şifrələmə texnologiyalarının kombinasiyasını istifadə edir.</string>
-    <string name="view_fake_chat_bubble_5">Dostlar, dostlarının güvənliyi qorunmayan messencerlərdən istifadə etməsinə icazə verməz. Xoşdur, buyurun.</string>
     <string name="displayNamePick">Ekran adınızı seçin</string>
     <string name="recommended">Tövsiyə edilən</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Zəhmət olmasa bir variant seçin</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">Bərpa parolunuzla tanış olun</string>
     <string name="activity_seed_explanation">Bərpa parolunuz, Session kimliyinizin ana açarıdır - cihazınıza müraciəti itirsəniz, Session kimliyinizi geri yükləmək üçün bunu istifadə edə bilərsiniz. Bərpa parolunuzu etibarlı bir yerdə saxlayın və heç kəsə verməyin.</string>
     <string name="activity_seed_reveal_button_title">Aşkarlamaq üçün basılı saxlayın</string>
-    <string name="view_seed_reminder_title">Demək olar ki, bitdi! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Bərpa parolunuzu bir yerdə saxlayaraq hesabınızı qoruyun</string>
-    <string name="view_seed_reminder_subtitle_2">Bərpa parolunuzu aşkarlamaq üçün düzəldilmiş sözlərə basılı saxlayın, daha sonra Session kimliyinizi qorumaq üçün güvənli bir yerdə saxlayın.</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düyünü</string>
     <string name="onionRoutingPathServiceNode">Xidmət Düyünü</string>

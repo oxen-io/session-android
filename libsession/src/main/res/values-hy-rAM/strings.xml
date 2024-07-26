@@ -34,7 +34,6 @@
     <string name="none">Չկա</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Հիմա</string>
-    <string name="DateUtils_today">Այսօր</string>
     <string name="DateUtils_yesterday">Երեկ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Հաջորդը</string>
     <string name="share">Կիսվել</string>
     <string name="cancel">Փակել</string>
-    <string name="view_fake_chat_bubble_4">Այն օգտվում է հատուկ տվյալների փոխանցման միջոցներից և ամբողջական կոդավորման տեխնոլոգիաներից։</string>
-    <string name="view_fake_chat_bubble_5">Ընկերները չեն թողնի ընկերներին, որ նրանք օգտվեն վտանգավոր նամակների ծրագրերից։ Խնդրեմ։</string>
     <string name="displayNamePick">Ընտրեք ցուցադրվող անուն</string>
     <string name="recommended">[Խորհուրդ է տրվում]</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Խնդրում ենք ընտրել</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">Ծանոթացեք ձեր վերականգնման բառակապակցության հետ</string>
     <string name="activity_seed_explanation">Session այդին Ձեր Session բանալին է, որը կարող եք վերականգնել եթե կորցնեք ձեր սարքը, ձեր բանալին պահեք և մի տվեք ինչ-որ մեկին.</string>
     <string name="activity_seed_reveal_button_title">Սեղմած պահեք տեսնելու համար</string>
-    <string name="view_seed_reminder_title">Դուք վերջացրել եք 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Պահեք ձեր անվտանգությունը պահպանելով session-ի բանալին</string>
-    <string name="view_seed_reminder_subtitle_2">Հպեք և պահեք տրված բառերը՝ ձեր վերականգնման բանալին գտնելու համար, այնուհետև պահեք այն ապահով՝ ձեր Session ID-ն ապահով պահելու համար.</string>
     <string name="onionRoutingPath">Ուղի</string>
     <string name="onionRoutingPathEntryNode">Մուտքային Հանգույց</string>
     <string name="onionRoutingPathServiceNode">Ծառայության Հանգույց</string>

@@ -35,7 +35,6 @@
     <string name="none">Niciuna</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Acum</string>
-    <string name="DateUtils_today">Azi</string>
     <string name="DateUtils_yesterday">Ieri</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -184,8 +183,6 @@
     <string name="next">Următorul</string>
     <string name="share">Distribuie</string>
     <string name="cancel">Anulare</string>
-    <string name="view_fake_chat_bubble_4">Utilizarea unei combinații avansate de rutare anonimă și de tehnologii de criptare capăt-la-capăt.</string>
-    <string name="view_fake_chat_bubble_5">Prietenii nu-și lasă prietenii să folosească mesageri compromiși. Cu plăcere.</string>
     <string name="displayNamePick">Alegeți numele afișat</string>
     <string name="onionRoutingPathEntryNode">Nod de intrare</string>
     <string name="onionRoutingPathServiceNode">Nod servicii</string>

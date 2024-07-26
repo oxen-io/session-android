@@ -34,7 +34,6 @@
     <string name="none">Hiçbiri</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Şimdi</string>
-    <string name="DateUtils_today">Bugün</string>
     <string name="DateUtils_yesterday">Dün</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">İleri</string>
     <string name="share">Paylaş</string>
     <string name="cancel">İptal</string>
-    <string name="view_fake_chat_bubble_4">Gelişmiş anonim yönlendirme ve uçtan uca şifreleme teknolojilerinin bir kombinasyonunu kullan.</string>
-    <string name="view_fake_chat_bubble_5">Arkadaşlar, arkadaşlarının güvenliği ihlal edilmiş mesajlaşma programlarını kullanmasına izin vermez. Rica ederim.</string>
     <string name="displayNamePick">Görünen adınızı seçin</string>
     <string name="recommended">Önerilenler</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Lütfen Bir Seçenek Seçin</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">Kurtarma ifadenizle tanışın</string>
     <string name="activity_seed_explanation">Kurtarma ifadeniz Session kimliğinizin ana anahtarıdır; cihazınıza erişiminizi kaybederseniz Session kimliğinizi geri yüklemek için bunu kullanabilirsiniz. Kurtarma ifadenizi güvenli bir yerde saklayın ve kimseye vermeyin.</string>
     <string name="activity_seed_reveal_button_title">Ortaya çıkarmak için basılı tutun</string>
-    <string name="view_seed_reminder_title">Neredeyse bitirdiniz! %80</string>
-    <string name="view_seed_reminder_subtitle_1">Kurtarma ifadenizi kaydederek hesabınızı güvenceye alın</string>
-    <string name="view_seed_reminder_subtitle_2">Kurtarma ifadenizi ortaya çıkarmak için düzeltilen kelimelere dokunun ve basılı tutun, ardından Session kimliğinizi korumak için güvenli bir şekilde saklayın.</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düğüm</string>
     <string name="onionRoutingPathServiceNode">Hizmet Düğüm</string>

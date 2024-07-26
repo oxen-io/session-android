@@ -51,11 +51,17 @@
 
     <!-- Old naming convention strings that need to me renamed to their modern equivalents and have any % substitution modified to use {braces} -->
 
-    <!-- We won't be using the curly brace notation on plurals strings like this one -->
+    <!-- We won't be using the curly brace notation on plurals strings like this one - but this needs a new name! -->
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Saving this media to storage will allow any other apps on your device to access it.\n\nContinue?</item>
         <item quantity="other">Saving all %1$d media to storage will allow any other apps on your device to access them.\n\nContinue?</item>
     </plurals>
+
+
+    <!-- USED! -->
+    <string name="activity_home_empty_state_button_title">Start a Session</string>
+
+
 
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
@@ -72,10 +78,6 @@
     <string name="activity_disappearing_messages_subtitle">This setting applies to messages you send in this conversation.</string>
     <string name="activity_disappearing_messages_subtitle_sent">Messages disappear after they have been sent.</string>
     <string name="activity_disappearing_messages_timer">Timer</string>
-    <string name="activity_disappearing_messages_title">Disappearing Messages</string>
-    <string name="activity_help_settings__export_logs">Export Logs</string>
-    <string name="activity_home_empty_state_button_title">Start a Session</string>
-    <string name="activity_home_outdated_client_config">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
     <string name="activity_link_device_skip_prompt">This is taking a while, would you like to skip?</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
     <string name="activity_register_explanation">Your Session ID is the unique address people can use to contact you on Session. With no connection to your real identity, your Session ID is totally anonymous and private by design.</string> <!-- Replaced during onboarding -->
@@ -102,17 +104,13 @@
     <string name="message_details_header__disappears">Disappears</string>
     <string name="message_details_header__file_id">File Id:</string>
     <string name="registration_activity__skip">Skip</string> <!-- Replaced during onboarding -->
-    <string name="view_fake_chat_bubble_4">Using a combination of advanced anonymous routing and end-to-end encryption technologies.</string>
-    <string name="view_fake_chat_bubble_5">Friends don\'t let friends use compromised messengers. You\'re welcome.</string>
-    <string name="view_seed_reminder_subtitle_1">Secure your account by saving your recovery phrase</string>
-    <string name="view_seed_reminder_subtitle_2">Tap and hold the redacted words to reveal your recovery phrase, then store it safely to secure your Session ID.</string>
-    <string name="view_seed_reminder_title">You\'re almost finished! 80%</string>
+    
+
+    <!-- RENAMED! -->
+    <string name="deleteAfterGroupFirstReleaseConfigOutdated">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
+
 
     <!-- Strings with modern names and {braced} substitution markers -->
-    <string name="andMore">+{count}</string>
-    <string name="theContinue">Continue</string>
-    <string name="theDefault">Default</string>
-    <string name="theError">Error</string>
     <string name="about">About</string>
     <string name="accept">Accept</string>
     <string name="accountIdCopy">Copy Account ID</string>
@@ -147,6 +145,7 @@
     <string name="adminSendingPromotion">Sending admin promotion</string>
     <string name="adminSettings">Admin Settings</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> and <b>{other_name}</b> were promoted to Admin.</string>
+    <string name="andMore">+{count}</string>
     <string name="anonymous">Anonymous</string>
     <string name="appearanceAutoDarkMode">Auto dark-mode</string>
     <string name="appearanceHideMenuBar">Hide Menu Bar</string>
@@ -161,7 +160,6 @@
     <string name="appearanceThemesOceanLight">Ocean Light</string>
     <string name="appearanceZoom">Zoom</string>
     <string name="attachment">Attachment</string>
-    <string name="attachmentsNotification">{emoji} Attachment</string>
     <string name="attachmentsAdd">Add attachment</string>
     <string name="attachmentsAlbumUnnamed">Unnamed Album</string>
     <string name="attachmentsAutoDownload">Auto-download Attachments</string>
@@ -192,11 +190,12 @@
     <string name="attachmentsImageErrorMetadata">Unable to remove metadata from file.</string>
     <string name="attachmentsMediaEmpty">You don\'t have any media in this conversation.</string>
     <string name="attachmentsMediaSaved">Media saved by {name}</string>
+    <string name="attachmentsNotification">{emoji} Attachment</string>
     <string name="attachmentsResolution">Resolution:</string>
     <string name="attachmentsSaveError">Unable to save file.</string>
     <string name="attachmentsTapToDownload">Tap to download {file_type}</string>
-    <string name="attachmentsThisWeek">This Week</string>
     <string name="attachmentsThisMonth">This Month</string>
+    <string name="attachmentsThisWeek">This Week</string>
     <string name="attachmentsWarning">Attachments you save can be accessed by other apps on your device.</string>
     <string name="audio">Audio</string>
     <string name="audioNoInput">No audio input found</string>
@@ -219,10 +218,10 @@
     <string name="blockBlockedUser">Blocked {name}</string>
     <string name="blockDescription">Are you sure you want to block <b>{name}</b>? Blocked users cannot send you message requests, group invites or call you.</string>
     <string name="blockUnblock">Unblock</string>
-    <string name="blockUnblockedUser">Unblocked {name}</string>
-    <string name="blockUnblockNameMultiple">Are you sure you want to unblock {name} and {count} others?</string>
     <string name="blockUnblockName">Are you sure you want to unblock {name}?</string>
+    <string name="blockUnblockNameMultiple">Are you sure you want to unblock {name} and {count} others?</string>
     <string name="blockUnblockNameTwo">Are you sure you want to unblock {name} and 1 other?</string>
+    <string name="blockUnblockedUser">Unblocked {name}</string>
     <string name="call">Call</string>
     <string name="callsCalledYou">{name} called you</string>
     <string name="callsCannotStart">You cannot start a new call. Finish your current call first.</string>
@@ -253,7 +252,6 @@
     <string name="cameraGrantAccessDenied">{app_name} needs camera access to take photos and videos, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\".</string>
     <string name="cameraGrantAccessDescription">{app_name} needs camera access to take photos or videos.</string>
     <string name="cameraGrantAccessQr">{app_name} needs camera access to scan QR codes</string>
-    <string name="permissionsStorageSend">{app_name} needs storage access to send photos and videos.</string>
     <string name="cameraGrantAccessStorageDenied">{app_name} needs storage access to send photos and videos, but it has been permanently denied. Please continue to app settings, select "Permissions", and enable "Storage".</string>
     <string name="cancel">Cancel</string>
     <string name="clear">Clear</string>
@@ -285,9 +283,9 @@
     <string name="communityInvitation">Community Invitation</string>
     <string name="communityJoin">Join Community</string>
     <string name="communityJoinDescription">Are you sure you want to join {community_name}?</string>
+    <string name="communityJoinError">Failed to join {community_name}</string>
     <string name="communityJoinOfficial">Or join one of these...</string>
     <string name="communityJoined">Joined Community</string>
-    <string name="communityJoinError">Failed to join {community_name}</string>
     <string name="communityJoinedAlready">You are already a member of this community.</string>
     <string name="communityLeave">Leave Community</string>
     <string name="communityLeaveError">Failed to leave {community_name}</string>
@@ -406,9 +404,10 @@
     <string name="emojiCategorySmileys">Smileys &amp; People</string>
     <string name="emojiCategorySymbols">Symbols</string>
     <string name="emojiCategoryTravel">Travel &amp; Places</string>
+    <string name="emojiReactsCoolDown">Slow down! You\'ve sent too many emoji reacts. Try again soon</string>
     <string name="emojiReactsHoverTwoNameMultiple">{name}, {other_name} and {count} others reacted with {emoji}</string>
     <string name="emojiReactsHoverTwoNameOne">{name}, {other_name} and 1 other reacted with {emoji}</string>
-    <string name="emojiReactsCoolDown">Slow down! You\'ve sent too many emoji reacts. Try again soon</string>
+    <string name="emojiReactsNotification">Reacted to your message {emoji}</string>
     <string name="enable">Enable</string>
     <string name="error">Error</string>
     <string name="errorConnection">Please check your internet connection and try again.</string>
@@ -527,8 +526,8 @@
     <string name="lockAppDescriptionIos">Require Touch ID, Face ID or your passcode to unlock Session.</string>
     <string name="lockAppEnablePasscode">You must enable a passcode in your iOS Settings in order to use Screen Lock.</string>
     <string name="lockAppLocked">{app_name} is locked</string>
-    <string name="lockAppStatus">Lock status</string>
     <string name="lockAppQuickResponse">Quick response is unavailable when {app_name} is locked!</string>
+    <string name="lockAppStatus">Lock status</string>
     <string name="lockAppUnlock">Tap to unlock</string>
     <string name="lockAppUnlocked">{app_name} is unlocked</string>
     <string name="max">Max</string>
@@ -617,8 +616,8 @@
     <string name="notificationsMute1Week">Mute for 1 week</string>
     <string name="notificationsMute2Hours">Mute for 2 hours</string>
     <string name="notificationsMuteFor">Mute for {time_large}</string>
-    <string name="notificationsMuted">Muted</string>
     <string name="notificationsMuteUnmute">Unmute</string>
+    <string name="notificationsMuted">Muted</string>
     <string name="notificationsSlowMode">Slow Mode</string>
     <string name="notificationsSlowModeDescription">{app_name} will occasionally check for new messages in the background.</string>
     <string name="notificationsSound">Sound</string>
@@ -682,6 +681,7 @@
     <string name="permissionsMicrophoneDescription">Allow access to microphone</string>
     <string name="permissionsRequired">Permission required</string>
     <string name="permissionsStorageSaveDenied">{app_name} needs storage access in order to save to external storage, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".</string>
+    <string name="permissionsStorageSend">{app_name} needs storage access to send photos and videos.</string>
     <string name="photo">Photo</string>
     <string name="pin">Pin</string>
     <string name="pinConversation">Pin Conversation</string>
@@ -702,14 +702,13 @@
     <string name="qrView">View QR</string>
     <string name="qrYoursDescription">Friends can message you by scanning your QR code.</string>
     <string name="quitButton">Quit</string>
-    <string name="emojiReactsNotification">Reacted to your message {emoji}</string>
     <string name="read">Read</string>
     <string name="readReceipts">Read Receipts</string>
     <string name="readReceiptsDescription">Show read receipts for all messages you send and receive.</string>
     <string name="received">Received:</string>
     <string name="recommended">Recommended</string>
-    <string name="recoveryPasswordBannerTitle">Save your recovery password</string>
     <string name="recoveryPasswordBannerDescription">Save your recovery password to make sure you don\'t lose access to your account.</string>
+    <string name="recoveryPasswordBannerTitle">Save your recovery password</string>
     <string name="recoveryPasswordDescription">Use your recovery password to load your account on new devices. Your account cannot be recovered without your recovery password. Make sure it\'s stored somewhere safe and secure — and don\'t share it with anyone.</string>
     <string name="recoveryPasswordEnter">Enter your recovery password</string>
     <string name="recoveryPasswordErrorMessageGeneric">Please check your recovery password and try again.</string>
@@ -754,8 +753,8 @@
     <string name="select">Select</string>
     <string name="selectAll">Select All</string>
     <string name="send">Send</string>
-    <string name="sent">Sent:</string>
     <string name="sending">Sending</string>
+    <string name="sent">Sent:</string>
     <string name="sessionAppearance">Appearance</string>
     <string name="sessionClearData">Clear Data</string>
     <string name="sessionConversations">Conversations</string>
@@ -778,6 +777,9 @@
     <string name="showLess">Show Less</string>
     <string name="stickers">Stickers</string>
     <string name="supportGoTo">Go to Support Page</string>
+    <string name="theContinue">Continue</string>
+    <string name="theDefault">Default</string>
+    <string name="theError">Error</string>
     <string name="tryAgain">Try Again</string>
     <string name="typingIndicators">Typing Indicators</string>
     <string name="typingIndicatorsDescription">See and share typing indicators (...)</string>
@@ -791,7 +793,6 @@
     <string name="updateReleaseNotes">Go to Release Notes</string>
     <string name="updateSession">{app_name} Update</string>
     <string name="updateVersion">Version {version}</string>
-    <string name="uploading">Uploading...</string>
     <string name="urlCopy">Copy URL</string>
     <string name="urlOpen">Open URL</string>
     <string name="urlOpenBrowser">This will open in your browser.</string>
@@ -807,8 +808,4 @@
     <string name="window">Window</string>
     <string name="yes">Yes</string>
     <string name="you">You</string>
-    <string name="DateUtils_today">dasdas</string>
-    <string name="DateUtils_yesterday">dsadas</string>
-    <string name="onionRoutingPathYou">fsdfsdfsd</string>
-    <string name="preferences_notifications__content_message">fsdfsdfs</string>
 </resources>

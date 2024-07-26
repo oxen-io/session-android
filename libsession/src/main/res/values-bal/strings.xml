@@ -27,7 +27,6 @@
     <string name="none">Kosong</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Sekarang</string>
-    <string name="DateUtils_today">Hari ini</string>
     <string name="DateUtils_yesterday">Kemarin</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -170,8 +169,6 @@
     <string name="next">Selanjutnya</string>
     <string name="share">Bagikan</string>
     <string name="cancel">Batal</string>
-    <string name="view_fake_chat_bubble_4">Menggunakan kombinasi routing yang anonim canggih dan teknologi enkripsi ujung-ke-ujung (end-to-end encryption)</string>
-    <string name="view_fake_chat_bubble_5">Rekan yang baik tak membiarkan rekannya menggunakan aplikasi bertukar pesan yang tak aman. Terima kasih kembali.</string>
     <string name="displayNamePick">Pilih nama yang ditampilkan</string>
     <string name="recommended">Direkomendasikan</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Pilih salah satu opsi</string>
@@ -180,8 +177,6 @@
     <string name="activity_seed_title_2">Inilah kata pemulihan anda</string>
     <string name="activity_seed_explanation">Kata pemulihan adalah kunci Session ID -- bisa digunakan untuk mengembalikan Session ID ketika anda kehilangan perangkat. Simpan kata pemulihan di tempat yang aman dan jangan berikan kepada siapapun</string>
     <string name="activity_seed_reveal_button_title">Tekan untuk melihat</string>
-    <string name="view_seed_reminder_subtitle_1">Amankan akun anda dengan menyimpan kata pemulihan</string>
-    <string name="view_seed_reminder_subtitle_2">Ketuk dan tekan kata yang disensor untuk mengetahui kata pemulihan anda, lalu simpan baik-baik untuk mengamnkan Session ID anda</string>
     <string name="onionRoutingPathEntryNode">Simpul masuk</string>
     <string name="onionRoutingPathServiceNode">Simpul layanan</string>
     <string name="onionRoutingPathDestination">Tujuan</string>

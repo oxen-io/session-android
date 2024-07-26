@@ -33,7 +33,6 @@
     <string name="none">なし</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">今</string>
-    <string name="DateUtils_today">今日</string>
     <string name="DateUtils_yesterday">昨日</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -182,8 +181,6 @@
     <string name="next">次</string>
     <string name="share">共有する</string>
     <string name="cancel">取り消す</string>
-    <string name="view_fake_chat_bubble_4">高度な匿名ルーティングとエンドツーエンドの暗号化テクノロジーを組み合わせて使用します。</string>
-    <string name="view_fake_chat_bubble_5">友人は、セキュリティ侵害されたメッセンジャーを自らの友人に使用させません。どういたしまして。</string>
     <string name="displayNamePick">表示名を選択してください</string>
     <string name="recommended">オススメ</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">オプションを選択してください</string>
@@ -192,9 +189,6 @@
     <string name="activity_seed_title_2">リカバリーフレーズに合致する</string>
     <string name="activity_seed_explanation">リカバリーフレーズは、Session ID のマスターキーです。デバイスにアクセスできなくなった場合、これを使用して Session ID を復元できます。リカバリーフレーズを安全な場所に保管し、誰にも教えないでください。</string>
     <string name="activity_seed_reveal_button_title">明らかにする</string>
-    <string name="view_seed_reminder_title">あと少しで終了です。80%</string>
-    <string name="view_seed_reminder_subtitle_1">リカバリーフレーズを保存してアカウントを保護する</string>
-    <string name="view_seed_reminder_subtitle_2">編集された単語をタップして長押ししてリカバリーフレーズを表示し、それを安全に保管して Session ID を保護します。</string>
     <string name="onionRoutingPath">パス</string>
     <string name="onionRoutingPathEntryNode">エントリーノード</string>
     <string name="onionRoutingPathServiceNode">サービスノード</string>

@@ -37,7 +37,6 @@
     <string name="none">ఏదీ కాదు</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">ఇప్పుడు</string>
-    <string name="DateUtils_today">నేడు</string>
     <string name="DateUtils_yesterday">నిన్న</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

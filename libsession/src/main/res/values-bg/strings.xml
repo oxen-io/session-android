@@ -33,7 +33,6 @@
     <string name="none">Нищо</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Току що</string>
-    <string name="DateUtils_today">Днес</string>
     <string name="DateUtils_yesterday">Вчера</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

@@ -28,7 +28,6 @@
     <string name="none">ಯಾವುದೂ ಇಲ್ಲ</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">ಈಗ</string>
-    <string name="DateUtils_today">ಇಂದು</string>
     <string name="DateUtils_yesterday">ನಿನ್ನೆ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

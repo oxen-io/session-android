@@ -29,7 +29,6 @@
     <string name="none">ไม่มี</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">เดี๋ยวนี้</string>
-    <string name="DateUtils_today">วันนี้</string>
     <string name="DateUtils_yesterday">เมื่อวานนี้</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

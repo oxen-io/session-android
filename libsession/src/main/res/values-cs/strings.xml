@@ -36,7 +36,6 @@
     <string name="none">Nic</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Teď</string>
-    <string name="DateUtils_today">Dnes</string>
     <string name="DateUtils_yesterday">Včera</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -185,8 +184,6 @@
     <string name="next">Další</string>
     <string name="share">Sdílet</string>
     <string name="cancel">Zrušit</string>
-    <string name="view_fake_chat_bubble_4">Použitím kombinace pokročilých anonymních směrovacích a end-to-end šifrovacích technologií.</string>
-    <string name="view_fake_chat_bubble_5">Přátelé nenechávají přátelé používat kompromitované aplikace. Není zač.</string>
     <string name="displayNamePick">Vaše jméno</string>
     <string name="recommended">Doporučeno</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Prosím vyberte možnost</string>
@@ -195,9 +192,6 @@
     <string name="activity_seed_title_2">Zadejte frázi pro obnovení</string>
     <string name="activity_seed_explanation">Ahoj</string>
     <string name="activity_seed_reveal_button_title">Podrž pro zobrazení</string>
-    <string name="view_seed_reminder_title">Jste skoro u konce! 80 %</string>
-    <string name="view_seed_reminder_subtitle_1">Zabezpečte svůj účet uložením Vašich klíčových slov</string>
-    <string name="view_seed_reminder_subtitle_2">Pro zobrazení fráze pro obnovení klepněte a podržte redigovaná slova a poté ji bezpečně uložte, abyste si ochránili své Session ID.</string>
     <string name="onionRoutingPath">Cesta</string>
     <string name="onionRoutingPathEntryNode">Vstupní uzel</string>
     <string name="onionRoutingPathServiceNode">Provozní uzel</string>

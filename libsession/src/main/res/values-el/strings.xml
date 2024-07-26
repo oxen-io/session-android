@@ -34,7 +34,6 @@
     <string name="none">Κανένα</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Τώρα</string>
-    <string name="DateUtils_today">Σήμερα</string>
     <string name="DateUtils_yesterday">Χθες</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Επόμενο</string>
     <string name="share">Διαμοιρασμός</string>
     <string name="cancel">Ακύρωση</string>
-    <string name="view_fake_chat_bubble_4">Χρησιμοποιώντας ένα συνδυασμό προηγμένων ανώνυμων τεχνολογιών δρομολόγησης και τεχνολογίας κρυπτογράφησης από άκρο σε άκρο.</string>
-    <string name="view_fake_chat_bubble_5">Οι φίλοι δεν αφήνουν τους φίλους να χρησιμοποιούν ευάλωτες εφαρμογές μηνυμάτων. Είστε ευπρόσδεκτοι.</string>
     <string name="displayNamePick">Επιλέξτε το εμφανιζόμενο όνομα σας</string>
     <string name="recommended">Προτεινόμενο</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Παρακαλούμε κάντε μια επιλογή</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">Γνωρίστε τη φράση ανάκτησής σας</string>
     <string name="activity_seed_explanation">Η φράση ανάκτησης είναι το κύριο κλειδί στο Session ID σας - μπορείτε να τη χρησιμοποιήσετε για να επαναφέρετε το Session ID σας εάν χάσετε πρόσβαση στη συσκευή σας. Αποθηκεύστε τη φράση ανάκτησης σε ασφαλές μέρος, και μην τη δώσετε σε κανέναν.</string>
     <string name="activity_seed_reveal_button_title">Πατήστε για εμφάνιση</string>
-    <string name="view_seed_reminder_title">Σχεδόν τελειώσατε! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Ασφαλίστε το λογαριασμό σας αποθηκεύοντας τη φράση ανάκτησής σας</string>
-    <string name="view_seed_reminder_subtitle_2">Πατήστε παρατεταμένα τις λέξεις που τροποποιήθηκαν για να αποκαλύψετε τη φράση ανάκτησης και μετά αποθηκεύστε την με ασφάλεια για να εξασφαλίσετε το αναγνωριστικό σας.</string>
     <string name="onionRoutingPath">Διαδρομή</string>
     <string name="onionRoutingPathEntryNode">Κόμβος Εισόδου</string>
     <string name="onionRoutingPathServiceNode">Κόμβος Υπηρεσίας</string>

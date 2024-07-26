@@ -33,7 +33,6 @@
     <string name="none">没有</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">现在</string>
-    <string name="DateUtils_today">今天</string>
     <string name="DateUtils_yesterday">昨天</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -182,8 +181,6 @@
     <string name="next">下一步</string>
     <string name="share">共享</string>
     <string name="cancel">取消</string>
-    <string name="view_fake_chat_bubble_4">通过结合高效的匿名路由和端到端的加密技术。</string>
-    <string name="view_fake_chat_bubble_5">好朋友之间就要使用能够保证信息安全的聊天工具，不用谢啦！</string>
     <string name="displayNamePick">选择您想显示的名称</string>
     <string name="recommended">推荐的选项</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">请选择一个选项</string>
@@ -192,9 +189,6 @@
     <string name="activity_seed_title_2">这里是您的恢复口令</string>
     <string name="activity_seed_explanation">您的恢复口令是Session ID的主密钥 - 如果您无法访问您的现有设备，则可以使用它在其他设备上恢复您的Session ID。请将您的恢复口令存储在安全的地方，不要将其提供给任何人。</string>
     <string name="activity_seed_reveal_button_title">长按显示内容</string>
-    <string name="view_seed_reminder_title">就快完成了！80%</string>
-    <string name="view_seed_reminder_subtitle_1">保存恢复口令以保护您的帐号安全</string>
-    <string name="view_seed_reminder_subtitle_2">点击并按住遮盖住的单词以显示您的恢复口令，请将它安全地存储以保护您的Session ID</string>
     <string name="onionRoutingPath">路径</string>
     <string name="onionRoutingPathEntryNode">入口节点</string>
     <string name="onionRoutingPathServiceNode">服务节点</string>

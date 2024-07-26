@@ -34,7 +34,6 @@
     <string name="none">Nenhum</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Agora</string>
-    <string name="DateUtils_today">Hoje</string>
     <string name="DateUtils_yesterday">Ontem</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Próximo</string>
     <string name="share">Compartilhar</string>
     <string name="cancel">Cancelar</string>
-    <string name="view_fake_chat_bubble_4">Usando uma combinação de tecnologias avançadas de roteamento anônimo e encriptação ponta-a-ponta.</string>
-    <string name="view_fake_chat_bubble_5">Amigas(os) não deixam amigas(os) usarem mensageiros comprometidos. De nada.</string>
     <string name="displayNamePick">Escolha seu nome de display</string>
     <string name="recommended">Recomendado</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Escolha uma opção</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">Revele sua frase de recuperação</string>
     <string name="activity_seed_explanation">Sua frase de recuperação é a chave mestra do seu ID Session - você pode usá-la para restaurar seu ID Session se perder o acesso ao seu dispositivo. Armazene sua frase de recuperação em um local seguro e não a entregue a ninguém.</string>
     <string name="activity_seed_reveal_button_title">Segure para revelar</string>
-    <string name="view_seed_reminder_title">Você está quase terminando! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Proteja sua conta salvando sua frase de recuperação</string>
-    <string name="view_seed_reminder_subtitle_2">Toque e segure as palavras editadas para revelar sua frase de recuperação e armazene-a com segurança para proteger seu ID Session.</string>
     <string name="onionRoutingPath">Caminho</string>
     <string name="onionRoutingPathEntryNode">Nó de Entrada</string>
     <string name="onionRoutingPathServiceNode">Nó de Serviço</string>

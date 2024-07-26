@@ -33,7 +33,6 @@
     <string name="none">Ningunha</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Agora</string>
-    <string name="DateUtils_today">Hoxe</string>
     <string name="DateUtils_yesterday">Onte</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -182,7 +181,6 @@
     <string name="next">Seguinte</string>
     <string name="share">Partillar</string>
     <string name="cancel">Cancelar</string>
-    <string name="view_fake_chat_bubble_4">Empregando unha combinación de tecnoloxías avanzadas de encamiñamento anónimo e cifrado punto-a-punto.</string>
     <string name="activity_home_empty_state_button_title">Iniciar unha sesión</string>
     <string name="conversationsDeleted">Conversa borrada</string>
     <string name="resolving">Procesando…</string>

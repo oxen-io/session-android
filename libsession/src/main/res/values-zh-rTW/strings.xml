@@ -33,7 +33,6 @@
     <string name="none">無</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">現在</string>
-    <string name="DateUtils_today">今天</string>
     <string name="DateUtils_yesterday">昨天</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -182,8 +181,6 @@
     <string name="next">下一步</string>
     <string name="share">分享</string>
     <string name="cancel">取消</string>
-    <string name="view_fake_chat_bubble_4">我們結合了進階匿名連線與端對端加密技術。</string>
-    <string name="view_fake_chat_bubble_5">我們不會讓自己的朋友使用不夠好的聊天 app，不客氣。</string>
     <string name="displayNamePick">請輸入您的名稱</string>
     <string name="recommended">建議</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">請選擇其中一個選項</string>
@@ -192,9 +189,6 @@
     <string name="activity_seed_title_2">查看您的恢復短語</string>
     <string name="activity_seed_explanation">您的恢復短語是您的 Session ID 的主金鑰——如果您無法存取您的裝置，您可以使用它來恢復您的Session ID。 將您的恢復短語存放在安全的地方，不要將其提供給任何人。</string>
     <string name="activity_seed_reveal_button_title">按住以解除隱藏</string>
-    <string name="view_seed_reminder_title">安裝快完成囉！80%</string>
-    <string name="view_seed_reminder_subtitle_1">透過儲存您的恢復短語來保護您的帳戶</string>
-    <string name="view_seed_reminder_subtitle_2">點擊並按住已編輯的字詞以顯示您的恢復短語，然後將其妥善保管以保護您的 Session ID。</string>
     <string name="onionRoutingPath">路徑</string>
     <string name="onionRoutingPathEntryNode">入口節點</string>
     <string name="onionRoutingPathServiceNode">服務節點</string>

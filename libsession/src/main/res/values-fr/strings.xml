@@ -45,7 +45,6 @@
     <string name="none">Aucun</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">À l’instant</string>
-    <string name="DateUtils_today">Aujourd’hui</string>
     <string name="DateUtils_yesterday">Hier</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -199,8 +198,6 @@
     <string name="next">Suivant</string>
     <string name="share">Partager</string>
     <string name="cancel">Annuler</string>
-    <string name="view_fake_chat_bubble_4">En utilisant une combinaison de technologies avancées de routage anonyme et de chiffrement de bout en bout.</string>
-    <string name="view_fake_chat_bubble_5">Les vrais amis ne laissent pas leurs amis utiliser des outils de messagerie compromis. De rien.</string>
     <string name="displayNamePick">Choisissez votre nom d\'utilisateur</string>
     <string name="recommended">Recommandé</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Veuillez choisir une option</string>
@@ -209,9 +206,6 @@
     <string name="activity_seed_title_2">Voici votre phrase de récupération</string>
     <string name="activity_seed_explanation">Votre phrase de récupération est la clé principale de votre Session ID - vous pouvez l\'utiliser pour restaurer votre Session ID si vous perdez l\'accès à votre appareil. Conservez la dans un endroit sûr et ne la donnez à personne.</string>
     <string name="activity_seed_reveal_button_title">Appuyer pour révéler</string>
-    <string name="view_seed_reminder_title">Vous avez presque terminé ! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Sécurisez votre compte en sauvegardant votre phrase de récupération</string>
-    <string name="view_seed_reminder_subtitle_2">Appuyez et maintenez les mots masqués pour révéler votre phrase de récupération, puis stockez-la en toute sécurité pour sécuriser votre Session ID.</string>
     <string name="onionRoutingPath">Chemin</string>
     <string name="onionRoutingPathEntryNode">Nœud d’entrée</string>
     <string name="onionRoutingPathServiceNode">Nœud de service</string>
@@ -231,7 +225,6 @@
     <string name="notificationsStyle">Style de notification</string>
     <string name="notificationsContent">Contenu de notification</string>
     <string name="sessionPrivacy">Confidentialité</string>
-    <string name="activity_help_settings__export_logs">Exporter les journaux</string>
     <string name="notificationsStrategy">Stratégie de notification</string>
     <string name="useFastMode">Utiliser le Mode Rapide</string>
     <string name="clearDataAll">Effacer toutes les données</string>

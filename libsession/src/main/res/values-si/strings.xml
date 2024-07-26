@@ -24,7 +24,6 @@
     <!-- CustomDefaultPreference -->
     <!-- DateUtils -->
     <string name="DateUtils_just_now">දැන්</string>
-    <string name="DateUtils_today">අද</string>
     <string name="DateUtils_yesterday">ඊයේ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

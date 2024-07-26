@@ -38,7 +38,6 @@
     <string name="none">لا شيء </string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">الآن</string>
-    <string name="DateUtils_today">اليوم</string>
     <string name="DateUtils_yesterday">البارحة</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -187,8 +186,6 @@
     <string name="next">التالي</string>
     <string name="share">شارك</string>
     <string name="cancel">إلغاء</string>
-    <string name="view_fake_chat_bubble_4">باِستخدام مُركَب من تكنولوجيات التشفير من الطرفين و توجيه مجهول للمعلومات.</string>
-    <string name="view_fake_chat_bubble_5">الأصدقاء لا يتركون أصدقائهم يستعملون تطبيق مراسلة مكشوف. مرحبا بك.</string>
     <string name="displayNamePick">أختر اِسم الاِظهار</string>
     <string name="recommended">محبذ</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">اِختر</string>
@@ -197,9 +194,6 @@
     <string name="activity_seed_title_2">هذه هي عبارة الاسترجاع</string>
     <string name="activity_seed_explanation">عبارة الاسترجاع هي مفتاح عنوان تعريفك - يمكنك استخدامها لاسترجاع عنوان تعريفك اذا فقدت الوصول لجهازك. قم بحفظها في مكان امن و لا تعطها الى اي أحد.</string>
     <string name="activity_seed_reveal_button_title">انقر مطولاً للكشف</string>
-    <string name="view_seed_reminder_title">انت على وشك الإنتهاء! ٨٠٪</string>
-    <string name="view_seed_reminder_subtitle_1">أمّن حسابك بحفظ كلمات إسترجاع الحساب</string>
-    <string name="view_seed_reminder_subtitle_2">انقر بإستمرار على الكلمات المغطاة للكشف عن كلمات إسترداد حسابك، ثم قم بتخزينها بأمان للحفاظ على معرّف الجلسة الخاص بك.</string>
     <string name="onionRoutingPath">مسار</string>
     <string name="onionRoutingPathEntryNode">عقدة الدخول</string>
     <string name="onionRoutingPathServiceNode">عقدة الخدمة</string>

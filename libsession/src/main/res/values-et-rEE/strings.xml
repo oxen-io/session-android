@@ -31,7 +31,6 @@
     <string name="none">Puudub</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nüüd</string>
-    <string name="DateUtils_today">Täna</string>
     <string name="DateUtils_yesterday">Eile</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

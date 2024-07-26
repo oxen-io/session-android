@@ -34,7 +34,6 @@
     <string name="none">Ingen</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nu</string>
-    <string name="DateUtils_today">I dag</string>
     <string name="DateUtils_yesterday">I går</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Næste</string>
     <string name="share">Del</string>
     <string name="cancel">Annuller</string>
-    <string name="view_fake_chat_bubble_4">Ved hjælp af en kombination af avanceret anonym routing og end-to-end krypteringsteknologier.</string>
-    <string name="view_fake_chat_bubble_5">Venner lader ikke venner bruge usikre besked tjenester. Du er velkommen.</string>
     <string name="displayNamePick">Vælg dit visningsnavn</string>
     <string name="recommended">Anbefalet</string>
     <string name="activity_home_empty_state_button_title">Start en Session</string>
@@ -192,9 +189,6 @@
     <string name="activity_seed_title_2">Mød din gendannelsessætning</string>
     <string name="activity_seed_explanation">Din gendannelsessætning er hovednøglen til dit Session ID - du kan bruge den til at gendanne dit Session ID, hvis du mister adgang til din enhed. Gem din gendannelsessætning på et sikkert sted, og giv det ikke til nogen.</string>
     <string name="activity_seed_reveal_button_title">Hold nede for at se</string>
-    <string name="view_seed_reminder_title">Du er næsten færdig! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Sikre din konto ved at gemme din gendannelsessætning</string>
-    <string name="view_seed_reminder_subtitle_2">Tryk og hold de redigerede ord for at afsløre din gendannelsessætning, og gem det derefter et sikkert sted for at sikre dit Session ID.</string>
     <string name="onionRoutingPath">Sti</string>
     <string name="onionRoutingPathDestination">Destination</string>
     <string name="learnMore">Læs mere</string>

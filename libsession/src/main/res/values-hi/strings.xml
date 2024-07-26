@@ -34,7 +34,6 @@
     <string name="none">कुछ नहीं</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">अभी</string>
-    <string name="DateUtils_today">आज</string>
     <string name="DateUtils_yesterday">कल</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">अगला</string>
     <string name="share">साझा करें</string>
     <string name="cancel">रद्द करें</string>
-    <string name="view_fake_chat_bubble_4">एडवांस्ड anonymous routing और end-to-end encryption के मिश्रण का प्रयोग करके।</string>
-    <string name="view_fake_chat_bubble_5">दोस्त दोस्तों को असुरक्षित मैसेंजर नहीं उपयोग करने देते। आपका स्वागत है।</string>
     <string name="displayNamePick">अपना प्रदर्शन नाम चुनें</string>
     <string name="recommended">सुझाया गया</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">कृपया एक विकल्प चुनें।</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">अपने पुनर्प्राप्ति वाक्यांश से मिलें</string>
     <string name="activity_seed_explanation">आपका रिकवरी फ्रेज आपके Session Id की मास्टर कीय है — आप इसका इस्तेमाल अपनी Session ID को वापिस पाने के लिए कर सकते है अगर आपका फ़ोन गुम हो गया है | अपने रिकवरी फ्रेज को एक सुरक्षित जगह रखे और इसे किसी के साथ शेयर न करे |</string>
     <string name="activity_seed_reveal_button_title">देखने के लिए दबाएं</string>
-    <string name="view_seed_reminder_title">पूर्ण होने वाला है! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">अकाउंट सुरक्षित रखने के लिए अपनी पुनर्व्यप्ती वाक्यांश को सेव करके रखें</string>
-    <string name="view_seed_reminder_subtitle_2">अपना पुनर्प्राप्ति वाक्यांश प्रकट करने के लिए संशोधित शब्दों को टैप और होल्ड करें, फिर अपनी Session ID को सुरक्षित करने के लिए इसे सुरक्षित रूप से संग्रहीत करें।</string>
     <string name="onionRoutingPath">पथ</string>
     <string name="onionRoutingPathEntryNode">प्रवेश नोड</string>
     <string name="onionRoutingPathServiceNode">सर्विस नोड</string>

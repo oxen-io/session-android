@@ -36,7 +36,6 @@
     <string name="none">Жодного</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Зараз</string>
-    <string name="DateUtils_today">Сьогодні</string>
     <string name="DateUtils_yesterday">Вчора</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -186,8 +185,6 @@
     <string name="next">Далі</string>
     <string name="share">Поділитися</string>
     <string name="cancel">Відміна</string>
-    <string name="view_fake_chat_bubble_4">Він використовує комбінацію анонімної мережі та скрізного енд-ту-енд шифрування.</string>
-    <string name="view_fake_chat_bubble_5">Друзі не дозволяють друзям користуватися скомпромітованими мессенджерами. Ласкаво просимо.</string>
     <string name="displayNamePick">Виберіть ваш псевдонім для показу</string>
     <string name="recommended">Рекомендовано</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Будь ласка виберіть варіант</string>
@@ -196,9 +193,6 @@
     <string name="activity_seed_title_2">Знайомтесь з вашою фразою відновлення</string>
     <string name="activity_seed_explanation">Ваша фраза відновлення - це головний ключ до вашогї Session ID адреси - ви можете використовувати її для відновлення вашої Session ID адреси якщо ви втратите доступ до пристрою. Запишіть на папері та зберігайте вашу фразу відновлення у безпечному місці і не дайте її нікому.</string>
     <string name="activity_seed_reveal_button_title">Натисніть, щоб відобразити</string>
-    <string name="view_seed_reminder_title">Ви майже закінчили! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Захистіть свій обліковий запис, записавши на папері відновлювальну фразу</string>
-    <string name="view_seed_reminder_subtitle_2">Натисніть і втримуйте приховані слова, щоб розкрити вашу фразу відновлення, запишіть її на папері, щоб безпечно захистити вашу Session ID адресу.</string>
     <string name="onionRoutingPath">Шлях</string>
     <string name="onionRoutingPathEntryNode">Вхідний Вузел</string>
     <string name="onionRoutingPathServiceNode">Сервісний Вузел</string>

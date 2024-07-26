@@ -31,7 +31,6 @@
     <string name="none">Ingen</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">No</string>
-    <string name="DateUtils_today">I dag</string>
     <string name="DateUtils_yesterday">I går</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

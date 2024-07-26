@@ -34,7 +34,6 @@
     <string name="none">Inga</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nu</string>
-    <string name="DateUtils_today">Idag</string>
     <string name="DateUtils_yesterday">Igår</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Nästa</string>
     <string name="share">Dela</string>
     <string name="cancel">Avbryt</string>
-    <string name="view_fake_chat_bubble_4">Med hjälp av en kombination av avancerad anonym routing och end-to-end-krypteringsteknik.</string>
-    <string name="view_fake_chat_bubble_5">Vänner låter inte vänner använda osäkra meddelandeappar. Varsågod.</string>
     <string name="displayNamePick">Välj visningsnamn</string>
     <string name="recommended">Rekommenderat</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Välj ett alternativ</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">Möt din återställningsfras</string>
     <string name="activity_seed_explanation">Din återställningsfras är huvudnyckeln till ditt Session-ID – du kan använda den för att återställa ditt Session-ID om du förlorar åtkomst till enheten. Förvara din återställningsfras på en säker plats, och ge den inte till någon.</string>
     <string name="activity_seed_reveal_button_title">Håll ned för att visa</string>
-    <string name="view_seed_reminder_title">Du är nästan klar! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Säkra ditt konto genom att spara din återställningsfras</string>
-    <string name="view_seed_reminder_subtitle_2">Tryck på och håll ned de dolda orden för att avslöja din återställningsfras och lagra dem på ett säkert sätt för att säkra ditt Session-ID.</string>
     <string name="onionRoutingPath">Sökväg</string>
     <string name="onionRoutingPathEntryNode">Entrénod</string>
     <string name="onionRoutingPathServiceNode">Tjänstnod</string>

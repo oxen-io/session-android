@@ -34,7 +34,6 @@
     <string name="none">Ништа</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Сад</string>
-    <string name="DateUtils_today">Данас</string>
     <string name="DateUtils_yesterday">Јуче</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -177,6 +176,5 @@
     <string name="conversationsDeleted">Конверзација је избрисана</string>
     <string name="activity_seed_title_2">Сретни своју фразу за опоравак</string>
     <string name="activity_seed_reveal_button_title">Држи да откријеш</string>
-    <string name="view_seed_reminder_title">Скоро си завршио! 80%</string>
     <!-- Next round of translation -->
 </resources>

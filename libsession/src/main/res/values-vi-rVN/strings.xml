@@ -27,7 +27,6 @@
     <string name="none">Không</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Bây giờ</string>
-    <string name="DateUtils_today">Hôm nay</string>
     <string name="DateUtils_yesterday">Ngày hôm qua</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -146,8 +145,6 @@
     <string name="next">Tiếp</string>
     <string name="share">Chia sẻ</string>
     <string name="cancel">Huỷ</string>
-    <string name="view_fake_chat_bubble_4">Sử dụng kết hợp công nghệ định tuyến ẩn danh nâng cao và công nghệ mã hoá đầu cuối.</string>
-    <string name="view_fake_chat_bubble_5">Đừng để bạn bè sử dụng những ứng dụng nhắn tin dễ bị tấn công.</string>
     <string name="displayNamePick">Chọn tên hiển thị của bạn</string>
     <string name="recommended">Khuyến nghị</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Vui lòng lựa chọn </string>
@@ -156,8 +153,6 @@
     <string name="activity_seed_title_2">Làm quen với cụm từ khôi phục của bạn</string>
     <string name="activity_seed_explanation">Cụm từ khôi phục của bạn là chìa khoá chủ cho Session ID của bạn — bạn có thể sử dụng nó để khôi phục Session ID khi bị mất tiếp cận với thiết bị của bạn. Hãy lưu cụm từ khôi phục của bạn ở một nơi an toàn và không cung cấp cho bất kì ai.</string>
     <string name="activity_seed_reveal_button_title">Giữ để hiển thị.</string>
-    <string name="view_seed_reminder_subtitle_1">Bảo vệ tài khoản của bạn bằng việc bảo vệ cụm từ khôi phục của bạn</string>
-    <string name="view_seed_reminder_subtitle_2">Chạm và giữ cụm từ bị che để hiển thị cụm từ khôi phục của bạn, sau đó lưu nó cẩn thận để bảo vệ Session ID của bạn.</string>
     <string name="onionRoutingPath">Đường đi</string>
     <string name="onionRoutingPathEntryNode">Nút khởi đầu</string>
     <string name="onionRoutingPathServiceNode">Nút Dịch vụ</string>

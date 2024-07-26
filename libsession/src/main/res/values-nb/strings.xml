@@ -34,7 +34,6 @@
     <string name="none">Ingen</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Nå</string>
-    <string name="DateUtils_today">I dag</string>
     <string name="DateUtils_yesterday">I går</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">Neste</string>
     <string name="share">Del</string>
     <string name="cancel">Avbryt</string>
-    <string name="view_fake_chat_bubble_4">Bruker en kombinasjon av avansert anonym ruting og ende-til-ende-krypteringsteknologi.</string>
-    <string name="view_fake_chat_bubble_5">Venner lar ikke venner bruke kompromitterte meldinger. Du er velkommen.</string>
     <string name="displayNamePick">Velg ditt visningsnavn</string>
     <string name="recommended">Anbefalt</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Vennligst velg et alternativ</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">Møt din gjenopprettingsfrase</string>
     <string name="activity_seed_explanation">Gjenopprettelsesfrasen din er hovednøkkelen til Session-IDen din – du kan bruke den for å gjenopprette Session-IDen din dersom du mister tilgang til enheten din. Arkiver gjenopprettelsesfrasen din på et trygt sted, og ikke gi den til noen.</string>
     <string name="activity_seed_reveal_button_title">Hold for å vise</string>
-    <string name="view_seed_reminder_title">Du er nesten ferdig! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Sikre kontoen din ved å lagre din gjenopprettingsfrase</string>
-    <string name="view_seed_reminder_subtitle_2">Trykk og hold inne de overflødige ordene for å hente gjenopprettingsfrasen din, og lagre den trygt å sikre din Session-ID.</string>
     <string name="onionRoutingPath">Bane</string>
     <string name="onionRoutingPathEntryNode">Enhetens node</string>
     <string name="onionRoutingPathServiceNode">Tjeneste node</string>

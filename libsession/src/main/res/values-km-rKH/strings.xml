@@ -31,7 +31,6 @@
     <string name="none">គ្មាន</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">ឥឡូវនេះ</string>
-    <string name="DateUtils_today">ថ្ងៃនេះ</string>
     <string name="DateUtils_yesterday">ម្សិលមិញ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

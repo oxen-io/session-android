@@ -34,7 +34,6 @@
     <string name="none">هیچ کدام</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">اکنون</string>
-    <string name="DateUtils_today">امروز</string>
     <string name="DateUtils_yesterday">دیروز</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
@@ -183,8 +182,6 @@
     <string name="next">بعدی</string>
     <string name="share">اشتراک‌گذاری</string>
     <string name="cancel">لغو</string>
-    <string name="view_fake_chat_bubble_4">Session با استفاده از ترکیبی از فناوری‌های پیشرفته مسیریابی ناشناس و رمزگذاری سرتاسری این کار را انجام می‌دهد.</string>
-    <string name="view_fake_chat_bubble_5">یک دوست هیچ‌وقت به دوستان خود اجازه استفاده از پیام‌رسان‌های در معرض خطر را نمی‌دهد.</string>
     <string name="displayNamePick">نام خود را برای نمایش انتخاب کنید</string>
     <string name="recommended">گزینه پیشنهادی</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">لطفا یک گزینه را انتخاب کنید</string>
@@ -193,9 +190,6 @@
     <string name="activity_seed_title_2">این عبارت بازیابی شماست</string>
     <string name="activity_seed_explanation">عبارت بازیابی شما کلید اصلی شناسه‌ی Session شما است - در صورت عدم دسترسی به دستگاه خود می توانید از آن برای بازگرداندن شناسه‌ی Session خود استفاده کنید. عبارت بازیابی خود را در مکانی امن ذخیره کنید و آن را به کسی ندهید.</string>
     <string name="activity_seed_reveal_button_title">نگه دارید تا نشان داده شود</string>
-    <string name="view_seed_reminder_title">شما تقریبا تمام کردید! ۸۰٪</string>
-    <string name="view_seed_reminder_subtitle_1">با ذخیره کردن عبارت بازیابی، از حساب خود را محافظت کنید</string>
-    <string name="view_seed_reminder_subtitle_2">برای فاش کردن عبارت بازیابی، بر روی کلمات redacted ضربه زده و نگه دارید، سپس با خیال راحت آن را ذخیره کنید تا از شناسه‌ی Session خود محافظت نمایید.</string>
     <string name="onionRoutingPath">مسیر</string>
     <string name="onionRoutingPathEntryNode">گره ورودی</string>
     <string name="onionRoutingPathServiceNode">گره سرویس</string>

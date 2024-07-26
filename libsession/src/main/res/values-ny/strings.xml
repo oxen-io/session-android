@@ -30,7 +30,6 @@
     <string name="none">Nimaykan</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Kunan</string>
-    <string name="DateUtils_today">Kunan</string>
     <string name="DateUtils_yesterday">Kayna</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->

@@ -89,7 +89,7 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
             // Change export logs button text
             val exportLogsButton = this.activity?.findViewById(R.id.export_logs_button) as TextView?
             if (exportLogsButton == null) { Log.w("Loki", "Could not find export logs button view.") }
-            exportLogsButton?.text = if (exportJobRunning) getString(R.string.cancel) else getString(R.string.activity_help_settings__export_logs)
+            exportLogsButton?.text = if (exportJobRunning) getString(R.string.cancel) else getString(R.string.helpReportABugExportLogs)
 
             // Show progress bar
             val exportProgressBar = this.activity?.findViewById(R.id.export_progress_bar) as ProgressBar?
