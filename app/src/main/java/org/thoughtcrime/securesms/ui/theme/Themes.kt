@@ -42,11 +42,12 @@ fun SessionMaterialTheme(
     // or if the user has changed their light/dark system settings in the background
     if(selectedTheme == null ||
         (systemInDark != isSystemInDarkTheme()) && preferences.getFollowSystemSettings()) {
-        systemInDark = isSystemInDarkTheme()
-        
         // Some values can be set from the preferences, and if not should fallback to a default value
         selectedTheme = preferences.getComposeTheme()
     }
+
+    // keeping track of the current system light/dark setting
+    systemInDark = isSystemInDarkTheme()
 
     SessionMaterialTheme(colors = selectedTheme ?: ClassicDark()) { content() }
 }
