@@ -40,7 +40,7 @@ import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
-import org.thoughtcrime.securesms.mms.GlideApp
+import com.bumptech.glide.Glide
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -71,7 +71,7 @@ class HomeActivityTests {
         onView(allOf(isDescendantOfA(withId(R.id.inputBar)),withId(R.id.inputBarEditText))).perform(ViewActions.replaceText(messageToSend))
         if (linkPreview != null) {
             val activity = activityMonitor.waitForActivity() as ConversationActivityV2
-            val glide = GlideApp.with(activity)
+            val glide = Glide.with(activity)
             activity.findViewById<InputBar>(R.id.inputBar).updateLinkPreviewDraft(glide, linkPreview)
         }
         onView(allOf(isDescendantOfA(withId(R.id.inputBar)),inputButtonWithDrawable(R.drawable.ic_arrow_up))).perform(ViewActions.click())

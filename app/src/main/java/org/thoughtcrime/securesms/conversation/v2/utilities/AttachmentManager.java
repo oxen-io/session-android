@@ -44,7 +44,7 @@ import org.thoughtcrime.securesms.mediasend.MediaSendActivity;
 import org.thoughtcrime.securesms.mms.AudioSlide;
 import org.thoughtcrime.securesms.mms.DocumentSlide;
 import org.thoughtcrime.securesms.mms.GifSlide;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.RequestManager;
 import org.thoughtcrime.securesms.mms.ImageSlide;
 import org.thoughtcrime.securesms.mms.MediaConstraints;
 import org.thoughtcrime.securesms.mms.PartAuthority;
@@ -126,7 +126,7 @@ public class AttachmentManager {
   }
 
   @SuppressLint("StaticFieldLeak")
-  public ListenableFuture<Boolean> setMedia(@NonNull final GlideRequests glideRequests,
+  public ListenableFuture<Boolean> setMedia(@NonNull final RequestManager glideRequests,
                                             @NonNull final Uri uri,
                                             @NonNull final MediaType mediaType,
                                             @NonNull final MediaConstraints constraints,

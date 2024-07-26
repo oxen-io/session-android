@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 import org.session.libsession.utilities.Util;
 
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class MediaPickerItemFragment extends Fragment implements MediaPickerItem
 
     RecyclerView imageList = view.findViewById(R.id.mediapicker_item_list);
 
-    adapter       = new MediaPickerItemAdapter(GlideApp.with(this), this, maxSelection);
+    adapter       = new MediaPickerItemAdapter(Glide.with(this), this, maxSelection);
     layoutManager = new GridLayoutManager(requireContext(), 4);
 
     imageList.setLayoutManager(layoutManager);

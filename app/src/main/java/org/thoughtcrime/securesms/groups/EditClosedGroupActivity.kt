@@ -39,7 +39,7 @@ import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.ClosedGroupManager.updateLegacyGroup
-import org.thoughtcrime.securesms.mms.GlideApp
+import com.bumptech.glide.Glide
 import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
 import java.io.IOException
@@ -78,9 +78,9 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
 
     private val memberListAdapter by lazy {
         if (isSelfAdmin)
-            EditClosedGroupMembersAdapter(this, GlideApp.with(this), isSelfAdmin, this::onMemberClick)
+            EditClosedGroupMembersAdapter(this, Glide.with(this), isSelfAdmin, this::onMemberClick)
         else
-            EditClosedGroupMembersAdapter(this, GlideApp.with(this), isSelfAdmin)
+            EditClosedGroupMembersAdapter(this, Glide.with(this), isSelfAdmin)
     }
 
     private lateinit var mainContentContainer: LinearLayout

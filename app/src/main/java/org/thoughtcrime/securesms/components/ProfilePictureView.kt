@@ -21,8 +21,8 @@ import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 
 class ProfilePictureView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -30,7 +30,7 @@ class ProfilePictureView @JvmOverloads constructor(
     private val TAG = "ProfilePictureView"
 
     private val binding = ViewProfilePictureBinding.inflate(LayoutInflater.from(context), this)
-    private val glide: GlideRequests = GlideApp.with(this)
+    private val glide: RequestManager = Glide.with(this)
     private val prefs = context.prefs
     private val userPublicKey = prefs.getLocalNumber()
     var publicKey: String? = null

@@ -14,18 +14,18 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 
 import network.loki.messenger.R;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.RequestManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class MediaPickerFolderAdapter extends RecyclerView.Adapter<MediaPickerFolderAdapter.FolderViewHolder> {
 
-  private final GlideRequests glideRequests;
+  private final RequestManager glideRequests;
   private final EventListener     eventListener;
   private final List<MediaFolder> folders;
 
-  MediaPickerFolderAdapter(@NonNull GlideRequests glideRequests, @NonNull EventListener eventListener) {
+  MediaPickerFolderAdapter(@NonNull RequestManager glideRequests, @NonNull EventListener eventListener) {
     this.glideRequests = glideRequests;
     this.eventListener = eventListener;
     this.folders       = new ArrayList<>();
@@ -74,7 +74,7 @@ class MediaPickerFolderAdapter extends RecyclerView.Adapter<MediaPickerFolderAda
       count     = itemView.findViewById(R.id.mediapicker_folder_item_count);
     }
 
-    void bind(@NonNull MediaFolder folder, @NonNull GlideRequests glideRequests, @NonNull EventListener eventListener) {
+    void bind(@NonNull MediaFolder folder, @NonNull RequestManager glideRequests, @NonNull EventListener eventListener) {
       title.setText(folder.getTitle());
       count.setText(String.valueOf(folder.getItemCount()));
 

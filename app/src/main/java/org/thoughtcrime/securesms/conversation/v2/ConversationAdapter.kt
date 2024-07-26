@@ -26,7 +26,7 @@ import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDel
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.showSessionDialog
 import java.util.concurrent.atomic.AtomicLong
@@ -42,7 +42,7 @@ class ConversationAdapter(
     private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
     private val onDeselect: (MessageRecord, Int) -> Unit,
     private val onAttachmentNeedsDownload: (DatabaseAttachment) -> Unit,
-    private val glide: GlideRequests,
+    private val glide: RequestManager,
     lifecycleCoroutineScope: LifecycleCoroutineScope
 ) : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
     private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }

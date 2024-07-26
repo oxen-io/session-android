@@ -138,6 +138,8 @@ class TextSecurePreferences @Inject constructor(
 
         val HAS_RECEIVED_LEGACY_CONFIG = Pref("has_received_legacy_config", false)
 
+        val PATCH_SNODE_VERSION_2024_07_23 = Pref("libsession.patch_snode_version_2024_07_23", false)
+
         const val GREEN_ACCENT = "accent_green"
         const val BLUE_ACCENT = "accent_blue"
         const val PURPLE_ACCENT = "accent_purple"
@@ -287,6 +289,10 @@ class TextSecurePreferences @Inject constructor(
 
     fun hasSelectedAccentColor() = has(SELECTED_ACCENT_COLOR)
     fun getSelectedAccentColor(): String? = sharedPreferences[SELECTED_ACCENT_COLOR]
+
+    var hasAppliedPatchSnodeVersion: Boolean
+        get() = sharedPreferences[PATCH_SNODE_VERSION_2024_07_23]
+        set(value) = set(PATCH_SNODE_VERSION_2024_07_23, value)
 
     @StyleRes
     fun getAccentColorStyle(): Int? = when (getSelectedAccentColor()) {

@@ -115,18 +115,26 @@ object HTTP {
             }
             Verb.DELETE -> request.delete()
         }
-        lateinit var response: Response
-        try {
-            val connection: OkHttpClient = if (timeout != HTTP.timeout) { // Custom timeout
-                if (useSeedNodeConnection) {
-                    throw IllegalStateException("Setting a custom timeout is only allowed for requests to snodes.")
+        return try {
+            when {
+                // Custom timeout
+                timeout != HTTP.timeout -> {
+                    if (useSeedNodeConnection) {
+                        throw IllegalStateException("Setting a custom timeout is only allowed for requests to snodes.")
+                    }
+                    getDefaultConnection(timeout)
                 }
-                getDefaultConnection(timeout)
-            } else {
-                if (useSeedNodeConnection) seedNodeConnection else defaultConnection
+                useSeedNodeConnection -> seedNodeConnection
+                else -> defaultConnection
+            }.newCall(request.build()).execute().use { response ->
+                when (val statusCode = response.code) {
+                    200 -> response.body!!.bytes()
+                    else -> {
+                        Log.d("Loki", "${verb.rawValue} request to $url failed with status code: $statusCode.")
+                        throw HTTPRequestFailedException(statusCode, null)
+                    }
+                }
             }
-
-            response = connection.newCall(request.build()).execute()
         } catch (exception: Exception) {
             Log.d("Loki", "${verb.rawValue} request to $url failed due to error: ${exception.localizedMessage}.")
 
@@ -134,15 +142,6 @@ object HTTP {
 
             // Override the actual error so that we can correctly catch failed requests in OnionRequestAPI
             throw HTTPRequestFailedException(0, null, "HTTP request failed due to: ${exception.message}")
-        }
-        return when (val statusCode = response.code) {
-            200 -> {
-                response.body!!.bytes()
-            }
-            else -> {
-                Log.d("Loki", "${verb.rawValue} request to $url failed with status code: $statusCode.")
-                throw HTTPRequestFailedException(statusCode, null)
-            }
         }
     }
 }

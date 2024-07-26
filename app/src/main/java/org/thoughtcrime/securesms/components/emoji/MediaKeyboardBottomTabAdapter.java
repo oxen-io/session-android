@@ -9,20 +9,20 @@ import android.widget.ImageView;
 
 
 import org.thoughtcrime.securesms.components.emoji.MediaKeyboardProvider.TabIconProvider;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.RequestManager;
 
 import network.loki.messenger.R;
 
 public class MediaKeyboardBottomTabAdapter extends RecyclerView.Adapter<MediaKeyboardBottomTabAdapter.MediaKeyboardBottomTabViewHolder>  {
 
-  private final GlideRequests glideRequests;
+  private final RequestManager glideRequests;
   private final EventListener eventListener;
 
   private TabIconProvider tabIconProvider;
   private int             activePosition;
   private int             count;
 
-  public MediaKeyboardBottomTabAdapter(@NonNull GlideRequests glideRequests, @NonNull EventListener eventListener) {
+  public MediaKeyboardBottomTabAdapter(@NonNull RequestManager glideRequests, @NonNull EventListener eventListener) {
     this.glideRequests = glideRequests;
     this.eventListener = eventListener;
   }
@@ -71,7 +71,7 @@ public class MediaKeyboardBottomTabAdapter extends RecyclerView.Adapter<MediaKey
       this.indicator = itemView.findViewById(R.id.media_keyboard_bottom_tab_indicator);
     }
 
-    void bind(@NonNull GlideRequests glideRequests,
+    void bind(@NonNull RequestManager glideRequests,
               @NonNull EventListener eventListener,
               @NonNull TabIconProvider tabIconProvider,
               int index,

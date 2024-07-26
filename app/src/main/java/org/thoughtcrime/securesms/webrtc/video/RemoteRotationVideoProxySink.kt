@@ -14,7 +14,7 @@ class RemoteRotationVideoProxySink: VideoSink {
         val thisSink = targetSink ?: return
         val thisFrame = frame ?: return
 
-        val modifiedRotation = thisFrame.rotation - rotation
+        val modifiedRotation = (thisFrame.rotation - rotation + 360) % 360
 
         val newFrame = VideoFrame(thisFrame.buffer, modifiedRotation, thisFrame.timestampNs)
         thisSink.onFrame(newFrame)

@@ -20,7 +20,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.thoughtcrime.securesms.giph.model.GiphyImage;
 import org.thoughtcrime.securesms.giph.net.GiphyLoader;
 import org.thoughtcrime.securesms.giph.util.InfiniteScrollListener;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 import org.session.libsession.utilities.ViewUtil;
 
 import java.util.LinkedList;
@@ -54,7 +54,7 @@ public abstract class GiphyFragment extends Fragment implements LoaderManager.Lo
   public void onActivityCreated(Bundle bundle) {
     super.onActivityCreated(bundle);
 
-    this.giphyAdapter = new GiphyAdapter(getActivity(), GlideApp.with(this), new LinkedList<>());
+    this.giphyAdapter = new GiphyAdapter(getActivity(), Glide.with(this), new LinkedList<>());
     this.giphyAdapter.setListener(this);
 
     setLayoutManager(MessagingModuleConfiguration.getShared().getPrefs().isGifSearchInGridLayout());
