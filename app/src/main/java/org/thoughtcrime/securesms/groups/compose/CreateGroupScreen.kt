@@ -1,29 +1,26 @@
 package org.thoughtcrime.securesms.groups.compose
 
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.interaction.FocusInteraction
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import network.loki.messenger.R
+import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.groups.ContactItem
 import org.thoughtcrime.securesms.groups.CreateGroupEvent
 import org.thoughtcrime.securesms.groups.CreateGroupViewModel
@@ -34,24 +31,30 @@ import org.thoughtcrime.securesms.ui.SearchBar
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
 import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 
 @Composable
 fun CreateGroupScreen(
-    onNavigateToConversationScreen: (groupAccountId: String) -> Unit,
+    onNavigateToConversationScreen: (threadID: Long) -> Unit,
     onBack: () -> Unit,
     onClose: () -> Unit,
 ) {
     val viewModel: CreateGroupViewModel = hiltViewModel()
+    val context = LocalContext.current
 
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
                 is CreateGroupEvent.NavigateToConversation -> {
                     onClose()
-                    onNavigateToConversationScreen(event.groupAccountId)
+                    onNavigateToConversationScreen(event.threadID)
+                }
+
+                is CreateGroupEvent.Error -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -90,7 +93,7 @@ fun CreateGroup(
     val focusManager = LocalFocusManager.current
 
     Column(
-        modifier = modifier,
+        modifier = modifier.padding(bottom = LocalDimensions.current.mediumSpacing),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -107,23 +110,27 @@ fun CreateGroup(
             textStyle = LocalType.current.base,
             modifier = Modifier.padding(horizontal = 16.dp),
             error = groupNameError.takeIf { it.isNotBlank() },
-            onContinue = {
-                focusManager.clearFocus()
-            }
+            enabled = !showLoading,
+            onContinue = focusManager::clearFocus
         )
 
         SearchBar(
             query = contactSearchQuery,
             onValueChanged = onContactSearchQueryChanged,
             placeholder = stringResource(R.string.search_contacts_hint),
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
+            enabled = !showLoading
         )
 
         LazyColumn(modifier = Modifier.weight(1f)) {
-            multiSelectMemberList(items, onContactItemClicked = onContactItemClicked)
+            multiSelectMemberList(
+                contacts = items,
+                onContactItemClicked = onContactItemClicked,
+                enabled = !showLoading
+            )
         }
 
-        PrimaryOutlineButton(onClick = onCreateClicked) {
+        PrimaryOutlineButton(onClick = onCreateClicked, modifier = Modifier.widthIn(min = 120.dp)) {
             LoadingArcOr(loading = showLoading) {
                 Text(stringResource(R.string.activity_create_group_create_button_title))
             }
@@ -137,9 +144,10 @@ private fun CreateGroupPreview(
 ) {
     val random = "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234"
     val previewMembers = listOf(
-        ContactItem(random, "Alice", false),
-        ContactItem(random, "Bob", true),
+        ContactItem(Contact(random, name = "Alice"), false),
+        ContactItem(Contact(random, name = "Bob"), true),
     )
+
     PreviewTheme {
         CreateGroup(
             modifier = Modifier.background(LocalColors.current.backgroundSecondary),

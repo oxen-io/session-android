@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.serialization.Serializable
 import network.loki.messenger.R
+import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.groups.ContactItem
 import org.thoughtcrime.securesms.groups.SelectContactsViewModel
 import org.thoughtcrime.securesms.ui.CloseIcon
@@ -47,7 +48,7 @@ data class RouteSelectContacts(
 @Composable
 fun SelectContactsScreen(
     onlySelectFromAccountIDs: Set<String>?,
-    onDoneClicked: (selectedContactAccountIDs: List<String>) -> Unit,
+    onDoneClicked: (selectedContacts: Set<Contact>) -> Unit,
     onBackClicked: () -> Unit,
 ) {
     val viewModel = hiltViewModel<SelectContactsViewModel, SelectContactsViewModel.Factory> { factory ->
@@ -59,7 +60,7 @@ fun SelectContactsScreen(
         onContactItemClicked = viewModel::onContactItemClicked,
         searchQuery = viewModel.searchQuery.collectAsState().value,
         onSearchQueryChanged = viewModel::onSearchQueryChanged,
-        onDoneClicked = { onDoneClicked(viewModel.currentSelectedAccountIDs) },
+        onDoneClicked = { onDoneClicked(viewModel.currentSelected) },
         onBack = onBackClicked,
     )
 }
@@ -134,7 +135,7 @@ fun SelectContacts(
 @Preview
 @Composable
 fun PreviewSelectContacts() {
-    PreviewTheme() {
+    PreviewTheme {
         SelectContacts(
             contacts = emptyList(),
             onContactItemClicked = {},

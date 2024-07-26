@@ -119,7 +119,7 @@ inline session::config::convo::legacy_group deserialize_legacy_closed_group(JNIE
 
 inline session::config::convo::group deserialize_closed_group(JNIEnv* env, jobject info, session::config::ConvoInfoVolatile* conf) {
     auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$ClosedGroup");
-    auto id_getter = env->GetFieldID(clazz, "sessionId", "Ljava/lang/String;");
+    auto id_getter = env->GetFieldID(clazz, "accountId", "Ljava/lang/String;");
     auto last_read_getter = env->GetFieldID(clazz, "lastRead", "J");
     auto unread_getter = env->GetFieldID(clazz, "unread", "Z");
     auto session_id = (jstring)env->GetObjectField(info, id_getter);

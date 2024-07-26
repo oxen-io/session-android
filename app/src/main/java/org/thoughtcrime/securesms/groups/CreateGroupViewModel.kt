@@ -3,11 +3,14 @@ package org.thoughtcrime.securesms.groups
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import org.thoughtcrime.securesms.database.Storage
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.session.libsession.database.StorageProtocol
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import javax.inject.Inject
 
@@ -15,11 +18,11 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateGroupViewModel @Inject constructor(
     configFactory: ConfigFactory,
-    storage: Storage,
+    private val storage: StorageProtocol,
 ): ViewModel() {
     // Child view model to handle contact selection logic
     val selectContactsViewModel = SelectContactsViewModel(
-        storageProtocol = storage,
+        storage = storage,
         configFactory = configFactory,
         onlySelectedFromAccountIDs = null,
         scope = viewModelScope,
@@ -42,9 +45,33 @@ class CreateGroupViewModel @Inject constructor(
     val events: SharedFlow<CreateGroupEvent> get() = mutableEvents
 
     fun onCreateClicked() {
-        if (groupName.value.trim().isBlank()) {
-            mutableGroupNameError.value = "Group name cannot be empty"
-            return
+        viewModelScope.launch {
+            val groupName = groupName.value.trim()
+            if (groupName.isBlank()) {
+                mutableGroupNameError.value = "Group name cannot be empty"
+                return@launch
+            }
+
+            val selected = selectContactsViewModel.currentSelected
+            if (selected.isEmpty()) {
+                mutableEvents.emit(CreateGroupEvent.Error("Please select at least one contact"))
+                return@launch
+            }
+
+            mutableIsLoading.value = true
+
+            val recipient = withContext(Dispatchers.Default) {
+                storage.createNewGroup(groupName, "", selected)
+            }
+
+            if (recipient.isPresent) {
+                val threadId = withContext(Dispatchers.Default) { storage.getOrCreateThreadIdFor(recipient.get().address) }
+                mutableEvents.emit(CreateGroupEvent.NavigateToConversation(threadId))
+            } else {
+                mutableEvents.emit(CreateGroupEvent.Error("Failed to create group"))
+            }
+
+            mutableIsLoading.value = false
         }
     }
 
@@ -60,5 +87,7 @@ class CreateGroupViewModel @Inject constructor(
 }
 
 sealed interface CreateGroupEvent {
-    data class NavigateToConversation(val groupAccountId: String): CreateGroupEvent
+    data class NavigateToConversation(val threadID: Long): CreateGroupEvent
+
+    data class Error(val message: String): CreateGroupEvent
 }

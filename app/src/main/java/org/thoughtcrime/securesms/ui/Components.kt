@@ -370,7 +370,8 @@ fun Modifier.fadingEdges(
 @Composable
 fun Divider(modifier: Modifier = Modifier, startIndent: Dp = 0.dp) {
     HorizontalDivider(
-        modifier = modifier.padding(horizontal = LocalDimensions.current.smallSpacing)
+        modifier = modifier
+            .padding(horizontal = LocalDimensions.current.smallSpacing)
             .padding(start = startIndent),
         color = LocalColors.current.borders,
     )
@@ -479,41 +480,47 @@ fun SearchBar(
     onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String? = null,
+    enabled: Boolean = true,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxWidth()
-            .background(LocalColors.current.background, RoundedCornerShape(100))
-    ) {
-        Image(
-            painterResource(id = R.drawable.ic_search_24),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(
-                LocalColors.current.text
-            ),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).size(24.dp)
-        )
+    BasicTextField(
+        singleLine = true,
+        value = query,
+        onValueChange = onValueChanged,
+        enabled = enabled,
+        decorationBox = { innerTextField ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(LocalColors.current.background, RoundedCornerShape(100))
+            ) {
+                Image(
+                    painterResource(id = R.drawable.ic_search_24),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(
+                        LocalColors.current.text
+                    ),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .size(24.dp)
+                )
 
-        BasicTextField(
-            singleLine = true,
-            value = query,
-            onValueChange = onValueChanged,
-            decorationBox = { innerTextField ->
-                innerTextField()
-                if (query.isEmpty() && placeholder != null) {
-                    Text(
-                        text = placeholder,
-                        color = LocalColors.current.textSecondary,
-                        style = LocalType.current.base
-                    )
+                Box(modifier = Modifier.weight(1f)) {
+                    innerTextField()
+                    if (query.isEmpty() && placeholder != null) {
+                        Text(
+                            text = placeholder,
+                            color = LocalColors.current.textSecondary,
+                            style = LocalType.current.base
+                        )
+                    }
                 }
-            },
-            textStyle = LocalType.current.base.copy(color = LocalColors.current.text),
-            modifier = Modifier.weight(1f),
-            cursorBrush = SolidColor(LocalColors.current.text)
-        )
-    }
+            }
+        },
+        textStyle = LocalType.current.base.copy(color = LocalColors.current.text),
+        modifier = modifier,
+        cursorBrush = SolidColor(LocalColors.current.text)
+    )
 }
 
 @Composable

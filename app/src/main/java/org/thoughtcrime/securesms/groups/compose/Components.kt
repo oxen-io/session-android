@@ -99,6 +99,7 @@ fun LazyListScope.multiSelectMemberList(
     contacts: List<ContactItem>,
     modifier: Modifier = Modifier,
     onContactItemClicked: (accountId: String) -> Unit,
+    enabled: Boolean = true,
 ) {
     items(contacts) { contact ->
         Column {
@@ -106,6 +107,7 @@ fun LazyListScope.multiSelectMemberList(
                 modifier = modifier
                     .fillMaxWidth()
                     .toggleable(
+                        enabled = enabled,
                         value = contact.selected,
                         onValueChange = { onContactItemClicked(contact.accountID) },
                         role = Role.Checkbox
@@ -121,7 +123,8 @@ fun LazyListScope.multiSelectMemberList(
                 Checkbox(
                     checked = contact.selected,
                     onCheckedChange = null,
-                    colors = CheckboxDefaults.colors(checkedColor = LocalColors.current.primary)
+                    colors = CheckboxDefaults.colors(checkedColor = LocalColors.current.primary),
+                    enabled = enabled,
                 )
             }
 
@@ -216,13 +219,11 @@ fun PreviewMemberList() {
             multiSelectMemberList(
                 contacts = listOf(
                     ContactItem(
-                        accountID = random,
-                        name = "Person",
+                        Contact(random, "Person"),
                         selected = false,
                     ),
                     ContactItem(
-                        accountID = random,
-                        name = "Cow",
+                        Contact(random, "Cow"),
                         selected = true,
                     )
                 ),

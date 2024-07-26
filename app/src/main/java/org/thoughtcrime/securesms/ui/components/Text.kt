@@ -95,6 +95,7 @@ fun SessionOutlinedTextField(
     onContinue: () -> Unit = {},
     error: String? = null,
     isTextErrorColor: Boolean = error != null,
+    enabled: Boolean = true,
 ) {
     BasicTextField(
         value = text,
@@ -102,6 +103,7 @@ fun SessionOutlinedTextField(
         modifier = modifier,
         textStyle = textStyle.copy(color = LocalColors.current.text(isTextErrorColor)),
         cursorBrush = SolidColor(LocalColors.current.text(isTextErrorColor)),
+        enabled = enabled,
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
             onDone = { onContinue() },

@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
+import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.InviteContactsJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsignal.utilities.AccountId
@@ -67,8 +68,8 @@ class EditGroupViewModel @AssistedInject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, EditGroupViewState())
 
-    fun onContactSelected(contactAccountIDs: List<String>) {
-        storage.inviteClosedGroupMembers(groupSessionId, contactAccountIDs)
+    fun onContactSelected(contacts: Set<Contact>) {
+        storage.inviteClosedGroupMembers(groupSessionId, contacts.map { it.accountID })
     }
 
     fun onReInviteContact(contactSessionId: String) {

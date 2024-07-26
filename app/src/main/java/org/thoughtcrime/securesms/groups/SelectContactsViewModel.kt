@@ -29,7 +29,7 @@ import org.thoughtcrime.securesms.home.search.getSearchName
 @OptIn(FlowPreview::class)
 @HiltViewModel(assistedFactory = SelectContactsViewModel.Factory::class)
 class SelectContactsViewModel @AssistedInject constructor(
-    private val storageProtocol: StorageProtocol,
+    private val storage: StorageProtocol,
     private val configFactory: ConfigFactory,
     @Assisted private val onlySelectedFromAccountIDs: Set<String>?,
     @Assisted private val scope: CoroutineScope
@@ -52,12 +52,12 @@ class SelectContactsViewModel @AssistedInject constructor(
     ).stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     // Output
-    val currentSelectedAccountIDs: List<String>
+    val currentSelected: Set<Contact>
         get() = contacts.value
             .asSequence()
             .filter { it.selected }
-            .map { it.accountID }
-            .toList()
+            .map { it.contact }
+            .toSet()
 
     override fun onCleared() {
         super.onCleared()
@@ -70,7 +70,7 @@ class SelectContactsViewModel @AssistedInject constructor(
         .onStart { emit(Unit) }
         .map {
             val allContacts = withContext(Dispatchers.Default) {
-                storageProtocol.getAllContacts()
+                storage.getAllContacts()
             }
 
             if (onlySelectedFromAccountIDs == null) {
@@ -95,8 +95,7 @@ class SelectContactsViewModel @AssistedInject constructor(
             }
             .map { contact ->
                 ContactItem(
-                    accountID = contact.accountID,
-                    name = contact.getSearchName(),
+                    contact = contact,
                     selected = selectedAccountIDs.contains(contact.accountID)
                 )
             }
@@ -125,7 +124,9 @@ class SelectContactsViewModel @AssistedInject constructor(
 }
 
 data class ContactItem(
-    val accountID: String,
-    val name: String,
+    val contact: Contact,
     val selected: Boolean,
-)
+) {
+    val accountID: String get() = contact.accountID
+    val name: String get() = contact.getSearchName()
+}
