@@ -16,15 +16,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.ui.theme.LocalDimensions
-import org.thoughtcrime.securesms.ui.theme.PreviewTheme
-import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.components.AppBar
 import org.thoughtcrime.securesms.ui.components.SlimOutlineButton
 import org.thoughtcrime.securesms.ui.components.SlimOutlineCopyButton
 import org.thoughtcrime.securesms.ui.components.border
 import org.thoughtcrime.securesms.ui.contentDescription
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 @Composable
 internal fun InviteFriend(
@@ -38,7 +38,11 @@ internal fun InviteFriend(
         LocalColors.current.backgroundSecondary,
         shape = MaterialTheme.shapes.small
     )) {
-        AppBar(stringResource(R.string.invite_a_friend), onBack = onBack, onClose = onClose)
+        AppBar(
+            stringResource(R.string.sessionInviteAFriend),
+            onBack = onBack,
+            onClose = onClose
+        )
         Column(
             modifier = Modifier.padding(horizontal = LocalDimensions.current.spacing)
                 .padding(top = LocalDimensions.current.spacing),
@@ -57,7 +61,7 @@ internal fun InviteFriend(
             Spacer(modifier = Modifier.height(LocalDimensions.current.xsSpacing))
 
             Text(
-                stringResource(R.string.invite_your_friend_to_chat_with_you_on_session_by_sharing_your_account_id_with_them),
+                stringResource(R.string.shareAccountIdDescription),
                 textAlign = TextAlign.Center,
                 style = LocalType.current.small,
                 color = LocalColors.current.textSecondary,

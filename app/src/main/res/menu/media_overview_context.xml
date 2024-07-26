@@ -11,7 +11,7 @@
         app:showAsAction="always"/>
 
     <item android:id="@+id/select_all"
-        android:title="@string/MediaOverviewActivity_Select_all"
+        android:title="@string/selectAll"
         android:icon="?menu_selectall_icon"
         app:showAsAction="always"/>
 </menu>

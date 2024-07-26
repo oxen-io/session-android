@@ -16,11 +16,12 @@
  */
 package org.thoughtcrime.securesms;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,10 +33,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
@@ -48,36 +47,34 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-
+import com.bumptech.glide.Glide;
 import com.codewaves.stickyheadergrid.StickyHeaderGridLayoutManager;
 import com.google.android.material.tabs.TabLayout;
-
-import org.session.libsession.messaging.messages.control.DataExtractionNotification;
-import org.session.libsession.messaging.sending_receiving.MessageSender;
-import org.session.libsession.snode.SnodeAPI;
-import org.session.libsession.utilities.Address;
-import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
-import org.thoughtcrime.securesms.database.MediaDatabase;
-import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader;
-import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader.BucketedThreadMedia;
-import org.thoughtcrime.securesms.database.loaders.ThreadMediaLoader;
-import org.thoughtcrime.securesms.mms.GlideApp;
-import org.thoughtcrime.securesms.permissions.Permissions;
-import org.session.libsession.utilities.recipients.Recipient;
-import org.thoughtcrime.securesms.util.AttachmentUtil;
-import org.thoughtcrime.securesms.util.SaveAttachmentTask;
-import org.thoughtcrime.securesms.util.StickyHeaderDecoration;
-import org.session.libsession.utilities.Util;
-import org.session.libsession.utilities.ViewUtil;
-import org.session.libsession.utilities.task.ProgressDialogAsyncTask;
-
+import com.squareup.phrase.Phrase;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-
 import kotlin.Unit;
 import network.loki.messenger.R;
+import org.session.libsession.messaging.messages.control.DataExtractionNotification;
+import org.session.libsession.messaging.sending_receiving.MessageSender;
+import org.session.libsession.snode.SnodeAPI;
+import org.session.libsession.utilities.Address;
+import org.session.libsession.utilities.Util;
+import org.session.libsession.utilities.ViewUtil;
+import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsession.utilities.task.ProgressDialogAsyncTask;
+import org.session.libsignal.utilities.Log;
+import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
+import org.thoughtcrime.securesms.database.MediaDatabase;
+import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader.BucketedThreadMedia;
+import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader;
+import org.thoughtcrime.securesms.database.loaders.ThreadMediaLoader;
+import org.thoughtcrime.securesms.permissions.Permissions;
+import org.thoughtcrime.securesms.util.AttachmentUtil;
+import org.thoughtcrime.securesms.util.SaveAttachmentTask;
+import org.thoughtcrime.securesms.util.StickyHeaderDecoration;
 
 /**
  * Activity for displaying media attachments in-app
@@ -117,17 +114,26 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
   }
 
   private void initializeResources() {
-    Address address = getIntent().getParcelableExtra(ADDRESS_EXTRA);
-
     this.viewPager = ViewUtil.findById(this, R.id.pager);
-    this.toolbar   = ViewUtil.findById(this, R.id.toolbar);
+    this.toolbar   = ViewUtil.findById(this, R.id.search_toolbar);
     this.tabLayout = ViewUtil.findById(this, R.id.tab_layout);
-    this.recipient = Recipient.from(this, address, true);
+
+    Address address = getIntent().getParcelableExtra(ADDRESS_EXTRA);
+    if (address == null) {
+      Log.w(TAG, "Got null address in initializeResources.");
+    } else {
+      this.recipient = Recipient.from(this, address, true);
+    }
   }
 
   private void initializeToolbar() {
     setSupportActionBar(this.toolbar);
     ActionBar actionBar = getSupportActionBar();
+    if (actionBar == null) {
+      Log.w(TAG, "Could not get support actionbar");
+      return;
+    }
+    // Implied else that the actionbar is fine to work with...
     actionBar.setTitle(recipient.toShortString());
     actionBar.setDisplayHomeAsUpEnabled(true);
     actionBar.setHomeButtonEnabled(true);
@@ -176,8 +182,8 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
 
     @Override
     public CharSequence getPageTitle(int position) {
-      if      (position == 0) return getString(R.string.MediaOverviewActivity_Media);
-      else if (position == 1) return getString(R.string.MediaOverviewActivity_Documents);
+      if      (position == 0) return getString(R.string.media);
+      else if (position == 1) return getString(R.string.files);
       else                    throw new AssertionError();
     }
   }
@@ -227,7 +233,7 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
       this.gridManager  = new StickyHeaderGridLayoutManager(getResources().getInteger(R.integer.media_overview_cols));
 
       this.recyclerView.setAdapter(new MediaGalleryAdapter(getContext(),
-                                                           GlideApp.with(this),
+                                                           Glide.with(this),
                                                            new BucketedThreadMedia(getContext()),
                                                            locale,
                                                            this));
@@ -325,13 +331,19 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
         Permissions.with(this)
                 .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P)
-                .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
-                .onAnyDenied(() -> Toast.makeText(getContext(), R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show())
+                .withPermanentDenialDialog(Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                        .put(APP_NAME_KEY, getString(R.string.app_name))
+                        .format().toString())
+                .onAnyDenied(() -> Toast.makeText(getContext(),
+                                                  Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                                                    .put(APP_NAME_KEY, getString(R.string.app_name))
+                                                    .format().toString(),
+                                                  Toast.LENGTH_LONG).show())
                 .onAllGranted(() -> {
                   new ProgressDialogAsyncTask<Void, Void, List<SaveAttachmentTask.Attachment>>(
                           context,
-                          R.string.MediaOverviewActivity_collecting_attachments,
-                          R.string.please_wait) {
+                          R.string.attachmentsCollecting,
+                          R.string.waitOneMoment) {
                     @Override
                     protected List<SaveAttachmentTask.Attachment> doInBackground(Void... params) {
                       List<SaveAttachmentTask.Attachment> attachments = new LinkedList<>();
@@ -382,8 +394,8 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
               recordCount,
               () -> new ProgressDialogAsyncTask<MediaDatabase.MediaRecord, Void, Void>(
                 requireContext(),
-                R.string.MediaOverviewActivity_Media_delete_progress_title,
-                R.string.MediaOverviewActivity_Media_delete_progress_message) {
+                R.string.deleting,
+                R.string.deleting) {
         @Override
         protected Void doInBackground(MediaDatabase.MediaRecord... records) {
           if (records == null || records.length == 0) {

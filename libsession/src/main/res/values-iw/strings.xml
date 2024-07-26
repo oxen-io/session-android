@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sessionMessenger">ישיבה</string>
+    <string name="yes">כן</string>
+    <string name="no">לא</string>
+    <string name="delete">מחק</string>
+    <string name="save">שמור</string>
+    <string name="noteToSelf">הערה לעצמי</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">הודעה חדשה</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">החודש</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">שליחה נכשלה, הקש לפרטים</string>
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">הוסף צרופה</string>
+    <string name="message">הודעה</string>
+    <string name="blockUnblock">בטל חסימה</string>
+    <!-- ConversationFragment -->
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="one">שמירת המדיה הזאת לאחסון תאפשר לכל אפליקציה אחרת לגשת אליהם.\n\nלהמשיך?</item>
+        <item quantity="two">שמירת כל %1$d פריטי המדיה באחסון תתיר לכל יישומים כלשהם להשיג גישה לפריטי המדיה.\n\nלהמשיך?</item>
+        <item quantity="many">שמירת כל %1$d פריטי המדיה באחסון תתיר לכל יישומים כלשהם להשיג גישה לפריטי המדיה.\n\nלהמשיך?</item>
+        <item quantity="other">שמירת כל %1$d פריטי המדיה באחסון תתיר לכל יישומים כלשהם להשיג גישה לפריטי המדיה.\n\nלהמשיך?</item>
+    </plurals>
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">אין</string>
+    <!-- DateUtils -->
+    <string name="DateUtils_just_now">עכשיו</string>
+    <string name="DateUtils_today">היום</string>
+    <string name="DateUtils_yesterday">אתמול</string>
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">מדבקות</string>
+    <!-- CropImageActivity -->
+    <string name="photo">יצגן</string>
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">אוסף צרופות...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <string name="MediaPickerActivity_send_to">שלח אל %s</string>
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">מצלמה אינה זמינה.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">כל המדיה</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">חסום</string>
+    <!-- Slide -->
+    <string name="image">תמונה</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">הקבוצה עודכנה</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session אינו נעול</string>
+    <!-- MediaPreviewActivity -->
+    <string name="onionRoutingPathYou">אתה</string>
+    <string name="draft">טיוטה</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">סמן כנקרא</string>
+    <!-- Notification Channels -->
+    <string name="failures">כישלונות</string>
+    <string name="lockAppStatus">מעמד נעילה</string>
+    <string name="updateApp">עדכוני יישום</string>
+    <string name="other">אחר</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">נשמר</string>
+    <!-- SearchToolbar -->
+    <string name="search">חפש</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">קיצור דרך בלתי תקף</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <string name="contentDescriptionCamera">מצלמה</string>
+    <string name="gif">GIF</string>
+    <string name="attachment_type_selector__gallery_description">תמונה או וידיאו</string>
+    <string name="attachment_type_selector__gallery">גלריה</string>
+    <string name="attachment_type_selector__drawer_description">עורר מגירת צרופות</string>
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">שלח</string>
+    <string name="conversation_activity__attachment_thumbnail">תמונה ממוזערת של צרופה</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">עורר מגירת צרופות מהירות של מצלמה</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">החלק כדי לבטל</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__delivered_description">נמסר</string>
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">להצטרפות</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">הודעה מקורית לא נמצאה</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">נשלח</string>
+    <string name="received">התקבל</string>
+    <string name="message_details_header__disappears">נעלם</string>
+    <string name="via">דרך</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsMute1Hour">השתק למשך שעה</string>
+    <string name="notificationsMute2Hours">השתק למשך שעתיים</string>
+    <string name="notificationsMute1Day">השתק למשך יום 1</string>
+    <string name="notificationsContentShowNameOnly">שם בלבד</string>
+    <string name="arrays__images">תמונות</string>
+    <string name="audio">שמע</string>
+    <string name="video">וידיאו</string>
+    <string name="max">מרבי</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">שלח קדם־תצוגות של קישורים</string>
+    <string name="screenSecurity">אבטחת מסך</string>
+    <string name="sessionNotifications">התראות</string>
+    <string name="notificationsLedColor">צבע LED</string>
+    <string name="notificationsSound">קול</string>
+    <string name="notificationsVibrate">רטט</string>
+    <string name="theDefault">ברירת מחדל</string>
+    <string name="incognitoKeyboard">מקלדת סמויה</string>
+    <string name="readReceipts">אישורי קריאה</string>
+    <string name="typingIndicators">מחווני הקלדה</string>
+    <string name="conversationsMessageTrimming">קיצוץ הודעה</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">שמור צרופה</string>
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">בטל השתקה</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">השתק התראות</string>
+    <!-- conversation -->
+    <string name="groupLeave">עזוב קבוצה</string>
+    <string name="conversationsAddToHome">הוסף אל מסך הבית</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">מוחק</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">דרושה הרשאה</string>
+    <string name="notNow">לא עכשיו</string>
+    <string name="registration_activity__skip">דלג</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">המשך</string>
+    <string name="copy">העתקה</string>
+    <string name="communityEnterUrlErrorInvalid">קישור לא תקין</string>
+    <string name="next">הבא</string>
+    <string name="share">שיתוף</string>
+    <string name="cancel">ביטול</string>
+    <!-- Next round of translation -->
+</resources>

@@ -16,6 +16,8 @@
  */
 package org.thoughtcrime.securesms.conversation.v2.utilities;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -30,10 +32,14 @@ import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
+import com.squareup.phrase.Phrase;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import network.loki.messenger.R;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.ListenableFuture;
 import org.session.libsignal.utilities.Log;
@@ -44,7 +50,7 @@ import org.thoughtcrime.securesms.mediasend.MediaSendActivity;
 import org.thoughtcrime.securesms.mms.AudioSlide;
 import org.thoughtcrime.securesms.mms.DocumentSlide;
 import org.thoughtcrime.securesms.mms.GifSlide;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.RequestManager;
 import org.thoughtcrime.securesms.mms.ImageSlide;
 import org.thoughtcrime.securesms.mms.MediaConstraints;
 import org.thoughtcrime.securesms.mms.PartAuthority;
@@ -54,13 +60,6 @@ import org.thoughtcrime.securesms.mms.VideoSlide;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.util.MediaUtil;
-
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import network.loki.messenger.R;
 
 public class AttachmentManager {
 
@@ -126,7 +125,7 @@ public class AttachmentManager {
   }
 
   @SuppressLint("StaticFieldLeak")
-  public ListenableFuture<Boolean> setMedia(@NonNull final GlideRequests glideRequests,
+  public ListenableFuture<Boolean> setMedia(@NonNull final RequestManager glideRequests,
                                             @NonNull final Uri uri,
                                             @NonNull final MediaType mediaType,
                                             @NonNull final MediaConstraints constraints,
@@ -252,13 +251,31 @@ public class AttachmentManager {
     } else {
       builder = builder.request(Manifest.permission.READ_EXTERNAL_STORAGE);
     }
-    builder.withPermanentDenialDialog(activity.getString(R.string.AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio))
-            .withRationaleDialog(activity.getString(R.string.ConversationActivity_to_send_photos_and_video_allow_signal_access_to_storage), R.drawable.ic_baseline_photo_library_24)
+
+    Context c = activity.getApplicationContext();
+    String needStoragePermissionTxt = Phrase.from(c, R.string.permissionsStorageSend)
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .format().toString();
+    String storagePermissionDeniedTxt = Phrase.from(c, R.string.cameraGrantAccessStorageDenied)
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .format().toString();
+
+    builder.withPermanentDenialDialog(needStoragePermissionTxt)
+            .withRationaleDialog(storagePermissionDeniedTxt, R.drawable.ic_baseline_photo_library_24)
             .onAllGranted(() -> selectMediaType(activity, "*/*", null, requestCode)) // Note: We can use startActivityForResult w/ the ACTION_OPEN_DOCUMENT or ACTION_OPEN_DOCUMENT_TREE intent if we need to modernise this.
             .execute();
   }
 
   public static void selectGallery(Activity activity, int requestCode, @NonNull Recipient recipient, @NonNull String body) {
+
+    Context c = activity.getApplicationContext();
+    String needStoragePermissionTxt = Phrase.from(c, R.string.permissionsStorageSend)
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .format().toString();
+    String cameraPermissionDeniedTxt = Phrase.from(c, R.string.cameraGrantAccessDenied)
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .format().toString();
+
     Permissions.PermissionsBuilder builder = Permissions.with(activity);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       builder = builder.request(Manifest.permission.READ_MEDIA_VIDEO)
@@ -266,8 +283,8 @@ public class AttachmentManager {
     } else {
       builder = builder.request(Manifest.permission.READ_EXTERNAL_STORAGE);
     }
-    builder.withPermanentDenialDialog(activity.getString(R.string.AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio))
-      .withRationaleDialog(activity.getString(R.string.ConversationActivity_to_send_photos_and_video_allow_signal_access_to_storage), R.drawable.ic_baseline_photo_library_24)
+    builder.withPermanentDenialDialog(cameraPermissionDeniedTxt)
+      .withRationaleDialog(needStoragePermissionTxt, R.drawable.ic_baseline_photo_library_24)
       .onAllGranted(() -> activity.startActivityForResult(MediaSendActivity.buildGalleryIntent(activity, recipient, body), requestCode))
       .execute();
   }
@@ -291,10 +308,19 @@ public class AttachmentManager {
   }
 
   public void capturePhoto(Activity activity, int requestCode, Recipient recipient) {
+
+    String cameraPermissionDeniedTxt = Phrase.from(context, R.string.cameraGrantAccessDenied)
+            .put(APP_NAME_KEY, context.getString(R.string.app_name))
+            .format().toString();
+
+    String requireCameraPermissionTxt = Phrase.from(context, R.string.cameraGrantAccessDescription)
+            .put(APP_NAME_KEY, context.getString(R.string.app_name))
+            .format().toString();
+
     Permissions.with(activity)
         .request(Manifest.permission.CAMERA)
-        .withPermanentDenialDialog(activity.getString(R.string.AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied))
-        .withRationaleDialog(activity.getString(R.string.ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera),R.drawable.ic_baseline_photo_camera_24)
+        .withPermanentDenialDialog(cameraPermissionDeniedTxt)
+        .withRationaleDialog(requireCameraPermissionTxt, R.drawable.ic_baseline_photo_camera_24)
         .onAllGranted(() -> {
           Intent captureIntent = MediaSendActivity.buildCameraIntent(activity, recipient);
           if (captureIntent.resolveActivity(activity.getPackageManager()) != null) {
@@ -326,7 +352,7 @@ public class AttachmentManager {
       activity.startActivityForResult(intent, requestCode);
     } catch (ActivityNotFoundException anfe) {
       Log.w(TAG, "couldn't complete ACTION_GET_CONTENT intent, no activity found. falling back.");
-      Toast.makeText(activity, R.string.AttachmentManager_cant_open_media_selection, Toast.LENGTH_LONG).show();
+      Toast.makeText(activity, R.string.attachmentsErrorNoApp, Toast.LENGTH_LONG).show();
     }
   }
 

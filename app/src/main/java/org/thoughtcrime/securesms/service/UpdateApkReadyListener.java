@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.service;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.app.DownloadManager;
 import android.app.Notification;
@@ -12,6 +13,8 @@ import android.net.Uri;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import com.squareup.phrase.Phrase;
 
 import org.session.libsession.utilities.FileUtils;
 import org.session.libsession.utilities.ServiceUtil;
@@ -64,10 +67,17 @@ public class UpdateApkReadyListener extends BroadcastReceiver {
 
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
+    CharSequence title = Phrase.from(context, R.string.updateSession)
+            .put(APP_NAME_KEY, context.getString(R.string.app_name)).format();
+
+    CharSequence txt = Phrase.from(context, R.string.updateNewVersion)
+            .put(APP_NAME_KEY, context.getString(R.string.app_name)).format();
+
+
     Notification notification = new NotificationCompat.Builder(context, NotificationChannels.APP_UPDATES)
         .setOngoing(true)
-        .setContentTitle(context.getString(R.string.UpdateApkReadyListener_Signal_update))
-        .setContentText(context.getString(R.string.UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update))
+        .setContentTitle(title)
+        .setContentText(txt)
         .setSmallIcon(R.drawable.ic_notification)
         .setColor(context.getResources().getColor(R.color.textsecure_primary))
         .setPriority(NotificationCompat.PRIORITY_HIGH)

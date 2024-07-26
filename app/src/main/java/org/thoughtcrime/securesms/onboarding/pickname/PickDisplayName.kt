@@ -41,7 +41,7 @@ internal fun PickDisplayName(
 
     if (state.showDialog) OnboardingBackPressAlertDialog(
         dismissDialog,
-        R.string.you_cannot_go_back_further_cancel_account_creation,
+        R.string.onboardingBackAccountCreation,
         quit
     )
 

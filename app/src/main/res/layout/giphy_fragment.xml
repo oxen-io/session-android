@@ -23,7 +23,7 @@
 
     <TextView
         android:id="@+id/no_results"
-        android:text="@string/giphy_fragment__nothing_found"
+        android:text="@string/searchMatchesNone"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

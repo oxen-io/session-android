@@ -11,16 +11,18 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.AlbumThumbnailViewBinding
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
+import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.MediaPreviewActivity
 import org.thoughtcrime.securesms.components.CornerMask
 import org.thoughtcrime.securesms.conversation.v2.utilities.ThumbnailView
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.mms.Slide
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 
@@ -80,7 +82,7 @@ class AlbumThumbnailView : RelativeLayout {
         slideSize = -1
     }
 
-    fun bind(glideRequests: GlideRequests, message: MmsMessageRecord,
+    fun bind(glideRequests: RequestManager, message: MmsMessageRecord,
              isStart: Boolean, isEnd: Boolean) {
         slides = message.slideDeck.thumbnailSlides
         if (slides.isEmpty()) {
@@ -97,7 +99,10 @@ class AlbumThumbnailView : RelativeLayout {
             binding.albumCellContainer.findViewById<TextView>(R.id.album_cell_overflow_text)?.let { overflowText ->
                 // overflowText will be null if !overflowed
                 overflowText.isVisible = overflowed // more than max album size
-                overflowText.text = context.getString(R.string.AlbumThumbnailView_plus, slides.size - MAX_ALBUM_DISPLAY_SIZE)
+                val txt = Phrase.from(context, R.string.andMore)
+                    .put(COUNT_KEY, slides.size - MAX_ALBUM_DISPLAY_SIZE)
+                    .format()
+                overflowText.text = txt
             }
             this.slideSize = slides.size
         }
@@ -110,10 +115,9 @@ class AlbumThumbnailView : RelativeLayout {
 
     // endregion
 
-
     fun layoutRes(slideCount: Int) = when (slideCount) {
-        1 -> R.layout.album_thumbnail_1 // single
-        2 -> R.layout.album_thumbnail_2// two sidebyside
+        1 -> R.layout.album_thumbnail_1    // single
+        2 -> R.layout.album_thumbnail_2    // two side-by-side
         else -> R.layout.album_thumbnail_3 // three stacked with additional text
     }
 

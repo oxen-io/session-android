@@ -53,8 +53,8 @@ object RationaleDialog {
 
         return context.showSessionDialog {
             view(view)
-            button(R.string.Permissions_continue) { onPositive.run() }
-            button(R.string.Permissions_not_now) { onNegative.run() }
+            button(R.string.theContinue) { onPositive.run() }
+            button(R.string.notNow)    { onNegative.run() }
         }
     }
 }

@@ -13,7 +13,7 @@ import org.thoughtcrime.securesms.ui.contentDescription
 @Composable
 fun ContinuePrimaryOutlineButton(modifier: Modifier, onContinue: () -> Unit) {
     PrimaryOutlineButton(
-        stringResource(R.string.continue_2),
+        stringResource(R.string.theContinue),
         modifier = modifier
             .contentDescription(R.string.AccessibilityId_continue)
             .fillMaxWidth()

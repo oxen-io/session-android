@@ -2,28 +2,28 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:key="message_trimming" android:title="@string/preferences_chats__message_trimming">
+    <PreferenceCategory android:key="message_trimming" android:title="@string/conversationsMessageTrimming">
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_trim_threads"
-            android:summary="@string/preferences_chats__message_trimming_summary"
-            android:title="@string/preferences_chats__message_trimming_title" />
+            android:summary="@string/conversationsMessageTrimmingTrimCommunitiesDescription"
+            android:title="@string/conversationsMessageTrimmingTrimCommunities" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/preferences__pref_enter_sends_title">
+    <PreferenceCategory android:title="@string/conversationsSendWithEnterKey">
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_enter_sends"
-            android:summary="@string/preferences__pref_enter_sends_summary"
-            android:title="@string/preferences__pref_enter_sends_title" />
+            android:summary="@string/conversationsSendWithEnterKeyDescription"
+            android:title="@string/conversationsSendWithEnterKey" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/preferences__pref_autoplay_audio_title">
+    <PreferenceCategory android:title="@string/conversationsAudioMessages">
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_autoplay_audio"
-            android:summary="@string/preferences__pref_autoplay_audio_summary"
-            android:title="@string/preferences__pref_autoplay_audio_title"/>
+            android:summary="@string/conversationsAutoplayAudioMessageDescription"
+            android:title="@string/conversationsAutoplayAudioMessage" />
     </PreferenceCategory>
 
     <org.thoughtcrime.securesms.preferences.BlockedContactsPreference

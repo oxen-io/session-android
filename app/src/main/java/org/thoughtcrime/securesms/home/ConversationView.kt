@@ -136,7 +136,7 @@ class ConversationView : LinearLayout {
     }
 
     private fun getTitle(recipient: Recipient): String? = when {
-        recipient.isLocalNumber -> context.getString(R.string.note_to_self)
+        recipient.isLocalNumber -> context.getString(R.string.noteToSelf)
         else -> recipient.toShortString() // Internally uses the Contact API
     }
 
@@ -147,7 +147,7 @@ class ConversationView : LinearLayout {
 
     private fun ThreadRecord.getSnippetPrefix(): CharSequence? = when {
         recipient.isLocalNumber || lastMessage?.isControlMessage == true -> null
-        lastMessage?.isOutgoing == true -> resources.getString(R.string.MessageRecord_you)
+        lastMessage?.isOutgoing == true -> resources.getString(R.string.you)
         else -> lastMessage?.individualRecipient?.toShortString()
     }
     // endregion

@@ -25,6 +25,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import com.adevinta.android.barista.interaction.PermissionGranter
+import com.squareup.phrase.Phrase
 import network.loki.messenger.util.InputBarButtonDrawableMatcher.Companion.inputButtonWithDrawable
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -37,10 +38,11 @@ import org.junit.runner.RunWith
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.guava.Optional
+import org.session.libsession.utilities.StringSubstitutionConstants.URL_KEY
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
-import org.thoughtcrime.securesms.mms.GlideApp
+import com.bumptech.glide.Glide
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -71,7 +73,7 @@ class HomeActivityTests {
         onView(allOf(isDescendantOfA(withId(R.id.inputBar)),withId(R.id.inputBarEditText))).perform(ViewActions.replaceText(messageToSend))
         if (linkPreview != null) {
             val activity = activityMonitor.waitForActivity() as ConversationActivityV2
-            val glide = GlideApp.with(activity)
+            val glide = Glide.with(activity)
             activity.findViewById<InputBar>(R.id.inputBar).updateLinkPreviewDraft(glide, linkPreview)
         }
         onView(allOf(isDescendantOfA(withId(R.id.inputBar)),inputButtonWithDrawable(R.drawable.ic_arrow_up))).perform(ViewActions.click())
@@ -92,10 +94,10 @@ class HomeActivityTests {
         device.pressKeyCode(67)
 
         // Continue with display name
-        objectFromDesc(R.string.continue_2).click()
+        objectFromDesc(R.string.theContinue).click()
 
         // Continue with default push notification setting
-        objectFromDesc(R.string.continue_2).click()
+        objectFromDesc(R.string.theContinue).click()
 
         // PN select
         if (hasViewedSeed) {
@@ -127,7 +129,7 @@ class HomeActivityTests {
     @Test
     fun testLaunches_dismiss_seedView() {
         setupLoggedInState()
-        objectFromDesc(R.string.continue_2).click()
+        objectFromDesc(R.string.theContinue).click()
         objectFromDesc(R.string.copy).click()
         pressBack()
         onView(withId(R.id.seedReminderView)).check(matches(not(isDisplayed())))
@@ -172,7 +174,11 @@ class HomeActivityTests {
         // then the URL dialog should be displayed with a known punycode url
         val amazonPuny = "https://www.xn--mazon-wqa.com/"
 
-        val dialogPromptText = InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.dialog_open_url_explanation, amazonPuny)
+        // Substitute the URL into our string
+        val c = InstrumentationRegistry.getInstrumentation().targetContext
+        val dialogPromptText = Phrase.from(c, R.string.urlOpenDescription)
+            .put(URL_KEY, amazonPuny)
+            .format().toString()
 
         onView(isRoot()).perform(waitFor(1000)) // no other way for this to work apparently
         onView(withText(dialogPromptText)).check(matches(isDisplayed()))

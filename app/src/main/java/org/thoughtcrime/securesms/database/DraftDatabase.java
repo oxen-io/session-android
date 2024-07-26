@@ -3,14 +3,8 @@ package org.thoughtcrime.securesms.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-import androidx.annotation.Nullable;
-
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
-
-import network.loki.messenger.R;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -24,10 +18,10 @@ public class DraftDatabase extends Database {
   public static final String DRAFT_VALUE = "value";
 
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + ID + " INTEGER PRIMARY KEY, " +
-                                            THREAD_ID + " INTEGER, " + DRAFT_TYPE + " TEXT, " + DRAFT_VALUE + " TEXT);";
+          THREAD_ID + " INTEGER, " + DRAFT_TYPE + " TEXT, " + DRAFT_VALUE + " TEXT);";
 
   public static final String[] CREATE_INDEXS = {
-    "CREATE INDEX IF NOT EXISTS draft_thread_index ON " + TABLE_NAME + " (" + THREAD_ID + ");",
+          "CREATE INDEX IF NOT EXISTS draft_thread_index ON " + TABLE_NAME + " (" + THREAD_ID + ");",
   };
 
   public DraftDatabase(Context context, SQLCipherOpenHelper databaseHelper) {
@@ -59,8 +53,8 @@ public class DraftDatabase extends Database {
 
     for (long threadId : threadIds) {
       where.append(" OR ")
-           .append(THREAD_ID)
-           .append(" = ?");
+              .append(THREAD_ID)
+              .append(" = ?");
 
       arguments.add(String.valueOf(threadId));
     }
@@ -95,12 +89,10 @@ public class DraftDatabase extends Database {
     }
   }
 
+  // Class to save drafts of text (only) messages if the user is in the middle of writing a message
+  // and then the app loses focus or is closed.
   public static class Draft {
-    public static final String TEXT     = "text";
-    public static final String IMAGE    = "image";
-    public static final String VIDEO    = "video";
-    public static final String AUDIO    = "audio";
-    public static final String QUOTE    = "quote";
+    public static final String TEXT = "text";
 
     private final String type;
     private final String value;
@@ -117,48 +109,10 @@ public class DraftDatabase extends Database {
     public String getValue() {
       return value;
     }
-
-    String getSnippet(Context context) {
-      switch (type) {
-      case TEXT:     return value;
-      case IMAGE:    return context.getString(R.string.DraftDatabase_Draft_image_snippet);
-      case VIDEO:    return context.getString(R.string.DraftDatabase_Draft_video_snippet);
-      case AUDIO:    return context.getString(R.string.DraftDatabase_Draft_audio_snippet);
-      case QUOTE:    return context.getString(R.string.DraftDatabase_Draft_quote_snippet);
-      default:       return null;
-      }
-    }
   }
 
   public static class Drafts extends LinkedList<Draft> {
-    private Draft getDraftOfType(String type) {
-      for (Draft draft : this) {
-        if (type.equals(draft.getType())) {
-          return draft;
-        }
-      }
-      return null;
-    }
-
-    public String getSnippet(Context context) {
-      Draft textDraft = getDraftOfType(Draft.TEXT);
-      if (textDraft != null) {
-        return textDraft.getSnippet(context);
-      } else if (size() > 0) {
-        return get(0).getSnippet(context);
-      } else {
-        return "";
-      }
-    }
-
-    public @Nullable Uri getUriSnippet() {
-      Draft imageDraft = getDraftOfType(Draft.IMAGE);
-
-      if (imageDraft != null && imageDraft.getValue() != null) {
-        return Uri.parse(imageDraft.getValue());
-      }
-
-      return null;
-    }
+    // We don't do anything with drafts of a given type anymore (image, audio etc.) - we store TEXT
+    // drafts, and any files or audio get sent to the recipient when added as a message.
   }
 }

@@ -41,7 +41,7 @@ internal fun StartConversationScreen(
         LocalColors.current.backgroundSecondary,
         shape = MaterialTheme.shapes.small
     )) {
-        AppBar(stringResource(R.string.dialog_start_conversation_title), onClose = delegate::onDialogClosePressed)
+        AppBar(stringResource(R.string.conversationsStart), onClose = delegate::onDialogClosePressed)
         Surface(
             modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection()),
             color = LocalColors.current.backgroundSecondary
@@ -56,21 +56,21 @@ internal fun StartConversationScreen(
                     onClick = delegate::onNewMessageSelected)
                 Divider(startIndent = LocalDimensions.current.dividerIndent)
                 ItemButton(
-                    textId = R.string.activity_create_group_title,
+                    textId = R.string.groupCreate,
                     icon = R.drawable.ic_group,
                     modifier = Modifier.contentDescription(R.string.AccessibilityId_create_group),
                     onClick = delegate::onCreateGroupSelected
                 )
                 Divider(startIndent = LocalDimensions.current.dividerIndent)
                 ItemButton(
-                    textId = R.string.dialog_join_community_title,
+                    textId = R.string.communityJoin,
                     icon = R.drawable.ic_globe,
                     modifier = Modifier.contentDescription(R.string.AccessibilityId_join_community),
                     onClick = delegate::onJoinCommunitySelected
                 )
                 Divider(startIndent = LocalDimensions.current.dividerIndent)
                 ItemButton(
-                    textId = R.string.activity_settings_invite_button_title,
+                    textId = R.string.sessionInviteAFriend,
                     icon = R.drawable.ic_invite_friend,
                     Modifier.contentDescription(R.string.AccessibilityId_invite_friend_button),
                     onClick = delegate::onInviteFriend

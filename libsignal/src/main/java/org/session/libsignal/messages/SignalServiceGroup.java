@@ -35,7 +35,7 @@ public class SignalServiceGroup {
     UNKNOWN,
     UPDATE,
     DELIVER,
-    QUIT,
+    MEMBER_LEFT,
     REQUEST_INFO,
     CREATION,
     NAME_CHANGE,

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ItemSelectableBinding
-import org.thoughtcrime.securesms.mms.GlideApp
+import com.bumptech.glide.Glide
 import org.thoughtcrime.securesms.ui.GetString
 import java.util.Objects
 
@@ -45,7 +45,7 @@ class RadioOptionAdapter<T>(
     }
 
     class ViewHolder<T>(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val glide = GlideApp.with(itemView)
+        val glide = Glide.with(itemView)
         val binding = ItemSelectableBinding.bind(itemView)
 
         fun bind(option: RadioOption<T>, isSelected: Boolean, toggleSelection: (RadioOption<T>) -> Unit) {

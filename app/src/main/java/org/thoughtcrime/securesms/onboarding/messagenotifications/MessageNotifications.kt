@@ -18,7 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.onboarding.OnboardingBackPressAlertDialog
 import org.thoughtcrime.securesms.onboarding.messagenotifications.MessageNotificationsViewModel.UiState
 import org.thoughtcrime.securesms.onboarding.ui.ContinuePrimaryOutlineButton
@@ -55,28 +57,35 @@ internal fun MessageNotificationsScreen(
 
     Column {
         Spacer(Modifier.weight(1f))
-
         Column(modifier = Modifier.padding(horizontal = LocalDimensions.current.mediumSpacing)) {
             Text(stringResource(R.string.notificationsMessage), style = LocalType.current.h4)
             Spacer(Modifier.height(LocalDimensions.current.smallSpacing))
-            Text(stringResource(R.string.onboardingMessageNotificationExplaination), style = LocalType.current.base)
+            Text(
+                Phrase.from(stringResource(R.string.onboardingMessageNotificationExplanation))
+                    .put(APP_NAME_KEY, stringResource(R.string.app_name))
+                    .format().toString(),
+                style = LocalType.current.base
+            )
             Spacer(Modifier.height(LocalDimensions.current.spacing))
         }
 
         NotificationRadioButton(
-            R.string.activity_pn_mode_fast_mode,
-            R.string.activity_pn_mode_fast_mode_explanation,
+            R.string.notificationsFastMode,
+            R.string.notificationsFastModeDescriptionAndroid,
             modifier = Modifier.contentDescription(R.string.AccessibilityId_fast_mode_notifications_button),
-            tag = R.string.activity_pn_mode_recommended_option_tag,
+            tag = R.string.recommended,
             checked = state.pushEnabled,
             onClick = { setEnabled(true) }
         )
 
         // spacing between buttons is provided by ripple/downstate of NotificationRadioButton
 
+        val txt = Phrase.from(stringResource(R.string.onboardingMessageNotificationExplanation))
+            .put(APP_NAME_KEY, stringResource(R.string.app_name))
+            .format().toString()
         NotificationRadioButton(
-            R.string.activity_pn_mode_slow_mode,
-            R.string.activity_pn_mode_slow_mode_explanation,
+            R.string.notificationsSlowMode,
+            R.string.notificationsSlowModeDescription,
             modifier = Modifier.contentDescription(R.string.AccessibilityId_slow_mode_notifications_button),
             checked = state.pushDisabled,
             onClick = { setEnabled(false) }
@@ -112,13 +121,32 @@ private fun NotificationRadioButton(
                     RoundedCornerShape(8.dp)
                 ),
         ) {
-            Column(modifier = Modifier
-                .padding(horizontal = LocalDimensions.current.smallSpacing,
-                    vertical = LocalDimensions.current.xsSpacing)
-                ) {
-                Text(stringResource(title), style = LocalType.current.h8)
+            Column(
+                modifier = Modifier.padding(horizontal = LocalDimensions.current.smallSpacing, vertical = LocalDimensions.current.xsSpacing)) {
+                Text(
+                    stringResource(title),
+                    style = LocalType.current.h8
+                )
 
-                Text(stringResource(explanation), style = LocalType.current.small, modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing))
+                // If this radio button is the one for slow mode notifications then substitute the app name..
+                if (explanation == R.string.notificationsSlowModeDescription) {
+                    val txt = Phrase.from(stringResource(explanation))
+                        .put(APP_NAME_KEY, stringResource(R.string.app_name))
+                        .format().toString()
+                    Text(
+                        txt,
+                        style = LocalType.current.small,
+                        modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing)
+                    )
+                } else {
+                    // ..otherwise just pass through the text as it is.
+                    Text(
+                        stringResource(explanation),
+                        style = LocalType.current.small,
+                        modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing)
+                    )
+                }
+
                 tag?.let {
                     Text(
                         stringResource(it),

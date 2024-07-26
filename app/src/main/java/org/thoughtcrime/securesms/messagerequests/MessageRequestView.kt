@@ -11,7 +11,7 @@ import network.loki.messenger.databinding.ViewMessageRequestBinding
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.highlightMentions
 import org.thoughtcrime.securesms.database.model.ThreadRecord
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.util.DateUtils
 import java.util.Locale
 
@@ -32,7 +32,7 @@ class MessageRequestView : LinearLayout {
     // endregion
 
     // region Updating
-    fun bind(thread: ThreadRecord, glide: GlideRequests) {
+    fun bind(thread: ThreadRecord, glide: RequestManager) {
         this.thread = thread
 
         val senderDisplayName = getUserDisplayName(thread.recipient) ?: thread.recipient.address.toString()
@@ -59,7 +59,7 @@ class MessageRequestView : LinearLayout {
 
     private fun getUserDisplayName(recipient: Recipient): String? {
         return if (recipient.isLocalNumber) {
-            context.getString(R.string.note_to_self)
+            context.getString(R.string.noteToSelf)
         } else {
             recipient.name // Internally uses the Contact API
         }

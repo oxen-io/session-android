@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yes">Erê</string>
+    <string name="no">Na</string>
+    <string name="delete">Jê bibe</string>
+    <string name="save">Tomar bike</string>
+    <string name="noteToSelf">Bo min Nîşe</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Peyama nû</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Ev meh</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">Şandin têk çû, ji bo hûrgiliyên bêhtir, bitepîne</string>
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Servehî lê zede bike</string>
+    <string name="blockUnblock">Astengê rake</string>
+    <!-- ConversationFragment -->
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="one">Tu medyayê li bîrbarê tomar bike wê sepanên din yê di amûra we de jî destûra gihînê bide vê.\n\n Tê bidomîne?</item>
+        <item quantity="other">Tu %1$d medyayan teva li bîrbarê tomar bike wê sepanên din yê di amûra we de jî destûra gihînê bidin vê.\n\n Tê bidomîne?</item>
+    </plurals>
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Hîç</string>
+    <!-- DateUtils -->
+    <string name="DateUtils_just_now">Niha</string>
+    <string name="DateUtils_today">Îro</string>
+    <string name="DateUtils_yesterday">Doh</string>
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">...Servehî tên berhevkirin</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <string name="MediaPickerActivity_send_to">Ji %s re bişîne</string>
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Kamera nayê bikar anîn.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Hemû medya</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Astengkirin</string>
+    <!-- Slide -->
+    <string name="image">Wêne</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Kom hat hildemandin</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session vekirî ye</string>
+    <!-- MediaPreviewActivity -->
+    <string name="onionRoutingPathYou">Tu</string>
+    <string name="draft">Reşnivîs</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Xwendî nîşan bike</string>
+    <!-- Notification Channels -->
+    <string name="failures">Çewtî</string>
+    <string name="lockAppStatus">Rewşa kilîdê</string>
+    <string name="updateApp">Hildemên sepanê</string>
+    <string name="other">Din</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Hate tomarkirin</string>
+    <!-- SearchToolbar -->
+    <string name="search">Lê bigere</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Kurterêya nederbasdar</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <string name="contentDescriptionCamera">Kamera</string>
+    <string name="attachment_type_selector__gallery_description">Wêne yan vidyo</string>
+    <string name="attachment_type_selector__gallery">Pêşangeh</string>
+    <string name="attachment_type_selector__drawer_description">Çaviya servehiya din bijerînin</string>
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Bişîne</string>
+    <string name="conversation_activity__attachment_thumbnail">Wênoka Servehiyê</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Bijertina attachment drawer a kamera ya din</string>
+    <!-- conversation_input_panel -->
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__delivered_description">Hat gihandin</string>
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Peyama orjînal nehate dîtin</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Hat şandin</string>
+    <string name="received">Hat</string>
+    <string name="message_details_header__disappears">Winda dibe</string>
+    <string name="via">Bi riya</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsMute1Hour">Heta 1 demjimêrê bêdeng bike</string>
+    <string name="notificationsMute2Hours">Heta 2 demjimêran bêdeng bike</string>
+    <string name="notificationsMute1Day">Heta 1 rojê bêdeng bike</string>
+    <string name="notificationsContentShowNameOnly">Tenê nav</string>
+    <string name="arrays__images">Wêne</string>
+    <string name="audio">Deng</string>
+    <string name="video">Vîdyo</string>
+    <string name="max">Herî bilind</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Pêşdîtinên girêdanê bişîne</string>
+    <string name="screenSecurity">Ewlehiya ekranê</string>
+    <string name="sessionNotifications">Danezan</string>
+    <string name="notificationsLedColor">Rengê LED</string>
+    <string name="notificationsSound">Deng</string>
+    <string name="notificationsVibrate">Lerizîn</string>
+    <string name="theDefault">Jixweber</string>
+    <string name="incognitoKeyboard">Textenivîsa veşartî</string>
+    <string name="readReceipts">Girtekan bixwîne</string>
+    <string name="typingIndicators">Nîşandêrên nivîsandinê</string>
+    <string name="conversationsMessageTrimming">Qusandina peyamê</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">Servehiyê tomar bike</string>
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Bideng bike</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Danezanan bêdeng bike</string>
+    <!-- conversation -->
+    <string name="groupLeave">Ji komê veqete</string>
+    <string name="conversationsAddToHome">Tevlî dîmendera destpêkê bike</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Tê jêbirin</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Destûr pêwîst e</string>
+    <string name="notNow">Ne niha</string>
+    <string name="registration_activity__skip">Dev jê berde</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <!-- Next round of translation -->
+</resources>

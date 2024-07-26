@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sessionMessenger">Session</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="delete">Xóa</string>
+    <string name="save">Lưu</string>
+    <string name="noteToSelf">Gửi lời nhắc cho chính mình</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Tin nhắn mới</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Tháng này</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Thêm tập tin đính kèm</string>
+    <string name="blockUnblock">Không chặn</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Không</string>
+    <!-- DateUtils -->
+    <string name="DateUtils_just_now">Bây giờ</string>
+    <string name="DateUtils_today">Hôm nay</string>
+    <string name="DateUtils_yesterday">Ngày hôm qua</string>
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Đang thu thập đính kèm...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <!-- MediaRepository -->
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Chặn</string>
+    <!-- Slide -->
+    <string name="image">Ảnh</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session đã mở khóa</string>
+    <!-- MediaPreviewActivity -->
+    <string name="onionRoutingPathYou">Bạn</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Đánh dấu đã đọc</string>
+    <!-- Notification Channels -->
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <!-- SearchToolbar -->
+    <string name="search">Tìm kiếm</string>
+    <!-- ShortcutLauncherActivity -->
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- TransferControlView -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <string name="contentDescriptionCamera">Máy ảnh</string>
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Gửi</string>
+    <string name="conversation_activity__attachment_thumbnail">Ảnh nhỏ tập tin đính kèm</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">TRƯỢT ĐỂ HUỶ</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__delivered_description">Đã giao</string>
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <!-- QuoteView -->
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Đã gửi</string>
+    <string name="received">Đã nhận</string>
+    <string name="via">Qua</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsMute1Hour">Tạm im 1 tiếng</string>
+    <string name="notificationsMute2Hours">Tạm im 2 tiếng</string>
+    <string name="notificationsMute1Day">Tạm im 1 ngày</string>
+    <string name="notificationsContentShowNameOnly">Tên thôi</string>
+    <string name="arrays__images">Hình ảnh</string>
+    <string name="audio">Nhạc</string>
+    <string name="video">Đoạn phim</string>
+    <!-- preferences.xml -->
+    <string name="screenSecurity">An ninh màn hình</string>
+    <string name="sessionNotifications">Thông báo</string>
+    <string name="notificationsLedColor">Màu LED</string>
+    <string name="notificationsSound">Âm thanh</string>
+    <string name="notificationsVibrate">Rung</string>
+    <string name="theDefault">Mặc định</string>
+    <string name="conversationsMessageTrimming">Thu gọn tin nhắn</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">Lưu đính kèm</string>
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Tắt tạm im</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Tạm im thông báo</string>
+    <!-- conversation -->
+    <string name="groupLeave">Rời nhóm</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Đang xóa</string>
+    <!-- transport_selection_list_item -->
+    <string name="registration_activity__skip">Bỏ qua</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Tiếp tục</string>
+    <string name="copy">Sao chép</string>
+    <string name="communityEnterUrlErrorInvalid">URL không hợp lệ</string>
+    <string name="copied">Sao chép vào bộ nhớ tạm</string>
+    <string name="next">Tiếp</string>
+    <string name="share">Chia sẻ</string>
+    <string name="cancel">Huỷ</string>
+    <string name="view_fake_chat_bubble_4">Sử dụng kết hợp công nghệ định tuyến ẩn danh nâng cao và công nghệ mã hoá đầu cuối.</string>
+    <string name="view_fake_chat_bubble_5">Đừng để bạn bè sử dụng những ứng dụng nhắn tin dễ bị tấn công.</string>
+    <string name="displayNamePick">Chọn tên hiển thị của bạn</string>
+    <string name="recommended">Khuyến nghị</string>
+    <string name="activity_pn_mode_no_option_picked_dialog_title">Vui lòng lựa chọn </string>
+    <string name="activity_home_empty_state_button_title">Bắt đầu một Session</string>
+    <string name="conversationsDeleted">Cuộc hội thoại đã được xoá </string>
+    <string name="activity_seed_title_2">Làm quen với cụm từ khôi phục của bạn</string>
+    <string name="activity_seed_explanation">Cụm từ khôi phục của bạn là chìa khoá chủ cho Session ID của bạn — bạn có thể sử dụng nó để khôi phục Session ID khi bị mất tiếp cận với thiết bị của bạn. Hãy lưu cụm từ khôi phục của bạn ở một nơi an toàn và không cung cấp cho bất kì ai.</string>
+    <string name="activity_seed_reveal_button_title">Giữ để hiển thị.</string>
+    <string name="view_seed_reminder_subtitle_1">Bảo vệ tài khoản của bạn bằng việc bảo vệ cụm từ khôi phục của bạn</string>
+    <string name="view_seed_reminder_subtitle_2">Chạm và giữ cụm từ bị che để hiển thị cụm từ khôi phục của bạn, sau đó lưu nó cẩn thận để bảo vệ Session ID của bạn.</string>
+    <string name="onionRoutingPath">Đường đi</string>
+    <string name="onionRoutingPathEntryNode">Nút khởi đầu</string>
+    <string name="onionRoutingPathServiceNode">Nút Dịch vụ</string>
+    <string name="onionRoutingPathDestination">Điểm đến</string>
+    <string name="learnMore">Tìm hiểu thêm</string>
+    <string name="qrScan">Quét mã QR</string>
+    <string name="cameraGrantAccessQr">Session cần truy cập máy ảnh để quét mã QR </string>
+    <string name="cameraGrantAccess">Cho phép truy cập máy ảnh</string>
+    <string name="groupNameEnter">Nhập tên nhóm</string>
+    <string name="activity_create_closed_group_empty_state_button_title">Bắt đầu Session</string>
+    <string name="groupNameEnterPlease">Vui lòng nhập tên nhóm</string>
+    <string name="sessionSettings">Cài đặt</string>
+    <string name="sessionClearData">Xóa dữ liệu</string>
+    <string name="notificationsStyle">Kiểu thông báo</string>
+    <string name="notificationsContent">Nội dung thông báo</string>
+    <string name="sessionPrivacy">Riêng tưy</string>
+    <string name="notificationsStrategy">Chiến lược thông báo</string>
+    <string name="clearDataAll">Xóa tất cả dữ liệu</string>
+    <string name="qrCode">Mã QR</string>
+    <string name="contactsContacts">Danh bạ</string>
+    <!-- Next round of translation -->
+</resources>

@@ -60,7 +60,10 @@ public class MediaDocumentsAdapter extends CursorRecyclerViewAdapter<ViewHolder>
 
     if (slide != null && slide.hasDocument()) {
       viewHolder.documentView.setDocument((DocumentSlide)slide, false);
-      viewHolder.date.setText(DateUtils.getRelativeDate(getContext(), locale, mediaRecord.getDate()));
+
+      String relativeDate = DateUtils.INSTANCE.getRelativeDate(getContext(), locale, mediaRecord.getDate());
+      viewHolder.date.setText(relativeDate);
+
       viewHolder.documentView.setVisibility(View.VISIBLE);
       viewHolder.date.setVisibility(View.VISIBLE);
       viewHolder.documentView.setOnClickListener(view -> {
@@ -71,7 +74,7 @@ public class MediaDocumentsAdapter extends CursorRecyclerViewAdapter<ViewHolder>
           getContext().startActivity(intent);
         } catch (ActivityNotFoundException anfe) {
           Log.w(TAG, "No activity existed to view the media.");
-          Toast.makeText(getContext(), R.string.ConversationItem_unable_to_open_media, Toast.LENGTH_LONG).show();
+          Toast.makeText(getContext(), R.string.attachmentsErrorOpen, Toast.LENGTH_LONG).show();
         }
       });
     } else {
@@ -104,7 +107,7 @@ public class MediaDocumentsAdapter extends CursorRecyclerViewAdapter<ViewHolder>
   public void onBindHeaderViewHolder(HeaderViewHolder viewHolder, int position) {
     Cursor                    cursor      = getCursorAtPositionOrThrow(position);
     MediaDatabase.MediaRecord mediaRecord = MediaDatabase.MediaRecord.from(getContext(), cursor);
-    viewHolder.textView.setText(DateUtils.getRelativeDate(getContext(), locale, mediaRecord.getDate()));
+    viewHolder.textView.setText(DateUtils.INSTANCE.getRelativeDate(getContext(), locale, mediaRecord.getDate()));
   }
 
   public static class ViewHolder extends RecyclerView.ViewHolder {

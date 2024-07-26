@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yes">ใช่</string>
+    <string name="no">ไม่</string>
+    <string name="delete">ลบ</string>
+    <string name="save">บันทึก</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">ข้อความใหม่</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">เดือนนี้</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">การส่งล้มเหลว แตะเพื่อดูรายละเอียด</string>
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">เพิ่มไฟล์แนบ</string>
+    <string name="blockUnblock">เลิกปิดกั้น</string>
+    <!-- ConversationFragment -->
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="other">การบันทึกสื่อทั้งหมด %1$d รายการลงในที่เก็บข้อมูล จะอนุญาตให้แอปอื่นในอุปกรณ์ของคุณเข้าถึงสื่อเหล่านี้ได้ด้วย\n\nดำเนินการต่อหรือไม่</item>
+    </plurals>
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">ไม่มี</string>
+    <!-- DateUtils -->
+    <string name="DateUtils_just_now">เดี๋ยวนี้</string>
+    <string name="DateUtils_today">วันนี้</string>
+    <string name="DateUtils_yesterday">เมื่อวานนี้</string>
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">สติกเกอร์</string>
+    <!-- CropImageActivity -->
+    <string name="photo">อวตาร</string>
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">รวบรวมสิ่งแนบ...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">สื่อทั้งหมด</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">ปิดกั้น</string>
+    <!-- Slide -->
+    <string name="image">ภาพ</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">อัพเดตกลุ่มแล้ว</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session ถูกปลดล็อก</string>
+    <!-- MediaPreviewActivity -->
+    <string name="onionRoutingPathYou">คุณ</string>
+    <string name="draft">ร่าง</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">ทำเครื่องหมายว่าอ่านแล้ว</string>
+    <!-- Notification Channels -->
+    <string name="failures">ล้มเหลว</string>
+    <string name="lockAppStatus">สถานะล๊อค</string>
+    <string name="updateApp">การอัปเดตแอป</string>
+    <string name="other">ที่อื่น</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <!-- SearchToolbar -->
+    <string name="search">ค้นหา</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">ชอร์ตคัทใช้ไม่ได้</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- TransferControlView -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <string name="contentDescriptionCamera">กล้อง</string>
+    <string name="attachment_type_selector__gallery_description">ภาพหรือวิดีโอ</string>
+    <string name="attachment_type_selector__gallery">คลังภาพ</string>
+    <string name="attachment_type_selector__drawer_description">สลับแถบเมนูไฟล์แนบ</string>
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">ส่ง</string>
+    <string name="conversation_activity__attachment_thumbnail">รูปย่อของไฟล์แนบ</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">สลับแถบเมนูไฟล์แนบกล้องถ่ายภาพแบบเร็ว</string>
+    <!-- conversation_input_panel -->
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__delivered_description">ส่งแล้ว</string>
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">ไม่พบข้อความดั้งเดิม</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">ส่งแล้ว</string>
+    <string name="received">ได้รับแล้ว</string>
+    <string name="message_details_header__disappears">ลบตัวเอง</string>
+    <string name="via">ผ่าน</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsMute1Hour">ปิดเสียง 1 ชั่วโมง</string>
+    <string name="notificationsMute2Hours">ปิดเสียง 2 ชั่วโมง</string>
+    <string name="notificationsMute1Day">ปิดเสียง 1 วัน</string>
+    <string name="notificationsContentShowNameOnly">ชื่อเท่านั้น</string>
+    <string name="arrays__images">ภาพ</string>
+    <string name="audio">เสียง</string>
+    <string name="video">วิดีโอ</string>
+    <string name="max">สูงสุด</string>
+    <!-- preferences.xml -->
+    <string name="screenSecurity">ความปลอดภัยหน้าจอ</string>
+    <string name="sessionNotifications">การแจ้งเตือน</string>
+    <string name="notificationsLedColor">สี LED</string>
+    <string name="notificationsSound">เสียง</string>
+    <string name="notificationsVibrate">สั่น</string>
+    <string name="theDefault">ค่าเริ่มต้น</string>
+    <string name="incognitoKeyboard">แป้นพิมพ์แบบลับ</string>
+    <string name="readReceipts">ใบตอบรับเมื่ออ่าน</string>
+    <string name="conversationsMessageTrimming">ตัดข้อความให้สั้นลง</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">บันทึกไฟล์แนบ</string>
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">เลิกปิดเสียง</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">ปิดเสียงการแจ้งเตือน</string>
+    <!-- conversation -->
+    <string name="groupLeave">ออกจากกลุ่ม</string>
+    <string name="conversationsAddToHome">เพิ่มไปยังหน้าจอหลัก</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">กำลังลบ</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">ต้องได้รับอนุญาตก่อน</string>
+    <string name="notNow">ไม่ใช่ตอนนี้</string>
+    <string name="registration_activity__skip">ข้าม</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <!-- Next round of translation -->
+</resources>

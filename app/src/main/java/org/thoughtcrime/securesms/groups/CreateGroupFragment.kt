@@ -29,7 +29,7 @@ import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.keyboard.emoji.KeyboardPageSearchView
-import org.thoughtcrime.securesms.mms.GlideApp
+import com.bumptech.glide.Glide
 import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
 import javax.inject.Inject
@@ -55,7 +55,7 @@ class CreateGroupFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = SelectContactsAdapter(requireContext(), GlideApp.with(requireContext()))
+        val adapter = SelectContactsAdapter(requireContext(), Glide.with(requireContext()))
         binding.backButton.setOnClickListener { delegate.onDialogBackPressed() }
         binding.closeButton.setOnClickListener { delegate.onDialogClosePressed() }
         binding.contactSearch.callbacks = object : KeyboardPageSearchView.Callbacks {
@@ -76,17 +76,20 @@ class CreateGroupFragment : Fragment() {
             if (isLoading) return@setOnClickListener
             val name = binding.nameEditText.text.trim()
             if (name.isEmpty()) {
-                return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_group_name_missing_error, Toast.LENGTH_LONG).show()
+                return@setOnClickListener Toast.makeText(context, R.string.groupNameEnterPlease, Toast.LENGTH_LONG).show()
             }
+
+            // Limit the group name length if it exceeds the limit
             if (name.length > resources.getInteger(R.integer.max_group_and_community_name_length_chars)) {
-                return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_group_name_too_long_error, Toast.LENGTH_LONG).show()
+                return@setOnClickListener Toast.makeText(context, R.string.groupNameEnterShorter, Toast.LENGTH_LONG).show()
             }
+
             val selectedMembers = adapter.selectedMembers
             if (selectedMembers.isEmpty()) {
-                return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_not_enough_group_members_error, Toast.LENGTH_LONG).show()
+                return@setOnClickListener Toast.makeText(context, R.string.groupCreateErrorNoMembers, Toast.LENGTH_LONG).show()
             }
             if (selectedMembers.count() >= groupSizeLimit) { // Minus one because we're going to include self later
-                return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_too_many_group_members_error, Toast.LENGTH_LONG).show()
+                return@setOnClickListener Toast.makeText(context, R.string.groupAddMemberMaximum, Toast.LENGTH_LONG).show()
             }
             val userPublicKey = TextSecurePreferences.getLocalNumber(requireContext())!!
             isLoading = true

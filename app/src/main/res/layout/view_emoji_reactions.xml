@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_spacing"
         android:layout_marginStart="1dp"
-        android:text="@string/ReactionsConversationView_show_less"
+        android:text="@string/showLess"
         android:textSize="@dimen/very_small_font_size"
         android:textColor="?android:textColorPrimary"
         tools:visibility="visible"

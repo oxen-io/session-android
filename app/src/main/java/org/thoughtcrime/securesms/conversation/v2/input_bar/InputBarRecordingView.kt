@@ -19,7 +19,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewInputBarRecordingBinding
-import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.animateSizeChange
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.toPx
@@ -106,8 +105,7 @@ class InputBarRecordingView : RelativeLayout {
         timerJob = scope.launch {
             while (isActive) {
                 val duration = (Date().time - startTimestamp) / 1000L
-                binding.recordingViewDurationTextView.text = DateUtils.formatElapsedTime(duration)
-
+                binding.recordingViewDurationTextView.text = android.text.format.DateUtils.formatElapsedTime(duration)
                 delay(500)
             }
         }

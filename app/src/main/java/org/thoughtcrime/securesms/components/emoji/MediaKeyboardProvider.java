@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 
 
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.RequestManager;
 
 public interface MediaKeyboardProvider {
   @LayoutRes int getProviderIconView(boolean selected);
@@ -48,6 +48,6 @@ public interface MediaKeyboardProvider {
   }
 
   interface TabIconProvider {
-    void loadCategoryTabIcon(@NonNull GlideRequests glideRequests, @NonNull ImageView imageView, int index);
+    void loadCategoryTabIcon(@NonNull RequestManager glideRequests, @NonNull ImageView imageView, int index);
   }
 }

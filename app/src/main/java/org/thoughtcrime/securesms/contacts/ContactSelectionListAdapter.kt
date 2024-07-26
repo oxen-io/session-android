@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.databinding.ContactSelectionListDividerBinding
 import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 
 class ContactSelectionListAdapter(private val context: Context, private val multiSelect: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    lateinit var glide: GlideRequests
+    lateinit var glide: RequestManager
     val selectedContacts = mutableSetOf<Recipient>()
     var items = listOf<ContactSelectionListItem>()
         set(value) { field = value; notifyDataSetChanged() }

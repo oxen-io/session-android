@@ -16,7 +16,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -27,6 +26,13 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Date
+import java.util.Locale
+import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewEmojiReactionsBinding
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
@@ -52,19 +58,12 @@ import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.toDp
 import org.thoughtcrime.securesms.util.toPx
-import java.util.Date
-import java.util.Locale
-import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.min
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
 
 private const val TAG = "VisibleMessageView"
 
@@ -141,7 +140,7 @@ class VisibleMessageView : FrameLayout {
         message: MessageRecord,
         previous: MessageRecord? = null,
         next: MessageRecord? = null,
-        glide: GlideRequests = GlideApp.with(this),
+        glide: RequestManager = Glide.with(this),
         searchQuery: String? = null,
         contact: Contact? = null,
         senderAccountID: String,
@@ -384,37 +383,37 @@ class VisibleMessageView : FrameLayout {
         message.isFailed ->
             MessageStatusInfo(R.drawable.ic_delivery_status_failed,
                 getThemedColor(context, R.attr.danger),
-                R.string.delivery_status_failed
+                R.string.messageStatusFailedToSend
             )
         message.isSyncFailed ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_failed,
                 context.getColor(R.color.accent_orange),
-                R.string.delivery_status_sync_failed
+                R.string.messageStatusFailedToSync
             )
         message.isPending ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sending
+                R.string.sending
             )
         message.isSyncing || message.isResyncing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sending // We COULD tell the user that we're `syncing` (R.string.delivery_status_syncing) but it will likely make more sense to them if we say "Sending"
+                R.string.messageStatusSyncing
             )
         message.isRead || message.isIncoming ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_read,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_read
+                R.string.read
             )
         message.isSent ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sent,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sent
+                R.string.disappearingMessagesSent
             )
         else -> {
             // The message isn't one we care about for message statuses we display to the user (i.e.,

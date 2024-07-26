@@ -8,27 +8,29 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityMessageRequestsBinding
+import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.push
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), ConversationClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private lateinit var binding: ActivityMessageRequestsBinding
-    private lateinit var glide: GlideRequests
+    private lateinit var glide: RequestManager
 
     @Inject lateinit var threadDb: ThreadDatabase
 
@@ -43,7 +45,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         binding = ActivityMessageRequestsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        glide = GlideApp.with(this)
+        glide = Glide.with(this)
 
         adapter.setHasStableIds(true)
         adapter.glide = glide
@@ -83,10 +85,12 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         }
 
         showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_block_this_contact_question)
-                text(R.string.message_requests_block_message)
-                button(R.string.recipient_preferences__block) { doBlock() }
-                button(R.string.no)
+            title(R.string.block)
+            text(Phrase.from(context, R.string.blockDescription)
+                .put(NAME_KEY, thread.recipient.name)
+                .format())
+            button(R.string.block) { doBlock() }
+            button(R.string.no)
         }
     }
 
@@ -100,10 +104,10 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         }
 
         showSessionDialog {
-            title(R.string.decline)
-            text(resources.getString(R.string.message_requests_decline_message))
-            button(R.string.decline) { doDecline() }
-            button(R.string.no)
+            title(R.string.delete)
+            text(resources.getString(R.string.messageRequestsDelete))
+            button(R.string.delete) { doDecline() }
+            button(R.string.cancel)
         }
     }
 
@@ -123,7 +127,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         }
 
         showSessionDialog {
-            text(resources.getString(R.string.message_requests_clear_all_message))
+            text(resources.getString(R.string.messageRequestsClearAllExplanation))
             button(R.string.yes) { doDeleteAllAndBlock() }
             button(R.string.no)
         }

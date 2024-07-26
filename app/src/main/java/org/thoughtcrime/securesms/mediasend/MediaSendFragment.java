@@ -41,7 +41,7 @@ import org.thoughtcrime.securesms.util.SimpleTextWatcher;
 import org.thoughtcrime.securesms.imageeditor.model.EditorModel;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.mediapreview.MediaRailAdapter;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.scribbles.ImageEditorFragment;
@@ -187,7 +187,7 @@ public class MediaSendFragment extends Fragment implements ViewTreeObserver.OnGl
     fragmentPager.addOnPageChangeListener(pageChangeListener);
     fragmentPager.post(() -> pageChangeListener.onPageSelected(fragmentPager.getCurrentItem()));
 
-    mediaRailAdapter = new MediaRailAdapter(GlideApp.with(this), this, true);
+    mediaRailAdapter = new MediaRailAdapter(Glide.with(this), this, true);
     mediaRail.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
     mediaRail.setAdapter(mediaRailAdapter);
 
@@ -208,7 +208,7 @@ public class MediaSendFragment extends Fragment implements ViewTreeObserver.OnGl
     String    displayName = Optional.fromNullable(recipient.getName())
                                     .or(Optional.fromNullable(recipient.getProfileName())
                                                 .or(recipient.getAddress().serialize()));
-    composeText.setHint(getString(R.string.MediaSendActivity_message_to_s, displayName), null);
+    composeText.setHint(getString(R.string.message, displayName), null);
     composeText.setOnEditorActionListener((v, actionId, event) -> {
       boolean isSend = actionId == EditorInfo.IME_ACTION_SEND;
       if (isSend) sendButton.performClick();

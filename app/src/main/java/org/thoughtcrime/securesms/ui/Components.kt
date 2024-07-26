@@ -245,10 +245,10 @@ fun ItemButton(
 
 @Preview
 @Composable
-fun PrewviewItemButton() {
+fun PreviewItemButton() {
     PreviewTheme {
         ItemButton(
-            textId = R.string.activity_create_group_title,
+            textId = R.string.groupCreate,
             icon = R.drawable.ic_group,
             onClick = {}
         )

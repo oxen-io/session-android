@@ -60,7 +60,6 @@
     <uses-permission android:name="android.permission.RAISED_THREAD_PRIORITY" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" tools:node="remove"/>
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
 
     <queries>
         <intent>
@@ -130,12 +129,12 @@
         <activity
             android:name="org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity"
             android:exported="false"
-            android:label="@string/activity_message_requests_title"
+            android:label="@string/sessionMessageRequests"
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.preferences.SettingsActivity"
             android:screenOrientation="portrait"
-            android:label="@string/activity_settings_title" />
+            android:label="@string/sessionSettings" />
         <activity
             android:name="org.thoughtcrime.securesms.home.PathActivity"
             android:screenOrientation="portrait" />
@@ -147,11 +146,11 @@
             android:name="org.thoughtcrime.securesms.preferences.BlockedContactsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar"
-            android:label="@string/blocked_contacts_title"
+            android:label="@string/conversationsBlockedContacts"
             />
         <activity
             android:name="org.thoughtcrime.securesms.groups.EditClosedGroupActivity"
-            android:label="@string/activity_edit_closed_group_title"
+            android:label="@string/groupEdit"
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.recoverypassword.RecoveryPasswordActivity"
@@ -161,7 +160,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.preferences.PrivacySettingsActivity"
-            android:label="@string/activity_privacy_settings_title"
+            android:label="@string/sessionPrivacy"
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.preferences.NotificationSettingsActivity"
@@ -171,7 +170,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.preferences.HelpSettingsActivity"
-            android:label="@string/activity_help_settings_title"
+            android:label="@string/sessionHelp"
             android:screenOrientation="portrait" />
         <activity android:name="org.thoughtcrime.securesms.preferences.appearance.AppearanceSettingsActivity"
             android:screenOrientation="portrait"/>
@@ -264,7 +263,6 @@
         <activity
             android:name="org.thoughtcrime.securesms.MediaPreviewActivity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
-            android:label="@string/AndroidManifest__media_preview"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.NoActionBar"
             android:launchMode="singleTask"

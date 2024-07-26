@@ -52,9 +52,11 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.squareup.phrase.Phrase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
@@ -91,7 +93,10 @@ fun MaybeScanQrCode(
                     .padding(horizontal = 60.dp)
             ) {
                 Text(
-                    stringResource(R.string.activity_link_camera_permission_permanently_denied_configure_in_settings),
+                    stringResource(R.string.cameraGrantAccessDenied).let { txt ->
+                        val c = LocalContext.current
+                        Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString()
+                    },
                     style = LocalType.current.base,
                     textAlign = TextAlign.Center
                 )
@@ -110,8 +115,14 @@ fun MaybeScanQrCode(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                Text(stringResource(R.string.fragment_scan_qr_code_camera_access_explanation),
-                    style = LocalType.current.xl, textAlign = TextAlign.Center)
+                Text(
+                    stringResource(R.string.cameraGrantAccessQr).let { txt ->
+                        val c = LocalContext.current
+                        Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString()
+                    },
+                    style = LocalType.current.xl,
+                    textAlign = TextAlign.Center
+                )
                 Spacer(modifier = Modifier.height(LocalDimensions.current.spacing))
                 PrimaryOutlineButton(
                     stringResource(R.string.cameraGrantAccess),

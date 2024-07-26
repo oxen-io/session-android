@@ -10,6 +10,7 @@ import okhttp3.Request
 import org.session.libsession.messaging.file_server.FileServerApi
 import org.session.libsession.utilities.AESGCM
 import org.session.libsession.utilities.AESGCM.EncryptionResult
+import org.session.libsession.utilities.Util
 import org.session.libsession.utilities.getBodyForOnionRequest
 import org.session.libsession.utilities.getHeadersForOnionRequest
 import org.session.libsignal.crypto.getRandomElement
@@ -189,8 +190,21 @@ object OnionRequestAPI {
                 if (unusedSnodes.count() < pathSnodeCount) { throw InsufficientSnodesException() }
                 // Don't test path snodes as this would reveal the user's IP to them
                 guardSnodes.minus(reusableGuardSnodes).map { guardSnode ->
-                    val result = listOf( guardSnode ) + (0 until (pathSize - 1)).map {
-                        val pathSnode = unusedSnodes.getRandomElement()
+                    val result = listOf( guardSnode ) + (0 until (pathSize - 1)).mapIndexed() { index, _ ->
+                        var pathSnode = unusedSnodes.getRandomElement()
+
+                        // For the last node: We need to make sure the version is >= 2.8.0
+                        // to help with an issue that will disappear once the nodes are all updated
+                        if(index == pathSize - 2) {
+                            val suitableSnodes = unusedSnodes.filter { Util.compareVersions(it.version, "2.8.0") >= 0 }
+                            pathSnode = if (suitableSnodes.isNotEmpty()) {
+                                suitableSnodes.random()
+                            } else {
+                                throw InsufficientSnodesException()
+                            }
+                        }
+
+                        // remove the snode from the unused list and return it
                         unusedSnodes = unusedSnodes.minus(pathSnode)
                         pathSnode
                     }

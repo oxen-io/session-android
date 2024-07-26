@@ -16,6 +16,9 @@
  */
 package org.thoughtcrime.securesms.notifications;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -24,28 +27,39 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.service.notification.StatusBarNotification;
 import android.text.SpannableString;
 import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.goterl.lazysodium.utils.KeyPair;
-
+import com.squareup.phrase.Phrase;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import me.leolin.shortcutbadger.ShortcutBadger;
+import network.loki.messenger.R;
 import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
 import org.session.libsession.messaging.utilities.AccountId;
 import org.session.libsession.messaging.utilities.SodiumUtilities;
-import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.ServiceUtil;
@@ -56,7 +70,6 @@ import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.Util;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.contacts.ContactUtil;
-import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2;
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities;
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities;
 import org.thoughtcrime.securesms.database.LokiThreadDatabase;
@@ -73,21 +86,6 @@ import org.thoughtcrime.securesms.mms.SlideDeck;
 import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 import org.thoughtcrime.securesms.util.SpanUtil;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import me.leolin.shortcutbadger.ShortcutBadger;
-import network.loki.messenger.R;
 
 /**
  * Handles posting system notifications for new messages.
@@ -133,24 +131,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
   @Override
   public void notifyMessageDeliveryFailed(Context context, Recipient recipient, long threadId) {
-    if (visibleThread != threadId) {
-      Intent intent = new Intent(context, ConversationActivityV2.class);
-      intent.putExtra(ConversationActivityV2.ADDRESS, recipient.getAddress());
-      intent.putExtra(ConversationActivityV2.THREAD_ID, threadId);
-      intent.setData((Uri.parse("custom://" + SnodeAPI.getNowWithOffset())));
-
-      FailedNotificationBuilder builder = new FailedNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context), intent);
-      ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
-        .notify((int)threadId, builder.build());
-    }
-  }
-
-  public void notifyMessagesPending(Context context) {
-
-    if (!TextSecurePreferences.isNotificationsEnabled(context)) { return; }
-
-    PendingMessageNotificationBuilder builder = new PendingMessageNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
-    ServiceUtil.getNotificationManager(context).notify(PENDING_MESSAGES_ID, builder.build());
+    // We do not provide notifications for message delivery failure.
   }
 
   @Override
@@ -404,7 +385,19 @@ public class DefaultMessageNotifier implements MessageNotifier {
     }
 
     Notification notification = builder.build();
-    NotificationManagerCompat.from(context).notify(notificationId, notification);
+
+    // ACL FIX THIS PROPERLY
+    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+          // TODO: Consider calling
+          //    ActivityCompat#requestPermissions
+          // here to request the missing permissions, and then overriding
+          //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+          //                                          int[] grantResults)
+          // to handle the case where the user grants the permission. See the documentation
+          // for ActivityCompat#requestPermissions for more details.
+          return;
+      }
+      NotificationManagerCompat.from(context).notify(notificationId, notification);
     Log.i(TAG, "Posted notification. " + notification.toString());
   }
 
@@ -473,6 +466,19 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
 
+
+    // ACL FIX THIS PROPERLY
+    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+          // TODO: Consider calling
+          //    ActivityCompat#requestPermissions
+          // here to request the missing permissions, and then overriding
+          //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+          //                                          int[] grantResults)
+          // to handle the case where the user grants the permission. See the documentation
+          // for ActivityCompat#requestPermissions for more details.
+          return;
+    }
+
     Notification notification = builder.build();
     NotificationManagerCompat.from(context).notify(SUMMARY_NOTIFICATION_ID, notification);
     Log.i(TAG, "Posted notification. " + notification);
@@ -511,11 +517,11 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       // If this is a message request from an unknown user..
       if (messageRequest) {
-        body = SpanUtil.italic(context.getString(R.string.message_requests_notification));
+        body = SpanUtil.italic(context.getString(R.string.messageRequestsNew));
 
       // If we received some manner of notification but Session is locked..
       } else if (KeyCachingService.isLocked(context)) {
-        body = SpanUtil.italic(context.getString(R.string.MessageNotifier_locked_message));
+        body = SpanUtil.italic(context.getString(R.string.messageNewYouveGotA));
 
       // ----- All further cases assume we know the contact and that Session isn't locked -----
 
@@ -538,7 +544,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       // If this is a notification about an invitation to a community..
       } else if (record.isOpenGroupInvitation()) {
-        body = SpanUtil.italic(context.getString(R.string.ThreadRecord_open_group_invitation));
+        body = SpanUtil.italic(context.getString(R.string.communityInvitation));
       }
 
       String userPublicKey = TextSecurePreferences.getLocalNumber(context);
@@ -576,7 +582,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
           if (threadRecipients != null && !threadRecipients.isGroupRecipient()) {
             ReactionRecord reaction = lastReact.get();
             Recipient reactor = Recipient.from(context, Address.fromSerialized(reaction.getAuthor()), false);
-            String emoji = context.getString(R.string.reaction_notification, reactor.toShortString(), reaction.getEmoji());
+            String emoji = Phrase.from(context, R.string.emojiReactsNotification).put(EMOJI_KEY, reaction.getEmoji()).format().toString();
             notificationState.addNotification(new NotificationItem(id, mms, reactor, reactor, threadRecipients, threadId, emoji, reaction.getDateSent(), slideDeck));
           }
         }

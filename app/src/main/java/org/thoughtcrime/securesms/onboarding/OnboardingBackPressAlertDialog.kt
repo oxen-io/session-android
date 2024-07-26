@@ -12,7 +12,7 @@ import org.thoughtcrime.securesms.ui.theme.LocalColors
 @Composable
 fun OnboardingBackPressAlertDialog(
     dismissDialog: () -> Unit,
-    @StringRes textId: Int = R.string.you_cannot_go_back_further_in_order_to_stop_loading_your_account_session_needs_to_quit,
+    @StringRes textId: Int = R.string.onboardingBackAccountCreation,
     quit: () -> Unit
 ) {
     AlertDialog(
@@ -21,7 +21,7 @@ fun OnboardingBackPressAlertDialog(
         text = stringResource(textId),
         buttons = listOf(
             DialogButtonModel(
-                GetString(stringResource(R.string.quit)),
+                GetString(stringResource(R.string.quitButton)),
                 color = LocalColors.current.danger,
                 onClick = quit
             ),

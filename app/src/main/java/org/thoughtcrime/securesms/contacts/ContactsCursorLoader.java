@@ -159,7 +159,7 @@ public class ContactsCursorLoader extends CursorLoader {
 
   private Cursor getGroupsHeaderCursor() {
     MatrixCursor groupHeader = new MatrixCursor(CONTACT_PROJECTION, 1);
-    groupHeader.addRow(new Object[]{ getContext().getString(R.string.ContactsCursorLoader_groups),
+    groupHeader.addRow(new Object[]{ getContext().getString(R.string.conversationsGroups),
                                      "",
                                      ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE,
                                      "",
@@ -219,16 +219,6 @@ public class ContactsCursorLoader extends CursorLoader {
       }
     }
     return groupContacts;
-  }
-
-  private Cursor getNewNumberCursor() {
-    MatrixCursor newNumberCursor = new MatrixCursor(CONTACT_PROJECTION, 1);
-    newNumberCursor.addRow(new Object[] { getContext().getString(R.string.contact_selection_list__unknown_contact),
-                                          filter,
-                                          ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM,
-                                          "\u21e2",
-                                          NEW_TYPE });
-    return newNumberCursor;
   }
 
   private static boolean isCursorListEmpty(List<Cursor> list) {

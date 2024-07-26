@@ -9,13 +9,13 @@ import android.widget.BaseAdapter
 import android.widget.ListView
 import org.session.libsession.messaging.mentions.Mention
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.util.toPx
 
 class MentionCandidateSelectionView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ListView(context, attrs, defStyleAttr) {
     private var mentionCandidates = listOf<Mention>()
         set(newValue) { field = newValue; mentionCandidateSelectionViewAdapter.mentionCandidates = newValue }
-    var glide: GlideRequests? = null
+    var glide: RequestManager? = null
         set(newValue) { field = newValue; mentionCandidateSelectionViewAdapter.glide = newValue }
     var openGroupServer: String? = null
         set(newValue) { field = newValue; mentionCandidateSelectionViewAdapter.openGroupServer = openGroupServer }
@@ -28,7 +28,7 @@ class MentionCandidateSelectionView(context: Context, attrs: AttributeSet?, defS
     private class Adapter(private val context: Context) : BaseAdapter() {
         var mentionCandidates = listOf<Mention>()
             set(newValue) { field = newValue; notifyDataSetChanged() }
-        var glide: GlideRequests? = null
+        var glide: RequestManager? = null
         var openGroupServer: String? = null
         var openGroupRoom: String? = null
 

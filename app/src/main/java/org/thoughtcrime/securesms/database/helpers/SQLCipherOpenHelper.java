@@ -250,7 +250,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
       // Notify the user of the issue so they know they can downgrade until the issue is fixed
       NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-      String channelId = context.getString(R.string.NotificationChannel_failures);
+      String channelId = context.getString(R.string.failures);
 
       if (NotificationChannels.supported()) {
         NotificationChannel channel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_HIGH);

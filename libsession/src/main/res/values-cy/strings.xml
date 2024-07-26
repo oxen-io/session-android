@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yes">Iawn</string>
+    <string name="no">Na</string>
+    <string name="delete">Dileu</string>
+    <string name="save">Cadw</string>
+    <string name="noteToSelf">Nodyn i Fi Fy Hun</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Neges newydd</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Mis yma</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">Methodd yr anfon, tapiwch am fanylion</string>
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Ychwanegu atodiad</string>
+    <string name="blockUnblock">Dadrwystro</string>
+    <!-- ConversationFragment -->
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="zero">Bydd cadw\'r cyfryngau hyn i\'r storfa yn caniatáu i apiau eraill ar eich dyfais gael mynediad iddynt.\n\Parhau?</item>
+        <item quantity="one">Bydd cadw\'r holl gyfryngau %1$d i\'r storfa yn caniatáu i unrhyw apiau eraill ar eich dyfais gael mynediad iddynt.\n\Parhau?</item>
+        <item quantity="two">Bydd cadw\'r holl gyfryngau %1$d i\'r storfa yn caniatáu i apiau eraill ar eich dyfais gael mynediad iddynt.\n\Parhau?</item>
+        <item quantity="few">Bydd cadw\'r holl gyfryngau %1$d i\'r storfa yn caniatáu i apiau eraill ar eich dyfais gael mynediad iddynt.\n\Parhau?</item>
+        <item quantity="many">Bydd cadw\'r holl gyfryngau %1$d i\'r storfa yn caniatáu i apiau eraill ar eich dyfais gael mynediad iddynt.\n\Parhau?</item>
+        <item quantity="other">Bydd cadw\'r holl gyfryngau %1$d i\'r storfa yn caniatáu i apiau eraill ar eich dyfais gael mynediad iddynt.\n\Parhau?</item>
+    </plurals>
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Dim</string>
+    <!-- DateUtils -->
+    <string name="DateUtils_just_now">Nawr</string>
+    <string name="DateUtils_today">Heddiw</string>
+    <string name="DateUtils_yesterday">Ddoe</string>
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Sticeri</string>
+    <!-- CropImageActivity -->
+    <string name="photo">Afatar</string>
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Casglu atodiadau...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <string name="MediaPickerActivity_send_to">Anfon i %s</string>
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Camera ddim ar gael</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Pob cyfrwng</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Rhwystro</string>
+    <!-- Slide -->
+    <string name="image">Llun</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Grŵp wedi\'i ddiweddaru</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Mae Session wedi\'i ddatgloi</string>
+    <!-- MediaPreviewActivity -->
+    <string name="onionRoutingPathYou">Chi</string>
+    <string name="draft">Drafft</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Marcio wedi\'i ddarllen</string>
+    <!-- Notification Channels -->
+    <string name="failures">Methiannau</string>
+    <string name="lockAppStatus">Statws y clo</string>
+    <string name="updateApp">Diweddariadau ap</string>
+    <string name="other">Arall</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Wedi cadw</string>
+    <!-- SearchToolbar -->
+    <string name="search">Chwilio</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Llwybr byr annilys</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <string name="attachment_type_selector__gallery_description">Delwedd neu fideo</string>
+    <string name="attachment_type_selector__gallery">Oriel</string>
+    <string name="attachment_type_selector__drawer_description">Newid drôr yr atodiad</string>
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Anfon</string>
+    <string name="conversation_activity__attachment_thumbnail">Llun Bach Atodiad</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Newid y drôr atodiad cyflym camera</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Llithro i ddiddymu</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__delivered_description">Wedi\'i drosglwyddo</string>
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Heb ganfod y neges wreiddiol</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Anfonwyd</string>
+    <string name="received">Derbyniwyd</string>
+    <string name="message_details_header__disappears">Yn diflannu</string>
+    <string name="via">Drwy</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsMute1Hour">Tewi am 1 awr</string>
+    <string name="notificationsMute2Hours">Tewi am 2 awr</string>
+    <string name="notificationsMute1Day">Tewi am 1 diwrnod</string>
+    <string name="notificationsContentShowNameOnly">Enw yn unig</string>
+    <string name="arrays__images">Lluniau</string>
+    <string name="audio">Sain</string>
+    <string name="video">Fideo</string>
+    <string name="max">Mwyaf</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Anfon rhagolwg dolen</string>
+    <string name="screenSecurity">Diogelu\'r sgrin</string>
+    <string name="sessionNotifications">Hysbysiadau</string>
+    <string name="notificationsLedColor">Lliw\'r LED</string>
+    <string name="notificationsSound">Sain</string>
+    <string name="notificationsVibrate">Dirgrynu</string>
+    <string name="theDefault">Rhagosodiad</string>
+    <string name="incognitoKeyboard">Bysellfwrdd dirgel</string>
+    <string name="readReceipts">Derbynebau darllen</string>
+    <string name="typingIndicators">Dangosyddion Teipio</string>
+    <string name="conversationsMessageTrimming">Tocio sgyrsiau</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">Cadw atodiad</string>
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Dad-dewi</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Tewi hysbysiadau</string>
+    <!-- conversation -->
+    <string name="groupLeave">Gadael y grŵp</string>
+    <string name="conversationsAddToHome">Ychwanegu at y sgrin gartref</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Wrthi\'n dileu</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Angen caniatâd</string>
+    <string name="notNow">Nid nawr</string>
+    <string name="registration_activity__skip">Hepgor</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <!-- Next round of translation -->
+</resources>

@@ -16,6 +16,8 @@
  */
 package org.thoughtcrime.securesms.service;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -31,11 +33,10 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-
+import com.squareup.phrase.Phrase;
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
@@ -44,9 +45,7 @@ import org.thoughtcrime.securesms.DatabaseUpgradeActivity;
 import org.thoughtcrime.securesms.DummyActivity;
 import org.thoughtcrime.securesms.home.HomeActivity;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
-
 import java.util.concurrent.TimeUnit;
-
 import network.loki.messenger.R;
 
 /**
@@ -242,13 +241,19 @@ public class KeyCachingService extends Service {
     Log.i(TAG, "foregrounding KCS");
     NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NotificationChannels.LOCKED_STATUS);
 
-    builder.setContentTitle(getString(R.string.KeyCachingService_passphrase_cached));
-    builder.setContentText(getString(R.string.KeyCachingService_signal_passphrase_cached));
+    // Replace app name in title string
+    Context c = getApplicationContext();
+    String unlockedTxt = Phrase.from(c, R.string.lockAppUnlocked)
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .format().toString();
+    builder.setContentTitle(unlockedTxt);
+
+    builder.setContentText(getString(R.string.lockAppUnlock));
     builder.setSmallIcon(R.drawable.icon_cached);
     builder.setWhen(0);
     builder.setPriority(Notification.PRIORITY_MIN);
 
-    builder.addAction(R.drawable.ic_menu_lock_dark, getString(R.string.KeyCachingService_lock), buildLockIntent());
+    builder.addAction(R.drawable.ic_menu_lock_dark, getString(R.string.lockApp), buildLockIntent());
     builder.setContentIntent(buildLaunchIntent());
 
     stopForeground(true);

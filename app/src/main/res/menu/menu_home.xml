@@ -5,11 +5,11 @@
         android:icon="@drawable/ic_baseline_search_24"
         app:showAsAction="ifRoom"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        android:title="@string/SearchToolbar_search"/>
+        android:title="@string/search"/>
 
     <item android:id="@+id/path_action"
         android:icon="@drawable/accent_dot"
-        android:title="@string/activity_path_title"
+        android:title="@string/onionRoutingPath"
         app:showAsAction="ifRoom"/>
 
 

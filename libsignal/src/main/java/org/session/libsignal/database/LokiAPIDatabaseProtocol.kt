@@ -10,6 +10,7 @@ interface LokiAPIDatabaseProtocol {
     fun getSnodePool(): Set<Snode>
     fun setSnodePool(newValue: Set<Snode>)
     fun getOnionRequestPaths(): List<List<Snode>>
+    fun clearSnodePool()
     fun clearOnionRequestPaths()
     fun setOnionRequestPaths(newValue: List<List<Snode>>)
     fun getSwarm(publicKey: String): Set<Snode>?

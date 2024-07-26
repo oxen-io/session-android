@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sessionMessenger">Session</string>
+    <string name="yes">Kyllä</string>
+    <string name="no">Ei</string>
+    <string name="delete">Poista</string>
+    <string name="save">Tallenna</string>
+    <string name="noteToSelf">Viestit itselleni</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Uusi viesti</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Tässä kuussa</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">Lähetys epäonnistui, napauta nähdäksesi lisätietoja</string>
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Lisää liite</string>
+    <string name="message">Viesti</string>
+    <string name="notificationsMuted">Mykistetty</string>
+    <string name="blockUnblock">Poista esto</string>
+    <!-- ConversationFragment -->
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="one">Jos kopioit tämän tiedoston laitteesi tallennustilaan, niin kaikki muutkin sovellukset saavat oikeuden käyttää sitä.\n\nHaluatko jatkaa?</item>
+        <item quantity="other">Jos kopioit kaikki %1$d tiedostoa laitteesi tallennustilaan, niin kaikki muutkin sovellukset saavat oikeuden käyttää niitä.\n\nHaluatko jatkaa?</item>
+    </plurals>
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Ei asetettu</string>
+    <!-- DateUtils -->
+    <string name="DateUtils_just_now">Nyt</string>
+    <string name="DateUtils_today">tänään</string>
+    <string name="DateUtils_yesterday">eilen</string>
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Tarrat</string>
+    <!-- CropImageActivity -->
+    <string name="photo">Kuvake</string>
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Kerätään liitetiedostoja...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <string name="MediaPickerActivity_send_to">Lähetä yhteystiedolle %s</string>
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Kamera ei käytettävissä</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Kaikki media</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Estä</string>
+    <!-- Slide -->
+    <string name="image">Kuva</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Ryhmä päivitetty</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Sessionin lukitus on auki</string>
+    <!-- MediaPreviewActivity -->
+    <string name="onionRoutingPathYou">Sinä</string>
+    <string name="draft">Luonnos</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Luettu</string>
+    <!-- Notification Channels -->
+    <string name="failures">Viat</string>
+    <string name="lockAppStatus">Lukituksen tila</string>
+    <string name="updateApp">Sovellusten päivitykset</string>
+    <string name="other">Muu</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Tallennettu</string>
+    <!-- SearchToolbar -->
+    <string name="search">Hae</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Virheellinen pikakuvake</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <string name="contentDescriptionCamera">Kamera</string>
+    <string name="gif">Gif</string>
+    <string name="attachment_type_selector__gallery_description">Kuva tai video</string>
+    <string name="attachment_type_selector__gallery">Galleria</string>
+    <string name="attachment_type_selector__drawer_description">Avaa tai sulje liitetiedostovalikko</string>
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Lähetä</string>
+    <string name="conversation_activity__attachment_thumbnail">Liitteen esikatselu</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Avaa tai sulje pikakamera</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Pyyhkäise hylkääksesi</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__delivered_description">Toimitettu</string>
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">Liity</string>
+    <string name="read">Lue</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Alkuperäistä viestiä ei löytynyt</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Lähetetty</string>
+    <string name="received">Vastaanotettu</string>
+    <string name="message_details_header__disappears">Katoamisaika</string>
+    <string name="via">Tyyppi</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsMute1Hour">1 tunniksi</string>
+    <string name="notificationsMute2Hours">2 tunniksi</string>
+    <string name="notificationsMute1Day">1 vuorokaudeksi</string>
+    <string name="notificationsContentShowNameOnly">Vain nimi</string>
+    <string name="arrays__images">Kuvat</string>
+    <string name="audio">Äänitallenteet</string>
+    <string name="video">Videot</string>
+    <string name="max">Maksimi</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Lähetä esikatselukuva linkeistä</string>
+    <string name="screenSecurity">Näytön suojaus</string>
+    <string name="sessionNotifications">Ilmoitukset</string>
+    <string name="notificationsLedColor">LED:in väri</string>
+    <string name="notificationsSound">Ääni</string>
+    <string name="notificationsVibrate">Värinä</string>
+    <string name="theDefault">Oletus</string>
+    <string name="incognitoKeyboard">Yksityinen näppäimistö</string>
+    <string name="readReceipts">Lukukuittaukset</string>
+    <string name="typingIndicators">Kirjoitustilaindikaattori</string>
+    <string name="conversationsMessageTrimming">Keskustelujen karsiminen</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">Estä käyttäjä</string>
+    <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">Tallenna liite</string>
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Poista mykistys</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Mykistä ilmoitukset</string>
+    <!-- conversation -->
+    <string name="groupLeave">Poistu ryhmästä</string>
+    <string name="conversationsAddToHome">Lisää kotiruudulle</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Poistetaan</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Tarvitaan käyttöoikeus</string>
+    <string name="notNow">Ei nyt</string>
+    <string name="registration_activity__skip">Ohita</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Jatka</string>
+    <string name="copy">Kopioi</string>
+    <string name="communityEnterUrlErrorInvalid">Virheellinen URL</string>
+    <string name="copied">Kopioitu leikepöydälle</string>
+    <string name="next">Seuraava</string>
+    <string name="share">Jaa</string>
+    <string name="cancel">Peruuta</string>
+    <string name="view_fake_chat_bubble_4">Käyttämällä kehittyneitä nimettömiä reititys- ja päästä päähän -salaustekniikoita.</string>
+    <string name="view_fake_chat_bubble_5">Ystävät eivät anna ystävien käyttää vaarantunutta viestintäsovellusta. Olet tervetullut.</string>
+    <string name="displayNamePick">Valitse näyttönimi</string>
+    <string name="recommended">Suositeltu</string>
+    <string name="activity_pn_mode_no_option_picked_dialog_title">Valitse vaihtoehto</string>
+    <string name="activity_home_empty_state_button_title">Aloita ryhmä</string>
+    <string name="conversationsDeleted">Keskustelu poistettu</string>
+    <string name="activity_seed_title_2">Tutustu palautuslauseesi</string>
+    <string name="activity_seed_explanation">Sinun palautuslause on pääavain Session tunnukseesi — voit käyttää sitä palauttamaan Session tunnuksesi jos menetät pääsyn laitteeseen. Säilytä palautuslauseesi turvallisessa paikassa, ja älä anna sitä kenellekään.</string>
+    <string name="activity_seed_reveal_button_title">Pidä pohjassa paljastaaksesi</string>
+    <string name="view_seed_reminder_title">Olet melkein valmis! 80%</string>
+    <string name="view_seed_reminder_subtitle_1">Suojaa tilisi tallentamalla palautuslauseke</string>
+    <string name="view_seed_reminder_subtitle_2">Napauta ja pidä piiloteettuja sanoja paljastaaksesi palautuslauseen, ja säästä se turvallisesti suojataksesi Session tilisi.</string>
+    <string name="onionRoutingPath">Polku</string>
+    <string name="onionRoutingPathEntryNode">Sisääntulon Solmu</string>
+    <string name="onionRoutingPathServiceNode">Palvelu Solmu</string>
+    <string name="onionRoutingPathDestination">Päämäärä</string>
+    <string name="learnMore">Lisätietoja</string>
+    <string name="resolving">Ratkaistaan…</string>
+    <string name="qrScan">Lue QR-koodi</string>
+    <string name="cameraGrantAccessQr">Session tarvitsee kameran käyttöoikeuden skannatakseensa QR-koodit</string>
+    <string name="cameraGrantAccess">Myönnä Kameran Käyttöoikeus</string>
+    <string name="groupNameEnter">Syötä ryhmän nimi</string>
+    <string name="activity_create_closed_group_empty_state_button_title">Aloita ryhmä</string>
+    <string name="groupNameEnterPlease">Syötä ryhmän nimi</string>
+    <string name="sessionSettings">Asetukset</string>
+    <string name="sessionInviteAFriend">Kutsu ystäviä</string>
+    <string name="helpFAQ">UKK</string>
+    <string name="sessionClearData">Tyhjennä tiedot</string>
+    <string name="notificationsStyle">Ilmoitusten tyyli</string>
+    <string name="notificationsContent">Ilmoituksen Sisältö</string>
+    <string name="sessionPrivacy">Yksityisyys</string>
+    <string name="notificationsStrategy">Ilmoitusten Strategia</string>
+    <string name="useFastMode">Käytä Nopeaa Tilaa</string>
+    <string name="clearDataAll">Tyhjennä tiedot</string>
+    <string name="qrCode">QR-koodi</string>
+    <string name="contactsContacts">Yhteystiedot</string>
+    <!-- Next round of translation -->
+    <string name="menu_apply_button">Käytä</string>
+    <string name="done">Valmis</string>
+    <string name="groupEdit">Muokkaa ryhmää</string>
+    <string name="contactSelect">Valitse Yhteystiedot</string>
+    <string name="appearanceThemes">Teema</string>
+    <string name="attachment">Liite</string>
+    <string name="messageVoice">Ääniviesti</string>
+    <string name="activity_link_device_skip_prompt">Tämä kestää jonkin aikaa, haluaisitko ohittaa?</string>
+    <string name="communityJoinOfficial">Tai liity johonkin näistä…</string>
+    <string name="notificationsFastMode">Nopea tila</string>
+    <string name="notificationsSlowMode">Hidastila</string>
+    <string name="notificationsFastModeDescriptionAndroid">Sinulle ilmoitetaan uusista viesteistä luotettavasti ja viivyttelemättä Applen ilmoituspalvelua käyttäen.</string>
+    <string name="notificationsSlowModeDescription">Session tarkistaa taustalla ajoittain uudet viestit.</string>
+    <string name="open">Avaa</string>
+    <string name="urlCopy">Kopioi URL</string>
+    <string name="enable">Ota käyttöön</string>
+    <string name="download">Lataa</string>
+    <string name="media">Media</string>
+    <string name="theError">Virhe</string>
+    <string name="warning">Varoitus</string>
+    <string name="pin">Koodi</string>
+    <string name="pinUnpin">Ohita koodi</string>
+</resources>

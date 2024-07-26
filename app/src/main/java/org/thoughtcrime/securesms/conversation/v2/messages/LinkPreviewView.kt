@@ -15,7 +15,7 @@ import org.thoughtcrime.securesms.components.CornerMask
 import org.thoughtcrime.securesms.conversation.v2.ModalUrlBottomSheet
 import org.thoughtcrime.securesms.conversation.v2.utilities.MessageBubbleUtilities
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.mms.ImageSlide
 
 class LinkPreviewView : LinearLayout {
@@ -32,7 +32,7 @@ class LinkPreviewView : LinearLayout {
     // region Updating
     fun bind(
         message: MmsMessageRecord,
-        glide: GlideRequests,
+        glide: RequestManager,
         isStartOfMessageCluster: Boolean,
         isEndOfMessageCluster: Boolean
     ) {

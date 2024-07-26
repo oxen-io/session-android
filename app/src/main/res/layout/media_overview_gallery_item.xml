@@ -8,8 +8,7 @@
     <include layout="@layout/thumbnail_view"
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/media_preview_activity__media_content_description" />
+            android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/selected_indicator"

@@ -18,7 +18,7 @@ import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
 import org.thoughtcrime.securesms.database.SessionContactDatabase
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.getAccentColor
@@ -68,20 +68,20 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     // region Updating
     fun bind(authorPublicKey: String, body: String?, attachments: SlideDeck?, thread: Recipient,
         isOutgoingMessage: Boolean, isOpenGroupInvitation: Boolean, threadID: Long,
-        isOriginalMissing: Boolean, glide: GlideRequests) {
+        isOriginalMissing: Boolean, glide: RequestManager) {
         // Author
         val author = contactDb.getContactWithAccountID(authorPublicKey)
         val localNumber = TextSecurePreferences.getLocalNumber(context)
         val quoteIsLocalUser = localNumber != null && authorPublicKey == localNumber
 
         val authorDisplayName =
-            if (quoteIsLocalUser) context.getString(R.string.QuoteView_you)
+            if (quoteIsLocalUser) context.getString(R.string.you)
             else author?.displayName(Contact.contextForRecipient(thread)) ?: "${authorPublicKey.take(4)}...${authorPublicKey.takeLast(4)}"
         binding.quoteViewAuthorTextView.text = authorDisplayName
         binding.quoteViewAuthorTextView.setTextColor(getTextColor(isOutgoingMessage))
         // Body
         binding.quoteViewBodyTextView.text = if (isOpenGroupInvitation)
-            resources.getString(R.string.open_group_invitation_view__open_group_invitation)
+            resources.getString(R.string.communityInvitation)
         else MentionUtilities.highlightMentions(
             text = (body ?: "").toSpannable(),
             isOutgoingMessage = isOutgoingMessage,
@@ -106,7 +106,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 attachments.audioSlide != null -> {
                     binding.quoteViewAttachmentPreviewImageView.setImageResource(R.drawable.ic_microphone)
                     binding.quoteViewAttachmentPreviewImageView.isVisible = true
-                    binding.quoteViewBodyTextView.text = resources.getString(R.string.Slide_audio)
+                    binding.quoteViewBodyTextView.text = resources.getString(R.string.audio)
                 }
                 attachments.documentSlide != null -> {
                     binding.quoteViewAttachmentPreviewImageView.setImageResource(R.drawable.ic_document_large_light)
@@ -120,7 +120,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                         .root.setRoundedCorners(toPx(4, resources))
                     binding.quoteViewAttachmentThumbnailImageView.root.setImageResource(glide, slide, false)
                     binding.quoteViewAttachmentThumbnailImageView.root.isVisible = true
-                    binding.quoteViewBodyTextView.text = if (MediaUtil.isVideo(slide.asAttachment())) resources.getString(R.string.Slide_video) else resources.getString(R.string.Slide_image)
+                    binding.quoteViewBodyTextView.text = if (MediaUtil.isVideo(slide.asAttachment())) resources.getString(R.string.video) else resources.getString(R.string.image)
                 }
             }
         }

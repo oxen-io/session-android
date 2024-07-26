@@ -248,7 +248,7 @@ class DisappearingMessagesViewModelTest {
         ).isEqualTo(
             UiState(
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_delete_type,
+                    R.string.disappearingMessagesDeleteType,
                     typeOption(ExpiryMode.NONE, selected = true),
                     typeOption(12.hours, ExpiryType.AFTER_READ),
                     typeOption(1.days, ExpiryType.AFTER_SEND)
@@ -287,7 +287,7 @@ class DisappearingMessagesViewModelTest {
         ).isEqualTo(
             UiState(
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_delete_type,
+                    R.string.disappearingMessagesDeleteType,
                     typeOption(ExpiryMode.NONE),
                     typeOption(time, ExpiryType.AFTER_READ),
                     typeOption(time, ExpiryType.AFTER_SEND, selected = true)
@@ -333,7 +333,7 @@ class DisappearingMessagesViewModelTest {
         ).isEqualTo(
             UiState(
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_delete_type,
+                    R.string.disappearingMessagesDeleteType,
                     typeOption(ExpiryMode.NONE),
                     typeOption(time, ExpiryType.LEGACY, selected = true),
                     typeOption(12.hours, ExpiryType.AFTER_READ, enabled = false),
@@ -380,7 +380,7 @@ class DisappearingMessagesViewModelTest {
         ).isEqualTo(
             UiState(
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_delete_type,
+                    R.string.disappearingMessagesDeleteType,
                     typeOption(ExpiryMode.NONE),
                     typeOption(12.hours, ExpiryType.AFTER_READ),
                     typeOption(time, ExpiryType.AFTER_SEND, selected = true)
@@ -427,7 +427,7 @@ class DisappearingMessagesViewModelTest {
         ).isEqualTo(
             UiState(
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_delete_type,
+                    R.string.disappearingMessagesDeleteType,
                     typeOption(ExpiryMode.NONE),
                     typeOption(1.days, ExpiryType.AFTER_READ, selected = true),
                     typeOption(time, ExpiryType.AFTER_SEND)
@@ -480,7 +480,7 @@ class DisappearingMessagesViewModelTest {
         ).isEqualTo(
             UiState(
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_delete_type,
+                    R.string.disappearingMessagesDeleteType,
                     typeOption(ExpiryMode.NONE),
                     typeOption(12.hours, ExpiryType.AFTER_READ),
                     typeOption(1.days, ExpiryType.AFTER_SEND, selected = true)

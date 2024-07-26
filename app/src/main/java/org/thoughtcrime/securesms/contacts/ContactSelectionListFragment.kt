@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import network.loki.messenger.databinding.ContactSelectionListFragmentBinding
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.mms.GlideApp
+import com.bumptech.glide.Glide
 
 class ContactSelectionListFragment : Fragment(), LoaderManager.LoaderCallbacks<List<ContactSelectionListItem>>, ContactClickListener {
     private lateinit var binding: ContactSelectionListFragmentBinding
@@ -27,7 +27,7 @@ class ContactSelectionListFragment : Fragment(), LoaderManager.LoaderCallbacks<L
 
     private val listAdapter by lazy {
         val result = ContactSelectionListAdapter(requireActivity(), multiSelect)
-        result.glide = GlideApp.with(this)
+        result.glide = Glide.with(this)
         result.contactClickListener = this
         result
     }

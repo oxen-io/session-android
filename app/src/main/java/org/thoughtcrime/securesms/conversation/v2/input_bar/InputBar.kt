@@ -27,7 +27,7 @@ import org.thoughtcrime.securesms.conversation.v2.messages.QuoteView
 import org.thoughtcrime.securesms.conversation.v2.messages.QuoteViewDelegate
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.util.addTextChangedListener
 import org.thoughtcrime.securesms.util.contains
 
@@ -188,7 +188,7 @@ class InputBar @JvmOverloads constructor(
 
     private fun startRecordingVoiceMessage() { delegate?.startRecordingVoiceMessage() }
 
-    fun draftQuote(thread: Recipient, message: MessageRecord, glide: GlideRequests) {
+    fun draftQuote(thread: Recipient, message: MessageRecord, glide: RequestManager) {
         quoteView?.let(binding.inputBarAdditionalContentContainer::removeView)
 
         quote = message
@@ -238,7 +238,7 @@ class InputBar @JvmOverloads constructor(
         requestLayout()
     }
 
-    fun updateLinkPreviewDraft(glide: GlideRequests, updatedLinkPreview: LinkPreview) {
+    fun updateLinkPreviewDraft(glide: RequestManager, updatedLinkPreview: LinkPreview) {
         // Update our `linkPreview` property with the new (provided as an argument to this function)
         // then update the View from that.
         linkPreview = updatedLinkPreview.also { linkPreviewDraftView?.update(glide, it) }

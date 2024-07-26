@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivitySelectContactsBinding
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
-import org.thoughtcrime.securesms.mms.GlideApp
+import com.bumptech.glide.Glide
 
 class SelectContactsActivity : PassphraseRequiredActionBarActivity(), LoaderManager.LoaderCallbacks<List<String>> {
     private lateinit var binding: ActivitySelectContactsBinding
@@ -21,7 +21,7 @@ class SelectContactsActivity : PassphraseRequiredActionBarActivity(), LoaderMana
     private lateinit var usersToExclude: Set<String>
 
     private val selectContactsAdapter by lazy {
-        SelectContactsAdapter(this, GlideApp.with(this))
+        SelectContactsAdapter(this, Glide.with(this))
     }
 
     companion object {
@@ -35,7 +35,7 @@ class SelectContactsActivity : PassphraseRequiredActionBarActivity(), LoaderMana
         super.onCreate(savedInstanceState, isReady)
         binding = ActivitySelectContactsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar!!.title = resources.getString(R.string.activity_select_contacts_title)
+        supportActionBar!!.title = resources.getString(R.string.contactSelect)
 
         usersToExclude = intent.getStringArrayExtra(usersToExcludeKey)?.toSet() ?: setOf()
         val emptyStateText = intent.getStringExtra(emptyStateTextKey)

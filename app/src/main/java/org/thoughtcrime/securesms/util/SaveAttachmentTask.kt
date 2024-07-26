@@ -32,8 +32,8 @@ import java.util.concurrent.TimeUnit
 class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int = 1) :
     ProgressDialogAsyncTask<SaveAttachmentTask.Attachment, Void, Pair<Int, String?>>(
         context,
-        context.resources.getQuantityString(R.plurals.ConversationFragment_saving_n_attachments, count, count),
-        context.resources.getQuantityString(R.plurals.ConversationFragment_saving_n_attachments_to_sd_card, count, count)
+        context.resources.getString(R.string.saving),
+        context.resources.getString(R.string.saving)
     ) {
 
     companion object {
@@ -47,12 +47,13 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         @JvmOverloads
         fun showWarningDialog(context: Context, count: Int = 1, onAcceptListener: () -> Unit = {}) {
             context.showSessionDialog {
-                title(R.string.ConversationFragment_save_to_sd_card)
+                title(R.string.permissionsRequired)
                 iconAttribute(R.attr.dialog_alert_icon)
-                text(context.resources.getQuantityString(
-                    R.plurals.ConversationFragment_saving_n_media_to_storage_warning,
-                    count,
-                    count))
+
+                // ACL TODO - Need a replacement plurals string for the below!
+                val txt = context.resources.getQuantityString(R.plurals.ConversationFragment_saving_n_media_to_storage_warning, count, count)
+                text(txt)
+
                 button(R.string.yes) { onAcceptListener() }
                 button(R.string.no)
             }
@@ -235,18 +236,12 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
 
         when (result.first) {
             RESULT_FAILURE -> {
-                val message = context.resources.getQuantityText(
-                        R.plurals.ConversationFragment_error_while_saving_attachments_to_sd_card,
-                        attachmentCount)
+                val message = context.resources.getString(R.string.attachmentsSaveError)
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
 
             RESULT_SUCCESS -> {
-                val message = if (!TextUtils.isEmpty(result.second)) {
-                    context.resources.getString(R.string.SaveAttachmentTask_saved_to, result.second)
-                } else {
-                    context.resources.getString(R.string.SaveAttachmentTask_saved)
-                }
+                val message = context.resources.getString(R.string.saved)
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
 

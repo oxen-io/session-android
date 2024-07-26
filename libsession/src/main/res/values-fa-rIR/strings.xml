@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yes">بله</string>
+    <string name="no">خیر</string>
+    <string name="delete">حذف</string>
+    <string name="save">ذخیره</string>
+    <string name="noteToSelf">یادداشت به خود</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">پیام جدید</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">این ماه</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">ارسال نشد، برای جزئیات بیشتر ضربه بزنید</string>
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">پیوست فایل</string>
+    <string name="message">پیام</string>
+    <string name="notificationsMuted">بی صدا شده</string>
+    <string name="blockUnblock">رفع مسدودیت</string>
+    <string name="callsPermissionsRequired">دسترسی تلفن مورد نیاز است</string>
+    <!-- ConversationFragment -->
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="one">ذخیره همه %1$d رسانه ها به حافظه دستگاه ، باعث خواهد شد که همه برنامه های دیگر نصب شده در دستگاه شما ، به این اطلاعات دسترسی پیدا کنند. \n\n آیا مایل به ادامه هستید؟</item>
+        <item quantity="other">ذخیره همه %1$d مدیا به حافظه دستگاه ، باعث خواهد شد که همه برنامه های دیگر نصب شده در دستگاه شما ، به این اطلاعات دسترسی پیدا کنند. \n\n آیا مایل به ادامه هستید ؟</item>
+    </plurals>
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">هیچ کدام</string>
+    <!-- DateUtils -->
+    <string name="DateUtils_just_now">اکنون</string>
+    <string name="DateUtils_today">امروز</string>
+    <string name="DateUtils_yesterday">دیروز</string>
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">استیکر ها</string>
+    <!-- CropImageActivity -->
+    <string name="photo">تصویر پروفایل</string>
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">در حال جمع‌آوری پیوست‌ها...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <string name="MediaPickerActivity_send_to">ارسال به %s</string>
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">دوربین در دسترس نیست</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">تمام رسانه ها</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">مسدود</string>
+    <!-- Slide -->
+    <string name="image">تصویر</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">گروه به روز شد</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session قفل شده است</string>
+    <!-- MediaPreviewActivity -->
+    <string name="onionRoutingPathYou">شما</string>
+    <string name="draft">پیش نویس</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">علامت گذاری به عنوان خوانده شده</string>
+    <!-- Notification Channels -->
+    <string name="failures">خطاها</string>
+    <string name="lockAppStatus">وضعیت قفل</string>
+    <string name="updateApp">به‌روزآوری‌های برنامه</string>
+    <string name="other">دیگر</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">ذخیره شد</string>
+    <!-- SearchToolbar -->
+    <string name="search">جستجو</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">میانبر نامعتبر</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <string name="contentDescriptionCamera">دوربین</string>
+    <string name="gif">گیف</string>
+    <string name="attachment_type_selector__gallery_description">تصویر یا ویدئو</string>
+    <string name="attachment_type_selector__gallery">گالری</string>
+    <string name="attachment_type_selector__drawer_description">تغییر حالت نگه دارنده پیوست</string>
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">ارسال</string>
+    <string name="conversation_activity__attachment_thumbnail">پیوست تصویر کوچک</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">تغییر حالت نگه دارنده پیوست دوربین سریع</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">برای لغو بکشید</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__delivered_description">تحویل</string>
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">پیوستن</string>
+    <string name="read">خواندن</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">پیام اصلی یافت نشد</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">فرستاده</string>
+    <string name="received">رسیده</string>
+    <string name="message_details_header__disappears">نشان داده نشده ها</string>
+    <string name="via">از طریق</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsMute1Hour">بی صدا به مدت 1 ساعت</string>
+    <string name="notificationsMute2Hours">بی صدا به مدت 2 ساعت</string>
+    <string name="notificationsMute1Day">بی صدا برای 1 روز</string>
+    <string name="notificationsContentShowNameOnly">فقط نام</string>
+    <string name="arrays__images">تصویر</string>
+    <string name="audio">صدا</string>
+    <string name="video">ویدئو</string>
+    <string name="max">حداکثر</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">ارسال پیش‌نمایش‌های لینک</string>
+    <string name="screenSecurity">امنیت صفحه</string>
+    <string name="sessionNotifications">اعلانات</string>
+    <string name="notificationsLedColor">رنگ چراغ ال‌ای‌دی</string>
+    <string name="notificationsSound">صدا</string>
+    <string name="notificationsVibrate">لرزش</string>
+    <string name="theDefault">پیش فرض</string>
+    <string name="incognitoKeyboard">کیبورد ناشناس</string>
+    <string name="readReceipts">رسیدهای خواندن</string>
+    <string name="typingIndicators">نشانگر‌های در حال تایپ</string>
+    <string name="conversationsMessageTrimming">مرتب‌سازی پیام</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">مسدود کردن کاربر</string>
+    <string name="call">تماس گرفتن</string>
+    <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">ذخیره پیوست</string>
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">وصل نمودن صدای مکالمه</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">بیصدا کردن اعلان ها</string>
+    <!-- conversation -->
+    <string name="groupLeave">مرخص شدن از گروه</string>
+    <string name="conversationsAddToHome">افزودن به صفحه اصلی</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">در حال حذف</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">مجوز لازم است</string>
+    <string name="notNow">حالا نه</string>
+    <string name="registration_activity__skip">پرش</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">ادامه </string>
+    <string name="copy">کپی کردن</string>
+    <string name="communityEnterUrlErrorInvalid">URL غیرمعتبر</string>
+    <string name="copied">در حافظه موقت کپی شد</string>
+    <string name="next">بعدی</string>
+    <string name="share">اشتراک‌گذاری</string>
+    <string name="cancel">لغو</string>
+    <string name="view_fake_chat_bubble_4">Session با استفاده از ترکیبی از فناوری‌های پیشرفته مسیریابی ناشناس و رمزگذاری سرتاسری این کار را انجام می‌دهد.</string>
+    <string name="view_fake_chat_bubble_5">یک دوست هیچ‌وقت به دوستان خود اجازه استفاده از پیام‌رسان‌های در معرض خطر را نمی‌دهد.</string>
+    <string name="displayNamePick">نام خود را برای نمایش انتخاب کنید</string>
+    <string name="recommended">گزینه پیشنهادی</string>
+    <string name="activity_pn_mode_no_option_picked_dialog_title">لطفا یک گزینه را انتخاب کنید</string>
+    <string name="activity_home_empty_state_button_title">شروع Session</string>
+    <string name="conversationsDeleted">مکالمه حذف شد</string>
+    <string name="activity_seed_title_2">این عبارت بازیابی شماست</string>
+    <string name="activity_seed_explanation">عبارت بازیابی شما کلید اصلی شناسه‌ی Session شما است - در صورت عدم دسترسی به دستگاه خود می توانید از آن برای بازگرداندن شناسه‌ی Session خود استفاده کنید. عبارت بازیابی خود را در مکانی امن ذخیره کنید و آن را به کسی ندهید.</string>
+    <string name="activity_seed_reveal_button_title">نگه دارید تا نشان داده شود</string>
+    <string name="view_seed_reminder_title">شما تقریبا تمام کردید! ۸۰٪</string>
+    <string name="view_seed_reminder_subtitle_1">با ذخیره کردن عبارت بازیابی، از حساب خود محافظت کنید</string>
+    <string name="view_seed_reminder_subtitle_2">برای دیدن عبارت بازیابی، بر روی کلمات پنهان شده ضربه زده و نگه دارید، سپس با خیال راحت آن را ذخیره کنید تا از شناسه‌ی Session خود محافظت نمایید.</string>
+    <string name="onionRoutingPath">مسیر</string>
+    <string name="onionRoutingPathEntryNode">گره ورودی</string>
+    <string name="onionRoutingPathServiceNode">گره سرویس</string>
+    <string name="onionRoutingPathDestination">مقصد</string>
+    <string name="learnMore">بیشتر بدانید</string>
+    <string name="resolving">در حال اصلاح…</string>
+    <string name="qrScan">اسکن کد QR</string>
+    <string name="cameraGrantAccessQr">برنامه Session برای اسکن کدهای QR احتیاج دارد به دوربین دسترسی داشته باشد</string>
+    <string name="cameraGrantAccess">اجازه دسترسی به دوربین</string>
+    <string name="groupNameEnter">نام گروه را وارد کنید</string>
+    <string name="activity_create_closed_group_empty_state_button_title">شروع Session</string>
+    <string name="groupNameEnterPlease">لطفا یک نام گروه وارد کنید</string>
+    <string name="sessionSettings">تنظیمات</string>
+    <string name="sessionInviteAFriend">دعوت از یک دوست</string>
+    <string name="helpFAQ">سوالات متداول</string>
+    <string name="sessionClearData">پاک کردن اطلاعات</string>
+    <string name="notificationsStyle">سبک اعلان</string>
+    <string name="notificationsContent">محتوای اعلان</string>
+    <string name="sessionPrivacy">حریم خصوصی</string>
+    <string name="activity_help_settings__export_logs">صدور گزارش‌ها</string>
+    <string name="notificationsStrategy">استراتژی اعلان</string>
+    <string name="useFastMode">استفاده از حالت سریع</string>
+    <string name="clearDataAll">پاک کردن همه داتا</string>
+    <string name="qrCode">کد QR</string>
+    <string name="contactsContacts">مخاطبین</string>
+    <!-- Next round of translation -->
+    <string name="menu_apply_button">اعمال</string>
+    <string name="done">انجام شد</string>
+    <string name="groupEdit">ویرایش گروه</string>
+    <string name="contactSelect">انتخاب مخاطب‌ها</string>
+    <string name="appearanceThemes">قالب</string>
+    <string name="attachment">پیوست</string>
+    <string name="messageVoice">پیام صوتی</string>
+    <string name="activity_link_device_skip_prompt">این فرآیند کمی طولانی است، دوست دارید ردش کنید؟</string>
+    <string name="communityJoinOfficial">یا به یکی از این‌ها بپیوندید…</string>
+    <string name="notificationsFastMode">حالت سریع</string>
+    <string name="notificationsFastModeDescriptionAndroid">با استفاده از سرورهای گوگل، شما به صورت سریع و مطمئن از پیام‌های جدید مطلع می‌شوید.</string>
+    <string name="notificationsSlowModeDescription">Session هرازگاهی در پس زمینه وجود پیام‌های جدید را بررسی می‌کند.</string>
+    <string name="open">باز کردن</string>
+    <string name="urlCopy">کپی URL</string>
+    <string name="enable">فعال کردن</string>
+    <string name="download">دانلود</string>
+    <string name="media">رسانه</string>
+    <string name="theError">خطا</string>
+    <string name="warning">هشدار</string>
+    <string name="pin">سنجاق کردن</string>
+    <string name="pinUnpin">برداشتن سنجاق</string>
+    <string name="messages">پیام‌ها</string>
+    <string name="sessionMessageRequests">درخواست های پیام</string>
+    <string name="accept">پذیرفتن</string>
+    <string name="decline">رد کردن</string>
+    <string name="clearAll">حذف همه</string>
+    <string name="messageRequestsAccepted">درخواست پیام شما قبول شد.</string>
+    <string name="messageRequestPending">درخواست پیام شما در انتظار پاسخ می باشد.</string>
+    <string name="messageRequestsNonePending">هیچ درخواست پیامی وجود ندارد</string>
+    <string name="messageRequestsNew">شما درخواست پیام جدیدی دارید</string>
+    <string name="callsInProgress">در حال تماس...</string>
+    <string name="callsEnd">پایان تماس</string>
+    <string name="callsSessionCall">تماس Session</string>
+    <string name="callsReconnecting">در حال اتصال دوباره...</string>
+    <string name="dismiss">رد کردن</string>
+    <string name="appearancePrimaryColor">رنگ اولیه</string>
+    <string name="emojiCategoryRecentlyUsed">اخیرا استفاده شده</string>
+    <string name="emojiCategorySmileys">شکلک‌ها و مردم</string>
+    <string name="emojiCategoryAnimals" comment="Heading for an emoji list's category">حیوانات و طبیعت</string>
+    <string name="emojiCategoryFood" comment="Heading for an emoji list's category">غذا و نوشیدنی</string>
+    <string name="emojiCategoryActivities">فعالیت ها</string>
+    <string name="emojiCategoryTravel" comment="Heading for an emoji list's category">مسافرت و اماکن</string>
+    <string name="emojiCategoryObjects">اشیاء</string>
+    <string name="emojiCategorySymbols">نمادها</string>
+    <string name="emojiCategoryFlags">پرچم ها</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+%1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="KeyboardPagerFragment_search_emoji">جستجو ایموجی</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">بازگشت به ایموجی</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">پاک کردن ورودی جستجو</string>
+    <string name="appearanceAutoDarkMode">حالت شب خودکار</string>
+    <string name="fragment_enter_public_key_prompt">یک مکالمه جدید را با وارد کردن شناسه Session شخصی شروع کنید یا شناسه جلسه خود را با آنها به اشتراک بگذارید.</string>
+</resources>

@@ -11,6 +11,7 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -20,8 +21,7 @@ import org.thoughtcrime.securesms.imageeditor.Bounds;
 import org.thoughtcrime.securesms.imageeditor.Renderer;
 import org.thoughtcrime.securesms.imageeditor.RendererContext;
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader;
-import org.thoughtcrime.securesms.mms.GlideApp;
-import org.thoughtcrime.securesms.mms.GlideRequest;
+import com.bumptech.glide.Glide;
 
 import java.util.concurrent.ExecutionException;
 
@@ -97,8 +97,8 @@ final class UriGlideRenderer implements Renderer {
     }
   }
 
-  private GlideRequest<Bitmap> getBitmapGlideRequest(@NonNull Context context) {
-    return GlideApp.with(context)
+  private RequestBuilder<Bitmap> getBitmapGlideRequest(@NonNull Context context) {
+    return Glide.with(context)
                    .asBitmap()
                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                    .override(maxWidth, maxHeight)

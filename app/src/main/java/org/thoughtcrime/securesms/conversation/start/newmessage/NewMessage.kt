@@ -41,7 +41,7 @@ import org.thoughtcrime.securesms.ui.components.SessionTabRow
 import org.thoughtcrime.securesms.ui.contentDescription
 import org.thoughtcrime.securesms.ui.theme.LocalType
 
-private val TITLES = listOf(R.string.enter_account_id, R.string.qrScan)
+private val TITLES = listOf(R.string.accountIdEnter, R.string.qrScan)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -63,7 +63,7 @@ internal fun NewMessage(
         SessionTabRow(pagerState, TITLES)
         HorizontalPager(pagerState) {
             when (TITLES[it]) {
-                R.string.enter_account_id -> EnterAccountId(state, callbacks, onHelp)
+                R.string.accountIdEnter -> EnterAccountId(state, callbacks, onHelp)
                 R.string.qrScan -> MaybeScanQrCode(qrErrors, onScan = callbacks::onScanQrCode)
             }
         }
@@ -101,7 +101,7 @@ private fun EnterAccountId(
             Spacer(modifier = Modifier.height(LocalDimensions.current.xxxsSpacing))
 
             BorderlessButtonWithIcon(
-                text = stringResource(R.string.messageNewDescription),
+                text = stringResource(R.string.messageNewDescriptionMobile),
                 modifier = Modifier
                     .contentDescription(R.string.AccessibilityId_help_desk_link)
                     .padding(horizontal = LocalDimensions.current.mediumSpacing)

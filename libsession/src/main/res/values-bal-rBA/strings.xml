@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="delete">Hapus</string>
+    <string name="save">Simpan</string>
+    <string name="noteToSelf">Catatan Pribadi</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Pesan baru</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Bulan ini</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">Gagal mengirim, ketuk untuk detil</string>
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Tambahkan lampiran</string>
+    <string name="blockUnblock">Buka blokir</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Kosong</string>
+    <!-- DateUtils -->
+    <string name="DateUtils_just_now">Sekarang</string>
+    <string name="DateUtils_today">Hari ini</string>
+    <string name="DateUtils_yesterday">Kemarin</string>
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Stiker</string>
+    <!-- CropImageActivity -->
+    <string name="photo">Avatar</string>
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Mengumpulkan lampiran...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <string name="MediaPickerActivity_send_to">Kirim ke %s</string>
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Kamera tidak tersedia.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Semua media</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Blokir</string>
+    <!-- Slide -->
+    <string name="image">Gambar</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Grup diperbarui</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session tidak terkunci</string>
+    <!-- MediaPreviewActivity -->
+    <string name="onionRoutingPathYou">Anda</string>
+    <string name="draft">Draf</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Tandai sudah dibaca</string>
+    <!-- Notification Channels -->
+    <string name="failures">Gagal</string>
+    <string name="lockAppStatus">Status penguncian</string>
+    <string name="updateApp">pembaruan aplikasi</string>
+    <string name="other">Yang lain</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Tersimpan</string>
+    <!-- SearchToolbar -->
+    <string name="search">Cari</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Pintasan tidak sah</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- TransferControlView -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <string name="contentDescriptionCamera">Kamera</string>
+    <string name="attachment_type_selector__gallery_description">Gambar atau video</string>
+    <string name="attachment_type_selector__gallery">Galeri</string>
+    <string name="attachment_type_selector__drawer_description">Jungkitkan laci lampiran</string>
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Kirim</string>
+    <string name="conversation_activity__attachment_thumbnail">Gambar Mini Lampiran</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Jungkitkan laci lampiran kamera cepat</string>
+    <!-- conversation_input_panel -->
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__delivered_description">Terkirim</string>
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Pesan asli tidak lagi tersedia</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Terkirim</string>
+    <string name="received">Diterima</string>
+    <string name="message_details_header__disappears">Hilang</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsMute1Hour">Bisukan selama 1 jam</string>
+    <string name="notificationsMute2Hours">Bisukan selama 2 jam</string>
+    <string name="notificationsMute1Day">Bisukan selama 1 hari</string>
+    <string name="notificationsContentShowNameOnly">Nama saja</string>
+    <string name="arrays__images">Gambar</string>
+    <string name="max">Maks</string>
+    <!-- plurals.xml -->
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Kirim pratinjau tautan</string>
+    <string name="screenSecurity">Keamanan Layar</string>
+    <string name="sessionNotifications">Pemberitahuan</string>
+    <string name="notificationsLedColor">Warna LED</string>
+    <string name="notificationsSound">Bunyi</string>
+    <string name="notificationsVibrate">Getar</string>
+    <string name="theDefault">Bawaan</string>
+    <string name="incognitoKeyboard">Papan ketik tersembunyi</string>
+    <string name="readReceipts">Pesan terbaca</string>
+    <string name="typingIndicators">Indikator penulisan</string>
+    <string name="conversationsMessageTrimming">Penyingkatan pesan</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">Simpan lampiran</string>
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Bunyikan</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Bisukan pemberitahuan</string>
+    <!-- conversation -->
+    <string name="groupLeave">Keluar grup</string>
+    <string name="conversationsAddToHome">tambahkan ke layar utama</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Menghapus</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Memerlukan izin akses</string>
+    <string name="notNow">Nanti saja</string>
+    <string name="registration_activity__skip">Lewati</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Lanjut</string>
+    <string name="copy">Salin</string>
+    <string name="communityEnterUrlErrorInvalid">URL salah</string>
+    <string name="copied">Salin ke clipboard</string>
+    <string name="next">Selanjutnya</string>
+    <string name="share">Bagikan</string>
+    <string name="cancel">Batal</string>
+    <string name="view_fake_chat_bubble_4">Menggunakan kombinasi routing yang anonim canggih dan teknologi enkripsi ujung-ke-ujung (end-to-end encryption)</string>
+    <string name="view_fake_chat_bubble_5">Rekan yang baik tak membiarkan rekannya menggunakan aplikasi bertukar pesan yang tak aman. Terima kasih kembali.</string>
+    <string name="displayNamePick">Pilih nama yang ditampilkan</string>
+    <string name="recommended">Direkomendasikan</string>
+    <string name="activity_pn_mode_no_option_picked_dialog_title">Pilih salah satu opsi</string>
+    <string name="activity_home_empty_state_button_title">Mulai sebuah Session</string>
+    <string name="conversationsDeleted">Percakapan terhapus</string>
+    <string name="activity_seed_title_2">Inilah kata pemulihan anda</string>
+    <string name="activity_seed_explanation">Kata pemulihan adalah kunci Session ID -- bisa digunakan untuk mengembalikan Session ID ketika anda kehilangan perangkat. Simpan kata pemulihan di tempat yang aman dan jangan berikan kepada siapapun</string>
+    <string name="activity_seed_reveal_button_title">Tekan untuk melihat</string>
+    <string name="view_seed_reminder_subtitle_1">Amankan akun anda dengan menyimpan kata pemulihan</string>
+    <string name="view_seed_reminder_subtitle_2">Ketuk dan tekan kata yang disensor untuk mengetahui kata pemulihan anda, lalu simpan baik-baik untuk mengamnkan Session ID anda</string>
+    <string name="onionRoutingPathEntryNode">Simpul masuk</string>
+    <string name="onionRoutingPathServiceNode">Simpul layanan</string>
+    <string name="onionRoutingPathDestination">Tujuan</string>
+    <string name="learnMore">Pelajari lebih lanjut</string>
+    <string name="qrScan">Pindai kode QR</string>
+    <string name="cameraGrantAccessQr">Session membutuhkan akses kamera untuk memindai kode QR</string>
+    <string name="cameraGrantAccess">Berikan akses kamera</string>
+    <string name="groupNameEnter">Masukkan nama grup</string>
+    <string name="activity_create_closed_group_empty_state_button_title">Mulai sebuah Session</string>
+    <string name="groupNameEnterPlease">Masukkan nama grup</string>
+    <string name="sessionSettings">Pengaturan</string>
+    <string name="sessionClearData">Hapus data</string>
+    <string name="notificationsStyle">Gaya notifikasi</string>
+    <string name="notificationsContent">Isi notifikasi</string>
+    <string name="sessionPrivacy">Privasi</string>
+    <string name="notificationsStrategy">Strategi notofikasi</string>
+    <string name="clearDataAll">Hapus semua data</string>
+    <string name="qrCode">Kode QR</string>
+    <string name="contactsContacts">Kontak</string>
+    <!-- Next round of translation -->
+</resources>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sessionMessenger">Sandarbham</string>
+    <string name="yes">అవును</string>
+    <string name="no">కాదు</string>
+    <string name="delete">తొలగించండి</string>
+    <string name="save">భద్రపరుచు</string>
+    <string name="noteToSelf">Sviya gamanika</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">కొత్త సందేశం</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">ఈ నెల</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">విఫలమైంది పంపండి, వివరాల కోసం నొక్కండి</string>
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">అటాచ్మెంట్ జోడించండి</string>
+    <string name="message">సందేశం</string>
+    <string name="blockUnblock">అనుమతించు</string>
+    <!-- ConversationFragment -->
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="one">ఈ మీడియాను నిల్వలో భద్రపరచడం వల్ల మీ పరికరంలో ఏదైనా ఇతర అనువర్తనాలు దానిని వాడుటకు  ప్రవేశాధికారము కలిపిస్తుంది.
+
+కొనసాగించాలా?</item>
+        <item quantity="other">అన్ని %1$d మీడియాను నిల్వలో భద్రపరచడం వల్ల మీ పరికరంలో ఏదైనా ఇతర అనువర్తనాలు వాటిని వాడుటకు ప్రవేశాధికారము కలిపిస్తుంది.
+
+కొనసాగించాలా?</item>
+    </plurals>
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">ఏదీ కాదు</string>
+    <!-- DateUtils -->
+    <string name="DateUtils_just_now">ఇప్పుడు</string>
+    <string name="DateUtils_today">నేడు</string>
+    <string name="DateUtils_yesterday">నిన్న</string>
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">స్టిక్కర్లు</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">జోడింపుల సేకరణ ...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">కెమెరా అందుబాటులో లేదు.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">అన్ని మీడియా</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">నిరోధించు</string>
+    <!-- Slide -->
+    <string name="image">చిత్రం</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">సమూహం నవీకరించబడింది</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session తాళం తీయబడినది</string>
+    <!-- MediaPreviewActivity -->
+    <string name="onionRoutingPathYou">మీరు</string>
+    <string name="draft">చిత్తు పత్రం</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">చదివినట్టు గుర్తుపెట్టు</string>
+    <!-- Notification Channels -->
+    <string name="failures">వైఫల్యాలు</string>
+    <string name="lockAppStatus">స్థితి లాక్</string>
+    <string name="updateApp">అనువర్తన నవీకరణలు</string>
+    <string name="other">ఇతర</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">సేవ్</string>
+    <!-- SearchToolbar -->
+    <string name="search">వెతకండి</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">చెల్లని సత్వరమార్గం</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- TransferControlView -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <string name="contentDescriptionCamera">కెమెరా</string>
+    <string name="gif">గిఫ్</string>
+    <string name="attachment_type_selector__gallery_description">ఇమెజ్   ఆర్   వీడియో</string>
+    <string name="attachment_type_selector__gallery">వారపాక</string>
+    <string name="attachment_type_selector__drawer_description">టోగుల్ అటాచ్మెంట్ సొరుగు</string>
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">పంపించు</string>
+    <string name="conversation_activity__attachment_thumbnail">జోడింపు సూక్ష్మచిత్రం</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">టోగుల్ శీఘ్ర కెమెరా అటాచ్మెంట్ సొరుగు</string>
+    <!-- conversation_input_panel -->
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__delivered_description">పంపిణి ఐనది</string>
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">అసలు సందేశం కనుగొనబడలేదు</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">పంపిన</string>
+    <string name="received">అందుకున్న</string>
+    <string name="message_details_header__disappears">అదృశ్యమవుతుంది</string>
+    <string name="via">ద్వారా</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsMute1Hour">1 గంట నిశబ్దంగా ఉంచు</string>
+    <string name="notificationsMute2Hours">2 గంటలు నిశబ్దంగా ఉంచు</string>
+    <string name="notificationsMute1Day">1 రోజు నిశబ్దంగా ఉంచు</string>
+    <string name="notificationsContentShowNameOnly">పేరు మాత్రమే </string>
+    <string name="arrays__images">చిత్రాలు</string>
+    <string name="audio">ఆడియో</string>
+    <string name="video">వీడియో</string>
+    <string name="max">గరిష్టం</string>
+    <!-- preferences.xml -->
+    <string name="screenSecurity">స్క్రీన్ భద్రత</string>
+    <string name="sessionNotifications">ప్రకటనలు</string>
+    <string name="notificationsLedColor">ఎల్ఈడి రంగు</string>
+    <string name="notificationsSound">శబ్దము</string>
+    <string name="notificationsVibrate">ప్రకంపన</string>
+    <string name="theDefault">అప్రమేయ</string>
+    <string name="incognitoKeyboard">అజ్ఞాత కీబోర్డ్</string>
+    <string name="readReceipts">చదివిన రసీదులు</string>
+    <string name="conversationsMessageTrimming">సందేశం కత్తిరించి సరి చేయుట </string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">జత పరిచినది దాచి పెట్టు </string>
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">మ్యూట్ తీసివేయి</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">  ప్రకటనలను మ్యూట్లో ఉంచు</string>
+    <!-- conversation -->
+    <string name="groupLeave">సమూహాన్ని వదులు</string>
+    <string name="conversationsAddToHome">హోమ్ స్క్రీన్కు జోడించండి</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">తొలగిపోతున్నాయ్</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">అనుమతి అవసరం</string>
+    <string name="notNow">ఇప్పుడు కాదు</string>
+    <string name="registration_activity__skip">వదిలివేయి</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <!-- Next round of translation -->
+</resources>

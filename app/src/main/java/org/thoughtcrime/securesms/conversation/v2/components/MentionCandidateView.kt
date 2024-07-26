@@ -8,13 +8,13 @@ import android.widget.LinearLayout
 import network.loki.messenger.databinding.ViewMentionCandidateBinding
 import org.session.libsession.messaging.mentions.Mention
 import org.thoughtcrime.securesms.groups.OpenGroupManager
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 
 class MentionCandidateView : LinearLayout {
     private lateinit var binding: ViewMentionCandidateBinding
     var mentionCandidate = Mention("", "")
         set(newValue) { field = newValue; update() }
-    var glide: GlideRequests? = null
+    var glide: RequestManager? = null
     var openGroupServer: String? = null
     var openGroupRoom: String? = null
 
