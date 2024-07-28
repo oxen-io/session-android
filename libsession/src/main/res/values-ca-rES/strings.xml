@@ -147,7 +147,6 @@
     <!-- conversation_context -->
     <string name="banUser">Bloca l\'usuari</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Desa l\'adjunt</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -181,8 +180,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Selecciona una opció, si us plau</string>
     <string name="activity_home_empty_state_button_title">Enceta un Session</string>
     <string name="conversationsDeleted">S\'ha suprimit la conversa</string>
-    <string name="activity_seed_title_2">Coneix la teva frase de recuperació</string>
-    <string name="activity_seed_explanation">La teva frase de recuperació és la clau principal del teu ID de Session — pots fer-la servir per a restaurar la teva ID de Session si perds l\'accés al dispositiu. Emmagatzema la frase de recuperació en un lloc segur i no la donis a ningú.</string>
     <string name="onionRoutingPath">Ruta</string>
     <string name="onionRoutingPathEntryNode">Node d\'entrada</string>
     <string name="onionRoutingPathServiceNode">Node de servei</string>
@@ -210,7 +207,6 @@
     <string name="appearanceThemes">Tema</string>
     <string name="attachment">Adjunt</string>
     <string name="messageVoice">Missatge de veu</string>
-    <string name="activity_link_device_skip_prompt">Això triga un xic, t\'ho vols saltar?</string>
     <string name="communityJoinOfficial">O uneix-te a alguns d\'aquests…</string>
     <string name="notificationsFastMode">Mode ràpid</string>
     <string name="notificationsSlowMode">Mode lent</string>

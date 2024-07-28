@@ -149,7 +149,6 @@
     <!-- contact_selection_list -->
     <!-- conversation_context -->
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Įrašyti priedą</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -182,8 +181,6 @@
     <string name="recommended">Rekomenduojama</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Pasirinkite parinktį</string>
     <string name="conversationsDeleted">Pokalbis ištrintas</string>
-    <string name="activity_seed_title_2">Pasitikite savo atkūrimo frazę</string>
-    <string name="activity_seed_explanation">Jūsų atkūrimo frazė yra pagrindinis raktas į jūsų Session ID — galite ją naudoti, kad atkurtumėte savo Session ID tuo atveju, jei prarasite prieigą prie savo įrenginio. Laikykite savo atkūrimo frazę saugioje vietoje ir niekam jos nerodykite.</string>
     <string name="onionRoutingPath">Kelias</string>
     <string name="onionRoutingPathEntryNode">Įėjimo mazgas</string>
     <string name="onionRoutingPathServiceNode">Aptarnavimo mazgas</string>

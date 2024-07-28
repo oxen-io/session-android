@@ -10,7 +10,7 @@
         app:showAsAction="always" />
 
     <item
-        android:title="@string/conversation_context_image__save_attachment"
+        android:title="@string/save"
         android:id="@+id/menu_context_save_attachment"
         android:icon="?menu_save_icon"
         app:showAsAction="always" />
@@ -33,7 +33,7 @@
         app:showAsAction="always" />
 
     <item
-        android:title="@string/conversation_context__menu_resync_message"
+        android:title="@string/resync"
         android:id="@+id/menu_context_resync"
         app:showAsAction="never" />
 

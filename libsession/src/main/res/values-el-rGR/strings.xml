@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">Αποκλεισμός χρήστη</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Αποθήκευση συνημμένου</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -182,8 +181,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Παρακαλούμε κάντε μια επιλογή</string>
     <string name="activity_home_empty_state_button_title">Ξεκινήστε μια συνομιλία</string>
     <string name="conversationsDeleted">Η συνομιλία διαγράφηκε</string>
-    <string name="activity_seed_title_2">Γνωρίστε τη φράση ανάκτησής σας</string>
-    <string name="activity_seed_explanation">Η φράση ανάκτησης είναι το κύριο κλειδί στο Session ID σας - μπορείτε να τη χρησιμοποιήσετε για να επαναφέρετε το Session ID σας εάν χάσετε πρόσβαση στη συσκευή σας. Αποθηκεύστε τη φράση ανάκτησης σε ασφαλές μέρος, και μην τη δώσετε σε κανέναν.</string>
     <string name="onionRoutingPath">Διαδρομή</string>
     <string name="onionRoutingPathEntryNode">Κόμβος Εισόδου</string>
     <string name="onionRoutingPathServiceNode">Κόμβος Υπηρεσίας</string>
@@ -215,7 +212,6 @@
     <string name="appearanceThemes">Θέμα</string>
     <string name="attachment">Συνημμένο</string>
     <string name="messageVoice">Ηχητικό μήνυμα</string>
-    <string name="activity_link_device_skip_prompt">Αυτό παίρνει λίγο χρόνο, θα θέλατε να παραλείψετε;</string>
     <string name="communityJoinOfficial">Ή συνδεθείτε σε ένα από αυτά…</string>
     <string name="notificationsFastMode">Γρήγορη Επιλογή</string>
     <string name="notificationsSlowMode">Αργή Επιλογή</string>

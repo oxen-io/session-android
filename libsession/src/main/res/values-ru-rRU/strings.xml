@@ -150,7 +150,6 @@
     <!-- conversation_context -->
     <string name="banUser">Заблокировать пользователя</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Сохранить вложение</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -184,8 +183,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Пожалуйста, выберите метод</string>
     <string name="activity_home_empty_state_button_title">Начать Сессию</string>
     <string name="conversationsDeleted">Разговор удален</string>
-    <string name="activity_seed_title_2">А вот и ваша секретная фраза для восстановления</string>
-    <string name="activity_seed_explanation">Ваша секретная фраза является главным ключом к вашему Session ID. Вы можете использовать ее для восстановления Session ID, если потеряете доступ к своему устройству. Сохраните свою секретную фразу в безопасном месте, и никому ее не передавайте.</string>
     <string name="onionRoutingPath">Маршрут</string>
     <string name="onionRoutingPathEntryNode">Узел входа</string>
     <string name="onionRoutingPathServiceNode">Служебный узел</string>
@@ -217,7 +214,6 @@
     <string name="appearanceThemes">Тема</string>
     <string name="attachment">Вложение</string>
     <string name="messageVoice">Голосовое сообщение</string>
-    <string name="activity_link_device_skip_prompt">Это занимает некоторое время, хотите пропустить?</string>
     <string name="communityJoinOfficial">Или присоединитесь к одной из этих…</string>
     <string name="notificationsFastMode">Ускоренный режим</string>
     <string name="notificationsSlowMode">Медленный режим</string>

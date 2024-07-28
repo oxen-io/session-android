@@ -24,7 +24,7 @@ data class State(
     val showDebugOptions: Boolean = false
 ) {
     val subtitle get() = when {
-        isGroup || isNoteToSelf -> GetString(R.string.activity_disappearing_messages_subtitle_sent)
+        isGroup || isNoteToSelf -> GetString(R.string.disappearingMessagesDisappearAfterSendDescription)
         else -> GetString(R.string.activity_disappearing_messages_subtitle)
     }
 

@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">Forbari uzanton</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Konservi kunsendaĵon</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -182,8 +181,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Bonvolu Elekti Opcion</string>
     <string name="activity_home_empty_state_button_title">Komenci Sesion</string>
     <string name="conversationsDeleted">Konversacio forviŝite</string>
-    <string name="activity_seed_title_2">Ekkonu vian riparan frazon</string>
-    <string name="activity_seed_explanation">Via ripara frazo estas la ĉefŝlosilo de via Session ID — vi povas uzi ĝin por restaŭri vian Session ID-on se vi malgajros aliron al via aparato. Konservu vian riparan frazon en sekura loko, kaj donu ĝin al neniu.</string>
     <string name="onionRoutingPath">Vojo</string>
     <string name="onionRoutingPathEntryNode">Enira Nodo</string>
     <string name="onionRoutingPathServiceNode">Serva Nodo</string>

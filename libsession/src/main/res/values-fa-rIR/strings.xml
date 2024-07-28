@@ -149,7 +149,6 @@
     <string name="banUser">مسدود کردن کاربر</string>
     <string name="call">تماس گرفتن</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">ذخیره پیوست</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -183,8 +182,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">لطفا یک گزینه را انتخاب کنید</string>
     <string name="activity_home_empty_state_button_title">شروع Session</string>
     <string name="conversationsDeleted">مکالمه حذف شد</string>
-    <string name="activity_seed_title_2">این عبارت بازیابی شماست</string>
-    <string name="activity_seed_explanation">عبارت بازیابی شما کلید اصلی شناسه‌ی Session شما است - در صورت عدم دسترسی به دستگاه خود می توانید از آن برای بازگرداندن شناسه‌ی Session خود استفاده کنید. عبارت بازیابی خود را در مکانی امن ذخیره کنید و آن را به کسی ندهید.</string>
     <string name="onionRoutingPath">مسیر</string>
     <string name="onionRoutingPathEntryNode">گره ورودی</string>
     <string name="onionRoutingPathServiceNode">گره سرویس</string>
@@ -216,7 +213,6 @@
     <string name="appearanceThemes">قالب</string>
     <string name="attachment">پیوست</string>
     <string name="messageVoice">پیام صوتی</string>
-    <string name="activity_link_device_skip_prompt">این فرآیند کمی طولانی است، دوست دارید ردش کنید؟</string>
     <string name="communityJoinOfficial">یا به یکی از این‌ها بپیوندید…</string>
     <string name="notificationsFastMode">حالت سریع</string>
     <string name="notificationsFastModeDescriptionAndroid">با استفاده از سرورهای گوگل، شما به صورت سریع و مطمئن از پیام‌های جدید مطلع می‌شوید.</string>

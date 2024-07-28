@@ -147,7 +147,6 @@
     <!-- conversation_context -->
     <string name="banUser">ユーザーをバンする</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">添付ファイルを保存</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -181,8 +180,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">オプションを選択してください</string>
     <string name="activity_home_empty_state_button_title">Session を開始する</string>
     <string name="conversationsDeleted">会話を削除しました</string>
-    <string name="activity_seed_title_2">リカバリーフレーズに合致する</string>
-    <string name="activity_seed_explanation">リカバリーフレーズは、Session ID のマスターキーです。デバイスにアクセスできなくなった場合、これを使用して Session ID を復元できます。リカバリーフレーズを安全な場所に保管し、誰にも教えないでください。</string>
     <string name="onionRoutingPath">パス</string>
     <string name="onionRoutingPathEntryNode">エントリーノード</string>
     <string name="onionRoutingPathServiceNode">サービスノード</string>

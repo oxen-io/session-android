@@ -162,7 +162,6 @@
     <string name="banUser">Bannir l\'utilisateur</string>
     <string name="call">Appeler</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Enregistrer la pièce jointe</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -197,8 +196,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Veuillez choisir une option</string>
     <string name="activity_home_empty_state_button_title">Démarrez une Session</string>
     <string name="conversationsDeleted">Conversation supprimée</string>
-    <string name="activity_seed_title_2">Voici votre phrase de récupération</string>
-    <string name="activity_seed_explanation">Votre phrase de récupération est la clé principale de votre Session ID - vous pouvez l\'utiliser pour restaurer votre Session ID si vous perdez l\'accès à votre appareil. Conservez la dans un endroit sûr et ne la donnez à personne.</string>
     <string name="onionRoutingPath">Chemin</string>
     <string name="onionRoutingPathEntryNode">Nœud d’entrée</string>
     <string name="onionRoutingPathServiceNode">Nœud de service</string>
@@ -230,7 +227,6 @@
     <string name="appearanceThemes">Thème</string>
     <string name="attachment">Fichier joint</string>
     <string name="messageVoice">Message vocal</string>
-    <string name="activity_link_device_skip_prompt">Cela prend un certain temps, voulez-vous passer ?</string>
     <string name="communityJoinOfficial">Ou rejoignez l\'un(e) de ceux-ci…</string>
     <string name="notificationsFastMode">Mode rapide</string>
     <string name="notificationsSlowMode">Mode lent</string>

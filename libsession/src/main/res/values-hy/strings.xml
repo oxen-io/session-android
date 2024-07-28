@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">Արգելափակել օգտատիրոչը</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Պահպանել կցորդը</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -182,8 +181,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Խնդրում ենք ընտրել</string>
     <string name="activity_home_empty_state_button_title">Սկսել Սեանս</string>
     <string name="conversationsDeleted">Ջնջված է</string>
-    <string name="activity_seed_title_2">Ծանոթացեք ձեր վերականգնման բառակապակցության հետ</string>
-    <string name="activity_seed_explanation">Session այդին Ձեր Session բանալին է, որը կարող եք վերականգնել եթե կորցնեք ձեր սարքը, ձեր բանալին պահեք և մի տվեք ինչ-որ մեկին.</string>
     <string name="onionRoutingPath">Ուղի</string>
     <string name="onionRoutingPathEntryNode">Մուտքային Հանգույց</string>
     <string name="onionRoutingPathServiceNode">Ծառայության Հանգույց</string>
@@ -215,7 +212,6 @@
     <string name="appearanceThemes">Ոճ</string>
     <string name="attachment">Կցում</string>
     <string name="messageVoice">Ձայնագրություն</string>
-    <string name="activity_link_device_skip_prompt">Սա որոշ ժամանակ է տևում, կցանկանա՞ք բաց թողնել:</string>
     <string name="communityJoinOfficial">Կամ միացե՛ք սրանցից մեկին…</string>
     <string name="notificationsFastMode">Արագ ռեժիմ</string>
     <string name="notificationsSlowMode">Դանդաղ ռեժիմ</string>

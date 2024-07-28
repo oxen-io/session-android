@@ -149,7 +149,6 @@
     <!-- conversation_context -->
     <string name="banUser">Banir utilizador</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Guardar anexo</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -183,8 +182,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Escolha uma opção</string>
     <string name="activity_home_empty_state_button_title">Iniciar uma sessão</string>
     <string name="conversationsDeleted">Conversa excluída</string>
-    <string name="activity_seed_title_2">Revele sua frase de recuperação</string>
-    <string name="activity_seed_explanation">Sua frase de recuperação é a chave mestra do seu ID Session - você pode usá-la para restaurar seu ID Session se perder o acesso ao seu dispositivo. Armazene sua frase de recuperação em um local seguro e não a entregue a ninguém.</string>
     <string name="onionRoutingPath">Caminho</string>
     <string name="onionRoutingPathEntryNode">Nó de Entrada</string>
     <string name="onionRoutingPathServiceNode">Nó de Serviço</string>

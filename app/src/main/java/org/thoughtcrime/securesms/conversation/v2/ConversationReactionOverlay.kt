@@ -562,11 +562,11 @@ class ConversationReactionOverlay : FrameLayout {
         }
         // Resync
         if (message.isSyncFailed) {
-            items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_resync_message, { handleActionItemClicked(Action.RESYNC) })
+            items += ActionItem(R.attr.menu_reply_icon, R.string.resync, { handleActionItemClicked(Action.RESYNC) })
         }
         // Save media
         if (message.isMms && (message as MediaMmsMessageRecord).containsMediaSlide()) {
-            items += ActionItem(R.attr.menu_save_icon, R.string.conversation_context_image__save_attachment, { handleActionItemClicked(Action.DOWNLOAD) }, R.string.AccessibilityId_save_attachment)
+            items += ActionItem(R.attr.menu_save_icon, R.string.save, { handleActionItemClicked(Action.DOWNLOAD) }, R.string.AccessibilityId_save_attachment)
         }
         backgroundView.visibility = VISIBLE
         foregroundView.visibility = VISIBLE

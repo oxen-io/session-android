@@ -152,7 +152,6 @@
     <!-- conversation_context -->
     <string name="banUser">منع المستخدم</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">حفظ المرفق</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -186,8 +185,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">اِختر</string>
     <string name="activity_home_empty_state_button_title">اِبدا جلسة محادثة</string>
     <string name="conversationsDeleted">تم حذف المحادثة</string>
-    <string name="activity_seed_title_2">هذه هي عبارة الاسترجاع</string>
-    <string name="activity_seed_explanation">عبارة الاسترجاع هي مفتاح عنوان تعريفك - يمكنك استخدامها لاسترجاع عنوان تعريفك اذا فقدت الوصول لجهازك. قم بحفظها في مكان امن و لا تعطها الى اي أحد.</string>
     <string name="onionRoutingPath">مسار</string>
     <string name="onionRoutingPathEntryNode">عقدة الدخول</string>
     <string name="onionRoutingPathServiceNode">عقدة الخدمة</string>
@@ -219,7 +216,6 @@
     <string name="appearanceThemes">الشكل</string>
     <string name="attachment">مُرفق</string>
     <string name="messageVoice">رسالة صوتية</string>
-    <string name="activity_link_device_skip_prompt">هذا يستغرق بعض الوقت، هل تريد أن تتخطى؟</string>
     <string name="communityJoinOfficial">أو انضم إلى واحدة من…</string>
     <string name="notificationsFastMode">الوضع السريع</string>
     <string name="notificationsSlowMode">الوضع البطيء</string>

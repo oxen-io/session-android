@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">Verban gebruiker</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Bijlage opslaan</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -182,8 +181,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Gelieve een optie te selecteren</string>
     <string name="activity_home_empty_state_button_title">Sessie starten</string>
     <string name="conversationsDeleted">Gesprek verwijderd</string>
-    <string name="activity_seed_title_2">Maak kennis met uw herstel zin</string>
-    <string name="activity_seed_explanation">Uw herstel zin is de hoofdsleutel van uw Sessie-ID - u kunt deze gebruiken om uw Sessie-ID te herstellen als u de toegang tot uw apparaat verliest. Sla uw herstel zin op op een veilige plaats op en geef het aan niemand anders.</string>
     <string name="onionRoutingPath">Locatie</string>
     <string name="onionRoutingPathEntryNode">Invoer node</string>
     <string name="onionRoutingPathServiceNode">Service node</string>
@@ -215,7 +212,6 @@
     <string name="appearanceThemes">Thema</string>
     <string name="attachment">Bijlage</string>
     <string name="messageVoice">Spraakbericht</string>
-    <string name="activity_link_device_skip_prompt">Dit duurt een tijdje, wilt u het overslaan?</string>
     <string name="communityJoinOfficial">Of neem deel aan een van deze...</string>
     <string name="notificationsFastMode">Snelle modus</string>
     <string name="notificationsSlowMode">Langzame modus</string>

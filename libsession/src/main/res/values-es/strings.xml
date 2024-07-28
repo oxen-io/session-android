@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">Banear usuario</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Guardar archivo adjunto</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -182,8 +181,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Por favor, elige una opción</string>
     <string name="activity_home_empty_state_button_title">Empieza una Session</string>
     <string name="conversationsDeleted">Conversación eliminada</string>
-    <string name="activity_seed_title_2">Guarda tu frase de recuperación</string>
-    <string name="activity_seed_explanation">Tu frase de recuperación es la llave maestra de tu ID de Session, puedes usarla para recuperar tu ID de Session en caso de pérdida de acceso a tu dispositivo. Guarda tu frase de recuperación en un lugar seguro y no se la digas a nadie.</string>
     <string name="onionRoutingPath">Ruta</string>
     <string name="onionRoutingPathEntryNode">Nodo de Entrada</string>
     <string name="onionRoutingPathServiceNode">Nodo de Servicio</string>
@@ -215,7 +212,6 @@
     <string name="appearanceThemes">Tema</string>
     <string name="attachment">Adjunto</string>
     <string name="messageVoice">Mensaje de voz</string>
-    <string name="activity_link_device_skip_prompt">Esto está tomando un tiempo, ¿te gustaría saltarlo?</string>
     <string name="communityJoinOfficial">O únete a uno de estos…</string>
     <string name="notificationsFastMode">Modo Rápido</string>
     <string name="notificationsSlowMode">Modo Lento</string>

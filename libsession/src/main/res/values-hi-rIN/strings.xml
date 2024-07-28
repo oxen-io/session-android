@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">प्रतिबंध उपयोगकर्ता</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">अनुलग्नक सहेजें</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -182,8 +181,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">कृपया एक विकल्प चुनें।</string>
     <string name="activity_home_empty_state_button_title">एक सेशन प्रारंभ करें</string>
     <string name="conversationsDeleted">बातचीत हटाई गई</string>
-    <string name="activity_seed_title_2">अपने पुनर्प्राप्ति वाक्यांश से मिलें</string>
-    <string name="activity_seed_explanation">आपका रिकवरी फ्रेज आपके Session Id की मास्टर कीय है — आप इसका इस्तेमाल अपनी Session ID को वापिस पाने के लिए कर सकते है अगर आपका फ़ोन गुम हो गया है | अपने रिकवरी फ्रेज को एक सुरक्षित जगह रखे और इसे किसी के साथ शेयर न करे |</string>
     <string name="onionRoutingPath">पथ</string>
     <string name="onionRoutingPathEntryNode">प्रवेश नोड</string>
     <string name="onionRoutingPathServiceNode">सर्विस नोड</string>
@@ -215,7 +212,6 @@
     <string name="appearanceThemes">थीम</string>
     <string name="attachment">अटैचमेंट</string>
     <string name="messageVoice">वौइस् मैसेज</string>
-    <string name="activity_link_device_skip_prompt">यह समय ले रहा है, इसे छोड़ दें?</string>
     <string name="communityJoinOfficial">या इनमें से एक को जोड़ें...</string>
     <string name="notificationsFastMode">फास्ट मोड</string>
     <string name="notificationsSlowMode">स्लो मोड</string>

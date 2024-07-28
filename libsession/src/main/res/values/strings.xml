@@ -63,6 +63,9 @@
 
     <!-- LOOK UP IF NEEDED ON FIGMA - THIS ONLY SHOWS AS A IN-EDITOR HINT ATM tools:hint not android:hint -->
     <string name="KeyboardPagerFragment_search_emoji">Search emoji</string>
+    <string name="message_details_header__disappears">Disappears</string>
+    <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
+
 
 
     <!-- INVESTIGATING -->
@@ -72,14 +75,7 @@
     <string name="ReactionsConversationView_plus">+%1$d</string>
     <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>
     <string name="activity_disappearing_messages_subtitle">This setting applies to messages you send in this conversation.</string>
-    <string name="activity_disappearing_messages_subtitle_sent">Messages disappear after they have been sent.</string>
-    <string name="activity_disappearing_messages_timer">Timer</string>
-    <string name="activity_link_device_skip_prompt">This is taking a while, would you like to skip?</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
-    <string name="activity_register_explanation">Your Session ID is the unique address people can use to contact you on Session. With no connection to your real identity, your Session ID is totally anonymous and private by design.</string> <!-- Replaced during onboarding -->
-    <string name="activity_register_title">Say hello to your Session ID</string> <!-- Replaced during onboarding -->
-    <string name="activity_seed_explanation">Your recovery phrase is the master key to your Session ID — you can use it to restore your Session ID if you lose access to your device. Store your recovery phrase in a safe place, and don\'t give it to anyone.</string> <!-- Replaced during onboarding -->
-    <string name="activity_seed_title_2">Meet your recovery phrase</string>
     <string name="activity_settings_upload">Upload</string>
     <string name="attachment_type_selector__drawer_description">Toggle attachment drawer</string>
     <string name="attachment_type_selector__gallery">Gallery</string>
@@ -87,13 +83,8 @@
     <string name="conversation_activity__attachment_thumbnail">Attachment Thumbnail</string>
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Toggle quick camera attachment drawer</string>
     <string name="conversation_activity__wait_until_attachment_has_finished_downloading">Please wait until attachment has finished downloading</string>
-    <string name="conversation_context__menu_resync_message">Resync message</string>
-    <string name="conversation_context_image__save_attachment">Save attachment</string>
     <string name="conversation_item_sent__delivered_description">Delivered</string>
     <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
-    <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
-    <string name="fragment_view_my_qr_code_share_title">Share QR Code</string>
-    <string name="message_details_header__disappears">Disappears</string>
 
 
     <!-- RENAMED! -->

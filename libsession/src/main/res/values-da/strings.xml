@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">Udeluk bruger</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Gem vedhæftet fil</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -181,8 +180,6 @@
     <string name="recommended">Anbefalet</string>
     <string name="activity_home_empty_state_button_title">Start en Session</string>
     <string name="conversationsDeleted">Samtale slettet</string>
-    <string name="activity_seed_title_2">Mød din gendannelsessætning</string>
-    <string name="activity_seed_explanation">Din gendannelsessætning er hovednøglen til dit Session ID - du kan bruge den til at gendanne dit Session ID, hvis du mister adgang til din enhed. Gem din gendannelsessætning på et sikkert sted, og giv det ikke til nogen.</string>
     <string name="onionRoutingPath">Sti</string>
     <string name="onionRoutingPathDestination">Destination</string>
     <string name="learnMore">Læs mere</string>
@@ -208,7 +205,6 @@
     <string name="contactSelect">Vælg Kontakter</string>
     <string name="appearanceThemes">Tema</string>
     <string name="messageVoice">Talebesked</string>
-    <string name="activity_link_device_skip_prompt">Dette tager et stykke tid, vil du gerne springe over?</string>
     <string name="communityJoinOfficial">Eller deltag i en af disse…</string>
     <string name="urlCopy">Kopier URL</string>
     <string name="enable">Aktivér</string>

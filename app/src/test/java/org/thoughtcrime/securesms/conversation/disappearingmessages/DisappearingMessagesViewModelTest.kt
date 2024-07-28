@@ -88,7 +88,7 @@ class DisappearingMessagesViewModelTest {
         ).isEqualTo(
             UiState(
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_timer,
+                    R.string.disappearingMessagesTimer,
                     typeOption(ExpiryMode.NONE, selected = true),
                     timeOption(ExpiryType.AFTER_SEND, 12.hours),
                     timeOption(ExpiryType.AFTER_SEND, 1.days),
@@ -127,7 +127,7 @@ class DisappearingMessagesViewModelTest {
         ).isEqualTo(
             UiState(
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_timer,
+                    R.string.disappearingMessagesTimer,
                     typeOption(ExpiryMode.NONE, selected = false),
                     timeOption(ExpiryType.LEGACY, 12.hours),
                     timeOption(ExpiryType.LEGACY, 1.days),
@@ -166,7 +166,7 @@ class DisappearingMessagesViewModelTest {
         ).isEqualTo(
             UiState(
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_timer,
+                    R.string.disappearingMessagesTimer,
                     typeOption(ExpiryMode.NONE, selected = true),
                     timeOption(ExpiryType.AFTER_SEND, 12.hours),
                     timeOption(ExpiryType.AFTER_SEND, 1.days),
@@ -206,7 +206,7 @@ class DisappearingMessagesViewModelTest {
         ).isEqualTo(
             UiState(
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_timer,
+                    R.string.disappearingMessagesTimer,
                     typeOption(ExpiryMode.NONE, enabled = false, selected = true),
                     timeOption(ExpiryType.AFTER_SEND, 12.hours, enabled = false),
                     timeOption(ExpiryType.AFTER_SEND, 1.days, enabled = false),
@@ -293,7 +293,7 @@ class DisappearingMessagesViewModelTest {
                     typeOption(time, ExpiryType.AFTER_SEND, selected = true)
                 ),
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_timer,
+                    R.string.disappearingMessagesTimer,
                     timeOption(ExpiryType.AFTER_SEND, 12.hours, selected = true),
                     timeOption(ExpiryType.AFTER_SEND, 1.days),
                     timeOption(ExpiryType.AFTER_SEND, 7.days),
@@ -340,7 +340,7 @@ class DisappearingMessagesViewModelTest {
                     typeOption(1.days, ExpiryType.AFTER_SEND, enabled = false)
                 ),
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_timer,
+                    R.string.disappearingMessagesTimer,
                     timeOption(ExpiryType.LEGACY, 12.hours, selected = true),
                     timeOption(ExpiryType.LEGACY, 1.days),
                     timeOption(ExpiryType.LEGACY, 7.days),
@@ -386,7 +386,7 @@ class DisappearingMessagesViewModelTest {
                     typeOption(time, ExpiryType.AFTER_SEND, selected = true)
                 ),
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_timer,
+                    R.string.disappearingMessagesTimer,
                     timeOption(ExpiryType.AFTER_SEND, 12.hours),
                     timeOption(ExpiryType.AFTER_SEND, 1.days, selected = true),
                     timeOption(ExpiryType.AFTER_SEND, 7.days),
@@ -433,7 +433,7 @@ class DisappearingMessagesViewModelTest {
                     typeOption(time, ExpiryType.AFTER_SEND)
                 ),
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_timer,
+                    R.string.disappearingMessagesTimer,
                     timeOption(ExpiryType.AFTER_READ, 5.minutes),
                     timeOption(ExpiryType.AFTER_READ, 1.hours),
                     timeOption(ExpiryType.AFTER_READ, 12.hours),
@@ -486,7 +486,7 @@ class DisappearingMessagesViewModelTest {
                     typeOption(1.days, ExpiryType.AFTER_SEND, selected = true)
                 ),
                 OptionsCardData(
-                    R.string.activity_disappearing_messages_timer,
+                    R.string.disappearingMessagesTimer,
                     timeOption(ExpiryType.AFTER_SEND, 12.hours),
                     timeOption(ExpiryType.AFTER_SEND, 1.days, selected = true),
                     timeOption(ExpiryType.AFTER_SEND, 7.days),

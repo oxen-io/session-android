@@ -147,7 +147,6 @@
     <!-- conversation_context -->
     <string name="banUser">封禁用户</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">保存附件</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -181,8 +180,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">请选择一个选项</string>
     <string name="activity_home_empty_state_button_title">开始对话</string>
     <string name="conversationsDeleted">对话已删除</string>
-    <string name="activity_seed_title_2">这里是您的恢复口令</string>
-    <string name="activity_seed_explanation">您的恢复口令是Session ID的主密钥 - 如果您无法访问您的现有设备，则可以使用它在其他设备上恢复您的Session ID。请将您的恢复口令存储在安全的地方，不要将其提供给任何人。</string>
     <string name="onionRoutingPath">路径</string>
     <string name="onionRoutingPathEntryNode">入口节点</string>
     <string name="onionRoutingPathServiceNode">服务节点</string>
@@ -214,7 +211,6 @@
     <string name="appearanceThemes">主题</string>
     <string name="attachment">附件</string>
     <string name="messageVoice">语音消息</string>
-    <string name="activity_link_device_skip_prompt">这需要一点时间，您想要跳过吗？</string>
     <string name="communityJoinOfficial">或加入下列群组…</string>
     <string name="notificationsFastMode">快速模式</string>
     <string name="notificationsSlowMode">慢速模式</string>

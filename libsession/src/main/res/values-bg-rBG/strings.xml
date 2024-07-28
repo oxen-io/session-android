@@ -144,7 +144,6 @@
     <!-- conversation_context -->
     <string name="banUser">Забрана на потребител</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Запази прикачения файл</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->

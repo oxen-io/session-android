@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">Zablokovať užívateľa</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Uložiť prílohu </string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -181,8 +180,6 @@
     <string name="recommended">Odporúčané</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Prosím, zvoľte možnosť</string>
     <string name="conversationsDeleted">Konverzácia úspešne zmazaná</string>
-    <string name="activity_seed_title_2">Toto je vaša fráza pre obnovenie</string>
-    <string name="activity_seed_explanation">Vaša fráza na obnovenie je hlavným kľúčom k vášmu Session ID - môžete ju použiť na obnovenie svojho Session ID ak stratíte prístup k zariadeniu. Uložte frázu na obnovenie na bezpečnom mieste a nikomu ju nedávajte.</string>
     <string name="onionRoutingPath">Cesta</string>
     <string name="onionRoutingPathEntryNode">Vstupný uzol</string>
     <string name="onionRoutingPathServiceNode">Servisný uzol</string>

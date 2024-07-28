@@ -149,7 +149,6 @@
     <!-- conversation_context -->
     <string name="banUser">Felhasználó kitiltása</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Melléklet mentése</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -183,8 +182,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Kérjük, válasszon egy lehetőséget</string>
     <string name="activity_home_empty_state_button_title">Indítson el egy beszélgetést</string>
     <string name="conversationsDeleted">A beszélgetés törölve</string>
-    <string name="activity_seed_title_2">Írja be a helyreállítási kifejezést</string>
-    <string name="activity_seed_explanation">A helyreállítási kifejezés a Session azonosító főkulcsa - használhatja a Session azonosító visszaállítására, ha elveszíti a hozzáférését eszközéhez. Tárolja helyreállítási mondatát biztonságos helyen, és ne adja át senkinek.</string>
     <string name="onionRoutingPath">Útvonal</string>
     <string name="onionRoutingPathEntryNode">Belépési csomópont</string>
     <string name="onionRoutingPathServiceNode">Szolgáltatási csomópont</string>
@@ -216,7 +213,6 @@
     <string name="appearanceThemes">Téma</string>
     <string name="attachment">Csatolmány</string>
     <string name="messageVoice">Hangüzenet</string>
-    <string name="activity_link_device_skip_prompt">Ez eltarthat egy ideig, szeretnéd átugrani?</string>
     <string name="communityJoinOfficial">Vagy csatlakozz ezekhez…</string>
     <string name="notificationsFastMode">Gyorsított mód</string>
     <string name="notificationsSlowMode">Lassított mód</string>

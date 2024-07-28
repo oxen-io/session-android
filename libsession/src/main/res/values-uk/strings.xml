@@ -151,7 +151,6 @@
     <!-- conversation_context -->
     <string name="banUser">Бан користувача</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Зберегти вкладення</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -185,8 +184,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Будь ласка виберіть варіант</string>
     <string name="activity_home_empty_state_button_title">Почати сесію</string>
     <string name="conversationsDeleted">Бесіду видалено</string>
-    <string name="activity_seed_title_2">Знайомтесь з вашою фразою відновлення</string>
-    <string name="activity_seed_explanation">Ваша фраза відновлення - це головний ключ до вашогї Session ID адреси - ви можете використовувати її для відновлення вашої Session ID адреси якщо ви втратите доступ до пристрою. Запишіть на папері та зберігайте вашу фразу відновлення у безпечному місці і не дайте її нікому.</string>
     <string name="onionRoutingPath">Шлях</string>
     <string name="onionRoutingPathEntryNode">Вхідний Вузел</string>
     <string name="onionRoutingPathServiceNode">Сервісний Вузел</string>
@@ -218,7 +215,6 @@
     <string name="appearanceThemes">Тема</string>
     <string name="attachment">Вкладення</string>
     <string name="messageVoice">Голосове повідомлення</string>
-    <string name="activity_link_device_skip_prompt">Це займає деякий час, ви б хотіли це пропустити?</string>
     <string name="communityJoinOfficial">Або приєднуйтесь до одного з цих…</string>
     <string name="notificationsFastMode">Швидкий режим</string>
     <string name="notificationsSlowMode">Медленний режим</string>

@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">Bannlys bruker</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Lagre vedlegg</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -182,8 +181,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Vennligst velg et alternativ</string>
     <string name="activity_home_empty_state_button_title">Start en Session</string>
     <string name="conversationsDeleted">Samtalen slettet</string>
-    <string name="activity_seed_title_2">Møt din gjenopprettingsfrase</string>
-    <string name="activity_seed_explanation">Gjenopprettelsesfrasen din er hovednøkkelen til Session-IDen din – du kan bruke den for å gjenopprette Session-IDen din dersom du mister tilgang til enheten din. Arkiver gjenopprettelsesfrasen din på et trygt sted, og ikke gi den til noen.</string>
     <string name="onionRoutingPath">Bane</string>
     <string name="onionRoutingPathEntryNode">Enhetens node</string>
     <string name="onionRoutingPathServiceNode">Tjeneste node</string>
@@ -215,7 +212,6 @@
     <string name="appearanceThemes">Tema</string>
     <string name="attachment">Vedlegg</string>
     <string name="messageVoice">Talemelding</string>
-    <string name="activity_link_device_skip_prompt">Dette tar en stund, vil du hoppe over?</string>
     <string name="communityJoinOfficial">Eller bli med i en av disse…</string>
     <string name="notificationsFastMode">Rask modus</string>
     <string name="notificationsSlowMode">Langsom Modus</string>

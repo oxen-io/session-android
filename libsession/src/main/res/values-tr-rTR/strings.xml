@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">Kullanıcıyı engelle</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Eklentiyi kaydet</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -182,8 +181,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Lütfen Bir Seçenek Seçin</string>
     <string name="activity_home_empty_state_button_title">Oturumu başlat</string>
     <string name="conversationsDeleted">Konuşma silindi</string>
-    <string name="activity_seed_title_2">Kurtarma ifadenizle tanışın</string>
-    <string name="activity_seed_explanation">Kurtarma ifadeniz Session kimliğinizin ana anahtarıdır; cihazınıza erişiminizi kaybederseniz Session kimliğinizi geri yüklemek için bunu kullanabilirsiniz. Kurtarma ifadenizi güvenli bir yerde saklayın ve kimseye vermeyin.</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düğüm</string>
     <string name="onionRoutingPathServiceNode">Hizmet Düğüm</string>
@@ -215,7 +212,6 @@
     <string name="appearanceThemes">Tema</string>
     <string name="attachment">Ek</string>
     <string name="messageVoice">Sesli mesaj</string>
-    <string name="activity_link_device_skip_prompt">Bu biraz uzun sürüyor, atlamak ister misiniz?</string>
     <string name="communityJoinOfficial">Veya bunlardan birine katılın…</string>
     <string name="notificationsFastMode">Hızlı Mod</string>
     <string name="notificationsSlowMode">Yavaş Mod</string>

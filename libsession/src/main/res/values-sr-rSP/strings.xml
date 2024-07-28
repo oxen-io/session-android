@@ -144,7 +144,6 @@
     <!-- contact_selection_list -->
     <!-- conversation_context -->
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Сачувај прилог</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -169,6 +168,5 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Молимо Вас да одаберете опцију</string>
     <string name="activity_home_empty_state_button_title">Почни сесију</string>
     <string name="conversationsDeleted">Конверзација је избрисана</string>
-    <string name="activity_seed_title_2">Сретни своју фразу за опоравак</string>
     <!-- Next round of translation -->
 </resources>

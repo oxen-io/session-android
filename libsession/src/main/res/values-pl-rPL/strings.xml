@@ -150,7 +150,6 @@
     <!-- conversation_context -->
     <string name="banUser">Zablokuj użytkownika</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Zapisz załącznik</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -184,8 +183,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Wybierz opcję</string>
     <string name="activity_home_empty_state_button_title">Rozpocznij sesję</string>
     <string name="conversationsDeleted">Rozmowa usunięta</string>
-    <string name="activity_seed_title_2">Poznaj swoją frazę odzyskiwania</string>
-    <string name="activity_seed_explanation">Twoja fraza odzyskiwania jest głównym kluczem do identyfikatora Session - możesz jej użyć do przywrócenia identyfikatora Session, jeśli stracisz dostęp do urządzenia. Przechowuj swoją frazę odzyskiwania w bezpiecznym miejscu i nikomu jej nie udostępniaj.</string>
     <string name="onionRoutingPath">Ścieżka</string>
     <string name="onionRoutingPathEntryNode">Węzeł wejścia</string>
     <string name="onionRoutingPathServiceNode">Węzeł serwisowy</string>
@@ -217,7 +214,6 @@
     <string name="appearanceThemes">Motyw</string>
     <string name="attachment">Załącznik</string>
     <string name="messageVoice">Wiadomość głosowa</string>
-    <string name="activity_link_device_skip_prompt">To zajmuje chwilę, czy chcesz pominąć?</string>
     <string name="communityJoinOfficial">Lub dołącz do jednego z tych…</string>
     <string name="notificationsFastMode">Tryb szybki</string>
     <string name="notificationsSlowMode">Tryb wolny</string>

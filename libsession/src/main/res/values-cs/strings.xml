@@ -150,7 +150,6 @@
     <!-- conversation_context -->
     <string name="banUser">Zablokovat uživatele</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Uložit přílohu</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -184,8 +183,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Prosím vyberte možnost</string>
     <string name="activity_home_empty_state_button_title">Zahájit relaci</string>
     <string name="conversationsDeleted">Konverzace byla smazána</string>
-    <string name="activity_seed_title_2">Zadejte frázi pro obnovení</string>
-    <string name="activity_seed_explanation">Ahoj</string>
     <string name="onionRoutingPath">Cesta</string>
     <string name="onionRoutingPathEntryNode">Vstupní uzel</string>
     <string name="onionRoutingPathServiceNode">Provozní uzel</string>
@@ -217,7 +214,6 @@
     <string name="appearanceThemes">Motiv</string>
     <string name="attachment">Příloha</string>
     <string name="messageVoice">Hlasová zpráva</string>
-    <string name="activity_link_device_skip_prompt">Trvá to trochu déle, chcete přeskočit?</string>
     <string name="communityJoinOfficial">Nebo se připojte k jedné z těchto…</string>
     <string name="notificationsFastMode">Rychlý režim</string>
     <string name="notificationsSlowMode">Pomalý režim</string>

@@ -115,7 +115,6 @@
     <!-- contact_selection_list -->
     <!-- conversation_context -->
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Lưu đính kèm</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -146,8 +145,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Vui lòng lựa chọn </string>
     <string name="activity_home_empty_state_button_title">Bắt đầu một Session</string>
     <string name="conversationsDeleted">Cuộc hội thoại đã được xoá </string>
-    <string name="activity_seed_title_2">Làm quen với cụm từ khôi phục của bạn</string>
-    <string name="activity_seed_explanation">Cụm từ khôi phục của bạn là chìa khoá chủ cho Session ID của bạn — bạn có thể sử dụng nó để khôi phục Session ID khi bị mất tiếp cận với thiết bị của bạn. Hãy lưu cụm từ khôi phục của bạn ở một nơi an toàn và không cung cấp cho bất kì ai.</string>
     <string name="onionRoutingPath">Đường đi</string>
     <string name="onionRoutingPathEntryNode">Nút khởi đầu</string>
     <string name="onionRoutingPathServiceNode">Nút Dịch vụ</string>

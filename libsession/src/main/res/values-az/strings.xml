@@ -148,7 +148,6 @@
     <!-- conversation_context -->
     <string name="banUser">İstifadəçiyə qadağa qoy</string>
     <!-- conversation_context_image -->
-    <string name="conversation_context_image__save_attachment">Qoşmanı yaddaşda saxla</string>
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
@@ -182,8 +181,6 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Zəhmət olmasa bir variant seçin</string>
     <string name="activity_home_empty_state_button_title">Bir Session başladın</string>
     <string name="conversationsDeleted">Danışıq silindi</string>
-    <string name="activity_seed_title_2">Bərpa parolunuzla tanış olun</string>
-    <string name="activity_seed_explanation">Bərpa parolunuz, Session kimliyinizin ana açarıdır - cihazınıza müraciəti itirsəniz, Session kimliyinizi geri yükləmək üçün bunu istifadə edə bilərsiniz. Bərpa parolunuzu etibarlı bir yerdə saxlayın və heç kəsə verməyin.</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düyünü</string>
     <string name="onionRoutingPathServiceNode">Xidmət Düyünü</string>
@@ -215,7 +212,6 @@
     <string name="appearanceThemes">Tema</string>
     <string name="attachment">Qoşma</string>
     <string name="messageVoice">Səsyazmalı mesaj</string>
-    <string name="activity_link_device_skip_prompt">Bu bir az vaxt apara bilər, ötürmək istəyirsiniz?</string>
     <string name="communityJoinOfficial">Və ya bunlardan birinə qoşulun…</string>
     <string name="notificationsFastMode">Sürətli rejim</string>
     <string name="notificationsSlowMode">Yavaş rejim</string>
