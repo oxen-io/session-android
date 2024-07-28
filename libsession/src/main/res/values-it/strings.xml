@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Invio fallito, tocca per dettagli</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Aggiungi allegato</string>
     <string name="message">Messaggio</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Conversazione eliminata</string>
     <string name="activity_seed_title_2">La frase di recupero</string>
     <string name="activity_seed_explanation">La frase di recupero è la chiave principale per l\'ID Sessione: puoi usarla per ripristinare l\'ID Sessione se perdi l\'accesso al dispositivo. Conserva la frase di recupero in un luogo sicuro e non rivelarla a nessuno.</string>
-    <string name="activity_seed_reveal_button_title">Tieni premuto per rivelare</string>
     <string name="onionRoutingPath">Percorso</string>
     <string name="onionRoutingPathEntryNode">Nodo di entrata</string>
     <string name="onionRoutingPathServiceNode">Nodo di servizio</string>

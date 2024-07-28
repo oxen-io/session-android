@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">送信失敗、タップして詳細を見る</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">添付ファイルを付ける</string>
     <string name="message">メッセージ</string>
@@ -184,7 +183,6 @@
     <string name="conversationsDeleted">会話を削除しました</string>
     <string name="activity_seed_title_2">リカバリーフレーズに合致する</string>
     <string name="activity_seed_explanation">リカバリーフレーズは、Session ID のマスターキーです。デバイスにアクセスできなくなった場合、これを使用して Session ID を復元できます。リカバリーフレーズを安全な場所に保管し、誰にも教えないでください。</string>
-    <string name="activity_seed_reveal_button_title">明らかにする</string>
     <string name="onionRoutingPath">パス</string>
     <string name="onionRoutingPathEntryNode">エントリーノード</string>
     <string name="onionRoutingPathServiceNode">サービスノード</string>

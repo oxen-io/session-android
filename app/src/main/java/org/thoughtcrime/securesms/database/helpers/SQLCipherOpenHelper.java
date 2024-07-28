@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.database.helpers;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -7,6 +9,8 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+
+import com.squareup.phrase.Phrase;
 
 import net.zetetic.database.sqlcipher.SQLiteConnection;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
@@ -258,12 +262,16 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         notificationManager.createNotificationChannel(channel);
       }
 
+      CharSequence errorTxt = Phrase.from(context, R.string.databaseErrorGeneric)
+              .put(APP_NAME_KEY, R.string.app_name)
+              .format();
+
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
         .setSmallIcon(R.drawable.ic_notification)
         .setColor(context.getResources().getColor(R.color.textsecure_primary))
         .setCategory(NotificationCompat.CATEGORY_ERROR)
-        .setContentTitle(context.getString(R.string.ErrorNotifier_migration))
-        .setContentText(context.getString(R.string.ErrorNotifier_migration_downgrade))
+        .setContentTitle(context.getString(R.string.errorDatabase))
+        .setContentText(errorTxt)
         .setAutoCancel(true);
 
       if (!NotificationChannels.supported()) {

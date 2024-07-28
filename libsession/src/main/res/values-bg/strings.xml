@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Неуспешно изпращане, натиснете за повече информация</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Прикачване на файл</string>
     <string name="message">Съобщение</string>

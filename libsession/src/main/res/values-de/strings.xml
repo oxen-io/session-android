@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Senden fehlgeschlagen, für Details tippen</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Anhang hinzufügen</string>
     <string name="message">Nachricht</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Die Unterhaltung wurde gelöscht.</string>
     <string name="activity_seed_title_2">Das ist Ihr Wiederherstellungssatz.</string>
     <string name="activity_seed_explanation">Ihr Wiederherstellungssatz ist der Hauptschlüssel für Ihre Session ID. Mit diesem Satz können Sie Ihre Session ID wiederherstellen, wenn Sie den Zugriff auf Ihr Gerät verlieren. Bewahren Sie Ihren Wiederherstellungssatz an einem sicheren Ort auf und geben Sie ihn an niemandem weiter.</string>
-    <string name="activity_seed_reveal_button_title">Zur Anzeige gedrückt halten</string>
     <string name="onionRoutingPath">Pfad</string>
     <string name="onionRoutingPathEntryNode">Eingangsknoten</string>
     <string name="onionRoutingPathServiceNode">Dienstknoten</string>

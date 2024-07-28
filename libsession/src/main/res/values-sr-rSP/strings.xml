@@ -17,7 +17,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Слање није успело, тапните за детаље</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Додај прилог</string>
     <string name="message">Пошаљи поруку</string>
@@ -171,6 +170,5 @@
     <string name="activity_home_empty_state_button_title">Почни сесију</string>
     <string name="conversationsDeleted">Конверзација је избрисана</string>
     <string name="activity_seed_title_2">Сретни своју фразу за опоравак</string>
-    <string name="activity_seed_reveal_button_title">Држи да откријеш</string>
     <!-- Next round of translation -->
 </resources>

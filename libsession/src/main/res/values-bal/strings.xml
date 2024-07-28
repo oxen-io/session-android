@@ -17,7 +17,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Gagal mengirim, ketuk untuk detil</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Tambahkan lampiran</string>
     <string name="blockUnblock">Buka blokir</string>
@@ -172,7 +171,6 @@
     <string name="conversationsDeleted">Percakapan terhapus</string>
     <string name="activity_seed_title_2">Inilah kata pemulihan anda</string>
     <string name="activity_seed_explanation">Kata pemulihan adalah kunci Session ID -- bisa digunakan untuk mengembalikan Session ID ketika anda kehilangan perangkat. Simpan kata pemulihan di tempat yang aman dan jangan berikan kepada siapapun</string>
-    <string name="activity_seed_reveal_button_title">Tekan untuk melihat</string>
     <string name="onionRoutingPathEntryNode">Simpul masuk</string>
     <string name="onionRoutingPathServiceNode">Simpul layanan</string>
     <string name="onionRoutingPathDestination">Tujuan</string>

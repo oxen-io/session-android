@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">傳送失敗，點擊以了解細節。</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">增加附件檔案</string>
     <string name="message">訊息</string>
@@ -184,7 +183,6 @@
     <string name="conversationsDeleted">對話已刪除</string>
     <string name="activity_seed_title_2">查看您的恢復短語</string>
     <string name="activity_seed_explanation">您的恢復短語是您的 Session ID 的主金鑰——如果您無法存取您的裝置，您可以使用它來恢復您的Session ID。 將您的恢復短語存放在安全的地方，不要將其提供給任何人。</string>
-    <string name="activity_seed_reveal_button_title">按住以解除隱藏</string>
     <string name="onionRoutingPath">路徑</string>
     <string name="onionRoutingPathEntryNode">入口節點</string>
     <string name="onionRoutingPathServiceNode">服務節點</string>

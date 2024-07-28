@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Wysyłanie nie powiodło się, dotknij, aby wyświetlić szczegóły</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Dodaj załącznik</string>
     <string name="message">Wiadomość</string>
@@ -187,7 +186,6 @@
     <string name="conversationsDeleted">Rozmowa usunięta</string>
     <string name="activity_seed_title_2">Poznaj swoją frazę odzyskiwania</string>
     <string name="activity_seed_explanation">Twoja fraza odzyskiwania jest głównym kluczem do identyfikatora Session - możesz jej użyć do przywrócenia identyfikatora Session, jeśli stracisz dostęp do urządzenia. Przechowuj swoją frazę odzyskiwania w bezpiecznym miejscu i nikomu jej nie udostępniaj.</string>
-    <string name="activity_seed_reveal_button_title">Przytrzymaj, aby odsłonić</string>
     <string name="onionRoutingPath">Ścieżka</string>
     <string name="onionRoutingPathEntryNode">Węzeł wejścia</string>
     <string name="onionRoutingPathServiceNode">Węzeł serwisowy</string>

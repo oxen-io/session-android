@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Sendado malsukcesis, tuŝetu por detaloj</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Aldoni kunsendaĵon</string>
     <string name="message">Mesaĝo</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Konversacio forviŝite</string>
     <string name="activity_seed_title_2">Ekkonu vian riparan frazon</string>
     <string name="activity_seed_explanation">Via ripara frazo estas la ĉefŝlosilo de via Session ID — vi povas uzi ĝin por restaŭri vian Session ID-on se vi malgajros aliron al via aparato. Konservu vian riparan frazon en sekura loko, kaj donu ĝin al neniu.</string>
-    <string name="activity_seed_reveal_button_title">Tuŝadu por malkaŝi</string>
     <string name="onionRoutingPath">Vojo</string>
     <string name="onionRoutingPathEntryNode">Enira Nodo</string>
     <string name="onionRoutingPathServiceNode">Serva Nodo</string>

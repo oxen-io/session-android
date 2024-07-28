@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">שליחה נכשלה, הקש לפרטים</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">הוסף צרופה</string>
     <string name="message">הודעה</string>

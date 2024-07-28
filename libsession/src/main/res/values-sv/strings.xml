@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Sändningen misslyckades, tryck för detaljer</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Bifoga fil</string>
     <string name="message">Meddelande</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Konversationen har raderats</string>
     <string name="activity_seed_title_2">Möt din återställningsfras</string>
     <string name="activity_seed_explanation">Din återställningsfras är huvudnyckeln till ditt Session-ID – du kan använda den för att återställa ditt Session-ID om du förlorar åtkomst till enheten. Förvara din återställningsfras på en säker plats, och ge den inte till någon.</string>
-    <string name="activity_seed_reveal_button_title">Håll ned för att visa</string>
     <string name="onionRoutingPath">Sökväg</string>
     <string name="onionRoutingPathEntryNode">Entrénod</string>
     <string name="onionRoutingPathServiceNode">Tjänstnod</string>

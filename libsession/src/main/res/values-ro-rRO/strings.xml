@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Trimitere eșuată, apăsați pentru detalii</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Adăugați atașament</string>
     <string name="message">Mesaj</string>

@@ -17,7 +17,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">ارسال نشد، برای جزئیات بیشتر ضربه بزنید</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">پیوست فایل</string>
     <string name="message">پیام</string>
@@ -186,7 +185,6 @@
     <string name="conversationsDeleted">مکالمه حذف شد</string>
     <string name="activity_seed_title_2">این عبارت بازیابی شماست</string>
     <string name="activity_seed_explanation">عبارت بازیابی شما کلید اصلی شناسه‌ی Session شما است - در صورت عدم دسترسی به دستگاه خود می توانید از آن برای بازگرداندن شناسه‌ی Session خود استفاده کنید. عبارت بازیابی خود را در مکانی امن ذخیره کنید و آن را به کسی ندهید.</string>
-    <string name="activity_seed_reveal_button_title">نگه دارید تا نشان داده شود</string>
     <string name="onionRoutingPath">مسیر</string>
     <string name="onionRoutingPathEntryNode">گره ورودی</string>
     <string name="onionRoutingPathServiceNode">گره سرویس</string>

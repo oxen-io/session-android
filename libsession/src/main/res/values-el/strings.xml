@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Η αποστολή απέτυχε, πατήστε για λεπτομέρειες</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Προσθήκη συνημμένου</string>
     <string name="message">Μήνυμα</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Η συνομιλία διαγράφηκε</string>
     <string name="activity_seed_title_2">Γνωρίστε τη φράση ανάκτησής σας</string>
     <string name="activity_seed_explanation">Η φράση ανάκτησης είναι το κύριο κλειδί στο Session ID σας - μπορείτε να τη χρησιμοποιήσετε για να επαναφέρετε το Session ID σας εάν χάσετε πρόσβαση στη συσκευή σας. Αποθηκεύστε τη φράση ανάκτησης σε ασφαλές μέρος, και μην τη δώσετε σε κανέναν.</string>
-    <string name="activity_seed_reveal_button_title">Πατήστε για εμφάνιση</string>
     <string name="onionRoutingPath">Διαδρομή</string>
     <string name="onionRoutingPathEntryNode">Κόμβος Εισόδου</string>
     <string name="onionRoutingPathServiceNode">Κόμβος Υπηρεσίας</string>

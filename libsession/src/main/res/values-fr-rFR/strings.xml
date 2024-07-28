@@ -28,7 +28,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Échec d’envoi, touchez pour obtenir des détails</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Ajouter une pièce jointe</string>
     <string name="message">Message</string>
@@ -198,7 +197,6 @@
     <string name="conversationsDeleted">Conversation supprimée</string>
     <string name="activity_seed_title_2">Voici votre phrase de récupération</string>
     <string name="activity_seed_explanation">Votre phrase de récupération est la clé principale de votre Session ID - vous pouvez l\'utiliser pour restaurer votre Session ID si vous perdez l\'accès à votre appareil. Conservez la dans un endroit sûr et ne la donnez à personne.</string>
-    <string name="activity_seed_reveal_button_title">Appuyer pour révéler</string>
     <string name="onionRoutingPath">Chemin</string>
     <string name="onionRoutingPathEntryNode">Nœud d’entrée</string>
     <string name="onionRoutingPathServiceNode">Nœud de service</string>
@@ -278,5 +276,4 @@
     <string name="appearanceAutoDarkMode">Thème sombre automatique</string>
     <string name="fragment_enter_public_key_prompt">Commencez une nouvelle conversation en entrant l\'ID Session de quelqu\'un ou en lui partageant votre ID Session.</string>
     <string name="ErrorNotifier_migration">Échec de la mise à jour de la base de données</string>
-    <string name="ErrorNotifier_migration_downgrade">Veuillez contacter le support pour signaler l\'erreur.</string>
 </resources>

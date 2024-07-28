@@ -17,7 +17,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Feil ved sending, trykk for detaljar</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Legg til vedlegg</string>
     <string name="blockUnblock">Fjern blokkering</string>

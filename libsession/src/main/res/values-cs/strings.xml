@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Odeslání se nezdařilo, klikněte pro podrobnosti</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Přidat přílohu</string>
     <string name="message">Zpráva</string>
@@ -187,7 +186,6 @@
     <string name="conversationsDeleted">Konverzace byla smazána</string>
     <string name="activity_seed_title_2">Zadejte frázi pro obnovení</string>
     <string name="activity_seed_explanation">Ahoj</string>
-    <string name="activity_seed_reveal_button_title">Podrž pro zobrazení</string>
     <string name="onionRoutingPath">Cesta</string>
     <string name="onionRoutingPathEntryNode">Vstupní uzel</string>
     <string name="onionRoutingPathServiceNode">Provozní uzel</string>

@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Verzenden is mislukt, tik voor details</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Bijlage toevoegen</string>
     <string name="message">Bericht</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Gesprek verwijderd</string>
     <string name="activity_seed_title_2">Maak kennis met uw herstel zin</string>
     <string name="activity_seed_explanation">Uw herstel zin is de hoofdsleutel van uw Sessie-ID - u kunt deze gebruiken om uw Sessie-ID te herstellen als u de toegang tot uw apparaat verliest. Sla uw herstel zin op op een veilige plaats op en geef het aan niemand anders.</string>
-    <string name="activity_seed_reveal_button_title">Ingedrukt houden om te onthullen</string>
     <string name="onionRoutingPath">Locatie</string>
     <string name="onionRoutingPathEntryNode">Invoer node</string>
     <string name="onionRoutingPathServiceNode">Service node</string>

@@ -57,22 +57,17 @@
         <item quantity="other">Saving all %1$d media to storage will allow any other apps on your device to access them.\n\nContinue?</item>
     </plurals>
 
-
-    <!-- USED AND WE NEED NEW STRING NAMES! -->
+    <!-- USED STRINGS FOR WHICH WE NEED NEW NAMES! -->
     <string name="activity_home_empty_state_button_title">Start a Session</string>
     <string name="fragment_view_my_qr_code_title">Scan Me</string>
 
+    <!-- LOOK UP IF NEEDED ON FIGMA - THIS ONLY SHOWS AS A IN-EDITOR HINT ATM tools:hint not android:hint -->
+    <string name="KeyboardPagerFragment_search_emoji">Search emoji</string>
+
 
     <!-- INVESTIGATING -->
-    <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
-    <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
     <string name="DateUtils_just_now">Now</string>
-    <string name="DisappearingMessagesActivity_settings_not_updated">Settings not updated and please try again</string>
-    <string name="ErrorNotifier_migration">Database Upgrade Failed</string>
-    <string name="ErrorNotifier_migration_downgrade">Please contact support to report the error.</string>
-    <string name="KeyboardPagerFragment_search_emoji">Search emoji</string>
-    <string name="KeyboardPagerfragment_back_to_emoji">Back to emoji</string>
-    <string name="KeyboardPagerfragment_clear_search_entry">Clear search entry</string>
+
     <string name="MediaPickerActivity_send_to">Send to %s</string>
     <string name="ReactionsConversationView_plus">+%1$d</string>
     <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>
@@ -84,7 +79,6 @@
     <string name="activity_register_explanation">Your Session ID is the unique address people can use to contact you on Session. With no connection to your real identity, your Session ID is totally anonymous and private by design.</string> <!-- Replaced during onboarding -->
     <string name="activity_register_title">Say hello to your Session ID</string> <!-- Replaced during onboarding -->
     <string name="activity_seed_explanation">Your recovery phrase is the master key to your Session ID — you can use it to restore your Session ID if you lose access to your device. Store your recovery phrase in a safe place, and don\'t give it to anyone.</string> <!-- Replaced during onboarding -->
-    <string name="activity_seed_reveal_button_title">Hold to reveal</string>
     <string name="activity_seed_title_2">Meet your recovery phrase</string>
     <string name="activity_settings_upload">Upload</string>
     <string name="attachment_type_selector__drawer_description">Toggle attachment drawer</string>
@@ -105,6 +99,8 @@
     <!-- RENAMED! -->
     <string name="deleteAfterGroupFirstReleaseConfigOutdated">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
 
+    <!-- ADDED FROM 'FOR EXPORT' TAB -->
+    <string name="databaseErrorGeneric">A database error occurred.\n\nExport your application logs to share for troubleshooting. If this is unsuccessful, reinstall {app_name} and restore your account.\n\nWarning: This will result in loss of all messages, attachments, and account data older than two weeks.</string>
 
     <!-- Strings with modern names and {braced} substitution markers -->
     <string name="about">About</string>

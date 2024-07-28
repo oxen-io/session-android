@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">فشل الإرسال , اضغط للحصول على معلومات</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">إضافة مرفقات</string>
     <string name="message">رسالة</string>
@@ -189,7 +188,6 @@
     <string name="conversationsDeleted">تم حذف المحادثة</string>
     <string name="activity_seed_title_2">هذه هي عبارة الاسترجاع</string>
     <string name="activity_seed_explanation">عبارة الاسترجاع هي مفتاح عنوان تعريفك - يمكنك استخدامها لاسترجاع عنوان تعريفك اذا فقدت الوصول لجهازك. قم بحفظها في مكان امن و لا تعطها الى اي أحد.</string>
-    <string name="activity_seed_reveal_button_title">انقر مطولاً للكشف</string>
     <string name="onionRoutingPath">مسار</string>
     <string name="onionRoutingPathEntryNode">عقدة الدخول</string>
     <string name="onionRoutingPathServiceNode">عقدة الخدمة</string>

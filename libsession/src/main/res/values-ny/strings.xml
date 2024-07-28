@@ -16,7 +16,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Mana rirkachu, ashtawan yachankapak munashpaka kaypi llapipay</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Shuk imaykunata kimichipay</string>
     <string name="blockUnblock">Pakashkamanta llukchi</string>

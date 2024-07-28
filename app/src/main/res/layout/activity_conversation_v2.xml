@@ -145,7 +145,7 @@
 
     <TextView
         android:id="@+id/textSendAfterApproval"
-        android:text="@string/ConversationActivity_send_after_approval"
+        android:text="@string/messageRequestPendingDescription"
         android:visibility="gone"
         tools:visibility="visible"
         android:textAlignment="center"

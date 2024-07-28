@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Sikertelen küldés, koppints a részletekért</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Melléklet csatolása</string>
     <string name="message">Üzenet</string>
@@ -186,7 +185,6 @@
     <string name="conversationsDeleted">A beszélgetés törölve</string>
     <string name="activity_seed_title_2">Írja be a helyreállítási kifejezést</string>
     <string name="activity_seed_explanation">A helyreállítási kifejezés a Session azonosító főkulcsa - használhatja a Session azonosító visszaállítására, ha elveszíti a hozzáférését eszközéhez. Tárolja helyreállítási mondatát biztonságos helyen, és ne adja át senkinek.</string>
-    <string name="activity_seed_reveal_button_title">Tartsa lenyomva, hogy felfedje</string>
     <string name="onionRoutingPath">Útvonal</string>
     <string name="onionRoutingPathEntryNode">Belépési csomópont</string>
     <string name="onionRoutingPathServiceNode">Szolgáltatási csomópont</string>

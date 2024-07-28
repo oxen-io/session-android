@@ -131,6 +131,8 @@
     <string name="AccessibilityId_select_camera_button">Select camera button</string>
     <string name="AccessibilityId_send_message_button">Send message button</string>
     <string name="AccessibilityId_untrusted_attachment_message">Untrusted attachment message</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">Back to emoji</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">Clear search entry</string>
     <!-- Conversation View-->
     <string name="AccessibilityId_delete_message">Delete message</string>
     <string name="AccessibilityId_deleted_message">Deleted message</string>

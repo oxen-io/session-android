@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">ផ្ញើបរាជ័យ ចុច សម្រាប់ព័ត៌មានលម្អិត</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">ភ្ជាប់ឯកសារ</string>
     <string name="blockUnblock">បើកវិញ</string>

@@ -52,7 +52,7 @@ class DisappearingMessagesActivity: PassphraseRequiredActionBarActivity() {
                 viewModel.event.collect {
                     when (it) {
                         Event.SUCCESS -> finish()
-                        Event.FAIL -> showToast(getString(R.string.DisappearingMessagesActivity_settings_not_updated))
+                        Event.FAIL -> showToast(getString(R.string.communityErrorDescription))
                     }
                 }
             }

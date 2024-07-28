@@ -17,7 +17,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Methodd yr anfon, tapiwch am fanylion</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Ychwanegu atodiad</string>
     <string name="blockUnblock">Dadrwystro</string>

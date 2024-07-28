@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Falha ao enviar, toque para mais detalhes</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Adicionar anexo</string>
     <string name="message">Mensagem</string>
@@ -186,7 +185,6 @@
     <string name="conversationsDeleted">Conversa excluída</string>
     <string name="activity_seed_title_2">Revele sua frase de recuperação</string>
     <string name="activity_seed_explanation">Sua frase de recuperação é a chave mestra do seu ID Session - você pode usá-la para restaurar seu ID Session se perder o acesso ao seu dispositivo. Armazene sua frase de recuperação em um local seguro e não a entregue a ninguém.</string>
-    <string name="activity_seed_reveal_button_title">Segure para revelar</string>
     <string name="onionRoutingPath">Caminho</string>
     <string name="onionRoutingPathEntryNode">Nó de Entrada</string>
     <string name="onionRoutingPathServiceNode">Nó de Serviço</string>

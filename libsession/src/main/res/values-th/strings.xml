@@ -16,7 +16,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">การส่งล้มเหลว แตะเพื่อดูรายละเอียด</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">เพิ่มไฟล์แนบ</string>
     <string name="blockUnblock">เลิกปิดกั้น</string>

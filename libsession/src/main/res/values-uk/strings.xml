@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Помилка відправлення, переглянути деталі</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Додати вкладення</string>
     <string name="message">Написати</string>
@@ -188,7 +187,6 @@
     <string name="conversationsDeleted">Бесіду видалено</string>
     <string name="activity_seed_title_2">Знайомтесь з вашою фразою відновлення</string>
     <string name="activity_seed_explanation">Ваша фраза відновлення - це головний ключ до вашогї Session ID адреси - ви можете використовувати її для відновлення вашої Session ID адреси якщо ви втратите доступ до пристрою. Запишіть на папері та зберігайте вашу фразу відновлення у безпечному місці і не дайте її нікому.</string>
-    <string name="activity_seed_reveal_button_title">Натисніть, щоб відобразити</string>
     <string name="onionRoutingPath">Шлях</string>
     <string name="onionRoutingPathEntryNode">Вхідний Вузел</string>
     <string name="onionRoutingPathServiceNode">Сервісний Вузел</string>

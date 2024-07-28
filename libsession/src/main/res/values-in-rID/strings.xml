@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Pengiriman gagal, ketuk untuk rincian</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Tambahkan lampiran</string>
     <string name="message">Pesan</string>
@@ -167,7 +166,6 @@
     <string name="activity_home_empty_state_button_title">Memulai Session</string>
     <string name="conversationsDeleted">Percakapan dihapus</string>
     <string name="activity_seed_title_2">Inilah kata pemulihan anda</string>
-    <string name="activity_seed_reveal_button_title">Tekan untuk melihat</string>
     <string name="onionRoutingPathDestination">Tujuan</string>
     <string name="learnMore">Selengkapnya</string>
     <string name="qrScan">Pindai kode QR</string>

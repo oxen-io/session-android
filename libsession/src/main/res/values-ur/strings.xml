@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">بھیجنا ناکام ہو گیا، تفصیلات کے لیے تھپتھپائیں۔</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">منسلکہ شامل کریں</string>
     <string name="message">پیغام</string>

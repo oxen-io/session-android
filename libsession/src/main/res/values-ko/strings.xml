@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">전송 실패, 탭해서 자세히 보기</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">첨부</string>
     <string name="message">메시지</string>

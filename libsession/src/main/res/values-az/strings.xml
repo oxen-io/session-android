@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Göndərilmədi, təfsilatlar üçün toxunun</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Qoşma əlavə et</string>
     <string name="message">Mesaj</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Danışıq silindi</string>
     <string name="activity_seed_title_2">Bərpa parolunuzla tanış olun</string>
     <string name="activity_seed_explanation">Bərpa parolunuz, Session kimliyinizin ana açarıdır - cihazınıza müraciəti itirsəniz, Session kimliyinizi geri yükləmək üçün bunu istifadə edə bilərsiniz. Bərpa parolunuzu etibarlı bir yerdə saxlayın və heç kəsə verməyin.</string>
-    <string name="activity_seed_reveal_button_title">Aşkarlamaq üçün basılı saxlayın</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düyünü</string>
     <string name="onionRoutingPathServiceNode">Xidmət Düyünü</string>

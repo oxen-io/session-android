@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Erro ao enviar; toca para máis detalles</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Engadir anexo</string>
     <string name="message">Escribe aquí a túa mensaxe</string>

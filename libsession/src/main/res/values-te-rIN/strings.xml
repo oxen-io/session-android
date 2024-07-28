@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">విఫలమైంది పంపండి, వివరాల కోసం నొక్కండి</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">అటాచ్మెంట్ జోడించండి</string>
     <string name="message">సందేశం</string>

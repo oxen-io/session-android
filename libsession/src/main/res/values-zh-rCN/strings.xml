@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">发送失败，点击查看详情</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">添加附件</string>
     <string name="message">消息</string>
@@ -184,7 +183,6 @@
     <string name="conversationsDeleted">对话已删除</string>
     <string name="activity_seed_title_2">这里是您的恢复口令</string>
     <string name="activity_seed_explanation">您的恢复口令是Session ID的主密钥 - 如果您无法访问您的现有设备，则可以使用它在其他设备上恢复您的Session ID。请将您的恢复口令存储在安全的地方，不要将其提供给任何人。</string>
-    <string name="activity_seed_reveal_button_title">长按显示内容</string>
     <string name="onionRoutingPath">路径</string>
     <string name="onionRoutingPathEntryNode">入口节点</string>
     <string name="onionRoutingPathServiceNode">服务节点</string>

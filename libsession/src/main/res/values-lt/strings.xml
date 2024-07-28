@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Siuntimas nepavyko, bakstelėkite išsamesnei informacijai</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Pridėti priedą</string>
     <string name="message">Žinutė</string>

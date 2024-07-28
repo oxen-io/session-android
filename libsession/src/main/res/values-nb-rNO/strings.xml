@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Sending mislyktes, trykk for detaljer</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Legg til vedlegg</string>
     <string name="message">Melding</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Samtalen slettet</string>
     <string name="activity_seed_title_2">Møt din gjenopprettingsfrase</string>
     <string name="activity_seed_explanation">Gjenopprettelsesfrasen din er hovednøkkelen til Session-IDen din – du kan bruke den for å gjenopprette Session-IDen din dersom du mister tilgang til enheten din. Arkiver gjenopprettelsesfrasen din på et trygt sted, og ikke gi den til noen.</string>
-    <string name="activity_seed_reveal_button_title">Hold for å vise</string>
     <string name="onionRoutingPath">Bane</string>
     <string name="onionRoutingPathEntryNode">Enhetens node</string>
     <string name="onionRoutingPathServiceNode">Tjeneste node</string>

@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">भेजने में असफल रहा, विवरण के लिए टैप करें।</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">अटैचमेंट जोड़ें</string>
     <string name="message">मैसेज</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">बातचीत हटाई गई</string>
     <string name="activity_seed_title_2">अपने पुनर्प्राप्ति वाक्यांश से मिलें</string>
     <string name="activity_seed_explanation">आपका रिकवरी फ्रेज आपके Session Id की मास्टर कीय है — आप इसका इस्तेमाल अपनी Session ID को वापिस पाने के लिए कर सकते है अगर आपका फ़ोन गुम हो गया है | अपने रिकवरी फ्रेज को एक सुरक्षित जगह रखे और इसे किसी के साथ शेयर न करे |</string>
-    <string name="activity_seed_reveal_button_title">देखने के लिए दबाएं</string>
     <string name="onionRoutingPath">पथ</string>
     <string name="onionRoutingPathEntryNode">प्रवेश नोड</string>
     <string name="onionRoutingPathServiceNode">सर्विस नोड</string>

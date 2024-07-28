@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Ha fallat l\'enviament. Toqueu per a saber-ne més</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Afegeix un adjunt</string>
     <string name="message">Missatge</string>
@@ -184,7 +183,6 @@
     <string name="conversationsDeleted">S\'ha suprimit la conversa</string>
     <string name="activity_seed_title_2">Coneix la teva frase de recuperació</string>
     <string name="activity_seed_explanation">La teva frase de recuperació és la clau principal del teu ID de Session — pots fer-la servir per a restaurar la teva ID de Session si perds l\'accés al dispositiu. Emmagatzema la frase de recuperació en un lloc segur i no la donis a ningú.</string>
-    <string name="activity_seed_reveal_button_title">Mantingues premut per a revelar</string>
     <string name="onionRoutingPath">Ruta</string>
     <string name="onionRoutingPathEntryNode">Node d\'entrada</string>
     <string name="onionRoutingPathServiceNode">Node de servei</string>

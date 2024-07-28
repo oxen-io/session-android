@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Lähetys epäonnistui, napauta nähdäksesi lisätietoja</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Lisää liite</string>
     <string name="message">Viesti</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Keskustelu poistettu</string>
     <string name="activity_seed_title_2">Tutustu palautuslauseesi</string>
     <string name="activity_seed_explanation">Sinun palautuslause on pääavain Session tunnukseesi — voit käyttää sitä palauttamaan Session tunnuksesi jos menetät pääsyn laitteeseen. Säilytä palautuslauseesi turvallisessa paikassa, ja älä anna sitä kenellekään.</string>
-    <string name="activity_seed_reveal_button_title">Pidä pohjassa paljastaaksesi</string>
     <string name="onionRoutingPath">Polku</string>
     <string name="onionRoutingPathEntryNode">Sisääntulon Solmu</string>
     <string name="onionRoutingPathServiceNode">Palvelu Solmu</string>

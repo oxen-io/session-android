@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Afsendelse mislykkedes, tryk for detaljer</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Vedhæft fil</string>
     <string name="message">Besked</string>
@@ -184,7 +183,6 @@
     <string name="conversationsDeleted">Samtale slettet</string>
     <string name="activity_seed_title_2">Mød din gendannelsessætning</string>
     <string name="activity_seed_explanation">Din gendannelsessætning er hovednøglen til dit Session ID - du kan bruge den til at gendanne dit Session ID, hvis du mister adgang til din enhed. Gem din gendannelsessætning på et sikkert sted, og giv det ikke til nogen.</string>
-    <string name="activity_seed_reveal_button_title">Hold nede for at se</string>
     <string name="onionRoutingPath">Sti</string>
     <string name="onionRoutingPathDestination">Destination</string>
     <string name="learnMore">Læs mere</string>

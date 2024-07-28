@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Ошибка отправки. Нажмите для подробностей</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Добавить вложение</string>
     <string name="message">Сообщение</string>
@@ -187,7 +186,6 @@
     <string name="conversationsDeleted">Разговор удален</string>
     <string name="activity_seed_title_2">А вот и ваша секретная фраза для восстановления</string>
     <string name="activity_seed_explanation">Ваша секретная фраза является главным ключом к вашему Session ID. Вы можете использовать ее для восстановления Session ID, если потеряете доступ к своему устройству. Сохраните свою секретную фразу в безопасном месте, и никому ее не передавайте.</string>
-    <string name="activity_seed_reveal_button_title">Удерживайте, чтобы показать</string>
     <string name="onionRoutingPath">Маршрут</string>
     <string name="onionRoutingPathEntryNode">Узел входа</string>
     <string name="onionRoutingPathServiceNode">Служебный узел</string>

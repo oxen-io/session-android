@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Չուղարկվեց, սեղմեք տվյալների համար</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Ավելացնել կցորդ</string>
     <string name="message">Հաղորդագրություն</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Ջնջված է</string>
     <string name="activity_seed_title_2">Ծանոթացեք ձեր վերականգնման բառակապակցության հետ</string>
     <string name="activity_seed_explanation">Session այդին Ձեր Session բանալին է, որը կարող եք վերականգնել եթե կորցնեք ձեր սարքը, ձեր բանալին պահեք և մի տվեք ինչ-որ մեկին.</string>
-    <string name="activity_seed_reveal_button_title">Սեղմած պահեք տեսնելու համար</string>
     <string name="onionRoutingPath">Ուղի</string>
     <string name="onionRoutingPathEntryNode">Մուտքային Հանգույց</string>
     <string name="onionRoutingPathServiceNode">Ծառայության Հանգույց</string>

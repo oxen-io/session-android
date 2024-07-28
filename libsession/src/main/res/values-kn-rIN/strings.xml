@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">ಕಳುಹಿಸಲು ವಿಫಲವಾಗಿದೆ, ಮಾಹಿತಿಗಾಗಿ ತಟ್ಟಿ ನೋಡಿ</string>
     <!-- ConversationActivity -->
     <string name="message">ಸಂದೇಶ</string>
     <string name="notificationsMuted">ಸದ್ದಡಗಿಸಿ</string>

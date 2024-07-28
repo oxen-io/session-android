@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Dërgimi dështoi, për hollësi, prekeni</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Shtoni bashkëngjitje</string>
     <string name="message">Mesazh</string>

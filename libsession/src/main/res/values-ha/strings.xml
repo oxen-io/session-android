@@ -17,7 +17,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Şandin têk çû, ji bo hûrgiliyên bêhtir, bitepîne</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Servehî lê zede bike</string>
     <string name="blockUnblock">Astengê rake</string>

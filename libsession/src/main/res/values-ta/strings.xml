@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">அனுப்ப முடியவில்லை. விவரங்களுக்கு தட்டவும்</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">இணைப்பை சேர்க்கவும்</string>
     <string name="message">செய்தி</string>

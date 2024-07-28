@@ -18,7 +18,6 @@
     <!-- CommunicationActions -->
     <!-- ContactsCursorLoader -->
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Gönderme başarısız, ayrıntılar için dokunun</string>
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Eklenti ekle</string>
     <string name="message">İleti</string>
@@ -185,7 +184,6 @@
     <string name="conversationsDeleted">Konuşma silindi</string>
     <string name="activity_seed_title_2">Kurtarma ifadenizle tanışın</string>
     <string name="activity_seed_explanation">Kurtarma ifadeniz Session kimliğinizin ana anahtarıdır; cihazınıza erişiminizi kaybederseniz Session kimliğinizi geri yüklemek için bunu kullanabilirsiniz. Kurtarma ifadenizi güvenli bir yerde saklayın ve kimseye vermeyin.</string>
-    <string name="activity_seed_reveal_button_title">Ortaya çıkarmak için basılı tutun</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düğüm</string>
     <string name="onionRoutingPathServiceNode">Hizmet Düğüm</string>
