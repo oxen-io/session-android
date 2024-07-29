@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
@@ -32,6 +33,7 @@ import org.thoughtcrime.securesms.groups.SelectContactsViewModel
 import org.thoughtcrime.securesms.ui.CloseIcon
 import org.thoughtcrime.securesms.ui.NavigationBar
 import org.thoughtcrime.securesms.ui.SearchBar
+import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
@@ -65,7 +67,6 @@ fun SelectContactsScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SelectContacts(
     contacts: List<ContactItem>,
@@ -77,7 +78,7 @@ fun SelectContacts(
     onClose: (() -> Unit)? = null,
     @StringRes okButtonResId: Int = R.string.ok
 ) {
-    Column {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         NavigationBar(
             title = stringResource(id = R.string.activity_create_closed_group_select_contacts),
             onBack = onBack,
@@ -88,13 +89,15 @@ fun SelectContacts(
             }
         )
 
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            stickyHeader {
-                GroupMinimumVersionBanner()
-                // Search Bar
-                SearchBar(query = searchQuery, onValueChanged = onSearchQueryChanged)
-            }
+        GroupMinimumVersionBanner()
+        SearchBar(
+            query = searchQuery,
+            onValueChanged = onSearchQueryChanged,
+            placeholder = stringResource(R.string.search_contacts_hint),
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
 
+        LazyColumn(modifier = Modifier.weight(1f)) {
             multiSelectMemberList(
                 contacts = contacts,
                 onContactItemClicked = onContactItemClicked,
@@ -107,21 +110,15 @@ fun SelectContacts(
                 .background(
                     verticalGradient(
                         0f to Color.Transparent,
-                        0.2f to LocalColors.current.primary,
+                        0.2f to LocalColors.current.background,
                     )
                 )
         ) {
-            OutlinedButton(
+            PrimaryOutlineButton(
                 onClick = onDoneClicked,
                 modifier = Modifier
                     .padding(horizontal = 12.dp, vertical = 4.dp)
                     .defaultMinSize(minWidth = 128.dp),
-                border = BorderStroke(1.dp, LocalColors.current.borders),
-                shape = CircleShape,
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = LocalColors.current.text,
-                )
             ) {
                 Text(
                     stringResource(id = okButtonResId)
@@ -134,10 +131,19 @@ fun SelectContacts(
 
 @Preview
 @Composable
-fun PreviewSelectContacts() {
+private fun PreviewSelectContacts() {
     PreviewTheme {
         SelectContacts(
-            contacts = emptyList(),
+            contacts = listOf(
+                ContactItem(
+                    contact = Contact(accountID = "123", name = "User 1"),
+                    selected = false,
+                ),
+                ContactItem(
+                    contact = Contact(accountID = "124", name = "User 2"),
+                    selected = true,
+                ),
+            ),
             onContactItemClicked = {},
             searchQuery = "",
             onSearchQueryChanged = {},

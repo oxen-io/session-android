@@ -10,10 +10,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupMember
@@ -35,33 +37,42 @@ class EditGroupViewModel @AssistedInject constructor(
     // Input/Output state
     private val mutableEditingName = MutableStateFlow<String?>(null)
 
+    // Input: pending member removing
+    private val removingMemberAccountIDs = MutableStateFlow(emptySet<String>())
+
     // Output: The name of the group being edited. Null if it's not in edit mode, not to be confused
     // with empty string, where it's a valid editing state.
     val editingName: StateFlow<String?> get() = mutableEditingName
 
     // Output: the source-of-truth group information. Other states are derived from this.
     private val groupInfo: StateFlow<Pair<GroupDisplayInfo, List<GroupMemberState>>?> =
-        configFactory.configUpdateNotifications
-            .filter { it.hexString == groupSessionId }
-            .onStart { emit(AccountId(groupSessionId)) }
-            .map { _ ->
-                withContext(Dispatchers.Default) {
-                    val currentUserId = checkNotNull(storage.getUserPublicKey()) {
-                        "User public key is null"
-                    }
-
-                    val displayInfo = storage.getClosedGroupDisplayInfo(groupSessionId)
-                        ?: return@withContext null
-
-
-                    val members = storage.getMembers(groupSessionId).map { member ->
-                        createGroupMember(member, currentUserId, amIAdmin = displayInfo.isUserAdmin)
-                    }
-
-                    displayInfo to members
+        combine(
+            removingMemberAccountIDs,
+            configFactory.configUpdateNotifications
+                .filter { it.hexString == groupSessionId }
+                .onStart { emit(AccountId(groupSessionId)) }
+        ) { removingAccountIDs, _ ->
+            withContext(Dispatchers.Default) {
+                val currentUserId = checkNotNull(storage.getUserPublicKey()) {
+                    "User public key is null"
                 }
+
+                val displayInfo = storage.getClosedGroupDisplayInfo(groupSessionId)
+                    ?: return@withContext null
+
+
+                val members = storage.getMembers(groupSessionId).map { member ->
+                    createGroupMember(
+                        member = member,
+                        myAccountId = currentUserId,
+                        amIAdmin = displayInfo.isUserAdmin,
+                        isBeingRemoved = member.sessionId in removingAccountIDs
+                    )
+                }
+
+                displayInfo to members
             }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     // Output: whether the group name can be edited. This is true if the group is loaded successfully.
     val canEditGroupName: StateFlow<Boolean> = groupInfo
@@ -83,7 +94,12 @@ class EditGroupViewModel @AssistedInject constructor(
         .map { it?.first?.isUserAdmin == true }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
-    private fun createGroupMember(member: GroupMember, myAccountId: String, amIAdmin: Boolean): GroupMemberState {
+    private fun createGroupMember(
+        member: GroupMember,
+        myAccountId: String,
+        amIAdmin: Boolean,
+        isBeingRemoved: Boolean
+    ): GroupMemberState {
         var status = ""
         var highlightStatus = false
         var name = member.name.orEmpty()
@@ -91,6 +107,10 @@ class EditGroupViewModel @AssistedInject constructor(
         when {
             member.sessionId == myAccountId -> {
                 name = "You"
+            }
+
+            isBeingRemoved -> {
+                status = "Removing..."
             }
 
             member.inviteFailed -> {
@@ -115,7 +135,7 @@ class EditGroupViewModel @AssistedInject constructor(
         return GroupMemberState(
             accountId = member.sessionId,
             name = name,
-            showEdit = member.sessionId != myAccountId && amIAdmin,
+            showEdit = member.sessionId != myAccountId && amIAdmin && !isBeingRemoved,
             status = status,
             highlightStatus = highlightStatus
         )
@@ -123,7 +143,9 @@ class EditGroupViewModel @AssistedInject constructor(
 
 
     fun onContactSelected(contacts: Set<Contact>) {
-        storage.inviteClosedGroupMembers(groupSessionId, contacts.map { it.accountID })
+        viewModelScope.launch(Dispatchers.Default) {
+            storage.inviteClosedGroupMembers(groupSessionId, contacts.map { it.accountID })
+        }
     }
 
     fun onReInviteContact(contactSessionId: String) {
@@ -131,11 +153,19 @@ class EditGroupViewModel @AssistedInject constructor(
     }
 
     fun onPromoteContact(contactSessionId: String) {
-        storage.promoteMember(groupSessionId, arrayOf(contactSessionId))
+        viewModelScope.launch(Dispatchers.Default) {
+            storage.promoteMember(groupSessionId, arrayOf(contactSessionId))
+        }
     }
 
     fun onRemoveContact(contactSessionId: String) {
-        storage.removeMember(groupSessionId, arrayOf(contactSessionId))
+        viewModelScope.launch {
+            removingMemberAccountIDs.value += contactSessionId
+            withContext(Dispatchers.Default) {
+                storage.removeMember(groupSessionId, arrayOf(contactSessionId))
+            }
+            removingMemberAccountIDs.value -= contactSessionId
+        }
     }
 
     fun onEditNameClicked() {

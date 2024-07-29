@@ -67,7 +67,6 @@ fun EditGroupScreen(
     onFinish: () -> Unit,
 ) {
     val navController = rememberNavController()
-    val context = LocalContext.current
     val viewModel = hiltViewModel<EditGroupViewModel, EditGroupViewModel.Factory> { factory ->
         factory.create(groupSessionId)
     }
@@ -81,20 +80,7 @@ fun EditGroupScreen(
                 },
                 onReinvite = viewModel::onReInviteContact,
                 onPromote = viewModel::onPromoteContact,
-                onRemove = { contact ->
-//                    val string = Phrase.from(context, R.string.activity_edit_closed_group_remove_users_single)
-//                        .put("user", contact.memberName)
-//                        .put("group", viewModel.viewState.value.groupName)
-//                        .format()
-//                    context.showSessionDialog {
-//                        title(R.string.activity_settings_remove)
-//                        text(string)
-//                        dangerButton(R.string.activity_settings_remove) {
-//                            viewModel.onRemoveContact(contact.memberSessionId)
-//                        }
-//                        cancelButton()
-//                    }
-                },
+                onRemove = viewModel::onRemoveContact,
                 onEditNameClicked = viewModel::onEditNameClicked,
                 onEditNameCancelClicked = viewModel::onCancelEditingNameClicked,
                 onEditNameConfirmed = viewModel::onEditNameConfirmClicked,
