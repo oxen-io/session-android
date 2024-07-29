@@ -94,8 +94,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Пошаљи</string>
-    <string name="conversation_activity__attachment_thumbnail">Сличица прилога</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Фиока брзог прилога камере</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
@@ -166,7 +164,6 @@
     <!-- Session -->
     <string name="recommended">Препоручено</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Молимо Вас да одаберете опцију</string>
-    <string name="activity_home_empty_state_button_title">Почни сесију</string>
     <string name="conversationsDeleted">Конверзација је избрисана</string>
     <!-- Next round of translation -->
 </resources>

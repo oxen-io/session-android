@@ -93,8 +93,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">发送</string>
-    <string name="conversation_activity__attachment_thumbnail">附件缩略图</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">切换快速相机附件抽屉</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel"> 滑动以取消发送</string>
     <!-- conversation_item -->
@@ -178,7 +176,6 @@
     <string name="displayNamePick">选择您想显示的名称</string>
     <string name="recommended">推荐的选项</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">请选择一个选项</string>
-    <string name="activity_home_empty_state_button_title">开始对话</string>
     <string name="conversationsDeleted">对话已删除</string>
     <string name="onionRoutingPath">路径</string>
     <string name="onionRoutingPathEntryNode">入口节点</string>

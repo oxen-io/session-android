@@ -93,8 +93,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Envia</string>
-    <string name="conversation_activity__attachment_thumbnail">Miniatura de l\'adjunt</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Desplega la pestanya d\'adjunts de càmera ràpida</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Llisqueu per cancel·lar-ho</string>
     <!-- conversation_item -->
@@ -178,7 +176,6 @@
     <string name="displayNamePick">Tria el nom que es mostrarà</string>
     <string name="recommended">Recomanat</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Selecciona una opció, si us plau</string>
-    <string name="activity_home_empty_state_button_title">Enceta un Session</string>
     <string name="conversationsDeleted">S\'ha suprimit la conversa</string>
     <string name="onionRoutingPath">Ruta</string>
     <string name="onionRoutingPathEntryNode">Node d\'entrada</string>

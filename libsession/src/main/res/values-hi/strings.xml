@@ -94,8 +94,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">भेजें</string>
-    <string name="conversation_activity__attachment_thumbnail">अटैचमेंट थंबनेल </string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">त्वरित कैमरा अनुलग्नक दराज टॉगल करें</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">रद्द करने के लिए स्लाइड करें</string>
     <!-- conversation_item -->
@@ -179,7 +177,6 @@
     <string name="displayNamePick">अपना प्रदर्शन नाम चुनें</string>
     <string name="recommended">सुझाया गया</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">कृपया एक विकल्प चुनें।</string>
-    <string name="activity_home_empty_state_button_title">एक सेशन प्रारंभ करें</string>
     <string name="conversationsDeleted">बातचीत हटाई गई</string>
     <string name="onionRoutingPath">पथ</string>
     <string name="onionRoutingPathEntryNode">प्रवेश नोड</string>

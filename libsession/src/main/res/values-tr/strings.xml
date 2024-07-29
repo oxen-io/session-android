@@ -94,8 +94,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Gönder</string>
-    <string name="conversation_activity__attachment_thumbnail">Eklenti Önizlemesi</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Hızlı kamera eki çekmecesini göster/gizle</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">İptal etmek için kaydırın</string>
     <!-- conversation_item -->
@@ -179,7 +177,6 @@
     <string name="displayNamePick">Görünen adınızı seçin</string>
     <string name="recommended">Önerilenler</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Lütfen Bir Seçenek Seçin</string>
-    <string name="activity_home_empty_state_button_title">Oturumu başlat</string>
     <string name="conversationsDeleted">Konuşma silindi</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düğüm</string>

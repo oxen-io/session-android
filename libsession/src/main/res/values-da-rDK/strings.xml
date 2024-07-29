@@ -94,8 +94,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Send</string>
-    <string name="conversation_activity__attachment_thumbnail">Vedhæftet skabelon</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Slå kamera til/fra</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Slide for at annullere</string>
     <!-- conversation_item -->
@@ -178,7 +176,6 @@
     <string name="cancel">Annuller</string>
     <string name="displayNamePick">Vælg dit visningsnavn</string>
     <string name="recommended">Anbefalet</string>
-    <string name="activity_home_empty_state_button_title">Start en Session</string>
     <string name="conversationsDeleted">Samtale slettet</string>
     <string name="onionRoutingPath">Sti</string>
     <string name="onionRoutingPathDestination">Destination</string>

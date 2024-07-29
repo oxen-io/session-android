@@ -90,8 +90,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Saada</string>
-    <string name="conversation_activity__attachment_thumbnail">Manuse pisipilt</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Lülita kiire kaamera manuse sahtel sisse või välja</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Libista tühistamiseks</string>
     <!-- conversation_item -->

@@ -144,6 +144,7 @@
     <string name="AccessibilityId_save_attachment">Save attachment</string>
     <string name="AccessibilityId_select">Select</string>
     <string name="AccessibilityId_voice_message">Voice message</string>
+    <string name="conversation_item_sent__delivered_description">Delivered</string>
     <!-- Delete message modal-->
     <string name="AccessibilityId_cancel_deletion">Cancel deletion</string>
     <string name="AccessibilityId_delete_for_everyone">Delete for everyone</string>
@@ -179,6 +180,9 @@
     <string name="AccessibilityId_username_input">Username input</string>
     <string name="AccessibilityId_username_text">Username text</string>
 
+    <!-- Misc. -->
     <string name="AccessibilityId_navigateBack">Navigate Back</string>
     <string name="AccessibilityId_closeDialog">Close Dialog</string>
+    <string name="attachment_type_selector__gallery_description">Image or video</string>
+    <string name="attachment_type_selector__drawer_description">Toggle attachment drawer</string>
 </resources>

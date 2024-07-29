@@ -93,8 +93,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Anfon</string>
-    <string name="conversation_activity__attachment_thumbnail">Llun Bach Atodiad</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Newid y drôr atodiad cyflym camera</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Llithro i ddiddymu</string>
     <!-- conversation_item -->

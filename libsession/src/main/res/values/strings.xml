@@ -58,7 +58,6 @@
     </plurals>
 
     <!-- USED STRINGS FOR WHICH WE NEED NEW NAMES! -->
-    <string name="activity_home_empty_state_button_title">Start a Session</string>
     <string name="fragment_view_my_qr_code_title">Scan Me</string>
 
     <!-- LOOK UP IF NEEDED ON FIGMA - THIS ONLY SHOWS AS A IN-EDITOR HINT ATM tools:hint not android:hint -->
@@ -77,21 +76,23 @@
     <string name="activity_disappearing_messages_subtitle">This setting applies to messages you send in this conversation.</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
     <string name="activity_settings_upload">Upload</string>
-    <string name="attachment_type_selector__drawer_description">Toggle attachment drawer</string>
+
+    <!-- REQUIRED: Used in attachment_type_selector.xml as a category of attachment.
+         Figma: Unable to locate this string in Figma.
+    -->
     <string name="attachment_type_selector__gallery">Gallery</string>
-    <string name="attachment_type_selector__gallery_description">Image or video</string>
-    <string name="conversation_activity__attachment_thumbnail">Attachment Thumbnail</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Toggle quick camera attachment drawer</string>
+
+    <!-- REQUIRED: Toast shown when a user attempts to download a second attachment while the first is still downloading.
+         Figma: Unable to locate this string in Figma.
+    -->
     <string name="conversation_activity__wait_until_attachment_has_finished_downloading">Please wait until attachment has finished downloading</string>
-    <string name="conversation_item_sent__delivered_description">Delivered</string>
+
+    <!-- REQUIRED: Used when a users follows the disappearing messages of another user to turn them off.
+         Figma: https://www.figma.com/design/tEgZ8ujg76DdtPwEJv8zFp/Disappearing-Messages?node-id=0-1&t=RmpaOwy9gz7ohKSE-0
+    -->
     <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
 
-
-    <!-- RENAMED! -->
-    <string name="deleteAfterGroupFirstReleaseConfigOutdated">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
-
-    <!-- ADDED FROM 'FOR EXPORT' TAB -->
-    <string name="databaseErrorGeneric">A database error occurred.\n\nExport your application logs to share for troubleshooting. If this is unsuccessful, reinstall {app_name} and restore your account.\n\nWarning: This will result in loss of all messages, attachments, and account data older than two weeks.</string>
+    <!-- ========== END OF STRAGGLERS SECTION ========== -->
 
     <!-- Strings with modern names and {braced} substitution markers -->
     <string name="about">About</string>
@@ -311,9 +312,11 @@
     <string name="copy">Copy</string>
     <string name="create">Create</string>
     <string name="cut">Cut</string>
+    <string name="databaseErrorGeneric">A database error occurred.\n\nExport your application logs to share for troubleshooting. If this is unsuccessful, reinstall {app_name} and restore your account.\n\nWarning: This will result in loss of all messages, attachments, and account data older than two weeks.</string>
     <string name="databaseOptimizing">Optimizing Database</string>
     <string name="decline">Decline</string>
     <string name="delete">Delete</string>
+    <string name="deleteAfterGroupFirstReleaseConfigOutdated">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
     <string name="deleteAfterGroupPR3DeleteMessagesConfirmation">Permanently delete the messages in this conversation?</string>
     <string name="deleteAfterLegacyDisappearingMessagesLegacy">Legacy</string>
     <string name="deleteAfterLegacyDisappearingMessagesOriginal">Original version of disappearing messages.</string>

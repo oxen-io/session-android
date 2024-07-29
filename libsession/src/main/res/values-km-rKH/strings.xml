@@ -90,8 +90,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">ផ្ញើ</string>
-    <string name="conversation_activity__attachment_thumbnail">ភ្ជាប់រូបភាពឯកសារ</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">បិទបើកថតឯកសារភ្ជាប់កាមេរ៉ារហ័ស</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">អូសដើម្បីបោះបង់</string>
     <!-- conversation_item -->

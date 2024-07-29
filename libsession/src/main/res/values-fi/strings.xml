@@ -94,8 +94,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Lähetä</string>
-    <string name="conversation_activity__attachment_thumbnail">Liitteen esikatselu</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Avaa tai sulje pikakamera</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Pyyhkäise hylkääksesi</string>
     <!-- conversation_item -->
@@ -179,7 +177,6 @@
     <string name="displayNamePick">Valitse näyttönimi</string>
     <string name="recommended">Suositeltu</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Valitse vaihtoehto</string>
-    <string name="activity_home_empty_state_button_title">Aloita ryhmä</string>
     <string name="conversationsDeleted">Keskustelu poistettu</string>
     <string name="onionRoutingPath">Polku</string>
     <string name="onionRoutingPathEntryNode">Sisääntulon Solmu</string>

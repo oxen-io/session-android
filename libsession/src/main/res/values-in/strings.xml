@@ -162,7 +162,6 @@
     <string name="displayNamePick">Pilih nama yang ditampilkan</string>
     <string name="recommended">Direkomendasikan</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Pilih salah satu opsi</string>
-    <string name="activity_home_empty_state_button_title">Memulai Session</string>
     <string name="conversationsDeleted">Percakapan dihapus</string>
     <string name="onionRoutingPathDestination">Tujuan</string>
     <string name="learnMore">Selengkapnya</string>

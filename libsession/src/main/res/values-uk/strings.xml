@@ -97,8 +97,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Надіслати</string>
-    <string name="conversation_activity__attachment_thumbnail">Мініатюра вкладення</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Увімк/вимк скриньку прикріплень камери</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Проведіть щоб відмінити</string>
     <!-- conversation_item -->
@@ -182,7 +180,6 @@
     <string name="displayNamePick">Виберіть ваш псевдонім для показу</string>
     <string name="recommended">Рекомендовано</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Будь ласка виберіть варіант</string>
-    <string name="activity_home_empty_state_button_title">Почати сесію</string>
     <string name="conversationsDeleted">Бесіду видалено</string>
     <string name="onionRoutingPath">Шлях</string>
     <string name="onionRoutingPathEntryNode">Вхідний Вузел</string>

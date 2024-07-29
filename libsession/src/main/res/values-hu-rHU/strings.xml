@@ -95,8 +95,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Küldés</string>
-    <string name="conversation_activity__attachment_thumbnail">Melléklet előnézet</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Gyorskamera kapcsoló</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Megszakításhoz csúsztasd</string>
     <!-- conversation_item -->
@@ -180,7 +178,6 @@
     <string name="displayNamePick">Válassza ki a megjelenítendő nevet</string>
     <string name="recommended">Ajánlott</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Kérjük, válasszon egy lehetőséget</string>
-    <string name="activity_home_empty_state_button_title">Indítson el egy beszélgetést</string>
     <string name="conversationsDeleted">A beszélgetés törölve</string>
     <string name="onionRoutingPath">Útvonal</string>
     <string name="onionRoutingPathEntryNode">Belépési csomópont</string>

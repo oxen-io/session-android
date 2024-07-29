@@ -94,8 +94,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">ارسال</string>
-    <string name="conversation_activity__attachment_thumbnail">پیوست تصویر کوچک</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">تغییر حالت نگه دارنده پیوست دوربین سریع</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">برای لغو بکشید</string>
     <!-- conversation_item -->
@@ -179,7 +177,6 @@
     <string name="displayNamePick">نام خود را برای نمایش انتخاب کنید</string>
     <string name="recommended">گزینه پیشنهادی</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">لطفا یک گزینه را انتخاب کنید</string>
-    <string name="activity_home_empty_state_button_title">شروع Session</string>
     <string name="conversationsDeleted">مکالمه حذف شد</string>
     <string name="onionRoutingPath">مسیر</string>
     <string name="onionRoutingPathEntryNode">گره ورودی</string>

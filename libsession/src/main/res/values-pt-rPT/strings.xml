@@ -95,8 +95,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Enviar</string>
-    <string name="conversation_activity__attachment_thumbnail">Antevisão de anexo</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Comutar a câmara rápida da gaveta de anexos</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Deslize para cancelar</string>
     <!-- conversation_item -->
@@ -180,7 +178,6 @@
     <string name="displayNamePick">Escolha seu nome de exibição</string>
     <string name="recommended">Recomendado</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Escolha uma opção</string>
-    <string name="activity_home_empty_state_button_title">Iniciar uma sessão</string>
     <string name="conversationsDeleted">Conversa excluída</string>
     <string name="onionRoutingPath">Caminho</string>
     <string name="onionRoutingPathEntryNode">Nó de Entrada</string>

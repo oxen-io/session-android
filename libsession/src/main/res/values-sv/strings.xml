@@ -94,8 +94,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Skicka</string>
-    <string name="conversation_activity__attachment_thumbnail">Bifogad miniatyrbild</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Dölj/Visa snabbpanel för kamerabilaga</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Dra för att avbryta</string>
     <!-- conversation_item -->
@@ -179,7 +177,6 @@
     <string name="displayNamePick">Välj visningsnamn</string>
     <string name="recommended">Rekommenderat</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Välj ett alternativ</string>
-    <string name="activity_home_empty_state_button_title">Starta en Session</string>
     <string name="conversationsDeleted">Konversationen har raderats</string>
     <string name="onionRoutingPath">Sökväg</string>
     <string name="onionRoutingPathEntryNode">Entrénod</string>

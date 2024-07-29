@@ -94,8 +94,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Dërgoje</string>
-    <string name="conversation_activity__attachment_thumbnail">Miniaturë Bashkëngjitjeje</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Hap/mbyll sirtar të shpejtë bashkëngjitjesh nga kamera</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Rrëshqiteni që të anulohet</string>
     <!-- conversation_item -->

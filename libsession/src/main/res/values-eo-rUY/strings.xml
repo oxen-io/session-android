@@ -94,8 +94,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Sendi</string>
-    <string name="conversation_activity__attachment_thumbnail">Kunsendaĵa miniaturo</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Baskuligi kunsendaĵon el rapida fotilo</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Deŝovu por nuligi</string>
     <!-- conversation_item -->
@@ -179,7 +177,6 @@
     <string name="displayNamePick">Elektu vian vidigan nomon</string>
     <string name="recommended">Rekomendate</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Bonvolu Elekti Opcion</string>
-    <string name="activity_home_empty_state_button_title">Komenci Sesion</string>
     <string name="conversationsDeleted">Konversacio forviŝite</string>
     <string name="onionRoutingPath">Vojo</string>
     <string name="onionRoutingPathEntryNode">Enira Nodo</string>

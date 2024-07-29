@@ -105,8 +105,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Envoyer</string>
-    <string name="conversation_activity__attachment_thumbnail">Vignette de pièce jointe</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Afficher, masquer le tiroir permettant de lancer l’appareil photo à basse résolution</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Faire glisser pour annuler</string>
     <!-- conversation_item -->
@@ -192,7 +190,6 @@
     <string name="displayNamePick">Choisissez votre nom d\'utilisateur</string>
     <string name="recommended">Recommandé</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Veuillez choisir une option</string>
-    <string name="activity_home_empty_state_button_title">Démarrez une Session</string>
     <string name="conversationsDeleted">Conversation supprimée</string>
     <string name="onionRoutingPath">Chemin</string>
     <string name="onionRoutingPathEntryNode">Nœud d’entrée</string>

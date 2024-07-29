@@ -95,8 +95,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Trimite</string>
-    <string name="conversation_activity__attachment_thumbnail">Miniatură atașament</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Comutare panou cu atașamente de la camera rapidă </string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Glisați pentru a anula</string>
     <!-- conversation_item -->

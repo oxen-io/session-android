@@ -98,8 +98,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">أرسل</string>
-    <string name="conversation_activity__attachment_thumbnail">المصغّرة للمرفق</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">تفعيل أو تثبيط سريع لدرج مرفقات الكاميرا </string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">إسحب للإلغاء</string>
     <!-- conversation_item -->
@@ -183,7 +181,6 @@
     <string name="displayNamePick">أختر اِسم الاِظهار</string>
     <string name="recommended">محبذ</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">اِختر</string>
-    <string name="activity_home_empty_state_button_title">اِبدا جلسة محادثة</string>
     <string name="conversationsDeleted">تم حذف المحادثة</string>
     <string name="onionRoutingPath">مسار</string>
     <string name="onionRoutingPathEntryNode">عقدة الدخول</string>

@@ -72,7 +72,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Gửi</string>
-    <string name="conversation_activity__attachment_thumbnail">Ảnh nhỏ tập tin đính kèm</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">TRƯỢT ĐỂ HUỶ</string>
     <!-- conversation_item -->
@@ -143,7 +142,6 @@
     <string name="displayNamePick">Chọn tên hiển thị của bạn</string>
     <string name="recommended">Khuyến nghị</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Vui lòng lựa chọn </string>
-    <string name="activity_home_empty_state_button_title">Bắt đầu một Session</string>
     <string name="conversationsDeleted">Cuộc hội thoại đã được xoá </string>
     <string name="onionRoutingPath">Đường đi</string>
     <string name="onionRoutingPathEntryNode">Nút khởi đầu</string>

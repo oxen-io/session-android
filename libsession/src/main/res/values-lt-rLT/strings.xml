@@ -96,8 +96,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Siųsti</string>
-    <string name="conversation_activity__attachment_thumbnail">Priedo miniatiūra</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Perjungti sparčiosios kameros priedų stalčių</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Perbraukite, norėdami atsisakyti</string>
     <!-- conversation_item -->

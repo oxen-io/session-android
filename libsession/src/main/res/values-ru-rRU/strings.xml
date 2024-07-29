@@ -96,8 +96,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Отправить</string>
-    <string name="conversation_activity__attachment_thumbnail">Миниатюра вложения</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Включить быстрое показывание камеры в панели вложений</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Проведите для отмены</string>
     <!-- conversation_item -->
@@ -181,7 +179,6 @@
     <string name="displayNamePick">Выберите ваше отображаемое имя</string>
     <string name="recommended">Рекомендуется</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Пожалуйста, выберите метод</string>
-    <string name="activity_home_empty_state_button_title">Начать Сессию</string>
     <string name="conversationsDeleted">Разговор удален</string>
     <string name="onionRoutingPath">Маршрут</string>
     <string name="onionRoutingPathEntryNode">Узел входа</string>

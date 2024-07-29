@@ -94,8 +94,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Göndər</string>
-    <string name="conversation_activity__attachment_thumbnail">Qoşma eskizi</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Cəld kamera qoşma siyirməsini aç/bağla</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">İmtina etmək üçün sürüşdür</string>
     <!-- conversation_item -->
@@ -179,7 +177,6 @@
     <string name="displayNamePick">Ekran adınızı seçin</string>
     <string name="recommended">Tövsiyə edilən</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Zəhmət olmasa bir variant seçin</string>
-    <string name="activity_home_empty_state_button_title">Bir Session başladın</string>
     <string name="conversationsDeleted">Danışıq silindi</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düyünü</string>

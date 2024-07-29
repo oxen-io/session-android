@@ -85,8 +85,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Kachana</string>
-    <string name="conversation_activity__attachment_thumbnail">Uchilla kimichishka</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Shuyullukchik kimichishkapak ñapash millkata rurana</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
     <!-- conversation_item_sent -->

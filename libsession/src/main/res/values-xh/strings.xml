@@ -69,7 +69,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Sindika</string>
-    <string name="conversation_activity__attachment_thumbnail">Ekikwasidwaako Thumbnail</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Kasindike okusazamu</string>
     <!-- conversation_item -->

@@ -96,8 +96,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Wyślij</string>
-    <string name="conversation_activity__attachment_thumbnail">Miniaturka załącznika</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Bezpośrednie przechwytywanie</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Przesuń, aby anulować</string>
     <!-- conversation_item -->
@@ -181,7 +179,6 @@
     <string name="displayNamePick">Wybierz swoją nazwę wyświetlaną</string>
     <string name="recommended">Zalecana</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Wybierz opcję</string>
-    <string name="activity_home_empty_state_button_title">Rozpocznij sesję</string>
     <string name="conversationsDeleted">Rozmowa usunięta</string>
     <string name="onionRoutingPath">Ścieżka</string>
     <string name="onionRoutingPathEntryNode">Węzeł wejścia</string>

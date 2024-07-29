@@ -93,8 +93,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Enviar</string>
-    <string name="conversation_activity__attachment_thumbnail">Miniatura do anexo</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Activar panel rápido de ficheiros da cámara</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Pasa o dedo para cancelar</string>
     <!-- conversation_item -->
@@ -175,7 +173,6 @@
     <string name="next">Seguinte</string>
     <string name="share">Partillar</string>
     <string name="cancel">Cancelar</string>
-    <string name="activity_home_empty_state_button_title">Iniciar unha sesión</string>
     <string name="conversationsDeleted">Conversa borrada</string>
     <string name="resolving">Procesando…</string>
     <string name="qrScan">Escanear código QR</string>

@@ -83,7 +83,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">보내기</string>
-    <string name="conversation_activity__attachment_thumbnail">첨부파일 미리보기 이미지</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">취소하려면 슬라이드</string>
     <!-- conversation_item -->
@@ -150,7 +149,6 @@
     <string name="copied">클립보드에 복사됨</string>
     <string name="share">공유</string>
     <string name="cancel">취소</string>
-    <string name="activity_home_empty_state_button_title">세션 시작하기</string>
     <string name="onionRoutingPathDestination">목적지</string>
     <string name="learnMore">더 알아보기</string>
     <string name="qrScan">QR 코드 스캔</string>

@@ -95,8 +95,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">שלח</string>
-    <string name="conversation_activity__attachment_thumbnail">תמונה ממוזערת של צרופה</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">עורר מגירת צרופות מהירות של מצלמה</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">החלק כדי לבטל</string>
     <!-- conversation_item -->

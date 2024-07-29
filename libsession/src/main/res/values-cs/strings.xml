@@ -96,8 +96,6 @@
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Odeslat</string>
-    <string name="conversation_activity__attachment_thumbnail">Připojený náhled</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Vytvořit rychlou přílohu kamerou</string>
     <!-- conversation_input_panel -->
     <string name="messageVoiceSlideToCancel">Pro zrušení přejeďte</string>
     <!-- conversation_item -->
@@ -181,7 +179,6 @@
     <string name="displayNamePick">Vaše jméno</string>
     <string name="recommended">Doporučeno</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Prosím vyberte možnost</string>
-    <string name="activity_home_empty_state_button_title">Zahájit relaci</string>
     <string name="conversationsDeleted">Konverzace byla smazána</string>
     <string name="onionRoutingPath">Cesta</string>
     <string name="onionRoutingPathEntryNode">Vstupní uzel</string>
