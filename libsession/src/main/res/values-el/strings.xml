@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Κανένα</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Τώρα</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">Ακύρωση</string>
     <string name="displayNamePick">Επιλέξτε το εμφανιζόμενο όνομα σας</string>
     <string name="recommended">Προτεινόμενο</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Παρακαλούμε κάντε μια επιλογή</string>
     <string name="conversationsDeleted">Η συνομιλία διαγράφηκε</string>
     <string name="onionRoutingPath">Διαδρομή</string>
     <string name="onionRoutingPathEntryNode">Κόμβος Εισόδου</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">Το Session χρειάζεται πρόσβαση στην κάμερα για σάρωση κωδικών QR</string>
     <string name="cameraGrantAccess">Χορήγηση Πρόσβασης Κάμερας</string>
     <string name="groupNameEnter">Εισαγωγή ονόματος ομάδας</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Ξεκινήστε μια συνομιλία</string>
     <string name="groupNameEnterPlease">Παρακαλώ εισάγετε όνομα ομάδας</string>
     <string name="sessionSettings">Ρυθμίσεις</string>
     <string name="sessionInviteAFriend">Προσκαλέστε ένα φίλο</string>

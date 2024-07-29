@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Geen</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Nu</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">Annuleren</string>
     <string name="displayNamePick">Kies je weergavenaam</string>
     <string name="recommended">Aanbevolen</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Gelieve een optie te selecteren</string>
     <string name="conversationsDeleted">Gesprek verwijderd</string>
     <string name="onionRoutingPath">Locatie</string>
     <string name="onionRoutingPathEntryNode">Invoer node</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">Sessie heeft cameratoegang nodig om QR-codes te scannen</string>
     <string name="cameraGrantAccess">Toegang tot camera verlenen</string>
     <string name="groupNameEnter">Vul een groepsnaam in</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Sessie starten</string>
     <string name="groupNameEnterPlease">Vul een groepsnaam in</string>
     <string name="sessionSettings">Instellingen</string>
     <string name="sessionInviteAFriend">Nodig een vriend uit</string>

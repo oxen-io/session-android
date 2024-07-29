@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Inga</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Nu</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">Avbryt</string>
     <string name="displayNamePick">Välj visningsnamn</string>
     <string name="recommended">Rekommenderat</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Välj ett alternativ</string>
     <string name="conversationsDeleted">Konversationen har raderats</string>
     <string name="onionRoutingPath">Sökväg</string>
     <string name="onionRoutingPathEntryNode">Entrénod</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">Sessionen behöver kameraåtkomst för att skanna QR-koder</string>
     <string name="cameraGrantAccess">Tillåt kameraåtkomst</string>
     <string name="groupNameEnter">Ange ett gruppnamn</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Starta en Session</string>
     <string name="groupNameEnterPlease">Vänligen ange ett gruppnamn</string>
     <string name="sessionSettings">Inställningar</string>
     <string name="sessionInviteAFriend">Bjud in en vän</string>

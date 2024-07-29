@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Ingen</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Nu</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -184,7 +183,6 @@
     <string name="cameraGrantAccessQr">Session skal bruge kameraadgang for at scanne QR-koder</string>
     <string name="cameraGrantAccess">Tildel Adgang Til Kamera</string>
     <string name="groupNameEnter">Indtast et gruppenavn</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Start en Session</string>
     <string name="sessionSettings">Indstillinger</string>
     <string name="sessionInviteAFriend">Inviter en ven</string>
     <string name="helpFAQ">Ofte stillede spørgsmål</string>

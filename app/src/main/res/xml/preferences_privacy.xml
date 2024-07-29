@@ -20,8 +20,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/preferences__message_requests_category"
-        android:key="@string/preferences__message_requests_category"
+        android:title="@string/sessionMessageRequests"
+        android:key="@string/sessionMessageRequests"
         android:persistent="false">
     </PreferenceCategory>
 

@@ -31,7 +31,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">無</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">現在</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -175,7 +174,6 @@
     <string name="cancel">取消</string>
     <string name="displayNamePick">請輸入您的名稱</string>
     <string name="recommended">建議</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">請選擇其中一個選項</string>
     <string name="conversationsDeleted">對話已刪除</string>
     <string name="onionRoutingPath">路徑</string>
     <string name="onionRoutingPathEntryNode">入口節點</string>
@@ -187,7 +185,6 @@
     <string name="cameraGrantAccessQr">Session 需要使用相機存取權來掃描 QR Codes</string>
     <string name="cameraGrantAccess">授與相機權限</string>
     <string name="groupNameEnter">請輸入群組名稱</string>
-    <string name="activity_create_closed_group_empty_state_button_title">開始一個 Session</string>
     <string name="groupNameEnterPlease">請輸入群組名稱</string>
     <string name="sessionSettings">設定</string>
     <string name="sessionInviteAFriend">邀請好友</string>

@@ -138,7 +138,7 @@
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginVertical="@dimen/medium_spacing"
-        android:text="@string/activity_create_closed_group_empty_state_button_title"
+        android:text="@string/groupCreate"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -36,7 +36,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">لا شيء </string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">الآن</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -180,7 +179,6 @@
     <string name="cancel">إلغاء</string>
     <string name="displayNamePick">أختر اِسم الاِظهار</string>
     <string name="recommended">محبذ</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">اِختر</string>
     <string name="conversationsDeleted">تم حذف المحادثة</string>
     <string name="onionRoutingPath">مسار</string>
     <string name="onionRoutingPathEntryNode">عقدة الدخول</string>
@@ -192,7 +190,6 @@
     <string name="cameraGrantAccessQr">تحتاج الجلسة إلى الوصول إلى الكاميرا لمسح رموز QR</string>
     <string name="cameraGrantAccess">منح صلاحية الكاميرا</string>
     <string name="groupNameEnter">أدخل إسم المجموعة</string>
-    <string name="activity_create_closed_group_empty_state_button_title">بدء جلسة</string>
     <string name="groupNameEnterPlease">الرجاء إدخال إسم للمجموعة</string>
     <string name="sessionSettings">الإعدادات</string>
     <string name="sessionInviteAFriend">أُدع صديق</string>

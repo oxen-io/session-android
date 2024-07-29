@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Ei asetettu</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Nyt</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">Peruuta</string>
     <string name="displayNamePick">Valitse näyttönimi</string>
     <string name="recommended">Suositeltu</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Valitse vaihtoehto</string>
     <string name="conversationsDeleted">Keskustelu poistettu</string>
     <string name="onionRoutingPath">Polku</string>
     <string name="onionRoutingPathEntryNode">Sisääntulon Solmu</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">Session tarvitsee kameran käyttöoikeuden skannatakseensa QR-koodit</string>
     <string name="cameraGrantAccess">Myönnä Kameran Käyttöoikeus</string>
     <string name="groupNameEnter">Syötä ryhmän nimi</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Aloita ryhmä</string>
     <string name="groupNameEnterPlease">Syötä ryhmän nimi</string>
     <string name="sessionSettings">Asetukset</string>
     <string name="sessionInviteAFriend">Kutsu ystäviä</string>

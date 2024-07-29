@@ -34,7 +34,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Nic</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Teď</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -178,7 +177,6 @@
     <string name="cancel">Zrušit</string>
     <string name="displayNamePick">Vaše jméno</string>
     <string name="recommended">Doporučeno</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Prosím vyberte možnost</string>
     <string name="conversationsDeleted">Konverzace byla smazána</string>
     <string name="onionRoutingPath">Cesta</string>
     <string name="onionRoutingPathEntryNode">Vstupní uzel</string>
@@ -190,7 +188,6 @@
     <string name="cameraGrantAccessQr">Session potřebuje přístup ke kameře, aby bylo možné skenovat QR kódy</string>
     <string name="cameraGrantAccess">Udělit přístup k fotoaparátu</string>
     <string name="groupNameEnter">Zadejte název skupiny</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Zahájit relaci</string>
     <string name="groupNameEnterPlease">Zadejte prosím název skupiny</string>
     <string name="sessionSettings">Nastavení</string>
     <string name="sessionInviteAFriend">Pozvat přítele</string>

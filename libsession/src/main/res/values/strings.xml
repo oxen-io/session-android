@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- ==========  New CrowdIn plurals from Morgan - 2024/07/24 ========== -->
+    <!-- ==========  NEW PLURALS FROM MORGAN SECTION - 2024/07/24 ========== -->
     <plurals name="members">
         <item quantity="one">%1$d member</item>
         <item quantity="other">%1$d members</item>
@@ -44,41 +44,34 @@
     </plurals>
     <!-- CURRENTLY UNUSED and no 'old' string for this as of 2024/07/24 -ACL -->
 
-    <!-- ========== End of new plurals ========== -->
+    <!-- ========== END OF NEW PLURALS SECTION ========== -->
 
-    <!-- This specific `app_name` string (only) gets a pass to keep its underscore -->
-    <string name="app_name">Session</string>
 
-    <!-- Old naming convention strings that need to me renamed to their modern equivalents and have any % substitution modified to use {braces} -->
+    <!-- ========== STRAGGLERS SECTION ========== -->
 
-    <!-- We won't be using the curly brace notation on plurals strings like this one - but this needs a new name! -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Saving this media to storage will allow any other apps on your device to access it.\n\nContinue?</item>
-        <item quantity="other">Saving all %1$d media to storage will allow any other apps on your device to access them.\n\nContinue?</item>
-    </plurals>
-
-    <!-- USED STRINGS FOR WHICH WE NEED NEW NAMES! -->
-    <string name="fragment_view_my_qr_code_title">Scan Me</string>
-
-    <!-- LOOK UP IF NEEDED ON FIGMA - THIS ONLY SHOWS AS A IN-EDITOR HINT ATM tools:hint not android:hint -->
-    <string name="KeyboardPagerFragment_search_emoji">Search emoji</string>
-    <string name="message_details_header__disappears">Disappears</string>
+    <!-- USED: In fragment_enter_public_key.xml when writing a message to a new contact.
+         Figma: Unable to locate usage in Figma - although you would think it would be there... =/
+     -->
     <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
 
+    <!-- USED: activity_message_detail - bolded text before disappearing message time, e.g., "Disappears: 12 hours"
+         Figma: Unable to locate usage in Figma.
+    -->
+    <string name="message_details_header__disappears">Disappears</string>
 
-
-    <!-- INVESTIGATING -->
-    <string name="DateUtils_just_now">Now</string>
-
+    <!-- REQUIRED: Title on media picker when you go to send an image - this can be either to a specific Button on the `Set Display Picture` dialog used to instigate choosing a profile picture to set.
+         person, to to a closed group, or to a community (in the latter two cases it will show the group name).
+         Figma: Unable to locate usage in Figma.
+    -->
     <string name="MediaPickerActivity_send_to">Send to %s</string>
-    <string name="ReactionsConversationView_plus">+%1$d</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>
-    <string name="activity_disappearing_messages_subtitle">This setting applies to messages you send in this conversation.</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
+
+    <!-- REQUIRED: Button on the `Set Display Picture` dialog used to instigate choosing a profile picture to set.
+         Figma: Unable to locate usage in Figma.
+    -->
     <string name="activity_settings_upload">Upload</string>
 
     <!-- REQUIRED: Used in attachment_type_selector.xml as a category of attachment.
-         Figma: Unable to locate this string in Figma.
+         Figma: Unable to locate usage in Figma.
     -->
     <string name="attachment_type_selector__gallery">Gallery</string>
 
@@ -92,7 +85,19 @@
     -->
     <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
 
+    <!-- USED as text for the Legacy ExpiryType enum defined in State.kt - however, I don' think
+         there's any way to set "Legacy" disappearing messages any more, that's gone. Although we
+         may still need to cater to _seeing_ Legacy disappearing messages from clients which haven't
+         been updated, perhaps?
+         Figma: https://www.figma.com/design/tEgZ8ujg76DdtPwEJv8zFp/Disappearing-Messages?t=25H0THKH9VADKm9s-0
+
+    -->
+    <string name="expiration_type_disappear_legacy">Legacy</string>
+
     <!-- ========== END OF STRAGGLERS SECTION ========== -->
+
+    <!-- This specific `app_name` string (only) gets a pass to keep its underscore -->
+    <string name="app_name">Session</string>
 
     <!-- Strings with modern names and {braced} substitution markers -->
     <string name="about">About</string>
@@ -401,8 +406,6 @@
     <string name="errorDatabase">Database Error</string>
     <string name="errorUnknown">An unknown error occurred.</string>
     <string name="expand">Expand</string>
-    <string name="expiration_type_disappear_legacy">Legacy</string>
-    <string name="expiration_type_disappear_legacy_description">Original version of disappearing messages.</string>
     <string name="failures">Failures</string>
     <string name="file">File</string>
     <string name="files">Files</string>
@@ -517,7 +520,6 @@
     <string name="lockAppUnlocked">{app_name} is unlocked</string>
     <string name="max">Max</string>
     <string name="media">Media</string>
-    <string name="mediaMessage">Media message</string> <!-- ACL to confirm we are adding this - used to be `ThreadRecord_media_message` -->
     <string name="membersAddAccountIdOrOns">Add Account ID or ONS</string>
     <string name="membersInvite">Invite Contacts</string>
     <string name="membersInviteSend">Send Invite</string>
@@ -672,7 +674,6 @@
     <string name="pinConversation">Pin Conversation</string>
     <string name="pinUnpin">Unpin</string>
     <string name="pinUnpinConversation">Unpin Conversation</string>
-    <string name="preferences__message_requests_category">Message Requests</string>
     <string name="preview">Preview</string>
     <string name="profile">Profile</string>
     <string name="profileDisplayPicture">Display Picture</string>
@@ -705,7 +706,7 @@
     <string name="recoveryPasswordHidePermanentlyDescription1">Without your recovery password, you cannot load your account on new devices. We strongly recommend you save your recovery password in a safe and secure place before continuing.</string>
     <string name="recoveryPasswordHidePermanentlyDescription2">Are you sure you want to permanently hide your recovery password on this device? This cannot be undone.</string>
     <string name="recoveryPasswordHideRecoveryPassword">Hide Recovery Password</string>
-    <string name="recoveryPasswordHideRecoveryPasswordDescription">Permanently hide your recover password on this device.</string>
+    <string name="recoveryPasswordHideRecoveryPasswordDescription">Permanently hide your recovery password on this device.</string>
     <string name="recoveryPasswordRestoreDescription">Enter your recovery password to load your account. If you haven\'t saved it, you can find it in your app settings.</string>
     <string name="recoveryPasswordView">View Password</string>
     <string name="recoveryPasswordWarningSendDescription">This is your recovery password. If you send it to someone they\'ll have full access to your account.</string>

@@ -25,7 +25,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Kosong</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Sekarang</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -163,7 +162,6 @@
     <string name="cancel">Batal</string>
     <string name="displayNamePick">Pilih nama yang ditampilkan</string>
     <string name="recommended">Direkomendasikan</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Pilih salah satu opsi</string>
     <string name="conversationsDeleted">Percakapan terhapus</string>
     <string name="onionRoutingPathEntryNode">Simpul masuk</string>
     <string name="onionRoutingPathServiceNode">Simpul layanan</string>
@@ -173,7 +171,6 @@
     <string name="cameraGrantAccessQr">Session membutuhkan akses kamera untuk memindai kode QR</string>
     <string name="cameraGrantAccess">Berikan akses kamera</string>
     <string name="groupNameEnter">Masukkan nama grup</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Mulai sebuah Session</string>
     <string name="groupNameEnterPlease">Masukkan nama grup</string>
     <string name="sessionSettings">Pengaturan</string>
     <string name="sessionClearData">Hapus data</string>

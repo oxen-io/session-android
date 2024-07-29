@@ -25,7 +25,7 @@ data class State(
 ) {
     val subtitle get() = when {
         isGroup || isNoteToSelf -> GetString(R.string.disappearingMessagesDisappearAfterSendDescription)
-        else -> GetString(R.string.activity_disappearing_messages_subtitle)
+        else -> GetString(R.string.disappearingMessagesDescription1)
     }
 
     val typeOptionsHidden get() = isNoteToSelf || (isGroup && isNewConfigEnabled)

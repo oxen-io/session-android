@@ -31,7 +31,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">没有</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">现在</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -175,7 +174,6 @@
     <string name="cancel">取消</string>
     <string name="displayNamePick">选择您想显示的名称</string>
     <string name="recommended">推荐的选项</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">请选择一个选项</string>
     <string name="conversationsDeleted">对话已删除</string>
     <string name="onionRoutingPath">路径</string>
     <string name="onionRoutingPathEntryNode">入口节点</string>
@@ -187,7 +185,6 @@
     <string name="cameraGrantAccessQr">Session需要摄像头访问权限才能扫描二维码</string>
     <string name="cameraGrantAccess">授予摄像头访问权限</string>
     <string name="groupNameEnter">输入群组名称</string>
-    <string name="activity_create_closed_group_empty_state_button_title">开始对话</string>
     <string name="groupNameEnterPlease">请输入群组名称</string>
     <string name="sessionSettings">设置</string>
     <string name="sessionInviteAFriend">邀请朋友</string>

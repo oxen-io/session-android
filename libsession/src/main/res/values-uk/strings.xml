@@ -34,7 +34,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Жодного</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Зараз</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -179,7 +178,6 @@
     <string name="cancel">Відміна</string>
     <string name="displayNamePick">Виберіть ваш псевдонім для показу</string>
     <string name="recommended">Рекомендовано</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Будь ласка виберіть варіант</string>
     <string name="conversationsDeleted">Бесіду видалено</string>
     <string name="onionRoutingPath">Шлях</string>
     <string name="onionRoutingPathEntryNode">Вхідний Вузел</string>
@@ -191,7 +189,6 @@
     <string name="cameraGrantAccessQr">Session потрібен дозвіл до камери, щоб сканувати QR-код</string>
     <string name="cameraGrantAccess">Дозволити доступ до камери</string>
     <string name="groupNameEnter">Введіть ім\'я групи</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Почати сесію</string>
     <string name="groupNameEnterPlease">Будь ласка, введіть ім\'я групи</string>
     <string name="sessionSettings">Параметри</string>
     <string name="sessionInviteAFriend">Запросити друга</string>

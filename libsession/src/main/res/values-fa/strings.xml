@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">هیچ کدام</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">اکنون</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">لغو</string>
     <string name="displayNamePick">نام خود را برای نمایش انتخاب کنید</string>
     <string name="recommended">گزینه پیشنهادی</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">لطفا یک گزینه را انتخاب کنید</string>
     <string name="conversationsDeleted">مکالمه حذف شد</string>
     <string name="onionRoutingPath">مسیر</string>
     <string name="onionRoutingPathEntryNode">گره ورودی</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">اپ Session برای اسکن کدهای QR احتیاج دارد به دوربین دسترسی داشته باشد</string>
     <string name="cameraGrantAccess">اجازه دسترسی به دوربین</string>
     <string name="groupNameEnter">نام گروه را وارد کنید</string>
-    <string name="activity_create_closed_group_empty_state_button_title">شروع Session</string>
     <string name="groupNameEnterPlease">لطفا یک نام گروه وارد کنید</string>
     <string name="sessionSettings">تنظیمات</string>
     <string name="sessionInviteAFriend">دعوت از یک دوست</string>

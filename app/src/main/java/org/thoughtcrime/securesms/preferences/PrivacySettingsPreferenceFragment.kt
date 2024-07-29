@@ -39,7 +39,7 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
             .onPreferenceChangeListener = TypingIndicatorsToggleListener()
         findPreference<Preference>(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED)!!
             .onPreferenceChangeListener = CallToggleListener(this) { setCall(it) }
-        findPreference<PreferenceCategory>(getString(R.string.preferences__message_requests_category))?.let { category ->
+        findPreference<PreferenceCategory>(getString(R.string.sessionMessageRequests))?.let { category ->
             when (val user = configFactory.user) {
                 null -> category.isVisible = false
                 else -> SwitchPreferenceCompat(requireContext()).apply {

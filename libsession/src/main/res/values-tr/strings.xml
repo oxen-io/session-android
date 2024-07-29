@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Hiçbiri</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Şimdi</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">İptal</string>
     <string name="displayNamePick">Görünen adınızı seçin</string>
     <string name="recommended">Önerilenler</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Lütfen Bir Seçenek Seçin</string>
     <string name="conversationsDeleted">Konuşma silindi</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düğüm</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">Session’ın QR kodlarını taramak için kamera erişimine ihtiyacı var</string>
     <string name="cameraGrantAccess">Kameraya erişim izni ver</string>
     <string name="groupNameEnter">Yeni grup adı girin</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Oturumu başlat</string>
     <string name="groupNameEnterPlease">Lütfen bir grup adı girin</string>
     <string name="sessionSettings">Ayarlar</string>
     <string name="sessionInviteAFriend">Bir arkadaş davet et</string>

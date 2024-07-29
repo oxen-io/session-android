@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Չկա</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Հիմա</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">Փակել</string>
     <string name="displayNamePick">Ընտրեք ցուցադրվող անուն</string>
     <string name="recommended">[Խորհուրդ է տրվում]</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Խնդրում ենք ընտրել</string>
     <string name="conversationsDeleted">Ջնջված է</string>
     <string name="onionRoutingPath">Ուղի</string>
     <string name="onionRoutingPathEntryNode">Մուտքային Հանգույց</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">Session-ին պետք հասանելիություն տեսախցիկին որպեսզի սքանավորի QR կոդը</string>
     <string name="cameraGrantAccess">Տեսախցիկի հասանելիություն</string>
     <string name="groupNameEnter">Մուտքագրեք խմբի անուն</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Սկսել Սեանս</string>
     <string name="groupNameEnterPlease">Այս դաշտը չպիտի լինի դատարկ</string>
     <string name="sessionSettings">Կարգավորումներ</string>
     <string name="sessionInviteAFriend">Հրավիրել ընկերոջը</string>

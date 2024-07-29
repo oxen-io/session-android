@@ -31,7 +31,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">なし</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">今</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -175,7 +174,6 @@
     <string name="cancel">取り消す</string>
     <string name="displayNamePick">表示名を選択してください</string>
     <string name="recommended">オススメ</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">オプションを選択してください</string>
     <string name="conversationsDeleted">会話を削除しました</string>
     <string name="onionRoutingPath">パス</string>
     <string name="onionRoutingPathEntryNode">エントリーノード</string>
@@ -187,7 +185,6 @@
     <string name="cameraGrantAccessQr">Session で QR コードをスキャンするにはカメラへのアクセスが必要です</string>
     <string name="cameraGrantAccess">カメラへのアクセスを許可する</string>
     <string name="groupNameEnter">グループ名を入力してください</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Session を開始する</string>
     <string name="groupNameEnterPlease">グループ名を入力してください</string>
     <string name="sessionSettings">設定</string>
     <string name="sessionInviteAFriend">友達を招待</string>

@@ -26,7 +26,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Không</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Bây giờ</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -141,7 +140,6 @@
     <string name="cancel">Huỷ</string>
     <string name="displayNamePick">Chọn tên hiển thị của bạn</string>
     <string name="recommended">Khuyến nghị</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Vui lòng lựa chọn </string>
     <string name="conversationsDeleted">Cuộc hội thoại đã được xoá </string>
     <string name="onionRoutingPath">Đường đi</string>
     <string name="onionRoutingPathEntryNode">Nút khởi đầu</string>
@@ -152,7 +150,6 @@
     <string name="cameraGrantAccessQr">Session cần truy cập máy ảnh để quét mã QR </string>
     <string name="cameraGrantAccess">Cho phép truy cập máy ảnh</string>
     <string name="groupNameEnter">Nhập tên nhóm</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Bắt đầu Session</string>
     <string name="groupNameEnterPlease">Vui lòng nhập tên nhóm</string>
     <string name="sessionSettings">Cài đặt</string>
     <string name="sessionClearData">Xóa dữ liệu</string>

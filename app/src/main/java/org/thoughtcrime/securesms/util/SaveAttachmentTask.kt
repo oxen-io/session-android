@@ -49,13 +49,9 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
             context.showSessionDialog {
                 title(R.string.permissionsRequired)
                 iconAttribute(R.attr.dialog_alert_icon)
-
-                // ACL TODO - Need a replacement plurals string for the below!
-                val txt = context.resources.getQuantityString(R.plurals.ConversationFragment_saving_n_media_to_storage_warning, count, count)
-                text(txt)
-
-                button(R.string.yes) { onAcceptListener() }
-                button(R.string.no)
+                text(context.getString(R.string.attachmentsWarning))
+                button(R.string.accept) { onAcceptListener() }
+                button(R.string.cancel)
             }
         }
     }

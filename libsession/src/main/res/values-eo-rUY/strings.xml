@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Neniu</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Nun</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">Nuligi</string>
     <string name="displayNamePick">Elektu vian vidigan nomon</string>
     <string name="recommended">Rekomendate</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Bonvolu Elekti Opcion</string>
     <string name="conversationsDeleted">Konversacio forviŝite</string>
     <string name="onionRoutingPath">Vojo</string>
     <string name="onionRoutingPathEntryNode">Enira Nodo</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">Sesio bezonas fotilan aliron por skani QR-kodojn</string>
     <string name="cameraGrantAccess">Permesi Fotilan Aliron</string>
     <string name="groupNameEnter">Entajpu grupnomon</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Komenci Sesion</string>
     <string name="groupNameEnterPlease">Bonvolu entajpi grupnomon</string>
     <string name="sessionSettings">Agordo</string>
     <string name="sessionInviteAFriend">Inviti Amikon</string>

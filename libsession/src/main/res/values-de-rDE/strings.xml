@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Kein Eintrag</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Jetzt</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">Abbrechen</string>
     <string name="displayNamePick">Wählen Sie Ihren Anzeigenamen</string>
     <string name="recommended">Empfohlen</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Bitte wählen Sie eine Option aus.</string>
     <string name="conversationsDeleted">Die Unterhaltung wurde gelöscht.</string>
     <string name="onionRoutingPath">Pfad</string>
     <string name="onionRoutingPathEntryNode">Eingangsknoten</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">Session benötigt Kamerazugriff, um die QR-Codes scannen zu können.</string>
     <string name="cameraGrantAccess">Kamerazugriff gewähren</string>
     <string name="groupNameEnter">Geben Sie einen Gruppennamen ein.</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Session starten</string>
     <string name="groupNameEnterPlease">Bitte geben Sie einen Gruppennamen ein.</string>
     <string name="sessionSettings">Einstellungen</string>
     <string name="sessionInviteAFriend">Einen Freund einladen</string>

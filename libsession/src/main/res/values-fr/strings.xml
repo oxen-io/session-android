@@ -43,7 +43,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Aucun</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">À l’instant</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -191,7 +190,6 @@
     <string name="cancel">Annuler</string>
     <string name="displayNamePick">Choisissez votre nom d\'utilisateur</string>
     <string name="recommended">Recommandé</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Veuillez choisir une option</string>
     <string name="conversationsDeleted">Conversation supprimée</string>
     <string name="onionRoutingPath">Chemin</string>
     <string name="onionRoutingPathEntryNode">Nœud d’entrée</string>
@@ -203,7 +201,6 @@
     <string name="cameraGrantAccessQr">Session a besoin d\'accéder à l\'appareil photo pour scanner les QR codes</string>
     <string name="cameraGrantAccess">Autoriser l\'accès</string>
     <string name="groupNameEnter">Saisissez un nom de groupe</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Démarrer une session</string>
     <string name="groupNameEnterPlease">Veuillez saisir un nom de groupe</string>
     <string name="sessionSettings">Paramètres</string>
     <string name="sessionInviteAFriend">Inviter un ami</string>
@@ -263,7 +260,6 @@
     <string name="emojiCategorySymbols">Symboles</string>
     <string name="emojiCategoryFlags">Drapeaux</string>
     <!-- ReactionsConversationView -->
-    <string name="ReactionsConversationView_plus">+%1$d</string>
     <!-- ReactionsRecipientAdapter -->
     <string name="KeyboardPagerFragment_search_emoji">Rechercher un émoticône</string>
     <string name="KeyboardPagerfragment_back_to_emoji">Retour à l\'émoticône</string>

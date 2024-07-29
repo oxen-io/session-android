@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Heç biri</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">İndi</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">İmtina</string>
     <string name="displayNamePick">Ekran adınızı seçin</string>
     <string name="recommended">Tövsiyə edilən</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Zəhmət olmasa bir variant seçin</string>
     <string name="conversationsDeleted">Danışıq silindi</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düyünü</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">Session, QR kodunu skan etmək üçün kameraya müraciət etməlidir</string>
     <string name="cameraGrantAccess">Kameraya müraciətə icazə ver</string>
     <string name="groupNameEnter">Qrup adını daxil edin</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Bir Seans Başladın</string>
     <string name="groupNameEnterPlease">Zəhmət olmasa bir qrup adı daxil edin</string>
     <string name="sessionSettings">Tənzimləmələr</string>
     <string name="sessionInviteAFriend">Dostu dəvət edin</string>

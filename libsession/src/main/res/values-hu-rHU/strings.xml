@@ -33,7 +33,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Egyik sem</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Most</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -177,7 +176,6 @@
     <string name="cancel">Mégse</string>
     <string name="displayNamePick">Válassza ki a megjelenítendő nevet</string>
     <string name="recommended">Ajánlott</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Kérjük, válasszon egy lehetőséget</string>
     <string name="conversationsDeleted">A beszélgetés törölve</string>
     <string name="onionRoutingPath">Útvonal</string>
     <string name="onionRoutingPathEntryNode">Belépési csomópont</string>
@@ -189,7 +187,6 @@
     <string name="cameraGrantAccessQr">Kamera hozzáférésre van szükség a QR kód beolvasásához</string>
     <string name="cameraGrantAccess">Adjon hozzáférést a kamerához</string>
     <string name="groupNameEnter">Írja be a csoport nevét</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Egy munkamenet indítása</string>
     <string name="groupNameEnterPlease">Kérjük, adja meg a csoport nevét</string>
     <string name="sessionSettings">Beállítások</string>
     <string name="sessionInviteAFriend">Barát meghívása</string>

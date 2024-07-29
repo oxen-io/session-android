@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Žiadna</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Teraz</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">Zrušiť</string>
     <string name="displayNamePick">Vyberte svoje zobrazované meno</string>
     <string name="recommended">Odporúčané</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Prosím, zvoľte možnosť</string>
     <string name="conversationsDeleted">Konverzácia úspešne zmazaná</string>
     <string name="onionRoutingPath">Cesta</string>
     <string name="onionRoutingPathEntryNode">Vstupný uzol</string>

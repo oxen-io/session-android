@@ -177,9 +177,14 @@ public class ThreadRecord extends DisplayRecord {
         } else if (getCount() == 0) {
             return new SpannableString(context.getString(R.string.messageEmpty));
         } else {
-            // This is shown when we receive a media message from an un-accepted contact
+            // This block hits when we receive a media message from an unaccepted contact - however,
+            // unaccepted contacts aren't allowed to send us media - so we'll return an empty string
+            // if it's JUST an image, or the body text that accompanied the image should any exist.
+            // We could return null here - but then we have to find all the usages of this
+            // `getDisplayBody` method and make sure it doesn't fall over if it has a null result.
             if (TextUtils.isEmpty(getBody())) {
-                return new SpannableString(emphasisAdded(context.getString(R.string.mediaMessage)));
+                return new SpannableString("");
+                // Old behaviour was: return new SpannableString(emphasisAdded(context.getString(R.string.mediaMessage)));
             } else {
                 return new SpannableString(getBody());
             }

@@ -31,7 +31,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Cap</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Ara</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -175,7 +174,6 @@
     <string name="cancel">Cancel·la</string>
     <string name="displayNamePick">Tria el nom que es mostrarà</string>
     <string name="recommended">Recomanat</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Selecciona una opció, si us plau</string>
     <string name="conversationsDeleted">S\'ha suprimit la conversa</string>
     <string name="onionRoutingPath">Ruta</string>
     <string name="onionRoutingPathEntryNode">Node d\'entrada</string>
@@ -186,7 +184,6 @@
     <string name="cameraGrantAccessQr">Session necessita accés a la càmera per escanejar codis QR</string>
     <string name="cameraGrantAccess">Permet accés a la càmera</string>
     <string name="groupNameEnter">Introdueix un nom de grup</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Enceta un Session</string>
     <string name="groupNameEnterPlease">Entra un nom de grup, si us plau</string>
     <string name="sessionSettings">Configuració</string>
     <string name="sessionClearData">Neteja les dades</string>

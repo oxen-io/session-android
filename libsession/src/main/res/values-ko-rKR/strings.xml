@@ -31,7 +31,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">없음</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">방금 전</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->

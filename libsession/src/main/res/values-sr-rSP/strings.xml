@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Ништа</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Сад</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -163,7 +162,6 @@
     <!-- Conversation activity -->
     <!-- Session -->
     <string name="recommended">Препоручено</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Молимо Вас да одаберете опцију</string>
     <string name="conversationsDeleted">Конверзација је избрисана</string>
     <!-- Next round of translation -->
 </resources>

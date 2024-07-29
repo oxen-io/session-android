@@ -32,7 +32,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">कुछ नहीं</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">अभी</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -176,7 +175,6 @@
     <string name="cancel">रद्द करें</string>
     <string name="displayNamePick">अपना प्रदर्शन नाम चुनें</string>
     <string name="recommended">सुझाया गया</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">कृपया एक विकल्प चुनें।</string>
     <string name="conversationsDeleted">बातचीत हटाई गई</string>
     <string name="onionRoutingPath">पथ</string>
     <string name="onionRoutingPathEntryNode">प्रवेश नोड</string>
@@ -188,7 +186,6 @@
     <string name="cameraGrantAccessQr">क्यूआर कोड स्कैन करने के लिए Session को कैमरा एक्सेस की आवश्यकता है</string>
     <string name="cameraGrantAccess">कैमरा केउपयोग को प्रदान करें</string>
     <string name="groupNameEnter">ग्रुप का नाम डालें</string>
-    <string name="activity_create_closed_group_empty_state_button_title">एक सेशन प्रारंभ करें</string>
     <string name="groupNameEnterPlease">कृपया ग्रुप नाम डालें</string>
     <string name="sessionSettings">सेटिंग्स</string>
     <string name="sessionInviteAFriend">किसी मित्र को आमंत्रित करें</string>

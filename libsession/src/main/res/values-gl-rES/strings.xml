@@ -31,7 +31,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Ningunha</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Agora</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -178,7 +177,6 @@
     <string name="qrScan">Escanear código QR</string>
     <string name="cameraGrantAccess">Conceder acceso á cámara</string>
     <string name="groupNameEnter">Introduce o nome do grupo</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Iniciar unha sesión</string>
     <string name="groupNameEnterPlease">Por favor, introduce o nome do grupo</string>
     <string name="qrCode">Código QR</string>
     <!-- Next round of translation -->

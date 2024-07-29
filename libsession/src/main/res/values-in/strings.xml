@@ -28,7 +28,6 @@
     <!-- CustomDefaultPreference -->
     <string name="none">Tidak ada</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Sekarang</string>
     <!-- DeviceListItem -->
     <!-- DocumentView -->
     <!-- GiphyActivity -->
@@ -161,7 +160,6 @@
     <string name="next">Berikutnya</string>
     <string name="displayNamePick">Pilih nama yang ditampilkan</string>
     <string name="recommended">Direkomendasikan</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Pilih salah satu opsi</string>
     <string name="conversationsDeleted">Percakapan dihapus</string>
     <string name="onionRoutingPathDestination">Tujuan</string>
     <string name="learnMore">Selengkapnya</string>
