@@ -136,7 +136,7 @@ fun EditGroup(
     onInvite: () -> Unit,
     onReinvite: (accountId: String) -> Unit,
     onPromote: (accountId: String) -> Unit,
-    onRemove: (MemberViewModel) -> Unit,
+    onRemove: (accountId: String) -> Unit,
     onEditingNameValueChanged: (String) -> Unit,
     editingName: String?,
     onEditNameClicked: () -> Unit,

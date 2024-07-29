@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
+import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupMember
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.contacts.Contact
@@ -30,7 +31,7 @@ class EditGroupViewModel @AssistedInject constructor(
     @Assisted private val groupSessionId: String,
     private val storage: StorageProtocol,
     configFactory: ConfigFactory
-): ViewModel() {
+) : ViewModel() {
     // Input/Output state
     private val mutableEditingName = MutableStateFlow<String?>(null)
 
@@ -38,35 +39,82 @@ class EditGroupViewModel @AssistedInject constructor(
     // with empty string, where it's a valid editing state.
     val editingName: StateFlow<String?> get() = mutableEditingName
 
-    // Output: the overall view state
-    val viewState = configFactory.configUpdateNotifications
-        .filter { it.hexString == groupSessionId }
-        .onStart { emit(AccountId(groupSessionId)) }
-        .map { _ ->
-            withContext(Dispatchers.Default) {
-                val currentUserId = checkNotNull(storage.getUserPublicKey()) {
-                    "User public key is null"
-                }
+    // Output: the source-of-truth group information. Other states are derived from this.
+    private val groupInfo: StateFlow<Pair<GroupDisplayInfo, List<GroupMemberState>>?> =
+        configFactory.configUpdateNotifications
+            .filter { it.hexString == groupSessionId }
+            .onStart { emit(AccountId(groupSessionId)) }
+            .map { _ ->
+                withContext(Dispatchers.Default) {
+                    val currentUserId = checkNotNull(storage.getUserPublicKey()) {
+                        "User public key is null"
+                    }
 
-                val members = storage.getMembers(groupSessionId).map { member ->
-                    MemberViewModel(
-                        memberName = member.name,
-                        memberSessionId = member.sessionId,
-                        memberState = memberStateOf(member),
-                        currentUser = member.sessionId == currentUserId
-                    )
-                }
+                    val members = storage.getMembers(groupSessionId).map { member ->
+                        createGroupMember(member, currentUserId)
+                    }
 
-                val displayInfo = storage.getClosedGroupDisplayInfo(groupSessionId)
-                EditGroupViewState(
-                    groupName = displayInfo?.name.orEmpty(),
-                    groupDescription = displayInfo?.description,
-                    memberStateList = members,
-                    admin = displayInfo?.isUserAdmin == true,
-                )
+                    val displayInfo = storage.getClosedGroupDisplayInfo(groupSessionId)
+                        ?: return@withContext null
+
+                    displayInfo to members
+                }
+            }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    // Output: whether the group name can be edited. This is true if the group is loaded successfully.
+    val canEditGroupName: StateFlow<Boolean> = groupInfo
+        .map { it != null }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    // Output: The name of the group. This is the current name of the group, not the name being edited.
+    val groupName: StateFlow<String> = groupInfo
+        .map { it?.first?.name.orEmpty() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
+
+    // Output: the list of the members and their state in the group.
+    val members: StateFlow<List<GroupMemberState>> = groupInfo
+        .map { it?.second.orEmpty() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+    private fun createGroupMember(member: GroupMember, myAccountId: String): GroupMemberState {
+        var status = ""
+        var highlightStatus = false
+        var name = member.name.orEmpty()
+
+        when {
+            member.sessionId == myAccountId -> {
+                name = "You"
+            }
+
+            member.inviteFailed -> {
+                status = "Invite Failed"
+                highlightStatus = true
+            }
+
+            member.invitePending -> {
+                status = "Inviting"
+            }
+
+            member.promotionFailed -> {
+                status = "Promotion Failed"
+                highlightStatus = true
+            }
+
+            member.promotionPending -> {
+                status = "Promoting"
             }
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, EditGroupViewState())
+
+        return GroupMemberState(
+            accountId = member.sessionId,
+            name = name,
+            showEdit = member.sessionId != myAccountId && member.admin,
+            status = status,
+            highlightStatus = highlightStatus
+        )
+    }
+
 
     fun onContactSelected(contacts: Set<Contact>) {
         storage.inviteClosedGroupMembers(groupSessionId, contacts.map { it.accountID })
@@ -85,7 +133,7 @@ class EditGroupViewModel @AssistedInject constructor(
     }
 
     fun onEditNameClicked() {
-        mutableEditingName.value = viewState.value.groupName
+        mutableEditingName.value = groupInfo.value?.first?.name.orEmpty()
     }
 
     fun onCancelEditingNameClicked() {
@@ -113,48 +161,12 @@ class EditGroupViewModel @AssistedInject constructor(
     interface Factory {
         fun create(groupSessionId: String): EditGroupViewModel
     }
-
 }
 
-data class MemberViewModel(
-    val memberName: String?,
-    val memberSessionId: String,
-    val memberState: MemberState,
-    val currentUser: Boolean,
+data class GroupMemberState(
+    val accountId: String,
+    val name: String,
+    val status: String,
+    val highlightStatus: Boolean,
+    val showEdit: Boolean,
 )
-
-enum class MemberState {
-    InviteSent,
-    Inviting, // maybe just use these in view
-    InviteFailed,
-    PromotionSent,
-    Promoting, // maybe just use these in view
-    PromotionFailed,
-    Admin,
-    Member
-}
-
-fun memberStateOf(member: GroupMember): MemberState = when {
-    member.inviteFailed -> MemberState.InviteFailed
-    member.invitePending -> MemberState.InviteSent
-    member.promotionFailed -> MemberState.PromotionFailed
-    member.promotionPending -> MemberState.PromotionSent
-    member.admin -> MemberState.Admin
-    else -> MemberState.Member
-}
-
-data class EditGroupViewState(
-    val groupName: String = "",
-    val groupDescription: String? = null,
-    val memberStateList: List<MemberViewModel> = emptyList(),
-    private val admin: Boolean = false
-) {
-    val canEditName: Boolean
-        get() = admin
-
-    val canInvite: Boolean
-        get() = admin
-
-    val canPromote: Boolean
-        get() = admin
-}
