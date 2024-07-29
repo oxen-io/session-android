@@ -50,12 +50,13 @@ class EditGroupViewModel @AssistedInject constructor(
                         "User public key is null"
                     }
 
-                    val members = storage.getMembers(groupSessionId).map { member ->
-                        createGroupMember(member, currentUserId)
-                    }
-
                     val displayInfo = storage.getClosedGroupDisplayInfo(groupSessionId)
                         ?: return@withContext null
+
+
+                    val members = storage.getMembers(groupSessionId).map { member ->
+                        createGroupMember(member, currentUserId, amIAdmin = displayInfo.isUserAdmin)
+                    }
 
                     displayInfo to members
                 }
@@ -77,7 +78,12 @@ class EditGroupViewModel @AssistedInject constructor(
         .map { it?.second.orEmpty() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-    private fun createGroupMember(member: GroupMember, myAccountId: String): GroupMemberState {
+    // Output: whether we should show the "add members" button
+    val showAddMembers: StateFlow<Boolean> = groupInfo
+        .map { it?.first?.isUserAdmin == true }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
+    private fun createGroupMember(member: GroupMember, myAccountId: String, amIAdmin: Boolean): GroupMemberState {
         var status = ""
         var highlightStatus = false
         var name = member.name.orEmpty()
@@ -109,7 +115,7 @@ class EditGroupViewModel @AssistedInject constructor(
         return GroupMemberState(
             accountId = member.sessionId,
             name = name,
-            showEdit = member.sessionId != myAccountId && member.admin,
+            showEdit = member.sessionId != myAccountId && amIAdmin,
             status = status,
             highlightStatus = highlightStatus
         )

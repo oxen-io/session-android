@@ -1,62 +1,61 @@
 package org.thoughtcrime.securesms.groups.compose
 
-import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.google.android.material.color.MaterialColors
 import com.squareup.phrase.Phrase
 import kotlinx.serialization.Serializable
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.groups.EditGroupViewModel
-import org.thoughtcrime.securesms.groups.EditGroupViewState
-import org.thoughtcrime.securesms.groups.MemberState
-import org.thoughtcrime.securesms.groups.MemberViewModel
-import org.thoughtcrime.securesms.showSessionDialog
-import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
+import org.thoughtcrime.securesms.groups.GroupMemberState
+import org.thoughtcrime.securesms.ui.AlertDialog
+import org.thoughtcrime.securesms.ui.DialogButtonModel
+import org.thoughtcrime.securesms.ui.GetString
 import org.thoughtcrime.securesms.ui.NavigationBar
+import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
+import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
@@ -78,39 +77,33 @@ fun EditGroupScreen(
             EditGroup(
                 onBack = onFinish,
                 onInvite = {
-                    navController.navigate(RouteSelectContacts)
+                    navController.navigate(RouteSelectContacts())
                 },
                 onReinvite = viewModel::onReInviteContact,
                 onPromote = viewModel::onPromoteContact,
                 onRemove = { contact ->
-                    val string = Phrase.from(context, R.string.activity_edit_closed_group_remove_users_single)
-                        .put("user", contact.memberName)
-                        .put("group", viewModel.viewState.value.groupName)
-                        .format()
-                    context.showSessionDialog {
-                        title(R.string.activity_settings_remove)
-                        text(string)
-                        dangerButton(R.string.activity_settings_remove) {
-                            viewModel.onRemoveContact(contact.memberSessionId)
-                        }
-                        cancelButton()
-                    }
+//                    val string = Phrase.from(context, R.string.activity_edit_closed_group_remove_users_single)
+//                        .put("user", contact.memberName)
+//                        .put("group", viewModel.viewState.value.groupName)
+//                        .format()
+//                    context.showSessionDialog {
+//                        title(R.string.activity_settings_remove)
+//                        text(string)
+//                        dangerButton(R.string.activity_settings_remove) {
+//                            viewModel.onRemoveContact(contact.memberSessionId)
+//                        }
+//                        cancelButton()
+//                    }
                 },
-                onMemberSelected = { member ->
-                    if (member.memberState == MemberState.Admin) {
-                        // show toast saying we can't remove them
-                        Toast.makeText(context,
-                            R.string.ConversationItem_group_member_admin_cannot_remove,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                },
-                viewState = viewModel.viewState.collectAsState().value,
                 onEditNameClicked = viewModel::onEditNameClicked,
                 onEditNameCancelClicked = viewModel::onCancelEditingNameClicked,
                 onEditNameConfirmed = viewModel::onEditNameConfirmClicked,
                 onEditingNameValueChanged = viewModel::onEditingNameChanged,
                 editingName = viewModel.editingName.collectAsState().value,
+                members = viewModel.members.collectAsState().value,
+                groupName = viewModel.groupName.collectAsState().value,
+                showAddMembers = viewModel.showAddMembers.collectAsState().value,
+                canEditName = viewModel.canEditGroupName.collectAsState().value,
             )
         }
 
@@ -130,6 +123,7 @@ fun EditGroupScreen(
 @Serializable
 private object RouteEditGroup
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditGroup(
     onBack: () -> Unit,
@@ -142,9 +136,21 @@ fun EditGroup(
     onEditNameClicked: () -> Unit,
     onEditNameConfirmed: () -> Unit,
     onEditNameCancelClicked: () -> Unit,
-    onMemberSelected: (MemberViewModel) -> Unit,
-    viewState: EditGroupViewState,
+    canEditName: Boolean,
+    groupName: String,
+    members: List<GroupMemberState>,
+    showAddMembers: Boolean,
 ) {
+    val sheetState = rememberModalBottomSheetState()
+
+    val (showingBottomModelForMember, setShowingBottomModelForMember) = remember {
+        mutableStateOf<GroupMemberState?>(null)
+    }
+
+    val (showingConfirmRemovingMember, setShowingConfirmRemovingMember) = remember {
+        mutableStateOf<GroupMemberState?>(null)
+    }
+
     Scaffold(
         topBar = {
             NavigationBar(
@@ -169,9 +175,11 @@ fun EditGroup(
             // Group name title
             Row(
                 modifier = Modifier
+                    .animateContentSize()
                     .fillMaxWidth()
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+                verticalAlignment = CenterVertically,
             ) {
                 if (editingName != null) {
                     IconButton(onClick = onEditNameCancelClicked) {
@@ -182,10 +190,11 @@ fun EditGroup(
                         )
                     }
 
-                    TextField(
-                        value = editingName,
-                        onValueChange = onEditingNameValueChanged,
-                        textStyle = LocalType.current.base
+                    SessionOutlinedTextField(
+                        modifier = Modifier.width(180.dp),
+                        text = editingName,
+                        onChange = onEditingNameValueChanged,
+                        textStyle = LocalType.current.large
                     )
 
                     IconButton(onClick = onEditNameConfirmed) {
@@ -198,16 +207,15 @@ fun EditGroup(
                 } else {
                     val nameDesc = stringResource(R.string.AccessibilityId_group_name)
                     Text(
-                        text = viewState.groupName,
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.Bold,
+                        text = groupName,
+                        style = LocalType.current.h3,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.semantics {
                             contentDescription = nameDesc
                         }
                     )
 
-                    if (viewState.canEditName) {
+                    if (canEditName) {
                         IconButton(onClick = onEditNameClicked) {
                             Icon(
                                 painterResource(R.drawable.ic_baseline_edit_24),
@@ -218,203 +226,209 @@ fun EditGroup(
                     }
                 }
             }
-            // Description
-            if (viewState.groupDescription?.isNotEmpty() == true) {
-                val descriptionDesc = stringResource(R.string.AccessibilityId_group_description)
-                Text(
-                    text = viewState.groupDescription,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 8.dp)
-                        .semantics {
-                            contentDescription = descriptionDesc
-                        }
-                )
-            }
 
-            // Invite
-            if (viewState.canInvite) {
-                CellWithPaddingAndMargin(margin = 16.dp, padding = 16.dp) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(onClick = onInvite)
-                            .padding(horizontal = 8.dp),
-                        verticalAlignment = CenterVertically,
-                    ) {
-                        Icon(painterResource(id = R.drawable.ic_add_admins), contentDescription = null)
-                        Spacer(modifier = Modifier.size(8.dp))
-                        Text(text = stringResource(id = R.string.activity_edit_closed_group_add_members))
-                    }
+            // Header & Add member button
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = CenterVertically
+            ) {
+                Text(
+                    stringResource(R.string.activity_edit_closed_group_edit_members),
+                    modifier = Modifier.weight(1f),
+                    style = LocalType.current.large,
+                    color = LocalColors.current.text
+                )
+
+                if (showAddMembers) {
+                    PrimaryOutlineButton(
+                        stringResource(R.string.activity_edit_closed_group_add_members),
+                        onClick = onInvite
+                    )
                 }
             }
-            // members header
-            Text(
-                text = stringResource(id = R.string.conversation_settings_group_members),
-//                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier
-                    .padding(vertical = 8.dp, horizontal = 32.dp)
-            )
+
+
             // List of members
             LazyColumn(modifier = Modifier) {
-
-                items(viewState.memberStateList) { member ->
+                items(members) { member ->
                     // Each member's view
                     MemberItem(
-                        canInvite = viewState.canInvite,
-                        canPromote = viewState.canPromote,
+                        modifier = Modifier.fillMaxWidth(),
                         member = member,
-                        onReinvite = onReinvite,
-                        onPromote = onPromote,
-                        onRemove = onRemove,
-                        onMemberSelected = onMemberSelected
+                        onClick = { setShowingBottomModelForMember(member) }
                     )
                 }
             }
         }
     }
+
+    if (showingBottomModelForMember != null) {
+        MemberModalBottomSheetOptions(
+            member = showingBottomModelForMember,
+            onDismissRequest = { setShowingBottomModelForMember(null) },
+            sheetState = sheetState,
+            onRemove = {
+                setShowingConfirmRemovingMember(showingBottomModelForMember)
+                setShowingBottomModelForMember(null)
+            },
+        )
+    }
+
+    if (showingConfirmRemovingMember != null) {
+        ConfirmRemovingMemberDialog(
+            onDismissRequest = {
+                setShowingConfirmRemovingMember(null)
+            },
+            onConfirmed = onRemove,
+            member = showingConfirmRemovingMember,
+            groupName = groupName,
+        )
+    }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MemberItem(modifier: Modifier = Modifier,
-               canInvite: Boolean,
-               canPromote: Boolean,
-               member: MemberViewModel,
-               onReinvite: (String) -> Unit,
-               onPromote: (String) -> Unit,
-               onRemove: (MemberViewModel) -> Unit,
-               onMemberSelected: (MemberViewModel) -> Unit) {
-    Row(
-        modifier
-            .fillMaxWidth()
-            .combinedClickable(onLongClick = {
-                // long pressing should remove the member
-                onRemove(member)
-            }, onClick = {
-                // handle clicking the member
-                onMemberSelected(member)
-            })
-            .padding(vertical = 8.dp, horizontal = 16.dp)) {
-        ContactPhoto(member.memberSessionId)
-        Column(modifier = Modifier
-            .weight(1f)
-            .fillMaxHeight()
-            .padding(horizontal = 8.dp)
-            .align(CenterVertically)) {
-            // Member's name
-            val memberDesc = stringResource(R.string.AccessibilityId_contact)
-            Text(
-                text = member.memberName ?: member.memberSessionId,
-                style = MemberNameStyle,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(1.dp)
-                    .semantics {
-                        contentDescription = memberDesc
-                    }
+private fun ConfirmRemovingMemberDialog(
+    onConfirmed: (accountId: String) -> Unit,
+    onDismissRequest: () -> Unit,
+    member: GroupMemberState,
+    groupName: String,
+) {
+    val context = LocalContext.current
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        text = Phrase.from(context, R.string.activity_edit_closed_group_remove_users_single)
+            .put("user", member.name)
+            .put("group", groupName)
+            .format()
+            .toString(),
+        title = stringResource(R.string.activity_settings_remove),
+        buttons = listOf(
+            DialogButtonModel(
+                text = GetString(R.string.activity_settings_remove),
+                color = LocalColors.current.danger,
+                onClick = { onConfirmed(member.accountId) }
+            ),
+            DialogButtonModel(
+                text = GetString(R.string.cancel),
+                onClick = onDismissRequest,
             )
-            member.memberState.toDisplayString()?.let { displayString ->
-                // Display the current member state
-                val stateDesc = stringResource(R.string.AccessibilityId_member_state)
+        )
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MemberModalBottomSheetOptions(
+    member: GroupMemberState,
+    onRemove: () -> Unit,
+    onDismissRequest: () -> Unit,
+    sheetState: SheetState,
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismissRequest,
+        sheetState = sheetState,
+    ) {
+        MemberModalBottomSheetOptionItem(
+            onClick = onRemove,
+            text = stringResource(R.string.fragment_edit_group_bottom_sheet_remove)
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+    }
+}
+
+@Composable
+private fun MemberModalBottomSheetOptionItem(
+    text: String,
+    onClick: () -> Unit
+) {
+    Text(
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .padding(16.dp)
+            .fillMaxWidth(),
+        style = LocalType.current.base,
+        text = text,
+        color = LocalColors.current.text,
+    )
+}
+
+@Composable
+private fun MemberItem(
+    onClick: (accountId: String) -> Unit,
+    member: GroupMemberState,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = CenterVertically,
+    ) {
+        ContactPhoto(member.accountId)
+
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+
+            Text(
+                style = LocalType.current.large,
+                text = member.name,
+                color = LocalColors.current.text
+            )
+
+            if (member.status.isNotEmpty()) {
                 Text(
-                    text = displayString,
-                    color = member.memberState.toDisplayColor(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(1.dp)
-                        .semantics {
-                            contentDescription = stateDesc
-                        }
+                    text = member.status,
+                    style = LocalType.current.small,
+                    color = if (member.highlightStatus) {
+                        LocalColors.current.danger
+                    } else {
+                        LocalColors.current.textSecondary
+                    },
                 )
             }
         }
-        // Resend button
-        if (canInvite && member.memberState == MemberState.InviteFailed) {
-            val reinviteDesc = stringResource(R.string.AccessibilityId_reinvite_member)
-            TextButton(
-                onClick = {
-                    onReinvite(member.memberSessionId)
-                },
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .controlHighlightBackground()
-                    .semantics {
-                        contentDescription = reinviteDesc
-                    },
-                contentPadding = PaddingValues(8.dp,2.dp)
-            ) {
-                Text(
-                    stringResource(id = R.string.EditGroup_resend_action),
-                    color = LocalColors.current.text
-                )
-            }
-        } else if (canPromote && member.memberState == MemberState.Member) {
-            // Promotion button
-            val promoteDesc = stringResource(R.string.AccessibilityId_promote_member)
-            TextButton(
-                onClick = {
-                    onPromote(member.memberSessionId)
-                },
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .controlHighlightBackground()
-                    .semantics {
-                        contentDescription = promoteDesc
-                    },
-                contentPadding = PaddingValues(8.dp,2.dp)
-            ) {
-                Text(
-                    stringResource(R.string.EditGroup_promote_action),
-                    color = LocalColors.current.text
+
+        if (member.showEdit) {
+            IconButton(onClick = { onClick(member.accountId) }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_circle_dot_dot_dot),
+                    contentDescription = stringResource(R.string.AccessibilityId_settings)
                 )
             }
         }
     }
-
 }
 
-@Composable
-fun Modifier.controlHighlightBackground() = this.background(
-    Color(
-        MaterialColors.getColor(
-            LocalContext.current,
-            R.attr.colorControlHighlight,
-            LocalColors.current.text.toArgb()
-        )
-    )
-)
 
 @Preview
 @Composable
-fun PreviewList() {
+private fun EditGroupPreview() {
     PreviewTheme {
-        val oneMember = MemberViewModel(
-            "Test User",
-            "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234",
-            MemberState.InviteSent,
-            false
+        val oneMember = GroupMemberState(
+            accountId = "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234",
+            name = "Test User",
+            status = "Invited",
+            highlightStatus = false,
+            showEdit = true
         )
-        val twoMember = MemberViewModel(
-            "Test User 2",
-            "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1235",
-            MemberState.InviteFailed,
-            false
+        val twoMember = GroupMemberState(
+            accountId = "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1235",
+            name = "Test User 2",
+            status = "Promote failed",
+            highlightStatus = true,
+            showEdit = true
         )
-        val threeMember = MemberViewModel(
-            "Test User 3",
-            "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1236",
-            MemberState.Member,
-            false
+        val threeMember = GroupMemberState(
+            accountId = "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1236",
+            name = "Test User 3",
+            status = "",
+            highlightStatus = false,
+            showEdit = true
         )
 
-        val viewState = EditGroupViewState(
-            "Preview",
-            "This is a preview description",
-            listOf(oneMember, twoMember, threeMember),
-            true
-        )
+        val (editingName, setEditingName) = remember { mutableStateOf<String?>(null) }
 
         EditGroup(
             onBack = {},
@@ -422,30 +436,21 @@ fun PreviewList() {
             onReinvite = {},
             onPromote = {},
             onRemove = {},
-            onMemberSelected = {},
-            viewState = viewState,
-            onEditNameCancelClicked = {},
-            onEditNameConfirmed = {},
-            onEditNameClicked = {},
-            editingName = null,
-            onEditingNameValueChanged = {},
+            onEditNameCancelClicked = {
+                setEditingName(null)
+            },
+            onEditNameConfirmed = {
+                setEditingName(null)
+            },
+            onEditNameClicked = {
+                setEditingName("Test Group")
+            },
+            editingName = editingName,
+            onEditingNameValueChanged = setEditingName,
+            members = listOf(oneMember, twoMember, threeMember),
+            canEditName = true,
+            groupName = "Test",
+            showAddMembers = true,
         )
     }
-}
-
-@Composable
-fun MemberState.toDisplayString(): String? = when(this) {
-    MemberState.InviteSent -> stringResource(id = R.string.groupMemberStateInviteSent)
-    MemberState.Inviting -> stringResource(id = R.string.groupMemberStateInviting)
-    MemberState.InviteFailed -> stringResource(id = R.string.groupMemberStateInviteFailed)
-    MemberState.PromotionSent -> stringResource(id = R.string.groupMemberStatePromotionSent)
-    MemberState.Promoting -> stringResource(id = R.string.groupMemberStatePromoting)
-    MemberState.PromotionFailed -> stringResource(id = R.string.groupMemberStatePromotionFailed)
-    else -> null
-}
-
-@Composable
-fun MemberState.toDisplayColor(): Color = when (this) {
-    MemberState.InviteFailed, MemberState.PromotionFailed -> LocalColors.current.danger
-    else -> LocalColors.current.text
 }

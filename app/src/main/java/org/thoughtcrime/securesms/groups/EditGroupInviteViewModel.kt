@@ -26,6 +26,6 @@ data class EditGroupInviteState(
 )
 
 data class EditGroupInviteViewState(
-    val currentMembers: List<MemberViewModel>,
+    val currentMembers: List<GroupMemberState>,
     val allContacts: Set<Contact>
 )
