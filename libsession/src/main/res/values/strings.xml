@@ -90,14 +90,10 @@
          may still need to cater to _seeing_ Legacy disappearing messages from clients which haven't
          been updated, perhaps?
          Figma: https://www.figma.com/design/tEgZ8ujg76DdtPwEJv8zFp/Disappearing-Messages?t=25H0THKH9VADKm9s-0
-
     -->
     <string name="expiration_type_disappear_legacy">Legacy</string>
 
     <!-- ========== END OF STRAGGLERS SECTION ========== -->
-
-    <!-- This specific `app_name` string (only) gets a pass to keep its underscore -->
-    <string name="app_name">Session</string>
 
     <!-- Strings with modern names and {braced} substitution markers -->
     <string name="about">About</string>
@@ -616,7 +612,7 @@
     <string name="onboardingAccountCreate">Create account</string>
     <string name="onboardingAccountCreated">Account Created</string>
     <string name="onboardingAccountExists">I have an account</string>
-    <string name="onboardingBackAccountCreation">You cannot go back further. In order to cancel your account creation, Session needs to quit.</string>
+    <string name="onboardingBackAccountCreation">You cannot go back further. In order to cancel your account creation, {app_name} needs to quit.</string>
     <string name="onboardingBubbleCreatingAnAccountIsEasy">Creating an account is instant, free, and anonymous</string>
     <string name="onboardingBubbleNoPhoneNumber">You don\'t even need a phone number to sign up.</string>
     <string name="onboardingBubblePrivacyInYourPocket">Privacy in your pocket.</string>
@@ -638,12 +634,12 @@
     <string name="open">Open</string>
     <string name="other">Other</string>
     <string name="passwordChange">Change Password</string>
-    <string name="passwordChangeDescription">Change the password required to unlock Session.</string>
+    <string name="passwordChangeDescription">Change the password required to unlock {app_name}.</string>
     <string name="passwordChangedDescription">Your password has been changed. Please keep it safe.</string>
     <string name="passwordConfirm">Confirm password</string>
     <string name="passwordCreate">Create your password</string>
     <string name="passwordCurrentIncorrect">Your current password is incorrect.</string>
-    <string name="passwordDescription">Require password to unlock Session.</string>
+    <string name="passwordDescription">Require password to unlock {app_name}.</string>
     <string name="passwordEnterCurrent">Please enter your current password.</string>
     <string name="passwordEnterNew">Please enter your new password</string>
     <string name="passwordError">Password must only contain letters, numbers and symbols</string>
@@ -660,11 +656,9 @@
     <string name="permissionsAutoUpdate">Auto Update</string>
     <string name="permissionsAutoUpdateDescription">Automatically check for updates on startup</string>
     <string name="permissionsKeepInSystemTray">Keep in System Tray</string>
-    <string name="permissionsKeepInSystemTrayDescription">Session continues running in the background when you close the window</string>
     <string name="permissionsMicrophone">Microphone</string>
     <string name="permissionsMicrophoneAccessRequired">Microphone Access Required</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">{app_name} needs microphone access to send audio messages, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".</string>
-    <string name="permissionsMicrophoneAccessRequiredDesktop">You can enable microphone access in Session\'s privacy settings</string>
     <string name="permissionsMicrophoneDescription">Allow access to microphone</string>
     <string name="permissionsRequired">Permission required</string>
     <string name="permissionsStorageSaveDenied">{app_name} needs storage access in order to save to external storage, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".</string>

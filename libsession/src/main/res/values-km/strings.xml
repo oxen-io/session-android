@@ -22,9 +22,6 @@
     <string name="attachmentsAdd">ភ្ជាប់ឯកសារ</string>
     <string name="blockUnblock">បើកវិញ</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="other">ការរក្សាទុកទាំងអស់ %1$d ព័ត៌មាននៅលើថាសផ្ទុក នឹងអនុញ្ញាតអោយកម្មវិធីផ្សេងៗ បើកមើលបាន.\n\nបន្ត?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">គ្មាន</string>

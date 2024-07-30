@@ -24,9 +24,6 @@
     <string name="notificationsMuted">알림 꺼짐</string>
     <string name="blockUnblock">차단 해제</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="other">미디어 %1$d개를 저장소에 저장하게 되면, 기기에 설치된 다른 앱이 접근할 수 있습니다.\n\n저장하시겠습니까?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">없음</string>

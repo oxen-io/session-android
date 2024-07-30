@@ -23,10 +23,6 @@
     <string name="message">Missatge</string>
     <string name="blockUnblock">Desbloca</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Desar aquest mitjà a emmagatzematge permetrà que qualsevol altra aplicació del dispositiu també hi pugui accedir.\n\nVoleu continuar?</item>
-        <item quantity="other">Desar els %1$d fitxers a l\'emmagatzematge permetrà que qualsevol altra aplicació del dispositiu també hi pugui accedir.\n\nVoleu continuar?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Cap</string>

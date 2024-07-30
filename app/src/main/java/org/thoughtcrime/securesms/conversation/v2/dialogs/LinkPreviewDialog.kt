@@ -16,7 +16,7 @@ class LinkPreviewDialog(private val onEnabled: () -> Unit) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
         title(R.string.linkPreviewsEnable)
         val txt = Phrase.from(context, R.string.linkPreviewsFirstDescription)
-            .put(APP_NAME_KEY, context.getString(R.string.app_name))
+            .put(APP_NAME_KEY, context.getString(R.string.sessionMessenger))
             .format()
         text(txt)
         button(R.string.enable) { enable() }

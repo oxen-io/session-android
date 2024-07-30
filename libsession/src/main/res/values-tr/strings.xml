@@ -24,10 +24,6 @@
     <string name="notificationsMuted">Sessize alındı</string>
     <string name="blockUnblock">Engeli kaldır</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Bu medyayı depolama alanına kaydetmek, telefonunuzdaki diğer uygulamaların erişimine izin verecektir.\n\nDevam edilsin mi?</item>
-        <item quantity="other">%1$d medyanın tümünü depolama alanına kaydetmek, telefonunuzdaki diğer uygulamaların erişimine izin verecektir.\n\nDevam edilsin mi?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Hiçbiri</string>

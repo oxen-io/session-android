@@ -24,12 +24,6 @@
     <string name="notificationsMuted">Užtildytas</string>
     <string name="blockUnblock">Atblokuoti</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Šios %1$d medijos įrašymas į atmintį leis bet kuriai programėlei jūsų įrenginyje prieigą prie jos.\n\nTęsti?</item>
-        <item quantity="few">Šių visų %1$d medijų įrašymas į atmintį leis bet kuriai programėlei jūsų įrenginyje prieigą prie jų.\n\nTęsti?</item>
-        <item quantity="many">Šių visų %1$d medijų įrašymas į atmintį leis bet kuriai programėlei jūsų įrenginyje prieigą prie jų.\n\nTęsti?</item>
-        <item quantity="other">Šių visų %1$d medijų įrašymas į atmintį leis bet kuriai programėlei jūsų įrenginyje prieigą prie jų.\n\nTęsti?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Nėra</string>

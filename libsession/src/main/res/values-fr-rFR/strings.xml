@@ -35,10 +35,6 @@
     <string name="blockUnblock">Débloquer</string>
     <string name="callsPermissionsRequired">Autorisations d\'appel requises</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">La sauvegarde du média dans l’espace de stockage autorisera d’autres applications à y accéder.\n\nContinuer ?</item>
-        <item quantity="other">L’enregistrement des %1$d médias dans la mémoire permettra à n’importe quelles autres applis de votre appareil d’y accéder.\n\nContinuer ?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Aucun</string>
@@ -259,10 +255,8 @@
     <string name="emojiCategoryFlags">Drapeaux</string>
     <!-- ReactionsConversationView -->
     <!-- ReactionsRecipientAdapter -->
-    <string name="KeyboardPagerFragment_search_emoji">Rechercher un émoticône</string>
     <string name="KeyboardPagerfragment_back_to_emoji">Retour à l\'émoticône</string>
     <string name="KeyboardPagerfragment_clear_search_entry">Effacer la recherche</string>
     <string name="appearanceAutoDarkMode">Thème sombre automatique</string>
     <string name="fragment_enter_public_key_prompt">Commencez une nouvelle conversation en entrant l\'ID Session de quelqu\'un ou en lui partageant votre ID Session.</string>
-    <string name="ErrorNotifier_migration">Échec de la mise à jour de la base de données</string>
 </resources>

@@ -24,10 +24,6 @@
     <string name="notificationsMuted">Σίγαση</string>
     <string name="blockUnblock">Ξεμπλοκάρισμα</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Αποθηκεύοντας αυτό το πολυμέσο στην μνήμη θα επιτρέψει σε άλλες εφαρμογές στην συσκευή σου να έχουν πρόσβαση σε αυτό. \n\nΣυνέχεια;</item>
-        <item quantity="other">Αποθηκεύοντας τα %1$d πολυμέσα στη μνήμη θα επιτρέψει σε άλλες εφαρμογές της συσκευής σας να έχουν πρόσβαση σε αυτά.\n\nΣυνέχεια;</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Κανένα</string>

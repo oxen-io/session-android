@@ -254,10 +254,10 @@ public class AttachmentManager {
 
     Context c = activity.getApplicationContext();
     String needStoragePermissionTxt = Phrase.from(c, R.string.permissionsStorageSend)
-            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
             .format().toString();
     String storagePermissionDeniedTxt = Phrase.from(c, R.string.cameraGrantAccessStorageDenied)
-            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
             .format().toString();
 
     builder.withPermanentDenialDialog(needStoragePermissionTxt)
@@ -270,10 +270,10 @@ public class AttachmentManager {
 
     Context c = activity.getApplicationContext();
     String needStoragePermissionTxt = Phrase.from(c, R.string.permissionsStorageSend)
-            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
             .format().toString();
     String cameraPermissionDeniedTxt = Phrase.from(c, R.string.cameraGrantAccessDenied)
-            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
             .format().toString();
 
     Permissions.PermissionsBuilder builder = Permissions.with(activity);
@@ -310,11 +310,11 @@ public class AttachmentManager {
   public void capturePhoto(Activity activity, int requestCode, Recipient recipient) {
 
     String cameraPermissionDeniedTxt = Phrase.from(context, R.string.cameraGrantAccessDenied)
-            .put(APP_NAME_KEY, context.getString(R.string.app_name))
+            .put(APP_NAME_KEY, context.getString(R.string.sessionMessenger))
             .format().toString();
 
     String requireCameraPermissionTxt = Phrase.from(context, R.string.cameraGrantAccessDescription)
-            .put(APP_NAME_KEY, context.getString(R.string.app_name))
+            .put(APP_NAME_KEY, context.getString(R.string.sessionMessenger))
             .format().toString();
 
     Permissions.with(activity)

@@ -21,10 +21,6 @@
     <string name="attachmentsAdd">Lisa manus</string>
     <string name="blockUnblock">Eemalda blokeering</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Selle meediafaili sisemällu salvestamine lubab mistahes teisel rakendusel sinu seadmes sellele juurde pääseda.\n\nJätkad?</item>
-        <item quantity="other">Kõigi %1$d meediafaili sisemällu salvestamine lubab mistahes teisel rakendusel sinu seadmes nendele juurde pääseda.\n\nJätkad?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Puudub</string>

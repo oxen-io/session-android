@@ -24,10 +24,6 @@
     <string name="notificationsMuted">Dempet</string>
     <string name="blockUnblock">Fjern blokkering</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Hvis du lagrer dette mediet på enheten som vanlig fil, kan andre programmer få tilgang til det.\n\nEr du sikker på at du vil fortsette?</item>
-        <item quantity="other">Hvis du lagrer disse %1$d mediene på enheten som vanlige filer, kan andre programmer få tilgang til dem.\n\nEr du sikker på at du vil fortsette?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Ingen</string>

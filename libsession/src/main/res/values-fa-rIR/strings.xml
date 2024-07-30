@@ -24,10 +24,6 @@
     <string name="blockUnblock">رفع مسدودیت</string>
     <string name="callsPermissionsRequired">دسترسی تلفن مورد نیاز است</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">ذخیره همه %1$d رسانه ها به حافظه دستگاه ، باعث خواهد شد که همه برنامه های دیگر نصب شده در دستگاه شما ، به این اطلاعات دسترسی پیدا کنند. \n\n آیا مایل به ادامه هستید؟</item>
-        <item quantity="other">ذخیره همه %1$d مدیا به حافظه دستگاه ، باعث خواهد شد که همه برنامه های دیگر نصب شده در دستگاه شما ، به این اطلاعات دسترسی پیدا کنند. \n\n آیا مایل به ادامه هستید ؟</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">هیچ کدام</string>
@@ -246,7 +242,6 @@
     <string name="emojiCategoryFlags">پرچم ها</string>
     <!-- ReactionsConversationView -->
     <!-- ReactionsRecipientAdapter -->
-    <string name="KeyboardPagerFragment_search_emoji">جستجو ایموجی</string>
     <string name="KeyboardPagerfragment_back_to_emoji">بازگشت به ایموجی</string>
     <string name="KeyboardPagerfragment_clear_search_entry">پاک کردن ورودی جستجو</string>
     <string name="appearanceAutoDarkMode">حالت شب خودکار</string>

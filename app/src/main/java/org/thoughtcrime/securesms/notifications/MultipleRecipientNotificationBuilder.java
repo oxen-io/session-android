@@ -34,7 +34,7 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
 
     setColor(context.getResources().getColor(R.color.textsecure_primary));
     setSmallIcon(R.drawable.ic_notification);
-    setContentTitle(context.getString(R.string.app_name));
+    setContentTitle(context.getString(R.string.sessionMessenger));
     setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, HomeActivity.class), PendingIntent.FLAG_IMMUTABLE));
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
     setGroupSummary(true);

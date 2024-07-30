@@ -36,8 +36,6 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.drawToBitmap
-import androidx.core.text.set
-import androidx.core.text.toSpannable
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -188,7 +186,6 @@ import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.NetworkUtils
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
-import org.thoughtcrime.securesms.util.drawToBitmap
 import org.thoughtcrime.securesms.util.isScrolledToBottom
 import org.thoughtcrime.securesms.util.isScrolledToWithin30dpOfBottom
 import org.thoughtcrime.securesms.util.push
@@ -1732,7 +1729,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (!hasSeenGIFMetaDataWarning) {
             showSessionDialog {
                 title(R.string.giphyWarning)
-                text(Phrase.from(context, R.string.giphyWarningDescription).put(APP_NAME_KEY, getString(R.string.app_name)).format())
+                text(Phrase.from(context, R.string.giphyWarningDescription).put(APP_NAME_KEY, getString(R.string.sessionMessenger)).format())
                 button(R.string.theContinue) {
                     textSecurePreferences.setHasSeenGIFMetaDataWarning()
                     selectGif()
@@ -1865,7 +1862,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 .request(Manifest.permission.RECORD_AUDIO)
                 .withRationaleDialog(getString(R.string.permissionsMicrophoneAccessRequired), R.drawable.ic_baseline_mic_48)
                 .withPermanentDenialDialog(Phrase.from(applicationContext, R.string.permissionsMicrophoneAccessRequiredAndroid)
-                    .put(APP_NAME_KEY, getString(R.string.app_name))
+                    .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
                     .format().toString())
                 .execute()
         }
@@ -2160,12 +2157,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P)
                 .withPermanentDenialDialog(Phrase.from(applicationContext, R.string.permissionsStorageSaveDenied)
-                    .put(APP_NAME_KEY, getString(R.string.app_name))
+                    .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
                     .format().toString())
                 .onAnyDenied {
                     endActionMode()
                     val txt = Phrase.from(applicationContext, R.string.permissionsStorageSaveDenied)
-                                .put(APP_NAME_KEY, getString(R.string.app_name))
+                                .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
                                 .format().toString()
                     Toast.makeText(this@ConversationActivityV2, txt, Toast.LENGTH_LONG).show()
                 }

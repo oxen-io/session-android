@@ -42,7 +42,7 @@ class ShareLogsDialog(private val updateCallback: (Boolean)->Unit): DialogFragme
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
         title(R.string.helpReportABugExportLogs)
-        val appName = context.getString(R.string.app_name)
+        val appName = context.getString(R.string.sessionMessenger)
         val txt = Phrase.from(context, R.string.helpReportABugDescription)
             .put(APP_NAME_KEY, appName)
             .format().toString()

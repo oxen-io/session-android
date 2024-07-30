@@ -158,7 +158,7 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
     if (statusTitle != null) {
       Context c = getApplicationContext();
       String lockedTxt = Phrase.from(c, R.string.lockAppLocked)
-              .put(APP_NAME_KEY, c.getString(R.string.app_name))
+              .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
               .format().toString();
       statusTitle.setText(lockedTxt);
     }

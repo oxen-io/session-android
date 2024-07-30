@@ -24,10 +24,6 @@
     <string name="notificationsMuted">Səssizdə</string>
     <string name="blockUnblock">Kilidi aç</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Bu medianı anbarda saxlamaq, cihazınızdakı digər tətbiqlərin ona müraciətinə icazə verəcək.\n\nDavam edilsin?</item>
-        <item quantity="other">%1$d medianı anbarda saxlamaq, cihazınızdakı digər tətbiqlərin onlara müraciətinə icazə verəcək.\n\nDavam edilsin?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Heç biri</string>

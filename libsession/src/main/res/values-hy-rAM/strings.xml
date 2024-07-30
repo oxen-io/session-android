@@ -24,10 +24,6 @@
     <string name="notificationsMuted">Լուռ է</string>
     <string name="blockUnblock">Հանել արգելափակումից</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Այս մեդիան պահպանելով սարքի մեջ մնացած հավելվածները կկարողանան տեսնել այն։\n\nՇարունակե՞լ։</item>
-        <item quantity="other">Այս %1$d մեդիան պահպանելով սարքի մեջ մնացած հավելվածները կկարողանան տեսնել այն։\n\nՇարունակե՞լ։</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Չկա</string>

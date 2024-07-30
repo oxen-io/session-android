@@ -58,7 +58,6 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import java.util.concurrent.Executors
@@ -95,7 +94,7 @@ fun MaybeScanQrCode(
                 Text(
                     stringResource(R.string.cameraGrantAccessDenied).let { txt ->
                         val c = LocalContext.current
-                        Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString()
+                        Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.sessionMessenger)).format().toString()
                     },
                     style = LocalType.current.base,
                     textAlign = TextAlign.Center
@@ -118,7 +117,7 @@ fun MaybeScanQrCode(
                 Text(
                     stringResource(R.string.cameraGrantAccessQr).let { txt ->
                         val c = LocalContext.current
-                        Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString()
+                        Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.sessionMessenger)).format().toString()
                     },
                     style = LocalType.current.xl,
                     textAlign = TextAlign.Center

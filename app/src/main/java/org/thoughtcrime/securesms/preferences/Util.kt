@@ -17,7 +17,7 @@ fun Context.sendInvitationToUseSession() {
     val DOWNLOAD_URL = "https://getsession.org/download"
 
     val txt = Phrase.from(getString(R.string.accountIdShare))
-        .put(APP_NAME_KEY, getString(R.string.app_name))
+        .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
         .put(ACCOUNT_ID_KEY, TextSecurePreferences.getLocalNumber(this@sendInvitationToUseSession))
         .put(DOWNLOAD_URL_KEY, DOWNLOAD_URL)
         .format().toString()

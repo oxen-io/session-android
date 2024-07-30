@@ -24,10 +24,6 @@
     <string name="notificationsMuted">Lyden slået fra</string>
     <string name="blockUnblock">Fjern blokering</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">At gemme denne fil på disk vil tillade alle andre apps at tilgå den.\n\nFortsæt?</item>
-        <item quantity="other">Gemmes alle %1$d filer i hukommelsen, vil alle andre apps også have mulighed for at tilgå dem.\n\nFortsæt?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Ingen</string>

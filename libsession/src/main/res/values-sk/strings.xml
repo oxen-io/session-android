@@ -22,12 +22,6 @@
     <string name="message">Správa</string>
     <string name="blockUnblock">Odblokovať</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Uložením tohto média na úložisko k nemu umožníte prístup ostatným aplikáciám v zariadení.\n\nPokračovať?</item>
-        <item quantity="few">Uložením %1$d príloh na úložisko k nim umožníte prístup ostatným aplikáciám v zariadení.\n\nPokračovať?</item>
-        <item quantity="many">Uložením všetkých %1$d príloh na úložisko k nim umožníte prístup ostatným aplikáciám v zariadení.\n\nPokračovať?</item>
-        <item quantity="other">Uložením všetkých %1$d príloh na úložisko k nim umožníte prístup ostatným aplikáciám v zariadení.\n\nPokračovať?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Žiadna</string>

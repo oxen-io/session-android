@@ -136,7 +136,7 @@ internal fun LandingScreen(
                         item.stringId == R.string.onboardingBubbleSessionIsEngineered) {
                         AnimateMessageText(
                             Phrase.from(stringResource(item.stringId))
-                                .put(APP_NAME_KEY, stringResource(R.string.app_name))
+                                .put(APP_NAME_KEY, stringResource(R.string.sessionMessenger))
                                 .format().toString(),
                             item.isOutgoing
                         )

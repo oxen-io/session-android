@@ -24,12 +24,6 @@
     <string name="notificationsMuted">Без звука</string>
     <string name="blockUnblock">Разблокировать</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Сохранение этого медиафайла в хранилище устройства позволит любому приложению его просматривать.\n\nПродолжить?</item>
-        <item quantity="few">Сохранение этих %1$d медиафайлов в хранилище устройства позволит любому приложению их просматривать.\n\nПродолжить?</item>
-        <item quantity="many">Сохранение этих %1$d медиафайлов в хранилище устройства позволит любому приложению их просматривать.\n\nПродолжить?</item>
-        <item quantity="other">Сохранение этих %1$d медиафайлов в хранилище устройства позволит любому приложению их просматривать.\n\nПродолжить?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Нет</string>

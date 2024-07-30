@@ -24,10 +24,6 @@
     <string name="notificationsMuted">Heshtur</string>
     <string name="blockUnblock">Zhbllokoje</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Ruajtja e kësaj medieje në depozitë do t\’i lejojë përdorimin e tij cilitdo aplikacioni tjetër në pajisjen tuaj.\n\nTë vazhdohet?</item>
-        <item quantity="other">Ruajtja e %1$d medieve në depozitë do t\’i lejojë përdorimin e tyre cilitdo aplikacioni tjetër në pajisjen tuaj.\n\nTë vazhdohet?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Asnjë</string>

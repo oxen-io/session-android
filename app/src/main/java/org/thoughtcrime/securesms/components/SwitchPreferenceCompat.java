@@ -45,7 +45,7 @@ public class SwitchPreferenceCompat extends CheckBoxPreference {
             if (key.equalsIgnoreCase(LOCK_SCREEN_KEY)) {
                 Context c = getContext();
                 CharSequence substitutedSummaryCS = Phrase.from(c, R.string.lockAppDescriptionAndroid)
-                                                        .put(APP_NAME_KEY, c.getString(R.string.app_name))
+                                                        .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
                                                         .format();
                 this.setSummary(substitutedSummaryCS);
             }

@@ -24,10 +24,6 @@
     <string name="notificationsMuted">म्यूट हो गए</string>
     <string name="blockUnblock">अनब्लॉक करें</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">इस मीडिया को स्टोरेज में सहेजने से आपके डिवाइस पर किसी अन्य ऐप को इसे एक्सेस करने की अनुमति मिल जाएगी। \n\n जारी रखें?</item>
-        <item quantity="other">सभी %1$d मीडिया को स्टोरेज में सहेजने से आपके डिवाइस पर किसी अन्य ऐप को इन्हें एक्सेस करने की अनुमति मिल जाएगी। \n\n जारी रखें?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">कुछ नहीं</string>

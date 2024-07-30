@@ -24,9 +24,6 @@
     <string name="notificationsMuted">已靜音</string>
     <string name="blockUnblock">解除封鎖</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="other">儲存所有的 %1$d 媒體至存儲將會允許您裝置上的其它軟體開啟它們。\n\n繼續嗎？</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">無</string>

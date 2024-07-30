@@ -25,10 +25,6 @@
     <string name="blockUnblock">Letiltás feloldása</string>
     <!-- ConversationFragment -->
     <string name="callsPermissionsRequired">Hívás engedély szükséges</string>
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">A média mentése a tárolóra lehetővé teszi bármelyik másik alkalmazásnak a készülékeden, hogy hozzáférjen.\n\nFolytatod?</item>
-        <item quantity="other">A(z) %1$d db médiafájl tárolóra mentése más alkalmazások számára is lehetővé teszi, hogy hozzájuk férjenek.\n\nFolytatod?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Egyik sem</string>

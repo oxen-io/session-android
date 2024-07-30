@@ -23,10 +23,6 @@
     <string name="message">Съобщение</string>
     <string name="blockUnblock">Отблокирване</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Запазването на този медиен файл ще даде достъп до него на всички други приложения.\n\nПродължи?</item>
-        <item quantity="other">Запазването на всички %1$d медийни файла ще даде достъп до тях на всички други приложения.\n\nПродължи?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Нищо</string>

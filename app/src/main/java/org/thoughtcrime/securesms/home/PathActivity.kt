@@ -54,7 +54,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         supportActionBar!!.title = resources.getString(R.string.onionRoutingPath)
 
         // Substitute the localised version of "Session" into the layout
-        val appName = applicationContext.getString(R.string.app_name)
+        val appName = applicationContext.getString(R.string.sessionMessenger)
         val txt = Phrase.from(applicationContext, R.string.onionRoutingPathDescription).put(APP_NAME_KEY, appName).format().toString()
         binding.pathDescription.text = txt
 

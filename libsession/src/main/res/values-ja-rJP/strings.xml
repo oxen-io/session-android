@@ -24,9 +24,6 @@
     <string name="notificationsMuted">ミュート中</string>
     <string name="blockUnblock">ブロック解除</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="other">%1$d個のメディア・ファイルをすべて外部メモリに保存することで、他のアプリからアクセスすることが可能になります。\n\n続行しますか？</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">なし</string>

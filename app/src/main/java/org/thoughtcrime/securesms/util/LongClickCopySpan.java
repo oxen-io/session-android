@@ -49,7 +49,7 @@ public class LongClickCopySpan extends URLSpan {
   private void copyUriSdk11(Context context, String url) {
     android.content.ClipboardManager clipboard =
             (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-    ClipData clip = ClipData.newPlainText(context.getString(R.string.app_name), url);
+    ClipData clip = ClipData.newPlainText(context.getString(R.string.sessionMessenger), url);
     clipboard.setPrimaryClip(clip);
   }
 

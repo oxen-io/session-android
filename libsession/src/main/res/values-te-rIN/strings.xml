@@ -23,14 +23,6 @@
     <string name="message">సందేశం</string>
     <string name="blockUnblock">అనుమతించు</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">ఈ మీడియాను నిల్వలో భద్రపరచడం వల్ల మీ పరికరంలో ఏదైనా ఇతర అనువర్తనాలు దానిని వాడుటకు  ప్రవేశాధికారము కలిపిస్తుంది.
-
-కొనసాగించాలా?</item>
-        <item quantity="other">అన్ని %1$d మీడియాను నిల్వలో భద్రపరచడం వల్ల మీ పరికరంలో ఏదైనా ఇతర అనువర్తనాలు వాటిని వాడుటకు ప్రవేశాధికారము కలిపిస్తుంది.
-
-కొనసాగించాలా?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">ఏదీ కాదు</string>

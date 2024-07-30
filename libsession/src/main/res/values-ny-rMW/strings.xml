@@ -20,10 +20,6 @@
     <string name="attachmentsAdd">Shuk imaykunata kimichipay</string>
     <string name="blockUnblock">Pakashkamanta llukchi</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Uyayta, shuyurikuchiktapash allichik ukupi allichina kan, chaymi tukuy aplicación paskayta ushanka \n\nKatichinkichu.</item>
-        <item quantity="other">Tukuy %1$d uyayrikuchikkunata allichik ukupi allichikpika, tukuy aplicacionkunapash paskayta ushankami \n\nKatichinkichu</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Nimaykan</string>

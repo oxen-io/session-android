@@ -21,10 +21,6 @@
     <string name="attachmentsAdd">Legg til vedlegg</string>
     <string name="blockUnblock">Fjern blokkering</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Viss du lagrar dette mediet på eininga som ei vanleg fil, kan andre program få tilgang til det.\n\nEr du sikker på at du vil halda fram?</item>
-        <item quantity="other">Viss du lagrar desse %1$d media på eininga som vanlege filer, kan andre program få tilgang til dei.\n\nEr du sikker på at du vil halda fram?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Ingen</string>

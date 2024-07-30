@@ -24,10 +24,6 @@
     <string name="notificationsMuted">Silenziato</string>
     <string name="blockUnblock">Sblocca</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Salvare il file sulla memoria consentirà ad altre applicazioni di accedervi.\n\nContinuare?</item>
-        <item quantity="other">Salvare il %1$d file sulla memoria consentirà ad altre applicazioni di accedervi.\n\nContinuare?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Nessuna</string>

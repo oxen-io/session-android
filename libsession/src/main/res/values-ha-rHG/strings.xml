@@ -21,10 +21,6 @@
     <string name="attachmentsAdd">Servehî lê zede bike</string>
     <string name="blockUnblock">Astengê rake</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Tu medyayê li bîrbarê tomar bike wê sepanên din yê di amûra we de jî destûra gihînê bide vê.\n\n Tê bidomîne?</item>
-        <item quantity="other">Tu %1$d medyayan teva li bîrbarê tomar bike wê sepanên din yê di amûra we de jî destûra gihînê bidin vê.\n\n Tê bidomîne?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Hîç</string>

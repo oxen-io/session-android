@@ -53,7 +53,7 @@ public class QuickResponseService extends IntentService {
       Log.w(TAG, "Got quick response request when locked...");
       Context c = getApplicationContext();
       String txt = Phrase.from(c, R.string.lockAppQuickResponse)
-                      .put(APP_NAME_KEY, c.getString(R.string.app_name))
+                      .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
                       .format().toString();
       Toast.makeText(this, txt, Toast.LENGTH_LONG).show();
       return;

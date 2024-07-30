@@ -24,12 +24,6 @@
     <string name="notificationsMuted">Беззвучний</string>
     <string name="blockUnblock">Розблокувати</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Збереження цього файлу до пам\'яті пристрою зробить його доступним іншим програмам на вашому пристрої.\n\nПродовжити?</item>
-        <item quantity="few">Збереження всіх %1$d файлів до пам\'яті пристрою зробить їх доступними для інших програм на вашому пристрої.\n\nПродовжити?</item>
-        <item quantity="many">Збереження всіх %1$d файлів до пам\'яті пристрою зробить їх доступними для інших програм на вашому пристрої.\n\nПродовжити?</item>
-        <item quantity="other">Збереження всіх %1$d файлів до пам\'яті пристрою зробить їх доступними для інших програм на вашому пристрої.\n\nПродовжити?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Жодного</string>

@@ -24,10 +24,6 @@
     <string name="notificationsMuted">Dempen</string>
     <string name="blockUnblock">Deblokkeren</string>
     <!-- ConversationFragment -->
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Als je dit bestand opslaat op de SD-kaart wordt het niet versleuteld opgeslagen en hebben alle andere apps op je apparaat toegang tot dit bestand.\n\nDoorgaan?</item>
-        <item quantity="other">Als je deze %1$d bestanden opslaat op de SD-kaart worden ze niet versleuteld opgeslagen en hebben alle andere apps op je apparaat ook toegang tot deze bestanden.\n\nDoorgaan?</item>
-    </plurals>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Geen</string>
