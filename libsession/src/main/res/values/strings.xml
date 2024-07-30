@@ -49,12 +49,7 @@
 
     <!-- ========== STRAGGLERS SECTION ========== -->
 
-    <!-- USED: In fragment_enter_public_key.xml when writing a message to a new contact.
-         Figma: Unable to locate usage in Figma - although you would think it would be there... =/
-     -->
-    <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
-
-    <!-- USED: activity_message_detail - bolded text before disappearing message time, e.g., "Disappears: 12 hours"
+    <!-- USED: activity_message_detail - bolded text before disappearing message time on message info fragment, e.g., "Disappears: 12 hours"
          Figma: Unable to locate usage in Figma.
     -->
     <string name="message_details_header__disappears">Disappears</string>
@@ -235,7 +230,7 @@
     <string name="cameraErrorUnavailable">Camera unavailable.</string>
     <string name="cameraGrantAccess">Grant Camera Access</string>
     <string name="cameraGrantAccessDenied">{app_name} needs camera access to take photos and videos, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\".</string>
-    <string name="cameraGrantAccessDescription">{app_name} needs camera access to take photos or videos.</string>
+    <string name="cameraGrantAccessDescription">{app_name} needs camera access to take photos and videos, or scan QR codes.</string>
     <string name="cameraGrantAccessQr">{app_name} needs camera access to scan QR codes</string>
     <string name="cameraGrantAccessStorageDenied">{app_name} needs storage access to send photos and videos, but it has been permanently denied. Please continue to app settings, select "Permissions", and enable "Storage".</string>
     <string name="cancel">Cancel</string>
@@ -323,14 +318,14 @@
     <string name="deleteAfterLegacyDisappearingMessagesOriginal">Original version of disappearing messages.</string>
     <string name="deleteAfterLegacyDisappearingMessagesTheyChangedTimer"><b>{name}</b> set the disappearing message timer to <b>{time}</b></string>
     <string name="deleteMessage">Delete Message</string>
-    <string name="deleteMessageConfirm">Are you sure you want to delete these messages?</string>
+    <string name="deleteMessageConfirm">Are you sure you want to delete this message?</string>
     <string name="deleteMessageDeleted">Message deleted</string>
     <string name="deleteMessageDescriptionDevice">Are you sure you want to delete this message from your device?</string>
     <string name="deleteMessageDescriptionEveryone">Are you sure you want to delete this message for everyone?</string>
     <string name="deleteMessageDeviceOnly">Delete on this device only</string>
     <string name="deleteMessageEveryone">Delete for everyone</string>
     <string name="deleteMessages">Delete Messages</string>
-    <string name="deleteMessagesConfirm">Delete Messages</string>
+    <string name="deleteMessagesConfirm">Are you sure you want to delete these messages?</string>
     <string name="deleteMessagesDeleted">Messages deleted</string>
     <string name="deleteMessagesDescriptionDevice">Are you sure you want to delete these messages from your device?</string>
     <string name="deleteMessagesDescriptionEveryone">Are you sure you want to delete these messages for everyone?</string>
@@ -510,7 +505,7 @@
     <string name="lockAppDescriptionIos">Require Touch ID, Face ID or your passcode to unlock Session.</string>
     <string name="lockAppEnablePasscode">You must enable a passcode in your iOS Settings in order to use Screen Lock.</string>
     <string name="lockAppLocked">{app_name} is locked</string>
-    <string name="lockAppQuickResponse">Quick response is unavailable when {app_name} is locked!</string>
+    <string name="lockAppQuickResponse">Quick response unavailable when {app_name} is locked!</string>
     <string name="lockAppStatus">Lock status</string>
     <string name="lockAppUnlock">Tap to unlock</string>
     <string name="lockAppUnlocked">{app_name} is unlocked</string>
@@ -533,7 +528,7 @@
     <string name="messageErrorLimit">Message limit reached</string>
     <string name="messageErrorOld">Received a message encrypted using an old version of {app_name} that is no longer supported. Please ask the sender to update to the most recent version and resend the message.</string>
     <string name="messageErrorOriginal">Original message not found</string>
-    <string name="messageInfo">Message Info</string>  <!-- Heading when user long presses and selects `info` ("Info") on a msg -->
+    <string name="messageInfo">Message Info</string>
     <string name="messageMarkRead">Mark read</string>
     <string name="messageMarkUnread">Mark unread</string>
     <string name="messageNew">New Message</string>
@@ -708,7 +703,7 @@
     <string name="remove">Remove</string>
     <string name="reply">Reply</string>
     <string name="resend">Resend</string>
-    <string name="resolving">Resolving...</string>
+    <string name="resolving">Loading country information...</string>
     <string name="restart">Restart</string>
     <string name="resync">Resync</string>
     <string name="retry">Retry</string>
@@ -748,10 +743,10 @@
     <string name="sessionRecoveryPassword">Recovery Password</string>
     <string name="sessionSettings">Settings</string>
     <string name="set">Set</string>
-    <string name="settingsRestartDescription">You must restart Session to apply your new settings.</string>
+    <string name="settingsRestartDescription">You must restart {app_name} to apply your new settings.</string>
     <string name="share">Share</string>
-    <string name="shareAccountIdDescription">Invite your friend to chat with you on Session by sharing your Account ID with them.</string>
-    <string name="shareToSession">Share to Session</string>
+    <string name="shareAccountIdDescription">Invite your friend to chat with you on {app_name} by sharing your Account ID with them.</string>
+    <string name="shareToSession">Share to {app_name}</string>
     <string name="show">Show</string>
     <string name="showAll">Show All</string>
     <string name="showLess">Show Less</string>
@@ -766,10 +761,10 @@
     <string name="undo">Undo</string>
     <string name="unknown">Unknown</string>
     <string name="updateApp">App updates</string>
-    <string name="updateDownloaded">The update has been downloaded. Restart Session to apply the updates.</string>
+    <string name="updateDownloaded">Updated installed, click to restart</string>
     <string name="updateError">Cannot Update</string>
     <string name="updateNewVersion">A new version of {app_name} is available, tap to update</string>
-    <string name="updateNewVersionDescription">There is a new version of Session available. Would you like to download the update?</string>
+    <string name="updateNewVersionDescription">There is a new version of {app_name} available. Would you like to download the update?</string>
     <string name="updateReleaseNotes">Go to Release Notes</string>
     <string name="updateSession">{app_name} Update</string>
     <string name="updateVersion">Version {version}</string>

@@ -245,5 +245,4 @@
     <string name="KeyboardPagerfragment_back_to_emoji">بازگشت به ایموجی</string>
     <string name="KeyboardPagerfragment_clear_search_entry">پاک کردن ورودی جستجو</string>
     <string name="appearanceAutoDarkMode">حالت شب خودکار</string>
-    <string name="fragment_enter_public_key_prompt">یک مکالمه جدید را با وارد کردن شناسه Session شخصی شروع کنید یا شناسه جلسه خود را با آنها به اشتراک بگذارید.</string>
 </resources>
