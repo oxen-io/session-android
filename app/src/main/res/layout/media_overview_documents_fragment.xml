@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/media_overview_documents_fragment__no_documents_found"
+        android:text="@string/attachmentsFilesEmpty"
         android:textSize="@dimen/medium_font_size"
         android:visibility="gone"
         tools:visibility="visible" />

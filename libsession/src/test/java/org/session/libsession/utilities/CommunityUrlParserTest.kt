@@ -67,7 +67,7 @@ class CommunityUrlParserTest {
         OpenGroupUrlParser.parseUrl(inputUrl)
     }
 
-    @Test(expected = OpenGroupUrlParser.Error.NoRoom::class)
+    @Test(expected = OpenGroupUrlParser.Error.NoRoomSpecified::class)
     fun parseUrlNoRoomSpecifiedTest() {
         val inputUrl = "https://sessionopengroup.comain?public_key=658d29b91892a2389505596b135e76a53db6e11d613a51dbd3d0816adffb231c"
         OpenGroupUrlParser.parseUrl(inputUrl)

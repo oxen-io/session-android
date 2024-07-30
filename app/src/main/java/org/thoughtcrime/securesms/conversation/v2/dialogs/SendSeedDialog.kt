@@ -10,9 +10,9 @@ import org.thoughtcrime.securesms.createSessionDialog
 class SendSeedDialog(private val proceed: (() -> Unit)? = null) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
-        title(R.string.dialog_send_seed_title)
-        text(R.string.dialog_send_seed_explanation)
-        button(R.string.dialog_send_seed_send_button_title) { send() }
+        title(R.string.warning)
+        text(R.string.recoveryPasswordWarningSendDescription)
+        button(R.string.send) { send() }
         cancelButton()
     }
 

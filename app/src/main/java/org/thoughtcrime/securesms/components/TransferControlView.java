@@ -1,35 +1,32 @@
 package org.thoughtcrime.securesms.components;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY;
+
 import android.animation.LayoutTransition;
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import com.annimon.stream.Stream;
 import com.pnikosis.materialishprogress.ProgressWheel;
-
+import com.squareup.phrase.Phrase;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import network.loki.messenger.R;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress;
-import org.thoughtcrime.securesms.database.AttachmentDatabase;
+import org.session.libsession.utilities.ViewUtil;
 import org.thoughtcrime.securesms.events.PartProgressEvent;
 import org.thoughtcrime.securesms.mms.Slide;
-
-import org.session.libsession.utilities.ViewUtil;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import network.loki.messenger.R;
 
 public class TransferControlView extends FrameLayout {
 
@@ -191,7 +188,8 @@ public class TransferControlView extends FrameLayout {
       return slides.get(0).getContentDescription();
     } else {
       int downloadCount = Stream.of(slides).reduce(0, (count, slide) -> slide.getTransferState() != AttachmentTransferProgress.TRANSFER_PROGRESS_DONE ? count + 1 : count);
-      return getContext().getResources().getQuantityString(R.plurals.TransferControlView_n_items, downloadCount, downloadCount);
+
+      return Phrase.from(getContext(), R.string.andMore).put(COUNT_KEY, downloadCount).format().toString();
     }
   }
 

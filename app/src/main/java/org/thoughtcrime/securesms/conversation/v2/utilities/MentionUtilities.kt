@@ -54,13 +54,14 @@ object MentionUtilities {
         val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
         val openGroup by lazy { DatabaseComponent.get(context).storage().getOpenGroup(threadID) }
 
-        // format the mention text
+        // Format the mention text
         if (matcher.find(startIndex)) {
             while (true) {
                 val publicKey = text.subSequence(matcher.start() + 1, matcher.end()).toString() // +1 to get rid of the @
+
                 val isYou = isYou(publicKey, userPublicKey, openGroup)
                 val userDisplayName: String? = if (isYou) {
-                    context.getString(R.string.MessageRecord_you)
+                    context.getString(R.string.you)
                 } else {
                     val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithAccountID(publicKey)
                     @Suppress("NAME_SHADOWING") val context = if (openGroup != null) Contact.ContactContext.OPEN_GROUP else Contact.ContactContext.REGULAR

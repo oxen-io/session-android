@@ -8,7 +8,7 @@ import org.thoughtcrime.securesms.showSessionDialog
 object NotificationUtils {
     fun showNotifyDialog(context: Context, thread: Recipient, notifyTypeHandler: (Int)->Unit) {
         context.showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_notification_settings)
+            title(R.string.sessionNotifications)
             singleChoiceItems(
                 context.resources.getStringArray(R.array.notify_types),
                 thread.notifyType

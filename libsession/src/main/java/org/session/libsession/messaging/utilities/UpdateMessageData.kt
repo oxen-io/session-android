@@ -38,13 +38,15 @@ class UpdateMessageData () {
         class GroupNameChange(val name: String): Kind() {
             constructor(): this("") //default constructor required for json serialization
         }
-        class GroupMemberAdded(val updatedMembers: Collection<String>): Kind() {
-            constructor(): this(Collections.emptyList())
+        class GroupMemberAdded(val updatedMembers: Collection<String>, val groupName: String): Kind() {
+            constructor(): this(Collections.emptyList(), "")
         }
-        class GroupMemberRemoved(val updatedMembers: Collection<String>): Kind() {
-            constructor(): this(Collections.emptyList())
+        class GroupMemberRemoved(val updatedMembers: Collection<String>, val groupName:String): Kind() {
+            constructor(): this(Collections.emptyList(), "")
         }
-        data object GroupMemberLeft: Kind()
+        class GroupMemberLeft(val updatedMembers: Collection<String>, val groupName:String): Kind() {
+            constructor(): this(Collections.emptyList(), "")
+        }
         class GroupMemberUpdated(val sessionIds: List<String>, val type: MemberUpdateType?): Kind() {
             constructor(): this(emptyList(), null)
         }
@@ -87,6 +89,7 @@ class UpdateMessageData () {
                 SignalServiceGroup.Type.NAME_CHANGE -> UpdateMessageData(Kind.GroupNameChange(name))
                 SignalServiceGroup.Type.MEMBER_ADDED -> UpdateMessageData(Kind.GroupMemberAdded(members))
                 SignalServiceGroup.Type.MEMBER_REMOVED -> UpdateMessageData(Kind.GroupMemberRemoved(members))
+                SignalServiceGroup.Type.MEMBER_LEFT    -> UpdateMessageData(Kind.GroupMemberLeft(members, name))
                 SignalServiceGroup.Type.QUIT -> UpdateMessageData(Kind.GroupMemberLeft)
                 SignalServiceGroup.Type.LEAVING -> UpdateMessageData(Kind.GroupLeaving)
                 SignalServiceGroup.Type.ERROR_QUIT -> UpdateMessageData(Kind.GroupErrorQuit)

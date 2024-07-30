@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="@id/titleTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/titleTextView"
-        android:contentDescription="@string/new_conversation_dialog_close_button_content_description" />
+        android:contentDescription="@string/AccessibilityId_closeDialog" />
 
     <TextView
         android:id="@+id/messageTextView"

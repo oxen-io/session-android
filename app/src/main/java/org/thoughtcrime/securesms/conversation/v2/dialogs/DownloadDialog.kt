@@ -7,6 +7,7 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import androidx.fragment.app.DialogFragment
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import org.session.libsession.database.StorageProtocol
@@ -14,6 +15,7 @@ import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsession.utilities.StringSubstitutionConstants.CONVERSATION_NAME_KEY
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.util.createAndStartAttachmentDownload
@@ -41,19 +43,21 @@ class AutoDownloadDialog(private val threadRecipient: Recipient,
             threadRecipient.isClosedGroupV2Recipient -> threadRecipient.name ?: "UNKNOWN"
             else -> storage.getContactWithAccountID(threadRecipient.address.serialize())?.displayName(Contact.ContactContext.REGULAR) ?: "UNKNOWN"
         }
-        title(resources.getString(R.string.dialog_auto_download_title))
+        title(getString(R.string.attachmentsAutoDownloadModalTitle))
 
-        val explanation = resources.getString(R.string.dialog_auto_download_explanation, displayName)
+        val explanation = Phrase.from(context, R.string.attachmentsAutoDownloadModalDescription)
+            .put(CONVERSATION_NAME_KEY, displayName)
+            .format()
         val spannable = SpannableStringBuilder(explanation)
         val startIndex = explanation.indexOf(displayName)
         spannable.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + displayName.count(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         text(spannable)
 
-        button(R.string.dialog_download_button_title, R.string.AccessibilityId_download_media) {
+        button(R.string.download, R.string.AccessibilityId_download_media) {
             setAutoDownload()
         }
 
-        cancelButton {  }
+        cancelButton { dismiss() }
     }
 
     private fun setAutoDownload() {

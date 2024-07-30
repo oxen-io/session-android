@@ -71,6 +71,7 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
                 NotificationChannels.updateMessageVibrate(requireContext(), newValue as Boolean)
                 true
             }
+
         findPreference<Preference>(TextSecurePreferences.RINGTONE_PREF)!!.onPreferenceClickListener =
             Preference.OnPreferenceClickListener {
                 val current = prefs.getNotificationRingtone()
@@ -89,10 +90,10 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
                 startActivityForResult(intent, 1)
                 true
             }
+
         findPreference<Preference>(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF)!!.onPreferenceClickListener =
             Preference.OnPreferenceClickListener { preference: Preference ->
                 val listPreference = preference as ListPreference
-                listPreference.setDialogMessage(R.string.preferences_notifications__content_message)
                 listPreferenceDialog(requireContext(), listPreference) {
                     initializeListSummary(findPreference(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF))
                 }
@@ -138,7 +139,7 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
         override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
             val value = newValue as? Uri
             if (value == null || TextUtils.isEmpty(value.toString())) {
-                preference.setSummary(R.string.preferences__silent)
+                preference.setSummary(R.string.none)
             } else {
                 RingtoneManager.getRingtone(activity, value)
                     ?.getTitle(activity)
@@ -176,8 +177,8 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
         @Suppress("unused")
         private val TAG = NotificationsPreferenceFragment::class.java.simpleName
         fun getSummary(context: Context): CharSequence = when (isNotificationsEnabled(context)) {
-                true -> R.string.ApplicationPreferencesActivity_On
-                false -> R.string.ApplicationPreferencesActivity_Off
+                true -> R.string.on
+                false -> R.string.off
             }.let(context::getString)
     }
 }

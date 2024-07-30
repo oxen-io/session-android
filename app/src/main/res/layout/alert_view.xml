@@ -11,7 +11,7 @@
         android:visibility="gone"
         app:tint="@color/core_red"
         tools:visibility="visible"
-        android:contentDescription="@string/conversation_item_sent__send_failed_indicator_description" />
+        android:contentDescription="@string/messageStatusFailedToSend" />
 
     <ImageView
         android:id="@+id/pending_approval_indicator"
@@ -22,6 +22,6 @@
         android:visibility="gone"
         tools:visibility="visible"
         android:layout_gravity="center_vertical"
-        android:contentDescription="@string/conversation_item_sent__pending_approval_description" />
+        android:contentDescription="@string/messageRequestPending" />
 
 </merge>

@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:gravity="center"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content" >
 
 
     <ImageView
@@ -21,7 +21,6 @@
         android:textStyle="bold"
         android:textColor="?danger"
         android:textSize="16sp"
-        android:text="@string/recipient_preferences__block"
-        />
+        android:text="@string/block" />
 
 </LinearLayout>

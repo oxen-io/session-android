@@ -16,10 +16,13 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
+import com.squareup.phrase.Phrase
+import java.io.IOException
 import network.loki.messenger.R
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.leave
 import org.session.libsession.utilities.GroupUtil.doubleDecodeGroupID
+import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.guava.Optional
@@ -38,7 +41,6 @@ import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.BitmapUtil
-import java.io.IOException
 
 object ConversationMenuHelper {
     
@@ -164,9 +166,9 @@ object ConversationMenuHelper {
 
         if (!TextSecurePreferences.isCallNotificationsEnabled(context)) {
             context.showSessionDialog {
-                title(R.string.ConversationActivity_call_title)
-                text(R.string.ConversationActivity_call_prompt)
-                button(R.string.activity_settings_title, R.string.AccessibilityId_settings) {
+                title(R.string.callsPermissionsRequired)
+                text(R.string.callsPermissionsRequiredDescription)
+                button(R.string.sessionSettings, R.string.AccessibilityId_settings) {
                     Intent(context, PrivacySettingsActivity::class.java).let(context::startActivity)
                 }
                 cancelButton()
@@ -217,7 +219,7 @@ object ConversationMenuHelper {
                     .setIntent(ShortcutLauncherActivity.createIntent(context, thread.address))
                     .build()
                 if (ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null)) {
-                    Toast.makeText(context, context.resources.getString(R.string.ConversationActivity_added_to_home_screen), Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.resources.getString(R.string.conversationsAddedToHome), Toast.LENGTH_LONG).show()
                 }
             }
         }.execute()
@@ -274,15 +276,24 @@ object ConversationMenuHelper {
         val accountID = TextSecurePreferences.getLocalNumber(context)
         val isCurrentUserAdmin = admins.any { it.toString() == accountID }
         val message = if (isCurrentUserAdmin) {
-            "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
+            Phrase.from(context, R.string.groupLeaveDescriptionAdmin)
+                .put(GROUP_NAME_KEY, group.title)
+                .format().toString()
         } else {
-            context.resources.getString(R.string.ConversationActivity_are_you_sure_you_want_to_leave_this_group)
+            Phrase.from(context, R.string.groupLeaveDescription)
+                .put(GROUP_NAME_KEY, group.title)
+                .format().toString()
         }
 
-        fun onLeaveFailed() = Toast.makeText(context, R.string.ConversationActivity_error_leaving_group, Toast.LENGTH_LONG).show()
+        fun onLeaveFailed() {
+            val txt = Phrase.from(context, R.string.groupLeaveErrorFailed)
+                .put(GROUP_NAME_KEY, group.title)
+                .format().toString()
+            Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
+        }
 
         context.showSessionDialog {
-            title(R.string.ConversationActivity_leave_group)
+            title(R.string.groupLeave)
             text(message)
             button(R.string.yes) {
                 try {

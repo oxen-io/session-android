@@ -16,6 +16,8 @@
  */
 package org.thoughtcrime.securesms;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +33,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,25 +50,36 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.phrase.Phrase;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import kotlin.Unit;
+import network.loki.messenger.R;
 
 import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
-import org.session.libsession.utilities.GroupRecord;
-import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.ViewUtil;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsession.utilities.task.ProgressDialogAsyncTask;
+import org.session.libsignal.utilities.Log;
+import org.session.libsession.utilities.GroupRecord;
+import org.session.libsession.utilities.TextSecurePreferences;
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
 import org.thoughtcrime.securesms.database.MediaDatabase;
+import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader.BucketedThreadMedia;
+import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader;
 import org.thoughtcrime.securesms.database.loaders.ThreadMediaLoader;
-import com.bumptech.glide.Glide;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.util.AttachmentUtil;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask;
+import org.thoughtcrime.securesms.util.StickyHeaderDecoration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -118,38 +130,48 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity i
     }
 
     private void initializeResources() {
-        Address address = getIntent().getParcelableExtra(ADDRESS_EXTRA);
-
         this.viewPager = ViewUtil.findById(this, R.id.pager);
-        this.toolbar = ViewUtil.findById(this, R.id.toolbar);
+        this.toolbar = ViewUtil.findById(this, R.id.search_toolbar);
         this.tabLayout = ViewUtil.findById(this, R.id.tab_layout);
-        this.recipient = Recipient.from(this, address, true);
-    }
 
-    private void initializeToolbar() {
-        setSupportActionBar(this.toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(recipient.toShortString());
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        this.recipient.addListener(recipient -> {
-            Util.runOnMain(() -> actionBar.setTitle(recipient.toShortString()));
-        });
-        View clearButton = toolbar.findViewById(R.id.clearMedia);
-        if (!this.recipient.isClosedGroupV2Recipient()) {
-            clearButton.setVisibility(View.GONE);
+        Address address = getIntent().getParcelableExtra(ADDRESS_EXTRA);
+        if (address == null) {
+            Log.w(TAG, "Got null address in initializeResources.");
         } else {
-            String userPublicKey = TextSecurePreferences.getLocalNumber(this);
-            GroupRecord groupRecord = MessagingModuleConfiguration.getShared().getStorage().getGroup(this.recipient.getAddress().toGroupString());
-            if (userPublicKey == null || groupRecord == null) {
-                clearButton.setVisibility(View.GONE);
-            } else {
-                boolean isUserAdmin = groupRecord.getAdmins().contains(Address.fromSerialized(userPublicKey));
-                clearButton.setVisibility(isUserAdmin ? View.VISIBLE : View.GONE);
-                clearButton.setOnClickListener(this);
-            }
+            this.recipient = Recipient.from(this, address, true);
         }
     }
+
+  private void initializeToolbar() {
+    setSupportActionBar(this.toolbar);
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar == null) {
+      Log.w(TAG, "Could not get support actionbar");
+      return;
+    }
+    // Implied else that the actionbar is fine to work with...
+    actionBar.setTitle(recipient.toShortString());
+    actionBar.setDisplayHomeAsUpEnabled(true);
+    actionBar.setHomeButtonEnabled(true);
+    this.recipient.addListener(recipient -> {
+      Util.runOnMain(() -> actionBar.setTitle(recipient.toShortString()));
+    });
+
+      View clearButton = toolbar.findViewById(R.id.clearMedia);
+      if (!this.recipient.isClosedGroupV2Recipient()) {
+          clearButton.setVisibility(View.GONE);
+      } else {
+          String userPublicKey = TextSecurePreferences.getLocalNumber(this);
+          GroupRecord groupRecord = MessagingModuleConfiguration.getShared().getStorage().getGroup(this.recipient.getAddress().toGroupString());
+          if (userPublicKey == null || groupRecord == null) {
+              clearButton.setVisibility(View.GONE);
+          } else {
+              boolean isUserAdmin = groupRecord.getAdmins().contains(Address.fromSerialized(userPublicKey));
+              clearButton.setVisibility(isUserAdmin ? View.VISIBLE : View.GONE);
+              clearButton.setOnClickListener(this);
+          }
+      }
+  }
 
     public void onEnterMultiSelect() {
         tabLayout.setEnabled(false);
@@ -196,13 +218,13 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity i
             return 2;
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if (position == 0) return getString(R.string.MediaOverviewActivity_Media);
-            else if (position == 1) return getString(R.string.MediaOverviewActivity_Documents);
-            else throw new AssertionError();
-        }
+    @Override
+    public CharSequence getPageTitle(int position) {
+      if      (position == 0) return getString(R.string.media);
+      else if (position == 1) return getString(R.string.files);
+      else                    throw new AssertionError();
     }
+  }
 
     public static abstract class MediaOverviewFragment<T> extends Fragment implements LoaderManager.LoaderCallbacks<T> {
 
@@ -346,20 +368,26 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity i
         private void handleSaveMedia(@NonNull Collection<MediaDatabase.MediaRecord> mediaRecords) {
             final Context context = requireContext();
 
-            SaveAttachmentTask.showWarningDialog(context, mediaRecords.size(), () -> {
-                Permissions.with(this)
-                        .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .maxSdkVersion(Build.VERSION_CODES.P)
-                        .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
-                        .onAnyDenied(() -> Toast.makeText(getContext(), R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show())
-                        .onAllGranted(() -> {
-                            new ProgressDialogAsyncTask<Void, Void, List<SaveAttachmentTask.Attachment>>(
-                                    context,
-                                    R.string.MediaOverviewActivity_collecting_attachments,
-                                    R.string.please_wait) {
-                                @Override
-                                protected List<SaveAttachmentTask.Attachment> doInBackground(Void... params) {
-                                    List<SaveAttachmentTask.Attachment> attachments = new LinkedList<>();
+      SaveAttachmentTask.showWarningDialog(context, mediaRecords.size(), () -> {
+        Permissions.with(this)
+                .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .maxSdkVersion(Build.VERSION_CODES.P)
+                .withPermanentDenialDialog(Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                        .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                        .format().toString())
+                .onAnyDenied(() -> Toast.makeText(getContext(),
+                                       Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                                           .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                                           .format().toString(),
+                                       Toast.LENGTH_LONG).show())
+                .onAllGranted(() -> {
+                  new ProgressDialogAsyncTask<Void, Void, List<SaveAttachmentTask.Attachment>>(
+                          context,
+                          R.string.attachmentsCollecting,
+                          R.string.waitOneMoment) {
+                    @Override
+                    protected List<SaveAttachmentTask.Attachment> doInBackground(Void... params) {
+                      List<SaveAttachmentTask.Attachment> attachments = new LinkedList<>();
 
                                     for (MediaDatabase.MediaRecord mediaRecord : mediaRecords) {
                                         if (mediaRecord.getAttachment().getDataUri() != null) {
@@ -402,26 +430,25 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity i
         private void handleDeleteMedia(@NonNull Collection<MediaDatabase.MediaRecord> mediaRecords) {
             int recordCount = mediaRecords.size();
 
-                    DeleteMediaDialog.show(
-            requireContext(),
+            DeleteMediaDialog.show(
+                    requireContext(),
                     recordCount,
-                    () ->
-                new ProgressDialogAsyncTask<MediaDatabase.MediaRecord, Void, Void>(requireContext(),
-                        R.string.MediaOverviewActivity_Media_delete_progress_title,
-                        R.string.MediaOverviewActivity_Media_delete_progress_message) {
-                    @Override
-                    protected Void doInBackground(MediaDatabase.MediaRecord... records) {
-                        if (records == null || records.length == 0) {
+                    () -> new ProgressDialogAsyncTask<MediaDatabase.MediaRecord, Void, Void>(
+                            requireContext(),
+                            R.string.deleting,
+                            R.string.deleting) {
+                        @Override
+                        protected Void doInBackground(MediaDatabase.MediaRecord... records) {
+                            if (records == null || records.length == 0) {
+                                return null;
+                            }
+
+                            for (MediaDatabase.MediaRecord record : records) {
+                                AttachmentUtil.deleteAttachment(getContext(), record.getAttachment());
+                            }
                             return null;
                         }
-
-                        for (MediaDatabase.MediaRecord record : records) {
-                            AttachmentUtil.deleteAttachment(getContext(), record.getAttachment());
-                        }
-                        return null;
-                    }
-
-                }.execute(mediaRecords.toArray(new MediaDatabase.MediaRecord[mediaRecords.size()])));
+                    }.execute(mediaRecords.toArray(new MediaDatabase.MediaRecord[mediaRecords.size()])));
             }
 
         private void handleSelectAllMedia() {

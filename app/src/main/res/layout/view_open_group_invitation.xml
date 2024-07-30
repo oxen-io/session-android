@@ -48,7 +48,7 @@
             android:id="@+id/openGroupJoinMessageTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/open_group_invitation_view__open_group_invitation"
+            android:text="@string/communityInvitation"
             android:textColor="@color/black"
             android:maxLines="1"
             android:ellipsize="end"
