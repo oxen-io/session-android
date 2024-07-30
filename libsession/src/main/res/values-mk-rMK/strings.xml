@@ -97,7 +97,6 @@
     <string name="disappearingMessagesSent">ပို့ပြီးပြီ</string>
     <string name="received">လက်ခံရရှိသည်</string>
     <string name="message_details_header__disappears">ပျောက်သွားမည်</string>
-    <string name="via">တဆင့်</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">အသံကို ၁ နာရီ ပိတ်ထားပါ။</string>

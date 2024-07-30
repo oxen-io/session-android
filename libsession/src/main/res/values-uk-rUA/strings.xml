@@ -113,7 +113,6 @@
     <string name="disappearingMessagesSent">Надіслано</string>
     <string name="received">Одержано</string>
     <string name="message_details_header__disappears">Зникає</string>
-    <string name="via">Через</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Вимкнути звук на 1 годину</string>
@@ -195,7 +194,6 @@
     <string name="useFastMode">Використовувати швидкий режим</string>
     <string name="clearDataAll">Видалити всі дані</string>
     <string name="qrCode">QR-код</string>
-    <string name="contactsContacts">Контакти</string>
     <!-- Next round of translation -->
     <string name="done">Готово</string>
     <string name="groupEdit">Редагувати Групу</string>

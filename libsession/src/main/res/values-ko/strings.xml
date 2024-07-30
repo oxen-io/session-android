@@ -98,7 +98,6 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">보낸 시간:</string>
     <string name="received">받은 시간:</string>
-    <string name="via">유형:</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">1시간 동안 알림 끄기</string>

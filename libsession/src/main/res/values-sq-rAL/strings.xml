@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Dërguar më</string>
     <string name="received">Marrë më</string>
     <string name="message_details_header__disappears">Zhduket më</string>
-    <string name="via">Përmes</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Heshtoje për 1 orë</string>

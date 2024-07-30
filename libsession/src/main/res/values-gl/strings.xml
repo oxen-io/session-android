@@ -111,7 +111,6 @@
     <string name="disappearingMessagesSent">Enviada</string>
     <string name="received">Recibida</string>
     <string name="message_details_header__disappears">Desaparece</string>
-    <string name="via">Vía</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Silenciar durante 1 hora</string>

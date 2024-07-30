@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">发送</string>
     <string name="received">已接收</string>
     <string name="message_details_header__disappears">销毁</string>
-    <string name="via">来自</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">静音 1 小时</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">使用快速模式</string>
     <string name="clearDataAll">清除所有数据</string>
     <string name="qrCode">二维码</string>
-    <string name="contactsContacts">联系人</string>
     <!-- Next round of translation -->
     <string name="done">完成</string>
     <string name="groupEdit">编辑群组</string>

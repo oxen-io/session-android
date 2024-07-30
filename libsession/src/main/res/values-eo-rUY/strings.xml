@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Sendita</string>
     <string name="received">Ricevita</string>
     <string name="message_details_header__disappears">Malaperos je</string>
-    <string name="via">Per</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Silentigi dum 1 horo</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">Uzi Rapidan Reĝimon</string>
     <string name="clearDataAll">Viŝi Tutajn Datumojn</string>
     <string name="qrCode">QR-Kodo</string>
-    <string name="contactsContacts">Kontaktoj</string>
     <!-- Next round of translation -->
     <string name="done">Farite</string>
     <string name="groupEdit">Redakti Grupon</string>

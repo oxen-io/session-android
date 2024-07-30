@@ -126,7 +126,7 @@ class ConversationActionBarView @JvmOverloads constructor(
             settings += ConversationSetting(
                 recipient.mutedUntil.takeUnless { it == Long.MAX_VALUE }
                     ?.let {
-                        val mutedDuration = it.milliseconds
+                        val mutedDuration = (it - System.currentTimeMillis()).milliseconds
                         val durationString = LocalisedTimeUtil.getDurationWithSingleLargestTimeUnit(context, mutedDuration)
                         Phrase.from(context, R.string.notificationsMuteFor)
                             .put(TIME_LARGE_KEY, durationString)

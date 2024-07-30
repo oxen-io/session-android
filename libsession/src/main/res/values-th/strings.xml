@@ -102,7 +102,6 @@
     <string name="disappearingMessagesSent">ส่งแล้ว</string>
     <string name="received">ได้รับแล้ว</string>
     <string name="message_details_header__disappears">ลบตัวเอง</string>
-    <string name="via">ผ่าน</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">ปิดเสียง 1 ชั่วโมง</string>

@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">فرستاده</string>
     <string name="received">رسیده</string>
     <string name="message_details_header__disappears">نشان داده نشده ها</string>
-    <string name="via">از طریق</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">بی صدا به مدت 1 ساعت</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">استفاده از حالت سریع</string>
     <string name="clearDataAll">پاک کردن همه داده‌ها</string>
     <string name="qrCode">کد QR</string>
-    <string name="contactsContacts">مخاطبین</string>
     <!-- Next round of translation -->
     <string name="done">انجام شد</string>
     <string name="groupEdit">ویرایش گروه</string>

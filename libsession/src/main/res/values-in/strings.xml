@@ -109,7 +109,6 @@
     <string name="disappearingMessagesSent">Terkirim</string>
     <string name="received">Diterima</string>
     <string name="message_details_header__disappears">Menghilang</string>
-    <string name="via">Melalui</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Senyapkan selama 1 jam</string>
@@ -167,7 +166,6 @@
     <string name="groupNameEnterPlease">Masukkan nama grup</string>
     <string name="clearDataAll">Hapus semua data</string>
     <string name="qrCode">Kode QR</string>
-    <string name="contactsContacts">Kontak</string>
     <!-- Next round of translation -->
     <string name="done">Selesai</string>
     <string name="groupEdit">Ubah Grup</string>

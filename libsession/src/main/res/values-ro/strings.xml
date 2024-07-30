@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Trimis</string>
     <string name="received">Primit</string>
     <string name="message_details_header__disappears">Dispar</string>
-    <string name="via">Prin</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Fără sunet pentru o oră</string>

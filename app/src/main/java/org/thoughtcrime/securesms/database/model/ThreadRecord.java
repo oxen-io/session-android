@@ -109,7 +109,7 @@ public class ThreadRecord extends DisplayRecord {
         if (expireStarted >= dateSent) {
             return context.getString(R.string.disappearingMessagesSent);
         }
-        return context.getString(R.string.disappearingMessagesRead);
+        return context.getString(R.string.read);
     }
 
     @Override

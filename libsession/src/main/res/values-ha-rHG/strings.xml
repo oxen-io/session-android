@@ -103,7 +103,6 @@
     <string name="disappearingMessagesSent">Hat şandin</string>
     <string name="received">Hat</string>
     <string name="message_details_header__disappears">Winda dibe</string>
-    <string name="via">Bi riya</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Heta 1 demjimêrê bêdeng bike</string>

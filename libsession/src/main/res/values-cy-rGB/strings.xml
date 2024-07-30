@@ -105,7 +105,6 @@
     <string name="disappearingMessagesSent">Anfonwyd</string>
     <string name="received">Derbyniwyd</string>
     <string name="message_details_header__disappears">Yn diflannu</string>
-    <string name="via">Drwy</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Tewi am 1 awr</string>

@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Skickat</string>
     <string name="received">Mottaget</string>
     <string name="message_details_header__disappears">Försvinner</string>
-    <string name="via">Via</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Tysta i 1 timme</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">Använd snabbläge</string>
     <string name="clearDataAll">Rensa All Data</string>
     <string name="qrCode">QR-kod</string>
-    <string name="contactsContacts">Kontakter</string>
     <!-- Next round of translation -->
     <string name="done">Klar</string>
     <string name="groupEdit">Redigera Grupp</string>

@@ -113,7 +113,6 @@
     <string name="disappearingMessagesSent">Elküldve</string>
     <string name="received">Érkezett</string>
     <string name="message_details_header__disappears">Eltűnik</string>
-    <string name="via">Csatorna</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Némítás 1 órára</string>
@@ -195,7 +194,6 @@
     <string name="useFastMode">Használja a Gyors módot</string>
     <string name="clearDataAll">Az összes adat törlése</string>
     <string name="qrCode">QR kód</string>
-    <string name="contactsContacts">Kapcsolatok</string>
     <!-- Next round of translation -->
     <string name="done">Kész</string>
     <string name="groupEdit">Csoport szerkesztése</string>

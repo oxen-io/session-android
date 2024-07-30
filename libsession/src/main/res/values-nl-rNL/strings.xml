@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Verzonden</string>
     <string name="received">Ontvangen</string>
     <string name="message_details_header__disappears">Wist zichzelf over</string>
-    <string name="via">Via</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Demp voor 1 uur</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">Gebruik snelle modus</string>
     <string name="clearDataAll">Wis alle gegevens</string>
     <string name="qrCode">QR-code</string>
-    <string name="contactsContacts">Contacten</string>
     <!-- Next round of translation -->
     <string name="done">Klaar</string>
     <string name="groupEdit">Groep bewerken</string>

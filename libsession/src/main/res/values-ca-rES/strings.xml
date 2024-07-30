@@ -111,7 +111,6 @@
     <string name="disappearingMessagesSent">Enviat</string>
     <string name="received">Rebut</string>
     <string name="message_details_header__disappears">Desapareix</string>
-    <string name="via">Per</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Silencia-ho durant 1 hora</string>
@@ -189,7 +188,6 @@
     <string name="notificationsStrategy">Estratègia de les notificacions</string>
     <string name="clearDataAll">Esborra totes les dades</string>
     <string name="qrCode">Codi QR</string>
-    <string name="contactsContacts">Contactes</string>
     <!-- Next round of translation -->
     <string name="done">Fet</string>
     <string name="groupEdit">Edita el Grup</string>

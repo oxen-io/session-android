@@ -110,7 +110,6 @@
     <string name="disappearingMessagesSent">Послата</string>
     <string name="received">Примљена</string>
     <string name="message_details_header__disappears">Нестаје</string>
-    <string name="via">Преко</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Утишај 1 сат</string>

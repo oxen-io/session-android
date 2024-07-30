@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">送信</string>
     <string name="received">受信</string>
     <string name="message_details_header__disappears">消える</string>
-    <string name="via">経由</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">1時間ミュート</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">高速モードを使用する</string>
     <string name="clearDataAll">すべてのデータを消去する</string>
     <string name="qrCode">QR コード</string>
-    <string name="contactsContacts">連絡先</string>
     <!-- Next round of translation -->
     <string name="done">完了</string>
     <string name="groupEdit">グループを編集</string>

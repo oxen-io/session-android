@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Išsiųsta</string>
     <string name="received">Gauta</string>
     <string name="message_details_header__disappears">Išnyksta</string>
-    <string name="via">Per</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Nutildyti 1 valandai</string>
@@ -189,7 +188,6 @@
     <string name="useFastMode">Naudoti greitą veikseną</string>
     <string name="clearDataAll">Išvalyti visus duomenis</string>
     <string name="qrCode">QR kodas</string>
-    <string name="contactsContacts">Adresatai</string>
     <!-- Next round of translation -->
     <string name="done">Atlikta</string>
     <string name="groupEdit">Taisyti grupę</string>

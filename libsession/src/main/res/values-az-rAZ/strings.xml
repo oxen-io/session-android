@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Göndərildi</string>
     <string name="received">Alındı</string>
     <string name="message_details_header__disappears">Yox olur</string>
-    <string name="via">Vasitəsilə</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">1 saatlıq səssizə al</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">Sürətli rejimi istifadə et</string>
     <string name="clearDataAll">Bütün verilənləri təmizlə</string>
     <string name="qrCode">QR Kod</string>
-    <string name="contactsContacts">Əlaqələr</string>
     <!-- Next round of translation -->
     <string name="done">Bitdi</string>
     <string name="groupEdit">Qrupa düzəliş et</string>

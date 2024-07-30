@@ -108,7 +108,6 @@
     <string name="disappearingMessagesSent">Изпратен</string>
     <string name="received">Получен</string>
     <string name="message_details_header__disappears">Изчезва</string>
-    <string name="via">През</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Тих режим за 1 час</string>

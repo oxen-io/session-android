@@ -99,12 +99,11 @@
     <string name="accountIdErrorInvalid">This Account ID is invalid. Please check and try again.</string>
     <string name="accountIdOrOnsEnter">Enter Account ID or ONS</string>
     <string name="accountIdOrOnsInvite">Invite Account ID or ONS</string>
-    <string name="accountIdShare">Hey, I\'ve been using {app_name} to chat with complete privacy and security. Come join me!\n\nMy Account ID is:\n{account_id}\n\nDownload it at:\n{download_url}</string>
+    <string name="accountIdShare">Hey, I\'ve been using {app_name} to chat with complete privacy and security. Come join me!\n\nMy Account ID is\n{account_id}\n\nDownload it at\n{download_url}</string>
     <string name="accountIdYours">Your Account ID</string>
     <string name="accountIdYoursDescription">This is your Account ID. Other users can scan it to start a conversation with you.</string>
     <string name="actualSize">Actual Size</string>
     <string name="add">Add</string>
-    <string name="adminAddAsAdmin">Add as Admin</string>
     <string name="adminCannotBeRemoved">Admins cannot be removed.</string>
     <string name="adminMorePromotedToAdmin"><b>{name}</b> and <b>{count} others</b> were promoted to Admin.</string>
     <string name="adminPromote">Promote Admins</string>
@@ -158,7 +157,7 @@
     <string name="attachmentsErrorNotSupported">This file type is not supported.</string>
     <string name="attachmentsErrorNumber">Unable to send more than 32 image and video files at once.</string>
     <string name="attachmentsErrorOpen">Unable to open file.</string>
-    <string name="attachmentsErrorSending">Error sending file.</string>
+    <string name="attachmentsErrorSending">Error sending file</string>
     <string name="attachmentsErrorSeparate">Please send files as separate messages.</string>
     <string name="attachmentsErrorSize">Files must be less than 10MB</string>
     <string name="attachmentsErrorTypes">Cannot attach images and video with other file types. Try sending other files in a separate message.</string>
@@ -185,7 +184,7 @@
     <string name="authenticateFailed">Authentication Failed</string>
     <string name="authenticateFailedTooManyAttempts">Too many failed authentication attempts. Please try again later.</string>
     <string name="authenticateNotAccessed">Authentication could not be accessed.</string>
-    <string name="authenticateToOpen">Authenticate to open Session.</string>
+    <string name="authenticateToOpen">Authenticate to open {app_name}.</string>
     <string name="banDeleteAll">Ban and Delete All</string>
     <string name="banErrorFailed">Ban failed</string>
     <string name="banUnbanErrorFailed">Unban failed</string>
@@ -277,14 +276,12 @@
     <string name="contactDeleteDescription">Are you sure you want to delete <b>{name}</b> from your contacts? New messages from <b>{name}</b> will arrive as a message request.</string>
     <string name="contactNone">You don\'t have any contacts yet</string>
     <string name="contactSelect">Select Contacts</string>
-    <string name="contactShowUserDetails">Show User Details</string>
     <string name="contactUserDetails">User Details</string>
-    <string name="contactsContacts">Contacts</string>
     <string name="contentDescriptionCamera">Camera</string>
     <string name="conversationsAddToHome">Add to home screen</string>
     <string name="conversationsAddedToHome">Added to home screen</string>
     <string name="conversationsAudioMessages">Audio Messages</string>
-    <string name="conversationsAutoplayAudioMessage">Autoplay Audio Message</string>
+    <string name="conversationsAutoplayAudioMessage">Autoplay Audio Messages</string>
     <string name="conversationsAutoplayAudioMessageDescription">Autoplay consecutively sent audio messages</string>
     <string name="conversationsBlockedContacts">Blocked Contacts</string>
     <string name="conversationsCommunities">Communities</string>
@@ -320,7 +317,7 @@
     <string name="deleteMessage">Delete Message</string>
     <string name="deleteMessageConfirm">Are you sure you want to delete this message?</string>
     <string name="deleteMessageDeleted">Message deleted</string>
-    <string name="deleteMessageDescriptionDevice">Are you sure you want to delete this message from your device?</string>
+    <string name="deleteMessageDescriptionDevice">Are you sure you want to delete these messages from this device only?</string>
     <string name="deleteMessageDescriptionEveryone">Are you sure you want to delete this message for everyone?</string>
     <string name="deleteMessageDeviceOnly">Delete on this device only</string>
     <string name="deleteMessageEveryone">Delete for everyone</string>
@@ -349,7 +346,6 @@
     <string name="disappearingMessagesLegacy">{name} is using an outdated client. Disappearing messages may not work as expected.</string>
     <string name="disappearingMessagesNewGroup">You created a new group.</string>
     <string name="disappearingMessagesOnlyAdmins">Only group admins can change this setting.</string>
-    <string name="disappearingMessagesRead">Read</string>
     <string name="disappearingMessagesSent">Sent</string>
     <string name="disappearingMessagesSet"><b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="disappearingMessagesSetYou"><b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
@@ -387,16 +383,12 @@
     <string name="emojiCategorySymbols">Symbols</string>
     <string name="emojiCategoryTravel">Travel &amp; Places</string>
     <string name="emojiReactsCoolDown">Slow down! You\'ve sent too many emoji reacts. Try again soon</string>
-    <string name="emojiReactsHoverTwoNameMultiple">{name}, {other_name} and {count} others reacted with {emoji}</string>
-    <string name="emojiReactsHoverTwoNameOne">{name}, {other_name} and 1 other reacted with {emoji}</string>
     <string name="emojiReactsNotification">Reacted to your message {emoji}</string>
     <string name="enable">Enable</string>
-    <string name="error">Error</string>
     <string name="errorConnection">Please check your internet connection and try again.</string>
     <string name="errorCopyAndQuit">Copy Error and Quit</string>
     <string name="errorDatabase">Database Error</string>
     <string name="errorUnknown">An unknown error occurred.</string>
-    <string name="expand">Expand</string>
     <string name="failures">Failures</string>
     <string name="file">File</string>
     <string name="files">Files</string>
@@ -502,7 +494,6 @@
     <string name="loadAccountProgressMessage">Loading your account</string>
     <string name="lockApp">Lock App</string>
     <string name="lockAppDescriptionAndroid">Require fingerprint, PIN, pattern or password to unlock {app_name}.</string>
-    <string name="lockAppDescriptionIos">Require Touch ID, Face ID or your passcode to unlock Session.</string>
     <string name="lockAppEnablePasscode">You must enable a passcode in your iOS Settings in order to use Screen Lock.</string>
     <string name="lockAppLocked">{app_name} is locked</string>
     <string name="lockAppQuickResponse">Quick response unavailable when {app_name} is locked!</string>
@@ -546,7 +537,7 @@
     <string name="messageRequestsAccepted">Your message request has been accepted.</string>
     <string name="messageRequestsClearAllExplanation">Are you sure you want to clear all message and group invites?</string>
     <string name="messageRequestsCommunities">Community Message Requests</string>
-    <string name="messageRequestsCommunitiesDescription">Allow message requests from Community conversations</string>
+    <string name="messageRequestsCommunitiesDescription">Allow message requests from Community conversations.</string>
     <string name="messageRequestsDelete">Are you sure you want to delete this message request?</string>
     <string name="messageRequestsNew">You have a new message request</string>
     <string name="messageRequestsNonePending">No pending message requests</string>
@@ -557,7 +548,7 @@
     <string name="messageStatusSyncing">Syncing</string>
     <string name="messageUnread">Unread messages</string>
     <string name="messageVoice">Voice Message</string>
-    <string name="messageVoiceErrorShort">Hold to record a voice message.</string>
+    <string name="messageVoiceErrorShort">Hold to record a voice message</string>
     <string name="messageVoiceSlideToCancel">Slide to Cancel</string>
     <string name="messages">Messages</string>
     <string name="minimize">Minimize</string>
@@ -720,7 +711,6 @@
     <string name="searchContacts">Search Contacts</string>
     <string name="searchConversation">Search Conversation</string>
     <string name="searchEnter">Please enter your search.</string>
-    <string name="searchMatches">{count} of {total_count} matches</string>
     <string name="searchMatchesNone">No results found.</string>
     <string name="searchMatchesNoneSpecific">No results found for {query}</string>
     <string name="searchMembers">Search Members</string>
@@ -764,7 +754,7 @@
     <string name="updateDownloaded">Updated installed, click to restart</string>
     <string name="updateError">Cannot Update</string>
     <string name="updateNewVersion">A new version of {app_name} is available, tap to update</string>
-    <string name="updateNewVersionDescription">There is a new version of {app_name} available. Would you like to download the update?</string>
+    <string name="updateNewVersionDescription">There is a new version of {app_name} available.</string>
     <string name="updateReleaseNotes">Go to Release Notes</string>
     <string name="updateSession">{app_name} Update</string>
     <string name="updateVersion">Version {version}</string>
@@ -773,7 +763,6 @@
     <string name="urlOpenBrowser">This will open in your browser.</string>
     <string name="urlOpenDescription">Are you sure you want to open this URL in your browser?\n\n{url}</string>
     <string name="useFastMode">Use Fast Mode</string>
-    <string name="via">Via</string>
     <string name="video">Video</string>
     <string name="videoErrorPlay">Unable to play video.</string>
     <string name="view">View</string>

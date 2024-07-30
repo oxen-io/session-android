@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Enviada</string>
     <string name="received">Recebida</string>
     <string name="message_details_header__disappears">Desaparece</string>
-    <string name="via">Via</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Mutar por 1 hora</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">Usar Modo Rápido</string>
     <string name="clearDataAll">Limpar Todos os Dados</string>
     <string name="qrCode">Código QR</string>
-    <string name="contactsContacts">Contatos</string>
     <!-- Next round of translation -->
     <string name="done">Concluído</string>
     <string name="groupEdit">Editar Grupo</string>

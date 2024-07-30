@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Gönderildi</string>
     <string name="received">Alındı</string>
     <string name="message_details_header__disappears">Kaybolacak</string>
-    <string name="via">Vasıtasıyla</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">1 saatliğine sustur</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">Hızlı Modu Kullan</string>
     <string name="clearDataAll">Tüm Verileri Temizle</string>
     <string name="qrCode">QR kod</string>
-    <string name="contactsContacts">Kişiler</string>
     <!-- Next round of translation -->
     <string name="done">Tamamlandı</string>
     <string name="groupEdit">Grubu Düzenle</string>

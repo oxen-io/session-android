@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Отправлено</string>
     <string name="received">Получено</string>
     <string name="message_details_header__disappears">Исчезнет</string>
-    <string name="via">Через</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Отключить звук на 1 час</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">Использовать быстрый режим</string>
     <string name="clearDataAll">Очистить все данные</string>
     <string name="qrCode">QR-код</string>
-    <string name="contactsContacts">Контакты</string>
     <!-- Next round of translation -->
     <string name="done">Готово</string>
     <string name="groupEdit">Редактировать группу</string>

@@ -110,7 +110,6 @@
     <string name="disappearingMessagesSent">נשלח</string>
     <string name="received">התקבל</string>
     <string name="message_details_header__disappears">נעלם</string>
-    <string name="via">דרך</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">השתק למשך שעה</string>

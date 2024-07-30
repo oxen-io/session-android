@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent"> भेजा गया </string>
     <string name="received"> मिल गया </string>
     <string name="message_details_header__disappears">गायब हो जाता है</string>
-    <string name="via">राह </string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">1 घंटे के लिए म्यूट करें</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">तीव्र मोड इस्तेमाल करे</string>
     <string name="clearDataAll">सभी डेटा हटाएं</string>
     <string name="qrCode">QR कोड</string>
-    <string name="contactsContacts">संपर्क</string>
     <!-- Next round of translation -->
     <string name="done">पूरा हुआ</string>
     <string name="groupEdit">ग्रुप बदलें</string>

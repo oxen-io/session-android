@@ -106,7 +106,6 @@
     <string name="disappearingMessagesSent">Saadetud</string>
     <string name="received">Vastuvõetud</string>
     <string name="message_details_header__disappears">Haihtub</string>
-    <string name="via">Saatmisviis:</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Vaigista 1 tunniks</string>

@@ -113,7 +113,6 @@
     <string name="disappearingMessagesSent">Enviada a</string>
     <string name="received">Recebida a</string>
     <string name="message_details_header__disappears">Desaparece</string>
-    <string name="via">Através de</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Silenciar por 1 hora</string>
@@ -192,6 +191,5 @@
     <string name="notificationsStrategy">Estratégia de notificação</string>
     <string name="clearDataAll">Limpar todos os dados</string>
     <string name="qrCode">Código QR</string>
-    <string name="contactsContacts">Contatos</string>
     <!-- Next round of translation -->
 </resources>

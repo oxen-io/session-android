@@ -112,7 +112,6 @@
     <string name="disappearingMessagesSent">Στάλθηκε στις</string>
     <string name="received">Ελήφθη στις</string>
     <string name="message_details_header__disappears">Εξαφανίζεται</string>
-    <string name="via">Μέσω</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Σίγαση για 1 ώρα</string>
@@ -194,7 +193,6 @@
     <string name="useFastMode">Χρήση Ταχείας Λειτουργίας</string>
     <string name="clearDataAll">Εκκαθάριση όλων των δεδομένων</string>
     <string name="qrCode">QR κωδικός</string>
-    <string name="contactsContacts">Επαφές</string>
     <!-- Next round of translation -->
     <string name="done">Τέλος</string>
     <string name="groupEdit">Επεξεργασία Ομάδας</string>

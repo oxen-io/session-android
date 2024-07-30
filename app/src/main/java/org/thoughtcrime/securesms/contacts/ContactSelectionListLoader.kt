@@ -45,7 +45,7 @@ class ContactSelectionListLoader(context: Context, val mode: Int, val filter: St
     }
 
     private fun getContacts(contacts: List<Recipient>): List<ContactSelectionListItem> {
-        return getItems(contacts, context.getString(R.string.contactsContacts)) {
+        return getItems(contacts, context.getString(R.string.contactContacts)) {
             !it.isGroupRecipient
         }
     }

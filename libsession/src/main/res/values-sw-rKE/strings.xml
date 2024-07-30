@@ -106,7 +106,6 @@
     <string name="disappearingMessagesSent">Imetumwa</string>
     <string name="received">Imepokelewa</string>
     <string name="message_details_header__disappears">kutoweka</string>
-    <string name="via">Kupitia</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">nyamaza kwa saa 1</string>
