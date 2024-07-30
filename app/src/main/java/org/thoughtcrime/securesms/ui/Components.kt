@@ -481,6 +481,7 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     placeholder: String? = null,
     enabled: Boolean = true,
+    backgroundColor: Color = LocalColors.current.background
 ) {
     BasicTextField(
         singleLine = true,
@@ -492,7 +493,7 @@ fun SearchBar(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(LocalColors.current.background, RoundedCornerShape(100))
+                    .background(backgroundColor, RoundedCornerShape(100))
             ) {
                 Image(
                     painterResource(id = R.drawable.ic_search_24),

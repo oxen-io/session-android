@@ -1556,6 +1556,9 @@ open class Storage(
             membersConfig.set(member)
         }
 
+        // Persist the config changes now, so we can show the invite status immediately
+        configFactory.persistGroupConfigDump(membersConfig, AccountId, SnodeAPI.nowWithOffset)
+
         // re-key for new members
         val keysConfig = configFactory.getGroupKeysConfig(
             AccountId,
@@ -1567,11 +1570,16 @@ open class Storage(
         keysConfig.rekey(infoConfig, membersConfig)
 
         // build unrevocation, in case of re-adding members
-        val unrevocation = SnodeAPI.buildAuthenticatedUnrevokeSubKeyBatchRequest(
-            groupSessionId,
-            adminKey,
-            filteredMembers.map { keysConfig.getSubAccountToken(AccountId(it)) }.toTypedArray()
-        ) ?: return Log.e("ClosedGroup", "Failed to build revocation update")
+        val membersToUnrevoke = filteredMembers.map { keysConfig.getSubAccountToken(AccountId(it)) }
+        val unrevocation = if (membersToUnrevoke.isNotEmpty()) {
+            SnodeAPI.buildAuthenticatedUnrevokeSubKeyBatchRequest(
+                groupSessionId,
+                adminKey,
+                membersToUnrevoke.toTypedArray()
+            ) ?: return Log.e("ClosedGroup", "Failed to build revocation update")
+        } else {
+            null
+        }
 
         // Build and store the key update in group swarm
         val toDelete = mutableListOf<String>()
@@ -1588,13 +1596,23 @@ open class Storage(
             signCallback
         )
 
-        val stores = listOf(keyMessage, infoMessage, membersMessage).map(ConfigurationSyncJob.ConfigMessageInformation::batch)
+        val requests = buildList {
+            add(keyMessage.batch)
+            add(infoMessage.batch)
+            add(membersMessage.batch)
+
+            if (unrevocation != null) {
+                add(unrevocation)
+            }
+
+            add(delete)
+        }
 
         val response = SnodeAPI.getSingleTargetSnode(groupSessionId).bind { snode ->
             SnodeAPI.getRawBatchResponse(
                 snode,
                 groupSessionId,
-                stores + unrevocation + delete,
+                requests,
                 sequence = true
             )
         }
@@ -1774,9 +1792,6 @@ open class Storage(
             members.erase(AccountId)
         }
 
-        // Re-key for removed members
-        keys.rekey(info, members)
-
         val revocation = SnodeAPI.buildAuthenticatedRevokeSubKeyBatchRequest(
             groupSessionId,
             adminKey,
@@ -1784,6 +1799,8 @@ open class Storage(
         ) ?: return Log.e("ClosedGroup", "Failed to build revocation update")
 
         keys.rekey(info, members)
+
+        configFactory.saveGroupConfigs(keys, info, members)
 
         val toDelete = mutableListOf<String>()
 

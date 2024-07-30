@@ -31,7 +31,7 @@ import org.thoughtcrime.securesms.home.search.getSearchName
 class SelectContactsViewModel @AssistedInject constructor(
     private val storage: StorageProtocol,
     private val configFactory: ConfigFactory,
-    @Assisted private val onlySelectedFromAccountIDs: Set<String>?,
+    @Assisted private val excludingAccountIDs: Set<String>,
     @Assisted private val scope: CoroutineScope
 ) : ViewModel() {
     // Input: The search query
@@ -69,14 +69,14 @@ class SelectContactsViewModel @AssistedInject constructor(
         .debounce(100L)
         .onStart { emit(Unit) }
         .map {
-            val allContacts = withContext(Dispatchers.Default) {
-                storage.getAllContacts()
-            }
+            withContext(Dispatchers.Default) {
+                val allContacts = storage.getAllContacts()
 
-            if (onlySelectedFromAccountIDs == null) {
-                allContacts
-            } else {
-                allContacts.filter { it.accountID in onlySelectedFromAccountIDs }
+                if (excludingAccountIDs.isEmpty()) {
+                    allContacts
+                } else {
+                    allContacts.filterNot { it.accountID in excludingAccountIDs }
+                }
             }
         }
 
@@ -117,7 +117,7 @@ class SelectContactsViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
-            onlySelectedFromAccountIDs: Set<String>?,
+            excludingAccountIDs: Set<String> = emptySet(),
             scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate),
         ): SelectContactsViewModel
     }

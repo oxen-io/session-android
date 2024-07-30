@@ -39,22 +39,16 @@ import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 
 @Serializable
-data class RouteSelectContacts(
-    /**
-     * If set, only select contacts from these account IDs.
-     * If null, select from all contacts.
-     */
-    val onlySelectFromAccountIDs: List<String>? = null
-)
+object RouteSelectContacts
 
 @Composable
 fun SelectContactsScreen(
-    onlySelectFromAccountIDs: Set<String>?,
+    excludingAccountIDs: Set<String> = emptySet(),
     onDoneClicked: (selectedContacts: Set<Contact>) -> Unit,
     onBackClicked: () -> Unit,
 ) {
     val viewModel = hiltViewModel<SelectContactsViewModel, SelectContactsViewModel.Factory> { factory ->
-        factory.create(onlySelectFromAccountIDs)
+        factory.create(excludingAccountIDs)
     }
 
     SelectContacts(
@@ -95,6 +89,7 @@ fun SelectContacts(
             onValueChanged = onSearchQueryChanged,
             placeholder = stringResource(R.string.search_contacts_hint),
             modifier = Modifier.padding(horizontal = 16.dp),
+            backgroundColor = LocalColors.current.backgroundSecondary,
         )
 
         LazyColumn(modifier = Modifier.weight(1f)) {

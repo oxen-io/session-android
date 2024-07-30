@@ -24,7 +24,7 @@ class CreateGroupViewModel @Inject constructor(
     val selectContactsViewModel = SelectContactsViewModel(
         storage = storage,
         configFactory = configFactory,
-        onlySelectedFromAccountIDs = null,
+        excludingAccountIDs = emptySet(),
         scope = viewModelScope,
     )
 

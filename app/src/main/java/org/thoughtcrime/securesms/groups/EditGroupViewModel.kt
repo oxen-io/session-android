@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -37,42 +36,40 @@ class EditGroupViewModel @AssistedInject constructor(
     // Input/Output state
     private val mutableEditingName = MutableStateFlow<String?>(null)
 
-    // Input: pending member removing
-    private val removingMemberAccountIDs = MutableStateFlow(emptySet<String>())
-
     // Output: The name of the group being edited. Null if it's not in edit mode, not to be confused
     // with empty string, where it's a valid editing state.
     val editingName: StateFlow<String?> get() = mutableEditingName
 
     // Output: the source-of-truth group information. Other states are derived from this.
     private val groupInfo: StateFlow<Pair<GroupDisplayInfo, List<GroupMemberState>>?> =
-        combine(
-            removingMemberAccountIDs,
-            configFactory.configUpdateNotifications
-                .filter { it.hexString == groupSessionId }
-                .onStart { emit(AccountId(groupSessionId)) }
-        ) { removingAccountIDs, _ ->
-            withContext(Dispatchers.Default) {
-                val currentUserId = checkNotNull(storage.getUserPublicKey()) {
-                    "User public key is null"
+        configFactory.configUpdateNotifications
+            .filter { it.hexString == groupSessionId }
+            .onStart { emit(AccountId(groupSessionId)) }
+            .map { _ ->
+                withContext(Dispatchers.Default) {
+                    val currentUserId = checkNotNull(storage.getUserPublicKey()) {
+                        "User public key is null"
+                    }
+
+                    val displayInfo = storage.getClosedGroupDisplayInfo(groupSessionId)
+                        ?: return@withContext null
+
+                    val members = storage.getMembers(groupSessionId)
+                        .asSequence()
+                        .filter { !it.removed }
+                        .mapTo(mutableListOf()) { member ->
+                            createGroupMember(
+                                member = member,
+                                myAccountId = currentUserId,
+                                amIAdmin = displayInfo.isUserAdmin,
+                            )
+                        }
+
+                    sortMembers(members, currentUserId)
+
+                    displayInfo to members
                 }
-
-                val displayInfo = storage.getClosedGroupDisplayInfo(groupSessionId)
-                    ?: return@withContext null
-
-
-                val members = storage.getMembers(groupSessionId).map { member ->
-                    createGroupMember(
-                        member = member,
-                        myAccountId = currentUserId,
-                        amIAdmin = displayInfo.isUserAdmin,
-                        isBeingRemoved = member.sessionId in removingAccountIDs
-                    )
-                }
-
-                displayInfo to members
-            }
-        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+            }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     // Output: whether the group name can be edited. This is true if the group is loaded successfully.
     val canEditGroupName: StateFlow<Boolean> = groupInfo
@@ -94,11 +91,14 @@ class EditGroupViewModel @AssistedInject constructor(
         .map { it?.first?.isUserAdmin == true }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
+    // Output:
+    val excludingAccountIDsFromContactSelection: Set<String>
+        get() = groupInfo.value?.second?.mapTo(hashSetOf()) { it.accountId }.orEmpty()
+
     private fun createGroupMember(
         member: GroupMember,
         myAccountId: String,
         amIAdmin: Boolean,
-        isBeingRemoved: Boolean
     ): GroupMemberState {
         var status = ""
         var highlightStatus = false
@@ -109,8 +109,12 @@ class EditGroupViewModel @AssistedInject constructor(
                 name = "You"
             }
 
-            isBeingRemoved -> {
-                status = "Removing..."
+            member.promotionPending -> {
+                status = "Promotion sent"
+            }
+
+            member.invitePending -> {
+                status = "Invite Sent"
             }
 
             member.inviteFailed -> {
@@ -118,29 +122,37 @@ class EditGroupViewModel @AssistedInject constructor(
                 highlightStatus = true
             }
 
-            member.invitePending -> {
-                status = "Inviting"
-            }
-
             member.promotionFailed -> {
                 status = "Promotion Failed"
                 highlightStatus = true
-            }
-
-            member.promotionPending -> {
-                status = "Promoting"
             }
         }
 
         return GroupMemberState(
             accountId = member.sessionId,
             name = name,
-            showEdit = member.sessionId != myAccountId && amIAdmin && !isBeingRemoved,
+            canRemove = amIAdmin && member.sessionId != myAccountId && !member.isAdminOrBeingPromoted,
+            canPromote = amIAdmin && member.sessionId != myAccountId && !member.isAdminOrBeingPromoted,
+            canResendPromotion = amIAdmin && member.sessionId != myAccountId && member.promotionFailed,
+            canResendInvite = amIAdmin && member.sessionId != myAccountId && member.inviteFailed,
             status = status,
             highlightStatus = highlightStatus
         )
     }
 
+    private fun sortMembers(members: MutableList<GroupMemberState>, currentUserId: String) {
+        // Order or members:
+        // 1. Current user always comes first
+        // 2. Then sort by name
+        // 3. Then sort by account ID
+        members.sortWith(
+            compareBy(
+                { it.accountId != currentUserId },
+                { it.name },
+                { it.accountId }
+            )
+        )
+    }
 
     fun onContactSelected(contacts: Set<Contact>) {
         viewModelScope.launch(Dispatchers.Default) {
@@ -148,24 +160,26 @@ class EditGroupViewModel @AssistedInject constructor(
         }
     }
 
-    fun onReInviteContact(contactSessionId: String) {
-        JobQueue.shared.add(InviteContactsJob(groupSessionId, arrayOf(contactSessionId)))
+    fun onResendInviteClicked(contactSessionId: String) {
+        viewModelScope.launch(Dispatchers.Default) {
+            JobQueue.shared.add(InviteContactsJob(groupSessionId, arrayOf(contactSessionId)))
+        }
     }
 
-    fun onPromoteContact(contactSessionId: String) {
+    fun onPromoteContact(memberSessionId: String) {
         viewModelScope.launch(Dispatchers.Default) {
-            storage.promoteMember(groupSessionId, arrayOf(contactSessionId))
+            storage.promoteMember(groupSessionId, arrayOf(memberSessionId))
         }
     }
 
     fun onRemoveContact(contactSessionId: String) {
-        viewModelScope.launch {
-            removingMemberAccountIDs.value += contactSessionId
-            withContext(Dispatchers.Default) {
-                storage.removeMember(groupSessionId, arrayOf(contactSessionId))
-            }
-            removingMemberAccountIDs.value -= contactSessionId
+        viewModelScope.launch(Dispatchers.Default) {
+            storage.removeMember(groupSessionId, arrayOf(contactSessionId))
         }
+    }
+
+    fun onResendPromotionClicked(memberSessionId: String) {
+        onPromoteContact(memberSessionId)
     }
 
     fun onEditNameClicked() {
@@ -204,5 +218,10 @@ data class GroupMemberState(
     val name: String,
     val status: String,
     val highlightStatus: Boolean,
-    val showEdit: Boolean,
-)
+    val canResendInvite: Boolean,
+    val canResendPromotion: Boolean,
+    val canRemove: Boolean,
+    val canPromote: Boolean,
+) {
+    val canEdit: Boolean get() = canRemove || canPromote || canResendInvite || canResendPromotion
+}

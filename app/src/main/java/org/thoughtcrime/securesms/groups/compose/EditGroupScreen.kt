@@ -23,10 +23,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -38,13 +36,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.squareup.phrase.Phrase
 import kotlinx.serialization.Serializable
 import network.loki.messenger.R
@@ -74,13 +69,11 @@ fun EditGroupScreen(
     NavHost(navController = navController, startDestination = RouteEditGroup) {
         composable<RouteEditGroup> {
             EditGroup(
-                onBack = onFinish,
-                onInvite = {
-                    navController.navigate(RouteSelectContacts())
-                },
-                onReinvite = viewModel::onReInviteContact,
-                onPromote = viewModel::onPromoteContact,
-                onRemove = viewModel::onRemoveContact,
+                onBackClick = onFinish,
+                onAddMemberClick = { navController.navigate(RouteSelectContacts) },
+                onResendInviteClick = viewModel::onResendInviteClicked,
+                onPromoteClick = viewModel::onPromoteContact,
+                onRemoveClick = viewModel::onRemoveContact,
                 onEditNameClicked = viewModel::onEditNameClicked,
                 onEditNameCancelClicked = viewModel::onCancelEditingNameClicked,
                 onEditNameConfirmed = viewModel::onEditNameConfirmClicked,
@@ -90,15 +83,17 @@ fun EditGroupScreen(
                 groupName = viewModel.groupName.collectAsState().value,
                 showAddMembers = viewModel.showAddMembers.collectAsState().value,
                 canEditName = viewModel.canEditGroupName.collectAsState().value,
+                onResendPromotionClick = viewModel::onResendPromotionClicked,
             )
         }
 
-        composable<RouteSelectContacts> { entry ->
-            val route: RouteSelectContacts = entry.toRoute()
-
+        composable<RouteSelectContacts> {
             SelectContactsScreen(
-                onlySelectFromAccountIDs = route.onlySelectFromAccountIDs?.toSet(),
-                onDoneClicked = viewModel::onContactSelected,
+                excludingAccountIDs = viewModel.excludingAccountIDsFromContactSelection,
+                onDoneClicked = {
+                    viewModel.onContactSelected(it)
+                    navController.popBackStack()
+                },
                 onBackClicked = { navController.popBackStack() },
             )
         }
@@ -112,11 +107,12 @@ private object RouteEditGroup
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditGroup(
-    onBack: () -> Unit,
-    onInvite: () -> Unit,
-    onReinvite: (accountId: String) -> Unit,
-    onPromote: (accountId: String) -> Unit,
-    onRemove: (accountId: String) -> Unit,
+    onBackClick: () -> Unit,
+    onAddMemberClick: () -> Unit,
+    onResendInviteClick: (accountId: String) -> Unit,
+    onResendPromotionClick: (accountId: String) -> Unit,
+    onPromoteClick: (accountId: String) -> Unit,
+    onRemoveClick: (accountId: String) -> Unit,
     onEditingNameValueChanged: (String) -> Unit,
     editingName: String?,
     onEditNameClicked: () -> Unit,
@@ -141,9 +137,9 @@ fun EditGroup(
         topBar = {
             NavigationBar(
                 title = stringResource(id = R.string.activity_edit_closed_group_title),
-                onBack = onBack,
+                onBack = onBackClick,
                 actionElement = {
-                    TextButton(onClick = onBack) {
+                    TextButton(onClick = onBackClick) {
                         Text(
                             text = stringResource(id = R.string.menu_done_button),
                             color = LocalColors.current.text,
@@ -228,7 +224,7 @@ fun EditGroup(
                 if (showAddMembers) {
                     PrimaryOutlineButton(
                         stringResource(R.string.activity_edit_closed_group_add_members),
-                        onClick = onInvite
+                        onClick = onAddMemberClick
                     )
                 }
             }
@@ -250,13 +246,25 @@ fun EditGroup(
 
     if (showingBottomModelForMember != null) {
         MemberModalBottomSheetOptions(
-            member = showingBottomModelForMember,
             onDismissRequest = { setShowingBottomModelForMember(null) },
             sheetState = sheetState,
             onRemove = {
                 setShowingConfirmRemovingMember(showingBottomModelForMember)
                 setShowingBottomModelForMember(null)
             },
+            onPromote = {
+                setShowingBottomModelForMember(null)
+                onPromoteClick(showingBottomModelForMember.accountId)
+            },
+            onResendInvite = {
+                setShowingBottomModelForMember(null)
+                onResendInviteClick(showingBottomModelForMember.accountId)
+            },
+            onResendPromotion = {
+                setShowingBottomModelForMember(null)
+                onResendPromotionClick(showingBottomModelForMember.accountId)
+            },
+            member = showingBottomModelForMember,
         )
     }
 
@@ -265,7 +273,7 @@ fun EditGroup(
             onDismissRequest = {
                 setShowingConfirmRemovingMember(null)
             },
-            onConfirmed = onRemove,
+            onConfirmed = onRemoveClick,
             member = showingConfirmRemovingMember,
             groupName = groupName,
         )
@@ -307,6 +315,9 @@ private fun ConfirmRemovingMemberDialog(
 private fun MemberModalBottomSheetOptions(
     member: GroupMemberState,
     onRemove: () -> Unit,
+    onPromote: () -> Unit,
+    onResendInvite: () -> Unit,
+    onResendPromotion: () -> Unit,
     onDismissRequest: () -> Unit,
     sheetState: SheetState,
 ) {
@@ -314,10 +325,24 @@ private fun MemberModalBottomSheetOptions(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
     ) {
-        MemberModalBottomSheetOptionItem(
-            onClick = onRemove,
-            text = stringResource(R.string.fragment_edit_group_bottom_sheet_remove)
-        )
+        if (member.canRemove) {
+            MemberModalBottomSheetOptionItem(
+                onClick = onRemove,
+                text = stringResource(R.string.fragment_edit_group_bottom_sheet_remove)
+            )
+        }
+
+        if (member.canPromote) {
+            MemberModalBottomSheetOptionItem(onClick = onPromote, text = "Promote to admin")
+        }
+
+        if (member.canResendInvite) {
+            MemberModalBottomSheetOptionItem(onClick = onResendInvite, text = "Resend invite")
+        }
+
+        if (member.canResendPromotion) {
+            MemberModalBottomSheetOptionItem(onClick = onResendPromotion, text = "Resend promotion")
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
     }
@@ -376,7 +401,7 @@ private fun MemberItem(
             }
         }
 
-        if (member.showEdit) {
+        if (member.canEdit) {
             IconButton(onClick = { onClick(member.accountId) }) {
                 Icon(
                     painter = painterResource(R.drawable.ic_circle_dot_dot_dot),
@@ -397,31 +422,40 @@ private fun EditGroupPreview() {
             name = "Test User",
             status = "Invited",
             highlightStatus = false,
-            showEdit = true
+            canPromote = true,
+            canRemove = true,
+            canResendInvite = false,
+            canResendPromotion = false,
         )
         val twoMember = GroupMemberState(
             accountId = "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1235",
             name = "Test User 2",
             status = "Promote failed",
             highlightStatus = true,
-            showEdit = true
+            canPromote = true,
+            canRemove = true,
+            canResendInvite = false,
+            canResendPromotion = false,
         )
         val threeMember = GroupMemberState(
             accountId = "05abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1236",
             name = "Test User 3",
             status = "",
             highlightStatus = false,
-            showEdit = true
+            canPromote = true,
+            canRemove = true,
+            canResendInvite = false,
+            canResendPromotion = false,
         )
 
         val (editingName, setEditingName) = remember { mutableStateOf<String?>(null) }
 
         EditGroup(
-            onBack = {},
-            onInvite = {},
-            onReinvite = {},
-            onPromote = {},
-            onRemove = {},
+            onBackClick = {},
+            onAddMemberClick = {},
+            onResendInviteClick = {},
+            onPromoteClick = {},
+            onRemoveClick = {},
             onEditNameCancelClicked = {
                 setEditingName(null)
             },
@@ -437,6 +471,7 @@ private fun EditGroupPreview() {
             canEditName = true,
             groupName = "Test",
             showAddMembers = true,
+            onResendPromotionClick = {},
         )
     }
 }

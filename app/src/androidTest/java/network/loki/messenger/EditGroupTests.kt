@@ -72,11 +72,11 @@ class EditGroupTests {
             setContent {
                 PreviewTheme {
                     EditGroup(
-                        onBack = {},
-                        onInvite = {},
-                        onReinvite = {},
-                        onPromote = {},
-                        onRemove = {},
+                        onBackClick = {},
+                        onAddMemberClick = {},
+                        onResendInviteClick = {},
+                        onPromoteClick = {},
+                        onRemoveClick = {},
                         onEditName = {},
                         onMemberSelected = {},
                         viewState = state
@@ -113,11 +113,11 @@ class EditGroupTests {
             setContent {
                 PreviewTheme {
                     EditGroup(
-                        onBack = {},
-                        onInvite = {},
-                        onReinvite = { reinvited = true },
-                        onPromote = {},
-                        onRemove = {},
+                        onBackClick = {},
+                        onAddMemberClick = {},
+                        onResendInviteClick = { reinvited = true },
+                        onPromoteClick = {},
+                        onRemoveClick = {},
                         onEditName = {},
                         onMemberSelected = {},
                         viewState = state
@@ -155,11 +155,11 @@ class EditGroupTests {
             setContent {
                 PreviewTheme {
                     EditGroup(
-                        onBack = {},
-                        onInvite = {},
-                        onReinvite = {},
-                        onPromote = { promoted = true },
-                        onRemove = {},
+                        onBackClick = {},
+                        onAddMemberClick = {},
+                        onResendInviteClick = {},
+                        onPromoteClick = { promoted = true },
+                        onRemoveClick = {},
                         onEditName = {},
                         onMemberSelected = {},
                         viewState = state
@@ -195,11 +195,11 @@ class EditGroupTests {
             setContent {
                 PreviewTheme {
                     EditGroup(
-                        onBack = {},
-                        onInvite = {},
-                        onReinvite = {},
-                        onPromote = {},
-                        onRemove = {},
+                        onBackClick = {},
+                        onAddMemberClick = {},
+                        onResendInviteClick = {},
+                        onPromoteClick = {},
+                        onRemoveClick = {},
                         onEditName = {},
                         onMemberSelected = {},
                         viewState = state
@@ -236,11 +236,11 @@ class EditGroupTests {
             setContent {
                 PreviewTheme {
                     EditGroup(
-                        onBack = {},
-                        onInvite = {},
-                        onReinvite = {},
-                        onPromote = {},
-                        onRemove = {},
+                        onBackClick = {},
+                        onAddMemberClick = {},
+                        onResendInviteClick = {},
+                        onPromoteClick = {},
+                        onRemoveClick = {},
                         onEditName = {},
                         onMemberSelected = {},
                         viewState = state
