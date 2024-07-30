@@ -1,6 +1,6 @@
 package org.session.libsignal.utilities
 
-class Snode(val address: String, val port: Int, val publicKeySet: KeySet?) {
+class Snode(val address: String, val port: Int, val publicKeySet: KeySet?, val version: String) {
     val ip: String get() = address.removePrefix("https://")
 
     public enum class Method(val rawValue: String) {

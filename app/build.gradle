@@ -18,6 +18,7 @@ plugins {
     id 'com.google.devtools.ksp'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-parcelize'
+    id 'kotlinx-serialization'
 }
 
 apply plugin: 'witness'
@@ -26,8 +27,8 @@ configurations.configureEach {
     exclude module: "commons-logging"
 }
 
-def canonicalVersionCode = 374
-def canonicalVersionName = "1.18.5"
+def canonicalVersionCode = 376
+def canonicalVersionName = "1.18.6"
 
 def postFixSize = 10
 def abiPostFix = ['armeabi-v7a' : 1,
@@ -80,6 +81,10 @@ android {
     buildFeatures {
         viewBinding true
         buildConfig true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.14'
     }
 
     defaultConfig {
@@ -229,6 +234,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
     ksp("com.google.dagger:hilt-compiler:$daggerHiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:$androidxHiltVersion")
+    ksp("androidx.hilt:hilt-compiler:$jetpackHiltVersion")
 
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'

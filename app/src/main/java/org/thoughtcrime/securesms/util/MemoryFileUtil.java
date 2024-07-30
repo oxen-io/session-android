@@ -22,7 +22,7 @@ public class MemoryFileUtil {
 
       int fd = field.getInt(fileDescriptor);
 
-      return ParcelFileDescriptor.adoptFd(fd);
+      return ParcelFileDescriptor.fromFd(fd);
     } catch (IllegalAccessException e) {
       throw new IOException(e);
     } catch (InvocationTargetException e) {

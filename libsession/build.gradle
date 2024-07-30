@@ -37,6 +37,7 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
     ksp("com.google.dagger:hilt-compiler:$daggerHiltVersion")
+    ksp("androidx.hilt:hilt-compiler:$jetpackHiltVersion")
 
     implementation "net.java.dev.jna:jna:5.12.1@aar"
     implementation "androidx.core:core-ktx:$coreVersion"
