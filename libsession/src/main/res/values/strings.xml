@@ -580,10 +580,6 @@
     <string name="notificationsMessage">Message notifications</string>
     <string name="notificationsMostRecent">Most recent from {name}</string>
     <string name="notificationsMute">Mute</string>
-    <string name="notificationsMute1Day">Mute for 1 day</string>
-    <string name="notificationsMute1Hour">Mute for 1 hour</string>
-    <string name="notificationsMute1Week">Mute for 1 week</string>
-    <string name="notificationsMute2Hours">Mute for 2 hours</string>
     <string name="notificationsMuteFor">Mute for {time_large}</string>
     <string name="notificationsMuteUnmute">Unmute</string>
     <string name="notificationsMuted">Muted</string>
