@@ -11,6 +11,7 @@ import org.session.libsignal.utilities.Log
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 fun showMuteDialog(
     context: Context,
@@ -31,7 +32,12 @@ fun showMuteDialog(
     }.toTypedArray()) {
         // Note: We add the current timestamp to the mute duration to get the un-mute timestamp
         // that gets stored in the database via ConversationMenuHelper.mute().
-        onMuteDuration(Option.entries[it].getTime() + System.currentTimeMillis())
+        // Also: This is a kludge, but we ADD one second to the mute duration because otherwise by
+        // the time the view for how long the conversation is muted for gets set then it's actually
+        // less than the entire duration - so 1 hour becomes 59 minutes, 1 day becomes 23 hours etc.
+        // As we really want to see the actual set time (1 hour / 1 day etc.) then we'll bump it by
+        // 1 second which is neither here nor there in the grand scheme of things.
+        onMuteDuration(Option.entries[it].getTime() + System.currentTimeMillis() + 1.seconds.inWholeMilliseconds)
     }
 }
 
