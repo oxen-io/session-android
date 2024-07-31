@@ -16,6 +16,7 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException

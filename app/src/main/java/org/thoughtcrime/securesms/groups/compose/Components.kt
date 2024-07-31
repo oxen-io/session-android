@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.groups.compose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,8 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -33,7 +30,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,36 +41,22 @@ import network.loki.messenger.R
 import org.session.libsession.BuildConfig
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.StringSubstitutionConstants.VERSION_KEY
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.groups.ContactItem
-import org.thoughtcrime.securesms.home.search.getSearchName
 import org.thoughtcrime.securesms.ui.Avatar
-import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 
 @Composable
-fun EmptyPlaceholder(modifier: Modifier = Modifier) {
-    Column(modifier) {
-        Text(
-            text = stringResource(id = R.string.activity_create_closed_group_empty_placeholer),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        )
-    }
-}
-
-@Composable
 fun GroupMinimumVersionBanner(modifier: Modifier = Modifier) {
     // Minimum version banner
     val context = LocalContext.current
     val text = remember {
-        Phrase.from(context, R.string.groupInviteVersionBanner)
-            .put("version", BuildConfig.MINIMUM_GROUP_VERSION)
+        Phrase.from(context, R.string.groupInviteVersion)
+            .put(VERSION_KEY, BuildConfig.MINIMUM_GROUP_VERSION)
             .format()
             .toString()
     }
@@ -146,43 +128,6 @@ fun RowScope.MemberName(
         .weight(1f)
         .align(CenterVertically)
 )
-
-fun LazyListScope.deleteMemberList(
-    contacts: List<Contact>,
-    modifier: Modifier = Modifier,
-    onDelete: (Contact) -> Unit,
-) {
-    item {
-        Text(
-            text = stringResource(id = R.string.conversation_settings_group_members),
-            color = LocalColors.current.text,
-            modifier = modifier
-                .padding(vertical = 8.dp)
-        )
-    }
-    if (contacts.isEmpty()) {
-        item {
-            EmptyPlaceholder(modifier.fillMaxWidth())
-        }
-    } else {
-        items(contacts) { contact ->
-            Row(modifier.fillMaxWidth()) {
-                ContactPhoto(contact.accountID)
-                MemberName(name = contact.getSearchName(), modifier = Modifier.padding(16.dp))
-                Image(
-                    painterResource(id = R.drawable.ic_baseline_close_24),
-                    null,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .align(CenterVertically)
-                        .clickable {
-                            onDelete(contact)
-                        },
-                )
-            }
-        }
-    }
-}
 
 
 @Composable

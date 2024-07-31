@@ -1,8 +1,6 @@
 package org.thoughtcrime.securesms.groups.compose
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,9 +9,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -74,7 +69,7 @@ fun SelectContacts(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         NavigationBar(
-            title = stringResource(id = R.string.activity_create_closed_group_select_contacts),
+            title = stringResource(id = R.string.contactSelect),
             onBack = onBack,
             actionElement = {
                 if (onClose != null) {
@@ -87,7 +82,7 @@ fun SelectContacts(
         SearchBar(
             query = searchQuery,
             onValueChanged = onSearchQueryChanged,
-            placeholder = stringResource(R.string.search_contacts_hint),
+            placeholder = stringResource(R.string.searchContacts),
             modifier = Modifier.padding(horizontal = 16.dp),
             backgroundColor = LocalColors.current.backgroundSecondary,
         )

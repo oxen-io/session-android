@@ -98,7 +98,7 @@ fun CreateGroup(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         NavigationBar(
-            title = stringResource(id = R.string.activity_create_group_title),
+            title = stringResource(id = R.string.groupCreate),
             onBack = onBack,
             actionElement = { CloseIcon(onClose) }
         )
@@ -106,7 +106,7 @@ fun CreateGroup(
         SessionOutlinedTextField(
             text = groupName,
             onChange = onGroupNameChanged,
-            placeholder = stringResource(R.string.dialog_edit_group_information_enter_group_name),
+            placeholder = stringResource(R.string.groupNameEnter),
             textStyle = LocalType.current.base,
             modifier = Modifier.padding(horizontal = 16.dp),
             error = groupNameError.takeIf { it.isNotBlank() },
@@ -117,7 +117,7 @@ fun CreateGroup(
         SearchBar(
             query = contactSearchQuery,
             onValueChanged = onContactSearchQueryChanged,
-            placeholder = stringResource(R.string.search_contacts_hint),
+            placeholder = stringResource(R.string.searchContacts),
             modifier = Modifier.padding(horizontal = 16.dp),
             enabled = !showLoading
         )
@@ -132,7 +132,7 @@ fun CreateGroup(
 
         PrimaryOutlineButton(onClick = onCreateClicked, modifier = Modifier.widthIn(min = 120.dp)) {
             LoadingArcOr(loading = showLoading) {
-                Text(stringResource(R.string.activity_create_group_create_button_title))
+                Text(stringResource(R.string.create))
             }
         }
     }

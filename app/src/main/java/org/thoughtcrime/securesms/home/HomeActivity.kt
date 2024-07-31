@@ -600,19 +600,23 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
 
             // If you are an admin of this group you can delete it
-            if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
+            if (group != null && group.admins.map { it.toString() }
+                    .contains(textSecurePreferences.getLocalNumber())) {
                 title = getString(R.string.groupDelete)
                 message = Phrase.from(this.applicationContext, R.string.groupDeleteDescription)
                     .put(GROUP_NAME_KEY, group.title)
                     .format()
             } else {
                 // Otherwise this is either a community, or it's a group you're not an admin of
-                title = if (recipient.isCommunityRecipient) getString(R.string.communityLeave) else getString(R.string.groupLeave)
+                title =
+                    if (recipient.isCommunityRecipient) getString(R.string.communityLeave) else getString(
+                        R.string.groupLeave
+                    )
                 message = Phrase.from(this.applicationContext, R.string.groupLeaveDescription)
                     .put(GROUP_NAME_KEY, group.title)
                     .format()
             }
-         } else {
+        } else {
             // If this is a 1-on-1 conversation
             if (recipient.name != null) {
                 title = getString(R.string.conversationsDelete)
@@ -646,7 +650,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                                 .takeIf(DatabaseComponent.get(context).lokiAPIDatabase()::isClosedGroup)
                                 ?.let { MessageSender.explicitLeave(it, true, deleteThread = true) }
                         } catch (ioe: IOException) {
-                            Log.w(TAG, ioe, "Got an IOException while sending leave group message")
+                            Log.w(TAG, "Got an IOException while sending leave group message", ioe)
                         }
                     }
                     if (recipient.address.isClosedGroupV2) {

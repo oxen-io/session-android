@@ -24,7 +24,7 @@
                 android:textColor="?attr/danger"
                 android:layout_gravity="center_vertical|end"
                 android:id="@+id/clearMedia"
-                android:text="@string/media_overview_activity__clear_media"
+                android:text="@string/clearAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </androidx.appcompat.widget.Toolbar>

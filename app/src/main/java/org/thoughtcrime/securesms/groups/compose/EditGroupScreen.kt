@@ -43,6 +43,8 @@ import androidx.navigation.compose.rememberNavController
 import com.squareup.phrase.Phrase
 import kotlinx.serialization.Serializable
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.groups.EditGroupViewModel
 import org.thoughtcrime.securesms.groups.GroupMemberState
 import org.thoughtcrime.securesms.ui.AlertDialog
@@ -136,12 +138,12 @@ fun EditGroup(
     Scaffold(
         topBar = {
             NavigationBar(
-                title = stringResource(id = R.string.activity_edit_closed_group_title),
+                title = stringResource(id = R.string.groupEdit),
                 onBack = onBackClick,
                 actionElement = {
                     TextButton(onClick = onBackClick) {
                         Text(
-                            text = stringResource(id = R.string.menu_done_button),
+                            text = stringResource(id = R.string.done),
                             color = LocalColors.current.text,
                             style = LocalType.current.large.bold()
                         )
@@ -201,7 +203,7 @@ fun EditGroup(
                         IconButton(onClick = onEditNameClicked) {
                             Icon(
                                 painterResource(R.drawable.ic_baseline_edit_24),
-                                contentDescription = stringResource(R.string.AccessibilityId_closed_group_edit_group_name),
+                                contentDescription = stringResource(R.string.groupName),
                                 tint = LocalColors.current.text,
                             )
                         }
@@ -215,7 +217,7 @@ fun EditGroup(
                 verticalAlignment = CenterVertically
             ) {
                 Text(
-                    stringResource(R.string.activity_edit_closed_group_edit_members),
+                    stringResource(R.string.groupMembers),
                     modifier = Modifier.weight(1f),
                     style = LocalType.current.large,
                     color = LocalColors.current.text
@@ -223,7 +225,7 @@ fun EditGroup(
 
                 if (showAddMembers) {
                     PrimaryOutlineButton(
-                        stringResource(R.string.activity_edit_closed_group_add_members),
+                        stringResource(R.string.membersInvite),
                         onClick = onAddMemberClick
                     )
                 }
@@ -290,15 +292,15 @@ private fun ConfirmRemovingMemberDialog(
     val context = LocalContext.current
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        text = Phrase.from(context, R.string.activity_edit_closed_group_remove_users_single)
-            .put("user", member.name)
-            .put("group", groupName)
+        text = Phrase.from(context, R.string.groupRemoveDescription)
+            .put(NAME_KEY, member.name)
+            .put(GROUP_NAME_KEY, groupName)
             .format()
             .toString(),
-        title = stringResource(R.string.activity_settings_remove),
+        title = stringResource(R.string.remove),
         buttons = listOf(
             DialogButtonModel(
-                text = GetString(R.string.activity_settings_remove),
+                text = GetString(R.string.remove),
                 color = LocalColors.current.danger,
                 onClick = { onConfirmed(member.accountId) }
             ),
@@ -328,12 +330,12 @@ private fun MemberModalBottomSheetOptions(
         if (member.canRemove) {
             MemberModalBottomSheetOptionItem(
                 onClick = onRemove,
-                text = stringResource(R.string.fragment_edit_group_bottom_sheet_remove)
+                text = stringResource(R.string.groupRemoveUserOnly)
             )
         }
 
         if (member.canPromote) {
-            MemberModalBottomSheetOptionItem(onClick = onPromote, text = "Promote to admin")
+            MemberModalBottomSheetOptionItem(onClick = onPromote, text = stringResource(R.string.adminPromoteToAdmin))
         }
 
         if (member.canResendInvite) {

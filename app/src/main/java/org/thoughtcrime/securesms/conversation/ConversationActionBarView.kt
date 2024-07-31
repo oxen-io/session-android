@@ -13,7 +13,6 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationActionBarBinding
@@ -23,7 +22,6 @@ import org.session.libsession.LocalisedTimeUtil
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.utilities.ExpirationUtil
-import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.TIME_LARGE_KEY
@@ -32,8 +30,6 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.database.Storage
-import org.thoughtcrime.securesms.util.DateUtils
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint

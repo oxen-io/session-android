@@ -208,10 +208,10 @@ class ConversationViewModel(
         ) {
 
             return MessageRequestUiState.Visible(
-                acceptButtonText = if (recipient.isClosedGroupV2Recipient) {
-                    R.string.message_requests_send_group_notice
+                acceptButtonText = if (recipient.isGroupRecipient) {
+                    R.string.messageRequestGroupInviteDescription
                 } else {
-                    R.string.message_requests_send_notice
+                    R.string.messageRequestsAcceptDescription
                 },
                 // You can block a 1to1 conversation, or a normal groups v2 conversation
                 showBlockButton = recipient.is1on1 || recipient.isClosedGroupV2Recipient,

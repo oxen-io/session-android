@@ -47,8 +47,8 @@ class UpdateMessageData () {
         class GroupMemberLeft(val updatedMembers: Collection<String>, val groupName:String): Kind() {
             constructor(): this(Collections.emptyList(), "")
         }
-        class GroupMemberUpdated(val sessionIds: List<String>, val type: MemberUpdateType?): Kind() {
-            constructor(): this(emptyList(), null)
+        class GroupMemberUpdated(val sessionIds: List<String>, val type: MemberUpdateType?, val groupName: String): Kind() {
+            constructor(): this(emptyList(), null, "")
         }
         data object GroupAvatarUpdated: Kind()
         data class GroupExpirationUpdated(val updatedExpiration: Int = 0): Kind()
@@ -57,11 +57,11 @@ class UpdateMessageData () {
         }
         data object GroupLeaving: Kind()
         data object GroupErrorQuit: Kind()
-        data class GroupInvitation(val invitingAdmin: String) : Kind() {
-            constructor(): this("")
+        data class GroupInvitation(val invitingAdmin: String, val groupName: String) : Kind() {
+            constructor(): this("", "")
         }
 
-        data object GroupKicked : Kind()
+        data class GroupKicked(val groupName: String) : Kind()
     }
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
@@ -87,13 +87,12 @@ class UpdateMessageData () {
             return when(type) {
                 SignalServiceGroup.Type.CREATION -> UpdateMessageData(Kind.GroupCreation)
                 SignalServiceGroup.Type.NAME_CHANGE -> UpdateMessageData(Kind.GroupNameChange(name))
-                SignalServiceGroup.Type.MEMBER_ADDED -> UpdateMessageData(Kind.GroupMemberAdded(members))
-                SignalServiceGroup.Type.MEMBER_REMOVED -> UpdateMessageData(Kind.GroupMemberRemoved(members))
-                SignalServiceGroup.Type.MEMBER_LEFT    -> UpdateMessageData(Kind.GroupMemberLeft(members, name))
-                SignalServiceGroup.Type.QUIT -> UpdateMessageData(Kind.GroupMemberLeft)
+                SignalServiceGroup.Type.MEMBER_ADDED -> UpdateMessageData(Kind.GroupMemberAdded(members, name))
+                SignalServiceGroup.Type.MEMBER_REMOVED -> UpdateMessageData(Kind.GroupMemberRemoved(members, name))
+                SignalServiceGroup.Type.QUIT -> UpdateMessageData(Kind.GroupMemberLeft(members, name))
                 SignalServiceGroup.Type.LEAVING -> UpdateMessageData(Kind.GroupLeaving)
                 SignalServiceGroup.Type.ERROR_QUIT -> UpdateMessageData(Kind.GroupErrorQuit)
-                SignalServiceGroup.Type.KICKED -> UpdateMessageData(Kind.GroupKicked)
+                SignalServiceGroup.Type.KICKED -> UpdateMessageData(Kind.GroupKicked(name))
                 SignalServiceGroup.Type.UNKNOWN,
                 SignalServiceGroup.Type.UPDATE,
                 SignalServiceGroup.Type.DELIVER,
@@ -101,7 +100,7 @@ class UpdateMessageData () {
             }
         }
 
-        fun buildGroupUpdate(groupUpdated: GroupUpdated): UpdateMessageData? {
+        fun buildGroupUpdate(groupUpdated: GroupUpdated, groupName: String): UpdateMessageData? {
             val inner = groupUpdated.inner
             return when {
                 inner.hasMemberChangeMessage() -> {
@@ -113,7 +112,7 @@ class UpdateMessageData () {
                         null -> null
                     }
                     val members = memberChange.memberSessionIdsList
-                    UpdateMessageData(Kind.GroupMemberUpdated(members, type))
+                    UpdateMessageData(Kind.GroupMemberUpdated(members, type, groupName))
                 }
                 inner.hasInfoChangeMessage() -> {
                     val infoChange = inner.infoChangeMessage
@@ -125,7 +124,10 @@ class UpdateMessageData () {
                         else -> null
                     }?.let { UpdateMessageData(it) }
                 }
-                inner.hasMemberLeftNotificationMessage() -> UpdateMessageData(Kind.GroupMemberLeft)
+                inner.hasMemberLeftNotificationMessage() -> UpdateMessageData(Kind.GroupMemberLeft(
+                    updatedMembers = listOf(groupUpdated.sender.orEmpty()),
+                    groupName = groupName
+                ))
                 else -> null
             }
         }

@@ -1464,7 +1464,7 @@ open class Storage(
             approveGroupInvite(groupThreadId, groupId)
         } else {
             inviteDb.addGroupInviteReferrer(groupThreadId, invitingAdmin.hexString)
-            insertGroupInviteControlMessage(SnodeAPI.nowWithOffset, invitingAdmin.hexString, groupId)
+            insertGroupInviteControlMessage(SnodeAPI.nowWithOffset, invitingAdmin.hexString, groupId, name)
         }
 
         if (invitingMessageHash != null) {
@@ -1532,9 +1532,9 @@ open class Storage(
         // don't try to process invitee acceptance if we aren't admin
         if (configFactory.userGroups?.getClosedGroup(groupSessionId)?.hasAdminKey() != true) return
         val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: return
-        val AccountId = AccountId(groupSessionId)
-        val membersConfig = configFactory.getGroupMemberConfig(AccountId) ?: return
-        val infoConfig = configFactory.getGroupInfoConfig(AccountId) ?: return
+        val accountId = AccountId(groupSessionId)
+        val membersConfig = configFactory.getGroupMemberConfig(accountId) ?: return
+        val infoConfig = configFactory.getGroupInfoConfig(accountId) ?: return
 
         // Filter out people who aren't already invited
         val filteredMembers = invitees.filter {
@@ -1557,11 +1557,11 @@ open class Storage(
         }
 
         // Persist the config changes now, so we can show the invite status immediately
-        configFactory.persistGroupConfigDump(membersConfig, AccountId, SnodeAPI.nowWithOffset)
+        configFactory.persistGroupConfigDump(membersConfig, accountId, SnodeAPI.nowWithOffset)
 
         // re-key for new members
         val keysConfig = configFactory.getGroupKeysConfig(
-            AccountId,
+            accountId,
             info = infoConfig,
             members = membersConfig,
             free = false
@@ -1643,7 +1643,7 @@ open class Storage(
                     .build()
             ).apply { this.sentTimestamp = timestamp }
             MessageSender.send(updatedMessage, fromSerialized(groupSessionId))
-            insertGroupInfoChange(updatedMessage, AccountId)
+            insertGroupInfoChange(updatedMessage, accountId)
             infoConfig.free()
             membersConfig.free()
             keysConfig.free()
@@ -1661,7 +1661,9 @@ open class Storage(
     override fun insertGroupInfoChange(message: GroupUpdated, closedGroup: AccountId): Long? {
         val sentTimestamp = message.sentTimestamp ?: SnodeAPI.nowWithOffset
         val senderPublicKey = message.sender
-        val updateData = UpdateMessageData.buildGroupUpdate(message) ?: return null
+        val groupName = configFactory.getGroupInfoConfig(closedGroup)?.use { it.getName() }.orEmpty()
+
+        val updateData = UpdateMessageData.buildGroupUpdate(message, groupName) ?: return null
 
         return insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
     }
@@ -1680,8 +1682,8 @@ open class Storage(
         mmsDB.updateInfoMessage(messageId, newMessage.toJSON())
     }
 
-    private fun insertGroupInviteControlMessage(sentTimestamp: Long, senderPublicKey: String, closedGroup: AccountId): Long? {
-        val updateData = UpdateMessageData(UpdateMessageData.Kind.GroupInvitation(senderPublicKey))
+    private fun insertGroupInviteControlMessage(sentTimestamp: Long, senderPublicKey: String, closedGroup: AccountId, groupName: String): Long? {
+        val updateData = UpdateMessageData(UpdateMessageData.Kind.GroupInvitation(senderPublicKey, groupName))
         return insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
     }
 

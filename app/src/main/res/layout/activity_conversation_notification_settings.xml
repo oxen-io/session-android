@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/notify_type_all"
+        android:text="@string/notificationsAllMessages"
         android:layout_width="0dp"
         android:layout_height="72dp"/>
     <View
@@ -34,7 +34,7 @@
         android:id="@+id/notifyMentions"
         style="@style/TextAppearance.Session.ConversationSettings.Option"
         android:background="@drawable/preference_middle"
-        android:text="@string/notify_type_mentions"
+        android:text="@string/notificationsMentionsOnly"
         android:layout_width="0dp"
         android:layout_height="@dimen/setting_button_height"/>
     <View
@@ -55,7 +55,7 @@
         android:id="@+id/notifyMute"
         style="@style/TextAppearance.Session.ConversationSettings.Option"
         android:background="@drawable/preference_bottom"
-        android:text="@string/notify_type_mute"
+        android:text="@string/notificationsMute"
         android:layout_width="0dp"
         android:layout_height="72dp"/>
     <View

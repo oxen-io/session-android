@@ -809,8 +809,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             outdatedGroupBanner.isVisible = shouldDisplayBanner
             outdatedGroupBanner.setOnClickListener {
                 showSessionDialog {
-                    title(R.string.dialog_open_url_title)
-                    text(R.string.dialog_open_url_explanation)
+                    title(R.string.urlOpenBrowser)
+                    text(R.string.urlOpenDescription)
                     cancelButton()
                     dangerButton(R.string.open) {
                         // open the URL (tbc)
@@ -1208,6 +1208,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun block(deleteThread: Boolean) {
         val recipient = viewModel.recipient ?: return Log.w("Loki", "Recipient was null for block action")
+        val invitingAdmin = viewModel.invitingAdmin
+
         val name = if (recipient.isClosedGroupV2Recipient && invitingAdmin != null) {
             invitingAdmin.getSearchName()
         } else {

@@ -71,7 +71,7 @@
                 android:background="?selectableItemBackground"
                 app:drawableStartCompat="@drawable/ic_search_conversation"
                 style="@style/TextAppearance.Session.ConversationSettings.Option"
-                android:text="@string/conversation_settings_search"
+                android:text="@string/searchConversation"
                 android:id="@+id/searchConversation"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"/>
@@ -85,7 +85,7 @@
                 android:background="?selectableItemBackground"
                 app:drawableStartCompat="@drawable/ic_edit_group"
                 style="@style/TextAppearance.Session.ConversationSettings.Option"
-                android:text="@string/conversation_settings_group_members"
+                android:text="@string/groupMembers"
                 android:id="@+id/groupMembers"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"/>
@@ -100,7 +100,7 @@
                 android:background="?selectableItemBackground"
                 app:drawableStartCompat="@drawable/ic_all_media"
                 style="@style/TextAppearance.Session.ConversationSettings.Option"
-                android:text="@string/conversation_settings_all_media"
+                android:text="@string/conversationsSettingsAllMedia"
                 android:id="@+id/allMedia"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"/>
@@ -114,7 +114,7 @@
                 android:background="?selectableItemBackground"
                 app:drawableStartCompat="@drawable/ic_pin_conversation"
                 style="@style/TextAppearance.Session.ConversationSettings.Option"
-                android:text="@string/conversation_settings_pin_conversation"
+                android:text="@string/pinConversation"
                 android:id="@+id/pinConversation"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"/>
@@ -147,7 +147,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/conversation_settings_notifications"
+                        android:text="@string/sessionNotifications"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
                         android:paddingVertical="1dp"
@@ -201,7 +201,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/conversation_settings_auto_download_title"
+                        android:text="@string/attachmentsAutoDownload"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
                         android:paddingVertical="1dp"
@@ -210,7 +210,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/conversation_settings_auto_download_summary"
+                        android:text="@string/attachmentsAutoDownloadDescription"
                         android:paddingVertical="1dp"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
@@ -228,7 +228,7 @@
             app:constraint_referenced_ids="adminContainer,adminSettingsTitle"/>
         <TextView
             style="@style/TextAppearance.Session.ConversationSettings.Subtitle"
-            android:text="@string/conversation_settings_admin_settings_title"
+            android:text="@string/adminSettings"
             android:id="@+id/adminSettingsTitle"
             app:layout_constraintTop_toBottomOf="@+id/mainConversationSettingContainer"
             android:layout_marginTop="@dimen/medium_spacing"
@@ -255,7 +255,7 @@
                 android:background="?selectableItemBackground"
                 app:drawableStartCompat="@drawable/ic_edit_group"
                 style="@style/TextAppearance.Session.ConversationSettings.Option"
-                android:text="@string/conversation_settings_edit_group"
+                android:text="@string/groupEdit"
                 android:id="@+id/editGroup"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"/>
@@ -295,7 +295,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/conversation_settings_disappearing_messages"
+                        android:text="@string/disappearingMessages"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
                         android:paddingVertical="1dp"
@@ -333,7 +333,7 @@
                 android:background="?selectableItemBackground"
                 app:drawableStartCompat="@drawable/ic_clear_messages"
                 style="@style/TextAppearance.Session.ConversationSettings.Option.Destructive"
-                android:text="@string/conversation_settings_clear_messages"
+                android:text="@string/conversationsClearMessages"
                 android:id="@+id/clearMessages"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"/>
@@ -348,7 +348,7 @@
                 android:background="?selectableItemBackground"
                 app:drawableStartCompat="@drawable/ic_leave_group"
                 style="@style/TextAppearance.Session.ConversationSettings.Option.Destructive"
-                android:text="@string/conversation_settings_leave_group"
+                android:text="@string/groupLeave"
                 android:id="@+id/leaveGroup"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"/>
@@ -363,7 +363,7 @@
                 android:background="?selectableItemBackground"
                 app:drawableStartCompat="@drawable/ic_delete"
                 style="@style/TextAppearance.Session.ConversationSettings.Option.Destructive"
-                android:text="@string/conversation_settings_delete_group"
+                android:text="@string/groupDelete"
                 android:id="@+id/deleteGroup"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"/>

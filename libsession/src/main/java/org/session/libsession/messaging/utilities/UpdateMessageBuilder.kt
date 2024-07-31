@@ -31,13 +31,6 @@ object UpdateMessageBuilder {
     const val TAG = "UpdateMessageBuilder"
 
 
-    private const val FIRST = "first"
-    private const val SECOND = "second"
-    private const val NUM_OTHERS = "number_others"
-    private const val ADMIN = "admin"
-    private const val GROUP = "group"
-    private const val USER = "user"
-
     val storage = MessagingModuleConfiguration.shared.storage
 
     private fun getSenderName(senderId: String) = storage.getContactWithAccountID(senderId)
@@ -180,7 +173,7 @@ object UpdateMessageBuilder {
                     }
                 }
             }
-            is UpdateMessageData.Kind.GroupAvatarUpdated -> context.getString(R.string.ConversationItem_group_action_avatar_updated)
+            is UpdateMessageData.Kind.GroupAvatarUpdated -> context.getString(R.string.groupDisplayPictureUpdated)
             is UpdateMessageData.Kind.GroupExpirationUpdated -> TODO()
             is UpdateMessageData.Kind.GroupMemberUpdated -> {
                 val userPublicKey = storage.getUserPublicKey()!!
@@ -190,87 +183,89 @@ object UpdateMessageBuilder {
                     UpdateMessageData.MemberUpdateType.ADDED -> {
                         when {
                             number == 1 && containsUser -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_you_added_single)
+                                R.string.groupInviteYou)
                                 .format()
                             number == 1 -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_added_single)
-                                .put(FIRST, context.youOrSender(updateData.sessionIds.first()))
+                                R.string.groupMemberNew)
+                                .put(NAME_KEY, context.youOrSender(updateData.sessionIds.first()))
                                 .format()
                             number == 2 && containsUser -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_you_added_two)
-                                .put(SECOND, context.youOrSender(updateData.sessionIds.first { it != userPublicKey }))
+                                R.string.groupMemberYouAndOtherNew)
+                                .put(OTHER_NAME_KEY, context.youOrSender(updateData.sessionIds.first { it != userPublicKey }))
                                 .format()
                             number == 2 -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_added_two)
-                                .put(FIRST, context.youOrSender(updateData.sessionIds.first()))
-                                .put(SECOND, context.youOrSender(updateData.sessionIds.last()))
+                                R.string.groupMemberTwoNew)
+                                .put(NAME_KEY, context.youOrSender(updateData.sessionIds.first()))
+                                .put(OTHER_NAME_KEY, context.youOrSender(updateData.sessionIds.last()))
                                 .format()
                             containsUser -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_you_added_multiple)
-                                .put(NUM_OTHERS, updateData.sessionIds.size - 1)
+                                R.string.groupMemberYouAndMoreNew)
+                                .put(COUNT_KEY, updateData.sessionIds.size - 1)
                                 .format()
                             else -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_added_multiple)
-                                .put(FIRST, context.youOrSender(updateData.sessionIds.first()))
-                                .put(NUM_OTHERS, updateData.sessionIds.size - 1)
+                                R.string.groupMemberMoreNew)
+                                .put(NAME_KEY, context.youOrSender(updateData.sessionIds.first()))
+                                .put(COUNT_KEY, updateData.sessionIds.size - 1)
                                 .format()
                         }
                     }
+
                     UpdateMessageData.MemberUpdateType.PROMOTED -> {
                         when {
                             number == 1 && containsUser -> context.getString(
-                                R.string.ConversationItem_group_member_you_promoted_single
+                                R.string.adminPromotedYouToAdmin
                             )
                             number == 1 -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_promoted_single)
-                                .put(FIRST,context.youOrSender(updateData.sessionIds.first()))
+                                R.string.adminPromotedToAdmin)
+                                .put(NAME_KEY,context.youOrSender(updateData.sessionIds.first()))
                                 .format()
                             number == 2 && containsUser -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_you_promoted_two)
-                                .put(SECOND, context.youOrSender(updateData.sessionIds.first{ it != userPublicKey }))
+                                R.string.adminPromotedYouAndOtherToAdmin)
+                                .put(OTHER_NAME_KEY, context.youOrSender(updateData.sessionIds.first{ it != userPublicKey }))
                                 .format()
                             number == 2 -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_promoted_two)
-                                .put(FIRST, context.youOrSender(updateData.sessionIds.first()))
-                                .put(SECOND, context.youOrSender(updateData.sessionIds.last()))
+                                R.string.adminPromotedTwoToAdmin)
+                                .put(NAME_KEY, context.youOrSender(updateData.sessionIds.first()))
+                                .put(OTHER_NAME_KEY, context.youOrSender(updateData.sessionIds.last()))
                                 .format()
                             containsUser -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_you_promoted_multiple)
-                                .put(NUM_OTHERS, updateData.sessionIds.size - 1)
+                                R.string.adminPromotedYouAndOthersToAdmin)
+                                .put(COUNT_KEY, updateData.sessionIds.size - 1)
                                 .format()
                             else -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_promoted_multiple)
-                                .put(FIRST, context.youOrSender(updateData.sessionIds.first()))
-                                .put(NUM_OTHERS, updateData.sessionIds.size - 1)
+                                R.string.adminPromotedMoreToAdmin)
+                                .put(NAME_KEY, context.youOrSender(updateData.sessionIds.first()))
+                                .put(COUNT_KEY, updateData.sessionIds.size - 1)
                                 .format()
                         }
                     }
                     UpdateMessageData.MemberUpdateType.REMOVED -> {
                         when {
-                            number == 1 && containsUser -> context.getString(
-                                R.string.ConversationItem_group_member_you_removed_single,
-                            )
+                            number == 1 && containsUser -> Phrase.from(context,
+                                R.string.groupRemovedYou)
+                                .put(GROUP_NAME_KEY, updateData.groupName)
+                                .format()
                             number == 1 -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_removed_single)
-                                .put(FIRST, context.youOrSender(updateData.sessionIds.first()))
+                                R.string.groupRemoved)
+                                .put(NAME_KEY, context.youOrSender(updateData.sessionIds.first()))
                                 .format()
                             number == 2 && containsUser -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_you_removed_two)
-                                .put(SECOND, context.youOrSender(updateData.sessionIds.first { it != userPublicKey }))
+                                R.string.groupRemovedYouAndOther)
+                                .put(OTHER_NAME_KEY, context.youOrSender(updateData.sessionIds.first { it != userPublicKey }))
                                 .format()
                             number == 2 -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_removed_two)
-                                .put(FIRST, context.youOrSender(updateData.sessionIds.first()))
-                                .put(SECOND, context.youOrSender(updateData.sessionIds.last()))
+                                R.string.groupRemovedTwo)
+                                .put(NAME_KEY, context.youOrSender(updateData.sessionIds.first()))
+                                .put(OTHER_NAME_KEY, context.youOrSender(updateData.sessionIds.last()))
                                 .format()
                             containsUser -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_you_removed_multiple)
-                                .put(NUM_OTHERS, updateData.sessionIds.size - 1)
+                                R.string.groupRemovedYouAndMore)
+                                .put(COUNT_KEY, updateData.sessionIds.size - 1)
                                 .format()
                             else -> Phrase.from(context,
-                                R.string.ConversationItem_group_member_removed_multiple)
-                                .put(FIRST, context.youOrSender(updateData.sessionIds.first()))
-                                .put(NUM_OTHERS, updateData.sessionIds.size - 1)
+                                R.string.groupRemovedMore)
+                                .put(NAME_KEY, context.youOrSender(updateData.sessionIds.first()))
+                                .put(COUNT_KEY, updateData.sessionIds.size - 1)
                                 .format()
                         }
                     }
@@ -280,38 +275,34 @@ object UpdateMessageBuilder {
             is UpdateMessageData.Kind.GroupInvitation -> {
                 val invitingAdmin = Recipient.from(context, Address.fromSerialized(updateData.invitingAdmin), false)
                 return if (invitingAdmin.name != null) {
-                    Phrase.from(context, R.string.ConversationItem_group_member_invited_admin)
-                        .put(ADMIN, invitingAdmin.name)
-                        .put(GROUP, "Group")
+                    Phrase.from(context, R.string.messageRequestGroupInvite)
+                        .put(NAME_KEY, invitingAdmin.name)
+                        .put(GROUP_NAME_KEY, updateData.groupName)
                         .format()
                 } else {
-                    Phrase.from(context, R.string.ConversationItem_group_member_invited)
-                        .put(GROUP, "Group")
-                        .format()
+                    context.getString(R.string.groupInviteYou)
                 }
             }
             is UpdateMessageData.Kind.OpenGroupInvitation -> ""
             is UpdateMessageData.Kind.GroupLeaving -> {
                 return if (isOutgoing) {
-                    context.getString(R.string.MessageRecord_leaving_group)
+                    context.getString(R.string.leaving)
                 } else {
                     ""
                 }
             }
             is UpdateMessageData.Kind.GroupErrorQuit -> {
-                return if (isInConversation) {
-                    context.getString(R.string.MessageRecord_unable_leave_group)
-                } else {
-                    context.getString(R.string.MessageRecord_leave_group_error)
-                }
+                return context.getString(R.string.groupLeaveErrorFailed)
             }
             is UpdateMessageData.Kind.GroupKicked -> {
-                return context.getString(R.string.MessageRecord_kicked)
+                return Phrase.from(context, R.string.groupRemovedYou)
+                    .put(GROUP_NAME_KEY, updateData.groupName)
+                    .format()
             }
         }
     }
 
-    fun Context.youOrSender(sessionId: String) = if (storage.getUserPublicKey() == sessionId) getString(R.string.MessageRecord_you) else getSenderName(sessionId)
+    fun Context.youOrSender(sessionId: String) = if (storage.getUserPublicKey() == sessionId) getString(R.string.you) else getSenderName(sessionId)
 
     fun buildExpirationTimerMessage(
         context: Context,
@@ -390,57 +381,65 @@ object UpdateMessageBuilder {
     }
 
     fun buildCallMessage(context: Context, type: CallMessageType, senderId: String): String {
-        val senderName = storage.getContactWithAccountID(senderId)?.displayName(Contact.ContactContext.REGULAR) ?: senderId
+        val senderName =
+            storage.getContactWithAccountID(senderId)?.displayName(Contact.ContactContext.REGULAR)
+                ?: senderId
 
         return when (type) {
-            CALL_INCOMING -> Phrase.from(context, R.string.callsCalledYou).put(NAME_KEY, senderName).format().toString()
-            CALL_OUTGOING -> Phrase.from(context, R.string.callsYouCalled).put(NAME_KEY, senderName).format().toString()
-            CALL_MISSED, CALL_FIRST_MISSED -> Phrase.from(context, R.string.callsMissedCallFrom).put(NAME_KEY, senderName).format().toString()
-        }
+            CALL_INCOMING -> Phrase.from(context, R.string.callsCalledYou).put(NAME_KEY, senderName)
+                .format().toString()
 
-    fun buildGroupModalMessage(
-        context: Context,
-        updateMessageData: UpdateMessageData,
-        serialize: String
-    ): CharSequence? {
-        return updateMessageData.kind?.takeIf {
-            it is UpdateMessageData.Kind.GroupMemberUpdated
-                    && it.type == UpdateMessageData.MemberUpdateType.ADDED
-        }?.let { kind ->
-            val members = (kind as UpdateMessageData.Kind.GroupMemberUpdated).sessionIds
-            val userPublicKey = storage.getUserPublicKey()!!
-            val number = members.size
-            val containsUser = members.contains(userPublicKey)
-            when {
-                number == 1 && containsUser -> Phrase.from(context,
-                    R.string.ConversationItem_group_member_you_added_single_modal)
-                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
-                    .format()
-                number == 1 -> Phrase.from(context,
-                    R.string.ConversationItem_group_member_added_single_modal)
-                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
-                    .format()
-                number == 2 && containsUser -> Phrase.from(context,
-                    R.string.ConversationItem_group_member_you_added_two_modal)
-                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
-                    .put(SECOND, context.youOrSender(kind.sessionIds.last()))
-                    .format()
-                number == 2 -> Phrase.from(context,
-                    R.string.ConversationItem_group_member_added_two_modal)
-                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
-                    .put(SECOND, context.youOrSender(kind.sessionIds.last()))
-                    .format()
-                containsUser -> Phrase.from(context,
-                    R.string.ConversationItem_group_member_you_added_multiple_modal)
-                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
-                    .put(NUM_OTHERS, kind.sessionIds.size - 1)
-                    .format()
-                else -> Phrase.from(context,
-                    R.string.ConversationItem_group_member_added_multiple_modal)
-                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
-                    .put(NUM_OTHERS, kind.sessionIds.size - 1)
-                    .format()
-            }
+            CALL_OUTGOING -> Phrase.from(context, R.string.callsYouCalled).put(NAME_KEY, senderName)
+                .format().toString()
+
+            CALL_MISSED, CALL_FIRST_MISSED -> Phrase.from(context, R.string.callsMissedCallFrom)
+                .put(NAME_KEY, senderName).format().toString()
         }
     }
+
+//    fun buildGroupModalMessage(
+//        context: Context,
+//        updateMessageData: UpdateMessageData,
+//        serialize: String
+//    ): CharSequence? {
+//        return updateMessageData.kind?.takeIf {
+//            it is UpdateMessageData.Kind.GroupMemberUpdated
+//                    && it.type == UpdateMessageData.MemberUpdateType.ADDED
+//        }?.let { kind ->
+//            val members = (kind as UpdateMessageData.Kind.GroupMemberUpdated).sessionIds
+//            val userPublicKey = storage.getUserPublicKey()!!
+//            val number = members.size
+//            val containsUser = members.contains(userPublicKey)
+//            when {
+//                number == 1 && containsUser -> Phrase.from(context,
+//                    R.string.ConversationItem_group_member_you_added_single_modal)
+//                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+//                    .format()
+//                number == 1 -> Phrase.from(context,
+//                    R.string.ConversationItem_group_member_added_single_modal)
+//                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+//                    .format()
+//                number == 2 && containsUser -> Phrase.from(context,
+//                    R.string.ConversationItem_group_member_you_added_two_modal)
+//                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+//                    .put(SECOND, context.youOrSender(kind.sessionIds.last()))
+//                    .format()
+//                number == 2 -> Phrase.from(context,
+//                    R.string.ConversationItem_group_member_added_two_modal)
+//                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+//                    .put(SECOND, context.youOrSender(kind.sessionIds.last()))
+//                    .format()
+//                containsUser -> Phrase.from(context,
+//                    R.string.ConversationItem_group_member_you_added_multiple_modal)
+//                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+//                    .put(NUM_OTHERS, kind.sessionIds.size - 1)
+//                    .format()
+//                else -> Phrase.from(context,
+//                    R.string.ConversationItem_group_member_added_multiple_modal)
+//                    .put(FIRST, context.youOrSender(kind.sessionIds.first()))
+//                    .put(NUM_OTHERS, kind.sessionIds.size - 1)
+//                    .format()
+//            }
+//        }
+//    }
 }

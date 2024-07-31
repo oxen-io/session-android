@@ -14,6 +14,8 @@ import network.loki.messenger.databinding.ActivityConversationSettingsBinding
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
+import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
@@ -92,7 +94,7 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
         binding.profilePictureView.root.update(recipient)
         // Setup name
         binding.conversationName.text = when {
-            recipient.isLocalNumber -> getString(R.string.note_to_self)
+            recipient.isLocalNumber -> getString(R.string.noteToSelf)
             else -> recipient.toShortString()
         }
         // Setup group description (if group)
@@ -120,8 +122,8 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
 
         // Set pinned state
         binding.pinConversation.setText(
-            if (viewModel.isPinned()) R.string.conversation_settings_unpin_conversation
-            else R.string.conversation_settings_pin_conversation
+            if (viewModel.isPinned()) R.string.pinUnpinConversation
+            else R.string.pinConversation
         )
 
         // Set auto-download state
@@ -164,11 +166,13 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
             v === binding.clearMessages -> {
 
                 showSessionDialog {
-                    title(R.string.dialog_clear_all_messages_title)
-                    text(R.string.dialog_clear_all_messages_message)
+                    title(R.string.clearMessages)
+                    text(Phrase.from(this@ConversationSettingsActivity, R.string.clearMessagesChatDescription)
+                        .put(NAME_KEY, threadRecipient.name)
+                        .format())
                     dangerButton(
-                        R.string.dialog_clear_all_messages_clear,
-                        R.string.dialog_clear_all_messages_clear) {
+                        R.string.clear,
+                        R.string.clear) {
                         viewModel.clearMessages(false)
                     }
                     cancelButton()
@@ -183,20 +187,22 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                     if (groupDb.isActive(groupString)) {
                         showSessionDialog {
 
-                            title(R.string.conversation_settings_leave_group)
+                            title(R.string.groupLeave)
 
                             val name = viewModel.recipient!!.name!!
                             val textWithArgs = if (groupDb.getGroup(groupString).get().admins.map(Address::serialize).contains(ourId)) {
-                                context.getString(R.string.conversation_settings_leave_group_as_admin)
+                                Phrase.from(context, R.string.groupLeaveDescriptionAdmin)
+                                    .put(GROUP_NAME_KEY, name)
+                                    .format()
                             } else {
-                                Phrase.from(context, R.string.conversation_settings_leave_group_name)
-                                    .put("group", name)
+                                Phrase.from(context, R.string.groupLeaveDescription)
+                                    .put(GROUP_NAME_KEY, name)
                                     .format()
                             }
                             text(textWithArgs)
                             dangerButton(
-                                R.string.conversation_settings_leave_group,
-                                R.string.conversation_settings_leave_group
+                                R.string.groupLeave,
+                                R.string.groupLeave
                             ) {
                                 lifecycleScope.launch {
                                     GroupUtil.doubleDecodeGroupID(threadRecipient.address.toString())
@@ -217,20 +223,22 @@ class ConversationSettingsActivity: PassphraseRequiredActionBarActivity(), View.
                     val groupInfo = viewModel.closedGroupInfo()
                     showSessionDialog {
 
-                        title(R.string.conversation_settings_leave_group)
+                        title(R.string.groupLeave)
 
                         val name = viewModel.recipient!!.name!!
                         val textWithArgs = if (groupInfo?.isUserAdmin == true) {
-                            context.getString(R.string.conversation_settings_leave_group_as_admin)
+                            Phrase.from(context, R.string.groupLeaveDescription)
+                                .put(GROUP_NAME_KEY, name)
+                                .format()
                         } else {
-                            Phrase.from(context, R.string.conversation_settings_leave_group_name)
-                                .put("group", name)
+                            Phrase.from(context, R.string.groupLeaveDescription)
+                                .put(GROUP_NAME_KEY, name)
                                 .format()
                         }
                         text(textWithArgs)
                         dangerButton(
-                            R.string.conversation_settings_leave_group,
-                            R.string.conversation_settings_leave_group
+                            R.string.groupLeave,
+                            R.string.groupLeave
                         ) {
                             lifecycleScope.launch {
                                 viewModel.leaveGroup()

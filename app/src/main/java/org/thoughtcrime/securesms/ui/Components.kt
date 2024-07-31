@@ -10,7 +10,6 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -547,7 +546,7 @@ fun NavigationBar(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_left_24),
                     contentDescription = stringResource(
-                        id = R.string.new_conversation_dialog_back_button_content_description
+                        id = R.string.AccessibilityId_navigateBack
                     ),
                     Modifier
                         .clickable(
@@ -593,7 +592,7 @@ fun BoxScope.CloseIcon(onClose: () -> Unit) {
     Icon(
         painter = painterResource(id = R.drawable.ic_baseline_close_24),
         contentDescription = stringResource(
-            id = R.string.new_conversation_dialog_close_button_content_description
+            id = R.string.close
         ),
         Modifier
             .clickable { onClose() }
