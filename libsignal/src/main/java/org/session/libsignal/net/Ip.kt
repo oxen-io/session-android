@@ -1,4 +1,4 @@
-package org.thoughtcrime.securesms.util
+package org.session.libsignal.net
 
 @JvmInline
 value class Ip(val ip: Long) {

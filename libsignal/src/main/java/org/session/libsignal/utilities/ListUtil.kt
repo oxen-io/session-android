@@ -1,4 +1,4 @@
-package org.session.libsession.utilities
+package org.session.libsignal.utilities
 
 /**
  * Find the index of the last element that matches the given predicate

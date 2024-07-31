@@ -1,5 +1,9 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'com.google.devtools.ksp'
+}
+
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -16,6 +20,10 @@ android {
 
 dependencies {
     implementation "androidx.annotation:annotation:1.5.0"
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
+    ksp("com.google.dagger:hilt-compiler:$daggerHiltVersion")
+    ksp("androidx.hilt:hilt-compiler:$jetpackHiltVersion")
+    implementation "com.opencsv:opencsv:4.6"
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     implementation "com.github.oxen-io.session-android-curve-25519:curve25519-java:$curve25519Version"

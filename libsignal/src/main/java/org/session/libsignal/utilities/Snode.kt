@@ -1,6 +1,6 @@
 package org.session.libsignal.utilities
 
-import org.thoughtcrime.securesms.util.Ip
+import org.session.libsignal.net.Ip
 
 class Snode(val address: String, val port: Int, val publicKeySet: KeySet?, val version: String) {
     val ip: Ip get() = address.removePrefix("https://").let(::Ip)

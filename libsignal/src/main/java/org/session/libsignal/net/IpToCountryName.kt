@@ -1,12 +1,12 @@
-package org.thoughtcrime.securesms.util
+package org.session.libsignal.net
 
 import android.content.Context
 import com.opencsv.CSVReader
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.session.libsession.utilities.binarySearchLastAndGet
-import org.session.libsession.utilities.computeIfAbsentV23
+import org.session.libsignal.utilities.binarySearchLastAndGet
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.associateByNotNull
+import org.session.libsignal.utilities.computeIfAbsentV23
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileReader
