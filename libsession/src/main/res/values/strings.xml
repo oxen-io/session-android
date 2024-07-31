@@ -113,6 +113,11 @@
     <string name="adminPromoteToAdmin">Promote to Admin</string>
     <string name="adminPromoteTwoDescription">Are you sure you want to promote <b>{name}</b> and <b>{other_name}</b> to admin? Admins cannot be removed.</string>
     <string name="adminPromotedToAdmin"><b>{name}</b> was promoted to Admin.</string>
+    <string name="adminPromotedTwoToAdmin"><b>{name}</b> and <b>{other_name}</b> were promoted to Admin.</string>
+    <string name="adminPromotedYouAndOtherToAdmin"><b>You</b> and <b>{other_name}</b> were promoted to Admin.</string>
+    <string name="adminPromotedYouAndOthersToAdmin"><b>You</b> and <b>{count} others</b> were promoted to Admin.</string>
+    <string name="adminPromotedYouToAdmin">You were promoted to Admin.</string>
+    <string name="adminPromotedMoreToAdmin"><b>{name}</b> and <b>{count} others</b> were promoted to Admin.</string>
     <string name="adminPromotionFailed">Admin promotion failed</string>
     <string name="adminPromotionFailedDescription">Failed to promote {name} in {group_name}</string>
     <string name="adminPromotionFailedDescriptionMany">Failed to promote {name} and {count} others in {group_name}</string>
@@ -301,6 +306,7 @@
     <string name="conversationsSendWithEnterKey">Send with Enter Key</string>
     <string name="conversationsSendWithEnterKeyDescription">Tapping the Enter Key will send message instead of starting a new line.</string>
     <string name="conversationsSettingsAllMedia">All Media</string>
+    <string name="conversationsClearMessages">Clear Messages</string>
     <string name="conversationsSpellCheck">Spell Check</string>
     <string name="conversationsSpellCheckDescription">Enable spell check when typing messages</string>
     <string name="conversationsStart">Start Conversation</string>
@@ -436,8 +442,10 @@
     <string name="groupMemberLeftMore"><b>{name}</b> and <b>{count} others</b> left the group.</string>
     <string name="groupMemberLeftTwo"><b>{name}</b> and <b>{other_name}</b> left the group.</string>
     <string name="groupMemberMoreNew"><b>{name}</b> and <b>{count} others</b> joined the group.</string>
-    <string name="groupMemberNew"><b>{name}</b> joined the group.</string>
+    <string name="groupMemberYouAndMoreNew"><b>You</b> and <b>{count} others</b> joined the group.</string>
+    <string name="groupMemberNew"><b>{name}</b> joined the group.</string>;;;
     <string name="groupMemberTwoNew"><b>{name}</b> and <b>{other_name}</b> joined the group.</string>
+    <string name="groupMemberYouAndOtherNew"><b>You</b> and <b>{other_name}</b> joined the group.</string>
     <string name="groupMemberYouLeft"><b>You</b> left the group.</string>
     <string name="groupMembers">Group Members</string>
     <string name="groupMembersNone">There are no other members in this group.</string>
@@ -460,8 +468,10 @@
     <string name="groupRemoveUsersMessages">Remove users and their messages</string>
     <string name="groupRemoveUsersOnly">Remove users</string>
     <string name="groupRemoved"><b>{name}</b> was removed from the group.</string>
+    <string name="groupRemovedYouAndMore"><b>You</b> and <b>{count}</b> others were removed from the group.</string>
     <string name="groupRemovedMore"><b>{name}</b> and <b>{count}</b> others were removed from the group.</string>
     <string name="groupRemovedTwo"><b>{name}</b> and <b>{other_name}</b> were removed from the group.</string>
+    <string name="groupRemovedYouAndOther"><b>You</b> and <b>{other_name}</b> were removed from the group.</string>
     <string name="groupRemovedYou">You were removed from <b>{group_name}</b>.</string>
     <string name="groupSetDisplayPicture">Set Group Display Picture</string>
     <string name="groupUnknown">Unknown Group</string>
@@ -604,6 +614,7 @@
     <string name="notificationsStyle">Notification Style</string>
     <string name="notificationsVibrate">Vibrate</string>
     <string name="off">Off</string>
+    <string name="on">On</string>
     <string name="onboardingAccountCreate">Create account</string>
     <string name="onboardingAccountCreated">Account Created</string>
     <string name="onboardingAccountExists">I have an account</string>
