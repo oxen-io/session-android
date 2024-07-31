@@ -97,6 +97,8 @@
     <string name="AccessibilityId_group_name">Group name</string>
     <string name="AccessibilityId_leave_group">Leave group</string>
     <string name="AccessibilityId_mentions_list">Mentions list</string>
+    <string name="AccessibilityId_outdated_group_banner">Legacy group banner</string>
+    <string name="AccessibilityId_empty_conversation">Empty conversation</string>
     <!--  Conversation icons -->
     <string name="AccessibilityId_accept_message_request_button">Accept message request</string>
     <string name="AccessibilityId_block_message_request_button">Block message request</string>
