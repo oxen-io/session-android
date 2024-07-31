@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import androidx.annotation.NonNull;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.thoughtcrime.securesms.crypto.KeyStoreHelper;
 import org.session.libsignal.utilities.Base64;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -14,8 +15,8 @@ import java.security.SecureRandom;
 class LogSecretProvider {
 
   static byte[] getOrCreateAttachmentSecret(@NonNull Context context) {
-    String unencryptedSecret = TextSecurePreferences.getLogUnencryptedSecret(context);
-    String encryptedSecret   = TextSecurePreferences.getLogEncryptedSecret(context);
+    String unencryptedSecret = MessagingModuleConfiguration.getShared().getPrefs().getLogUnencryptedSecret();
+    String encryptedSecret   = MessagingModuleConfiguration.getShared().getPrefs().getLogEncryptedSecret();
 
     if      (unencryptedSecret != null) return parseUnencryptedSecret(unencryptedSecret);
     else if (encryptedSecret != null)   return parseEncryptedSecret(encryptedSecret);
@@ -44,12 +45,8 @@ class LogSecretProvider {
     byte[]       secret = new byte[32];
     random.nextBytes(secret);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(secret);
-      TextSecurePreferences.setLogEncryptedSecret(context, encryptedSecret.serialize());
-    } else {
-      TextSecurePreferences.setLogUnencryptedSecret(context, Base64.encodeBytes(secret));
-    }
+    KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(secret);
+    MessagingModuleConfiguration.getShared().getPrefs().setLogEncryptedSecret(encryptedSecret.serialize());
 
     return secret;
   }

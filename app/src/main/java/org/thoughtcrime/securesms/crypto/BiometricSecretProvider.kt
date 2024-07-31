@@ -4,8 +4,10 @@ import android.content.Context
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.Util
+import org.session.libsession.utilities.prefs
 import java.security.InvalidKeyException
 import java.security.KeyPairGenerator
 import java.security.KeyStore
@@ -54,10 +56,10 @@ class BiometricSecretProvider {
         ks.load(null)
         if (!ks.containsAlias(BIOMETRIC_ASYM_KEY_ALIAS)
             || !ks.entryInstanceOf(BIOMETRIC_ASYM_KEY_ALIAS, KeyStore.PrivateKeyEntry::class.java)
-            || !TextSecurePreferences.getFingerprintKeyGenerated(context)
+            || !context.prefs.getFingerprintKeyGenerated()
         ) {
             createAsymmetricKey(context)
-            TextSecurePreferences.setFingerprintKeyGenerated(context)
+            context.prefs.setFingerprintKeyGenerated()
         }
         val signature = try {
             val key = ks.getKey(BIOMETRIC_ASYM_KEY_ALIAS, null) as PrivateKey
@@ -67,7 +69,7 @@ class BiometricSecretProvider {
         } catch (e: InvalidKeyException) {
             ks.deleteEntry(BIOMETRIC_ASYM_KEY_ALIAS)
             createAsymmetricKey(context)
-            TextSecurePreferences.setFingerprintKeyGenerated(context)
+            context.prefs.setFingerprintKeyGenerated()
             val key = ks.getKey(BIOMETRIC_ASYM_KEY_ALIAS, null) as PrivateKey
             val signature = Signature.getInstance(SIGNATURE_ALGORITHM)
             signature.initSign(key)

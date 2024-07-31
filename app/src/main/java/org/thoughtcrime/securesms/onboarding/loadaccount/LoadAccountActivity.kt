@@ -30,7 +30,6 @@ class LoadAccountActivity : BaseActionBarActivity() {
         super.onCreate(savedInstanceState)
         supportActionBar?.setTitle(R.string.activity_link_load_account)
         prefs.setConfigurationMessageSynced(false)
-        prefs.setRestorationTime(System.currentTimeMillis())
         prefs.setLastProfileUpdateTime(0)
 
         lifecycleScope.launch {

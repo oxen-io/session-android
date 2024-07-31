@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms;
 
 import static android.os.Build.VERSION.SDK_INT;
-import static org.session.libsession.utilities.TextSecurePreferences.SELECTED_ACCENT_COLOR;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -16,6 +15,7 @@ import androidx.annotation.StyleRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageActivityHelper;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
@@ -61,7 +61,7 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
 
   @StyleRes @Nullable
   private Integer getAccentTheme() {
-    if (!getPreferences().hasPreference(SELECTED_ACCENT_COLOR)) return null;
+    if (!getPreferences().hasSelectedAccentColor()) return null;
     ThemeState themeState = ActivityUtilitiesKt.themeState(getPreferences());
     return themeState.getAccentStyle();
   }
@@ -97,7 +97,7 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     initializeScreenshotSecurity(true);
-    DynamicLanguageActivityHelper.recreateIfNotInCorrectLanguage(this, TextSecurePreferences.getLanguage(this));
+    DynamicLanguageActivityHelper.recreateIfNotInCorrectLanguage(this, MessagingModuleConfiguration.getShared().getPrefs().getLanguage());
     String name = getResources().getString(R.string.app_name);
     Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground);
     int color = getResources().getColor(R.color.app_icon_background);
@@ -130,7 +130,7 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
     if (!isResume) {
       getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     } else {
-      if (TextSecurePreferences.isScreenSecurityEnabled(this)) {
+      if (MessagingModuleConfiguration.getShared().getPrefs().isScreenSecurityEnabled()) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
       } else {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
@@ -140,6 +140,6 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
 
   @Override
   protected void attachBaseContext(Context newBase) {
-    super.attachBaseContext(DynamicLanguageContextWrapper.updateContext(newBase, TextSecurePreferences.getLanguage(newBase)));
+    super.attachBaseContext(DynamicLanguageContextWrapper.updateContext(newBase, MessagingModuleConfiguration.getShared().getPrefs().getLanguage()));
   }
 }

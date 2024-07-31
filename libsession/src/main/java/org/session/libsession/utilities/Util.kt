@@ -11,6 +11,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.StyleSpan
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Base64
 import java.io.*
@@ -209,8 +210,8 @@ object Util {
     }
 
     @JvmStatic
-    fun isOwnNumber(context: Context, number: String): Boolean {
-        return TextSecurePreferences.getLocalNumber(context).equals(number)
+    fun isOwnNumber(number: String): Boolean {
+        return MessagingModuleConfiguration.shared.context.prefs.getLocalNumber().equals(number)
     }
 
     @JvmStatic

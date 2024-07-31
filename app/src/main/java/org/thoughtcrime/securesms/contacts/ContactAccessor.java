@@ -74,9 +74,9 @@ public class ContactAccessor {
     }
 
 //    if (context.getString(R.string.note_to_self).toLowerCase().contains(constraint.toLowerCase()) &&
-//        !numberList.contains(TextSecurePreferences.getLocalNumber(context)))
+//        !numberList.contains(MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber(context)))
 //    {
-//      numberList.add(TextSecurePreferences.getLocalNumber(context));
+//      numberList.add(MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber(context));
 //    }
 
     return numberList;

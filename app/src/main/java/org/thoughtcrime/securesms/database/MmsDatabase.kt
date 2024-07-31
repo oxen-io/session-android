@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.signal.IncomingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingGroupMediaMessage
@@ -45,8 +46,8 @@ import org.session.libsession.utilities.IdentityKeyMismatch
 import org.session.libsession.utilities.IdentityKeyMismatchList
 import org.session.libsession.utilities.NetworkFailure
 import org.session.libsession.utilities.NetworkFailureList
-import org.session.libsession.utilities.TextSecurePreferences.Companion.isReadReceiptsEnabled
 import org.session.libsession.utilities.Util.toIsoBytes
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
@@ -1254,10 +1255,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             val expiry               = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRY))
             val status               = cursor.getInt(cursor.getColumnIndexOrThrow(STATUS))
             val deliveryReceiptCount = cursor.getInt(cursor.getColumnIndexOrThrow(DELIVERY_RECEIPT_COUNT))
-            val readReceiptCount     = if (isReadReceiptsEnabled(context)) cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT)) else 0
+            val readReceiptCount     = if (context.prefs.isReadReceiptsEnabled()) cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT)) else 0
             val hasMention           = (cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1)
             val slideDeck            = SlideDeck(context, MmsNotificationAttachment(status, messageSize))
-
             return NotificationMmsMessageRecord(
                 id, recipient, recipient,
                 dateSent, dateReceived, deliveryReceiptCount, threadId,
@@ -1286,7 +1286,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             val unidentified         = cursor.getInt(cursor.getColumnIndexOrThrow(UNIDENTIFIED)) == 1
             val hasMention           = cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1
 
-            if (!isReadReceiptsEnabled(context)) {
+            if (!context.prefs.isReadReceiptsEnabled()) {
                 readReceiptCount = 0
             }
             val recipient = getRecipientFor(address)

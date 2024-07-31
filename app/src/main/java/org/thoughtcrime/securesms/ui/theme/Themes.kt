@@ -14,7 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import org.session.libsession.utilities.AppTextSecurePreferences
+import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 
 // Globally accessible composition local objects
 val LocalColors = compositionLocalOf <ThemeColors> { ClassicDark() }
@@ -33,8 +34,7 @@ fun SessionMaterialTheme(
     if(selectedTheme == null) {
         // Some values can be set from the preferences, and if not should fallback to a default value
         val context = LocalContext.current
-        val preferences = AppTextSecurePreferences(context)
-        selectedTheme = preferences.getComposeTheme()
+        selectedTheme = context.prefs.getComposeTheme()
     }
 
     SessionMaterialTheme(colors = selectedTheme ?: ClassicDark()) { content() }

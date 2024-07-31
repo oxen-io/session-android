@@ -2,7 +2,7 @@ package org.session.libsession.messaging.jobs
 
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.Data
-import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 
 class TrimThreadJob(val threadId: Long, val openGroupId: String?) : Job {
     override var delegate: JobDelegate? = null
@@ -22,7 +22,7 @@ class TrimThreadJob(val threadId: Long, val openGroupId: String?) : Job {
 
     override suspend fun execute(dispatcherName: String) {
         val context = MessagingModuleConfiguration.shared.context
-        val trimmingEnabled = TextSecurePreferences.isThreadLengthTrimmingEnabled(context)
+        val trimmingEnabled = context.prefs.isThreadLengthTrimmingEnabled()
         val storage = MessagingModuleConfiguration.shared.storage
         val messageCount = storage.getMessageCount(threadId)
         if (trimmingEnabled && !openGroupId.isNullOrEmpty() && messageCount >= THREAD_LENGTH_TRIGGER_SIZE) {

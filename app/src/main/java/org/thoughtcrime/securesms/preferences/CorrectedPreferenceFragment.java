@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
@@ -22,7 +21,6 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.thoughtcrime.securesms.components.CustomDefaultPreference;
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
 
 import network.loki.messenger.R;
@@ -52,22 +50,6 @@ public abstract class CorrectedPreferenceFragment extends PreferenceFragmentComp
     View lv = getView().findViewById(android.R.id.list);
     if (lv != null) lv.setPadding(0, 0, 0, 0);
     setDivider(null);
-  }
-
-  @Override
-  public void onDisplayPreferenceDialog(Preference preference) {
-    DialogFragment dialogFragment = null;
-
-    if (preference instanceof CustomDefaultPreference) {
-      dialogFragment = CustomDefaultPreference.CustomDefaultPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-    }
-
-    if (dialogFragment != null) {
-      dialogFragment.setTargetFragment(this, 0);
-      dialogFragment.show(getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
-    } else {
-      super.onDisplayPreferenceDialog(preference);
-    }
   }
 
   @Override

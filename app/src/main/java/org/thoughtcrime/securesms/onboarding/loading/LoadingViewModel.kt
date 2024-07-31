@@ -67,10 +67,8 @@ internal class LoadingViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                TextSecurePreferences.events
-                    .filter { it == TextSecurePreferences.CONFIGURATION_SYNCED }
-                    .onStart { emit(TextSecurePreferences.CONFIGURATION_SYNCED) }
-                    .filter { prefs.getConfigurationMessageSynced() }
+                prefs.configurationMessageSyncedFlow()
+                    .filter { it }
                     .timeout(TIMEOUT_TIME)
                     .collectLatest { onSuccess() }
             } catch (e: Exception) {

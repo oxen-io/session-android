@@ -1,7 +1,6 @@
 package org.session.libsession.messaging.sending_receiving
 
 import android.text.TextUtils
-import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -41,6 +40,7 @@ import org.session.libsession.utilities.GroupUtil.doubleEncodeGroupID
 import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
@@ -194,17 +194,18 @@ private fun MessageReceiver.handleDataExtractionNotification(message: DataExtrac
 private fun handleConfigurationMessage(message: ConfigurationMessage) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
-    if (TextSecurePreferences.getConfigurationMessageSynced(context)
-        && !TextSecurePreferences.shouldUpdateProfile(context, message.sentTimestamp!!)) return
+    val prefs = context.prefs
+    if (prefs.getConfigurationMessageSynced()
+        && !prefs.shouldUpdateProfile(message.sentTimestamp!!)) return
     val userPublicKey = storage.getUserPublicKey()
     if (userPublicKey == null || message.sender != storage.getUserPublicKey()) return
 
-    val firstTimeSync = !TextSecurePreferences.getConfigurationMessageSynced(context)
+    val firstTimeSync = !prefs.getConfigurationMessageSynced()
 
-    TextSecurePreferences.setConfigurationMessageSynced(context, true)
-    TextSecurePreferences.setLastProfileUpdateTime(context, message.sentTimestamp!!)
+    prefs.setConfigurationMessageSynced(true)
+    prefs.setLastProfileUpdateTime(message.sentTimestamp!!)
 
-    TextSecurePreferences.setHasLegacyConfig(context, true)
+    prefs.setHasLegacyConfig(true)
     if (!firstTimeSync) return
 
     val allClosedGroupPublicKeys = storage.getAllClosedGroupPublicKeys()
@@ -233,11 +234,11 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
     val profileManager = SSKEnvironment.shared.profileManager
     val recipient = Recipient.from(context, Address.fromSerialized(userPublicKey), false)
     if (message.displayName.isNotEmpty()) {
-        TextSecurePreferences.setProfileName(context, message.displayName)
+        prefs.setProfileName(message.displayName)
         profileManager.setName(context, recipient, message.displayName)
     }
     if (message.profileKey.isNotEmpty() && !message.profilePicture.isNullOrEmpty()
-        && TextSecurePreferences.getProfilePictureURL(context) != message.profilePicture) {
+        && prefs.getProfilePictureURL() != message.profilePicture) {
         val profileKey = Base64.encodeBytes(message.profileKey)
         ProfileKeyUtil.setEncodedProfileKey(context, profileKey)
         profileManager.setProfilePicture(context, recipient, message.profilePicture, message.profileKey)
@@ -641,7 +642,7 @@ private fun MessageReceiver.handleClosedGroupEncryptionKeyPair(message: ClosedGr
 private fun MessageReceiver.handleClosedGroupNameChanged(message: ClosedGroupControlMessage) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
-    val userPublicKey = TextSecurePreferences.getLocalNumber(context)
+    val userPublicKey = context.prefs.getLocalNumber()
     val senderPublicKey = message.sender ?: return
     val kind = message.kind!! as? ClosedGroupControlMessage.Kind.NameChange ?: return
     val groupPublicKey = message.groupPublicKey ?: return

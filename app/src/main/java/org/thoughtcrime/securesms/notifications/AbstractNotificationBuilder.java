@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
@@ -50,8 +51,8 @@ public abstract class AbstractNotificationBuilder extends NotificationCompat.Bui
   }
 
   public void setAlarms(@Nullable Uri ringtone, VibrateState vibrate) {
-    Uri     defaultRingtone = NotificationChannels.supported() ? NotificationChannels.getMessageRingtone(context) : TextSecurePreferences.getNotificationRingtone(context);
-    boolean defaultVibrate  = NotificationChannels.supported() ? NotificationChannels.getMessageVibrate(context)  : TextSecurePreferences.isNotificationVibrateEnabled(context);
+    Uri     defaultRingtone = NotificationChannels.supported() ? NotificationChannels.getMessageRingtone(context) : MessagingModuleConfiguration.getShared().getPrefs().getNotificationRingtoneUri();
+    boolean defaultVibrate  = NotificationChannels.supported() ? NotificationChannels.getMessageVibrate(context)  : MessagingModuleConfiguration.getShared().getPrefs().isNotificationVibrateEnabled();
 
     if      (ringtone == null && !TextUtils.isEmpty(defaultRingtone.toString())) setSound(defaultRingtone);
     else if (ringtone != null && !ringtone.toString().isEmpty())                 setSound(ringtone);
@@ -64,7 +65,7 @@ public abstract class AbstractNotificationBuilder extends NotificationCompat.Bui
   }
 
   private void setLed() {
-    int ledColor = TextSecurePreferences.getNotificationLedColor(context);
+    int ledColor = MessagingModuleConfiguration.getShared().getPrefs().getNotificationLedColor();
     setLights(ledColor, 500,2000);
   }
 

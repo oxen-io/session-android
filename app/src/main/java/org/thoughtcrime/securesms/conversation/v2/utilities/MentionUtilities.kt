@@ -12,9 +12,9 @@ import nl.komponents.kovenant.combine.Tuple2
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.utilities.SodiumUtilities
-import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.truncateIdForDisplay
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.RoundedBackgroundSpan
@@ -51,7 +51,7 @@ object MentionUtilities {
         var matcher = pattern.matcher(text)
         val mentions = mutableListOf<Tuple2<Range<Int>, String>>()
         var startIndex = 0
-        val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
+        val userPublicKey = context.prefs.getLocalNumber()!!
         val openGroup by lazy { DatabaseComponent.get(context).storage().getOpenGroup(threadID) }
 
         // format the mention text

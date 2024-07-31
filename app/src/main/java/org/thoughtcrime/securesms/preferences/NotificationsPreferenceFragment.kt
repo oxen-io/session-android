@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.TextSecurePreferences.Companion.isNotificationsEnabled
+import org.session.libsession.utilities.findPreference
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.components.SwitchPreferenceCompat
 import org.thoughtcrime.securesms.notifications.NotificationChannels
@@ -73,7 +73,7 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
             }
         findPreference<Preference>(TextSecurePreferences.RINGTONE_PREF)!!.onPreferenceClickListener =
             Preference.OnPreferenceClickListener {
-                val current = prefs.getNotificationRingtone()
+                val current = prefs.getNotificationRingtoneUri()
                 val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true)
@@ -151,7 +151,7 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
 
     private fun initializeRingtoneSummary(pref: Preference?) {
         val listener = pref!!.onPreferenceChangeListener as RingtoneSummaryListener?
-        val uri = prefs.getNotificationRingtone()
+        val uri = prefs.getNotificationRingtoneUri()
         listener!!.onPreferenceChange(pref, uri)
     }
 
@@ -170,14 +170,5 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             return super.onPreferenceChange(preference, value)
         }
-    }
-
-    companion object {
-        @Suppress("unused")
-        private val TAG = NotificationsPreferenceFragment::class.java.simpleName
-        fun getSummary(context: Context): CharSequence = when (isNotificationsEnabled(context)) {
-                true -> R.string.ApplicationPreferencesActivity_On
-                false -> R.string.ApplicationPreferencesActivity_Off
-            }.let(context::getString)
     }
 }

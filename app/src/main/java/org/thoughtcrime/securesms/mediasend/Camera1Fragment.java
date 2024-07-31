@@ -35,6 +35,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 
 import network.loki.messenger.R;
+
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsignal.utilities.Log;
 import com.bumptech.glide.Glide;
 import org.session.libsession.utilities.ServiceUtil;
@@ -78,7 +80,7 @@ public class Camera1Fragment extends Fragment implements TextureView.SurfaceText
     display.getSize(displaySize);
 
     controller    = (Controller) getActivity();
-    camera        = new Camera1Controller(TextSecurePreferences.getDirectCaptureCameraId(getContext()), displaySize.x, displaySize.y, this);
+    camera        = new Camera1Controller(MessagingModuleConfiguration.getShared().getPrefs().getDirectCaptureCameraId(), displaySize.x, displaySize.y, this);
     orderEnforcer = new OrderEnforcer<>(Stage.SURFACE_AVAILABLE, Stage.CAMERA_PROPERTIES_AVAILABLE);
     viewModel     = new ViewModelProvider(requireActivity(), new MediaSendViewModel.Factory(requireActivity().getApplication(), new MediaRepository())).get(MediaSendViewModel.class);
   }
@@ -212,7 +214,7 @@ public class Camera1Fragment extends Fragment implements TextureView.SurfaceText
         flipButton.setVisibility(properties.getCameraCount() > 1 ? View.VISIBLE : View.GONE);
         flipButton.setOnClickListener(v ->  {
           int newCameraId = camera.flip();
-          TextSecurePreferences.setDirectCaptureCameraId(getContext(), newCameraId);
+          MessagingModuleConfiguration.getShared().getPrefs().setDirectCaptureCameraId(newCameraId);
 
           Animation animation = new RotateAnimation(0, -180, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
           animation.setDuration(200);

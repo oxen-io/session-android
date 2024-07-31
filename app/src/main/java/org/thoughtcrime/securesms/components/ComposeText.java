@@ -22,6 +22,7 @@ import androidx.core.view.inputmethod.EditorInfoCompat;
 import androidx.core.view.inputmethod.InputConnectionCompat;
 import androidx.core.view.inputmethod.InputContentInfoCompat;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.thoughtcrime.securesms.components.emoji.EmojiEditText;
 import org.session.libsignal.utilities.Log;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -108,8 +109,8 @@ public class ComposeText extends EmojiEditText {
     }
 
     public void setTransport() {
-        final boolean useSystemEmoji = TextSecurePreferences.isSystemEmojiPreferred(getContext());
-        final boolean isIncognito    = TextSecurePreferences.isIncognitoKeyboardEnabled(getContext());
+        final boolean useSystemEmoji = MessagingModuleConfiguration.getShared().getPrefs().isSystemEmojiPreferred();
+        final boolean isIncognito    = MessagingModuleConfiguration.getShared().getPrefs().isIncognitoKeyboardEnabled();
 
         int imeOptions = (getImeOptions() & ~EditorInfo.IME_MASK_ACTION) | EditorInfo.IME_ACTION_SEND;
         int inputType  = getInputType();
@@ -132,7 +133,7 @@ public class ComposeText extends EmojiEditText {
     public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
         InputConnection inputConnection = super.onCreateInputConnection(editorInfo);
 
-        if(TextSecurePreferences.isEnterSendsEnabled(getContext())) {
+        if(MessagingModuleConfiguration.getShared().getPrefs().isEnterSendsEnabled()) {
             editorInfo.imeOptions &= ~EditorInfo.IME_FLAG_NO_ENTER_ACTION;
         }
 
@@ -149,7 +150,7 @@ public class ComposeText extends EmojiEditText {
     }
 
     private void initialize() {
-        if (TextSecurePreferences.isIncognitoKeyboardEnabled(getContext())) {
+        if (MessagingModuleConfiguration.getShared().getPrefs().isIncognitoKeyboardEnabled()) {
             setImeOptions(getImeOptions() | 16777216);
         }
     }

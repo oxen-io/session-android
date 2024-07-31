@@ -5,10 +5,9 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.DownloadUtilities.downloadFile
-import org.session.libsession.utilities.TextSecurePreferences.Companion.setProfileAvatarId
-import org.session.libsession.utilities.TextSecurePreferences.Companion.setProfilePictureURL
 import org.session.libsession.utilities.Util.copy
 import org.session.libsession.utilities.Util.equals
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.streams.ProfileCipherInputStream
 import org.session.libsignal.utilities.Log
@@ -64,8 +63,8 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
             Log.w(TAG, "Removing profile avatar for: " + recipient.address.serialize())
 
             if (recipient.isLocalNumber) {
-                setProfileAvatarId(context, SecureRandom().nextInt())
-                setProfilePictureURL(context, null)
+                context.prefs.setProfileAvatarId(SecureRandom().nextInt())
+                context.prefs.setProfilePictureURL(null)
             }
 
             AvatarHelper.delete(context, recipient.address)
@@ -83,8 +82,8 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
             decryptDestination.renameTo(AvatarHelper.getAvatarFile(context, recipient.address))
 
             if (recipient.isLocalNumber) {
-                setProfileAvatarId(context, SecureRandom().nextInt())
-                setProfilePictureURL(context, profileAvatar)
+                context.prefs.setProfileAvatarId(SecureRandom().nextInt())
+                context.prefs.setProfilePictureURL(profileAvatar)
             }
 
             storage.setProfileAvatar(recipient, profileAvatar)

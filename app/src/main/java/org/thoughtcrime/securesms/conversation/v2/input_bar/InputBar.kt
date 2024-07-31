@@ -18,8 +18,10 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewInputBarBinding
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.components.LinkPreviewDraftView
 import org.thoughtcrime.securesms.conversation.v2.components.LinkPreviewDraftViewDelegate
@@ -151,7 +153,7 @@ class InputBar @JvmOverloads constructor(
 
         // Edit text
         binding.inputBarEditText.setOnEditorActionListener(this)
-        if (TextSecurePreferences.isEnterSendsEnabled(context)) {
+        if (context.prefs.isEnterSendsEnabled()) {
             binding.inputBarEditText.imeOptions = EditorInfo.IME_ACTION_SEND
             binding.inputBarEditText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         } else {
@@ -160,7 +162,7 @@ class InputBar @JvmOverloads constructor(
                 binding.inputBarEditText.inputType
                         InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         }
-        val incognitoFlag = if (TextSecurePreferences.isIncognitoKeyboardEnabled(context)) 16777216 else 0
+        val incognitoFlag = if (context.prefs.isIncognitoKeyboardEnabled()) 16777216 else 0
         binding.inputBarEditText.imeOptions = binding.inputBarEditText.imeOptions or incognitoFlag // Always use incognito keyboard if setting enabled
         binding.inputBarEditText.delegate = this
     }
@@ -205,7 +207,7 @@ class InputBar @JvmOverloads constructor(
             it.delegate = this
             binding.inputBarAdditionalContentContainer.addView(layout)
             val attachments = (message as? MmsMessageRecord)?.slideDeck
-            val sender = if (message.isOutgoing) TextSecurePreferences.getLocalNumber(context)!! else message.individualRecipient.address.serialize()
+            val sender = if (message.isOutgoing) context.prefs.getLocalNumber()!! else message.individualRecipient.address.serialize()
             it.bind(sender, message.body, attachments, thread, true, message.isOpenGroupInvitation, message.threadId, false, glide)
         }
 

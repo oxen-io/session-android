@@ -28,6 +28,7 @@ import com.annimon.stream.Stream;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteStatement;
 import org.apache.commons.lang3.StringUtils;
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.calls.CallMessageType;
 import org.session.libsession.messaging.messages.signal.IncomingGroupMessage;
 import org.session.libsession.messaging.messages.signal.IncomingTextMessage;
@@ -837,7 +838,7 @@ public class SmsDatabase extends MessagingDatabase {
       boolean unidentified         = cursor.getInt(cursor.getColumnIndexOrThrow(SmsDatabase.UNIDENTIFIED)) == 1;
       boolean hasMention           = cursor.getInt(cursor.getColumnIndexOrThrow(SmsDatabase.HAS_MENTION)) == 1;
 
-      if (!TextSecurePreferences.isReadReceiptsEnabled(context)) {
+      if (!MessagingModuleConfiguration.getShared().getPrefs().isReadReceiptsEnabled()) {
         readReceiptCount = 0;
       }
 

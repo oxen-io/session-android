@@ -21,6 +21,7 @@ import network.loki.messenger.libsession_util.util.afterSend
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
@@ -71,6 +72,7 @@ import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol.Companion.NAME_PADDED_LENGTH
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.Recipient.DisappearingState
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
@@ -175,7 +177,7 @@ open class Storage(
     }
 
     override fun getUserPublicKey(): String? {
-        return TextSecurePreferences.getLocalNumber(context)
+        return context.prefs.getLocalNumber()
     }
 
     override fun getUserX25519KeyPair(): ECKeyPair {
@@ -183,9 +185,9 @@ open class Storage(
     }
 
     override fun getUserProfile(): Profile {
-        val displayName = TextSecurePreferences.getProfileName(context)
+        val displayName = context.prefs.getProfileName()
         val profileKey = ProfileKeyUtil.getProfileKey(context)
-        val profilePictureUrl = TextSecurePreferences.getProfilePictureURL(context)
+        val profilePictureUrl = context.prefs.getProfilePictureURL()
         return Profile(displayName, profileKey, profilePictureUrl)
     }
 
@@ -210,8 +212,8 @@ open class Storage(
             Recipient.from(context, it, false)
         }
         ourRecipient.resolve().profileKey = newProfileKey
-        TextSecurePreferences.setProfileKey(context, newProfileKey?.let { Base64.encodeBytes(it) })
-        TextSecurePreferences.setProfilePictureURL(context, newProfilePicture)
+        context.prefs.setProfileKey(newProfileKey?.let { Base64.encodeBytes(it) })
+        context.prefs.setProfilePictureURL(newProfilePicture)
 
         if (newProfileKey != null) {
             JobQueue.shared.add(RetrieveProfileAvatarJob(newProfilePicture, ourRecipient.address))
@@ -219,10 +221,10 @@ open class Storage(
     }
 
     override fun getOrGenerateRegistrationID(): Int {
-        var registrationID = TextSecurePreferences.getLocalRegistrationId(context)
+        var registrationID = context.prefs.getLocalRegistrationId()
         if (registrationID == 0) {
             registrationID = KeyHelper.generateRegistrationId(false)
-            TextSecurePreferences.setLocalRegistrationId(context, registrationID)
+            context.prefs.setLocalRegistrationId(registrationID)
         }
         return registrationID
     }
@@ -478,7 +480,7 @@ open class Storage(
         val profileManager = SSKEnvironment.shared.profileManager
 
         name.takeUnless { it.isEmpty() }?.truncate(NAME_PADDED_LENGTH)?.let {
-            TextSecurePreferences.setProfileName(context, it)
+            context.prefs.setProfileName(it)
             profileManager.setName(context, recipient, it)
             if (it != name) userProfile.setName(it)
         }
@@ -487,7 +489,7 @@ open class Storage(
         if (userPic == UserPic.DEFAULT) {
             clearUserPic()
         } else if (userPic.key.isNotEmpty() && userPic.url.isNotEmpty()
-            && TextSecurePreferences.getProfilePictureURL(context) != userPic.url) {
+            && context.prefs.getProfilePictureURL() != userPic.url) {
             setUserProfilePicture(userPic.url, userPic.key)
         }
 
@@ -525,11 +527,11 @@ open class Storage(
         val recipient = Recipient.from(context, fromSerialized(userPublicKey), false)
 
         // Clear details related to the user's profile picture
-        TextSecurePreferences.setProfileKey(context, null)
+        context.prefs.setProfileKey(null)
         ProfileKeyUtil.setEncodedProfileKey(context, null)
         recipientDatabase.setProfileAvatar(recipient, null)
-        TextSecurePreferences.setProfileAvatarId(context, 0)
-        TextSecurePreferences.setProfilePictureURL(context, null)
+        context.prefs.setProfileAvatarId(0)
+        context.prefs.setProfilePictureURL(null)
 
         Recipient.removeCached(fromSerialized(userPublicKey))
         configFactory.user?.setPic(UserPic.DEFAULT)
@@ -787,7 +789,7 @@ open class Storage(
     // message timestamp and as such we cannot use that to identify the local message.
     override fun markAsSentToCommunity(threadId: Long, messageID: Long) {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val message = database.getLastSentMessageRecordFromSender(threadId, TextSecurePreferences.getLocalNumber(context))
+        val message = database.getLastSentMessageRecordFromSender(threadId, context.prefs.getLocalNumber())
 
         // Ensure we can find the local message..
         if (message == null) {
@@ -852,7 +854,7 @@ open class Storage(
     // modifies the message timestamp and as such we cannot use that to identify the local message.
     override fun markUnidentifiedInCommunity(threadId: Long, messageId: Long) {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val message = database.getLastSentMessageRecordFromSender(threadId, TextSecurePreferences.getLocalNumber(context))
+        val message = database.getLastSentMessageRecordFromSender(threadId, context.prefs.getLocalNumber())
 
         // Check to ensure the message exists
         if (message == null) {

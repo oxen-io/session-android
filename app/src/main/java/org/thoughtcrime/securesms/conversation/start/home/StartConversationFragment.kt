@@ -8,7 +8,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.conversation.start.NullStartConversationDelegate
 import org.thoughtcrime.securesms.ui.createThemedComposeView
@@ -28,7 +30,7 @@ class StartConversationHomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = createThemedComposeView {
         StartConversationScreen(
-            accountId = TextSecurePreferences.getLocalNumber(requireContext())!!,
+            accountId = requireContext().prefs.getLocalNumber()!!,
             delegate = delegate.collectAsState().value
         )
     }

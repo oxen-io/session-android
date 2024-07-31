@@ -13,8 +13,9 @@ import androidx.core.content.ContextCompat
 import com.google.android.flexbox.JustifyContent
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewEmojiReactionsBinding
-import org.session.libsession.utilities.TextSecurePreferences.Companion.getLocalNumber
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.ThemeUtil
+import org.session.libsession.utilities.prefs
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView
 import org.thoughtcrime.securesms.components.emoji.EmojiUtil
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil
@@ -86,7 +87,7 @@ class EmojiReactionsView : ConstraintLayout, OnTouchListener {
     }
 
     private fun displayReactions(threshold: Int) {
-        val userPublicKey = getLocalNumber(context)
+        val userPublicKey = context.prefs.getLocalNumber()
         val reactions = buildSortedReactionsList(records!!, userPublicKey, threshold)
         binding.layoutEmojiContainer.removeAllViews()
         val overflowContainer = LinearLayout(context)

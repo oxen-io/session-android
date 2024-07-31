@@ -19,8 +19,8 @@ import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
-import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.WindowDebouncer
+import org.session.libsession.utilities.prefs
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
@@ -54,12 +54,12 @@ object ConfigurationMessageUtilities {
 
     @JvmStatic
     fun syncConfigurationIfNeeded(context: Context) {
-        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Log.w(TAG, "User Public Key is null")
+        val userPublicKey = context.prefs.getLocalNumber() ?: return Log.w(TAG, "User Public Key is null")
         scheduleConfigSync(userPublicKey)
     }
 
     fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
-        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofFail(NullPointerException("User Public Key is null"))
+        val userPublicKey = context.prefs.getLocalNumber() ?: return Promise.ofFail(NullPointerException("User Public Key is null"))
         // Schedule a new job if one doesn't already exist (only)
         scheduleConfigSync(userPublicKey)
         return Promise.ofSuccess(Unit)

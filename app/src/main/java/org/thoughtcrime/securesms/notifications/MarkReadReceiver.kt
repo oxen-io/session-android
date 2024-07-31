@@ -6,15 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import androidx.core.app.NotificationManagerCompat
-import org.session.libsession.messaging.MessagingModuleConfiguration.Companion.shared
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.control.ReadReceipt
 import org.session.libsession.messaging.sending_receiving.MessageSender.send
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeAPI.nowWithOffset
 import org.session.libsession.utilities.SSKEnvironment
-import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.TextSecurePreferences.Companion.isReadReceiptsEnabled
 import org.session.libsession.utilities.associateByNotNull
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.ApplicationContext
@@ -35,7 +34,7 @@ class MarkReadReceiver : BroadcastReceiver() {
                 val currentTime = nowWithOffset
                 threadIds.forEach {
                     Log.i(TAG, "Marking as read: $it")
-                    shared.storage.markConversationAsRead(it, currentTime, true)
+                    MessagingModuleConfiguration.shared.storage.markConversationAsRead(it, currentTime, true)
                 }
                 return null
             }
@@ -102,7 +101,7 @@ class MarkReadReceiver : BroadcastReceiver() {
                     SnodeAPI.alterTtl(
                         messageHashes = hashes,
                         newExpiry = nowWithOffset + expiresIn,
-                        publicKey = TextSecurePreferences.getLocalNumber(context)!!,
+                        publicKey = context.prefs.getLocalNumber()!!,
                         shorten = true
                     )
                 }
@@ -112,7 +111,7 @@ class MarkReadReceiver : BroadcastReceiver() {
             context: Context,
             markedReadMessages: List<MarkedMessageInfo>
         ) {
-            if (!isReadReceiptsEnabled(context)) return
+            if (!context.prefs.isReadReceiptsEnabled()) return
 
             markedReadMessages.map { it.syncMessageId }
                 .filter { shouldSendReadReceipt(Recipient.from(context, it.address, false)) }
@@ -130,7 +129,7 @@ class MarkReadReceiver : BroadcastReceiver() {
             hashToMessage: Map<String, MarkedMessageInfo>
         ) {
             @Suppress("UNCHECKED_CAST")
-            val expiries = SnodeAPI.getExpiries(hashToMessage.keys.toList(), TextSecurePreferences.getLocalNumber(context)!!).get()["expiries"] as Map<String, Long>
+            val expiries = SnodeAPI.getExpiries(hashToMessage.keys.toList(), context.prefs.getLocalNumber()!!).get()["expiries"] as Map<String, Long>
             hashToMessage.forEach { (hash, info) -> expiries[hash]?.let { scheduleDeletion(context, info.expirationInfo, it - info.expirationInfo.expireStarted) } }
         }
 

@@ -6,6 +6,8 @@ import android.database.DatabaseUtils;
 import android.database.MergeCursor;
 import androidx.annotation.NonNull;
 import com.annimon.stream.Stream;
+
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.GroupRecord;
@@ -137,7 +139,7 @@ public class SearchRepository {
 
   private CursorList<GroupRecord> queryConversations(@NonNull String query, List<String> matchingAddresses) {
     List<String> numbers = contactAccessor.getNumbersForThreadSearchFilter(context, query);
-    String localUserNumber = TextSecurePreferences.getLocalNumber(context);
+    String localUserNumber = MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber();
     if (localUserNumber != null) {
       matchingAddresses.remove(localUserNumber);
     }

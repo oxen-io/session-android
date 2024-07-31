@@ -12,9 +12,11 @@ import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewQuoteBinding
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
 import org.thoughtcrime.securesms.database.SessionContactDatabase
@@ -71,7 +73,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         isOriginalMissing: Boolean, glide: RequestManager) {
         // Author
         val author = contactDb.getContactWithAccountID(authorPublicKey)
-        val localNumber = TextSecurePreferences.getLocalNumber(context)
+        val localNumber = context.prefs.getLocalNumber()
         val quoteIsLocalUser = localNumber != null && authorPublicKey == localNumber
 
         val authorDisplayName =

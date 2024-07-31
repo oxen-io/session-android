@@ -18,8 +18,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import network.loki.messenger.R
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.PublicKeyValidation
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
@@ -47,7 +49,7 @@ class QRCodeActivity : PassphraseRequiredActionBarActivity() {
 
         setComposeContent {
             Tabs(
-                TextSecurePreferences.getLocalNumber(this)!!,
+                prefs.getLocalNumber()!!,
                 errors.asSharedFlow(),
                 onScan = ::onScan
             )

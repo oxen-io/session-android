@@ -4,6 +4,7 @@ import android.content.Context
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import okio.Buffer
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.file_server.FileServerApi
 import org.session.libsignal.streams.ProfileCipherOutputStream
 import org.session.libsignal.utilities.ProfileAvatarData
@@ -35,9 +36,9 @@ object ProfilePictureUtilities {
             } catch (e: Exception) {
                 deferred.reject(e)
             }
-            TextSecurePreferences.setLastProfilePictureUpload(context, Date().time)
+            context.prefs.setLastProfilePictureUpload(Date().time)
             val url = "${FileServerApi.server}/file/$id"
-            TextSecurePreferences.setProfilePictureURL(context, url)
+            context.prefs.setProfilePictureURL(url)
             deferred.resolve(Unit)
         }
         return deferred.promise

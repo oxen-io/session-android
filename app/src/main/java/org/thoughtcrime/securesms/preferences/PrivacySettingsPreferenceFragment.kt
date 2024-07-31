@@ -13,9 +13,10 @@ import androidx.preference.PreferenceDataStore
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.TextSecurePreferences.Companion.isPasswordDisabled
-import org.session.libsession.utilities.TextSecurePreferences.Companion.setScreenLockEnabled
+import org.session.libsession.utilities.findPreference
+import org.session.libsession.utilities.prefs
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.components.SwitchPreferenceCompat
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
@@ -30,6 +31,7 @@ import javax.inject.Inject
 class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
 
     @Inject lateinit var configFactory: ConfigFactory
+    @Inject lateinit var prefs: TextSecurePreferences
 
     override fun onCreate(paramBundle: Bundle?) {
         super.onCreate(paramBundle)
@@ -109,12 +111,8 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
         addPreferencesFromResource(R.xml.preferences_app_protection)
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     private fun initializeVisibility() {
-        if (isPasswordDisabled(requireContext())) {
+        if (prefs.isPasswordDisabled()) {
             val keyguardManager =
                 requireContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             if (!keyguardManager.isKeyguardSecure) {
@@ -130,10 +128,10 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
     private inner class ScreenLockListener : Preference.OnPreferenceChangeListener {
         override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
             val enabled = newValue as Boolean
-            setScreenLockEnabled(context!!, enabled)
+            requireContext().prefs.setScreenLockEnabled(enabled)
             val intent = Intent(context, KeyCachingService::class.java)
             intent.action = KeyCachingService.LOCK_TOGGLED_EVENT
-            context!!.startService(intent)
+            requireContext().startService(intent)
             return true
         }
     }

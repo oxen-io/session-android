@@ -32,6 +32,8 @@ import android.os.Build.VERSION;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.AttributeSet;
+
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsignal.utilities.Log;
 import android.view.OrientationEventListener;
 import android.view.ViewGroup;
@@ -81,7 +83,7 @@ public class CameraView extends ViewGroup {
       int        camera     = typedArray.getInt(R.styleable.CameraView_camera, -1);
 
       if      (camera != -1)    cameraId = camera;
-      else if (isMultiCamera()) cameraId = TextSecurePreferences.getDirectCaptureCameraId(context);
+      else if (isMultiCamera()) cameraId = MessagingModuleConfiguration.getShared().getPrefs().getDirectCaptureCameraId();
 
       typedArray.recycle();
     }
@@ -266,7 +268,7 @@ public class CameraView extends ViewGroup {
                  : CameraInfo.CAMERA_FACING_BACK;
       onPause();
       onResume();
-      TextSecurePreferences.setDirectCaptureCameraId(getContext(), cameraId);
+      MessagingModuleConfiguration.getShared().getPrefs().setDirectCaptureCameraId(cameraId);
     }
   }
 

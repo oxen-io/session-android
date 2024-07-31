@@ -27,6 +27,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.thoughtcrime.securesms.ApplicationContext
@@ -82,18 +83,14 @@ class LibSessionTests {
 
     @Before
     fun setupUser() {
-        PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getInstrumentation().targetContext.applicationContext).edit {
-            putBoolean(TextSecurePreferences.HAS_FORCED_NEW_CONFIG, true).apply()
-        }
         val newBytes = randomSeedBytes().toByteArray()
         val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
         val kp = KeyPairUtilities.generate(newBytes)
         KeyPairUtilities.store(context, kp.seed, kp.ed25519KeyPair, kp.x25519KeyPair)
         val registrationID = KeyHelper.generateRegistrationId(false)
-        TextSecurePreferences.setLocalRegistrationId(context, registrationID)
-        TextSecurePreferences.setLocalNumber(context, kp.x25519KeyPair.hexEncodedPublicKey)
-        TextSecurePreferences.setRestorationTime(context, 0)
-        TextSecurePreferences.setHasViewedSeed(context, false)
+        context.prefs.setLocalRegistrationId(registrationID)
+        context.prefs.setLocalNumber(kp.x25519KeyPair.hexEncodedPublicKey)
+        context.prefs.setHasViewedSeed(false)
     }
 
     @Test

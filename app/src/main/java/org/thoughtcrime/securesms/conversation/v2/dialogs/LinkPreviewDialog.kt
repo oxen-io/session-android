@@ -4,7 +4,9 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import network.loki.messenger.R
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.thoughtcrime.securesms.createSessionDialog
 
 /** Shown the first time the user inputs a URL that could generate a link preview, to
@@ -19,7 +21,7 @@ class LinkPreviewDialog(private val onEnabled: () -> Unit) : DialogFragment() {
     }
 
     private fun enable() {
-        TextSecurePreferences.setLinkPreviewsEnabled(requireContext(), true)
+        requireContext().prefs.setLinkPreviewsEnabled(true)
         dismiss()
         onEnabled()
     }

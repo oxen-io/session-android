@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import network.loki.messenger.R
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 
 fun Context.sendInvitationToUseSession() {
     Intent().apply {
@@ -15,7 +17,7 @@ fun Context.sendInvitationToUseSession() {
             Intent.EXTRA_TEXT,
             getString(
                 R.string.accountIdShare,
-                TextSecurePreferences.getLocalNumber(this@sendInvitationToUseSession)
+                prefs.getLocalNumber()
             )
         )
         type = "text/plain"
@@ -25,7 +27,7 @@ fun Context.sendInvitationToUseSession() {
 
 fun Context.copyPublicKey() {
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    val clip = ClipData.newPlainText("Account ID", TextSecurePreferences.getLocalNumber(this))
+    val clip = ClipData.newPlainText("Account ID", prefs.getLocalNumber())
     clipboard.setPrimaryClip(clip)
     Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
 }

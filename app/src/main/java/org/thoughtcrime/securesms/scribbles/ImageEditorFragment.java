@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import network.loki.messenger.R;
+
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.thoughtcrime.securesms.imageeditor.ColorableRenderer;
 import org.thoughtcrime.securesms.imageeditor.ImageEditorView;
 import org.thoughtcrime.securesms.imageeditor.Renderer;
@@ -209,7 +211,7 @@ public final class ImageEditorFragment extends Fragment implements ImageEditorHu
   }
 
   private void startTextEntityEditing(@NonNull EditorElement textElement, boolean selectAll) {
-    imageEditorView.startTextEditing(textElement, TextSecurePreferences.isIncognitoKeyboardEnabled(requireContext()), selectAll);
+    imageEditorView.startTextEditing(textElement, MessagingModuleConfiguration.getShared().getPrefs().isIncognitoKeyboardEnabled(), selectAll);
   }
 
   protected void addText() {

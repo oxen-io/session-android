@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -38,6 +37,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfilePictureModifiedEvent
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
@@ -162,7 +162,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // Set up seed reminder view
         lifecycleScope.launchWhenStarted {
             binding.seedReminderView.setThemedContent {
-                if (!textSecurePreferences.getHasViewedSeed()) SeedReminder { start<RecoveryPasswordActivity>() }
+                if (!textSecurePreferences.hasViewedSeed()) SeedReminder { start<RecoveryPasswordActivity>() }
             }
         }
         // Set up recycler view
@@ -191,9 +191,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // subscribe to outdated config updates, this should be removed after long enough time for device migration
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                TextSecurePreferences.events.filter { it == TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG }.collect {
-                    updateLegacyConfigView()
-                }
+                prefs.hasLegacyConfigFlow().collect(::updateLegacyConfigView)
             }
         }
 
@@ -230,10 +228,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 }
 
                 withContext(Dispatchers.Main) {
-                    updateProfileButton()
-                    TextSecurePreferences.events.filter { it == TextSecurePreferences.PROFILE_NAME_PREF }.collect {
-                        updateProfileButton()
-                    }
+                    prefs.profileNameFlow().collect(::updateProfileButton)
                 }
             }
 
@@ -337,13 +332,13 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.sessionToolbar.isVisible = !isShown
         binding.recyclerView.isVisible = !isShown
         binding.emptyStateContainer.isVisible = (binding.recyclerView.adapter as HomeAdapter).itemCount == 0 && binding.recyclerView.isVisible
-        binding.seedReminderView.isVisible = !TextSecurePreferences.getHasViewedSeed(this) && !isShown
+        binding.seedReminderView.isVisible = !prefs.hasViewedSeed() && !isShown
         binding.globalSearchRecycler.isInvisible = !isShown
         binding.newConversationButton.isVisible = !isShown
     }
 
-    private fun updateLegacyConfigView() {
-        binding.configOutdatedView.isVisible = textSecurePreferences.getHasLegacyConfig()
+    private fun updateLegacyConfigView(hasLegacyConfig: Boolean = textSecurePreferences.getHasLegacyConfig()) {
+        binding.configOutdatedView.isVisible = hasLegacyConfig
     }
 
     override fun onResume() {
@@ -353,7 +348,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         IdentityKeyUtil.checkUpdate(this)
         binding.profileButton.recycle() // clear cached image before update tje profilePictureView
         binding.profileButton.update()
-        if (textSecurePreferences.getHasViewedSeed()) {
+        if (textSecurePreferences.hasViewedSeed()) {
             binding.seedReminderView.isVisible = false
         }
 
@@ -394,9 +389,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
     }
 
-    private fun updateProfileButton() {
+    private fun updateProfileButton(profileName: String? = textSecurePreferences.getProfileName()) {
         binding.profileButton.publicKey = publicKey
-        binding.profileButton.displayName = textSecurePreferences.getProfileName()
+        binding.profileButton.displayName = profileName
         binding.profileButton.recycle()
         binding.profileButton.update()
     }

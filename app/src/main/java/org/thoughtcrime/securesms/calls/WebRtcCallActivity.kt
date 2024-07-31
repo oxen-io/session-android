@@ -53,6 +53,7 @@ import org.thoughtcrime.securesms.webrtc.CallViewModel.State.CALL_RINGING
 import org.thoughtcrime.securesms.webrtc.Orientation
 import org.thoughtcrime.securesms.webrtc.audio.SignalAudioManager.AudioDevice.EARPIECE
 import org.thoughtcrime.securesms.webrtc.audio.SignalAudioManager.AudioDevice.SPEAKER_PHONE
+import javax.inject.Inject
 import kotlin.math.asin
 
 @AndroidEntryPoint
@@ -68,6 +69,8 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
 
         private const val CALL_DURATION_FORMAT = "HH:mm:ss"
     }
+
+    @Inject lateinit var prefs: TextSecurePreferences
 
     private val viewModel by viewModels<CallViewModel>()
     private val glide by lazy { Glide.with(this) }
@@ -204,11 +207,10 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         clipFloatingInsets()
 
         // set up the user avatar
-        TextSecurePreferences.getLocalNumber(this)?.let{
-            val username = TextSecurePreferences.getProfileName(this) ?: truncateIdForDisplay(it)
+        prefs.getLocalNumber()?.let{
             binding.userAvatar.apply {
                 publicKey = it
-                displayName = username
+                displayName = prefs.getProfileName() ?: truncateIdForDisplay(it)
                 update()
             }
         }

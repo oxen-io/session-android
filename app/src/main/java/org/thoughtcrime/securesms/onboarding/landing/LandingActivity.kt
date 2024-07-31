@@ -40,7 +40,7 @@ class LandingActivity: BaseActionBarActivity() {
         }
 
         IdentityKeyUtil.generateIdentityKeyPair(this)
-        TextSecurePreferences.setPasswordDisabled(this, true)
+        prefs.setPasswordDisabled(true)
         // AC: This is a temporary workaround to trick the old code that the screen is unlocked.
         KeyCachingService.setMasterSecret(applicationContext, Object())
     }

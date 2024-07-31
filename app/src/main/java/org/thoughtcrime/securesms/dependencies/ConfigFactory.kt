@@ -7,9 +7,11 @@ import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsession.utilities.ConfigFactoryUpdateListener
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.ConfigDatabase
@@ -48,8 +50,6 @@ class ConfigFactory(
     private var _convoVolatileConfig: ConversationVolatileConfig? = null
     private val userGroupsLock = Object()
     private var _userGroups: UserGroupsConfig? = null
-
-    private val isConfigForcedOn by lazy { TextSecurePreferences.hasForcedNewConfig(context) }
 
     private val listeners: MutableList<ConfigFactoryUpdateListener> = mutableListOf()
     fun registerListener(listener: ConfigFactoryUpdateListener) {

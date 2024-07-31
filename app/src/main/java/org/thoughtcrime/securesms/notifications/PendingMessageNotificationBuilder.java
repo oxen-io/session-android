@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.recipients.Recipient;
@@ -34,7 +35,7 @@ public class PendingMessageNotificationBuilder extends AbstractNotificationBuild
     setAlarms(null, Recipient.VibrateState.DEFAULT);
 
     if (!NotificationChannels.supported()) {
-      setPriority(TextSecurePreferences.getNotificationPriority(context));
+      setPriority(MessagingModuleConfiguration.getShared().getPrefs().getNotificationPriority());
     }
   }
 }

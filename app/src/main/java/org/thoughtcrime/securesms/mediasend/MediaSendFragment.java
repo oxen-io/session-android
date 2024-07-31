@@ -28,6 +28,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.utilities.MediaTypes;
 import org.thoughtcrime.securesms.components.ComposeText;
 import org.thoughtcrime.securesms.components.ControllableViewPager;
@@ -50,7 +51,6 @@ import org.thoughtcrime.securesms.util.PushCharacterCalculator;
 import org.thoughtcrime.securesms.util.Stopwatch;
 import org.session.libsignal.utilities.guava.Optional;
 
-import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.Stub;
 import org.session.libsignal.utilities.ListenableFuture;
@@ -215,7 +215,7 @@ public class MediaSendFragment extends Fragment implements ViewTreeObserver.OnGl
       return isSend;
     });
 
-    if (TextSecurePreferences.isSystemEmojiPreferred(getContext())) {
+    if (MessagingModuleConfiguration.getShared().getPrefs().isSystemEmojiPreferred()) {
       emojiToggle.setVisibility(View.GONE);
     } else {
       emojiToggle.setOnClickListener(this::onEmojiToggleClicked);
@@ -511,7 +511,7 @@ public class MediaSendFragment extends Fragment implements ViewTreeObserver.OnGl
     public boolean onKey(View v, int keyCode, KeyEvent event) {
       if (event.getAction() == KeyEvent.ACTION_DOWN) {
         if (keyCode == KeyEvent.KEYCODE_ENTER) {
-          if (TextSecurePreferences.isEnterSendsEnabled(requireContext())) {
+          if (MessagingModuleConfiguration.getShared().getPrefs().isEnterSendsEnabled()) {
             sendButton.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
             sendButton.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
             return true;

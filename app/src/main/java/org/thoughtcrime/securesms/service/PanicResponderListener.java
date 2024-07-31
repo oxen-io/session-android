@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Build;
 
 import org.session.libsession.utilities.TextSecurePreferences;
+import org.session.libsession.utilities.TextSecurePreferencesKt;
+import org.thoughtcrime.securesms.ApplicationContext;
 
 /**
  * Respond to a PanicKit trigger Intent by locking the app.  PanicKit provides a
@@ -18,7 +20,8 @@ public class PanicResponderListener extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    if (intent != null  && !TextSecurePreferences.isPasswordDisabled(context) &&
+    TextSecurePreferences prefs = ApplicationContext.getInstance(context).getPrefs();
+    if (intent != null  && !prefs.isPasswordDisabled() &&
         "info.guardianproject.panic.action.TRIGGER".equals(intent.getAction()))
     {
       Intent lockIntent = new Intent(context, KeyCachingService.class);

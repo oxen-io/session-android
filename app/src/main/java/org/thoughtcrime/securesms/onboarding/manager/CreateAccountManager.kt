@@ -40,6 +40,5 @@ class CreateAccountManager @Inject constructor(
         val registrationID = KeyHelper.generateRegistrationId(false)
         prefs.setLocalRegistrationId(registrationID)
         prefs.setLocalNumber(userHexEncodedPublicKey)
-        prefs.setRestorationTime(0)
     }
 }

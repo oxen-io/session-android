@@ -107,7 +107,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         set(value) { field = value; handleDisplayNameEditActionModeChanged() }
     private var tempFile: File? = null
 
-    private val hexEncodedPublicKey: String get() = TextSecurePreferences.getLocalNumber(this)!!
+    private val hexEncodedPublicKey: String get() = prefs.getLocalNumber()!!
 
     companion object {
         private const val SCROLL_STATE = "SCROLL_STATE"
@@ -139,7 +139,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     }
 
     private fun getDisplayName(): String =
-        TextSecurePreferences.getProfileName(this) ?: truncateIdForDisplay(hexEncodedPublicKey)
+        prefs.getProfileName() ?: truncateIdForDisplay(hexEncodedPublicKey)
 
     private fun setupProfilePictureView(view: ProfilePictureView) {
         view.apply {
@@ -256,7 +256,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             Log.w(TAG, "Cannot update display name - no network connection.")
         } else {
             // if we have a network connection then attempt to update the display name
-            TextSecurePreferences.setProfileName(this, displayName)
+            prefs.setProfileName(displayName)
             val user = configFactory.user
             if (user == null) {
                 Log.w(TAG, "Cannot update display name - missing user details from configFactory.")
@@ -293,7 +293,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             }
 
             val userConfig = configFactory.user
-            AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
+            AvatarHelper.setAvatar(this, Address.fromSerialized(prefs.getLocalNumber()!!), profilePicture)
             prefs.setProfileAvatarId(SecureRandom().nextInt() )
             ProfileKeyUtil.setEncodedProfileKey(this, encodedProfileKey)
 

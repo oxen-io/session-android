@@ -20,7 +20,7 @@ import network.loki.messenger.R
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.leave
 import org.session.libsession.utilities.GroupUtil.doubleDecodeGroupID
-import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
@@ -162,7 +162,7 @@ object ConversationMenuHelper {
 
     private fun call(context: Context, thread: Recipient) {
 
-        if (!TextSecurePreferences.isCallNotificationsEnabled(context)) {
+        if (!context.prefs.isCallNotificationsEnabled()) {
             context.showSessionDialog {
                 title(R.string.ConversationActivity_call_title)
                 text(R.string.ConversationActivity_call_prompt)
@@ -271,7 +271,7 @@ object ConversationMenuHelper {
 
         val group = DatabaseComponent.get(context).groupDatabase().getGroup(thread.address.toGroupString()).orNull()
         val admins = group.admins
-        val accountID = TextSecurePreferences.getLocalNumber(context)
+        val accountID = context.prefs.getLocalNumber()
         val isCurrentUserAdmin = admins.any { it.toString() == accountID }
         val message = if (isCurrentUserAdmin) {
             "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
