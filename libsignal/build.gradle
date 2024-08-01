@@ -27,4 +27,7 @@ dependencies {
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.assertj:assertj-core:3.11.1"
     testImplementation "org.conscrypt:conscrypt-openjdk-uber:2.0.0"
+
+    debugApi "com.github.chuckerteam.chucker:library:$chunkerVersion"
+    releaseApi "com.github.chuckerteam.chucker:library-no-op:$chunkerVersion"
 }

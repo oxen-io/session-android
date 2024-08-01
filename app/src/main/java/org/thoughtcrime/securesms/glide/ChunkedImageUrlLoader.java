@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.glide;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -7,7 +9,9 @@ import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
+import com.chuckerteam.chucker.api.ChuckerInterceptor;
 
+import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.giph.model.ChunkedImageUrl;
 import org.thoughtcrime.securesms.net.ContentProxySafetyInterceptor;
 import org.thoughtcrime.securesms.net.ContentProxySelector;
@@ -38,8 +42,9 @@ public class ChunkedImageUrlLoader implements ModelLoader<ChunkedImageUrl, Input
 
     private final OkHttpClient client;
 
-    public Factory() {
+    public Factory(@NonNull Context context) {
       this.client  = new OkHttpClient.Builder()
+                                     .addInterceptor(new ChuckerInterceptor(context))
                                      .proxySelector(new ContentProxySelector())
                                      .cache(null)
                                      .addNetworkInterceptor(new ContentProxySafetyInterceptor())

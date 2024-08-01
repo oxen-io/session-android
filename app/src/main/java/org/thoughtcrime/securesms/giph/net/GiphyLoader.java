@@ -6,6 +6,9 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
+
+import com.chuckerteam.chucker.api.ChuckerInterceptor;
+
 import org.session.libsignal.utilities.Log;
 
 
@@ -36,7 +39,9 @@ public abstract class GiphyLoader extends AsyncLoader<List<GiphyImage>> {
   protected GiphyLoader(@NonNull Context context, @Nullable String searchString) {
     super(context);
     this.searchString = searchString;
-    this.client       = new OkHttpClient.Builder().proxySelector(new ContentProxySelector()).build();
+    this.client       = new OkHttpClient.Builder()
+            .addInterceptor(new ChuckerInterceptor(context))
+            .proxySelector(new ContentProxySelector()).build();
   }
 
   @Override

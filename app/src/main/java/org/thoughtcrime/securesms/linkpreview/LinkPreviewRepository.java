@@ -10,6 +10,8 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.chuckerteam.chucker.api.ChuckerInterceptor;
+
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress;
 import org.session.libsession.messaging.sending_receiving.attachments.UriAttachment;
@@ -43,11 +45,12 @@ public class LinkPreviewRepository {
 
   private final OkHttpClient client;
 
-  public LinkPreviewRepository() {
+  public LinkPreviewRepository(@NonNull Context applicationContext) {
     this.client = new OkHttpClient.Builder()
-                                  .addNetworkInterceptor(new ContentProxySafetyInterceptor())
-                                  .cache(null)
-                                  .build();
+            .addInterceptor(new ChuckerInterceptor(applicationContext))
+            .addNetworkInterceptor(new ContentProxySafetyInterceptor())
+            .cache(null)
+            .build();
   }
 
   RequestController getLinkPreview(@NonNull Context context, @NonNull String url, @NonNull Callback<Optional<LinkPreview>> callback) {

@@ -229,7 +229,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private val linkPreviewViewModel: LinkPreviewViewModel by lazy {
-        ViewModelProvider(this, LinkPreviewViewModel.Factory(LinkPreviewRepository()))
+        ViewModelProvider(this, LinkPreviewViewModel.Factory(LinkPreviewRepository(applicationContext)))
             .get(LinkPreviewViewModel::class.java)
     }
 

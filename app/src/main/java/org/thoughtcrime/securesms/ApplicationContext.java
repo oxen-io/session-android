@@ -210,6 +210,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Override
     public void onCreate() {
         TextSecurePreferences.setPushSuffix(BuildConfig.PUSH_KEY_SUFFIX);
+        HTTP.INSTANCE.init(this);
 
         DatabaseModule.init(this);
         MessagingModuleConfiguration.configure(this);

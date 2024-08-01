@@ -1,6 +1,9 @@
 package org.session.libsignal.utilities
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -15,6 +18,12 @@ import javax.net.ssl.X509TrustManager
 
 object HTTP {
     var isConnectedToNetwork: (() -> Boolean) = { false }
+
+    private lateinit var application: Application
+
+    fun init(context: Context) {
+        this.application = context.applicationContext as Application
+    }
 
     private val seedNodeConnection by lazy {
 
@@ -37,6 +46,7 @@ object HTTP {
         val sslContext = SSLContext.getInstance("SSL")
         sslContext.init(null, arrayOf( trustManager ), SecureRandom())
         OkHttpClient().newBuilder()
+            .addInterceptor(ChuckerInterceptor(application))
             .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
             .callTimeout(timeout, TimeUnit.SECONDS)
@@ -57,6 +67,7 @@ object HTTP {
         val sslContext = SSLContext.getInstance("SSL")
         sslContext.init(null, arrayOf( trustManager ), SecureRandom())
         return OkHttpClient().newBuilder()
+            .addInterceptor(ChuckerInterceptor(application))
             .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
             .callTimeout(timeout, TimeUnit.SECONDS)

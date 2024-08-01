@@ -86,7 +86,7 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
                             .setData(Uri.parse("package:" + BuildConfig.APPLICATION_ID))
                     }
                         .apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
-                        .takeIf { IntentUtils.isResolvable(requireContext(), it) }.let {
+                        .takeIf { IntentUtils.isResolvable(requireContext(), it) }?.let {
                         startActivity(it)
                     }
                 }
