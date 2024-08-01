@@ -8,7 +8,6 @@ import app.cash.copper.Query
 import app.cash.copper.flow.observeQuery
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -199,7 +198,7 @@ class DefaultConversationRepository @Inject constructor(
                         continuation.resume(ResultOf.Success(Unit))
                     }.fail { error ->
                         Log.w("TAG", "Call to OpenGroupApi.deleteForEveryone failed - attempting to resume..")
-                        continuation.resumeWithException(error)
+                        continuation.resume(ResultOf.Failure(error))
                     }
             }
 
@@ -232,7 +231,7 @@ class DefaultConversationRepository @Inject constructor(
                         continuation.resume(ResultOf.Success(Unit))
                     }.fail { error ->
                         Log.w("ConversationRepository", "Call to SnodeAPI.deleteMessage failed - attempting to resume..")
-                        continuation.resumeWithException(error)
+                        continuation.resume(ResultOf.Failure(error))
                     }
             }
         }
@@ -264,7 +263,7 @@ class DefaultConversationRepository @Inject constructor(
                     .success {
                         messageDataProvider.deleteMessage(message.id, !message.isMms)
                     }.fail { error ->
-                        continuation.resumeWithException(error)
+                        continuation.resume(ResultOf.Failure(error))
                     }
             }
         } else {
@@ -287,7 +286,7 @@ class DefaultConversationRepository @Inject constructor(
                 .success {
                     continuation.resume(ResultOf.Success(Unit))
                 }.fail { error ->
-                    continuation.resumeWithException(error)
+                    continuation.resume(ResultOf.Failure(error))
                 }
         }
 
@@ -301,7 +300,7 @@ class DefaultConversationRepository @Inject constructor(
                 .success {
                     continuation.resume(ResultOf.Success(Unit))
                 }.fail { error ->
-                    continuation.resumeWithException(error)
+                    continuation.resume(ResultOf.Failure(error))
                 }
         }
 
@@ -336,7 +335,7 @@ class DefaultConversationRepository @Inject constructor(
                 threadDb.setHasSent(threadId, true)
                 continuation.resume(ResultOf.Success(Unit))
             }.fail { error ->
-                continuation.resumeWithException(error)
+                continuation.resume(ResultOf.Failure(error))
             }
     }
 
