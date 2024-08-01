@@ -3,14 +3,12 @@ package org.thoughtcrime.securesms.conversation.v2
 import com.goterl.lazysodium.utils.KeyPair
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.endsWith
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.anyLong
@@ -20,14 +18,11 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.BaseViewModelTest
-import org.thoughtcrime.securesms.NoOpLogger
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
-import org.thoughtcrime.securesms.repository.ResultOf
 
 class ConversationViewModelTest: BaseViewModelTest() {
 
@@ -107,7 +102,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
         val message = mock<MessageRecord>()
         val error = Throwable()
         whenever(repository.deleteForEveryone(anyLong(), any(), any()))
-            .thenReturn(ResultOf.Failure(error))
+            .thenReturn(Result.failure(error))
 
         viewModel.deleteForEveryone(message)
 
@@ -120,7 +115,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
             val message = mock<MessageRecord>()
             val error = Throwable()
             whenever(repository.deleteMessageWithoutUnsendRequest(anyLong(), anySet()))
-                .thenReturn(ResultOf.Failure(error))
+                .thenReturn(Result.failure(error))
 
             viewModel.deleteMessagesWithoutUnsendRequest(setOf(message))
 
@@ -130,7 +125,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     @Test
     fun `should emit error message on ban user failure`() = runBlockingTest {
         val error = Throwable()
-        whenever(repository.banUser(anyLong(), any())).thenReturn(ResultOf.Failure(error))
+        whenever(repository.banUser(anyLong(), any())).thenReturn(Result.failure(error))
 
         viewModel.banUser(recipient)
 
@@ -139,7 +134,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     @Test
     fun `should emit a message on ban user success`() = runBlockingTest {
-        whenever(repository.banUser(anyLong(), any())).thenReturn(ResultOf.Success(Unit))
+        whenever(repository.banUser(anyLong(), any())).thenReturn(Result.success(Unit))
 
         viewModel.banUser(recipient)
 
@@ -152,7 +147,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     @Test
     fun `should emit error message on ban user and delete all failure`() = runBlockingTest {
         val error = Throwable()
-        whenever(repository.banAndDeleteAll(anyLong(), any())).thenReturn(ResultOf.Failure(error))
+        whenever(repository.banAndDeleteAll(anyLong(), any())).thenReturn(Result.failure(error))
 
         viewModel.banAndDeleteAll(messageRecord)
 
@@ -161,7 +156,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     @Test
     fun `should emit a message on ban user and delete all success`() = runBlockingTest {
-        whenever(repository.banAndDeleteAll(anyLong(), any())).thenReturn(ResultOf.Success(Unit))
+        whenever(repository.banAndDeleteAll(anyLong(), any())).thenReturn(Result.success(Unit))
 
         viewModel.banAndDeleteAll(messageRecord)
 
@@ -188,7 +183,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     @Test
     fun `should remove shown message`() = runBlockingTest {
         // Given that a message is generated
-        whenever(repository.banUser(anyLong(), any())).thenReturn(ResultOf.Success(Unit))
+        whenever(repository.banUser(anyLong(), any())).thenReturn(Result.success(Unit))
         viewModel.banUser(recipient)
         assertThat(viewModel.uiState.value.uiMessages.size, equalTo(1))
         // When the message is shown
