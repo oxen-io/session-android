@@ -12,10 +12,13 @@ import nl.komponents.kovenant.combine.and
 import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.emptyPromise
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,9 +32,11 @@ class PushRegistry @Inject constructor(
     private val pushRegistryV2: PushRegistryV2,
     private val prefs: TextSecurePreferences,
     private val tokenFetcher: TokenFetcher,
+    private val configFactory: ConfigFactory
 ) {
 
     private var pushRegistrationJob: Job? = null
+    private val pushGroupJobs = ConcurrentHashMap<String, Job>()
 
     fun refresh(force: Boolean): Job {
         Log.d(TAG, "refresh() called with: force = $force")
@@ -50,7 +55,7 @@ class PushRegistry @Inject constructor(
     }
 
     fun register(token: String?): Promise<*, Exception> {
-        Log.d(TAG, "refresh() called")
+        Log.d(TAG, "register() called")
 
         if (token?.isNotEmpty() != true) return emptyPromise()
 
@@ -66,6 +71,57 @@ class PushRegistry @Inject constructor(
         }
     }
 
+    fun registerForGroup(groupSessionId: AccountId) {
+        val groupHexString = groupSessionId.hexString
+        val authData = configFactory.userGroups?.getClosedGroup(groupHexString)?.authData ?: return
+        val keysConfig = configFactory.getGroupKeysConfig(groupSessionId) ?: return
+
+        MainScope().launch(Dispatchers.IO) {
+            try {
+                val token = tokenFetcher.fetch() ?: return@launch
+
+                pushRegistryV2.registerGroup(
+                    device,
+                    token,
+                    groupHexString,
+                    authData,
+                    keysConfig
+                ).get()
+            } catch (e: Exception) {
+                Log.e(TAG, "register group failed", e)
+            }
+        }.also { newJob ->
+            // replace old one by returned current value in concurrent hashmap
+            pushGroupJobs.replace(groupHexString, newJob)?.cancel()
+        }
+    }
+
+    fun unregisterForGroup(groupSessionId: AccountId) {
+        val groupHexString = groupSessionId.hexString
+        val authData = configFactory.userGroups?.getClosedGroup(groupHexString)?.authData
+            ?.takeIf { it.isNotEmpty() } ?: return
+        val keysConfig = configFactory.getGroupKeysConfig(groupSessionId) ?: return
+
+        MainScope().launch(Dispatchers.IO) {
+            try {
+                val token = tokenFetcher.fetch() ?: return@launch
+
+                pushRegistryV2.unregisterGroup(
+                    device,
+                    token,
+                    groupHexString,
+                    authData,
+                    keysConfig
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "unregister group failed", e)
+            }
+        }.also { newJob ->
+            // replace old one by returned current value in concurrent hashmap
+            pushGroupJobs.replace(groupHexString, newJob)?.cancel()
+        }
+    }
+
     /**
      * Register for push notifications.
      */
@@ -73,7 +129,7 @@ class PushRegistry @Inject constructor(
         token: String,
         publicKey: String,
         userEd25519Key: KeyPair,
-        namespaces: List<Int> = listOf(Namespace.DEFAULT)
+        namespaces: List<Int> = listOf(Namespace.DEFAULT())
     ): Promise<*, Exception> {
         Log.d(TAG, "register() called")
 

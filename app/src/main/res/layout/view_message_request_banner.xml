@@ -32,7 +32,7 @@
         android:drawablePadding="4dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/activity_message_requests_title"
+        android:text="@string/sessionMessageRequests"
         android:textAlignment="viewStart"
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/medium_font_size"

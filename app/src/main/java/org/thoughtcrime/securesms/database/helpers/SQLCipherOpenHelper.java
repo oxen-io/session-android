@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.database.helpers;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -7,6 +9,8 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+
+import com.squareup.phrase.Phrase;
 
 import net.zetetic.database.sqlcipher.SQLiteConnection;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
@@ -93,9 +97,11 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
   private static final int lokiV44                          = 65;
   private static final int lokiV45                          = 66;
   private static final int lokiV46                          = 67;
+  private static final int lokiV47                          = 68;
+  private static final int lokiV48                          = 69;
 
   // Loki - onUpgrade(...) must be updated to use Loki version numbers if Signal makes any database changes
-  private static final int    DATABASE_VERSION         = lokiV46;
+  private static final int    DATABASE_VERSION         = lokiV48;
   private static final int    MIN_DATABASE_VERSION     = lokiV7;
   private static final String CIPHER3_DATABASE_NAME    = "signal.db";
   public static final String  DATABASE_NAME            = "signal_v4.db";
@@ -250,7 +256,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
       // Notify the user of the issue so they know they can downgrade until the issue is fixed
       NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-      String channelId = context.getString(R.string.NotificationChannel_failures);
+      String channelId = context.getString(R.string.failures);
 
       if (NotificationChannels.supported()) {
         NotificationChannel channel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_HIGH);
@@ -258,12 +264,16 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         notificationManager.createNotificationChannel(channel);
       }
 
+      CharSequence errorTxt = Phrase.from(context, R.string.databaseErrorGeneric)
+              .put(APP_NAME_KEY, R.string.sessionMessenger)
+              .format();
+
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
         .setSmallIcon(R.drawable.ic_notification)
         .setColor(context.getResources().getColor(R.color.textsecure_primary))
         .setCategory(NotificationCompat.CATEGORY_ERROR)
-        .setContentTitle(context.getString(R.string.ErrorNotifier_migration))
-        .setContentText(context.getString(R.string.ErrorNotifier_migration_downgrade))
+        .setContentTitle(context.getString(R.string.errorDatabase))
+        .setContentText(errorTxt)
         .setAutoCancel(true);
 
       if (!NotificationChannels.supported()) {
@@ -367,6 +377,11 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(RecipientDatabase.getAddWrapperHash());
     db.execSQL(RecipientDatabase.getAddBlocksCommunityMessageRequests());
     db.execSQL(LokiAPIDatabase.CREATE_LAST_LEGACY_MESSAGE_TABLE);
+
+    db.execSQL(RecipientDatabase.getCreateAutoDownloadCommand());
+    db.execSQL(RecipientDatabase.getUpdateAutoDownloadValuesCommand());
+    db.execSQL(LokiMessageDatabase.getCreateGroupInviteTableCommand());
+    db.execSQL(LokiMessageDatabase.getCreateThreadDeleteTrigger());
   }
 
   @Override
@@ -631,6 +646,16 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         executeStatements(db, SmsDatabase.ADD_AUTOINCREMENT);
         executeStatements(db, MmsDatabase.ADD_AUTOINCREMENT);
         db.execSQL(LokiAPIDatabase.CREATE_LAST_LEGACY_MESSAGE_TABLE);
+      }
+
+      if (oldVersion < lokiV47) {
+        db.execSQL(RecipientDatabase.getCreateAutoDownloadCommand());
+        db.execSQL(RecipientDatabase.getUpdateAutoDownloadValuesCommand());
+      }
+
+      if (oldVersion < lokiV48) {
+        db.execSQL(LokiMessageDatabase.getCreateGroupInviteTableCommand());
+        db.execSQL(LokiMessageDatabase.getCreateThreadDeleteTrigger());
       }
 
       db.setTransactionSuccessful();

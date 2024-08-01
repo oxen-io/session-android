@@ -6,14 +6,25 @@ import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.GroupInfo
+import network.loki.messenger.libsession_util.util.GroupMember
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage.Kind
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Namespace
+import java.io.Closeable
 import java.util.Stack
 
+sealed class Config(protected val pointer: Long): Closeable {
+    abstract fun namespace(): Int
+    external fun free()
+    override fun close() {
+        free()
+    }
+}
 
-sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
+sealed class ConfigBase(pointer: Long): Config(pointer) {
     companion object {
         init {
             System.loadLibrary("session_util")
@@ -25,11 +36,13 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
             is Contacts -> Kind.CONTACTS
             is ConversationVolatileConfig -> Kind.CONVO_INFO_VOLATILE
             is UserGroupsConfig -> Kind.GROUPS
+            is GroupInfoConfig -> Kind.CLOSED_GROUP_INFO
+            is GroupMembersConfig -> Kind.CLOSED_GROUP_MEMBERS
         }
 
-        const val PRIORITY_HIDDEN = -1
-        const val PRIORITY_VISIBLE = 0
-        const val PRIORITY_PINNED = 1
+        const val PRIORITY_HIDDEN = -1L
+        const val PRIORITY_VISIBLE = 0L
+        const val PRIORITY_PINNED = 1L
 
     }
 
@@ -43,12 +56,8 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
     external fun merge(toMerge: Array<Pair<String,ByteArray>>): Stack<String>
     external fun currentHashes(): List<String>
 
-    external fun configNamespace(): Int
-
     // Singular merge
     external fun merge(toMerge: Pair<String,ByteArray>): Stack<String>
-
-    external fun free()
 
 }
 
@@ -60,6 +69,8 @@ class Contacts(pointer: Long) : ConfigBase(pointer) {
         external fun newInstance(ed25519SecretKey: ByteArray): Contacts
         external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): Contacts
     }
+
+    override fun namespace() = Namespace.CONTACTS()
 
     external fun get(accountId: String): Contact?
     external fun getOrConstruct(accountId: String): Contact
@@ -108,12 +119,14 @@ class UserProfile(pointer: Long) : ConfigBase(pointer) {
         external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): UserProfile
     }
 
+    override fun namespace() = Namespace.USER_PROFILE()
+
     external fun setName(newName: String)
     external fun getName(): String?
     external fun getPic(): UserPic
     external fun setPic(userPic: UserPic)
-    external fun setNtsPriority(priority: Int)
-    external fun getNtsPriority(): Int
+    external fun setNtsPriority(priority: Long)
+    external fun getNtsPriority(): Long
     external fun setNtsExpiry(expiryMode: ExpiryMode)
     external fun getNtsExpiry(): ExpiryMode
     external fun getCommunityMessageRequests(): Boolean
@@ -130,6 +143,8 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
         external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): ConversationVolatileConfig
     }
 
+    override fun namespace() = Namespace.CONVO_INFO_VOLATILE()
+
     external fun getOneToOne(pubKeyHex: String): Conversation.OneToOne?
     external fun getOrConstructOneToOne(pubKeyHex: String): Conversation.OneToOne
     external fun eraseOneToOne(pubKeyHex: String): Boolean
@@ -143,8 +158,12 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
     external fun getLegacyClosedGroup(groupId: String): Conversation.LegacyGroup?
     external fun getOrConstructLegacyGroup(groupId: String): Conversation.LegacyGroup
     external fun eraseLegacyClosedGroup(groupId: String): Boolean
-    external fun erase(conversation: Conversation): Boolean
 
+    external fun getClosedGroup(sessionId: String): Conversation.ClosedGroup?
+    external fun getOrConstructClosedGroup(sessionId: String): Conversation.ClosedGroup
+    external fun eraseClosedGroup(sessionId: String): Boolean
+
+    external fun erase(conversation: Conversation): Boolean
     external fun set(toStore: Conversation)
 
     /**
@@ -162,6 +181,7 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
     external fun allOneToOnes(): List<Conversation.OneToOne>
     external fun allCommunities(): List<Conversation.Community>
     external fun allLegacyClosedGroups(): List<Conversation.LegacyGroup>
+    external fun allClosedGroups(): List<Conversation.ClosedGroup>
     external fun all(): List<Conversation>
 
 }
@@ -175,19 +195,148 @@ class UserGroupsConfig(pointer: Long): ConfigBase(pointer) {
         external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): UserGroupsConfig
     }
 
+    override fun namespace() = Namespace.GROUPS()
+
     external fun getCommunityInfo(baseUrl: String, room: String): GroupInfo.CommunityGroupInfo?
     external fun getLegacyGroupInfo(accountId: String): GroupInfo.LegacyGroupInfo?
+    external fun getClosedGroup(accountId: String): GroupInfo.ClosedGroupInfo?
     external fun getOrConstructCommunityInfo(baseUrl: String, room: String, pubKeyHex: String): GroupInfo.CommunityGroupInfo
     external fun getOrConstructLegacyGroupInfo(accountId: String): GroupInfo.LegacyGroupInfo
+    external fun getOrConstructClosedGroup(accountId: String): GroupInfo.ClosedGroupInfo
     external fun set(groupInfo: GroupInfo)
-    external fun erase(communityInfo: GroupInfo)
+    external fun erase(groupInfo: GroupInfo)
     external fun eraseCommunity(baseCommunityInfo: BaseCommunityInfo): Boolean
     external fun eraseCommunity(server: String, room: String): Boolean
     external fun eraseLegacyGroup(accountId: String): Boolean
-    external fun sizeCommunityInfo(): Int
-    external fun sizeLegacyGroupInfo(): Int
-    external fun size(): Int
+    external fun eraseClosedGroup(accountId: String): Boolean
+    external fun sizeCommunityInfo(): Long
+    external fun sizeLegacyGroupInfo(): Long
+    external fun sizeClosedGroup(): Long
+    external fun size(): Long
     external fun all(): List<GroupInfo>
     external fun allCommunityInfo(): List<GroupInfo.CommunityGroupInfo>
     external fun allLegacyGroupInfo(): List<GroupInfo.LegacyGroupInfo>
+    external fun allClosedGroupInfo(): List<GroupInfo.ClosedGroupInfo>
+    external fun createGroup(): GroupInfo.ClosedGroupInfo
+}
+
+class GroupInfoConfig(pointer: Long): ConfigBase(pointer), Closeable {
+    companion object {
+        init {
+            System.loadLibrary("session_util")
+        }
+
+        external fun newInstance(
+            pubKey: ByteArray?,
+            secretKey: ByteArray? = null,
+            initialDump: ByteArray = byteArrayOf()
+        ): GroupInfoConfig
+    }
+
+    override fun namespace() = Namespace.CLOSED_GROUP_INFO()
+
+    external fun id(): AccountId
+    external fun destroyGroup()
+    external fun getCreated(): Long?
+    external fun getDeleteAttachmentsBefore(): Long?
+    external fun getDeleteBefore(): Long?
+    external fun getExpiryTimer(): Long
+    external fun getName(): String
+    external fun getProfilePic(): UserPic
+    external fun isDestroyed(): Boolean
+    external fun setCreated(createdAt: Long)
+    external fun setDeleteAttachmentsBefore(deleteBefore: Long)
+    external fun setDeleteBefore(deleteBefore: Long)
+    external fun setExpiryTimer(expireSeconds: Long)
+    external fun setName(newName: String)
+    external fun getDescription(): String
+    external fun setDescription(newDescription: String)
+    external fun setProfilePic(newProfilePic: UserPic)
+    external fun storageNamespace(): Long
+
+    override fun close() {
+        free()
+    }
+}
+
+class GroupMembersConfig(pointer: Long): ConfigBase(pointer), Closeable {
+    companion object {
+        init {
+            System.loadLibrary("session_util")
+        }
+        external fun newInstance(
+            pubKey: ByteArray,
+            secretKey: ByteArray? = null,
+            initialDump: ByteArray = byteArrayOf()
+        ): GroupMembersConfig
+    }
+
+    override fun namespace() = Namespace.CLOSED_GROUP_MEMBERS()
+
+    external fun all(): Stack<GroupMember>
+    external fun erase(groupMember: GroupMember): Boolean
+    external fun erase(pubKeyHex: String): Boolean
+    external fun get(pubKeyHex: String): GroupMember?
+    external fun getOrConstruct(pubKeyHex: String): GroupMember
+    external fun set(groupMember: GroupMember)
+    override fun close() {
+        free()
+    }
+}
+
+sealed class ConfigSig(pointer: Long) : Config(pointer)
+
+class GroupKeysConfig(pointer: Long): ConfigSig(pointer) {
+    companion object {
+        init {
+            System.loadLibrary("session_util")
+        }
+        external fun newInstance(
+            userSecretKey: ByteArray,
+            groupPublicKey: ByteArray,
+            groupSecretKey: ByteArray? = null,
+            initialDump: ByteArray = byteArrayOf(),
+            info: GroupInfoConfig,
+            members: GroupMembersConfig
+        ): GroupKeysConfig
+    }
+
+    override fun namespace() = Namespace.ENCRYPTION_KEYS()
+
+    external fun groupKeys(): Stack<ByteArray>
+    external fun needsDump(): Boolean
+    external fun dump(): ByteArray
+    external fun loadKey(message: ByteArray,
+                         hash: String,
+                         timestampMs: Long,
+                         info: GroupInfoConfig,
+                         members: GroupMembersConfig): Boolean
+    external fun needsRekey(): Boolean
+    external fun pendingKey(): ByteArray?
+    external fun supplementFor(userSessionId: String): ByteArray
+    external fun pendingConfig(): ByteArray?
+    external fun currentHashes(): List<String>
+    external fun rekey(info: GroupInfoConfig, members: GroupMembersConfig): ByteArray
+    override fun close() {
+        free()
+    }
+
+    external fun encrypt(plaintext: ByteArray): ByteArray
+    external fun decrypt(ciphertext: ByteArray): Pair<ByteArray, AccountId>?
+
+    external fun keys(): Stack<ByteArray>
+
+    external fun makeSubAccount(sessionId: AccountId, canWrite: Boolean = true, canDelete: Boolean = false): ByteArray
+    external fun getSubAccountToken(sessionId: AccountId, canWrite: Boolean = true, canDelete: Boolean = false): ByteArray
+
+    external fun subAccountSign(message: ByteArray, signingValue: ByteArray): SwarmAuth
+
+    external fun currentGeneration(): Int
+
+    data class SwarmAuth(
+        val subAccount: String,
+        val subAccountSig: String,
+        val signature: String
+    )
+
 }

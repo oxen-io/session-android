@@ -149,12 +149,12 @@ fun PreviewSimpleDialog(){
         AlertDialog(
             onDismissRequest = {},
             title = stringResource(R.string.warning),
-            text = stringResource(R.string.you_cannot_go_back_further_in_order_to_stop_loading_your_account_session_needs_to_quit),
+            text = stringResource(R.string.onboardingBackAccountCreation),
             buttons = listOf(
                 DialogButtonModel(
-                    GetString(stringResource(R.string.quit)),
+                    GetString(stringResource(R.string.quitButton)),
                     color = LocalColors.current.danger,
-                    onClick = {}
+                    onClick = { }
                 ),
                 DialogButtonModel(
                     GetString(stringResource(R.string.cancel))
@@ -174,12 +174,12 @@ fun PreviewXCloseDialog(){
             showCloseButton = true, // display the 'x' button
             buttons = listOf(
                 DialogButtonModel(
-                    text = GetString(R.string.activity_landing_terms_of_service),
+                    text = GetString(R.string.onboardingTos),
                     contentDescription = GetString(R.string.AccessibilityId_terms_of_service_button),
                     onClick = {}
                 ),
                 DialogButtonModel(
-                    text = GetString(R.string.activity_landing_privacy_policy),
+                    text = GetString(R.string.onboardingPrivacy),
                     contentDescription = GetString(R.string.AccessibilityId_privacy_policy_button),
                     onClick = {}
                 )

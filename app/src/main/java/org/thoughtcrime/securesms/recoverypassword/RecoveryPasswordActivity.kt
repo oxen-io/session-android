@@ -34,7 +34,7 @@ class RecoveryPasswordActivity : BaseActionBarActivity() {
         showSessionDialog {
             title(R.string.recoveryPasswordHidePermanently)
             htmlText(R.string.recoveryPasswordHidePermanentlyDescription1)
-            dangerButton(R.string.continue_2, R.string.AccessibilityId_continue) { onHideConfirm() }
+            dangerButton(R.string.theContinue, R.string.AccessibilityId_continue) { onHideConfirm() }
             cancelButton()
         }
     }
@@ -46,7 +46,7 @@ class RecoveryPasswordActivity : BaseActionBarActivity() {
             cancelButton()
             dangerButton(
                 R.string.yes,
-                contentDescription = R.string.AccessibilityId_confirm_button
+                contentDescriptionRes = R.string.AccessibilityId_confirm_button
             ) {
                 viewModel.permanentlyHidePassword()
                 finish()

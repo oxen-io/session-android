@@ -5,26 +5,25 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradlePluginVersion"
         classpath files('libs/gradle-witness.jar')
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
     }
 }
 
 plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'org.jetbrains.kotlin.plugin.compose'
     id 'com.google.devtools.ksp'
     id 'com.google.dagger.hilt.android'
+    id 'kotlin-parcelize'
+    id 'kotlinx-serialization'
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 apply plugin: 'witness'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlinx-serialization'
 
-configurations.all {
+configurations.configureEach {
     exclude module: "commons-logging"
 }
 
@@ -55,23 +54,20 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 
     packagingOptions {
-        exclude 'LICENSE.txt'
-        exclude 'LICENSE'
-        exclude 'NOTICE'
-        exclude 'asm-license.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/proguard/androidx-annotations.pro'
+        resources {
+            excludes += ['LICENSE.txt', 'LICENSE', 'NOTICE', 'asm-license.txt', 'META-INF/LICENSE', 'META-INF/NOTICE', 'META-INF/proguard/androidx-annotations.pro']
+        }
     }
+
 
     splits {
         abi {
@@ -83,8 +79,10 @@ android {
     }
 
     buildFeatures {
-        compose true
+        viewBinding true
+        buildConfig true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.14'
     }
@@ -108,8 +106,8 @@ android {
         buildConfigField "String", "USER_AGENT", "\"OWA\""
         buildConfigField "String[]", "LANGUAGES", "new String[]{\"" + autoResConfig().collect { s -> s.replace('-r', '_') }.join('", "') + '"}'
         buildConfigField "int", "CANONICAL_VERSION_CODE", "$canonicalVersionCode"
+        resourceConfigurations += []
 
-        resConfigs autoResConfig()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // The following argument makes the Android Test Orchestrator run its
         // "pm clear" command after each test invocation. This command ensures
@@ -169,7 +167,7 @@ android {
         }
     }
 
-    applicationVariants.all { variant ->
+    applicationVariants.configureEach { variant ->
         variant.outputs.each { output ->
             def abiName = output.getFilter("ABI") ?: 'universal'
             def postFix = abiPostFix.get(abiName, 0)
@@ -180,10 +178,6 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError true
-        baseline file("lint-baseline.xml")
-    }
 
     testOptions {
         unitTests {
@@ -191,12 +185,11 @@ android {
         }
     }
 
-    buildFeatures {
-        dataBinding true
-        viewBinding true
-    }
-
     def huaweiEnabled = project.properties['huawei'] != null
+    lint {
+        abortOnError true
+        baseline file('lint-baseline.xml')
+    }
 
     applicationVariants.configureEach { variant ->
         if (variant.flavorName == 'huawei') {
@@ -212,9 +205,11 @@ android {
         }
     }
 
-    task testPlayDebugUnitTestCoverageReport(type: JacocoReport, dependsOn: "testPlayDebugUnitTest") {
+    tasks.register("testPlayDebugUnitTestCoverageReport", JacocoReport) {
+        dependsOn("testPlayDebugUnitTest")
+
         reports {
-            xml.enabled = true
+            xml.enabled(true)
         }
 
         // Add files that should not be listed in the report (e.g. generated Files from dagger)
@@ -235,11 +230,15 @@ android {
 }
 
 dependencies {
+    implementation project(':content-descriptions')
 
-    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
-    ksp("com.google.dagger:hilt-compiler:$daggerHiltVersion")
     ksp("androidx.hilt:hilt-compiler:$jetpackHiltVersion")
+    ksp("com.google.dagger:hilt-compiler:$daggerHiltVersion")
+    ksp "com.github.bumptech.glide:ksp:$glideVersion"
+    implementation("androidx.hilt:hilt-navigation-compose:$androidxHiltVersion")
 
+    implementation 'androidx.compose.material3:material3-android:1.2.1'
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation "com.google.android.material:material:$materialVersion"
@@ -261,12 +260,15 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.5.3'
     implementation "androidx.core:core-ktx:$coreVersion"
     implementation "androidx.work:work-runtime-ktx:2.7.1"
+
     playImplementation ("com.google.firebase:firebase-messaging:18.0.0") {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
     }
+
     if (project.hasProperty('huawei')) huaweiImplementation 'com.huawei.hms:push:6.7.0.300'
+
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.1'
     implementation 'org.conscrypt:conscrypt-android:2.5.2'
@@ -279,7 +281,6 @@ dependencies {
     implementation 'commons-net:commons-net:3.7.2'
     implementation 'com.github.chrisbanes:PhotoView:2.1.3'
     implementation "com.github.bumptech.glide:glide:$glideVersion"
-    ksp "com.github.bumptech.glide:ksp:$glideVersion"
     implementation 'com.makeramen:roundedimageview:2.1.0'
     implementation 'com.pnikosis:materialish-progress:1.5'
     implementation 'org.greenrobot:eventbus:3.0.0'
@@ -319,7 +320,6 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "com.squareup.phrase:phrase:$phraseVersion"
     implementation 'app.cash.copper:copper-flow:1.0.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"
     implementation "nl.komponents.kovenant:kovenant-android:$kovenantVersion"
@@ -343,7 +343,6 @@ dependencies {
     androidTestImplementation('com.adevinta.android:barista:4.2.0') {
         exclude group: 'org.jetbrains.kotlin'
     }
-
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test:rules:1.5.0'
@@ -362,6 +361,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-web:3.5.1'
     androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.5.1'
     androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.5.1'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.5.3"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.5.3"
     androidTestUtil 'androidx.test:orchestrator:1.4.2'
 
     testImplementation 'org.robolectric:robolectric:4.12.2'
@@ -379,6 +380,11 @@ dependencies {
     implementation "androidx.compose.material3:material3:1.2.1"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4-android:$composeVersion"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
+    implementation "androidx.navigation:navigation-compose:$navVersion"
 
     implementation "com.google.accompanist:accompanist-themeadapter-appcompat:0.33.1-alpha"
     implementation "com.google.accompanist:accompanist-permissions:0.33.1-alpha"

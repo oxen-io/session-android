@@ -41,7 +41,7 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
             val (message, proto) = MessageReceiver.parse(this.data, this.openGroupMessageServerID, openGroupPublicKey = serverPublicKey, currentClosedGroups = currentClosedGroups)
             val threadId = Message.getThreadId(message, this.openGroupID, storage, false)
             message.serverHash = serverHash
-            MessageReceiver.handle(message, proto, threadId ?: -1, this.openGroupID)
+            MessageReceiver.handle(message, proto, threadId ?: -1, this.openGroupID, null)
             this.handleSuccess(dispatcherName)
             deferred.resolve(Unit)
         } catch (e: Exception) {

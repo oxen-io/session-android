@@ -45,7 +45,6 @@
                 android:textSize="@dimen/medium_font_size"
                 android:maxLines="3"
                 android:maxLength="240"
-                android:hint="@string/MediaSendActivity_add_a_caption"
                 android:autoText="true"
                 android:inputType="textAutoCorrect|textCapSentences|textMultiLine"
                 android:background="@null"/>
@@ -86,8 +85,7 @@
                         android:layout_gravity="bottom"
                         android:paddingStart="4dp"
                         android:paddingEnd="6dp"
-                        android:background="?selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/conversation_activity__emoji_toggle_description" />
+                        android:background="?selectableItemBackgroundBorderless" />
 
                     <Space
                         android:layout_width="0dp"
@@ -121,7 +119,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY"
-                        android:contentDescription="@string/conversation_activity__send"
+                        android:contentDescription="@string/send"
                         android:src="?conversation_transport_sms_indicator"
                         android:background="@drawable/circle_touch_highlight_background"/>
 

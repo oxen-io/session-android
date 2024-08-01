@@ -35,14 +35,14 @@
         android:layout_marginTop="@dimen/medium_spacing"
         app:layout_constraintStart_toStartOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="@+id/cardView"
-        android:text="@string/blocked_contacts_empty_state"
+        android:text="@string/blockBlockedNone"
         />
 
     <TextView
         style="@style/Widget.Session.Button.Common.DangerOutline"
         android:paddingHorizontal="@dimen/large_spacing"
         android:paddingVertical="@dimen/small_spacing"
-        android:text="@string/ConversationActivity_unblock"
+        android:text="@string/blockUnblock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

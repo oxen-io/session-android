@@ -8,17 +8,21 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewControlMessageBinding
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.ExpirationConfiguration
+import org.session.libsession.messaging.utilities.UpdateMessageData
+import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.conversation.disappearingmessages.DisappearingMessages
 import org.thoughtcrime.securesms.conversation.disappearingmessages.expiryMode
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ControlMessageView : LinearLayout {
@@ -43,6 +47,7 @@ class ControlMessageView : LinearLayout {
         binding.expirationTimerView.isGone = true
         binding.followSetting.isGone = true
         var messageBody: CharSequence = message.getDisplayBody(context)
+
         binding.root.contentDescription = null
         binding.textView.text = messageBody
         when {
@@ -52,7 +57,7 @@ class ControlMessageView : LinearLayout {
 
                     val threadRecipient = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(message.threadId)
 
-                    if (threadRecipient?.isClosedGroupRecipient == true) {
+                    if (threadRecipient?.isClosedGroupV2Recipient == true) {
                         expirationTimerView.setTimerIcon()
                     } else {
                         expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
@@ -75,8 +80,10 @@ class ControlMessageView : LinearLayout {
                 }
             }
             message.isMessageRequestResponse -> {
-                binding.textView.text =  context.getString(R.string.message_requests_accepted)
-                binding.root.contentDescription=context.getString(R.string.AccessibilityId_message_request_config_message)
+                binding.textView.text =  context.getString(R.string.messageRequestsAccepted)
+                binding.root.contentDescription = Phrase.from(context, R.string.messageRequestYouHaveAccepted)
+                    .put(NAME_KEY, message.individualRecipient.name)
+                    .format()
             }
             message.isCallLog -> {
                 val drawable = when {
@@ -92,6 +99,12 @@ class ControlMessageView : LinearLayout {
                 if (message.expireStarted > 0 && message.expiresIn > 0) {
                     binding.expirationTimerView.isVisible = true
                     binding.expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
+                }
+            }
+            message.isGroupUpdateMessage -> {
+                val updateMessageData: UpdateMessageData? = UpdateMessageData.fromJSON(message.body)
+                if (updateMessageData?.isGroupErrorQuitKind() == true) {
+                    binding.textView.setTextColor(context.getColorFromAttr(R.attr.danger))
                 }
             }
         }

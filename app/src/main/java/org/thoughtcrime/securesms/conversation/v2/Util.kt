@@ -37,7 +37,6 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.security.SecureRandom
-import java.util.Arrays
 import java.util.Collections
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -321,7 +320,7 @@ object Util {
     }
 
     fun writeTextToClipboard(context: Context, text: String) {
-        writeTextToClipboard(context, context.getString(R.string.app_name), text)
+        writeTextToClipboard(context, context.getString(R.string.sessionMessenger), text)
     }
 
     fun writeTextToClipboard(context: Context, label: String, text: String) {

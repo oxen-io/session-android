@@ -16,11 +16,12 @@
  */
 package org.thoughtcrime.securesms;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,10 +33,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
@@ -45,32 +44,44 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.codewaves.stickyheadergrid.StickyHeaderGridLayoutManager;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.phrase.Phrase;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import kotlin.Unit;
+import network.loki.messenger.R;
+
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
+import org.session.libsession.utilities.Util;
+import org.session.libsession.utilities.ViewUtil;
+import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsession.utilities.task.ProgressDialogAsyncTask;
+import org.session.libsignal.utilities.Log;
+import org.session.libsession.utilities.GroupRecord;
+import org.session.libsession.utilities.TextSecurePreferences;
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
 import org.thoughtcrime.securesms.database.MediaDatabase;
-import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader;
 import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader.BucketedThreadMedia;
+import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader;
 import org.thoughtcrime.securesms.database.loaders.ThreadMediaLoader;
-import com.bumptech.glide.Glide;
 import org.thoughtcrime.securesms.permissions.Permissions;
-import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.util.AttachmentUtil;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask;
 import org.thoughtcrime.securesms.util.StickyHeaderDecoration;
-import org.session.libsession.utilities.Util;
-import org.session.libsession.utilities.ViewUtil;
-import org.session.libsession.utilities.task.ProgressDialogAsyncTask;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,423 +93,465 @@ import network.loki.messenger.R;
 /**
  * Activity for displaying media attachments in-app
  */
-public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
+public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity implements View.OnClickListener {
 
-  @SuppressWarnings("unused")
-  private final static String TAG = MediaOverviewActivity.class.getSimpleName();
+    @SuppressWarnings("unused")
+    private final static String TAG = MediaOverviewActivity.class.getSimpleName();
 
-  public static final String ADDRESS_EXTRA   = "address";
+    public static final String ADDRESS_EXTRA = "address";
 
-  private Toolbar      toolbar;
-  private TabLayout    tabLayout;
-  private ViewPager    viewPager;
-  private Recipient    recipient;
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private Recipient recipient;
 
-  @Override
-  protected void onCreate(Bundle bundle, boolean ready) {
-    setContentView(R.layout.media_overview_activity);
+    @Override
+    protected void onCreate(Bundle bundle, boolean ready) {
+        setContentView(R.layout.media_overview_activity);
 
-    initializeResources();
-    initializeToolbar();
+        initializeResources();
+        initializeToolbar();
 
-    this.tabLayout.setupWithViewPager(viewPager);
-    this.viewPager.setAdapter(new MediaOverviewPagerAdapter(getSupportFragmentManager()));
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    super.onOptionsItemSelected(item);
-
-    switch (item.getItemId()) {
-      case android.R.id.home: finish(); return true;
+        this.tabLayout.setupWithViewPager(viewPager);
+        this.viewPager.setAdapter(new MediaOverviewPagerAdapter(getSupportFragmentManager()));
     }
 
-    return false;
-  }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
 
-  private void initializeResources() {
-    Address address = getIntent().getParcelableExtra(ADDRESS_EXTRA);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
 
-    this.viewPager = ViewUtil.findById(this, R.id.pager);
-    this.toolbar   = ViewUtil.findById(this, R.id.toolbar);
-    this.tabLayout = ViewUtil.findById(this, R.id.tab_layout);
-    this.recipient = Recipient.from(this, address, true);
-  }
+        return false;
+    }
+
+    private void initializeResources() {
+        this.viewPager = ViewUtil.findById(this, R.id.pager);
+        this.toolbar = ViewUtil.findById(this, R.id.search_toolbar);
+        this.tabLayout = ViewUtil.findById(this, R.id.tab_layout);
+
+        Address address = getIntent().getParcelableExtra(ADDRESS_EXTRA);
+        if (address == null) {
+            Log.w(TAG, "Got null address in initializeResources.");
+        } else {
+            this.recipient = Recipient.from(this, address, true);
+        }
+    }
 
   private void initializeToolbar() {
     setSupportActionBar(this.toolbar);
     ActionBar actionBar = getSupportActionBar();
+    if (actionBar == null) {
+      Log.w(TAG, "Could not get support actionbar");
+      return;
+    }
+    // Implied else that the actionbar is fine to work with...
     actionBar.setTitle(recipient.toShortString());
     actionBar.setDisplayHomeAsUpEnabled(true);
     actionBar.setHomeButtonEnabled(true);
     this.recipient.addListener(recipient -> {
       Util.runOnMain(() -> actionBar.setTitle(recipient.toShortString()));
     });
+
+      View clearButton = toolbar.findViewById(R.id.clearMedia);
+      if (!this.recipient.isClosedGroupV2Recipient()) {
+          clearButton.setVisibility(View.GONE);
+      } else {
+          String userPublicKey = TextSecurePreferences.getLocalNumber(this);
+          GroupRecord groupRecord = MessagingModuleConfiguration.getShared().getStorage().getGroup(this.recipient.getAddress().toGroupString());
+          if (userPublicKey == null || groupRecord == null) {
+              clearButton.setVisibility(View.GONE);
+          } else {
+              boolean isUserAdmin = groupRecord.getAdmins().contains(Address.fromSerialized(userPublicKey));
+              clearButton.setVisibility(isUserAdmin ? View.VISIBLE : View.GONE);
+              clearButton.setOnClickListener(this);
+          }
+      }
   }
 
-  public void onEnterMultiSelect() {
-    tabLayout.setEnabled(false);
-    viewPager.setEnabled(false);
-  }
-
-  public void onExitMultiSelect() {
-    tabLayout.setEnabled(true);
-    viewPager.setEnabled(true);
-  }
-
-  private class MediaOverviewPagerAdapter extends FragmentStatePagerAdapter {
-
-    MediaOverviewPagerAdapter(FragmentManager fragmentManager) {
-      super(fragmentManager);
+    public void onEnterMultiSelect() {
+        tabLayout.setEnabled(false);
+        viewPager.setEnabled(false);
     }
 
     @Override
-    public Fragment getItem(int position) {
-      Fragment fragment;
-
-      if      (position == 0) fragment = new MediaOverviewGalleryFragment();
-      else if (position == 1) fragment = new MediaOverviewDocumentsFragment();
-      else                    throw new AssertionError();
-
-      Bundle args = new Bundle();
-      args.putString(MediaOverviewGalleryFragment.ADDRESS_EXTRA, recipient.getAddress().serialize());
-      args.putSerializable(MediaOverviewGalleryFragment.LOCALE_EXTRA, Locale.getDefault());
-
-      fragment.setArguments(args);
-
-      return fragment;
+    public void onClick(View v) {
+        if (v.getId() == R.id.clearMedia) {
+            // TODO: future chunk
+        }
     }
 
-    @Override
-    public int getCount() {
-      return 2;
+    public void onExitMultiSelect() {
+        tabLayout.setEnabled(true);
+        viewPager.setEnabled(true);
     }
+
+    private class MediaOverviewPagerAdapter extends FragmentStatePagerAdapter {
+
+        MediaOverviewPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment;
+
+            if (position == 0) fragment = new MediaOverviewGalleryFragment();
+            else if (position == 1) fragment = new MediaOverviewDocumentsFragment();
+            else throw new AssertionError();
+
+            Bundle args = new Bundle();
+            args.putString(MediaOverviewGalleryFragment.ADDRESS_EXTRA, recipient.getAddress().serialize());
+            args.putSerializable(MediaOverviewGalleryFragment.LOCALE_EXTRA, Locale.getDefault());
+
+            fragment.setArguments(args);
+
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
 
     @Override
     public CharSequence getPageTitle(int position) {
-      if      (position == 0) return getString(R.string.MediaOverviewActivity_Media);
-      else if (position == 1) return getString(R.string.MediaOverviewActivity_Documents);
+      if      (position == 0) return getString(R.string.media);
+      else if (position == 1) return getString(R.string.files);
       else                    throw new AssertionError();
     }
   }
 
-  public static abstract class MediaOverviewFragment<T> extends Fragment implements LoaderManager.LoaderCallbacks<T> {
+    public static abstract class MediaOverviewFragment<T> extends Fragment implements LoaderManager.LoaderCallbacks<T> {
 
-    public static final String ADDRESS_EXTRA = "address";
-    public static final String LOCALE_EXTRA  = "locale_extra";
+        public static final String ADDRESS_EXTRA = "address";
+        public static final String LOCALE_EXTRA = "locale_extra";
 
-    protected TextView     noMedia;
-    protected Recipient    recipient;
-    protected RecyclerView recyclerView;
-    protected Locale       locale;
+        protected TextView noMedia;
+        protected Recipient recipient;
+        protected RecyclerView recyclerView;
+        protected Locale locale;
 
-    @Override
-    public void onCreate(Bundle bundle) {
-      super.onCreate(bundle);
+        @Override
+        public void onCreate(Bundle bundle) {
+            super.onCreate(bundle);
 
-      String       address      = getArguments().getString(ADDRESS_EXTRA);
-      Locale       locale       = (Locale)getArguments().getSerializable(LOCALE_EXTRA);
+            String address = getArguments().getString(ADDRESS_EXTRA);
+            Locale locale = (Locale) getArguments().getSerializable(LOCALE_EXTRA);
 
-      if (address == null)      throw new AssertionError();
-      if (locale == null)       throw new AssertionError();
+            if (address == null) throw new AssertionError();
+            if (locale == null) throw new AssertionError();
 
-      this.recipient    = Recipient.from(getContext(), Address.fromSerialized(address), true);
-      this.locale       = locale;
+            this.recipient = Recipient.from(getContext(), Address.fromSerialized(address), true);
+            this.locale = locale;
 
-      getLoaderManager().initLoader(0, null, this);
-    }
-  }
-
-  public static class MediaOverviewGalleryFragment
-      extends MediaOverviewFragment<BucketedThreadMedia>
-      implements MediaGalleryAdapter.ItemClickListener
-  {
-
-    private StickyHeaderGridLayoutManager gridManager;
-    private ActionMode                    actionMode;
-    private ActionModeCallback            actionModeCallback = new ActionModeCallback();
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      View view = inflater.inflate(R.layout.media_overview_gallery_fragment, container, false);
-
-      this.recyclerView = ViewUtil.findById(view, R.id.media_grid);
-      this.noMedia      = ViewUtil.findById(view, R.id.no_images);
-      this.gridManager  = new StickyHeaderGridLayoutManager(getResources().getInteger(R.integer.media_overview_cols));
-
-      this.recyclerView.setAdapter(new MediaGalleryAdapter(getContext(),
-                                                           Glide.with(this),
-                                                           new BucketedThreadMedia(getContext()),
-                                                           locale,
-                                                           this));
-      this.recyclerView.setLayoutManager(gridManager);
-      this.recyclerView.setHasFixedSize(true);
-
-      return view;
+            getLoaderManager().initLoader(0, null, this);
+        }
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-      super.onConfigurationChanged(newConfig);
-      if (gridManager != null) {
-        this.gridManager = new StickyHeaderGridLayoutManager(getResources().getInteger(R.integer.media_overview_cols));
-        this.recyclerView.setLayoutManager(gridManager);
-      }
-    }
+    public static class MediaOverviewGalleryFragment
+            extends MediaOverviewFragment<Cursor>
+            implements MediaGalleryAdapter.ItemClickListener {
 
-    @Override
-    public @NonNull Loader<BucketedThreadMedia> onCreateLoader(int i, Bundle bundle) {
-      return new BucketedThreadMediaLoader(getContext(), recipient.getAddress());
-    }
+        private GridLayoutManager gridManager;
+        private ActionMode actionMode;
+        private ActionModeCallback actionModeCallback = new ActionModeCallback();
 
-    @Override
-    public void onLoadFinished(@NonNull Loader<BucketedThreadMedia> loader, BucketedThreadMedia bucketedThreadMedia) {
-      ((MediaGalleryAdapter) recyclerView.getAdapter()).setMedia(bucketedThreadMedia);
-      ((MediaGalleryAdapter) recyclerView.getAdapter()).notifyAllSectionsDataSetChanged();
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.media_overview_gallery_fragment, container, false);
 
-      noMedia.setVisibility(recyclerView.getAdapter().getItemCount() > 0 ? View.GONE : View.VISIBLE);
-      getActivity().invalidateOptionsMenu();
-    }
+            this.recyclerView = ViewUtil.findById(view, R.id.media_grid);
+            this.noMedia = ViewUtil.findById(view, R.id.no_images);
+            this.gridManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.media_overview_cols));
 
-    @Override
-    public void onLoaderReset(@NonNull Loader<BucketedThreadMedia> cursorLoader) {
-      ((MediaGalleryAdapter) recyclerView.getAdapter()).setMedia(new BucketedThreadMedia(getContext()));
-    }
+            this.recyclerView.setAdapter(new MediaGalleryAdapter(this));
+            this.recyclerView.setLayoutManager(gridManager);
+            this.recyclerView.setHasFixedSize(true);
 
-    @Override
-    public void onMediaClicked(@NonNull MediaDatabase.MediaRecord mediaRecord) {
-      if (actionMode != null) {
-        handleMediaMultiSelectClick(mediaRecord);
-      } else {
-        handleMediaPreviewClick(mediaRecord);
-      }
-    }
+            return view;
+        }
 
-    private void handleMediaMultiSelectClick(@NonNull MediaDatabase.MediaRecord mediaRecord) {
-      MediaGalleryAdapter adapter = getListAdapter();
+        @Override
+        public void onConfigurationChanged(Configuration newConfig) {
+            super.onConfigurationChanged(newConfig);
+            if (gridManager != null) {
+                this.gridManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.media_overview_cols));
+                this.recyclerView.setLayoutManager(gridManager);
+            }
+        }
 
-      adapter.toggleSelection(mediaRecord);
-      if (adapter.getSelectedMediaCount() == 0) {
-        actionMode.finish();
-      } else {
-        actionMode.setTitle(String.valueOf(adapter.getSelectedMediaCount()));
-      }
-    }
+        @Override
+        public @NonNull
+        Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+            return new ThreadMediaLoader(requireContext(), recipient.getAddress(), true);
+        }
 
-    private void handleMediaPreviewClick(@NonNull MediaDatabase.MediaRecord mediaRecord) {
-      if (mediaRecord.getAttachment().getDataUri() == null) {
-        return;
-      }
+        @Override
+        public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
+            List<MediaDatabase.MediaRecord> mediaRecords = new ArrayList<>();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    mediaRecords.add(MediaDatabase.MediaRecord.from(requireContext(), cursor));
+                } while (cursor.moveToNext());
+            }
 
-      Context context = getContext();
-      if (context == null) {
-        return;
-      }
+            MediaGalleryAdapter adapter = getListAdapter();
+            adapter.setItems(mediaRecords);
 
-      Intent intent = new Intent(context, MediaPreviewActivity.class);
-      intent.putExtra(MediaPreviewActivity.DATE_EXTRA, mediaRecord.getDate());
-      intent.putExtra(MediaPreviewActivity.SIZE_EXTRA, mediaRecord.getAttachment().getSize());
-      intent.putExtra(MediaPreviewActivity.ADDRESS_EXTRA, recipient.getAddress());
-      intent.putExtra(MediaPreviewActivity.OUTGOING_EXTRA, mediaRecord.isOutgoing());
-      intent.putExtra(MediaPreviewActivity.LEFT_IS_RECENT_EXTRA, true);
+            noMedia.setVisibility(adapter.getItemCount() > 0 ? View.GONE : View.VISIBLE);
+            requireActivity().invalidateOptionsMenu();
+        }
 
-      intent.setDataAndType(mediaRecord.getAttachment().getDataUri(), mediaRecord.getContentType());
-      context.startActivity(intent);
-    }
+        @Override
+        public void onLoaderReset(@NonNull Loader<Cursor> cursorLoader) {
+            getListAdapter().setItems(new ArrayList<>());
+        }
 
-    @Override
-    public void onMediaLongClicked(MediaDatabase.MediaRecord mediaRecord) {
-      if (actionMode == null) {
-        ((MediaGalleryAdapter) recyclerView.getAdapter()).toggleSelection(mediaRecord);
-        recyclerView.getAdapter().notifyDataSetChanged();
+        @Override
+        public void onMediaClicked(@NonNull MediaDatabase.MediaRecord mediaRecord) {
+            if (actionMode != null) {
+                handleMediaMultiSelectClick(mediaRecord);
+            } else {
+                handleMediaPreviewClick(mediaRecord);
+            }
+        }
 
-        enterMultiSelect();
-      }
-    }
+        private void handleMediaMultiSelectClick(@NonNull MediaDatabase.MediaRecord mediaRecord) {
+            MediaGalleryAdapter adapter = getListAdapter();
 
-    @SuppressWarnings("CodeBlock2Expr")
-    @SuppressLint({"InlinedApi", "StaticFieldLeak"})
-    private void handleSaveMedia(@NonNull Collection<MediaDatabase.MediaRecord> mediaRecords) {
-      final Context context = requireContext();
+            adapter.toggleSelection(mediaRecord);
+            if (adapter.getSelectedMediaCount() == 0) {
+                actionMode.finish();
+            } else {
+                actionMode.setTitle(String.valueOf(adapter.getSelectedMediaCount()));
+            }
+        }
+
+        private void handleMediaPreviewClick(@NonNull MediaDatabase.MediaRecord mediaRecord) {
+            if (mediaRecord.getAttachment().getDataUri() == null) {
+                return;
+            }
+
+            Context context = getContext();
+            if (context == null) {
+                return;
+            }
+
+            Intent intent = new Intent(context, MediaPreviewActivity.class);
+            intent.putExtra(MediaPreviewActivity.DATE_EXTRA, mediaRecord.getDate());
+            intent.putExtra(MediaPreviewActivity.SIZE_EXTRA, mediaRecord.getAttachment().getSize());
+            intent.putExtra(MediaPreviewActivity.ADDRESS_EXTRA, recipient.getAddress());
+            intent.putExtra(MediaPreviewActivity.OUTGOING_EXTRA, mediaRecord.isOutgoing());
+            intent.putExtra(MediaPreviewActivity.LEFT_IS_RECENT_EXTRA, true);
+
+            intent.setDataAndType(mediaRecord.getAttachment().getDataUri(), mediaRecord.getContentType());
+            context.startActivity(intent);
+        }
+
+        @Override
+        public void onMediaLongClicked(MediaDatabase.MediaRecord mediaRecord) {
+            if (actionMode == null) {
+                ((MediaGalleryAdapter) recyclerView.getAdapter()).toggleSelection(mediaRecord);
+                recyclerView.getAdapter().notifyDataSetChanged();
+
+                enterMultiSelect();
+            }
+        }
+
+        @SuppressWarnings("CodeBlock2Expr")
+        @SuppressLint({"InlinedApi", "StaticFieldLeak"})
+        private void handleSaveMedia(@NonNull Collection<MediaDatabase.MediaRecord> mediaRecords) {
+            final Context context = requireContext();
 
       SaveAttachmentTask.showWarningDialog(context, mediaRecords.size(), () -> {
         Permissions.with(this)
                 .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P)
-                .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
-                .onAnyDenied(() -> Toast.makeText(getContext(), R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show())
+                .withPermanentDenialDialog(Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                        .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                        .format().toString())
+                .onAnyDenied(() -> Toast.makeText(getContext(),
+                                       Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                                           .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                                           .format().toString(),
+                                       Toast.LENGTH_LONG).show())
                 .onAllGranted(() -> {
                   new ProgressDialogAsyncTask<Void, Void, List<SaveAttachmentTask.Attachment>>(
                           context,
-                          R.string.MediaOverviewActivity_collecting_attachments,
-                          R.string.please_wait) {
+                          R.string.attachmentsCollecting,
+                          R.string.waitOneMoment) {
                     @Override
                     protected List<SaveAttachmentTask.Attachment> doInBackground(Void... params) {
                       List<SaveAttachmentTask.Attachment> attachments = new LinkedList<>();
 
-                      for (MediaDatabase.MediaRecord mediaRecord : mediaRecords) {
-                        if (mediaRecord.getAttachment().getDataUri() != null) {
-                          attachments.add(new SaveAttachmentTask.Attachment(mediaRecord.getAttachment().getDataUri(),
-                                  mediaRecord.getContentType(),
-                                  mediaRecord.getDate(),
-                                  mediaRecord.getAttachment().getFileName()));
-                        }
-                      }
+                                    for (MediaDatabase.MediaRecord mediaRecord : mediaRecords) {
+                                        if (mediaRecord.getAttachment().getDataUri() != null) {
+                                            attachments.add(new SaveAttachmentTask.Attachment(mediaRecord.getAttachment().getDataUri(),
+                                                    mediaRecord.getContentType(),
+                                                    mediaRecord.getDate(),
+                                                    mediaRecord.getAttachment().getFileName()));
+                                        }
+                                    }
 
-                      return attachments;
-                    }
+                                    return attachments;
+                                }
 
-                    @Override
-                    protected void onPostExecute(List<SaveAttachmentTask.Attachment> attachments) {
-                      super.onPostExecute(attachments);
-                      SaveAttachmentTask saveTask = new SaveAttachmentTask(context, attachments.size());
-                      saveTask.executeOnExecutor(THREAD_POOL_EXECUTOR,
-                              attachments.toArray(new SaveAttachmentTask.Attachment[attachments.size()]));
-                      actionMode.finish();
-                      boolean containsIncoming = mediaRecords.parallelStream().anyMatch(m -> !m.isOutgoing());
-                      if (containsIncoming) {
-                        sendMediaSavedNotificationIfNeeded();
-                      }
-                    }
-                  }.execute();
-                })
-                .execute();
-        return Unit.INSTANCE;
+                                @Override
+                                protected void onPostExecute(List<SaveAttachmentTask.Attachment> attachments) {
+                                    super.onPostExecute(attachments);
+                                    SaveAttachmentTask saveTask = new SaveAttachmentTask(context, attachments.size());
+                                    saveTask.executeOnExecutor(THREAD_POOL_EXECUTOR,
+                                            attachments.toArray(new SaveAttachmentTask.Attachment[attachments.size()]));
+                                    actionMode.finish();
+                                    boolean containsIncoming = mediaRecords.parallelStream().anyMatch(m -> !m.isOutgoing());
+                                    if (containsIncoming) {
+                                        sendMediaSavedNotificationIfNeeded();
+                                    }
+                                }
+                            }.execute();
+                        })
+                        .execute();
+            return Unit.INSTANCE;
       });
+        }
+
+        private void sendMediaSavedNotificationIfNeeded() {
+            if (recipient.isGroupRecipient()) return;
+            DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(SnodeAPI.getNowWithOffset()));
+            MessageSender.send(message, recipient.getAddress());
+        }
+
+        @SuppressLint("StaticFieldLeak")
+        private void handleDeleteMedia(@NonNull Collection<MediaDatabase.MediaRecord> mediaRecords) {
+            int recordCount = mediaRecords.size();
+
+            DeleteMediaDialog.show(
+                    requireContext(),
+                    recordCount,
+                    () -> new ProgressDialogAsyncTask<MediaDatabase.MediaRecord, Void, Void>(
+                            requireContext(),
+                            R.string.deleting,
+                            R.string.deleting) {
+                        @Override
+                        protected Void doInBackground(MediaDatabase.MediaRecord... records) {
+                            if (records == null || records.length == 0) {
+                                return null;
+                            }
+
+                            for (MediaDatabase.MediaRecord record : records) {
+                                AttachmentUtil.deleteAttachment(getContext(), record.getAttachment());
+                            }
+                            return null;
+                        }
+                    }.execute(mediaRecords.toArray(new MediaDatabase.MediaRecord[mediaRecords.size()])));
+            }
+
+        private void handleSelectAllMedia() {
+            getListAdapter().selectAllMedia();
+            actionMode.setTitle(String.valueOf(getListAdapter().getSelectedMediaCount()));
+        }
+
+        private MediaGalleryAdapter getListAdapter() {
+            return (MediaGalleryAdapter) recyclerView.getAdapter();
+        }
+
+        private void enterMultiSelect() {
+            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
+            ((MediaOverviewActivity) getActivity()).onEnterMultiSelect();
+        }
+
+        private class ActionModeCallback implements ActionMode.Callback {
+
+            private int originalStatusBarColor;
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.media_overview_context, menu);
+                mode.setTitle("1");
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getActivity().getWindow();
+                    originalStatusBarColor = window.getStatusBarColor();
+                    window.setStatusBarColor(getResources().getColor(R.color.action_mode_status_bar));
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.save:
+                        handleSaveMedia(getListAdapter().getSelectedMedia());
+                        return true;
+                    case R.id.delete:
+                        handleDeleteMedia(getListAdapter().getSelectedMedia());
+                        actionMode.finish();
+                        return true;
+                    case R.id.select_all:
+                        handleSelectAllMedia();
+                        return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                actionMode = null;
+                getListAdapter().clearSelection();
+                ((MediaOverviewActivity) getActivity()).onExitMultiSelect();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getActivity().getWindow().setStatusBarColor(originalStatusBarColor);
+                }
+            }
+        }
     }
 
-    private void sendMediaSavedNotificationIfNeeded() {
-      if (recipient.isGroupRecipient()) return;
-      DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(SnodeAPI.getNowWithOffset()));
-      MessageSender.send(message, recipient.getAddress());
-    }
+    public static class MediaOverviewDocumentsFragment extends MediaOverviewFragment<Cursor> {
 
-    @SuppressLint("StaticFieldLeak")
-    private void handleDeleteMedia(@NonNull Collection<MediaDatabase.MediaRecord> mediaRecords) {
-      int recordCount       = mediaRecords.size();
-
-      DeleteMediaDialog.show(
-              requireContext(),
-              recordCount,
-              () -> new ProgressDialogAsyncTask<MediaDatabase.MediaRecord, Void, Void>(
-                requireContext(),
-                R.string.MediaOverviewActivity_Media_delete_progress_title,
-                R.string.MediaOverviewActivity_Media_delete_progress_message) {
         @Override
-        protected Void doInBackground(MediaDatabase.MediaRecord... records) {
-          if (records == null || records.length == 0) {
-            return null;
-          }
+        public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.media_overview_documents_fragment, container, false);
+            MediaDocumentsAdapter adapter = new MediaDocumentsAdapter(getContext(), null, locale);
 
-          for (MediaDatabase.MediaRecord record : records) {
-            AttachmentUtil.deleteAttachment(getContext(), record.getAttachment());
-          }
-          return null;
+            this.recyclerView = ViewUtil.findById(view, R.id.recycler_view);
+            this.noMedia = ViewUtil.findById(view, R.id.no_documents);
+
+            this.recyclerView.setAdapter(adapter);
+            this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+            this.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+            return view;
         }
-      }.execute(mediaRecords.toArray(new MediaDatabase.MediaRecord[mediaRecords.size()])));
-    }
 
-    private void handleSelectAllMedia() {
-      getListAdapter().selectAllMedia();
-      actionMode.setTitle(String.valueOf(getListAdapter().getSelectedMediaCount()));
-    }
-
-    private MediaGalleryAdapter getListAdapter() {
-      return (MediaGalleryAdapter) recyclerView.getAdapter();
-    }
-
-    private void enterMultiSelect() {
-      actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
-      ((MediaOverviewActivity) getActivity()).onEnterMultiSelect();
-    }
-
-    private class ActionModeCallback implements ActionMode.Callback {
-
-      private int originalStatusBarColor;
-
-      @Override
-      public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        mode.getMenuInflater().inflate(R.menu.media_overview_context, menu);
-        mode.setTitle("1");
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          Window window = getActivity().getWindow();
-          originalStatusBarColor = window.getStatusBarColor();
-          window.setStatusBarColor(getResources().getColor(R.color.action_mode_status_bar));
+        @Override
+        public @NonNull
+        Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new ThreadMediaLoader(getContext(), recipient.getAddress(), false);
         }
-        return true;
-      }
 
-      @Override
-      public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
-      }
+        @Override
+        public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+            ((CursorRecyclerViewAdapter) this.recyclerView.getAdapter()).changeCursor(data);
+            getActivity().invalidateOptionsMenu();
 
-      @Override
-      public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-          case R.id.save:
-            handleSaveMedia(getListAdapter().getSelectedMedia());
-            return true;
-          case R.id.delete:
-            handleDeleteMedia(getListAdapter().getSelectedMedia());
-            actionMode.finish();
-            return true;
-          case R.id.select_all:
-            handleSelectAllMedia();
-            return true;
+            this.noMedia.setVisibility(data.getCount() > 0 ? View.GONE : View.VISIBLE);
         }
-        return false;
-      }
 
-      @Override
-      public void onDestroyActionMode(ActionMode mode) {
-        actionMode = null;
-        getListAdapter().clearSelection();
-        ((MediaOverviewActivity) getActivity()).onExitMultiSelect();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          getActivity().getWindow().setStatusBarColor(originalStatusBarColor);
+        @Override
+        public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+            ((CursorRecyclerViewAdapter) this.recyclerView.getAdapter()).changeCursor(null);
+            getActivity().invalidateOptionsMenu();
         }
-      }
     }
-  }
-
-  public static class MediaOverviewDocumentsFragment extends MediaOverviewFragment<Cursor> {
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      View                  view    = inflater.inflate(R.layout.media_overview_documents_fragment, container, false);
-      MediaDocumentsAdapter adapter = new MediaDocumentsAdapter(getContext(), null, locale);
-
-      this.recyclerView  = ViewUtil.findById(view, R.id.recycler_view);
-      this.noMedia       = ViewUtil.findById(view, R.id.no_documents);
-
-      this.recyclerView.setAdapter(adapter);
-      this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-      this.recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter, false, true));
-      this.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-
-      return view;
-    }
-
-    @Override
-    public @NonNull Loader<Cursor> onCreateLoader(int id, Bundle args) {
-      return new ThreadMediaLoader(getContext(), recipient.getAddress(), false);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-      ((CursorRecyclerViewAdapter)this.recyclerView.getAdapter()).changeCursor(data);
-      getActivity().invalidateOptionsMenu();
-
-      this.noMedia.setVisibility(data.getCount() > 0 ? View.GONE : View.VISIBLE);
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-      ((CursorRecyclerViewAdapter)this.recyclerView.getAdapter()).changeCursor(null);
-      getActivity().invalidateOptionsMenu();
-    }
-  }
 }

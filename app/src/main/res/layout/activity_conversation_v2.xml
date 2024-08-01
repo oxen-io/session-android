@@ -40,7 +40,6 @@
         app:layout_constraintBottom_toTopOf="@+id/typingIndicatorViewContainer"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-
     <org.thoughtcrime.securesms.conversation.v2.components.TypingIndicatorViewContainer
         android:focusable="false"
         android:id="@+id/typingIndicatorViewContainer"
@@ -146,7 +145,7 @@
 
     <TextView
         android:id="@+id/textSendAfterApproval"
-        android:text="@string/ConversationActivity_send_after_approval"
+        android:text="@string/messageRequestPendingDescription"
         android:visibility="gone"
         tools:visibility="visible"
         android:textAlignment="center"
@@ -230,7 +229,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:background="?danger"
         android:visibility="gone"
-        tools:visibility="visible">
+        >
 
         <TextView
             android:id="@+id/blockedBannerTextView"
@@ -247,16 +246,17 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/outdatedBanner"
+        android:id="@+id/outdatedDisappearingBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/blockedBanner"
         android:background="@color/outdated_client_banner_background_color"
+        android:contentDescription="@string/AccessibilityId_outdated_group_banner"
         android:visibility="gone"
         tools:visibility="visible">
 
         <TextView
-            android:id="@+id/outdatedBannerTextView"
+            android:id="@+id/outdatedDisappearingBannerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -269,6 +269,39 @@
 
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/outdatedGroupBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/blockedBanner"
+        android:background="@color/outdated_client_banner_background_color"
+        android:paddingHorizontal="2dp"
+        android:contentDescription="@string/AccessibilityId_outdated_group_banner"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/outdatedBannerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="@dimen/very_small_spacing"
+            android:gravity="center_horizontal"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="@dimen/large_spacing"
+            android:textSize="@dimen/tiny_font_size"
+            android:text="@string/groupLegacyBanner"
+            />
+
+        <ImageView
+            android:layout_gravity="end|center_vertical"
+            android:layout_margin="@dimen/small_spacing"
+            android:layout_width="@dimen/medium_spacing"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_link_out"/>
+
+    </FrameLayout>
+
+
     <TextView
         android:padding="@dimen/medium_spacing"
         android:textSize="@dimen/small_font_size"
@@ -277,10 +310,10 @@
         android:id="@+id/placeholderText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/outdatedBanner"
+        app:layout_constraintTop_toBottomOf="@+id/outdatedDisappearingBanner"
         android:elevation="8dp"
-        android:contentDescription="@string/AccessibilityId_control_message"
-        tools:text="@string/activity_conversation_empty_state_default"
+        android:contentDescription="@string/AccessibilityId_empty_conversation"
+        tools:visibility="gone"
         />
 
     <LinearLayout
@@ -295,6 +328,7 @@
         tools:visibility="gone">
 
         <TextView
+            tools:visibility="invisible"
             android:id="@+id/messageRequestBlock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -304,7 +338,7 @@
             android:paddingHorizontal="@dimen/massive_spacing"
             android:paddingVertical="@dimen/small_spacing"
             android:textSize="@dimen/text_size"
-            android:text="@string/activity_conversation_block_user"/>
+            android:text="@string/block"/>
 
         <TextView
             android:id="@+id/sendAcceptsTextView"
@@ -313,7 +347,7 @@
             android:layout_margin="@dimen/medium_spacing"
             android:alpha="0.6"
             android:gravity="center_horizontal"
-            android:text="@string/message_requests_send_notice"
+            android:text="@string/messageRequestsAcceptDescription"
             android:textColor="?android:textColorPrimary"
             android:textSize="@dimen/small_font_size" />
 
@@ -340,7 +374,7 @@
                 android:layout_height="@dimen/medium_button_height"
                 android:layout_marginStart="@dimen/medium_spacing"
                 android:layout_weight="1"
-                android:text="@string/decline" />
+                android:text="d" />
 
         </LinearLayout>
 

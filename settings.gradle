@@ -1,3 +1,11 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = "session-android"
 
 include ':app'
@@ -5,3 +13,4 @@ include ':liblazysodium'
 include ':libsession'
 include ':libsignal'
 include ':libsession-util'
+include ':content-descriptions' // ONLY AccessibilityID strings (non-translated) used to identify UI elements in automated testing

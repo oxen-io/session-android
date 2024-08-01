@@ -1,7 +1,5 @@
 package org.thoughtcrime.securesms.repository
 
-import network.loki.messenger.libsession_util.util.ExpiryMode
-
 import android.content.ContentResolver
 import android.content.Context
 import app.cash.copper.Query
@@ -12,6 +10,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -55,11 +54,17 @@ interface ConversationRepository {
     fun getDraft(threadId: Long): String?
     fun clearDrafts(threadId: Long)
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
-    fun setBlocked(recipient: Recipient, blocked: Boolean)
+    fun setBlocked(threadId: Long, recipient: Recipient, blocked: Boolean)
     fun deleteLocally(recipient: Recipient, message: MessageRecord)
     fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
-    suspend fun deleteForEveryone(threadId: Long, recipient: Recipient, message: MessageRecord): ResultOf<Unit>
+    fun isKicked(recipient: Recipient): Boolean
+
+    suspend fun deleteForEveryone(
+        threadId: Long,
+        recipient: Recipient,
+        message: MessageRecord,
+    ): ResultOf<Unit>
     fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
     suspend fun deleteMessageWithoutUnsendRequest(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit>
     suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit>
@@ -68,8 +73,9 @@ interface ConversationRepository {
     suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit>
     suspend fun clearAllMessageRequests(block: Boolean): ResultOf<Unit>
     suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit>
-    fun declineMessageRequest(threadId: Long)
+    fun declineMessageRequest(threadId: Long, recipient: Recipient)
     fun hasReceived(threadId: Long): Boolean
+    fun getInvitingAdmin(threadId: Long): Recipient?
 }
 
 class DefaultConversationRepository @Inject constructor(
@@ -154,9 +160,21 @@ class DefaultConversationRepository @Inject constructor(
         }
     }
 
+    override fun isKicked(recipient: Recipient): Boolean {
+        // For now, we only know care we are kicked for a groups v2 recipient
+        if (!recipient.isClosedGroupV2Recipient) {
+            return false
+        }
+
+        return configFactory.userGroups
+            ?.getClosedGroup(recipient.address.serialize())?.kicked == true
+    }
+
     // This assumes that recipient.isContactRecipient is true
-    override fun setBlocked(recipient: Recipient, blocked: Boolean) {
-        storage.setBlocked(listOf(recipient), blocked)
+    override fun setBlocked(threadId: Long, recipient: Recipient, blocked: Boolean) {
+        if (recipient.isContactRecipient) {
+            storage.setBlocked(listOf(recipient), blocked)
+        }
     }
 
     override fun deleteLocally(recipient: Recipient, message: MessageRecord) {
@@ -184,8 +202,9 @@ class DefaultConversationRepository @Inject constructor(
     override suspend fun deleteForEveryone(
         threadId: Long,
         recipient: Recipient,
-        message: MessageRecord
+        message: MessageRecord,
     ): ResultOf<Unit> = suspendCoroutine { continuation ->
+        // Un-send only works for legacy closed groups and 1to1, handled by null return otherwise
         buildUnsendRequest(recipient, message)?.let { unsendRequest ->
             MessageSender.send(unsendRequest, recipient.address)
         }
@@ -224,22 +243,29 @@ class DefaultConversationRepository @Inject constructor(
             messageDataProvider.deleteMessage(message.id, !message.isMms)
             messageDataProvider.getServerHashForMessage(message.id, message.isMms)?.let { serverHash ->
                 var publicKey = recipient.address.serialize()
-                if (recipient.isClosedGroupRecipient) {
+                if (recipient.isLegacyClosedGroupRecipient) {
                     publicKey = GroupUtil.doubleDecodeGroupID(publicKey).toHexString()
                 }
-                SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
-                    .success {
-                        continuation.resume(ResultOf.Success(Unit))
-                    }.fail { error ->
-                        Log.w("ConversationRepository", "Call to SnodeAPI.deleteMessage failed - attempting to resume..")
-                        continuation.resumeWithException(error)
-                    }
+                if (recipient.isClosedGroupV2Recipient) {
+                    // admin check internally, assume either admin or all belong to user
+                    storage.sendGroupUpdateDeleteMessage(recipient.address.serialize(), listOf(serverHash))
+                    continuation.resume(ResultOf.Success(Unit))
+                } else {
+                    SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
+                        .success {
+                            continuation.resume(ResultOf.Success(Unit))
+                        }.fail { error ->
+                            Log.w("[onversationRepository", "Call to SnodeAPI.deleteMessage failed - attempting to resume..")
+                            continuation.resumeWithException(error)
+                        }
+                }
             }
+            messageDataProvider.deleteMessage(message.id, !message.isMms)
         }
     }
 
     override fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest? {
-        if (recipient.isCommunityRecipient) return null
+        if (recipient.isCommunityRecipient || recipient.isClosedGroupV2Recipient) return null
         messageDataProvider.getServerHashForMessage(message.id, message.isMms) ?: return null
         return UnsendRequest(
             author = message.takeUnless { it.isOutgoing }?.run { individualRecipient.address.contactIdentifier() } ?: textSecurePreferences.getLocalNumber(),
@@ -312,8 +338,7 @@ class DefaultConversationRepository @Inject constructor(
     }
 
     override suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit> {
-        sessionJobDb.cancelPendingMessageSendJobs(thread.threadId)
-        storage.deleteConversation(thread.threadId)
+        declineMessageRequest(thread.threadId, thread.recipient)
         return ResultOf.Success(Unit)
     }
 
@@ -322,7 +347,9 @@ class DefaultConversationRepository @Inject constructor(
             while (reader.next != null) {
                 deleteMessageRequest(reader.current)
                 val recipient = reader.current.recipient
-                if (block) { setBlocked(recipient, true) }
+                if (block && !recipient.isClosedGroupV2Recipient) {
+                    setBlocked(reader.current.threadId, recipient, true)
+                }
             }
         }
         return ResultOf.Success(Unit)
@@ -330,19 +357,27 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
         storage.setRecipientApproved(recipient, true)
-        val message = MessageRequestResponse(true)
-        MessageSender.send(message, Destination.from(recipient.address), isSyncMessage = recipient.isLocalNumber)
-            .success {
-                threadDb.setHasSent(threadId, true)
-                continuation.resume(ResultOf.Success(Unit))
-            }.fail { error ->
-                continuation.resumeWithException(error)
-            }
+        if (recipient.isClosedGroupV2Recipient) {
+            storage.respondToClosedGroupInvitation(threadId, recipient, true)
+        } else {
+            val message = MessageRequestResponse(true)
+            MessageSender.send(message, Destination.from(recipient.address), isSyncMessage = recipient.isLocalNumber)
+                .success {
+                    threadDb.setHasSent(threadId, true)
+                    continuation.resume(ResultOf.Success(Unit))
+                }.fail { error ->
+                    continuation.resumeWithException(error)
+                }
+        }
     }
 
-    override fun declineMessageRequest(threadId: Long) {
+    override fun declineMessageRequest(threadId: Long, recipient: Recipient) {
         sessionJobDb.cancelPendingMessageSendJobs(threadId)
-        storage.deleteConversation(threadId)
+        if (recipient.isClosedGroupV2Recipient) {
+            storage.respondToClosedGroupInvitation(threadId, recipient, false)
+        } else {
+            storage.deleteConversation(threadId)
+        }
     }
 
     override fun hasReceived(threadId: Long): Boolean {
@@ -355,4 +390,10 @@ class DefaultConversationRepository @Inject constructor(
         return false
     }
 
+    // Only call this with a closed group thread ID
+    override fun getInvitingAdmin(threadId: Long): Recipient? {
+        return lokiMessageDb.groupInviteReferrer(threadId)?.let { id ->
+            Recipient.from(context, Address.fromSerialized(id), false)
+        }
+    }
 }

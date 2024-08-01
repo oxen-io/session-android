@@ -20,16 +20,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.Flow
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.onboarding.ui.ContinuePrimaryOutlineButton
-import org.thoughtcrime.securesms.ui.theme.LocalDimensions
-import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 import org.thoughtcrime.securesms.ui.components.MaybeScanQrCode
 import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
 import org.thoughtcrime.securesms.ui.components.SessionTabRow
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 private val TITLES = listOf(R.string.sessionRecoveryPassword, R.string.qrScan)
 
@@ -93,14 +95,17 @@ private fun RecoveryPassword(state: State, onChange: (String) -> Unit = {}, onCo
             }
             Spacer(Modifier.height(LocalDimensions.current.smallSpacing))
             Text(
-                stringResource(R.string.activity_link_enter_your_recovery_password_to_load_your_account_if_you_haven_t_saved_it_you_can_find_it_in_your_app_settings),
+                stringResource(R.string.recoveryPasswordRestoreDescription),
                 style = LocalType.current.base
             )
             Spacer(Modifier.height(LocalDimensions.current.spacing))
+
+            val contentDescription = stringResource(R.string.AccessibilityId_recovery_phrase_input)
             SessionOutlinedTextField(
                 text = state.recoveryPhrase,
-                modifier = Modifier.fillMaxWidth(),
-                contentDescription = stringResource(R.string.AccessibilityId_recovery_phrase_input),
+                modifier = Modifier.fillMaxWidth().semantics {
+                    this.contentDescription = contentDescription
+                },
                 placeholder = stringResource(R.string.recoveryPasswordEnter),
                 onChange = onChange,
                 onContinue = onContinue,

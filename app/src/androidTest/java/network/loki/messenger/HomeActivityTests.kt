@@ -1,14 +1,10 @@
 package network.loki.messenger
 
-import android.Manifest
 import android.app.Instrumentation
 import android.content.ClipboardManager
 import android.content.Context
-import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
@@ -20,13 +16,15 @@ import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.LargeTest
+import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
+import network.loki.messenger.util.sendMessage
+import network.loki.messenger.util.waitFor
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import com.adevinta.android.barista.interaction.PermissionGranter
+import com.squareup.phrase.Phrase
 import network.loki.messenger.util.InputBarButtonDrawableMatcher.Companion.inputButtonWithDrawable
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
@@ -37,13 +35,14 @@ import org.junit.runner.RunWith
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.guava.Optional
+import org.session.libsession.utilities.StringSubstitutionConstants.URL_KEY
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
 import com.bumptech.glide.Glide
 
 @RunWith(AndroidJUnit4::class)
-@LargeTest
+@SmallTest
 class HomeActivityTests {
 
     @get:Rule
@@ -92,10 +91,10 @@ class HomeActivityTests {
         device.pressKeyCode(67)
 
         // Continue with display name
-        objectFromDesc(R.string.continue_2).click()
+        objectFromDesc(R.string.theContinue).click()
 
         // Continue with default push notification setting
-        objectFromDesc(R.string.continue_2).click()
+        objectFromDesc(R.string.theContinue).click()
 
         // PN select
         if (hasViewedSeed) {
@@ -111,6 +110,7 @@ class HomeActivityTests {
         onView(withId(R.id.newConversationButton)).perform(ViewActions.click())
         onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
         // new chat
+        Thread.sleep(500)
         onView(withId(R.id.publicKeyEditText)).perform(ViewActions.closeSoftKeyboard())
         onView(withId(R.id.copyButton)).perform(ViewActions.click())
         val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -127,7 +127,7 @@ class HomeActivityTests {
     @Test
     fun testLaunches_dismiss_seedView() {
         setupLoggedInState()
-        objectFromDesc(R.string.continue_2).click()
+        objectFromDesc(R.string.theContinue).click()
         objectFromDesc(R.string.copy).click()
         pressBack()
         onView(withId(R.id.seedReminderView)).check(matches(not(isDisplayed())))
@@ -150,11 +150,13 @@ class HomeActivityTests {
         setupLoggedInState()
         goToMyChat()
         TextSecurePreferences.setLinkPreviewsEnabled(context, true)
-        sendMessage("howdy")
-        sendMessage("test")
-        // tests url rewriter doesn't crash
-        sendMessage("https://www.getsession.org?random_query_parameter=testtesttesttesttesttesttesttest&other_query_parameter=testtesttesttesttesttesttesttest")
-        sendMessage("https://www.ámazon.com")
+        with (activityMonitor.waitForActivity() as ConversationActivityV2) {
+            sendMessage("howdy")
+            sendMessage("test")
+            // tests url rewriter doesn't crash
+            sendMessage("https://www.getsession.org?random_query_parameter=testtesttesttesttesttesttesttest&other_query_parameter=testtesttesttesttesttesttesttest")
+            sendMessage("https://www.ámazon.com")
+        }
     }
 
     @Test
@@ -164,7 +166,9 @@ class HomeActivityTests {
         TextSecurePreferences.setLinkPreviewsEnabled(InstrumentationRegistry.getInstrumentation().targetContext, true)
         // given the link url text
         val url = "https://www.ámazon.com"
-        sendMessage(url, LinkPreview(url, "amazon", Optional.absent()))
+        with (activityMonitor.waitForActivity() as ConversationActivityV2) {
+            sendMessage(url, LinkPreview(url, "amazon", Optional.absent()))
+        }
 
         // when the URL span is clicked
         onView(withSubstring(url)).perform(ViewActions.click())
@@ -172,27 +176,14 @@ class HomeActivityTests {
         // then the URL dialog should be displayed with a known punycode url
         val amazonPuny = "https://www.xn--mazon-wqa.com/"
 
-        val dialogPromptText = InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.dialog_open_url_explanation, amazonPuny)
+        // Substitute the URL into our string
+        val c = InstrumentationRegistry.getInstrumentation().targetContext
+        val dialogPromptText = Phrase.from(c, R.string.urlOpenDescription)
+            .put(URL_KEY, amazonPuny)
+            .format().toString()
 
         onView(isRoot()).perform(waitFor(1000)) // no other way for this to work apparently
         onView(withText(dialogPromptText)).check(matches(isDisplayed()))
-    }
-
-    /**
-     * Perform action of waiting for a specific time.
-     */
-    fun waitFor(millis: Long): ViewAction {
-        return object : ViewAction {
-            override fun getConstraints(): Matcher<View>? {
-                return isRoot()
-            }
-
-            override fun getDescription(): String = "Wait for $millis milliseconds."
-
-            override fun perform(uiController: UiController, view: View?) {
-                uiController.loopMainThreadForAtLeast(millis)
-            }
-        }
     }
 
 }

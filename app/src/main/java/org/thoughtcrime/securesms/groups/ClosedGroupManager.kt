@@ -4,7 +4,7 @@ import android.content.Context
 import network.loki.messenger.libsession_util.ConfigBase
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
-import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
+import org.session.libsession.messaging.sending_receiving.pollers.LegacyClosedGroupPollerV2
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.GroupUtil
@@ -25,7 +25,7 @@ object ClosedGroupManager {
         // Notify the PN server
         PushRegistryV1.unsubscribeGroup(closedGroupPublicKey = groupPublicKey, publicKey = userPublicKey)
         // Stop polling
-        ClosedGroupPollerV2.shared.stopPolling(groupPublicKey)
+        LegacyClosedGroupPollerV2.shared.stopPolling(groupPublicKey)
         storage.cancelPendingMessageSendJobs(threadId)
         ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
         if (delete) {
@@ -33,16 +33,9 @@ object ClosedGroupManager {
         }
     }
 
-    fun ConfigFactory.removeLegacyGroup(group: GroupRecord): Boolean {
-        val groups = userGroups ?: return false
-        if (!group.isClosedGroup) return false
-        val groupPublicKey = GroupUtil.doubleEncodeGroupID(group.getId())
-        return groups.eraseLegacyGroup(groupPublicKey)
-    }
-
     fun ConfigFactory.updateLegacyGroup(group: GroupRecord) {
         val groups = userGroups ?: return
-        if (!group.isClosedGroup) return
+        if (!group.isLegacyClosedGroup) return
         val storage = MessagingModuleConfiguration.shared.storage
         val threadId = storage.getThreadId(group.encodedId) ?: return
         val groupPublicKey = GroupUtil.doubleEncodeGroupID(group.getId())

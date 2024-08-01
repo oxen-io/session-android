@@ -11,7 +11,6 @@ import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.UserPic
-import nl.komponents.kovenant.Promise
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.ConfigurationSyncJob
 import org.session.libsession.messaging.jobs.JobQueue
@@ -30,39 +29,60 @@ import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import java.util.Timer
+import java.util.concurrent.ConcurrentLinkedDeque
 
 object ConfigurationMessageUtilities {
     private const val TAG = "ConfigMessageUtils"
 
     private val debouncer = WindowDebouncer(3000, Timer())
+    private val destinationUpdater = Any()
+    private val pendingDestinations = ConcurrentLinkedDeque<Destination>()
 
-    private fun scheduleConfigSync(userPublicKey: String) {
-
+    private fun scheduleConfigSync(destination: Destination) {
+        synchronized(destinationUpdater) {
+            pendingDestinations.add(destination)
+        }
         debouncer.publish {
             // don't schedule job if we already have one
             val storage = MessagingModuleConfiguration.shared.storage
-            val ourDestination = Destination.Contact(userPublicKey)
-            val currentStorageJob = storage.getConfigSyncJob(ourDestination)
-            if (currentStorageJob != null) {
-                (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
-                return@publish
+            val configFactory = MessagingModuleConfiguration.shared.configFactory
+            val destinations = synchronized(destinationUpdater) {
+                val objects = pendingDestinations.toList()
+                pendingDestinations.clear()
+                objects
             }
-            val newConfigSyncJob = ConfigurationSyncJob(ourDestination)
-            JobQueue.shared.add(newConfigSyncJob)
+            destinations.forEach {  destination ->
+                if (destination is Destination.ClosedGroup) {
+                    // ensure we have the appropriate admin keys, skip this destination otherwise
+                    val group = configFactory.userGroups?.getClosedGroup(destination.publicKey) ?: return@forEach
+                    if (group.adminKey == null) return@forEach Log.w("ConfigurationSync", "Trying to schedule config sync for group we aren't an admin of")
+                }
+                val currentStorageJob = storage.getConfigSyncJob(destination)
+                if (currentStorageJob != null) {
+                    (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
+                    return@publish
+                }
+                val newConfigSyncJob = ConfigurationSyncJob(destination)
+                JobQueue.shared.add(newConfigSyncJob)
+            }
         }
     }
 
     @JvmStatic
     fun syncConfigurationIfNeeded(context: Context) {
-        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Log.w(TAG, "User Public Key is null")
-        scheduleConfigSync(userPublicKey)
+        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return
+        scheduleConfigSync(Destination.Contact(userPublicKey))
     }
 
-    fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
-        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofFail(NullPointerException("User Public Key is null"))
+    fun forceSyncConfigurationNowIfNeeded(destination: Destination) {
+        scheduleConfigSync(destination)
+    }
+
+
+    fun forceSyncConfigurationNowIfNeeded(context: Context) {
+        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Log.e("Loki", NullPointerException("User Public Key is null"))
         // Schedule a new job if one doesn't already exist (only)
-        scheduleConfigSync(userPublicKey)
-        return Promise.ofSuccess(Unit)
+        scheduleConfigSync(Destination.Contact(userPublicKey))
     }
 
     private fun maybeUserSecretKey() = MessagingModuleConfiguration.shared.getUserED25519KeyPair()?.secretKey?.asBytes
@@ -151,7 +171,12 @@ object ConfigurationMessageUtilities {
                         val (base, room, pubKey) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: continue
                         convoConfig.getOrConstructCommunity(base, room, pubKey)
                     }
-                    recipient.isClosedGroupRecipient -> {
+                    recipient.isClosedGroupV2Recipient -> {
+                        // It's probably safe to assume there will never be a case where new closed groups will ever be there before a dump is created...
+                        // but just in case...
+                        convoConfig.getOrConstructClosedGroup(recipient.address.serialize())
+                    }
+                    recipient.isLegacyClosedGroupRecipient -> {
                         val groupPublicKey = GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
                         convoConfig.getOrConstructLegacyGroup(groupPublicKey)
                     }
@@ -194,7 +219,7 @@ object ConfigurationMessageUtilities {
         }
 
         val allLgc = storage.getAllGroups(includeInactive = false).filter {
-            it.isClosedGroup && it.isActive && it.members.size > 1
+            it.isLegacyClosedGroup && it.isActive && it.members.size > 1
         }.mapNotNull { group ->
             val groupAddress = Address.fromSerialized(group.encodedId)
             val groupPublicKey = GroupUtil.doubleDecodeGroupID(groupAddress.serialize()).toHexString()
@@ -226,13 +251,13 @@ object ConfigurationMessageUtilities {
 
     @JvmField
     val DELETE_INACTIVE_GROUPS: String = """
-        DELETE FROM ${GroupDatabase.TABLE_NAME} WHERE ${GroupDatabase.GROUP_ID} IN (SELECT ${ThreadDatabase.ADDRESS} FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} LIKE '${GroupUtil.CLOSED_GROUP_PREFIX}%');
-        DELETE FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.ADDRESS} IN (SELECT ${ThreadDatabase.ADDRESS} FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} LIKE '${GroupUtil.CLOSED_GROUP_PREFIX}%');
+        DELETE FROM ${GroupDatabase.TABLE_NAME} WHERE ${GroupDatabase.GROUP_ID} IN (SELECT ${ThreadDatabase.ADDRESS} FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} LIKE '${GroupUtil.LEGACY_CLOSED_GROUP_PREFIX}%');
+        DELETE FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.ADDRESS} IN (SELECT ${ThreadDatabase.ADDRESS} FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} LIKE '${GroupUtil.LEGACY_CLOSED_GROUP_PREFIX}%');
     """.trimIndent()
 
     @JvmField
     val DELETE_INACTIVE_ONE_TO_ONES: String = """
-        DELETE FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.CLOSED_GROUP_PREFIX}%' AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.COMMUNITY_PREFIX}%' AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.COMMUNITY_INBOX_PREFIX}%';
+        DELETE FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.LEGACY_CLOSED_GROUP_PREFIX}%' AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.COMMUNITY_PREFIX}%' AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.COMMUNITY_INBOX_PREFIX}%';
     """.trimIndent()
 
 }

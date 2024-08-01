@@ -7,6 +7,7 @@ import com.goterl.lazysodium.utils.KeyPair
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import network.loki.messenger.libsession_util.GroupKeysConfig
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
 import okhttp3.MediaType
@@ -29,6 +30,7 @@ import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.retryIfNeeded
+import org.session.libsignal.utilities.toHexString
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -54,7 +56,7 @@ class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver)
         val requestParameters = SubscriptionRequest(
             pubkey = publicKey,
             session_ed25519 = userEd25519Key.publicKey.asHexString,
-            namespaces = listOf(Namespace.DEFAULT),
+            namespaces = listOf(Namespace.DEFAULT()),
             data = true, // only permit data subscription for now (?)
             service = device.service,
             sig_ts = timestamp,
@@ -93,6 +95,64 @@ class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver)
             Log.d(TAG, "unregisterV2 success")
         }
     }
+
+    fun registerGroup(
+        device: Device,
+        token: String,
+        groupSessionId: String,
+        authData: ByteArray,
+        groupKeysConfig: GroupKeysConfig,
+    ): Promise<SubscriptionResponse, Exception> {
+        val pnKey = pushReceiver.getOrCreateNotificationKey()
+
+        val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
+        val namespaces = listOf(Namespace.CLOSED_GROUP_MESSAGES())
+        val sigData = "MONITOR${groupSessionId}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
+        val subkeyAuth = groupKeysConfig.subAccountSign(sigData, authData)
+        val requestParameters = SubscriptionRequest(
+            pubkey = groupSessionId,
+            subaccount = Base64.decode(subkeyAuth.subAccount).toHexString(),
+            namespaces = namespaces,
+            data = true, // only permit data subscription for now (?)
+            service = device.service,
+            sig_ts = timestamp,
+            subaccount_sig = subkeyAuth.subAccountSig,
+            signature = subkeyAuth.signature,
+            service_info = mapOf("token" to token),
+            enc_key = pnKey.asHexString,
+        ).let(Json::encodeToString)
+
+        return retryResponseBody<SubscriptionResponse>("subscribe", requestParameters) success {
+            Log.d(TAG, "registerV2 for group success")
+        }
+    }
+
+    fun unregisterGroup(
+        device: Device,
+        token: String,
+        groupSessionId: String,
+        authData: ByteArray,
+        groupKeysConfig: GroupKeysConfig
+    ): Promise<UnsubscribeResponse, Exception> {
+        val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
+        val namespaces = listOf(Namespace.CLOSED_GROUP_MESSAGES(),Namespace.CLOSED_GROUP_INFO(), Namespace.CLOSED_GROUP_MEMBERS())
+        val sigData = "MONITOR${groupSessionId}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
+        val (subaccount, _, sig) = groupKeysConfig.subAccountSign(sigData, authData)
+        val requestParameters = UnsubscriptionRequest(
+            pubkey = groupSessionId,
+            session_ed25519 = null,
+            subkey_tag = subaccount,
+            service = device.service,
+            sig_ts = timestamp,
+            signature = sig,
+            service_info = mapOf("token" to token),
+        ).let(Json::encodeToString)
+
+        return retryResponseBody<UnsubscribeResponse>("unsubscribe", requestParameters) success {
+            Log.d(TAG, "unregisterV2 for group success")
+        }
+    }
+
 
     private inline fun <reified T: Response> retryResponseBody(path: String, requestParameters: String): Promise<T, Exception> =
         retryIfNeeded(maxRetryCount) { getResponseBody(path, requestParameters) }

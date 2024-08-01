@@ -3,6 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:text="@string/ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found"
+    android:text="@string/searchMatchesNone"
     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
     android:textColor="@color/signal_text_secondary" />

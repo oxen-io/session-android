@@ -164,7 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Signal.Text.Caption"
-                android:text="@string/QuoteView_original_missing"
+                android:text="@string/messageErrorOriginal"
                 android:textColor="?android:textColorPrimary"/>
 
         </LinearLayout>

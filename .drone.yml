@@ -1,0 +1,10 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: test
+  image: mingc/android-build-box:1.24.0
+  commands:
+  - bash ./gradlew test

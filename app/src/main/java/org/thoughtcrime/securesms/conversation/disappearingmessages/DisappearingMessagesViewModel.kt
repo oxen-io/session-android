@@ -59,16 +59,28 @@ class DisappearingMessagesViewModel(
     init {
         viewModelScope.launch {
             val expiryMode = storage.getExpirationConfiguration(threadId)?.expiryMode?.maybeConvertToLegacy(isNewConfigEnabled) ?: ExpiryMode.NONE
-            val recipient = threadDb.getRecipientForThreadId(threadId)
-            val groupRecord = recipient?.takeIf { it.isClosedGroupRecipient }
+            val recipient = threadDb.getRecipientForThreadId(threadId) ?: return@launch
+            val groupRecord = recipient.takeIf { it.isLegacyClosedGroupRecipient }
                 ?.run { groupDb.getGroup(address.toGroupString()).orNull() }
+
+            val isAdmin = when {
+                recipient.isClosedGroupV2Recipient -> {
+                    // Handle the new closed group functionality
+                    storage.getMembers(recipient.address.serialize()).any { it.sessionId == textSecurePreferences.getLocalNumber() && it.admin }
+                }
+                recipient.isLegacyClosedGroupRecipient -> {
+                    // Handle as legacy group
+                    groupRecord?.admins?.any{ it.serialize() == textSecurePreferences.getLocalNumber() } == true
+                }
+                else -> !recipient.isGroupRecipient
+            }
 
             _state.update {
                 it.copy(
-                    address = recipient?.address,
-                    isGroup = groupRecord != null,
-                    isNoteToSelf = recipient?.address?.serialize() == textSecurePreferences.getLocalNumber(),
-                    isSelfAdmin = groupRecord == null || groupRecord.admins.any{ it.serialize() == textSecurePreferences.getLocalNumber() },
+                    address = recipient.address,
+                    isGroup = recipient.isGroupRecipient,
+                    isNoteToSelf = recipient.address.serialize() == textSecurePreferences.getLocalNumber(),
+                    isSelfAdmin = isAdmin,
                     expiryMode = expiryMode,
                     persistedMode = expiryMode
                 )

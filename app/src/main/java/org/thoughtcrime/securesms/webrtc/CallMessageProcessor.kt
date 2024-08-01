@@ -65,7 +65,7 @@ class CallMessageProcessor(private val context: Context, private val textSecureP
                     val sentTimestamp = nextMessage.sentTimestamp ?: continue
                     if (textSecurePreferences.setShownCallNotification()) {
                         // first time call notification encountered
-                        val notification = CallNotificationBuilder.getFirstCallNotification(context)
+                        val notification = CallNotificationBuilder.getFirstCallNotification(context, sender)
                         context.getSystemService(NotificationManager::class.java).notify(CallNotificationBuilder.WEBRTC_NOTIFICATION, notification)
                         insertMissedCall(sender, sentTimestamp, isFirstCall = true)
                     } else {

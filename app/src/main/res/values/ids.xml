@@ -3,4 +3,9 @@
     <item type="id" name="holder_tag"/>
     <item type="id" name="contact_info_tag"/>
     <item type="id" name="motion_view_edittext"/>
+
+    <!-- Create closed groups -->
+    <item type="id" name="create_group_name_text_field"/>
+    <item type="id" name="create_group_create_button"/>
+
 </resources>

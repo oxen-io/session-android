@@ -84,13 +84,13 @@ Java_network_loki_messenger_libsession_1util_UserProfile_setPic(JNIEnv *env, job
 extern "C"
 JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_setNtsPriority(JNIEnv *env, jobject thiz,
-                                                                        jint priority) {
+                                                                        jlong priority) {
     std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);
     profile->set_nts_priority(priority);
 }
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jlong JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_getNtsPriority(JNIEnv *env, jobject thiz) {
     std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);

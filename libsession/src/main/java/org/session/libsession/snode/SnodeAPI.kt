@@ -9,6 +9,7 @@ import com.goterl.lazysodium.interfaces.PwHash
 import com.goterl.lazysodium.interfaces.SecretBox
 import com.goterl.lazysodium.interfaces.Sign
 import com.goterl.lazysodium.utils.Key
+import network.loki.messenger.libsession_util.GroupKeysConfig
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.deferred
@@ -28,6 +29,7 @@ import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Snode
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.prettifiedDescription
@@ -240,7 +242,7 @@ object SnodeAPI {
         }
     }
 
-    internal fun getSingleTargetSnode(publicKey: String): Promise<Snode, Exception> {
+    fun getSingleTargetSnode(publicKey: String): Promise<Snode, Exception> {
         // SecureRandom() should be cryptographically secure
         return getSwarm(publicKey).map { it.shuffled(SecureRandom()).random() }
     }
@@ -395,7 +397,12 @@ object SnodeAPI {
         return invoke(Snode.Method.Retrieve, snode, parameters, publicKey)
     }
 
-    fun buildAuthenticatedStoreBatchInfo(publicKey: String, namespace: Int, message: SnodeMessage): SnodeBatchRequestInfo? {
+    fun buildAuthenticatedStoreBatchInfo(namespace: Int, message: SnodeMessage, signingKey: ByteArray, ed25519PubKey: String? = null): SnodeBatchRequestInfo {
+        val signingKeyCallback = signingKeyCallback(signingKey)
+        return buildAuthenticatedStoreBatchInfo(namespace, message, signingKeyCallback, ed25519PubKey)
+    }
+
+    fun buildAuthenticatedStoreBatchInfo(namespace: Int, message: SnodeMessage, signCallback: SignCallback, ed25519PubKey: String? = null): SnodeBatchRequestInfo {
         val params = mutableMapOf<String, Any>()
         // load the message data params into the sub request
         // currently loads:
@@ -404,38 +411,33 @@ object SnodeAPI {
         // ttl
         // timestamp
         params.putAll(message.toJSON())
-        params["namespace"] = namespace
 
         // used for sig generation since it is also the value used in timestamp parameter
         val messageTimestamp = message.timestamp
 
-        val userEd25519KeyPair = try {
-            MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
-        } catch (e: Exception) {
-            return null
+        val signatureParams = signCallback("store$namespace$messageTimestamp", messageTimestamp, namespace)
+        params += signatureParams
+
+        // timestamp already set
+        if (ed25519PubKey != null) {
+            params["pubkey_ed25519"] = ed25519PubKey
         }
 
-        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
-        val signature = ByteArray(Sign.BYTES)
-        val verificationData = "store$namespace$messageTimestamp".toByteArray()
-        try {
-            sodium.cryptoSignDetached(
-                signature,
-                verificationData,
-                verificationData.size.toLong(),
-                userEd25519KeyPair.secretKey.asBytes
-            )
-        } catch (e: Exception) {
-            Log.e("Loki", "Signing data failed with user secret key", e)
-        }
-        // timestamp already set
-        params["pubkey_ed25519"] = ed25519PublicKey
-        params["signature"] = Base64.encodeBytes(signature)
         return SnodeBatchRequestInfo(
             Snode.Method.SendMessage.rawValue,
             params,
             namespace
         )
+    }
+
+    fun buildAuthenticatedStoreBatchInfo(namespace: Int, message: SnodeMessage): SnodeBatchRequestInfo? {
+        val userEd25519KeyPair = try {
+            MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
+        } catch (e: Exception) {
+            return null
+        }
+        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
+        return buildAuthenticatedStoreBatchInfo(namespace, message, userEd25519KeyPair.secretKey.asBytes, ed25519PublicKey)
     }
 
     /**
@@ -445,32 +447,41 @@ object SnodeAPI {
      * @param required indicates that *at least one* message in the list is deleted from the server, otherwise it will return 404
      */
     fun buildAuthenticatedDeleteBatchInfo(publicKey: String, messageHashes: List<String>, required: Boolean = false): SnodeBatchRequestInfo? {
-        val params = mutableMapOf(
-            "pubkey" to publicKey,
-            "required" to required, // could be omitted technically but explicit here
-            "messages" to messageHashes
-        )
         val userEd25519KeyPair = try {
             MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
         } catch (e: Exception) {
             return null
         }
-        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
-        val signature = ByteArray(Sign.BYTES)
-        val verificationData = "delete${messageHashes.joinToString("")}".toByteArray()
-        try {
-            sodium.cryptoSignDetached(
-                signature,
-                verificationData,
-                verificationData.size.toLong(),
-                userEd25519KeyPair.secretKey.asBytes
-            )
-        } catch (e: Exception) {
-            Log.e("Loki", "Signing data failed with user secret key", e)
-            return null
+        val ed25519PublicKey = userEd25519KeyPair.publicKey
+        val signCallback = signingKeyCallback(userEd25519KeyPair.secretKey.asBytes)
+        return buildAuthenticatedDeleteBatchInfo(
+            publicKey,
+            messageHashes,
+            signCallback,
+            required,
+            ed25519PublicKey
+        )
+    }
+
+    fun buildAuthenticatedDeleteBatchInfo(
+        publicKey: String,
+        messageHashes: List<String>,
+        signCallback: SignCallback,
+        required: Boolean = false,
+        ed25519PubKey: Key? = null): SnodeBatchRequestInfo {
+        val verificationData = "delete${messageHashes.joinToString("")}"
+        val params = mutableMapOf(
+            "pubkey" to publicKey,
+            "required" to required, // could be omitted technically but explicit here
+            "messages" to messageHashes
+        )
+
+        if (ed25519PubKey != null) {
+            params += "pubkey_ed25519" to ed25519PubKey.asHexString
         }
-        params["pubkey_ed25519"] = ed25519PublicKey
-        params["signature"] = Base64.encodeBytes(signature)
+
+        params += signCallback(verificationData, null, null)
+
         return SnodeBatchRequestInfo(
             Snode.Method.DeleteMessage.rawValue,
             params,
@@ -478,39 +489,25 @@ object SnodeAPI {
         )
     }
 
-    fun buildAuthenticatedRetrieveBatchRequest(snode: Snode, publicKey: String, namespace: Int = 0, maxSize: Int? = null): SnodeBatchRequestInfo? {
+    fun buildAuthenticatedRetrieveBatchRequest(snode: Snode,
+                                               publicKey: String,
+                                               namespace: Int,
+                                               maxSize: Int? = null,
+                                               signCallback: SignCallback,
+                                               ed25519PublicKey: Key? = null): SnodeBatchRequestInfo? {
         val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
         val params = mutableMapOf<String, Any>(
             "pubkey" to publicKey,
-            "last_hash" to lastHashValue,
+            "last_hash" to lastHashValue
         )
-        val userEd25519KeyPair = try {
-            MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
-        } catch (e: Exception) {
-            return null
+        if (ed25519PublicKey != null) {
+            params["pubkey_ed25519"] = ed25519PublicKey.asHexString
         }
-        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
-        val timestamp = System.currentTimeMillis() + clockOffset
-        val signature = ByteArray(Sign.BYTES)
-        val verificationData = if (namespace == 0) "retrieve$timestamp".toByteArray()
-        else "retrieve$namespace$timestamp".toByteArray()
-        try {
-            sodium.cryptoSignDetached(
-                signature,
-                verificationData,
-                verificationData.size.toLong(),
-                userEd25519KeyPair.secretKey.asBytes
-            )
-        } catch (e: Exception) {
-            Log.e("Loki", "Signing data failed with user secret key", e)
-            return null
-        }
-        params["timestamp"] = timestamp
-        params["pubkey_ed25519"] = ed25519PublicKey
-        params["signature"] = Base64.encodeBytes(signature)
-        if (namespace != 0) {
-            params["namespace"] = namespace
-        }
+        val timestamp = nowWithOffset
+        val verificationData = if (namespace == 0) "retrieve$timestamp"
+            else "retrieve$namespace$timestamp"
+        val signParameters = signCallback(verificationData, timestamp, namespace)
+        params += signParameters
         if (maxSize != null) {
             params["max_size"] = maxSize
         }
@@ -521,15 +518,89 @@ object SnodeAPI {
         )
     }
 
+    fun buildAuthenticatedRetrieveBatchRequest(snode: Snode, publicKey: String, namespace: Int = 0, maxSize: Int? = null): SnodeBatchRequestInfo? {
+        val userEd25519KeyPair = try {
+            MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
+        } catch (e: Exception) {
+            return null
+        }
+        val secretKey = userEd25519KeyPair.secretKey.asBytes
+        val ed25519PublicKey = userEd25519KeyPair.publicKey
+        return buildAuthenticatedRetrieveBatchRequest(
+            snode,
+            publicKey,
+            namespace,
+            maxSize,
+            signingKeyCallback(secretKey),
+            ed25519PublicKey
+        )
+    }
+
+    fun buildAuthenticatedAlterTtlBatchRequest(
+        messageHashes: List<String>,
+        newExpiry: Long,
+        publicKey: String,
+        signCallback: SignCallback,
+        pubKeyEd25519: String? = null,
+        shorten: Boolean = false,
+        extend: Boolean = false): SnodeBatchRequestInfo? {
+        val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, signCallback, pubKeyEd25519, extend, shorten) ?: return null
+        return SnodeBatchRequestInfo(
+            Snode.Method.Expire.rawValue,
+            params,
+            null
+        )
+    }
+
     fun buildAuthenticatedAlterTtlBatchRequest(
         messageHashes: List<String>,
         newExpiry: Long,
         publicKey: String,
         shorten: Boolean = false,
         extend: Boolean = false): SnodeBatchRequestInfo? {
-        val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, extend, shorten) ?: return null
+        val userEd25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
+        val signingKey = userEd25519KeyPair.secretKey.asBytes
+        val pubKeyEd25519 = userEd25519KeyPair.publicKey.asHexString
+        return buildAuthenticatedAlterTtlBatchRequest(
+            messageHashes,
+            newExpiry,
+            publicKey,
+            signingKeyCallback(signingKey),
+            pubKeyEd25519,
+            shorten,
+            extend
+        )
+    }
+
+    fun buildAuthenticatedUnrevokeSubKeyBatchRequest(
+        publicKeyDestination: String,
+        signingKey: ByteArray,
+        subAccounts: Array<ByteArray>,
+    ): SnodeBatchRequestInfo? {
+        val params= buildUnrevokeAccountParams(
+            publicKeyDestination,
+            signingKey,
+            subAccounts
+        ) ?: return null
         return SnodeBatchRequestInfo(
-            Snode.Method.Expire.rawValue,
+            Snode.Method.UnrevokeSubAccount.rawValue,
+            params,
+            null
+        )
+    }
+
+    fun buildAuthenticatedRevokeSubKeyBatchRequest(
+        publicKeyDestination: String,
+        signingKey: ByteArray,
+        subAccounts: Array<ByteArray>,
+    ): SnodeBatchRequestInfo? {
+        val params = buildRevokeAccountParams(
+            publicKeyDestination,
+            signingKey,
+            subAccounts
+        ) ?: return null
+        return SnodeBatchRequestInfo(
+            Snode.Method.RevokeSubAccount.rawValue,
             params,
             null
         )
@@ -588,9 +659,18 @@ object SnodeAPI {
         }
     }
 
-    fun alterTtl(messageHashes: List<String>, newExpiry: Long, publicKey: String, extend: Boolean = false, shorten: Boolean = false): RawResponsePromise {
+    fun alterTtl(messageHashes: List<String>,
+                 newExpiry: Long,
+                 publicKey: String,
+                 extend: Boolean = false,
+                 shorten: Boolean = false): RawResponsePromise {
         return retryIfNeeded(maxRetryCount) {
-            val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, extend, shorten)
+            val userEd25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return@retryIfNeeded Promise.ofFail(
+                Exception("No user key pair to sign alter ttl message")
+            )
+            val signingKey = userEd25519KeyPair.secretKey.asBytes
+            val pubKeyEd25519 = userEd25519KeyPair.publicKey.asHexString
+            val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, signingKeyCallback(signingKey), pubKeyEd25519, extend, shorten)
                 ?: return@retryIfNeeded Promise.ofFail(
                     Exception("Couldn't build signed params for alterTtl request for newExpiry=$newExpiry, extend=$extend, shorten=$shorten")
                 )
@@ -600,13 +680,15 @@ object SnodeAPI {
         }
     }
 
-    private fun buildAlterTtlParams( // TODO: in future this will probably need to use the closed group subkeys / admin keys for group swarms
+    private fun buildAlterTtlParams(
         messageHashes: List<String>,
         newExpiry: Long,
         publicKey: String,
+        signCallback: SignCallback,
+        pubKeyEd25519: String? = null,
         extend: Boolean = false,
         shorten: Boolean = false): Map<String, Any>? {
-        val userEd25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
+
         val params = mutableMapOf(
             "expiry" to newExpiry,
             "messages" to messageHashes,
@@ -618,25 +700,85 @@ object SnodeAPI {
         }
         val shortenOrExtend = if (extend) "extend" else if (shorten) "shorten" else ""
 
-        val signData = "${Snode.Method.Expire.rawValue}$shortenOrExtend$newExpiry${messageHashes.joinToString(separator = "")}".toByteArray()
+        val signData = "${Snode.Method.Expire.rawValue}$shortenOrExtend$newExpiry${messageHashes.joinToString(separator = "")}"
 
-        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
+        val signature: Map<String, Any>
+        try {
+            signature = signCallback(signData, nowWithOffset, null)
+        } catch (e: Exception) {
+            Log.e("Loki", "Signing data failed with user secret key", e)
+            return null
+        }
+        params["pubkey"] = publicKey
+        if (pubKeyEd25519 != null) {
+            params["pubkey_ed25519"] = pubKeyEd25519
+        }
+        params.putAll(signature)
+
+        return params
+    }
+
+    private fun buildUnrevokeAccountParams(
+        publicKey: String,
+        signingKey: ByteArray,
+        unrevoke: Array<ByteArray>,
+        pubKeyEd25519: String? = null,
+    ): Map<String, Any>? {
+        val timestamp = nowWithOffset
+        val params = mutableMapOf(
+            "pubkey" to publicKey,
+            "timestamp" to timestamp,
+            "unrevoke" to unrevoke.map { Base64.encodeBytes(it) }
+        )
+        val signData = "unrevoke_subaccount$timestamp".toByteArray() + unrevoke.reduce(ByteArray::plus)
         val signature = ByteArray(Sign.BYTES)
         try {
             sodium.cryptoSignDetached(
                 signature,
                 signData,
                 signData.size.toLong(),
-                userEd25519KeyPair.secretKey.asBytes
+                signingKey
             )
         } catch (e: Exception) {
-            Log.e("Loki", "Signing data failed with user secret key", e)
+            Log.e("Loki", "Signing data failed with secret key", e)
             return null
         }
-        params["pubkey"] = publicKey
-        params["pubkey_ed25519"] = ed25519PublicKey
         params["signature"] = Base64.encodeBytes(signature)
+        if (pubKeyEd25519 != null) {
+            params["pubkey_ed25519"] = pubKeyEd25519
+        }
+        return params
+    }
 
+    private fun buildRevokeAccountParams(
+        publicKey: String,
+        signingKey: ByteArray,
+        revoke: Array<ByteArray>,
+        pubKeyEd25519: String? = null,
+    ): Map<String,Any>? {
+        val timestamp = nowWithOffset
+        val params = mutableMapOf(
+            "pubkey" to publicKey,
+            "timestamp" to timestamp,
+            "revoke" to revoke.map { Base64.encodeBytes(it) },
+        )
+        val signData = "revoke_subaccount$timestamp".toByteArray() + revoke.reduce(ByteArray::plus)
+        val signature = ByteArray(Sign.BYTES)
+        try {
+            sodium.cryptoSignDetached(
+                signature,
+                signData,
+                signData.size.toLong(),
+                signingKey
+            )
+        } catch (e: Exception) {
+            Log.e("Loki", "Signing data failed with secret key", e)
+            return null
+        }
+        params["signature"] = Base64.encodeBytes(signature)
+        if (pubKeyEd25519 != null) {
+            params["pubkey_ed25519"] = pubKeyEd25519
+        }
         return params
     }
 
@@ -652,6 +794,64 @@ object SnodeAPI {
         return invoke(Snode.Method.Info, snode, emptyMap()).map { rawResponse ->
             val timestamp = rawResponse["timestamp"] as? Long ?: -1
             snode to timestamp
+        }
+    }
+
+    fun signingKeyCallback(signingKey: ByteArray): SignCallback = { message, timestamp, namespace ->
+        val signature = ByteArray(Sign.BYTES)
+        try {
+            val verificationData = message.toByteArray()
+            sodium.cryptoSignDetached(signature, verificationData, verificationData.size.toLong(), signingKey)
+        } catch (exception: Exception) {
+            throw Error.SigningFailed
+        }
+        val params = mutableMapOf<String,Any>(
+            "signature" to Base64.encodeBytes(signature),
+        )
+        if (timestamp != null) {
+            params += "timestamp" to timestamp
+        }
+
+        if (namespace != null && namespace != Namespace.DEFAULT()) {
+            params += "namespace" to namespace
+        }
+        params
+    }
+
+    fun subkeyCallback(authData: ByteArray, groupKeysConfig: GroupKeysConfig, freeKeysAfterSign: Boolean = true): SignCallback = { message, timestamp, namespace ->
+        val (subaccount, subaccountSig, sig) = groupKeysConfig.subAccountSign(message.toByteArray(), authData)
+        val params = mutableMapOf<String, Any>(
+            "subaccount" to subaccount,
+            "subaccount_sig" to subaccountSig,
+            "signature" to sig,
+        )
+        if (timestamp != null) {
+            params += "timestamp" to timestamp
+        }
+        if (namespace != null && namespace != Namespace.DEFAULT()) {
+            params += "namespace" to namespace
+        }
+        if (freeKeysAfterSign) {
+            groupKeysConfig.free()
+        }
+        params
+    }
+
+    fun sendAuthenticatedMessage(message: SnodeMessage, signCallback: SignCallback, namespace: Int): RawResponsePromise {
+        val pubKey = message.recipient
+
+        return retryIfNeeded(maxRetryCount) {
+            // assume namespace here is non-zero, as zero namespace doesn't require auth
+            val sigTimestamp = nowWithOffset
+            val messageToSign = "store$namespace$sigTimestamp"
+
+            val parameters = message.toJSON().toMutableMap<String,Any>()
+
+            parameters += signCallback(messageToSign, sigTimestamp, namespace)
+
+            getSingleTargetSnode(pubKey).bind { targetSnode ->
+                invoke(Snode.Method.SendMessage, targetSnode, parameters, pubKey)
+            }
         }
     }
 
@@ -767,14 +967,14 @@ object SnodeAPI {
                 retryIfNeeded(maxRetryCount) {
                     getNetworkTime(snode).bind { (_, timestamp) ->
                         val signature = ByteArray(Sign.BYTES)
-                        val verificationData = (Snode.Method.DeleteAll.rawValue + Namespace.ALL + timestamp.toString()).toByteArray()
+                        val verificationData = (Snode.Method.DeleteAll.rawValue + Namespace.ALL() + timestamp.toString()).toByteArray()
                         sodium.cryptoSignDetached(signature, verificationData, verificationData.size.toLong(), userED25519KeyPair.secretKey.asBytes)
                         val deleteMessageParams = mapOf(
                             "pubkey" to userPublicKey,
                             "pubkey_ed25519" to userED25519KeyPair.publicKey.asHexString,
                             "timestamp" to timestamp,
                             "signature" to Base64.encodeBytes(signature),
-                            "namespace" to Namespace.ALL,
+                            "namespace" to Namespace.ALL(),
                         )
                         invoke(Snode.Method.DeleteAll, snode, deleteMessageParams, userPublicKey).map {
                             rawResponse -> parseDeletions(userPublicKey, timestamp, rawResponse)
@@ -843,14 +1043,21 @@ object SnodeAPI {
         }
     }
 
-    fun parseRawMessagesResponse(rawResponse: RawResponse, snode: Snode, publicKey: String, namespace: Int = 0, updateLatestHash: Boolean = true, updateStoredHashes: Boolean = true): List<Pair<SignalServiceProtos.Envelope, String?>> {
+    fun parseRawMessagesResponse(rawResponse: RawResponse,
+                                 snode: Snode,
+                                 publicKey: String,
+                                 namespace: Int = 0,
+                                 updateLatestHash: Boolean = true,
+                                 updateStoredHashes: Boolean = true,
+                                 decrypt: ((ByteArray) -> Pair<ByteArray, AccountId>?)? = null
+                                 ): List<Pair<SignalServiceProtos.Envelope, String?>> {
         val messages = rawResponse["messages"] as? List<*>
         return if (messages != null) {
             if (updateLatestHash) {
                 updateLastMessageHashValueIfPossible(snode, publicKey, messages, namespace)
             }
             val newRawMessages = removeDuplicates(publicKey, messages, namespace, updateStoredHashes)
-            return parseEnvelopes(newRawMessages)
+            return parseEnvelopes(newRawMessages, decrypt)
         } else {
             listOf()
         }
@@ -887,14 +1094,20 @@ object SnodeAPI {
         return result
     }
 
-    private fun parseEnvelopes(rawMessages: List<*>): List<Pair<SignalServiceProtos.Envelope, String?>> {
+    private fun parseEnvelopes(rawMessages: List<*>, decrypt: ((ByteArray)->Pair<ByteArray, AccountId>?)?): List<Pair<SignalServiceProtos.Envelope, String?>> {
         return rawMessages.mapNotNull { rawMessage ->
             val rawMessageAsJSON = rawMessage as? Map<*, *>
             val base64EncodedData = rawMessageAsJSON?.get("data") as? String
             val data = base64EncodedData?.let { Base64.decode(it) }
             if (data != null) {
                 try {
-                    Pair(MessageWrapper.unwrap(data), rawMessageAsJSON.get("hash") as? String)
+                    if (decrypt != null) {
+                        val (decrypted, sender) = decrypt(data)!!
+                        val envelope = SignalServiceProtos.Envelope.parseFrom(decrypted).toBuilder()
+                        envelope.source = sender.hexString
+                        Pair(envelope.build(),rawMessageAsJSON.get("hash") as? String)
+                    }
+                    else Pair(MessageWrapper.unwrap(data), rawMessageAsJSON.get("hash") as? String)
                 } catch (e: Exception) {
                     Log.d("Loki", "Failed to unwrap data for message: ${rawMessage.prettifiedDescription()}.")
                     null
@@ -982,6 +1195,10 @@ object SnodeAPI {
                 Log.d("Loki", "404, probably no file found")
                 return Error.Generic
             }
+            401 -> {
+                Log.d("Loki", "401, check you're doing a sign properly")
+                return Error.SigningFailed
+            }
             else -> {
                 handleBadSnode()
                 Log.d("Loki", "Unhandled response code: ${statusCode}.")
@@ -991,6 +1208,11 @@ object SnodeAPI {
         return null
     }
 }
+
+/**
+ * (String: message to sign, Long?: timestamp (optional), Int?: namespace (optional)
+ */
+typealias SignCallback = (message: String, timestamp: Long?, namespace: Int?) -> Map<String, Any>
 
 // Type Aliases
 typealias RawResponse = Map<*, *>

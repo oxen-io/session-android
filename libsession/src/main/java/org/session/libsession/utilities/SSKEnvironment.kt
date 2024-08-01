@@ -1,9 +1,7 @@
 package org.session.libsession.utilities
 
 import android.content.Context
-import android.util.Log
 import network.loki.messenger.libsession_util.util.ExpiryMode
-import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage

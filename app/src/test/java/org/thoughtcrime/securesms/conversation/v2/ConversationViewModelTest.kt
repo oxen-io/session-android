@@ -3,14 +3,12 @@ package org.thoughtcrime.securesms.conversation.v2
 import com.goterl.lazysodium.utils.KeyPair
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.endsWith
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.anyLong
@@ -20,9 +18,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.BaseViewModelTest
-import org.thoughtcrime.securesms.NoOpLogger
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -33,7 +29,6 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     private val repository = mock<ConversationRepository>()
     private val storage = mock<Storage>()
-    private val mmsDatabase = mock<MmsDatabase>()
 
     private val threadId = 123L
     private val edKeyPair = mock<KeyPair>()
@@ -41,7 +36,16 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private lateinit var messageRecord: MessageRecord
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, edKeyPair, repository, storage, mock(), mmsDatabase)
+        ConversationViewModel(
+            threadId = threadId,
+            edKeyPair = edKeyPair,
+            repository = repository,
+            storage = storage,
+            messageDataProvider = mock(),
+            groupDb = mock(),
+            threadDb = mock(),
+            appContext = mock()
+        )
     }
 
     @Before
@@ -90,7 +94,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
         viewModel.unblock()
 
-        verify(repository).setBlocked(recipient, false)
+        verify(repository).setBlocked(threadId, recipient, false)
     }
 
     @Test
@@ -169,20 +173,6 @@ class ConversationViewModelTest: BaseViewModelTest() {
             viewModel.uiState.first().uiMessages.first().message,
             equalTo("Successfully banned user and deleted all their messages")
         )
-    }
-
-    @Test
-    fun `should accept message request`() = runBlockingTest {
-        viewModel.acceptMessageRequest()
-
-        verify(repository).acceptMessageRequest(threadId, recipient)
-    }
-
-    @Test
-    fun `should decline message request`() {
-        viewModel.declineMessageRequest()
-
-        verify(repository).declineMessageRequest(threadId)
     }
 
     @Test

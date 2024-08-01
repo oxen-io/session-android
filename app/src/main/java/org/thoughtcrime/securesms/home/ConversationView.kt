@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -16,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationBinding
 import org.session.libsession.utilities.ThemeUtil
+import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.highlightMentions
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_ALL
@@ -50,6 +50,16 @@ class ConversationView : LinearLayout {
 
     // region Updating
     fun bind(thread: ThreadRecord, isTyping: Boolean) {
+        if (thread.isLeavingGroup) {
+            binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorSecondary))
+            binding.snippetTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorSecondary))
+        } else if (thread.isErrorLeavingGroup) {
+            binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
+            binding.snippetTextView.setTextColor(context.getColorFromAttr(R.attr.danger))
+        } else {
+            binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
+            binding.snippetTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
+        }
         this.thread = thread
         if (thread.isPinned) {
             binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -136,7 +146,7 @@ class ConversationView : LinearLayout {
     }
 
     private fun getTitle(recipient: Recipient): String? = when {
-        recipient.isLocalNumber -> context.getString(R.string.note_to_self)
+        recipient.isLocalNumber -> context.getString(R.string.noteToSelf)
         else -> recipient.toShortString() // Internally uses the Contact API
     }
 
@@ -147,7 +157,7 @@ class ConversationView : LinearLayout {
 
     private fun ThreadRecord.getSnippetPrefix(): CharSequence? = when {
         recipient.isLocalNumber || lastMessage?.isControlMessage == true -> null
-        lastMessage?.isOutgoing == true -> resources.getString(R.string.MessageRecord_you)
+        lastMessage?.isOutgoing == true -> resources.getString(R.string.you)
         else -> lastMessage?.individualRecipient?.toShortString()
     }
     // endregion

@@ -30,4 +30,8 @@ data class SnodeMessage(
             "timestamp" to timestamp.toString(),
         )
     }
+
+    companion object {
+        const val CONFIG_TTL: Long = 30 * 24 * 60 * 60 * 1000L
+    }
 }

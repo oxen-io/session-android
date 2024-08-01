@@ -7,9 +7,9 @@ import org.session.libsession.messaging.open_groups.migrateLegacyServerUrl
 object OpenGroupUrlParser {
 
     sealed class Error(val description: String) : Exception(description) {
-        object MalformedURL : Error("Malformed URL.")
-        object NoRoom : Error("No room specified in the URL.")
-        object NoPublicKey : Error("No public key specified in the URL.")
+        object MalformedURL     : Error("Malformed URL.")
+        object NoRoom           : Error("No room specified in the URL.")
+        object NoPublicKey      : Error("No public key specified in the URL.")
         object InvalidPublicKey : Error("Invalid public key provided.")
     }
 

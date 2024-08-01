@@ -38,7 +38,7 @@ local ci_dep_mirror(want_mirror) = (if want_mirror then ' -DLOCAL_MIRROR=https:/
         pull: 'always',
         environment: { ANDROID_HOME: '/usr/lib/android-sdk' },
         commands: [
-          'apt-get install -y ninja-build',
+          'apt-get install -y ninja-build openjdk-17-jdk-headless',
           './gradlew testPlayDebugUnitTestCoverageReport'
         ],
       }
@@ -78,7 +78,7 @@ local ci_dep_mirror(want_mirror) = (if want_mirror then ' -DLOCAL_MIRROR=https:/
         pull: 'always',
         environment: { SSH_KEY: { from_secret: 'SSH_KEY' }, ANDROID_HOME: '/usr/lib/android-sdk' },
         commands: [
-          'apt-get install -y ninja-build',
+          'apt-get install -y ninja-build openjdk-17-jdk-headless',
           './gradlew assemblePlayDebug',
           './scripts/drone-static-upload.sh'
         ],

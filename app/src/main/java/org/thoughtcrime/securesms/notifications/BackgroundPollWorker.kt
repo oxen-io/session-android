@@ -7,8 +7,8 @@ import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -18,7 +18,7 @@ import nl.komponents.kovenant.functional.bind
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
-import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
+import org.session.libsession.messaging.sending_receiving.pollers.LegacyClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.TextSecurePreferences
@@ -121,7 +121,7 @@ class BackgroundPollWorker(val context: Context, params: WorkerParameters) : Wor
 
             // Closed groups
             if (requestTargets.contains(Targets.CLOSED_GROUPS)) {
-                val closedGroupPoller = ClosedGroupPollerV2() // Intentionally don't use shared
+                val closedGroupPoller = LegacyClosedGroupPollerV2() // Intentionally don't use shared
                 val storage = MessagingModuleConfiguration.shared.storage
                 val allGroupPublicKeys = storage.getAllClosedGroupPublicKeys()
                 allGroupPublicKeys.iterator().forEach { closedGroupPoller.poll(it) }

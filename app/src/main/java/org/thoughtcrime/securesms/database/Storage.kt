@@ -2,31 +2,42 @@ package org.thoughtcrime.securesms.database
 
 import android.content.Context
 import android.net.Uri
+import com.google.protobuf.ByteString
+import network.loki.messenger.libsession_util.Config
 import java.security.MessageDigest
-import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_HIDDEN
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_PINNED
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_VISIBLE
 import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
+import network.loki.messenger.libsession_util.GroupInfoConfig
+import network.loki.messenger.libsession_util.GroupKeysConfig
+import network.loki.messenger.libsession_util.GroupMembersConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
 import network.loki.messenger.libsession_util.util.BaseCommunityInfo
-import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.ExpiryMode
+import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupInfo
+import network.loki.messenger.libsession_util.util.Sodium
 import network.loki.messenger.libsession_util.util.UserPic
 import network.loki.messenger.libsession_util.util.afterSend
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.functional.bind
+import nl.komponents.kovenant.functional.map
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.ConfigurationSyncJob
+import org.session.libsession.messaging.jobs.ConfigurationSyncJob.Companion.messageInformation
 import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
+import org.session.libsession.messaging.jobs.InviteContactsJob
 import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
@@ -36,6 +47,7 @@ import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
+import org.session.libsession.messaging.messages.control.GroupUpdated
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.signal.IncomingEncryptedMessage
 import org.session.libsession.messaging.messages.signal.IncomingGroupMessage
@@ -51,18 +63,24 @@ import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.GroupMember
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
+import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
-import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
+import org.session.libsession.messaging.sending_receiving.pollers.LegacyClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.snode.OnionRequestAPI
+import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.snode.SnodeAPI.buildAuthenticatedDeleteBatchInfo
+import org.session.libsession.snode.SnodeAPI.buildAuthenticatedStoreBatchInfo
+import org.session.libsession.snode.SnodeAPI.signingKeyCallback
+import org.session.libsession.snode.SnodeAPI.subkeyCallback
+import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.GroupRecord
@@ -78,31 +96,48 @@ import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateDeleteMemberContentMessage
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInfoChangeMessage
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateInviteResponseMessage
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMemberChangeMessage
+import org.session.libsignal.protos.SignalServiceProtos.DataMessage.GroupUpdateMessage
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Namespace
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.guava.Optional
+import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
+import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.dependencies.PollerFactory
 import org.thoughtcrime.securesms.groups.ClosedGroupManager
 import org.thoughtcrime.securesms.groups.GroupManager
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.mms.PartAuthority
+import org.thoughtcrime.securesms.notifications.PushRegistry
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
+import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
+import network.loki.messenger.libsession_util.util.GroupMember as LibSessionGroupMember
 
 private const val TAG = "Storage"
 
 open class Storage(
     context: Context,
     helper: SQLCipherOpenHelper,
-    val configFactory: ConfigFactory
-) : Database(context, helper), StorageProtocol, ThreadDatabase.ConversationThreadUpdateListener {
+    private val configFactory: ConfigFactory,
+    private val pollerFactory: PollerFactory,
+    private val pushRegistry: PushRegistry,
+) : Database(context, helper), StorageProtocol,
+    ThreadDatabase.ConversationThreadUpdateListener {
 
     override fun threadCreated(address: Address, threadId: Long) {
         val localUserAddress = getUserPublicKey() ?: return
@@ -111,20 +146,31 @@ open class Storage(
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
             val groups = configFactory.userGroups ?: return
-            if (address.isClosedGroup) {
-                val accountId = GroupUtil.doubleDecodeGroupId(address.serialize())
-                val closedGroup = getGroup(address.toGroupString())
-                if (closedGroup != null && closedGroup.isActive) {
-                    val legacyGroup = groups.getOrConstructLegacyGroupInfo(accountId)
-                    groups.set(legacyGroup)
-                    val newVolatileParams = volatile.getOrConstructLegacyGroup(accountId).copy(
-                        lastRead = SnodeAPI.nowWithOffset,
-                    )
-                    volatile.set(newVolatileParams)
+            when {
+                address.isLegacyClosedGroup -> {
+                    val accountId = GroupUtil.doubleDecodeGroupId(address.serialize())
+                    val closedGroup = getGroup(address.toGroupString())
+                    if (closedGroup != null && closedGroup.isActive) {
+                        val legacyGroup = groups.getOrConstructLegacyGroupInfo(accountId)
+                        groups.set(legacyGroup)
+                        val newVolatileParams = volatile.getOrConstructLegacyGroup(accountId).copy(
+                            lastRead = SnodeAPI.nowWithOffset,
+                        )
+                        volatile.set(newVolatileParams)
+                    }
                 }
-            } else if (address.isCommunity) {
-                // these should be added on the group join / group info fetch
-                Log.w("Loki", "Thread created called for open group address, not adding any extra information")
+                address.isClosedGroupV2 -> {
+                    val AccountId = address.serialize()
+                    groups.getClosedGroup(AccountId) ?: return Log.d("Closed group doesn't exist locally", NullPointerException())
+                    val conversation = Conversation.ClosedGroup(
+                        AccountId, 0, false
+                    )
+                    volatile.set(conversation)
+                }
+                address.isCommunity -> {
+                    // these should be added on the group join / group info fetch
+                    Log.w("Loki", "Thread created called for open group address, not adding any extra information")
+                }
             }
         } else if (address.isContact) {
             // non-standard contact prefixes: 15, 00 etc shouldn't be stored in config
@@ -149,13 +195,15 @@ open class Storage(
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
             val groups = configFactory.userGroups ?: return
-            if (address.isClosedGroup) {
+            if (address.isLegacyClosedGroup) {
                 val accountId = GroupUtil.doubleDecodeGroupId(address.serialize())
                 volatile.eraseLegacyClosedGroup(accountId)
                 groups.eraseLegacyGroup(accountId)
             } else if (address.isCommunity) {
                 // these should be removed in the group leave / handling new configs
                 Log.w("Loki", "Thread delete called for open group address, expecting to be handled elsewhere")
+            } else if (address.isClosedGroupV2) {
+                Log.w("Loki", "Thread delete called for closed group address, expecting to be handled elsewhere")
             }
         } else {
             // non-standard contact prefixes: 15, 00 etc shouldn't be stored in config
@@ -243,6 +291,43 @@ open class Storage(
         return threadDb.getLastSeenAndHasSent(threadId)?.first() ?: 0L
     }
 
+    override fun ensureMessageHashesAreSender(
+        hashes: Set<String>,
+        sender: String,
+        closedGroupId: String
+    ): Boolean {
+        val dbComponent = DatabaseComponent.get(context)
+        val lokiMessageDatabase = dbComponent.lokiMessageDatabase()
+        val threadId = getThreadId(fromSerialized(closedGroupId))!!
+        val info = lokiMessageDatabase.getSendersForHashes(threadId, hashes)
+        return info.all { it.sender == sender }
+    }
+
+    override fun deleteMessagesByHash(threadId: Long, hashes: List<String>) {
+        val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
+        val lokiMessageDatabase = DatabaseComponent.get(context).lokiMessageDatabase()
+        val info = lokiMessageDatabase.getSendersForHashes(threadId, hashes.toSet())
+        // TODO: no idea if we need to server delete this
+        for ((serverHash, sender, messageIdToDelete, isSms) in info) {
+            messageDataProvider.updateMessageAsDeleted(messageIdToDelete, isSms)
+            if (!messageDataProvider.isOutgoingMessage(messageIdToDelete)) {
+                SSKEnvironment.shared.notificationManager.updateNotification(context)
+            }
+        }
+    }
+
+    override fun deleteMessagesByUser(threadId: Long, userSessionId: String) {
+        val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
+        val userMessages = DatabaseComponent.get(context).mmsSmsDatabase().getUserMessages(threadId, userSessionId)
+        val (mmsMessages, smsMessages) = userMessages.partition { it.isMms }
+        if (mmsMessages.isNotEmpty()) {
+            messageDataProvider.deleteMessages(mmsMessages.map(MessageRecord::id), threadId, isSms = false)
+        }
+        if (smsMessages.isNotEmpty()) {
+            messageDataProvider.deleteMessages(smsMessages.map(MessageRecord::id), threadId, isSms = true)
+        }
+    }
+
     override fun markConversationAsRead(threadId: Long, lastSeenTime: Long, force: Boolean) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         getRecipientForThread(threadId)?.let { recipient ->
@@ -256,7 +341,8 @@ open class Storage(
             configFactory.convoVolatile?.let { config ->
                 val convo = when {
                     // recipient closed group
-                    recipient.isClosedGroupRecipient -> config.getOrConstructLegacyGroup(GroupUtil.doubleDecodeGroupId(recipient.address.serialize()))
+                    recipient.isLegacyClosedGroupRecipient -> config.getOrConstructLegacyGroup(GroupUtil.doubleDecodeGroupId(recipient.address.serialize()))
+                    recipient.isClosedGroupV2Recipient -> config.getOrConstructClosedGroup(recipient.address.serialize())
                     // recipient is open group
                     recipient.isCommunityRecipient -> {
                         val openGroupJoinUrl = getOpenGroup(threadId)?.joinURL ?: return
@@ -285,7 +371,7 @@ open class Storage(
 
     override fun updateThread(threadId: Long, unarchive: Boolean) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
-        threadDb.update(threadId, unarchive, false)
+        threadDb.update(threadId, unarchive)
     }
 
     override fun persist(message: VisibleMessage,
@@ -302,6 +388,9 @@ open class Storage(
             ?.let { SodiumUtilities.accountId(getUserPublicKey()!!, message.sender!!, it) } ?: false
         val group: Optional<SignalServiceGroup> = when {
             openGroupID != null -> Optional.of(SignalServiceGroup(openGroupID.toByteArray(), SignalServiceGroup.GroupType.PUBLIC_CHAT))
+            groupPublicKey != null && groupPublicKey.startsWith(IdPrefix.GROUP.value) -> {
+                Optional.of(SignalServiceGroup(Hex.fromStringCondensed(groupPublicKey), SignalServiceGroup.GroupType.SIGNAL))
+            }
             groupPublicKey != null -> {
                 val doubleEncoded = GroupUtil.doubleEncodeGroupID(groupPublicKey)
                 Optional.of(SignalServiceGroup(GroupUtil.getDecodedGroupIDAsData(doubleEncoded), SignalServiceGroup.GroupType.SIGNAL))
@@ -314,7 +403,14 @@ open class Storage(
         val targetAddress = if ((isUserSender || isUserBlindedSender) && !message.syncTarget.isNullOrEmpty()) {
             fromSerialized(message.syncTarget!!)
         } else if (group.isPresent) {
-            fromSerialized(GroupUtil.getEncodedId(group.get()))
+            val idHex = group.get().groupId.toHexString()
+            if (idHex.startsWith(IdPrefix.GROUP.value)) {
+                fromSerialized(idHex)
+            } else {
+                fromSerialized(GroupUtil.getEncodedId(group.get()))
+            }
+        } else if (message.recipient?.startsWith(IdPrefix.GROUP.value) == true) {
+            fromSerialized(message.recipient!!)
         } else {
             senderAddress
         }
@@ -442,7 +538,7 @@ open class Storage(
         return DatabaseComponent.get(context).lokiAPIDatabase().getAuthToken(id)
     }
 
-    override fun notifyConfigUpdates(forConfigObject: ConfigBase, messageTimestamp: Long) {
+    override fun notifyConfigUpdates(forConfigObject: Config, messageTimestamp: Long) {
         notifyUpdates(forConfigObject, messageTimestamp)
     }
 
@@ -458,12 +554,15 @@ open class Storage(
         return configFactory.user?.getCommunityMessageRequests() == true
     }
 
-    private fun notifyUpdates(forConfigObject: ConfigBase, messageTimestamp: Long) {
+    private fun notifyUpdates(forConfigObject: Config, messageTimestamp: Long) {
         when (forConfigObject) {
             is UserProfile -> updateUser(forConfigObject, messageTimestamp)
             is Contacts -> updateContacts(forConfigObject, messageTimestamp)
             is ConversationVolatileConfig -> updateConvoVolatile(forConfigObject, messageTimestamp)
             is UserGroupsConfig -> updateUserGroups(forConfigObject, messageTimestamp)
+            is GroupInfoConfig -> updateGroupInfo(forConfigObject, messageTimestamp)
+            is GroupKeysConfig -> updateGroupKeys(forConfigObject)
+            is GroupMembersConfig -> updateGroupMembers(forConfigObject)
         }
     }
 
@@ -487,7 +586,8 @@ open class Storage(
         if (userPic == UserPic.DEFAULT) {
             clearUserPic()
         } else if (userPic.key.isNotEmpty() && userPic.url.isNotEmpty()
-            && TextSecurePreferences.getProfilePictureURL(context) != userPic.url) {
+            && TextSecurePreferences.getProfilePictureURL(context) != userPic.url
+        ) {
             setUserProfilePicture(userPic.url, userPic.key)
         }
 
@@ -508,9 +608,33 @@ open class Storage(
         // Set or reset the shared library to use latest expiration config
         getThreadId(recipient)?.let {
             setExpirationConfiguration(
-                getExpirationConfiguration(it)?.takeIf { it.updatedTimestampMs > messageTimestamp } ?: ExpirationConfiguration(it, userProfile.getNtsExpiry(), messageTimestamp)
+                getExpirationConfiguration(it)?.takeIf { it.updatedTimestampMs > messageTimestamp } ?:
+                    ExpirationConfiguration(it, userProfile.getNtsExpiry(), messageTimestamp)
             )
         }
+    }
+
+    private fun updateGroupInfo(groupInfoConfig: GroupInfoConfig, messageTimestamp: Long) {
+        val threadId = getThreadId(fromSerialized(groupInfoConfig.id().hexString)) ?: return
+        val recipient = getRecipientForThread(threadId) ?: return
+        val db = DatabaseComponent.get(context).recipientDatabase()
+        db.setProfileName(recipient, groupInfoConfig.getName())
+        groupInfoConfig.getDeleteBefore()?.let { removeBefore ->
+            trimThreadBefore(threadId, removeBefore)
+        }
+        groupInfoConfig.getDeleteAttachmentsBefore()?.let { removeAttachmentsBefore ->
+            val mmsDb = DatabaseComponent.get(context).mmsDatabase()
+            mmsDb.deleteMessagesInThreadBeforeDate(threadId, removeAttachmentsBefore, onlyMedia = true)
+        }
+        // TODO: handle deleted group, handle delete attachment / message before a certain time
+    }
+
+    private fun updateGroupKeys(groupKeys: GroupKeysConfig) {
+        // TODO: update something here?
+    }
+
+    private fun updateGroupMembers(groupMembers: GroupMembersConfig) {
+        // TODO: maybe clear out some contacts or something?
     }
 
     private fun updateContacts(contacts: Contacts, messageTimestamp: Long) {
@@ -542,6 +666,7 @@ open class Storage(
                 is Conversation.OneToOne -> getThreadIdFor(conversation.accountId, null, null, createThread = false)
                 is Conversation.LegacyGroup -> getThreadIdFor("", conversation.groupId,null, createThread = false)
                 is Conversation.Community -> getThreadIdFor("",null, "${conversation.baseCommunityInfo.baseUrl.removeSuffix("/")}.${conversation.baseCommunityInfo.room}", createThread = false)
+                is Conversation.ClosedGroup -> getThreadIdFor(conversation.accountId, null, null, createThread = false) // New groups will be managed bia libsession
             }
             if (threadId != null) {
                 if (conversation.lastRead > getLastSeen(threadId)) {
@@ -569,9 +694,9 @@ open class Storage(
         val toAddCommunities = communities.filter { it.community.fullUrl() !in existingCommunities.map { it.value.joinURL } }
         val existingJoinUrls = existingCommunities.values.map { it.joinURL }
 
-        val existingClosedGroups = getAllGroups(includeInactive = true).filter { it.isClosedGroup }
+        val existingLegacyClosedGroups = getAllGroups(includeInactive = true).filter { it.isLegacyClosedGroup }
         val lgcIds = lgc.map { it.accountId }
-        val toDeleteClosedGroups = existingClosedGroups.filter { group ->
+        val toDeleteClosedGroups = existingLegacyClosedGroups.filter { group ->
             GroupUtil.doubleDecodeGroupId(group.encodedId) !in lgcIds
         }
 
@@ -603,9 +728,25 @@ open class Storage(
             }
         }
 
+        val newClosedGroups = userGroups.allClosedGroupInfo()
+        for (closedGroup in newClosedGroups) {
+            val recipient = Recipient.from(context, fromSerialized(closedGroup.groupAccountId.hexString), false)
+            setRecipientApprovedMe(recipient, true)
+            setRecipientApproved(recipient, !closedGroup.invited)
+            val createThread = getThreadId(recipient) == null
+            val threadId = getOrCreateThreadIdFor(recipient.address)
+            setPinned(threadId, closedGroup.priority == PRIORITY_PINNED)
+            if (!closedGroup.invited) {
+                pollerFactory.pollerFor(closedGroup.groupAccountId)?.start()
+            }
+            if (createThread) {
+                pushRegistry.registerForGroup(closedGroup.groupAccountId)
+            }
+        }
+
         for (group in lgc) {
             val groupId = GroupUtil.doubleEncodeGroupID(group.accountId)
-            val existingGroup = existingClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.accountId }
+            val existingGroup = existingLegacyClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.accountId }
             val existingThread = existingGroup?.let { getThreadId(existingGroup.encodedId) }
             if (existingGroup != null) {
                 if (group.priority == PRIORITY_HIDDEN && existingThread != null) {
@@ -617,12 +758,12 @@ open class Storage(
                     threadDb.setPinned(existingThread, group.priority == PRIORITY_PINNED)
                 }
             } else {
-                val members = group.members.keys.map { Address.fromSerialized(it) }
-                val admins = group.members.filter { it.value /*admin = true*/ }.keys.map { Address.fromSerialized(it) }
+                val members = group.members.keys.map { fromSerialized(it) }
+                val admins = group.members.filter { it.value /*admin = true*/ }.keys.map { fromSerialized(it) }
                 val title = group.name
                 val formationTimestamp = (group.joinedAt * 1000L)
                 createGroup(groupId, title, admins + members, null, null, admins, formationTimestamp)
-                setProfileSharing(Address.fromSerialized(groupId), true)
+                setProfileSharing(fromSerialized(groupId), true)
                 // Add the group to the user's set of public keys to poll for
                 addClosedGroupPublicKey(group.accountId)
                 // Store the encryption key pair
@@ -631,14 +772,14 @@ open class Storage(
                 // Notify the PN server
                 PushRegistryV1.subscribeGroup(group.accountId, publicKey = localUserPublicKey)
                 // Notify the user
-                val threadID = getOrCreateThreadIdFor(Address.fromSerialized(groupId))
+                val threadID = getOrCreateThreadIdFor(fromSerialized(groupId))
                 threadDb.setDate(threadID, formationTimestamp)
                 insertOutgoingInfoMessage(context, groupId, SignalServiceGroup.Type.CREATION, title, members.map { it.serialize() }, admins.map { it.serialize() }, threadID, formationTimestamp)
                 // Don't create config group here, it's from a config update
                 // Start polling
-                ClosedGroupPollerV2.shared.startPolling(group.accountId)
+                LegacyClosedGroupPollerV2.shared.startPolling(group.accountId)
             }
-            getThreadId(Address.fromSerialized(groupId))?.let {
+            getThreadId(fromSerialized(groupId))?.let {
                 setExpirationConfiguration(
                     getExpirationConfiguration(it)?.takeIf { it.updatedTimestampMs > messageTimestamp }
                         ?: ExpirationConfiguration(it, afterSend(group.disappearingTimer), messageTimestamp)
@@ -929,6 +1070,134 @@ open class Storage(
         DatabaseComponent.get(context).groupDatabase().create(groupId, title, members, avatar, relay, admins, formationTimestamp)
     }
 
+    override fun createNewGroup(groupName: String, groupDescription: String, members: Set<Contact>): Optional<Recipient> {
+        val userGroups = configFactory.userGroups ?: return Optional.absent()
+        val convoVolatile = configFactory.convoVolatile ?: return Optional.absent()
+        val ourSessionId = getUserPublicKey() ?: return Optional.absent()
+
+        val groupCreationTimestamp = SnodeAPI.nowWithOffset
+
+        val group = userGroups.createGroup()
+        val adminKey = checkNotNull(group.adminKey) {
+            "Admin key is null for new group creation."
+        }
+
+        userGroups.set(group)
+        val groupInfo = configFactory.getGroupInfoConfig(group.groupAccountId) ?: return Optional.absent()
+        val groupMembers = configFactory.getGroupMemberConfig(group.groupAccountId) ?: return Optional.absent()
+
+        with (groupInfo) {
+            setName(groupName)
+            setDescription(groupDescription)
+        }
+
+        groupMembers.set(
+            LibSessionGroupMember(ourSessionId, getUserProfile().displayName, admin = true)
+        )
+
+        members.forEach { groupMembers.set(LibSessionGroupMember(it.accountID, it.name).setInvited()) }
+
+        val groupKeys = configFactory.constructGroupKeysConfig(group.groupAccountId,
+            info = groupInfo,
+            members = groupMembers) ?: return Optional.absent()
+
+        // Manually re-key to prevent issue with linked admin devices
+        groupKeys.rekey(groupInfo, groupMembers)
+
+        val newGroupRecipient = group.groupAccountId.hexString
+        val configTtl = 14 * 24 * 60 * 60 * 1000L
+        // Test the sending
+        val keyPush = groupKeys.pendingConfig() ?: return Optional.absent()
+
+        val keysSnodeMessage = SnodeMessage(
+            newGroupRecipient,
+            Base64.encodeBytes(keyPush),
+            configTtl,
+            groupCreationTimestamp
+        )
+        val keysBatchInfo = SnodeAPI.buildAuthenticatedStoreBatchInfo(
+            groupKeys.namespace(),
+            keysSnodeMessage,
+            adminKey
+        )
+
+        val (infoPush, infoSeqNo) = groupInfo.push()
+        val infoSnodeMessage = SnodeMessage(
+            newGroupRecipient,
+            Base64.encodeBytes(infoPush),
+            configTtl,
+            groupCreationTimestamp
+        )
+        val infoBatchInfo = SnodeAPI.buildAuthenticatedStoreBatchInfo(
+            groupInfo.namespace(),
+            infoSnodeMessage,
+            adminKey
+        )
+
+        val (memberPush, memberSeqNo) = groupMembers.push()
+        val memberSnodeMessage = SnodeMessage(
+            newGroupRecipient,
+            Base64.encodeBytes(memberPush),
+            configTtl,
+            groupCreationTimestamp
+        )
+        val memberBatchInfo = SnodeAPI.buildAuthenticatedStoreBatchInfo(
+            groupMembers.namespace(),
+            memberSnodeMessage,
+            adminKey
+        )
+
+        try {
+            val snode = SnodeAPI.getSingleTargetSnode(newGroupRecipient).get()
+            val response = SnodeAPI.getRawBatchResponse(
+                snode,
+                newGroupRecipient,
+                listOf(keysBatchInfo, infoBatchInfo, memberBatchInfo),
+                true
+            ).get()
+
+            @Suppress("UNCHECKED_CAST")
+            val responseList = (response["results"] as List<RawResponse>)
+
+            val keyResponse = responseList[0]
+            val keyHash = (keyResponse["body"] as Map<String,Any>)["hash"] as String
+            val keyTimestamp = (keyResponse["body"] as Map<String,Any>)["t"] as Long
+            val infoResponse = responseList[1]
+            val infoHash = (infoResponse["body"] as Map<String,Any>)["hash"] as String
+            val memberResponse = responseList[2]
+            val memberHash = (memberResponse["body"] as Map<String,Any>)["hash"] as String
+            // TODO: check response success
+            groupKeys.loadKey(keyPush, keyHash, keyTimestamp, groupInfo, groupMembers)
+            groupInfo.confirmPushed(infoSeqNo, infoHash)
+            groupMembers.confirmPushed(memberSeqNo, memberHash)
+
+            configFactory.saveGroupConfigs(groupKeys, groupInfo, groupMembers) // now check poller to be all
+            convoVolatile.set(Conversation.ClosedGroup(newGroupRecipient, groupCreationTimestamp, false))
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            val groupRecipient = Recipient.from(context, fromSerialized(newGroupRecipient), false)
+            SSKEnvironment.shared.profileManager.setName(context, groupRecipient, groupInfo.getName())
+            setRecipientApprovedMe(groupRecipient, true)
+            setRecipientApproved(groupRecipient, true)
+            Log.d("Group Config", "Saved group config for $newGroupRecipient")
+            groupKeys.free()
+            groupInfo.free()
+            groupMembers.free()
+            pollerFactory.updatePollers()
+
+            val memberArray = members.map(Contact::accountID).toTypedArray()
+            val job = InviteContactsJob(group.groupAccountId.hexString, memberArray)
+            JobQueue.shared.add(job)
+            return Optional.of(groupRecipient)
+        } catch (e: Exception) {
+            Log.e("Group Config", e)
+            Log.e("Group Config", "Deleting group from our group")
+            // delete the group from user groups
+            userGroups.erase(group)
+        }
+
+        return Optional.absent()
+    }
+
     override fun createInitialConfigGroup(groupPublicKey: String, name: String, members: Map<String, Boolean>, formationTimestamp: Long, encryptionKeyPair: ECKeyPair, expirationTimer: Int) {
         val volatiles = configFactory.convoVolatile ?: return
         val userGroups = configFactory.userGroups ?: return
@@ -1005,16 +1274,22 @@ open class Storage(
         DatabaseComponent.get(context).groupDatabase().updateZombieMembers(groupID, members)
     }
 
-    override fun insertIncomingInfoMessage(context: Context, senderPublicKey: String, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long) {
+    override fun insertIncomingInfoMessage(context: Context, senderPublicKey: String, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long): Long? {
         val group = SignalServiceGroup(type, GroupUtil.getDecodedGroupIDAsData(groupID), SignalServiceGroup.GroupType.SIGNAL, name, members.toList(), null, admins.toList())
         val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, 0, true, false)
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON()
-        val infoMessage = IncomingGroupMessage(m, groupID, updateData, true)
+        val infoMessage = IncomingGroupMessage(m, updateData, true)
         val smsDB = DatabaseComponent.get(context).smsDatabase()
-        smsDB.insertMessageInbox(infoMessage,  true)
+        return smsDB.insertMessageInbox(infoMessage,  true).orNull().messageId
     }
 
-    override fun insertOutgoingInfoMessage(context: Context, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long) {
+    override fun updateInfoMessage(context: Context, messageId: Long, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>) {
+        val mmsDB = DatabaseComponent.get(context).mmsDatabase()
+        val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON()
+        mmsDB.updateInfoMessage(messageId, updateData)
+    }
+
+    override fun insertOutgoingInfoMessage(context: Context, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long): Long? {
         val userPublicKey = getUserPublicKey()!!
         val recipient = Recipient.from(context, fromSerialized(groupID), false)
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON() ?: ""
@@ -1023,16 +1298,15 @@ open class Storage(
         val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
         if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) {
             Log.w(TAG, "Bailing from insertOutgoingInfoMessage because we believe the message has already been sent!")
-            return
+            return null
         }
         val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
         mmsDB.markAsSent(infoMessageID, true)
+        return infoMessageID
     }
 
-    override fun isClosedGroup(publicKey: String): Boolean {
-        val isClosedGroup = DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(publicKey)
-        val address = fromSerialized(publicKey)
-        return address.isClosedGroup || isClosedGroup
+    override fun isLegacyClosedGroup(publicKey: String): Boolean {
+        return DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(publicKey)
     }
 
     override fun getClosedGroupEncryptionKeyPairs(groupPublicKey: String): MutableList<ECKeyPair> {
@@ -1069,6 +1343,10 @@ open class Storage(
         DatabaseComponent.get(context).lokiAPIDatabase().removeAllClosedGroupEncryptionKeyPairs(groupPublicKey)
     }
 
+    override fun removeClosedGroupThread(threadID: Long) {
+        DatabaseComponent.get(context).threadDatabase().deleteConversation(threadID)
+    }
+
     override fun updateFormationTimestamp(groupID: String, formationTimestamp: Long) {
         DatabaseComponent.get(context).groupDatabase()
             .updateFormationTimestamp(groupID, formationTimestamp)
@@ -1077,6 +1355,715 @@ open class Storage(
     override fun updateTimestampUpdated(groupID: String, updatedTimestamp: Long) {
         DatabaseComponent.get(context).groupDatabase()
             .updateTimestampUpdated(groupID, updatedTimestamp)
+    }
+
+    /**
+     * For new closed groups
+     */
+    override fun getMembers(groupPublicKey: String): List<LibSessionGroupMember> =
+        configFactory.getGroupMemberConfig(AccountId(groupPublicKey))?.use { it.all() }?.toList() ?: emptyList()
+
+    private fun approveGroupInvite(threadId: Long, groupSessionId: AccountId) {
+        val groups = configFactory.userGroups ?: return
+        val group = groups.getClosedGroup(groupSessionId.hexString) ?: return
+
+        configFactory.persist(
+            forConfigObject = groups.apply { set(group.copy(invited = false)) },
+            timestamp = SnodeAPI.nowWithOffset
+        )
+
+        // Send invite response if we aren't admin. If we already have admin access,
+        // the group configs are already up-to-date (hence no need to reponse to the invite)
+        if (group.adminKey == null) {
+            val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
+                .setIsApproved(true)
+            val responseData = GroupUpdateMessage.newBuilder()
+                .setInviteResponse(inviteResponse)
+            val responseMessage = GroupUpdated(responseData.build())
+            clearMessages(threadId)
+            // this will fail the first couple of times :)
+            MessageSender.send(responseMessage, fromSerialized(groupSessionId.hexString))
+        } else {
+            // Update our on member state
+            configFactory.getGroupMemberConfig(groupSessionId)?.use { members ->
+                configFactory.getGroupInfoConfig(groupSessionId)?.use { info ->
+                    configFactory.getGroupKeysConfig(groupSessionId, info)?.use { keys ->
+                        members.get(getUserPublicKey().orEmpty())?.let { member ->
+                            members.set(member.setPromoteSuccess().setInvited())
+                        }
+
+                        configFactory.saveGroupConfigs(keys, info, members)
+                    }
+                }
+            }
+        }
+
+        configFactory.persist(groups, SnodeAPI.nowWithOffset)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        pollerFactory.pollerFor(groupSessionId)?.start()
+
+        // clear any group invites for this session ID (just in case there's a re-invite from an approved member after an invite from non-approved)
+        DatabaseComponent.get(context).lokiMessageDatabase().deleteGroupInviteReferrer(threadId)
+        pushRegistry.registerForGroup(groupSessionId)
+    }
+
+    override fun respondToClosedGroupInvitation(
+        threadId: Long,
+        groupRecipient: Recipient,
+        approved: Boolean
+    ) {
+        val groups = configFactory.userGroups ?: return
+        val groupSessionId = AccountId(groupRecipient.address.serialize())
+        // Whether approved or not, delete the invite
+        DatabaseComponent.get(context).lokiMessageDatabase().deleteGroupInviteReferrer(threadId)
+        if (!approved) {
+            groups.eraseClosedGroup(groupSessionId.hexString)
+            configFactory.persist(groups, SnodeAPI.nowWithOffset)
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            deleteConversation(threadId)
+            return
+        } else {
+            approveGroupInvite(threadId, groupSessionId)
+        }
+
+    }
+
+    override fun addClosedGroupInvite(
+        groupId: AccountId,
+        name: String,
+        authData: ByteArray?,
+        adminKey: ByteArray?,
+        invitingAdmin: AccountId,
+        invitingMessageHash: String?,
+    ) {
+        require(authData != null || adminKey != null) {
+            "Must provide either authData or adminKey"
+        }
+
+        val recipient = Recipient.from(context, fromSerialized(groupId.hexString), false)
+        val profileManager = SSKEnvironment.shared.profileManager
+        val groups = configFactory.userGroups ?: return
+        val inviteDb = DatabaseComponent.get(context).lokiMessageDatabase()
+        val shouldAutoApprove = getRecipientApproved(fromSerialized(invitingAdmin.hexString))
+        val closedGroupInfo = GroupInfo.ClosedGroupInfo(
+            groupAccountId = groupId,
+            adminKey = adminKey,
+            authData = authData,
+            priority = PRIORITY_VISIBLE,
+            invited = !shouldAutoApprove,
+            name = name,
+        )
+        groups.set(closedGroupInfo)
+
+        configFactory.persist(groups, SnodeAPI.nowWithOffset)
+        profileManager.setName(context, recipient, name)
+        val groupThreadId = getOrCreateThreadIdFor(recipient.address)
+        setRecipientApprovedMe(recipient, true)
+        setRecipientApproved(recipient, shouldAutoApprove)
+        if (shouldAutoApprove) {
+            approveGroupInvite(groupThreadId, groupId)
+        } else {
+            inviteDb.addGroupInviteReferrer(groupThreadId, invitingAdmin.hexString)
+            insertGroupInviteControlMessage(SnodeAPI.nowWithOffset, invitingAdmin.hexString, groupId, name)
+        }
+
+        if (invitingMessageHash != null) {
+            val publicKey = getUserPublicKey()!!
+            val batch = SnodeAPI.buildAuthenticatedDeleteBatchInfo(
+                publicKey,
+                listOf(invitingMessageHash)
+            )
+
+            if (batch != null) {
+                SnodeAPI.getSingleTargetSnode(publicKey).map { snode ->
+                    SnodeAPI.getRawBatchResponse(snode, publicKey, listOf(batch))
+                }.success {
+                    Log.d(TAG, "Successfully deleted invite message")
+                }.fail { e ->
+                    Log.e(TAG, "Error deleting invite message", e)
+                }
+            }
+        }
+    }
+
+    override fun setGroupInviteCompleteIfNeeded(approved: Boolean, invitee: String, closedGroup: AccountId) {
+        // don't try to process invitee acceptance if we aren't admin
+        if (configFactory.userGroups?.getClosedGroup(closedGroup.hexString)?.hasAdminKey() != true) return
+
+        configFactory.getGroupMemberConfig(closedGroup)?.use { groupMembers ->
+            val member = groupMembers.get(invitee) ?: run {
+                Log.e("ClosedGroup", "User wasn't in the group membership to add!")
+                return
+            }
+            if (!member.invitePending) return groupMembers.close()
+            if (approved) {
+                groupMembers.set(member.setAccepted())
+            } else {
+                groupMembers.erase(member)
+            }
+            configFactory.persistGroupConfigDump(groupMembers, closedGroup, SnodeAPI.nowWithOffset)
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(Destination.ClosedGroup(closedGroup.hexString))
+        }
+    }
+
+    override fun getLibSessionClosedGroup(groupSessionId: String): GroupInfo.ClosedGroupInfo? {
+        return configFactory.userGroups?.getClosedGroup(groupSessionId)
+    }
+
+    override fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo? {
+        val infoConfig = configFactory.getGroupInfoConfig(AccountId(groupSessionId)) ?: return null
+        val isAdmin = configFactory.userGroups?.getClosedGroup(groupSessionId)?.hasAdminKey() ?: return null
+
+        return infoConfig.use { info ->
+            GroupDisplayInfo(
+                id = info.id(),
+                name = info.getName(),
+                profilePic = info.getProfilePic(),
+                expiryTimer = info.getExpiryTimer(),
+                destroyed = false,
+                created = info.getCreated(),
+                description = info.getDescription(),
+                isUserAdmin = isAdmin
+            )
+        }
+    }
+
+    override fun inviteClosedGroupMembers(groupSessionId: String, invitees: List<String>) {
+        // don't try to process invitee acceptance if we aren't admin
+        if (configFactory.userGroups?.getClosedGroup(groupSessionId)?.hasAdminKey() != true) return
+        val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: return
+        val accountId = AccountId(groupSessionId)
+        val membersConfig = configFactory.getGroupMemberConfig(accountId) ?: return
+        val infoConfig = configFactory.getGroupInfoConfig(accountId) ?: return
+
+        // Filter out people who aren't already invited
+        val filteredMembers = invitees.filter {
+            membersConfig.get(it) == null
+        }
+        // Create each member's contact info if we have it
+        filteredMembers.forEach { memberSessionId ->
+            val contact = getContactWithAccountID(memberSessionId)
+            val name = contact?.name
+            val url = contact?.profilePictureURL
+            val key = contact?.profilePictureEncryptionKey
+            val userPic = if (url != null && key != null) {
+                UserPic(url, key)
+            } else UserPic.DEFAULT
+            val member = membersConfig.getOrConstruct(memberSessionId).copy(
+                name = name,
+                profilePicture = userPic,
+            ).setInvited()
+            membersConfig.set(member)
+        }
+
+        // Persist the config changes now, so we can show the invite status immediately
+        configFactory.persistGroupConfigDump(membersConfig, accountId, SnodeAPI.nowWithOffset)
+
+        // re-key for new members
+        val keysConfig = configFactory.getGroupKeysConfig(
+            accountId,
+            info = infoConfig,
+            members = membersConfig,
+            free = false
+        ) ?: return
+
+        keysConfig.rekey(infoConfig, membersConfig)
+
+        // build unrevocation, in case of re-adding members
+        val membersToUnrevoke = filteredMembers.map { keysConfig.getSubAccountToken(AccountId(it)) }
+        val unrevocation = if (membersToUnrevoke.isNotEmpty()) {
+            SnodeAPI.buildAuthenticatedUnrevokeSubKeyBatchRequest(
+                groupSessionId,
+                adminKey,
+                membersToUnrevoke.toTypedArray()
+            ) ?: return Log.e("ClosedGroup", "Failed to build revocation update")
+        } else {
+            null
+        }
+
+        // Build and store the key update in group swarm
+        val toDelete = mutableListOf<String>()
+
+        val signCallback = signingKeyCallback(adminKey)
+
+        val keyMessage = keysConfig.messageInformation(groupSessionId, adminKey)
+        val infoMessage = infoConfig.messageInformation(toDelete, groupSessionId, adminKey)
+        val membersMessage = membersConfig.messageInformation(toDelete, groupSessionId, adminKey)
+
+        val delete = SnodeAPI.buildAuthenticatedDeleteBatchInfo(
+            groupSessionId,
+            toDelete,
+            signCallback
+        )
+
+        val requests = buildList {
+            add(keyMessage.batch)
+            add(infoMessage.batch)
+            add(membersMessage.batch)
+
+            if (unrevocation != null) {
+                add(unrevocation)
+            }
+
+            add(delete)
+        }
+
+        val response = SnodeAPI.getSingleTargetSnode(groupSessionId).bind { snode ->
+            SnodeAPI.getRawBatchResponse(
+                snode,
+                groupSessionId,
+                requests,
+                sequence = true
+            )
+        }
+
+        try {
+            val rawResponse = response.get()
+            val results = (rawResponse["results"] as ArrayList<Any>).first() as Map<String,Any>
+            if (results["code"] as Int != 200) {
+                throw Exception("Response wasn't successful for unrevoke and key update: ${results["body"] as? String}")
+            }
+
+            configFactory.saveGroupConfigs(keysConfig, infoConfig, membersConfig)
+
+            val job = InviteContactsJob(groupSessionId, filteredMembers.toTypedArray())
+            JobQueue.shared.add(job)
+
+            val timestamp = SnodeAPI.nowWithOffset
+            val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.ADDED.name}$timestamp"
+            val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
+            val updatedMessage = GroupUpdated(
+                GroupUpdateMessage.newBuilder()
+                    .setMemberChangeMessage(
+                        GroupUpdateMemberChangeMessage.newBuilder()
+                            .addAllMemberSessionIds(filteredMembers)
+                            .setType(GroupUpdateMemberChangeMessage.Type.ADDED)
+                            .setAdminSignature(ByteString.copyFrom(signature))
+                    )
+                    .build()
+            ).apply { this.sentTimestamp = timestamp }
+            MessageSender.send(updatedMessage, fromSerialized(groupSessionId))
+            insertGroupInfoChange(updatedMessage, accountId)
+            infoConfig.free()
+            membersConfig.free()
+            keysConfig.free()
+        } catch (e: Exception) {
+            Log.e("ClosedGroup", "Failed to store new key", e)
+            infoConfig.free()
+            membersConfig.free()
+            keysConfig.free()
+            // toaster toast here
+            return
+        }
+
+    }
+
+    override fun insertGroupInfoChange(message: GroupUpdated, closedGroup: AccountId): Long? {
+        val sentTimestamp = message.sentTimestamp ?: SnodeAPI.nowWithOffset
+        val senderPublicKey = message.sender
+        val groupName = configFactory.getGroupInfoConfig(closedGroup)?.use { it.getName() }.orEmpty()
+
+        val updateData = UpdateMessageData.buildGroupUpdate(message, groupName) ?: return null
+
+        return insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
+    }
+
+    override fun insertGroupInfoLeaving(closedGroup: AccountId): Long? {
+        val sentTimestamp = SnodeAPI.nowWithOffset
+        val senderPublicKey = getUserPublicKey() ?: return null
+        val updateData = UpdateMessageData.buildGroupLeaveUpdate(UpdateMessageData.Kind.GroupLeaving)
+
+        return insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
+    }
+
+    override fun updateGroupInfoChange(messageId: Long, newType: UpdateMessageData.Kind) {
+        val mmsDB = DatabaseComponent.get(context).mmsDatabase()
+        val newMessage = UpdateMessageData.buildGroupLeaveUpdate(newType)
+        mmsDB.updateInfoMessage(messageId, newMessage.toJSON())
+    }
+
+    private fun insertGroupInviteControlMessage(sentTimestamp: Long, senderPublicKey: String, closedGroup: AccountId, groupName: String): Long? {
+        val updateData = UpdateMessageData(UpdateMessageData.Kind.GroupInvitation(senderPublicKey, groupName))
+        return insertUpdateControlMessage(updateData, sentTimestamp, senderPublicKey, closedGroup)
+    }
+
+    private fun insertUpdateControlMessage(updateData: UpdateMessageData, sentTimestamp: Long, senderPublicKey: String?, closedGroup: AccountId): Long? {
+        val userPublicKey = getUserPublicKey()!!
+        val recipient = Recipient.from(context, fromSerialized(closedGroup.hexString), false)
+        val threadDb = DatabaseComponent.get(context).threadDatabase()
+        val threadID = threadDb.getThreadIdIfExistsFor(recipient)
+        val expirationConfig = getExpirationConfiguration(threadID)
+        val expiryMode = expirationConfig?.expiryMode
+        val expiresInMillis = expiryMode?.expiryMillis ?: 0
+        val expireStartedAt = if (expiryMode is ExpiryMode.AfterSend) sentTimestamp else 0
+        val inviteJson = updateData.toJSON()
+
+
+        if (senderPublicKey == null || senderPublicKey == userPublicKey) {
+            val infoMessage = OutgoingGroupMediaMessage(
+                recipient,
+                inviteJson,
+                closedGroup.hexString,
+                null,
+                sentTimestamp,
+                expiresInMillis,
+                expireStartedAt,
+                true,
+                null,
+                listOf(),
+                listOf()
+            )
+            val mmsDB = DatabaseComponent.get(context).mmsDatabase()
+            val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
+            // check for conflict here, not returning duplicate in case it's different
+            if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return null
+            val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
+            mmsDB.markAsSent(infoMessageID, true)
+            return infoMessageID
+        } else {
+            val group = SignalServiceGroup(Hex.fromStringCondensed(closedGroup.hexString), SignalServiceGroup.GroupType.SIGNAL)
+            val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), expiresInMillis, expireStartedAt, true, false)
+            val infoMessage = IncomingGroupMessage(m, inviteJson, true)
+            val smsDB = DatabaseComponent.get(context).smsDatabase()
+            val insertResult = smsDB.insertMessageInbox(infoMessage,  true)
+            return insertResult.orNull()?.messageId
+        }
+    }
+
+    override fun promoteMember(groupSessionId: String, promotions: Array<String>) {
+        val closedGroupId = AccountId(groupSessionId)
+        val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: return
+        if (adminKey.isEmpty()) {
+            return Log.e("ClosedGroup", "No admin key for group")
+        }
+        val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
+        val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
+        val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
+
+        promotions.forEach { AccountId ->
+            val promoted = members.get(AccountId)?.setPromoteSent() ?: return@forEach
+            members.set(promoted)
+
+            val message = GroupUpdated(
+                GroupUpdateMessage.newBuilder()
+                    .setPromoteMessage(
+                        DataMessage.GroupUpdatePromoteMessage.newBuilder()
+                            .setGroupIdentitySeed(ByteString.copyFrom(adminKey))
+                            .setName(info.getName())
+                    )
+                    .build()
+            )
+            MessageSender.send(message, fromSerialized(AccountId))
+        }
+        configFactory.saveGroupConfigs(keys, info, members)
+        info.free()
+        members.free()
+        keys.free()
+        val groupDestination = Destination.ClosedGroup(groupSessionId)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(groupDestination)
+        val timestamp = SnodeAPI.nowWithOffset
+        val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.PROMOTED.name}$timestamp"
+        val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
+        val message = GroupUpdated(
+            GroupUpdateMessage.newBuilder()
+                .setMemberChangeMessage(
+                    GroupUpdateMemberChangeMessage.newBuilder()
+                        .addAllMemberSessionIds(promotions.toList())
+                        .setType(GroupUpdateMemberChangeMessage.Type.PROMOTED)
+                        .setAdminSignature(ByteString.copyFrom(signature))
+                )
+                .build()
+        ).apply {
+            sentTimestamp = timestamp
+        }
+        MessageSender.send(message, fromSerialized(groupSessionId))
+        insertGroupInfoChange(message, closedGroupId)
+    }
+
+    private fun doRemoveMember(groupSessionId: String, removedMembers: Array<String>, sendRemovedMessage: Boolean) {
+        val closedGroupId = AccountId(groupSessionId)
+        val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: return
+        if (adminKey.isEmpty()) {
+            return Log.e("ClosedGroup", "No admin key for group")
+        }
+        val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
+        val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
+        val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
+
+        removedMembers.forEach { AccountId ->
+            members.erase(AccountId)
+        }
+
+        val revocation = SnodeAPI.buildAuthenticatedRevokeSubKeyBatchRequest(
+            groupSessionId,
+            adminKey,
+            removedMembers.map { keys.getSubAccountToken(AccountId(it)) }.toTypedArray()
+        ) ?: return Log.e("ClosedGroup", "Failed to build revocation update")
+
+        keys.rekey(info, members)
+
+        configFactory.saveGroupConfigs(keys, info, members)
+
+        val toDelete = mutableListOf<String>()
+
+        val revocationStore = Sodium.encryptForMultipleSimple(
+            removedMembers.map{"$it-${keys.currentGeneration()}".encodeToByteArray()}.toTypedArray(),
+            removedMembers.map(::AccountId).map(AccountId::pubKeyBytes).toTypedArray(),
+            adminKey,
+            Sodium.KICKED_DOMAIN
+        )?.let { encryptedForMembers ->
+            val message = SnodeMessage(
+                groupSessionId,
+                Base64.encodeBytes(encryptedForMembers),
+                SnodeMessage.CONFIG_TTL,
+                SnodeAPI.nowWithOffset
+            )
+            buildAuthenticatedStoreBatchInfo(Namespace.REVOKED_GROUP_MESSAGES(), message, adminKey)
+        } ?: return Log.e("Storage", "Couldn't encrypt revocation for users ${removedMembers.size}")
+
+        val keyMessage = keys.messageInformation(groupSessionId, adminKey)
+        val infoMessage = info.messageInformation(toDelete, groupSessionId, adminKey)
+        val membersMessage = members.messageInformation(toDelete, groupSessionId, adminKey)
+
+        val signCallback = signingKeyCallback(adminKey)
+
+        val delete = buildAuthenticatedDeleteBatchInfo(
+            groupSessionId,
+            toDelete,
+            signCallback
+        )
+
+        val stores = listOf(revocationStore) + listOf(keyMessage, infoMessage, membersMessage).map(ConfigurationSyncJob.ConfigMessageInformation::batch)
+
+        val response = SnodeAPI.getSingleTargetSnode(groupSessionId).bind { snode ->
+            SnodeAPI.getRawBatchResponse(
+                snode,
+                groupSessionId,
+                stores + revocation + delete,
+                sequence = true
+            )
+        }
+
+        try {
+            // handle new key update and revocations response
+            val rawResponse = response.get()
+            val results = (rawResponse["results"] as ArrayList<Any>).first() as Map<String,Any>
+            if (results["code"] as Int != 200) {
+                throw Exception("Response wasn't successful for revoke and key update: ${results["body"] as? String}")
+            }
+
+            configFactory.saveGroupConfigs(keys, info, members)
+            info.free()
+            members.free()
+            keys.free()
+
+            if (sendRemovedMessage) {
+                val timestamp = SnodeAPI.nowWithOffset
+                val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.REMOVED.name}$timestamp"
+                val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
+
+                val updateMessage = GroupUpdateMessage.newBuilder()
+                    .setMemberChangeMessage(
+                        GroupUpdateMemberChangeMessage.newBuilder()
+                            .addAllMemberSessionIds(removedMembers.toList())
+                            .setType(GroupUpdateMemberChangeMessage.Type.REMOVED)
+                            .setAdminSignature(ByteString.copyFrom(signature))
+                    )
+                    .build()
+                val message = GroupUpdated(
+                    updateMessage
+                ).apply { sentTimestamp = timestamp }
+                val groupDestination = Destination.ClosedGroup(groupSessionId)
+                MessageSender.send(message, groupDestination, false)
+                insertGroupInfoChange(message, closedGroupId)
+            }
+        } catch (e: Exception) {
+            info.free()
+            members.free()
+            keys.free()
+        }
+
+    }
+
+    override fun removeMember(groupSessionId: String, removedMembers: Array<String>) {
+        doRemoveMember(groupSessionId, removedMembers, sendRemovedMessage = true)
+    }
+
+    override fun handleMemberLeft(message: GroupUpdated, closedGroupId: AccountId) {
+        val userGroups = configFactory.userGroups ?: return
+        val closedGroupHexString = closedGroupId.hexString
+        val closedGroup = userGroups.getClosedGroup(closedGroupId.hexString) ?: return
+        if (closedGroup.hasAdminKey()) {
+            // re-key and do a new config removing the previous member
+            doRemoveMember(closedGroupHexString, arrayOf(message.sender!!), sendRemovedMessage = false)
+        } else {
+            configFactory.getGroupMemberConfig(closedGroupId)?.use { memberConfig ->
+                // if the leaving member is an admin, disable the group and remove it
+                // This is just to emulate the "existing" group behaviour, this will need to be removed in future
+                if (memberConfig.get(message.sender!!)?.admin == true) {
+                    pollerFactory.pollerFor(closedGroupId)?.stop()
+                    pushRegistry.unregisterForGroup(closedGroupId)
+                    getThreadId(fromSerialized(closedGroupHexString))?.let { threadId ->
+                        deleteConversation(threadId)
+                    }
+                    configFactory.removeGroup(closedGroupId)
+                }
+            }
+        }
+    }
+
+    override fun handleMemberLeftNotification(message: GroupUpdated, closedGroupId: AccountId) {
+        insertGroupInfoChange(message, closedGroupId)
+    }
+
+    override fun handleKicked(groupSessionId: AccountId) {
+        pollerFactory.pollerFor(groupSessionId)?.stop()
+        pushRegistry.unregisterForGroup(groupSessionId)
+    }
+
+    override fun leaveGroup(groupSessionId: String, deleteOnLeave: Boolean): Boolean {
+        val closedGroupId = AccountId(groupSessionId)
+        val canSendGroupMessage = configFactory.userGroups?.getClosedGroup(groupSessionId)?.kicked != true
+
+        try {
+            if (canSendGroupMessage) {
+                // throws on unsuccessful send
+                MessageSender.sendNonDurably(
+                    message = GroupUpdated(
+                        GroupUpdateMessage.newBuilder()
+                            .setMemberLeftMessage(DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance())
+                            .build()
+                    ),
+                    address = fromSerialized(groupSessionId),
+                    isSyncMessage = false
+                ).get()
+
+                MessageSender.sendNonDurably(
+                    message = GroupUpdated(
+                        GroupUpdateMessage.newBuilder()
+                            .setMemberLeftNotificationMessage(DataMessage.GroupUpdateMemberLeftNotificationMessage.getDefaultInstance())
+                            .build()
+                    ),
+                    address = fromSerialized(groupSessionId),
+                    isSyncMessage = false
+                ).get()
+            }
+
+            pollerFactory.pollerFor(closedGroupId)?.stop()
+            pushRegistry.unregisterForGroup(closedGroupId)
+            // TODO: set "deleted" and post to -10 group namespace?
+            if (deleteOnLeave) {
+                getThreadId(fromSerialized(groupSessionId))?.let { threadId ->
+                    deleteConversation(threadId)
+                }
+                configFactory.removeGroup(closedGroupId)
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            }
+        } catch (e: Exception) {
+            Log.e("ClosedGroup", "Failed to send leave group message", e)
+            return false
+        }
+        return true
+    }
+
+    override fun setName(groupSessionId: String, newName: String) {
+        val closedGroupId = AccountId(groupSessionId)
+        val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: return
+        if (adminKey.isEmpty()) {
+            return Log.e("ClosedGroup", "No admin key for group")
+        }
+        val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
+        val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
+        val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
+
+        info.setName(newName)
+
+        configFactory.saveGroupConfigs(keys, info, members)
+        info.free()
+        members.free()
+        keys.free()
+        val groupDestination = Destination.ClosedGroup(groupSessionId)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(groupDestination)
+        val timestamp = SnodeAPI.nowWithOffset
+        val messageToSign = "INFO_CHANGE${GroupUpdateInfoChangeMessage.Type.NAME.name}$timestamp"
+        val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
+        val message = GroupUpdated(
+            GroupUpdateMessage.newBuilder()
+                .setInfoChangeMessage(
+                    GroupUpdateInfoChangeMessage.newBuilder()
+                        .setUpdatedName(newName)
+                        .setType(GroupUpdateInfoChangeMessage.Type.NAME)
+                        .setAdminSignature(ByteString.copyFrom(signature))
+                )
+                .build()
+        ).apply {
+            sentTimestamp = timestamp
+        }
+        MessageSender.send(message, fromSerialized(groupSessionId))
+        insertGroupInfoChange(message, closedGroupId)
+    }
+
+    override fun sendGroupUpdateDeleteMessage(groupSessionId: String, messageHashes: List<String>): Promise<Unit, Exception> {
+        val closedGroup = configFactory.userGroups?.getClosedGroup(groupSessionId)
+            ?: return Promise.ofFail(NullPointerException("No group found"))
+
+        val keys = configFactory.getGroupKeysConfig(AccountId(groupSessionId))
+            ?: return Promise.ofFail(NullPointerException("No group keys found"))
+
+        val adminKey = if (closedGroup.hasAdminKey()) closedGroup.adminKey else null
+        val subkeyCallback by lazy {
+            closedGroup.authData?.let {
+                subkeyCallback(it, keys, freeKeysAfterSign = false)
+            }
+        }
+        val groupDestination = Destination.ClosedGroup(groupSessionId)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(groupDestination)
+        val timestamp = SnodeAPI.nowWithOffset
+        val signature = adminKey?.let { key ->
+            val messageToSign = "DELETE_CONTENT$timestamp${messageHashes.joinToString(separator = "")}"
+            SodiumUtilities.sign(messageToSign.toByteArray(), key)
+        }
+        val message = GroupUpdated(
+            GroupUpdateMessage.newBuilder()
+                .setDeleteMemberContent(
+                    GroupUpdateDeleteMemberContentMessage.newBuilder()
+                        .addAllMessageHashes(messageHashes)
+                        .let {
+                            if (signature != null) it.setAdminSignature(ByteString.copyFrom(signature))
+                            else it
+                        }
+                )
+                .build()
+        ).apply {
+            sentTimestamp = timestamp
+        }
+
+        val signCallback = adminKey?.let(::signingKeyCallback) ?: subkeyCallback ?: return Promise.ofFail(NullPointerException("No signing key found"))
+        // Delete might need fake hash?
+        val authenticatedDelete = if (adminKey == null) null else buildAuthenticatedDeleteBatchInfo(groupSessionId, messageHashes, signCallback, required = true)
+        val authenticatedStore = buildAuthenticatedStoreBatchInfo(
+            Namespace.CLOSED_GROUP_MESSAGES(),
+            MessageSender.buildWrappedMessageToSnode(Destination.ClosedGroup(groupSessionId), message, false),
+            signCallback
+        )
+
+        keys.free()
+
+        // delete only present when admin
+        val storeIndex = if (adminKey != null) 1 else 0
+        return SnodeAPI.getSingleTargetSnode(groupSessionId).bind { snode ->
+            SnodeAPI.getRawBatchResponse(
+                snode,
+                groupSessionId,
+                listOfNotNull(authenticatedDelete, authenticatedStore),
+                sequence = true
+            )
+        }.map { rawResponse ->
+            val results = (rawResponse["results"] as ArrayList<Any>)[storeIndex] as Map<String,Any>
+            val hash = results["hash"] as? String
+            message.serverHash = hash
+            MessageSender.handleSuccessfulMessageSend(message, groupDestination, false)
+        }
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {
@@ -1140,8 +2127,12 @@ open class Storage(
         return if (!openGroupID.isNullOrEmpty()) {
             val recipient = Recipient.from(context, fromSerialized(GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())), false)
             database.getThreadIdIfExistsFor(recipient).let { if (it == -1L) null else it }
-        } else if (!groupPublicKey.isNullOrEmpty()) {
+        } else if (!groupPublicKey.isNullOrEmpty() && !groupPublicKey.startsWith(IdPrefix.GROUP.value)) {
             val recipient = Recipient.from(context, fromSerialized(GroupUtil.doubleEncodeGroupID(groupPublicKey)), false)
+            if (createThread) database.getOrCreateThreadIdFor(recipient)
+            else database.getThreadIdIfExistsFor(recipient).let { if (it == -1L) null else it }
+        } else if (!groupPublicKey.isNullOrEmpty()) {
+            val recipient = Recipient.from(context, fromSerialized(groupPublicKey), false)
             if (createThread) database.getOrCreateThreadIdFor(recipient)
             else database.getThreadIdIfExistsFor(recipient).let { if (it == -1L) null else it }
         } else {
@@ -1202,6 +2193,10 @@ open class Storage(
 
     override fun getRecipientSettings(address: Address): Recipient.RecipientSettings? {
         return DatabaseComponent.get(context).recipientDatabase().getRecipientSettings(address).orNull()
+    }
+
+    override fun hasAutoDownloadFlagBeenSet(recipient: Recipient): Boolean {
+        return DatabaseComponent.get(context).recipientDatabase().isAutoDownloadFlagSet(recipient)
     }
 
     override fun addLibSessionContacts(contacts: List<LibSessionContact>, timestamp: Long) {
@@ -1297,6 +2292,18 @@ open class Storage(
         }
     }
 
+    override fun shouldAutoDownloadAttachments(recipient: Recipient): Boolean {
+        return recipient.autoDownloadAttachments
+    }
+
+    override fun setAutoDownloadAttachments(
+        recipient: Recipient,
+        shouldAutoDownloadAttachments: Boolean
+    ) {
+        val recipientDb = DatabaseComponent.get(context).recipientDatabase()
+        recipientDb.setAutoDownloadAttachments(recipient, shouldAutoDownloadAttachments)
+    }
+
     override fun setRecipientHash(recipient: Recipient, recipientHash: String?) {
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         recipientDb.setRecipientHash(recipient, recipientHash)
@@ -1336,19 +2343,28 @@ open class Storage(
             }
         } else if (threadRecipient.isGroupRecipient) {
             val groups = configFactory.userGroups ?: return
-            if (threadRecipient.isClosedGroupRecipient) {
-                threadRecipient.address.serialize()
-                    .let(GroupUtil::doubleDecodeGroupId)
-                    .let(groups::getOrConstructLegacyGroupInfo)
-                    .copy (priority = if (isPinned) PRIORITY_PINNED else PRIORITY_VISIBLE)
-                    .let(groups::set)
-            } else if (threadRecipient.isCommunityRecipient) {
-                val openGroup = getOpenGroup(threadID) ?: return
-                val (baseUrl, room, pubKeyHex) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: return
-                val newGroupInfo = groups.getOrConstructCommunityInfo(baseUrl, room, Hex.toStringCondensed(pubKeyHex)).copy (
-                    priority = if (isPinned) PRIORITY_PINNED else PRIORITY_VISIBLE
-                )
-                groups.set(newGroupInfo)
+            when {
+                threadRecipient.isLegacyClosedGroupRecipient -> {
+                    threadRecipient.address.serialize()
+                        .let(GroupUtil::doubleDecodeGroupId)
+                        .let(groups::getOrConstructLegacyGroupInfo)
+                        .copy (priority = if (isPinned) PRIORITY_PINNED else PRIORITY_VISIBLE)
+                        .let(groups::set)
+                }
+                threadRecipient.isClosedGroupV2Recipient -> {
+                    val newGroupInfo = groups.getOrConstructClosedGroup(threadRecipient.address.serialize()).copy (
+                        priority = if (isPinned) PRIORITY_PINNED else PRIORITY_VISIBLE
+                    )
+                    groups.set(newGroupInfo)
+                }
+                threadRecipient.isCommunityRecipient -> {
+                    val openGroup = getOpenGroup(threadID) ?: return
+                    val (baseUrl, room, pubKeyHex) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: return
+                    val newGroupInfo = groups.getOrConstructCommunityInfo(baseUrl, room, Hex.toStringCondensed(pubKeyHex)).copy (
+                        priority = if (isPinned) PRIORITY_PINNED else PRIORITY_VISIBLE
+                    )
+                    groups.set(newGroupInfo)
+                }
             }
         }
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
@@ -1399,6 +2415,29 @@ open class Storage(
         } else {
             Log.w("Loki-DBG", "Failed to find a closed group for ${groupPublicKey.take(4)}")
         }
+    }
+
+    override fun clearMessages(threadID: Long, fromUser: Address?): Boolean {
+        val smsDb = DatabaseComponent.get(context).smsDatabase()
+        val mmsDb = DatabaseComponent.get(context).mmsDatabase()
+        val threadDb = DatabaseComponent.get(context).threadDatabase()
+        if (fromUser == null) {
+            // this deletes all *from* thread, not deleting the actual thread
+            smsDb.deleteThread(threadID)
+            mmsDb.deleteThread(threadID) // threadDB update called from within
+        } else {
+            // this deletes all *from* thread, not deleting the actual thread
+            smsDb.deleteMessagesFrom(threadID, fromUser.serialize())
+            mmsDb.deleteMessagesFrom(threadID, fromUser.serialize())
+            threadDb.update(threadID, false)
+        }
+        return true
+    }
+
+    override fun clearMedia(threadID: Long, fromUser: Address?): Boolean {
+        val mmsDb = DatabaseComponent.get(context).mmsDatabase()
+        mmsDb.deleteMediaFor(threadID, fromUser?.serialize())
+        return true
     }
 
     override fun getAttachmentDataUri(attachmentId: AttachmentId): Uri {
@@ -1516,6 +2555,12 @@ open class Storage(
             }
             setRecipientApproved(sender, true)
             setRecipientApprovedMe(sender, true)
+
+            // Also update the config about this contact
+            configFactory.contacts?.upsertContact(sender.address.serialize()) {
+                approved = true
+                approvedMe = true
+            }
             val message = IncomingMediaMessage(
                 sender.address,
                 response.sentTimestamp!!,
@@ -1539,7 +2584,7 @@ open class Storage(
     }
 
     override fun getRecipientApproved(address: Address): Boolean {
-        return DatabaseComponent.get(context).recipientDatabase().getApproved(address)
+        return address.isClosedGroupV2 || DatabaseComponent.get(context).recipientDatabase().getApproved(address)
     }
 
     override fun setRecipientApproved(recipient: Recipient, approved: Boolean) {
@@ -1709,7 +2754,7 @@ open class Storage(
 
     override fun getExpirationConfiguration(threadId: Long): ExpirationConfiguration? {
         val recipient = getRecipientForThread(threadId) ?: return null
-        val dbExpirationMetadata = DatabaseComponent.get(context).expirationConfigurationDatabase().getExpirationConfiguration(threadId) ?: return null
+        val dbExpirationMetadata = DatabaseComponent.get(context).expirationConfigurationDatabase().getExpirationConfiguration(threadId)
         return when {
             recipient.isLocalNumber -> configFactory.user?.getNtsExpiry()
             recipient.isContactRecipient -> {
@@ -1717,14 +2762,24 @@ open class Storage(
                 recipient.address.serialize().takeIf { it.startsWith(IdPrefix.STANDARD.value) }
                     ?.let { configFactory.contacts?.get(it)?.expiryMode }
             }
-            recipient.isClosedGroupRecipient -> {
+            recipient.isClosedGroupV2Recipient -> {
+                configFactory.getGroupInfoConfig(AccountId(recipient.address.serialize()))?.getExpiryTimer()?.let {
+                    if (it == 0L) ExpiryMode.NONE else ExpiryMode.AfterSend(it)
+                }
+            }
+            recipient.isLegacyClosedGroupRecipient -> {
                 // read it from group config if exists
                 GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
                     .let { configFactory.userGroups?.getLegacyGroupInfo(it) }
                     ?.run { disappearingTimer.takeIf { it != 0L }?.let(ExpiryMode::AfterSend) ?: ExpiryMode.NONE }
             }
             else -> null
-        }?.let { ExpirationConfiguration(threadId, it, dbExpirationMetadata.updatedTimestampMs) }
+        }?.let { ExpirationConfiguration(
+            threadId,
+            it,
+            // This will be 0L for new closed groups, apparently we don't need this anymore?
+            dbExpirationMetadata?.updatedTimestampMs ?: 0L
+        ) }
     }
 
     override fun setExpirationConfiguration(config: ExpirationConfiguration) {
@@ -1740,12 +2795,17 @@ open class Storage(
             DatabaseComponent.get(context).lokiAPIDatabase().setLastLegacySenderAddress(recipient.address.serialize(), null)
         }
 
-        if (recipient.isClosedGroupRecipient) {
+        if (recipient.isLegacyClosedGroupRecipient) {
             val userGroups = configFactory.userGroups ?: return
             val groupPublicKey = GroupUtil.addressToGroupAccountId(recipient.address)
             val groupInfo = userGroups.getLegacyGroupInfo(groupPublicKey)
                 ?.copy(disappearingTimer = expiryMode.expirySeconds) ?: return
             userGroups.set(groupInfo)
+        } else if (recipient.isClosedGroupV2Recipient) {
+            val groupSessionId = AccountId(recipient.address.serialize())
+            val groupInfo = configFactory.getGroupInfoConfig(groupSessionId) ?: return
+            groupInfo.setExpiryTimer(expiryMode.expirySeconds)
+            configFactory.persist(groupInfo, SnodeAPI.nowWithOffset, groupSessionId.hexString)
         } else if (recipient.isLocalNumber) {
             val user = configFactory.user ?: return
             user.setNtsExpiry(expiryMode)

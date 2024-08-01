@@ -49,7 +49,7 @@ abstract class Slide(@JvmField protected val context: Context, protected val att
                 // A missing file name is the legacy way to determine if an audio attachment is
                 // a voice note vs. other arbitrary audio attachments.
                 if (attachment.isVoiceNote || attachment.fileName.isNullOrEmpty()) {
-                    val baseString = context.getString(R.string.attachment_type_voice_message)
+                    val baseString = context.getString(R.string.messageVoice)
                     val languageIsLTR = Util.usingLeftToRightLanguage(context)
                     val attachmentString = if (languageIsLTR) {
                         "🎙 $baseString"

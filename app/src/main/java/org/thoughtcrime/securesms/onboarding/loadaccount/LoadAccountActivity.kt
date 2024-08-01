@@ -28,7 +28,7 @@ class LoadAccountActivity : BaseActionBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.setTitle(R.string.activity_link_load_account)
+        supportActionBar?.setTitle(R.string.loadAccount)
         prefs.setConfigurationMessageSynced(false)
         prefs.setRestorationTime(System.currentTimeMillis())
         prefs.setLastProfileUpdateTime(0)

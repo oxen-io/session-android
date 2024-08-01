@@ -8,13 +8,16 @@ import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.signal.IncomingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingExpirationUpdateMessage
 import org.session.libsession.snode.SnodeAPI.nowWithOffset
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
+import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.GroupUtil.doubleEncodeGroupID
-import org.session.libsession.utilities.GroupUtil.getDecodedGroupIDAsData
 import org.session.libsession.utilities.SSKEnvironment.MessageExpirationManagerProtocol
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getLocalNumber
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.messages.SignalServiceGroup
+import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.database.MmsDatabase
@@ -77,14 +80,18 @@ class ExpiringMessageManager(context: Context) : MessageExpirationManagerProtoco
         if (recipient.isBlocked && groupId == null) return
         try {
             if (groupId != null) {
-                val groupID = doubleEncodeGroupID(groupId)
-                groupInfo = Optional.of(
-                    SignalServiceGroup(
-                        getDecodedGroupIDAsData(groupID),
-                        SignalServiceGroup.GroupType.SIGNAL
-                    )
-                )
-                val groupAddress = fromSerialized(groupID)
+                val groupAddress: Address
+                groupInfo = when {
+                    groupId.startsWith(IdPrefix.GROUP.value) -> {
+                        groupAddress = fromSerialized(groupId)
+                        Optional.of(SignalServiceGroup(Hex.fromStringCondensed(groupId), SignalServiceGroup.GroupType.SIGNAL))
+                    }
+                    else -> {
+                        val doubleEncoded = GroupUtil.doubleEncodeGroupID(groupId)
+                        groupAddress = fromSerialized(doubleEncoded)
+                        Optional.of(SignalServiceGroup(GroupUtil.getDecodedGroupIDAsData(doubleEncoded), SignalServiceGroup.GroupType.SIGNAL))
+                    }
+                }
                 recipient = Recipient.from(context, groupAddress, false)
             }
             val threadId = shared.storage.getThreadId(recipient) ?: return

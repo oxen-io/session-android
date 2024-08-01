@@ -18,7 +18,7 @@ public abstract class ListSummaryPreferenceFragment extends CorrectedPreferenceF
 
       listPref.setSummary(entryIndex >= 0 && entryIndex < listPref.getEntries().length
                           ? listPref.getEntries()[entryIndex]
-                          : getString(R.string.preferences__led_color_unknown));
+                          : getString(R.string.unknown));
       return true;
     }
   }
