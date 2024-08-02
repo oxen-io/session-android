@@ -49,11 +49,6 @@
 
     <!-- ========== STRAGGLERS SECTION ========== -->
 
-    <!-- USED: activity_message_detail - bolded text before disappearing message time on message info fragment, e.g., "Disappears: 12 hours"
-         Figma: Unable to locate usage in Figma.
-    -->
-    <string name="message_details_header__disappears">Disappears</string>
-
     <!-- REQUIRED: Title on media picker when you go to send an image - this can be either to a specific Button on the `Set Display Picture` dialog used to instigate choosing a profile picture to set.
          person, to to a closed group, or to a community (in the latter two cases it will show the group name).
          Figma: Unable to locate usage in Figma.
