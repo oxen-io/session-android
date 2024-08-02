@@ -60,11 +60,6 @@
     -->
     <string name="activity_settings_upload">Upload</string>
 
-    <!-- REQUIRED: Used when a users follows the disappearing messages of another user to turn them off.
-         Figma: https://www.figma.com/design/tEgZ8ujg76DdtPwEJv8zFp/Disappearing-Messages?node-id=0-1&t=RmpaOwy9gz7ohKSE-0
-    -->
-    <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
-
     <!-- USED as text for the Legacy ExpiryType enum defined in State.kt - however, I don' think
          there's any way to set "Legacy" disappearing messages any more, that's gone. Although we
          may still need to cater to _seeing_ Legacy disappearing messages from clients which haven't
@@ -256,6 +251,7 @@
     <string name="communityUnknown">Unknown Community</string>
     <string name="communityUrl">Community URL</string>
     <string name="communityUrlCopy">Copy Community URL</string>
+    <string name="confirm">Confirm</string>
     <string name="contactContacts">Contacts</string>
     <string name="contactDelete">Delete Contact</string>
     <string name="contactDeleteDescription">Are you sure you want to delete <b>{name}</b> from your contacts? New messages from <b>{name}</b> will arrive as a message request.</string>
