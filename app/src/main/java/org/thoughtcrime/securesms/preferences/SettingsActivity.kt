@@ -391,7 +391,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         showSessionDialog {
             title(R.string.profileDisplayPictureSet)
             view(R.layout.dialog_change_avatar)
-            button(R.string.activity_settings_upload) { startAvatarSelection() }
+            button(R.string.save) { startAvatarSelection() }
 
             if (prefs.getProfileAvatarId() != 0) {
                 button(R.string.remove) { removeProfilePicture() }

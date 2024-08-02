@@ -52,19 +52,16 @@
     <!-- REQUIRED: Title on media picker when you go to send an image - this can be either to a specific Button on the `Set Display Picture` dialog used to instigate choosing a profile picture to set.
          person, to to a closed group, or to a community (in the latter two cases it will show the group name).
          Figma: Unable to locate usage in Figma.
+         Morgan 2024/07/31: "Added to Crowdin as `attachmentsSendTo` (not yet exported)" - leaving for now until I know the exact string substitution key -AL 2024/08/02
     -->
     <string name="MediaPickerActivity_send_to">Send to %s</string>
-
-    <!-- REQUIRED: Button on the `Set Display Picture` dialog used to instigate choosing a profile picture to set.
-         Figma: Unable to locate usage in Figma.
-    -->
-    <string name="activity_settings_upload">Upload</string>
 
     <!-- USED as text for the Legacy ExpiryType enum defined in State.kt - however, I don' think
          there's any way to set "Legacy" disappearing messages any more, that's gone. Although we
          may still need to cater to _seeing_ Legacy disappearing messages from clients which haven't
          been updated, perhaps?
          Figma: https://www.figma.com/design/tEgZ8ujg76DdtPwEJv8zFp/Disappearing-Messages?t=25H0THKH9VADKm9s-0
+         Morgan 2024/07/31: "once the Onboarding release has gone out we can remove the "Legacy" disappearing message settings (there is a PR for iOS to do so already)"
     -->
     <string name="expiration_type_disappear_legacy">Legacy</string>
 
