@@ -36,7 +36,10 @@ import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.ServiceCompat;
 import com.squareup.phrase.Phrase;
+import java.util.concurrent.TimeUnit;
+import network.loki.messenger.R;
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
@@ -45,8 +48,6 @@ import org.thoughtcrime.securesms.DatabaseUpgradeActivity;
 import org.thoughtcrime.securesms.DummyActivity;
 import org.thoughtcrime.securesms.home.HomeActivity;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
-import java.util.concurrent.TimeUnit;
-import network.loki.messenger.R;
 
 /**
  * Small service that stays running to keep a key cached in memory.
@@ -121,7 +122,7 @@ public class KeyCachingService extends Service {
       KeyCachingService.masterSecret = masterSecret;
 
       foregroundService();
-      
+
       new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... params) {
@@ -257,11 +258,18 @@ public class KeyCachingService extends Service {
     builder.setContentIntent(buildLaunchIntent());
 
     stopForeground(true);
+
+    int type = 0;
     if (Build.VERSION.SDK_INT >= 34) {
-      startForeground(SERVICE_RUNNING_ID, builder.build(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
-    } else {
-      startForeground(SERVICE_RUNNING_ID, builder.build());
+      type = ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE;
     }
+
+    ServiceCompat.startForeground(
+        this,
+        SERVICE_RUNNING_ID,
+        builder.build(),
+        type
+    );
   }
 
   private PendingIntent buildLockIntent() {

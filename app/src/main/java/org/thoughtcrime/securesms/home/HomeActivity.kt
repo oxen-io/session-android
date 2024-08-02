@@ -154,9 +154,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
 
-        // Bail if there is already an instance of the application running
-        if (!isTaskRoot) { finish(); return }
-
         // Set content view
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)

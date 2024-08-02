@@ -215,16 +215,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         MessagingModuleConfiguration.configure(this);
         super.onCreate();
 
-        // we need to clear the snode and onionrequest databases once on first launch
-        // in order to apply a patch that adds a version number to the Snode objects.
-        if(!TextSecurePreferences.hasAppliedPatchSnodeVersion(this)) {
-            ThreadUtils.queue(() -> {
-                lokiAPIDatabase.clearSnodePool();
-                lokiAPIDatabase.clearOnionRequestPaths();
-                TextSecurePreferences.setHasAppliedPatchSnodeVersion(this, true);
-            });
-        }
-
         messagingModuleConfiguration = new MessagingModuleConfiguration(
                 this,
                 storage,
