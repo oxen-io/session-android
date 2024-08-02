@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">Fotocamera</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Immagine o video</string>
-    <string name="attachment_type_selector__gallery">Galleria</string>
     <string name="attachment_type_selector__drawer_description">Mostra/nascondi pannello degli allegati</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->

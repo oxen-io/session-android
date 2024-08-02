@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">相机</string>
     <string name="gif">Gif图片</string>
     <string name="attachment_type_selector__gallery_description">图像或视频</string>
-    <string name="attachment_type_selector__gallery">相册</string>
     <string name="attachment_type_selector__drawer_description">切换附件抽屉</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->

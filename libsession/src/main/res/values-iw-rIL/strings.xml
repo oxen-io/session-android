@@ -83,7 +83,6 @@
     <string name="contentDescriptionCamera">מצלמה</string>
     <string name="gif">GIF</string>
     <string name="attachment_type_selector__gallery_description">תמונה או וידיאו</string>
-    <string name="attachment_type_selector__gallery">גלריה</string>
     <string name="attachment_type_selector__drawer_description">עורר מגירת צרופות</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->

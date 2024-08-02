@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">相機</string>
     <string name="gif">動態圖檔</string>
     <string name="attachment_type_selector__gallery_description">圖片或影片</string>
-    <string name="attachment_type_selector__gallery">圖片庫</string>
     <string name="attachment_type_selector__drawer_description">切換附件抽屜</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->

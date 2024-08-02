@@ -82,7 +82,6 @@
     <string name="contentDescriptionCamera">Kamera</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Obrázok alebo video</string>
-    <string name="attachment_type_selector__gallery">Galéria</string>
     <string name="attachment_type_selector__drawer_description">Prepnúť zobrazenie príloh</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->

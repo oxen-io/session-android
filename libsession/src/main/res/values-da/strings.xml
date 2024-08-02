@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">Kamera</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Billed eller video</string>
-    <string name="attachment_type_selector__gallery">Billeder</string>
     <string name="attachment_type_selector__drawer_description">Skift vedhæftet fil</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->

@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">دوربین</string>
     <string name="gif">گیف</string>
     <string name="attachment_type_selector__gallery_description">تصویر یا ویدئو</string>
-    <string name="attachment_type_selector__gallery">گالری</string>
     <string name="attachment_type_selector__drawer_description">تغییر حالت نگه دارنده پیوست</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->

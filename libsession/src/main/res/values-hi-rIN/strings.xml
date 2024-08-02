@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">कैमरा</string>
     <string name="gif">जीआईएफ</string>
     <string name="attachment_type_selector__gallery_description">छवि या वीडियो</string>
-    <string name="attachment_type_selector__gallery">गेलरी</string>
     <string name="attachment_type_selector__drawer_description">अनुलग्नक दराज टॉगल करें</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->

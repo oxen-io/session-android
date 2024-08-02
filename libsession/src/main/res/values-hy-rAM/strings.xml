@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">Տեսախցիկ</string>
     <string name="gif">Գիֆ</string>
     <string name="attachment_type_selector__gallery_description">Նկար կամ վիդեո</string>
-    <string name="attachment_type_selector__gallery">Պատկերասրահ</string>
     <string name="attachment_type_selector__drawer_description">Ցույց տալ կցորդի դարակը</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->

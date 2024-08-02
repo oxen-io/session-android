@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">Κάμερα</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Εικόνα ή βίντεο</string>
-    <string name="attachment_type_selector__gallery">Πινακοθήκη</string>
     <string name="attachment_type_selector__drawer_description">Εναλλαγή συρταριού επισυνημμένων</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
