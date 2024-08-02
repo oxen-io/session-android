@@ -15,7 +15,6 @@
     <string name="AccessibilityId_recovery_password_container">Recovery password container</string>
     <string name="AccessibilityId_recovery_password_menu_item">Recovery password menu item</string>
     <string name="AccessibilityId_view_qr_code">View QR code</string>
-    <string name="contentDescriptionMediaMessage">Multimedia message</string>
     <string name="AccessibilityId_fast_mode_notifications_button">Fast mode notifications button</string>
     <string name="AccessibilityId_slow_mode_notifications_button">Slow mode notifications button</string>
     <string name="AccessibilityId_loading_animation">Loading animation</string>
@@ -188,4 +187,5 @@
     <string name="expiration_type_disappear_legacy_description">Original version of disappearing messages.</string>
     <string name="expand">Expand</string>
 
+    <string name="contentDescriptionMediaMessage">Media message</string>
 </resources>

@@ -70,11 +70,6 @@
     -->
     <string name="attachment_type_selector__gallery">Gallery</string>
 
-    <!-- REQUIRED: Toast shown when a user attempts to download a second attachment while the first is still downloading.
-         Figma: Unable to locate this string in Figma.
-    -->
-    <string name="conversation_activity__wait_until_attachment_has_finished_downloading">Please wait until attachment has finished downloading</string>
-
     <!-- REQUIRED: Used when a users follows the disappearing messages of another user to turn them off.
          Figma: https://www.figma.com/design/tEgZ8ujg76DdtPwEJv8zFp/Disappearing-Messages?node-id=0-1&t=RmpaOwy9gz7ohKSE-0
     -->

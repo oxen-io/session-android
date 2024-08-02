@@ -2146,9 +2146,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun saveAttachment(messages: Set<MessageRecord>) {
         val message = messages.first() as MmsMessageRecord
 
-        // Do not allow the user to download a file attachment before it has finished downloading
+        // Note: The save option is only added to the menu in ConversationReactionOverlay.getMenuActionItems
+        // if the attachment has finished downloading, so we don't really have to check for message.isMediaPending
+        // here - but we'll do it anyway and bail should that be the case as a defensive programming strategy.
         if (message.isMediaPending) {
-            Toast.makeText(this, resources.getString(R.string.conversation_activity__wait_until_attachment_has_finished_downloading), Toast.LENGTH_LONG).show()
+            Log.w(TAG, "Somehow we were asked to download an attachment before it had finished downloading - aborting download.")
             return
         }
 
