@@ -435,8 +435,6 @@
     <string name="helpReportABugDescription">Share some details to help us resolve your issue. Export your logs, then upload the file through {app_name}\'s Help Desk.</string>
     <string name="helpReportABugExportLogs">Export Logs</string>
     <string name="helpReportABugExportLogsDescription">Export your logs, then upload the file through {app_name}\'s Help Desk.</string>
-    <string name="helpReportABugExportLogsSaveToDesktop">Save to desktop</string>
-    <string name="helpReportABugExportLogsSaveToDesktopDescription">Save this file to your desktop, then share it with Session developers.</string>
     <string name="helpSupport">Support</string>
     <string name="helpWedLoveYourFeedback">We\'d love your feedback</string>
     <string name="hide">Hide</string>
