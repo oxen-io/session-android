@@ -261,8 +261,14 @@ class ConversationViewModel(
         _recipient.updateTo(repository.maybeGetRecipientForThreadId(threadId))
     }
 
-    fun hidesInputBar(): Boolean = openGroup?.canWrite != true &&
-        blindedRecipient?.blocksCommunityMessageRequests == true
+    /**
+     * The input should be hidden when:
+     * - We are in a community without write access
+     * - We are dealing with a contact from a community (blinded recipient) that does not allow
+     *   requests form community members
+     */
+    fun hidesInputBar(): Boolean = openGroup?.canWrite == false ||
+            blindedRecipient?.blocksCommunityMessageRequests == true
 
     fun legacyBannerRecipient(context: Context): Recipient? = recipient?.run {
         storage.getLastLegacyRecipient(address.serialize())?.let { Recipient.from(context, Address.fromSerialized(it), false) }

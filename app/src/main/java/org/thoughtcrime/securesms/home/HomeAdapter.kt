@@ -104,7 +104,6 @@ class HomeAdapter(
                 holder.binding.run {
                     messageRequests?.let {
                         unreadCountTextView.text = it.count
-                        timestampTextView.text = it.timestamp
                     }
                 }
             }
