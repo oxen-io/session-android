@@ -42,10 +42,8 @@ object UpdateMessageBuilder {
         return when (updateData) {
             // --- Group created or joined ---
             is UpdateMessageData.Kind.GroupCreation -> {
-                if (isOutgoing) context.getString(R.string.disappearingMessagesNewGroup)
-                else Phrase.from(context, R.string.disappearingMessagesAddedYou)
-                    .put(NAME_KEY, senderName)
-                    .format().toString()
+                if (!isOutgoing) context.getString(R.string.groupInviteYou)
+                else "" // We no longer add a string like `disappearingMessagesNewGroup` ("You created a new group") and leave the group with its default empty state
             }
 
             // --- Group name changed ---
@@ -56,8 +54,7 @@ object UpdateMessageBuilder {
                         .format().toString()
                 }
                 else {
-                    Phrase.from(context, R.string.groupNameUpdatedBy)
-                        .put(NAME_KEY, senderName)
+                    Phrase.from(context, R.string.groupNameNew)
                         .put(GROUP_NAME_KEY, updateData.name)
                         .format().toString()
                 }
@@ -65,20 +62,36 @@ object UpdateMessageBuilder {
 
             // --- Group member(s) were added ---
             is UpdateMessageData.Kind.GroupMemberAdded -> {
-                val members = updateData.updatedMembers.joinToString(", ", transform = ::getSenderName)
 
-                // You added these members
-                if (isOutgoing) {
-                    Phrase.from(context, R.string.groupYouAdded)
-                        .put(MEMBERS_KEY, members)
-                        .format().toString()
-                }
-                // Someone else added these members
-                else {
-                    Phrase.from(context, R.string.groupNameAdded)
-                        .put(NAME_KEY,senderName)
-                        .put(MEMBERS_KEY, members)
-                        .format().toString()
+                val newMemberCount = updateData.updatedMembers.size
+
+                //val members = updateData.updatedMembers.joinToString(", ", transform = ::getSenderName)
+
+                // We previously differentiated between members added by us Vs. members added by someone
+                // else via checking against `isOutgoing` - but now we use the same strings regardless.
+                when (newMemberCount) {
+                    0 -> {
+                        Log.w(TAG, "Somehow asked to add zero new members to group - this should never happen.")
+                        return ""
+                    }
+                    1 -> {
+                        Phrase.from(context, R.string.groupMemberNew)
+                            .put(NAME_KEY, updateData.updatedMembers.elementAtOrNull(0))
+                            .format().toString()
+                    }
+                    2 -> {
+                        Phrase.from(context, R.string.groupMemberTwoNew)
+                            .put(NAME_KEY, updateData.updatedMembers.elementAtOrNull(0))
+                            .put(OTHER_NAME_KEY, updateData.updatedMembers.elementAtOrNull(1))
+                            .format().toString()
+                    }
+                    else -> {
+                        val newMemberCountMinusOne = newMemberCount - 1
+                        Phrase.from(context, R.string.groupMemberMoreNew)
+                            .put(NAME_KEY, updateData.updatedMembers.elementAtOrNull(0))
+                            .put(COUNT_KEY, newMemberCountMinusOne)
+                            .format().toString()
+                    }
                 }
             }
 
@@ -217,7 +230,7 @@ object UpdateMessageBuilder {
                     .format().toString()
             } else // 1-on-1 conversation
             {
-                Phrase.from(context, R.string.disappearingMessagesUpdatedYours)
+                Phrase.from(context, R.string.disappearingMessagesSetYou)
                     .put(TIME_KEY, time)
                     .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
                     .format().toString()

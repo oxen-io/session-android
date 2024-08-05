@@ -72,7 +72,6 @@
     <string name="accept">Accept</string>
     <string name="accountIdCopy">Copy Account ID</string>
     <string name="accountIdEnter">Enter Account ID</string>
-    <string name="accountIdEnterYourFriends">Enter your friend\'s Account ID or ONS</string>
     <string name="accountIdErrorInvalid">This Account ID is invalid. Please check and try again.</string>
     <string name="accountIdOrOnsEnter">Enter Account ID or ONS</string>
     <string name="accountIdOrOnsInvite">Invite Account ID or ONS</string>
@@ -208,7 +207,6 @@
     <string name="cameraGrantAccessDenied">{app_name} needs camera access to take photos and videos, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\".</string>
     <string name="cameraGrantAccessDescription">{app_name} needs camera access to take photos and videos, or scan QR codes.</string>
     <string name="cameraGrantAccessQr">{app_name} needs camera access to scan QR codes</string>
-    <string name="cameraGrantAccessStorageDenied">{app_name} needs storage access to send photos and videos, but it has been permanently denied. Please continue to app settings, select "Permissions", and enable "Storage".</string>
     <string name="cancel">Cancel</string>
     <string name="clear">Clear</string>
     <string name="clearAll">Clear All</string>
@@ -307,7 +305,6 @@
     <string name="deleting">Deleting</string>
     <string name="developerToolsToggle">Toggle Developer Tools</string>
     <string name="disappearingMessages">Disappearing Messages</string>
-    <string name="disappearingMessagesAddedYou">{name} added you to the group.</string>
     <string name="disappearingMessagesCountdownBigMobile">Auto-deletes in {time_large}</string>
     <string name="disappearingMessagesCountdownBigSmallMobile">Auto-deletes in {time_large} {time_small}</string>
     <string name="disappearingMessagesDeleteType">Delete Type</string>
@@ -322,7 +319,6 @@
     <string name="disappearingMessagesFollowSettingOff">Set your messages to disappear <b>{time}</b> after they have been <b>{disappearing_messages_type}</b>?</string>
     <string name="disappearingMessagesFollowSettingOn">Set your messages to disappear <b>{time}</b> after they have been <b>{disappearing_messages_type}</b>?</string>
     <string name="disappearingMessagesLegacy">{name} is using an outdated client. Disappearing messages may not work as expected.</string>
-    <string name="disappearingMessagesNewGroup">You created a new group.</string>
     <string name="disappearingMessagesOnlyAdmins">Only group admins can change this setting.</string>
     <string name="disappearingMessagesSent">Sent</string>
     <string name="disappearingMessagesSet"><b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
@@ -334,7 +330,6 @@
     <string name="disappearingMessagesTypeSent">sent</string>
     <string name="disappearingMessagesUpdated"><b>{admin_name}</b> updated disappearing message settings.</string>
     <string name="disappearingMessagesUpdatedYou"><b>You</b> updated disappearing message settings.</string>
-    <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="dismiss">Dismiss</string>
     <string name="displayNameDescription">It can be your real name, an alias, or anything else you like — and you can change it at any time.</string>
     <string name="displayNameEnter">Enter your display name</string>
@@ -412,13 +407,11 @@
     <string name="groupMembers">Group Members</string>
     <string name="groupMembersNone">There are no other members in this group.</string>
     <string name="groupName">Group Name</string>
-    <string name="groupNameAdded">{name} added {members} to the group.</string>
     <string name="groupNameEnter">Enter a group name</string>
     <string name="groupNameEnterPlease">Please enter a group name.</string>
     <string name="groupNameEnterShorter">Please enter a shorter group name.</string>
     <string name="groupNameNew">Group name is now {group_name}.</string>
     <string name="groupNameUpdated">Group name updated.</string>
-    <string name="groupNameUpdatedBy">{name} renamed the group to: {group_name}</string>
     <string name="groupNoMessages">You have no messages from <b>{group_name}</b>. Send a message to start the conversation!</string>
     <string name="groupOnlyAdmin">You are the only admin in <b>{group_name}</b>.\nGroup members and settings cannot be changed without an admin.</string>
     <string name="groupPromotedYou"><b>You</b> were promoted to Admin.</string>
@@ -435,9 +428,7 @@
     <string name="groupRemovedYou">You were removed from <b>{group_name}</b>.</string>
     <string name="groupSetDisplayPicture">Set Group Display Picture</string>
     <string name="groupUnknown">Unknown Group</string>
-    <string name="groupUnnamed">Unnamed group</string>
     <string name="groupUpdated">Group updated</string>
-    <string name="groupYouAdded">You added {members} to the group.</string>
     <string name="helpFAQ">FAQ</string>
     <string name="helpHelpUsTranslateSession">Help us translate {app_name}</string>
     <string name="helpReportABug">Report a bug</string>
@@ -491,7 +482,6 @@
     <string name="membersInviteShareTwoDescription">Would you like to share group message history with <b>{name}</b> and <b>{other_name}</b>?</string>
     <string name="membersInviteTitle">Invite</string>
     <string name="message">Message</string>
-    <string name="messageCopy">Copy message</string>
     <string name="messageEmpty">This message is empty.</string>
     <string name="messageErrorDelivery">Message delivery failed</string>
     <string name="messageErrorLimit">Message limit reached</string>
