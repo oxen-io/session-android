@@ -72,7 +72,6 @@ import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.ui.setThemedContent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.IP2Country
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
@@ -179,8 +178,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.emptyStateContainer.setThemedContent {
             EmptyView(isNewAccount)
         }
-
-        IP2Country.configureIfNeeded(this@HomeActivity)
 
         // Set up new conversation button
         binding.newConversationButton.setOnClickListener { showStartConversation() }

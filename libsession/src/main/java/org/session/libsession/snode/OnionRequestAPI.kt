@@ -1,5 +1,8 @@
 package org.session.libsession.snode
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.map
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
@@ -25,10 +28,9 @@ import org.session.libsignal.utilities.Snode
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.recover
 import org.session.libsignal.utilities.toHexString
-import java.util.concurrent.atomic.AtomicReference
 import kotlin.collections.set
 
-private typealias Path = List<Snode>
+typealias Path = List<Snode>
 
 /**
  * See the "Onion Requests" section of [The Session Whitepaper](https://arxiv.org/pdf/2002.04609.pdf) for more information.
@@ -43,28 +45,16 @@ object OnionRequestAPI {
     private val snodeFailureCount = mutableMapOf<Snode, Int>()
 
     var guardSnodes = setOf<Snode>()
-    var _paths: AtomicReference<List<Path>?> = AtomicReference(null)
+    var _paths = MutableStateFlow<List<Path>>(emptyList())
+    val pathFlow = _paths.map { it.firstOrNull() ?: emptyList() }
     var paths: List<Path> // Not a set to ensure we consistently show the same path to the user
-        get() {
-            val paths = _paths.get()
-
-            if (paths != null) { return paths }
-
-            // Storing this in an atomic variable as it was causing a number of background
-            // ANRs when this value was accessed via the main thread after tapping on
-            // a notification)
-            val result = database.getOnionRequestPaths()
-            _paths.set(result)
-            return result
-        }
+        get() = _paths.getAndUpdate { it.takeUnless { it.isEmpty() } ?: database.getOnionRequestPaths() }
         set(newValue) {
-            if (newValue.isEmpty()) {
-                database.clearOnionRequestPaths()
-                _paths.set(null)
-            } else {
-                database.setOnionRequestPaths(newValue)
-                _paths.set(newValue)
+            when {
+                newValue.isEmpty() -> database.clearOnionRequestPaths()
+                else -> database.setOnionRequestPaths(newValue)
             }
+            _paths.value = newValue
         }
 
     // region Settings
@@ -275,7 +265,7 @@ object OnionRequestAPI {
         path.add(unusedSnodes.secureRandom())
         // Don't test the new snode as this would reveal the user's IP
         oldPaths.removeAt(pathIndex)
-        val newPaths = oldPaths + listOf( path )
+        val newPaths = oldPaths + listOf(path)
         paths = newPaths
     }
 

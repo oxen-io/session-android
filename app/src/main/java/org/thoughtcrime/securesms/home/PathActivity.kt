@@ -1,9 +1,7 @@
 package org.thoughtcrime.securesms.home
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.util.AttributeSet
@@ -15,11 +13,17 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,106 +31,65 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPathBinding
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.getColorFromAttr
-import org.session.libsignal.utilities.Snode
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.util.GlowViewUtilities
-import org.thoughtcrime.securesms.util.IP2Country
+import org.session.libsignal.net.IpToCountryName
 import org.thoughtcrime.securesms.util.PathDotView
 import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.animateSizeChange
 import org.thoughtcrime.securesms.util.disableClipping
-import org.thoughtcrime.securesms.util.fadeIn
-import org.thoughtcrime.securesms.util.fadeOut
 import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getColorWithID
+import javax.inject.Inject
 
-class PathActivity : PassphraseRequiredActionBarActivity() {
+@AndroidEntryPoint
+class PathActivity: PassphraseRequiredActionBarActivity() {
     private lateinit var binding: ActivityPathBinding
-    private val broadcastReceivers = mutableListOf<BroadcastReceiver>()
 
-    // region Lifecycle
+    @Inject
+    lateinit var ipToCountryName: IpToCountryName
+
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
         binding = ActivityPathBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar!!.title = resources.getString(R.string.activity_path_title)
-        binding.pathRowsContainer.disableClipping()
         binding.learnMoreButton.setOnClickListener { learnMore() }
-        update(false)
-        registerObservers()
+
+        update(listOf(null, null, null))
+
+        lifecycleScope.launch {
+            OnionRequestAPI.pathFlow
+                .map { it.map { ipToCountryName[it.ip] } }
+                .distinctUntilChanged()
+                .flowOn(Dispatchers.IO)
+                .collectLatest {
+                    withContext(Dispatchers.Main) {
+                        update(it)
+                    }
+                }
+        }
     }
 
-    private fun registerObservers() {
-        val buildingPathsReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-
-            override fun onReceive(context: Context, intent: Intent) {
-                handleBuildingPathsEvent()
-            }
-        }
-        broadcastReceivers.add(buildingPathsReceiver)
-        LocalBroadcastManager.getInstance(this).registerReceiver(buildingPathsReceiver, IntentFilter("buildingPaths"))
-        val pathsBuiltReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-
-            override fun onReceive(context: Context, intent: Intent) {
-                handlePathsBuiltEvent()
-            }
-        }
-        broadcastReceivers.add(pathsBuiltReceiver)
-        LocalBroadcastManager.getInstance(this).registerReceiver(pathsBuiltReceiver, IntentFilter("pathsBuilt"))
-        val onionRequestPathCountriesLoadedReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-
-            override fun onReceive(context: Context, intent: Intent) {
-                handleOnionRequestPathCountriesLoaded()
-            }
-        }
-        broadcastReceivers.add(onionRequestPathCountriesLoadedReceiver)
-        LocalBroadcastManager.getInstance(this).registerReceiver(onionRequestPathCountriesLoadedReceiver, IntentFilter("onionRequestPathCountriesLoaded"))
-    }
-
-    override fun onDestroy() {
-        for (receiver in broadcastReceivers) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
-        }
-        super.onDestroy()
-    }
-    // endregion
-
-    // region Updating
-    private fun handleBuildingPathsEvent() { update(false) }
-    private fun handlePathsBuiltEvent() { update(false) }
-    private fun handleOnionRequestPathCountriesLoaded() { update(false) }
-
-    private fun update(isAnimated: Boolean) {
+    private fun update(countryNames: List<String?>) {
         binding.pathRowsContainer.removeAllViews()
-        if (OnionRequestAPI.paths.isNotEmpty()) {
-            val path = OnionRequestAPI.paths.firstOrNull() ?: return finish()
-            val dotAnimationRepeatInterval = path.count().toLong() * 1000 + 1000
-            val pathRows = path.mapIndexed { index, snode ->
-                val isGuardSnode = (OnionRequestAPI.guardSnodes.contains(snode))
-                getPathRow(snode, LineView.Location.Middle, index.toLong() * 1000 + 2000, dotAnimationRepeatInterval, isGuardSnode)
-            }
-            val youRow = getPathRow(resources.getString(R.string.activity_path_device_row_title), null, LineView.Location.Top, 1000, dotAnimationRepeatInterval)
-            val destinationRow = getPathRow(resources.getString(R.string.activity_path_destination_row_title), null, LineView.Location.Bottom, path.count().toLong() * 1000 + 2000, dotAnimationRepeatInterval)
-            val rows = listOf( youRow ) + pathRows + listOf( destinationRow )
-            for (row in rows) {
-                binding.pathRowsContainer.addView(row)
-            }
-            if (isAnimated) {
-                binding.spinner.fadeOut()
-            } else {
-                binding.spinner.alpha = 0.0f
-            }
-        } else {
-            if (isAnimated) {
-                binding.spinner.fadeIn()
-            } else {
-                binding.spinner.alpha = 1.0f
-            }
+
+        binding.spinner.isVisible = countryNames.isEmpty()
+
+        if (countryNames.isEmpty()) return
+
+        val dotAnimationRepeatInterval = countryNames.count().toLong() * 1000 + 1000
+        val pathRows = countryNames.mapIndexed { index, countryName ->
+            getPathRow(countryName, LineView.Location.Middle, index.toLong() * 1000 + 2000, dotAnimationRepeatInterval, index == 0)
+        }
+        val youRow = getPathRow(resources.getString(R.string.activity_path_device_row_title), null, LineView.Location.Top, 1000, dotAnimationRepeatInterval)
+        val destinationRow = getPathRow(resources.getString(R.string.activity_path_destination_row_title), null, LineView.Location.Bottom, countryNames.count().toLong() * 1000 + 2000, dotAnimationRepeatInterval)
+        val rows = listOf( youRow ) + pathRows + listOf( destinationRow )
+        for (row in rows) {
+            binding.pathRowsContainer.addView(row)
         }
     }
-    // endregion
 
-    // region General
     private fun getPathRow(title: String, subtitle: String?, location: LineView.Location, dotAnimationStartDelay: Long, dotAnimationRepeatInterval: Long): LinearLayout {
         val mainContainer = LinearLayout(this)
         mainContainer.orientation = LinearLayout.HORIZONTAL
@@ -161,18 +124,12 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         return mainContainer
     }
 
-    private fun getPathRow(snode: Snode, location: LineView.Location, dotAnimationStartDelay: Long, dotAnimationRepeatInterval: Long, isGuardSnode: Boolean): LinearLayout {
+    private fun getPathRow(countryName: String?, location: LineView.Location, dotAnimationStartDelay: Long, dotAnimationRepeatInterval: Long, isGuardSnode: Boolean): LinearLayout {
         val title = if (isGuardSnode) resources.getString(R.string.activity_path_guard_node_row_title) else resources.getString(R.string.activity_path_service_node_row_title)
-        val subtitle = if (IP2Country.isInitialized) {
-            IP2Country.shared.countryNamesCache[snode.ip] ?: resources.getString(R.string.activity_path_resolving_progress)
-        } else {
-            resources.getString(R.string.activity_path_resolving_progress)
-        }
+        val subtitle = countryName ?: resources.getString(R.string.activity_path_resolving_progress)
         return getPathRow(title, subtitle, location, dotAnimationStartDelay, dotAnimationRepeatInterval)
     }
-    // endregion
 
-    // region Interaction
     private fun learnMore() {
         try {
             val url = "https://getsession.org/faq/#onion-routing"
@@ -182,9 +139,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
             Toast.makeText(this, R.string.invalid_url, Toast.LENGTH_SHORT).show()
         }
     }
-    // endregion
 
-    // region Line View
     private class LineView : RelativeLayout {
         private lateinit var location: Location
         private var dotAnimationStartDelay: Long = 0
@@ -300,5 +255,4 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
             private const val EXPAND_ANIM_DELAY_MILLS = 1000L
         }
     }
-    // endregion
 }
