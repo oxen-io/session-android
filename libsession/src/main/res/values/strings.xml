@@ -512,6 +512,7 @@
     <string name="messageStatusFailedToSend">Failed to send</string>
     <string name="messageStatusFailedToSync">Failed to sync</string>
     <string name="messageStatusSyncing">Syncing</string>
+    <string name="messageStatusUploading">Uploading</string>
     <string name="messageUnread">Unread messages</string>
     <string name="messageVoice">Voice Message</string>
     <string name="messageVoiceErrorShort">Hold to record a voice message</string>

@@ -268,8 +268,7 @@ class VisibleMessageView : FrameLayout {
     // Method to display or hide the status of a message.
     // Note: Although most commonly used to display the delivery status of a message, we also use the
     // message status area to display the disappearing messages state - so in this latter case we'll
-    // be displaying the "Sent" and the animating clock icon for outgoing messages or "Read" and the
-    // animated clock icon for incoming messages.
+    // be displaying either "Sent" or "Read" and the animating clock icon.
     private fun showStatusMessage(message: MessageRecord) {
         // We'll start by hiding everything and then only make visible what we need
         binding.messageStatusTextView.isVisible  = false
@@ -392,11 +391,21 @@ class VisibleMessageView : FrameLayout {
                 R.string.messageStatusFailedToSync
             )
         message.isPending ->
-            MessageStatusInfo(
-                R.drawable.ic_delivery_status_sending,
-                context.getColorFromAttr(R.attr.message_status_color),
-                R.string.sending
-            )
+            // Non-mms messages display 'Sending'..
+            if (!message.isMms) {
+                MessageStatusInfo(
+                    R.drawable.ic_delivery_status_sending,
+                    context.getColorFromAttr(R.attr.message_status_color),
+                    R.string.sending
+                )
+            } else {
+                // ..and Mms messages display 'Uploading'.
+                MessageStatusInfo(
+                    R.drawable.ic_delivery_status_sending,
+                    context.getColorFromAttr(R.attr.message_status_color),
+                    R.string.messageStatusUploading
+                )
+            }
         message.isSyncing || message.isResyncing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
