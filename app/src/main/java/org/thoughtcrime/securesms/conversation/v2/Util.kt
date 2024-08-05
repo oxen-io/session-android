@@ -33,18 +33,16 @@ import android.view.View
 import com.annimon.stream.Stream
 import com.google.android.mms.pdu_alt.CharacterSets
 import com.google.android.mms.pdu_alt.EncodedStringValue
+import network.loki.messenger.R
+import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.components.ComposeText
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.UnsupportedEncodingException
-import java.security.SecureRandom
-import java.util.Arrays
 import java.util.Collections
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
-import network.loki.messenger.R
-import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.components.ComposeText
 
 object Util {
     private val TAG: String = Log.tag(Util::class.java)
@@ -246,32 +244,6 @@ object Util {
         System.arraycopy(input, 0, result, 0, result.size)
 
         return result
-    }
-
-    fun getSecretBytes(size: Int): ByteArray {
-        return getSecretBytes(SecureRandom(), size)
-    }
-
-    fun getSecretBytes(secureRandom: SecureRandom, size: Int): ByteArray {
-        val secret = ByteArray(size)
-        secureRandom.nextBytes(secret)
-        return secret
-    }
-
-    fun <T> getRandomElement(elements: Array<T>): T {
-        return elements[SecureRandom().nextInt(elements.size)]
-    }
-
-    fun <T> getRandomElement(elements: List<T>): T {
-        return elements[SecureRandom().nextInt(elements.size)]
-    }
-
-    fun equals(a: Any?, b: Any?): Boolean {
-        return a === b || (a != null && a == b)
-    }
-
-    fun hashCode(vararg objects: Any?): Int {
-        return objects.contentHashCode()
     }
 
     fun uri(uri: String?): Uri? {

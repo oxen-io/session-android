@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import org.thoughtcrime.securesms.components.InputAwareLayout.InputView;
 import org.thoughtcrime.securesms.components.RepeatableImageKey;
 import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 
 import java.util.Arrays;
 
@@ -158,7 +158,7 @@ public class MediaKeyboard extends FrameLayout implements InputView,
     this.searchButton          = view.findViewById(R.id.media_keyboard_search);
     this.addButton             = view.findViewById(R.id.media_keyboard_add);
 
-    this.categoryTabAdapter = new MediaKeyboardBottomTabAdapter(GlideApp.with(this), this);
+    this.categoryTabAdapter = new MediaKeyboardBottomTabAdapter(Glide.with(this), this);
 
     categoryTabs.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     categoryTabs.setAdapter(categoryTabAdapter);

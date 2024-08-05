@@ -41,7 +41,7 @@ import org.thoughtcrime.securesms.util.SimpleTextWatcher;
 import org.thoughtcrime.securesms.imageeditor.model.EditorModel;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.mediapreview.MediaRailAdapter;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.scribbles.ImageEditorFragment;
@@ -187,7 +187,7 @@ public class MediaSendFragment extends Fragment implements ViewTreeObserver.OnGl
     fragmentPager.addOnPageChangeListener(pageChangeListener);
     fragmentPager.post(() -> pageChangeListener.onPageSelected(fragmentPager.getCurrentItem()));
 
-    mediaRailAdapter = new MediaRailAdapter(GlideApp.with(this), this, true);
+    mediaRailAdapter = new MediaRailAdapter(Glide.with(this), this, true);
     mediaRail.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
     mediaRail.setAdapter(mediaRailAdapter);
 

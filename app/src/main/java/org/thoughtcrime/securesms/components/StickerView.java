@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import org.thoughtcrime.securesms.conversation.v2.utilities.ThumbnailView;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.RequestManager;
 
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.mms.SlideClickListener;

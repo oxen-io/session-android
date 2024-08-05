@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/conversation_view_background"
+    android:background="@drawable/conversation_unread_background"
     android:contentDescription="@string/AccessibilityId_message_request_banner"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -19,7 +19,8 @@
         android:layout_marginStart="@dimen/medium_spacing"
         android:padding="10dp"
         android:src="@drawable/ic_outline_message_requests_24"
-        app:circleColor="#585858"
+        android:tint="?unreadIndicatorTextColor"
+        app:circleColor="?unreadIndicatorBackgroundColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -47,7 +48,7 @@
         android:layout_height="20dp"
         android:layout_marginStart="4dp"
         android:background="@drawable/circle_tintable"
-        android:backgroundTint="#585858"
+        android:backgroundTint="?unreadIndicatorBackgroundColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/conversationViewDisplayNameTextView"
         app:layout_constraintTop_toTopOf="parent">
@@ -57,30 +58,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@color/white"
+            android:textColor="?unreadIndicatorTextColor"
             android:textSize="@dimen/very_small_font_size"
             android:textStyle="bold"
             tools:text="8" />
 
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/timestampTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/medium_spacing"
-        android:alpha="0.4"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAlignment="textEnd"
-        android:textColor="?android:textColorPrimary"
-        android:textSize="@dimen/small_font_size"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintStart_toEndOf="@id/unreadCountIndicator"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="11 Apr, 9:41 AM" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

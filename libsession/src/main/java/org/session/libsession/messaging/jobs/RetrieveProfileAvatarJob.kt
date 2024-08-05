@@ -12,11 +12,11 @@ import org.session.libsession.utilities.Util.equals
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.streams.ProfileCipherInputStream
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Util.SECURE_RANDOM
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.security.SecureRandom
 import java.util.concurrent.ConcurrentSkipListSet
 
 class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipientAddress: Address): Job {
@@ -64,7 +64,7 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
             Log.w(TAG, "Removing profile avatar for: " + recipient.address.serialize())
 
             if (recipient.isLocalNumber) {
-                setProfileAvatarId(context, SecureRandom().nextInt())
+                setProfileAvatarId(context, SECURE_RANDOM.nextInt())
                 setProfilePictureURL(context, null)
             }
 
@@ -83,7 +83,7 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
             decryptDestination.renameTo(AvatarHelper.getAvatarFile(context, recipient.address))
 
             if (recipient.isLocalNumber) {
-                setProfileAvatarId(context, SecureRandom().nextInt())
+                setProfileAvatarId(context, SECURE_RANDOM.nextInt())
                 setProfilePictureURL(context, profileAvatar)
             }
 

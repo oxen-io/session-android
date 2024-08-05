@@ -21,7 +21,6 @@ import android.content.res.Resources
 import android.net.Uri
 import androidx.annotation.DrawableRes
 import com.squareup.phrase.Phrase
-import java.security.SecureRandom
 import network.loki.messenger.R
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
@@ -29,6 +28,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.UriAttachm
 import org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY
 import org.session.libsession.utilities.Util.equals
 import org.session.libsession.utilities.Util.hashCode
+import org.session.libsignal.utilities.Util.SECURE_RANDOM
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.conversation.v2.Util
 import org.thoughtcrime.securesms.util.MediaUtil
@@ -160,7 +160,7 @@ abstract class Slide(@JvmField protected val context: Context, protected val att
         ): Attachment {
             val resolvedType =
                 Optional.fromNullable(MediaUtil.getMimeType(context, uri)).or(defaultMime)
-            val fastPreflightId = SecureRandom().nextLong().toString()
+            val fastPreflightId = SECURE_RANDOM.nextLong().toString()
             return UriAttachment(
                 uri,
                 if (hasThumbnail) uri else null,

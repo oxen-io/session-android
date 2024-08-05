@@ -10,7 +10,7 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.GroupUtil
-import org.session.libsignal.crypto.getRandomElementOrNull
+import org.session.libsignal.crypto.secureRandomOrNull
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.defaultRequiresAuth
@@ -104,7 +104,7 @@ class ClosedGroupPollerV2 {
     fun poll(groupPublicKey: String): Promise<Unit, Exception> {
         if (!isPolling(groupPublicKey)) { return Promise.of(Unit) }
         val promise = SnodeAPI.getSwarm(groupPublicKey).bind { swarm ->
-            val snode = swarm.getRandomElementOrNull() ?: throw InsufficientSnodesException() // Should be cryptographically secure
+            val snode = swarm.secureRandomOrNull() ?: throw InsufficientSnodesException() // Should be cryptographically secure
             if (!isPolling(groupPublicKey)) { throw PollingCanceledException() }
             val currentForkInfo = SnodeAPI.forkInfo
             when {

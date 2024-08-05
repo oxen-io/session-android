@@ -328,7 +328,6 @@
                 <action android:name="android.service.chooser.ChooserTargetService" />
             </intent-filter>
         </service>
-        <service android:name="org.thoughtcrime.securesms.service.GenericForegroundService" />
         <receiver
             android:name="org.thoughtcrime.securesms.notifications.MarkReadReceiver"
             android:enabled="true"
@@ -440,9 +439,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <service
-            android:name="org.thoughtcrime.securesms.jobmanager.KeepAliveService"
-            android:enabled="@bool/enable_alarm_manager" />
+
         <uses-library
             android:name="com.sec.android.app.multiwindow"
             android:required="false" />

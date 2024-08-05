@@ -1,6 +1,8 @@
 package org.thoughtcrime.securesms.crypto;
 
 
+import static org.session.libsignal.utilities.Util.SECURE_RANDOM;
+
 import android.content.Context;
 import android.os.Build;
 import androidx.annotation.NonNull;
@@ -8,7 +10,6 @@ import androidx.annotation.NonNull;
 import org.session.libsession.utilities.TextSecurePreferences;
 
 import java.io.IOException;
-import java.security.SecureRandom;
 
 public class DatabaseSecretProvider {
 
@@ -60,9 +61,8 @@ public class DatabaseSecretProvider {
   }
 
   private DatabaseSecret createAndStoreDatabaseSecret(@NonNull Context context) {
-    SecureRandom random = new SecureRandom();
     byte[]       secret = new byte[32];
-    random.nextBytes(secret);
+    SECURE_RANDOM.nextBytes(secret);
 
     DatabaseSecret databaseSecret = new DatabaseSecret(secret);
 

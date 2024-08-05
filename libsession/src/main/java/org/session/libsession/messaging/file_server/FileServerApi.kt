@@ -16,7 +16,7 @@ import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
 
 object FileServerApi {
 
@@ -127,14 +127,11 @@ object FileServerApi {
             ?: throw (Error.NoEd25519KeyPair)
 
         val blindedKeys = BlindKeyAPI.blindVersionKeyPair(secretKey)
-        val timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) //  The current timestamp in seconds
+        val timestamp = System.currentTimeMillis().milliseconds.inWholeSeconds //  The current timestamp in seconds
         val signature = BlindKeyAPI.blindVersionSign(secretKey, timestamp)
 
         // The hex encoded version-blinded public key with a 07 prefix
-        val blindedPkHex = buildString {
-            append("07")
-            append(blindedKeys.pubKey.toHexString())
-        }
+        val blindedPkHex = "07" + blindedKeys.pubKey.toHexString()
 
         val request = Request(
             verb = HTTP.Verb.GET,

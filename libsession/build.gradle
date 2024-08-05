@@ -2,6 +2,8 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlinx-serialization'
+    id 'com.google.devtools.ksp'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -21,6 +23,11 @@ dependencies {
     implementation project(":libsignal")
     implementation project(":libsession-util")
     implementation project(":liblazysodium")
+
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
+    ksp("com.google.dagger:hilt-compiler:$daggerHiltVersion")
+    ksp("androidx.hilt:hilt-compiler:$jetpackHiltVersion")
+
     implementation "net.java.dev.jna:jna:5.12.1@aar"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "androidx.core:core-ktx:$coreVersion"
@@ -28,7 +35,6 @@ dependencies {
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
     implementation "com.google.android.material:material:$materialVersion"
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
-    implementation "com.google.dagger:hilt-android:$daggerVersion"
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation "com.github.bumptech.glide:glide:$glideVersion"

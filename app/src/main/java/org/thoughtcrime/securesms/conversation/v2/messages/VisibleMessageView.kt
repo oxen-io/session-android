@@ -52,8 +52,8 @@ import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.toDp
@@ -141,7 +141,7 @@ class VisibleMessageView : FrameLayout {
         message: MessageRecord,
         previous: MessageRecord? = null,
         next: MessageRecord? = null,
-        glide: GlideRequests = GlideApp.with(this),
+        glide: RequestManager = Glide.with(this),
         searchQuery: String? = null,
         contact: Contact? = null,
         senderAccountID: String,

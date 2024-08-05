@@ -173,14 +173,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         val database = databaseHelper.readableDatabase
         return database.get(snodePoolTable, "${Companion.dummyKey} = ?", wrap("dummy_key")) { cursor ->
             val snodePoolAsString = cursor.getString(cursor.getColumnIndexOrThrow(snodePool))
-            snodePoolAsString.split(", ").mapNotNull { snodeAsString ->
-                val components = snodeAsString.split("-")
-                val address = components[0]
-                val port = components.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
-                val ed25519Key = components.getOrNull(2) ?: return@mapNotNull null
-                val x25519Key = components.getOrNull(3) ?: return@mapNotNull null
-                Snode(address, port, Snode.KeySet(ed25519Key, x25519Key))
-            }
+            snodePoolAsString.split(", ").mapNotNull(::Snode)
         }?.toSet() ?: setOf()
     }
 
@@ -192,6 +185,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
             if (keySet != null) {
                 string += "-${keySet.ed25519Key}-${keySet.x25519Key}"
             }
+            string += "-${snode.version}"
             string
         }
         val row = wrap(mapOf( Companion.dummyKey to "dummy_key", snodePool to snodePoolAsString ))
@@ -207,6 +201,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
             if (keySet != null) {
                 snodeAsString += "-${keySet.ed25519Key}-${keySet.x25519Key}"
             }
+            snodeAsString += "-${snode.version}"
             val row = wrap(mapOf( Companion.indexPath to indexPath, Companion.snode to snodeAsString ))
             database.insertOrUpdate(onionRequestPathTable, row, "${Companion.indexPath} = ?", wrap(indexPath))
         }
@@ -226,17 +221,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         val database = databaseHelper.readableDatabase
         fun get(indexPath: String): Snode? {
             return database.get(onionRequestPathTable, "${Companion.indexPath} = ?", wrap(indexPath)) { cursor ->
-                val snodeAsString = cursor.getString(cursor.getColumnIndexOrThrow(snode))
-                val components = snodeAsString.split("-")
-                val address = components[0]
-                val port = components.getOrNull(1)?.toIntOrNull()
-                val ed25519Key = components.getOrNull(2)
-                val x25519Key = components.getOrNull(3)
-                if (port != null && ed25519Key != null && x25519Key != null) {
-                    Snode(address, port, Snode.KeySet(ed25519Key, x25519Key))
-                } else {
-                    null
-                }
+                Snode(cursor.getString(cursor.getColumnIndexOrThrow(snode)))
             }
         }
         val result = mutableListOf<List<Snode>>()
@@ -249,6 +234,11 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
             result.add(listOf( path1Snode0, path1Snode1, path1Snode2 ))
         }
         return result
+    }
+
+    override fun clearSnodePool() {
+        val database = databaseHelper.writableDatabase
+        database.delete(snodePoolTable, null, null)
     }
 
     override fun clearOnionRequestPaths() {
@@ -265,14 +255,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         val database = databaseHelper.readableDatabase
         return database.get(swarmTable, "${Companion.swarmPublicKey} = ?", wrap(publicKey)) { cursor ->
             val swarmAsString = cursor.getString(cursor.getColumnIndexOrThrow(swarm))
-            swarmAsString.split(", ").mapNotNull { targetAsString ->
-                val components = targetAsString.split("-")
-                val address = components[0]
-                val port = components.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
-                val ed25519Key = components.getOrNull(2) ?: return@mapNotNull null
-                val x25519Key = components.getOrNull(3) ?: return@mapNotNull null
-                Snode(address, port, Snode.KeySet(ed25519Key, x25519Key))
-            }
+            swarmAsString.split(", ").mapNotNull(::Snode)
         }?.toSet()
     }
 

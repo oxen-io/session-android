@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
+import com.bumptech.glide.RequestManager
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewMessageRequestBannerBinding
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
-import org.thoughtcrime.securesms.mms.GlideRequests
 
 class HomeAdapter(
     private val context: Context,
@@ -74,7 +74,7 @@ class HomeAdapter(
         return data.threads[offsetPosition].threadId
     }
 
-    lateinit var glide: GlideRequests
+    lateinit var glide: RequestManager
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
@@ -104,7 +104,6 @@ class HomeAdapter(
                 holder.binding.run {
                     messageRequests?.let {
                         unreadCountTextView.text = it.count
-                        timestampTextView.text = it.timestamp
                     }
                 }
             }

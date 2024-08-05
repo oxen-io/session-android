@@ -17,6 +17,8 @@
  */
 package org.thoughtcrime.securesms.database;
 
+import static org.session.libsignal.utilities.Util.SECURE_RANDOM;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -49,7 +51,6 @@ import org.thoughtcrime.securesms.database.model.SmsMessageRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import java.io.Closeable;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -784,7 +785,7 @@ public class SmsDatabase extends MessagingDatabase {
     public OutgoingMessageReader(OutgoingTextMessage message, long threadId) {
       this.message  = message;
       this.threadId = threadId;
-      this.id       = new SecureRandom().nextLong();
+      this.id       = SECURE_RANDOM.nextLong();
     }
 
     public MessageRecord getCurrent() {

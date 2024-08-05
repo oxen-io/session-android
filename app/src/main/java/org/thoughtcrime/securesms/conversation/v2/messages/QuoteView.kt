@@ -18,7 +18,7 @@ import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
 import org.thoughtcrime.securesms.database.SessionContactDatabase
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.getAccentColor
@@ -68,7 +68,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     // region Updating
     fun bind(authorPublicKey: String, body: String?, attachments: SlideDeck?, thread: Recipient,
         isOutgoingMessage: Boolean, isOpenGroupInvitation: Boolean, threadID: Long,
-        isOriginalMissing: Boolean, glide: GlideRequests) {
+        isOriginalMissing: Boolean, glide: RequestManager) {
         // Author
         val author = contactDb.getContactWithAccountID(authorPublicKey)
         val localNumber = TextSecurePreferences.getLocalNumber(context)

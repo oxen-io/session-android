@@ -13,7 +13,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 
 import network.loki.messenger.R;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.RequestManager;
 import org.thoughtcrime.securesms.mms.VideoSlide;
 import org.thoughtcrime.securesms.video.VideoPlayer;
 
@@ -54,7 +54,7 @@ public class MediaView extends FrameLayout {
     this.videoView = new Stub<>(findViewById(R.id.video_player_stub));
   }
 
-  public void set(@NonNull GlideRequests glideRequests,
+  public void set(@NonNull RequestManager glideRequests,
                   @NonNull Window window,
                   @NonNull Uri source,
                   @NonNull String mediaType,

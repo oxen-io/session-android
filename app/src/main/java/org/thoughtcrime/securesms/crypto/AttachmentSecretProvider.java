@@ -1,13 +1,13 @@
 package org.thoughtcrime.securesms.crypto;
 
 
+import static org.session.libsignal.utilities.Util.SECURE_RANDOM;
+
 import android.content.Context;
 import android.os.Build;
 import androidx.annotation.NonNull;
 
 import org.session.libsession.utilities.TextSecurePreferences;
-
-import java.security.SecureRandom;
 
 /**
  * A provider that is responsible for creating or retrieving the AttachmentSecret model.
@@ -81,9 +81,8 @@ public class AttachmentSecretProvider {
   }
 
   private AttachmentSecret createAndStoreAttachmentSecret(@NonNull Context context) {
-    SecureRandom random = new SecureRandom();
     byte[]       secret = new byte[32];
-    random.nextBytes(secret);
+    SECURE_RANDOM.nextBytes(secret);
 
     AttachmentSecret attachmentSecret = new AttachmentSecret(null, null, secret);
     storeAttachmentSecret(context, attachmentSecret);

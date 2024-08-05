@@ -46,11 +46,11 @@ import org.session.libsession.utilities.IdentityKeyMismatchList
 import org.session.libsession.utilities.NetworkFailure
 import org.session.libsession.utilities.NetworkFailureList
 import org.session.libsession.utilities.TextSecurePreferences.Companion.isReadReceiptsEnabled
-import org.session.libsession.utilities.Util.toIsoBytes
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils.queue
+import org.session.libsignal.utilities.Util.SECURE_RANDOM
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.attachments.MmsNotificationAttachment
 import org.thoughtcrime.securesms.database.SmsDatabase.InsertListener
@@ -66,7 +66,6 @@ import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.util.asSequence
 import java.io.Closeable
 import java.io.IOException
-import java.security.SecureRandom
 import java.util.LinkedList
 
 class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : MessagingDatabase(context, databaseHelper) {
@@ -1200,7 +1199,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
 
     inner class OutgoingMessageReader(private val message: OutgoingMediaMessage?,
                                       private val threadId: Long) {
-        private val id = SecureRandom().nextLong()
+        private val id = SECURE_RANDOM.nextLong()
         val current: MessageRecord
             get() {
                 val slideDeck = SlideDeck(context, message!!.attachments)
