@@ -27,7 +27,7 @@ fun OnboardingBackPressAlertDialog(
         },
         buttons = listOf(
             DialogButtonModel(
-                GetString(stringResource(R.string.quitButton)),
+                GetString(stringResource(R.string.quit)),
                 color = LocalColors.current.danger,
                 onClick = quit
             ),

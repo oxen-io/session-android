@@ -631,7 +631,7 @@
     <string name="qrScan">Scan QR Code</string>
     <string name="qrView">View QR</string>
     <string name="qrYoursDescription">Friends can message you by scanning your QR code.</string>
-    <string name="quitButton">Quit</string>
+    <string name="quit">Quit</string>
     <string name="read">Read</string>
     <string name="readReceipts">Read Receipts</string>
     <string name="readReceiptsDescription">Show read receipts for all messages you send and receive.</string>
