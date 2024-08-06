@@ -1,6 +1,8 @@
 package org.thoughtcrime.securesms.onboarding.pickname
 
+import android.app.Application
 import androidx.annotation.StringRes
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -16,15 +18,15 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol.Companion.NAME_PADDED_LENGTH
 import org.session.libsession.utilities.TextSecurePreferences
-import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
-import org.thoughtcrime.securesms.onboarding.messagenotifications.MessageNotificationsViewModel
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 
 internal class PickDisplayNameViewModel(
     private val loadFailed: Boolean,
     private val prefs: TextSecurePreferences,
-    private val configFactory: ConfigFactory
-): ViewModel() {
+    private val configFactory: ConfigFactory,
+    application: Application
+): AndroidViewModel(application) {
     private val isCreateAccount = !loadFailed
 
     private val _states = MutableStateFlow(if (loadFailed) pickNewNameState() else State())
@@ -50,6 +52,7 @@ internal class PickDisplayNameViewModel(
                     if (loadFailed) {
                         prefs.setProfileName(displayName)
                         configFactory.user?.setName(displayName)
+                        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(getApplication())
 
                         _events.emit(Event.LoadAccountComplete)
                     } else _events.emit(Event.CreateAccount(displayName))
@@ -87,11 +90,12 @@ internal class PickDisplayNameViewModel(
     class Factory @AssistedInject constructor(
         @Assisted private val loadFailed: Boolean,
         private val prefs: TextSecurePreferences,
-        private val configFactory: ConfigFactory
+        private val configFactory: ConfigFactory,
+        private val application: Application
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return PickDisplayNameViewModel(loadFailed, prefs, configFactory) as T
+            return PickDisplayNameViewModel(loadFailed, prefs, configFactory, application) as T
         }
     }
 }
