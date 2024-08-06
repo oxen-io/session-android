@@ -1,8 +1,10 @@
 package org.thoughtcrime.securesms.webrtc
 
 import android.content.Context
+import org.session.libsignal.crypto.shuffledRandom
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.SettableFuture
+import org.session.libsignal.utilities.Util.SECURE_RANDOM
 import org.thoughtcrime.securesms.webrtc.video.Camera
 import org.thoughtcrime.securesms.webrtc.video.CameraEventListener
 import org.thoughtcrime.securesms.webrtc.video.CameraState
@@ -22,9 +24,7 @@ import org.webrtc.SurfaceTextureHelper
 import org.webrtc.VideoSink
 import org.webrtc.VideoSource
 import org.webrtc.VideoTrack
-import java.security.SecureRandom
 import java.util.concurrent.ExecutionException
-import kotlin.random.asKotlinRandom
 
 class PeerConnectionWrapper(private val context: Context,
                             private val factory: PeerConnectionFactory,
@@ -49,8 +49,7 @@ class PeerConnectionWrapper(private val context: Context,
     private var isInitiator = false
 
     private fun initPeerConnection() {
-        val random = SecureRandom().asKotlinRandom()
-        val iceServers = listOf("freyr","angus","hereford","holstein", "brahman").shuffled(random).take(2).map { sub ->
+        val iceServers = listOf("freyr","angus","hereford","holstein", "brahman").shuffledRandom().take(2).map { sub ->
             PeerConnection.IceServer.builder("turn:$sub.getsession.org")
                 .setUsername("session202111")
                 .setPassword("053c268164bc7bd7")

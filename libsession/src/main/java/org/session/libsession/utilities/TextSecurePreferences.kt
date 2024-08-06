@@ -13,6 +13,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import org.session.libsession.R
+import org.session.libsession.utilities.TextSecurePreferences.Companion
 import org.session.libsession.utilities.TextSecurePreferences.Companion.AUTOPLAY_AUDIO_MESSAGES
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CALL_NOTIFICATIONS_ENABLED
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_DARK
@@ -20,6 +21,7 @@ import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_
 import org.session.libsession.utilities.TextSecurePreferences.Companion.FOLLOW_SYSTEM_SETTINGS
 import org.session.libsession.utilities.TextSecurePreferences.Companion.HIDE_PASSWORD
 import org.session.libsession.utilities.TextSecurePreferences.Companion.LAST_VACUUM_TIME
+import org.session.libsession.utilities.TextSecurePreferences.Companion.LAST_VERSION_CHECK
 import org.session.libsession.utilities.TextSecurePreferences.Companion.LEGACY_PREF_KEY_SELECTED_UI_MODE
 import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_DARK
 import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_LIGHT
@@ -186,6 +188,8 @@ interface TextSecurePreferences {
     fun clearAll()
     fun getHidePassword(): Boolean
     fun setHidePassword(value: Boolean)
+    fun getLastVersionCheck(): Long
+    fun setLastVersionCheck()
 
     companion object {
         val TAG = TextSecurePreferences::class.simpleName
@@ -272,6 +276,7 @@ interface TextSecurePreferences {
         const val AUTOPLAY_AUDIO_MESSAGES = "pref_autoplay_audio"
         const val FINGERPRINT_KEY_GENERATED = "fingerprint_key_generated"
         const val SELECTED_ACCENT_COLOR = "selected_accent_color"
+        const val LAST_VERSION_CHECK = "pref_last_version_check"
 
         const val HAS_RECEIVED_LEGACY_CONFIG = "has_received_legacy_config"
         const val HAS_FORCED_NEW_CONFIG = "has_forced_new_config"
@@ -1539,6 +1544,14 @@ class AppTextSecurePreferences @Inject constructor(
 
     override fun setLastVacuumNow() {
         setLongPreference(LAST_VACUUM_TIME, System.currentTimeMillis())
+    }
+
+    override fun getLastVersionCheck(): Long {
+        return getLongPreference(LAST_VERSION_CHECK, 0)
+    }
+
+    override fun setLastVersionCheck() {
+        setLongPreference(LAST_VERSION_CHECK, System.currentTimeMillis())
     }
 
     override fun setShownCallNotification(): Boolean {

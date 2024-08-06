@@ -166,8 +166,6 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
 
         const val RESET_SEQ_NO = "UPDATE $lastMessageServerIDTable SET $lastMessageServerID = 0;"
 
-        const val EMPTY_VERSION = "0.0.0"
-
         // endregion
     }
 
@@ -175,15 +173,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         val database = databaseHelper.readableDatabase
         return database.get(snodePoolTable, "${Companion.dummyKey} = ?", wrap("dummy_key")) { cursor ->
             val snodePoolAsString = cursor.getString(cursor.getColumnIndexOrThrow(snodePool))
-            snodePoolAsString.split(", ").mapNotNull { snodeAsString ->
-                val components = snodeAsString.split("-")
-                val address = components[0]
-                val port = components.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
-                val ed25519Key = components.getOrNull(2) ?: return@mapNotNull null
-                val x25519Key = components.getOrNull(3) ?: return@mapNotNull null
-                val version = components.getOrNull(4) ?: EMPTY_VERSION
-                Snode(address, port, Snode.KeySet(ed25519Key, x25519Key), version)
-            }
+            snodePoolAsString.split(", ").mapNotNull(::Snode)
         }?.toSet() ?: setOf()
     }
 
@@ -231,18 +221,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         val database = databaseHelper.readableDatabase
         fun get(indexPath: String): Snode? {
             return database.get(onionRequestPathTable, "${Companion.indexPath} = ?", wrap(indexPath)) { cursor ->
-                val snodeAsString = cursor.getString(cursor.getColumnIndexOrThrow(snode))
-                val components = snodeAsString.split("-")
-                val address = components[0]
-                val port = components.getOrNull(1)?.toIntOrNull()
-                val ed25519Key = components.getOrNull(2)
-                val x25519Key = components.getOrNull(3)
-                val version = components.getOrNull(4) ?: EMPTY_VERSION
-                if (port != null && ed25519Key != null && x25519Key != null) {
-                    Snode(address, port, Snode.KeySet(ed25519Key, x25519Key), version)
-                } else {
-                    null
-                }
+                Snode(cursor.getString(cursor.getColumnIndexOrThrow(snode)))
             }
         }
         val result = mutableListOf<List<Snode>>()
@@ -276,15 +255,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         val database = databaseHelper.readableDatabase
         return database.get(swarmTable, "${Companion.swarmPublicKey} = ?", wrap(publicKey)) { cursor ->
             val swarmAsString = cursor.getString(cursor.getColumnIndexOrThrow(swarm))
-            swarmAsString.split(", ").mapNotNull { targetAsString ->
-                val components = targetAsString.split("-")
-                val address = components[0]
-                val port = components.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
-                val ed25519Key = components.getOrNull(2) ?: return@mapNotNull null
-                val x25519Key = components.getOrNull(3) ?: return@mapNotNull null
-                val version = components.getOrNull(4) ?: EMPTY_VERSION
-                Snode(address, port, Snode.KeySet(ed25519Key, x25519Key), version)
-            }
+            swarmAsString.split(", ").mapNotNull(::Snode)
         }?.toSet()
     }
 

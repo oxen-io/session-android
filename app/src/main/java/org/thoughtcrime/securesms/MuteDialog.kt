@@ -7,8 +7,6 @@ import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.LocalisedTimeUtil
 import org.session.libsession.utilities.StringSubstitutionConstants.TIME_LARGE_KEY
-import org.session.libsignal.utilities.Log
-import java.time.Duration
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds

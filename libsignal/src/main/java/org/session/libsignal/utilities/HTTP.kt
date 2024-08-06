@@ -5,8 +5,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import okhttp3.Response
-import java.security.SecureRandom
+import org.session.libsignal.utilities.Util.SECURE_RANDOM
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
@@ -35,7 +34,7 @@ object HTTP {
             override fun getAcceptedIssuers(): Array<X509Certificate> { return arrayOf() }
         }
         val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, arrayOf( trustManager ), SecureRandom())
+        sslContext.init(null, arrayOf( trustManager ), SECURE_RANDOM)
         OkHttpClient().newBuilder()
             .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
@@ -55,7 +54,7 @@ object HTTP {
             override fun getAcceptedIssuers(): Array<X509Certificate> { return arrayOf() }
         }
         val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, arrayOf( trustManager ), SecureRandom())
+        sslContext.init(null, arrayOf( trustManager ), SECURE_RANDOM)
         return OkHttpClient().newBuilder()
             .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }

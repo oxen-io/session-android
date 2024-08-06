@@ -8,6 +8,7 @@ import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
+import org.thoughtcrime.securesms.util.VersionDataFetcher
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,6 +17,7 @@ class CreateAccountManager @Inject constructor(
     private val application: Application,
     private val prefs: TextSecurePreferences,
     private val configFactory: ConfigFactory,
+    private val versionDataFetcher: VersionDataFetcher
 ) {
     private val database: LokiAPIDatabaseProtocol
         get() = SnodeModule.shared.storage
@@ -41,5 +43,7 @@ class CreateAccountManager @Inject constructor(
         prefs.setLocalRegistrationId(registrationID)
         prefs.setLocalNumber(userHexEncodedPublicKey)
         prefs.setRestorationTime(0)
+
+        versionDataFetcher.startTimedVersionCheck()
     }
 }

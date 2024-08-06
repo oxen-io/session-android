@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.logging;
 
 import static org.session.libsignal.crypto.CipherUtil.CIPHER_LOCK;
+import static org.session.libsignal.utilities.Util.SECURE_RANDOM;
 
 import androidx.annotation.NonNull;
 
@@ -17,7 +18,6 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -64,7 +64,7 @@ class LogFile {
     }
 
     void writeEntry(@NonNull String entry) throws IOException {
-      new SecureRandom().nextBytes(ivBuffer);
+      SECURE_RANDOM.nextBytes(ivBuffer);
 
       byte[] plaintext = entry.getBytes();
       try {

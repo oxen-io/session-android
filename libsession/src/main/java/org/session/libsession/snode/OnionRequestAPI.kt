@@ -10,11 +10,10 @@ import okhttp3.Request
 import org.session.libsession.messaging.file_server.FileServerApi
 import org.session.libsession.utilities.AESGCM
 import org.session.libsession.utilities.AESGCM.EncryptionResult
-import org.session.libsession.utilities.Util
 import org.session.libsession.utilities.getBodyForOnionRequest
 import org.session.libsession.utilities.getHeadersForOnionRequest
-import org.session.libsignal.crypto.getRandomElement
-import org.session.libsignal.crypto.getRandomElementOrNull
+import org.session.libsignal.crypto.secureRandom
+import org.session.libsignal.crypto.secureRandomOrNull
 import org.session.libsignal.database.LokiAPIDatabaseProtocol
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Broadcaster
@@ -149,7 +148,7 @@ object OnionRequestAPI {
                 val reusableGuardSnodeCount = reusableGuardSnodes.count()
                 if (unusedSnodes.count() < (targetGuardSnodeCount - reusableGuardSnodeCount)) { throw InsufficientSnodesException() }
                 fun getGuardSnode(): Promise<Snode, Exception> {
-                    val candidate = unusedSnodes.getRandomElementOrNull()
+                    val candidate = unusedSnodes.secureRandomOrNull()
                         ?: return Promise.ofFail(InsufficientSnodesException())
                     unusedSnodes = unusedSnodes.minus(candidate)
                     Log.d("Loki", "Testing guard snode: $candidate.")
@@ -191,7 +190,7 @@ object OnionRequestAPI {
                 // Don't test path snodes as this would reveal the user's IP to them
                 guardSnodes.minus(reusableGuardSnodes).map { guardSnode ->
                     val result = listOf( guardSnode ) + (0 until (pathSize - 1)).mapIndexed() { index, _ ->
-                        var pathSnode = unusedSnodes.getRandomElement()
+                        var pathSnode = unusedSnodes.secureRandom()
 
                         // remove the snode from the unused list and return it
                         unusedSnodes = unusedSnodes.minus(pathSnode)
@@ -228,9 +227,9 @@ object OnionRequestAPI {
         OnionRequestAPI.guardSnodes = guardSnodes
         fun getPath(paths: List<Path>): Path {
             return if (snodeToExclude != null) {
-                paths.filter { !it.contains(snodeToExclude) }.getRandomElement()
+                paths.filter { !it.contains(snodeToExclude) }.secureRandom()
             } else {
-                paths.getRandomElement()
+                paths.secureRandom()
             }
         }
         when {
@@ -273,7 +272,7 @@ object OnionRequestAPI {
         path.removeAt(snodeIndex)
         val unusedSnodes = SnodeAPI.snodePool.minus(oldPaths.flatten())
         if (unusedSnodes.isEmpty()) { throw InsufficientSnodesException() }
-        path.add(unusedSnodes.getRandomElement())
+        path.add(unusedSnodes.secureRandom())
         // Don't test the new snode as this would reveal the user's IP
         oldPaths.removeAt(pathIndex)
         val newPaths = oldPaths + listOf( path )

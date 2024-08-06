@@ -28,7 +28,7 @@ object MessageWrapper {
             val webSocketMessage = createWebSocketMessage(envelope)
             return webSocketMessage.toByteArray()
         } catch (e: Exception) {
-            throw if (e is Error) { e } else { Error.FailedToWrapData }
+            throw if (e is Error) e else Error.FailedToWrapData
         }
     }
 
@@ -49,15 +49,15 @@ object MessageWrapper {
 
     private fun createWebSocketMessage(envelope: Envelope): WebSocketMessage {
         try {
-            val requestBuilder = WebSocketRequestMessage.newBuilder()
-            requestBuilder.verb = "PUT"
-            requestBuilder.path = "/api/v1/message"
-            requestBuilder.id = SecureRandom.getInstance("SHA1PRNG").nextLong()
-            requestBuilder.body = envelope.toByteString()
-            val messageBuilder = WebSocketMessage.newBuilder()
-            messageBuilder.request = requestBuilder.build()
-            messageBuilder.type = WebSocketMessage.Type.REQUEST
-            return messageBuilder.build()
+            return WebSocketMessage.newBuilder().apply {
+                request = WebSocketRequestMessage.newBuilder().apply {
+                    verb = "PUT"
+                    path = "/api/v1/message"
+                    id = SecureRandom.getInstance("SHA1PRNG").nextLong()
+                    body = envelope.toByteString()
+                }.build()
+                type = WebSocketMessage.Type.REQUEST
+            }.build()
         } catch (e: Exception) {
             Log.d("Loki", "Failed to wrap envelope in web socket message: ${e.message}.")
             throw Error.FailedToWrapEnvelopeInWebSocketMessage

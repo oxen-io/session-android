@@ -86,6 +86,7 @@ import org.thoughtcrime.securesms.sskenvironment.ProfileManager;
 import org.thoughtcrime.securesms.sskenvironment.ReadReceiptManager;
 import org.thoughtcrime.securesms.sskenvironment.TypingStatusRepository;
 import org.thoughtcrime.securesms.util.Broadcaster;
+import org.thoughtcrime.securesms.util.VersionDataFetcher;
 import org.thoughtcrime.securesms.util.dynamiclanguage.LocaleParseHelper;
 import org.thoughtcrime.securesms.webrtc.CallMessageProcessor;
 import org.webrtc.PeerConnectionFactory;
@@ -110,7 +111,6 @@ import javax.inject.Inject;
 import dagger.hilt.EntryPoints;
 import dagger.hilt.android.HiltAndroidApp;
 import kotlin.Unit;
-import kotlinx.coroutines.Job;
 import network.loki.messenger.BuildConfig;
 import network.loki.messenger.libsession_util.ConfigBase;
 import network.loki.messenger.libsession_util.UserProfile;
@@ -151,6 +151,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Inject PushRegistry pushRegistry;
     @Inject ConfigFactory configFactory;
     @Inject LastSentTimestampCache lastSentTimestampCache;
+    @Inject VersionDataFetcher versionDataFetcher;
     CallMessageProcessor callMessageProcessor;
     MessagingModuleConfiguration messagingModuleConfiguration;
 
@@ -275,6 +276,9 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
             OpenGroupManager.INSTANCE.startPolling();
         });
+
+        // fetch last version data
+        versionDataFetcher.startTimedVersionCheck();
     }
 
     @Override
@@ -287,12 +291,14 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             poller.stopIfNeeded();
         }
         ClosedGroupPollerV2.getShared().stopAll();
+        versionDataFetcher.stopTimedVersionCheck();
     }
 
     @Override
     public void onTerminate() {
         stopKovenant(); // Loki
         OpenGroupManager.INSTANCE.stopPolling();
+        versionDataFetcher.stopTimedVersionCheck();
         super.onTerminate();
     }
 

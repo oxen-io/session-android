@@ -13,6 +13,7 @@ import android.text.TextUtils
 import android.text.style.StyleSpan
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.Util.SECURE_RANDOM
 import java.io.*
 import java.nio.charset.StandardCharsets
 import java.security.SecureRandom
@@ -292,13 +293,8 @@ object Util {
     @JvmStatic
     fun getSecretBytes(size: Int): ByteArray {
         val secret = ByteArray(size)
-        getSecureRandom().nextBytes(secret)
+        SECURE_RANDOM.nextBytes(secret)
         return secret
-    }
-
-    @JvmStatic
-    fun getSecureRandom(): SecureRandom {
-        return SecureRandom()
     }
 
     @JvmStatic
@@ -317,18 +313,14 @@ object Util {
     }
 
     @JvmStatic
-    fun <T> getRandomElement(elements: Array<T>): T {
-        return elements[SecureRandom().nextInt(elements.size)]
-    }
+    fun <T> getRandomElement(elements: Array<T>): T = elements[SECURE_RANDOM.nextInt(elements.size)]
 
     @JvmStatic
     fun getBoldedString(value: String?): CharSequence {
         if (value.isNullOrEmpty()) { return "" }
-        val spanned = SpannableString(value)
-        spanned.setSpan(StyleSpan(Typeface.BOLD), 0,
-                spanned.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        return spanned
+        return SpannableString(value).also {
+            it.setSpan(StyleSpan(Typeface.BOLD), 0, it.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
     }
 
     @JvmStatic
@@ -366,34 +358,6 @@ object Util {
         val digitGroups = (Math.log10(sizeBytes.toDouble()) / Math.log10(1024.0)).toInt()
         return DecimalFormat("#,##0.#").format(sizeBytes / Math.pow(1024.0, digitGroups.toDouble())) + " " + units[digitGroups]
     }
-
-    /**
-     * Compares two version strings (for example "1.8.0")
-     *
-     * @param version1 the first version string to compare.
-     * @param version2 the second version string to compare.
-     * @return an integer indicating the result of the comparison:
-     *         - 0 if the versions are equal
-     *         - a positive number if version1 is greater than version2
-     *         - a negative number if version1 is less than version2
-     */
-    @JvmStatic
-    fun compareVersions(version1: String, version2: String): Int {
-        val parts1 = version1.split(".").map { it.toIntOrNull() ?: 0 }
-        val parts2 = version2.split(".").map { it.toIntOrNull() ?: 0 }
-
-        val maxLength = maxOf(parts1.size, parts2.size)
-        val paddedParts1 = parts1 + List(maxLength - parts1.size) { 0 }
-        val paddedParts2 = parts2 + List(maxLength - parts2.size) { 0 }
-
-        for (i in 0 until maxLength) {
-            val compare = paddedParts1[i].compareTo(paddedParts2[i])
-            if (compare != 0) {
-                return compare
-            }
-        }
-        return 0
-    }
 }
 
 fun <T, R> T.runIf(condition: Boolean, block: T.() -> R): R where T: R = if (condition) block() else this
@@ -430,6 +394,12 @@ fun <E, K: Any, V: Any> Iterable<E>.associateByNotNull(
     for(e in this) { it[keySelector(e) ?: continue] = valueTransform(e) ?: continue }
 }
 
+fun <K: Any, V: Any, W : Any> Map<K, V>.mapValuesNotNull(
+    valueTransform: (Map.Entry<K, V>) -> W?
+): Map<K, W> = mutableMapOf<K, W>().also {
+    for(e in this) { it[e.key] = valueTransform(e) ?: continue }
+}
+
 /**
  * Groups elements of the original collection by the key returned by the given [keySelector] function
  * applied to each element and returns a map where each group key is associated with a list of
@@ -439,4 +409,24 @@ fun <E, K: Any, V: Any> Iterable<E>.associateByNotNull(
  */
 inline fun <E, K> Iterable<E>.groupByNotNull(keySelector: (E) -> K?): Map<K, List<E>> = LinkedHashMap<K, MutableList<E>>().also {
     forEach { e -> keySelector(e)?.let { k -> it.getOrPut(k) { mutableListOf() } += e } }
+}
+
+/**
+ * Analogous to [buildMap], this function creates a [MutableMap] and populates it using the given [action].
+ */
+inline fun <K, V> buildMutableMap(action: MutableMap<K, V>.() -> Unit): MutableMap<K, V> =
+    mutableMapOf<K, V>().apply(action)
+
+/**
+ * Converts a list of Pairs into a Map, filtering out any Pairs where the value is null.
+ *
+ * @param pairs The list of Pairs to convert.
+ * @return A Map with non-null values.
+ */
+fun <K : Any, V : Any> Iterable<Pair<K, V?>>.toMapNotNull(): Map<K, V> =
+    associateByNotNull(Pair<K, V?>::first, Pair<K, V?>::second)
+
+fun Sequence<String>.toByteArray(): ByteArray = ByteArrayOutputStream().use { output ->
+    forEach { it.byteInputStream().use { input -> input.copyTo(output) } }
+    output.toByteArray()
 }

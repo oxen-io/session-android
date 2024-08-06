@@ -45,7 +45,7 @@ class PickDisplayNameActivity : BaseActionBarActivity() {
             viewModel.events.collect {
                 when (it) {
                     is Event.CreateAccount -> startMessageNotificationsActivity(it.profileName)
-                    Event.LoadAccountComplete -> startHomeActivity(isNewAccount = false)
+                    Event.LoadAccountComplete -> startHomeActivity(isNewAccount = false, isFromOnboarding = true)
                 }
             }
         }

@@ -1,6 +1,8 @@
 package org.thoughtcrime.securesms.crypto;
 
 
+import static org.session.libsignal.utilities.Util.SECURE_RANDOM;
+
 import androidx.annotation.NonNull;
 import android.util.Pair;
 
@@ -11,7 +13,6 @@ import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
@@ -31,7 +32,7 @@ public class ModernEncryptingPartOutputStream {
       throws IOException
   {
     byte[] random = new byte[32];
-    new SecureRandom().nextBytes(random);
+    SECURE_RANDOM.nextBytes(random);
 
     try {
       Mac mac = Mac.getInstance("HmacSHA256");

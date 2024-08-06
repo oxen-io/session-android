@@ -89,6 +89,9 @@ import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
+private const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
+private const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
+
 @AndroidEntryPoint
 class HomeActivity : PassphraseRequiredActionBarActivity(),
     ConversationClickListener,
@@ -96,10 +99,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private val TAG = "HomeActivity"
 
-    companion object {
-        const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
-        const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
-    }
+//    companion object {
+//        const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
+//        const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
+//    }
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: RequestManager
@@ -148,7 +151,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
     }
 
-    private val isNewAccount: Boolean get() = intent.getBooleanExtra(FROM_ONBOARDING, false)
+    private val isFromOnboarding: Boolean get() = intent.getBooleanExtra(FROM_ONBOARDING, false)
+    private val isNewAccount: Boolean get() = intent.getBooleanExtra(NEW_ACCOUNT, false)
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
@@ -262,7 +266,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         }
                         else -> buildList {
                             result.contactAndGroupList.takeUnless { it.isEmpty() }?.let {
-                                add(GlobalSearchAdapter.Model.Header(R.string.contactContacts))
+                                add(GlobalSearchAdapter.Model.Header(R.string.sessionConversations))
                                 addAll(it)
                             }
                             result.messageResults.takeUnless { it.isEmpty() }?.let {
@@ -275,8 +279,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             }
         }
         EventBus.getDefault().register(this@HomeActivity)
-        if (intent.hasExtra(FROM_ONBOARDING)
-            && intent.getBooleanExtra(FROM_ONBOARDING, false)) {
+        if (isFromOnboarding) {
             if (Build.VERSION.SDK_INT >= 33 &&
                 (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled().not()) {
                 Permissions.with(this)
@@ -681,10 +684,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 }
 
-fun Context.startHomeActivity(isNewAccount: Boolean) {
+fun Context.startHomeActivity(isFromOnboarding: Boolean, isNewAccount: Boolean) {
     Intent(this, HomeActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        putExtra(HomeActivity.NEW_ACCOUNT, true)
-        putExtra(HomeActivity.FROM_ONBOARDING, true)
+        putExtra(NEW_ACCOUNT, isNewAccount)
+        putExtra(FROM_ONBOARDING, isFromOnboarding)
     }.also(::startActivity)
 }
