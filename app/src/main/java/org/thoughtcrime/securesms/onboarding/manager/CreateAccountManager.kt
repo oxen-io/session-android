@@ -24,7 +24,6 @@ class CreateAccountManager @Inject constructor(
 
     fun createAccount(displayName: String) {
         prefs.setProfileName(displayName)
-        configFactory.user?.setName(displayName)
 
         // This is here to resolve a case where the app restarts before a user completes onboarding
         // which can result in an invalid database state
@@ -37,12 +36,14 @@ class CreateAccountManager @Inject constructor(
         val x25519KeyPair = keyPairGenerationResult.x25519KeyPair
 
         KeyPairUtilities.store(application, seed, ed25519KeyPair, x25519KeyPair)
-        configFactory.keyPairChanged()
         val userHexEncodedPublicKey = x25519KeyPair.hexEncodedPublicKey
         val registrationID = KeyHelper.generateRegistrationId(false)
         prefs.setLocalRegistrationId(registrationID)
         prefs.setLocalNumber(userHexEncodedPublicKey)
         prefs.setRestorationTime(0)
+
+        configFactory.keyPairChanged()
+        configFactory.user?.setName(displayName)
 
         versionDataFetcher.startTimedVersionCheck()
     }
