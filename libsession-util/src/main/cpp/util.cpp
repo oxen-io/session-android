@@ -291,6 +291,7 @@ Java_network_loki_messenger_libsession_1util_util_Sodium_encryptForMultipleSimpl
     // messages and recipients have to be the same size
     uint size = env->GetArrayLength(messages);
     if (env->GetArrayLength(recipients) != size) {
+        env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), "Messages and recipients must be the same size");
         return nullptr;
     }
     std::vector<session::ustring> message_vec{};

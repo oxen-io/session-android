@@ -16,7 +16,7 @@ object Sodium {
         recipients: Array<ByteArray>,
         ed25519SecretKey: ByteArray,
         domain: String
-    ): ByteArray?
+    ): ByteArray
 
     external fun decryptForMultipleSimple(
         encoded: ByteArray,
