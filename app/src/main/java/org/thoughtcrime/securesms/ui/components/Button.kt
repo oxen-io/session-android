@@ -177,7 +177,7 @@ fun OutlineCopyButton(
     val interactionSource = remember { MutableInteractionSource() }
 
     Button(
-        modifier = modifier.contentDescription(R.string.AccessibilityId_copy_button),
+        modifier = modifier.contentDescription(R.string.AccessibilityId_copy),
         interactionSource = interactionSource,
         style = style,
         type = ButtonType.Outline(color),

@@ -101,7 +101,7 @@ fun QrPage(string: String) {
             string = string,
             modifier = Modifier
                 .padding(top = LocalDimensions.current.mediumSpacing, bottom = LocalDimensions.current.xsSpacing)
-                .contentDescription(R.string.AccessibilityId_qr_code),
+                .contentDescription(R.string.AccessibilityId_qrCode),
             icon = R.drawable.session
         )
 

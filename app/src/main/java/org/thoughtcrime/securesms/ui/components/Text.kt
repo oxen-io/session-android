@@ -134,7 +134,7 @@ fun SessionOutlinedTextField(
             Text(
                 it,
                 modifier = Modifier.fillMaxWidth()
-                    .contentDescription(R.string.AccessibilityId_error_message),
+                    .contentDescription(R.string.AccessibilityId_theError),
                 textAlign = TextAlign.Center,
                 style = LocalType.current.base.bold(),
                 color = LocalColors.current.danger

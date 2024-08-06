@@ -46,7 +46,7 @@ class RecoveryPasswordActivity : BaseActionBarActivity() {
             cancelButton()
             dangerButton(
                 R.string.yes,
-                contentDescription = R.string.AccessibilityId_confirm_button
+                contentDescription = R.string.AccessibilityId_recoveryPasswordHidePermanentlyConfirm
             ) {
                 viewModel.permanentlyHidePassword()
                 finish()

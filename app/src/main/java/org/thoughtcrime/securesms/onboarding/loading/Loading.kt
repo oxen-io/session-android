@@ -20,7 +20,7 @@ internal fun LoadingScreen(progress: Float) {
         Spacer(modifier = Modifier.weight(1f))
         ProgressArc(
             progress,
-            modifier = Modifier.contentDescription(R.string.AccessibilityId_loading_animation)
+            modifier = Modifier.contentDescription(R.string.AccessibilityId_loadAccountProgressMessage)
         )
         Text(
             stringResource(R.string.waitOneMoment),

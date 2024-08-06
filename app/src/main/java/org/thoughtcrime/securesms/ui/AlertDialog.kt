@@ -175,12 +175,12 @@ fun PreviewXCloseDialog(){
             buttons = listOf(
                 DialogButtonModel(
                     text = GetString(R.string.onboardingTos),
-                    contentDescription = GetString(R.string.AccessibilityId_terms_of_service_button),
+                    contentDescription = GetString(R.string.AccessibilityId_onboardingTos),
                     onClick = {}
                 ),
                 DialogButtonModel(
                     text = GetString(R.string.onboardingPrivacy),
-                    contentDescription = GetString(R.string.AccessibilityId_privacy_policy_button),
+                    contentDescription = GetString(R.string.AccessibilityId_onboardingPrivacy),
                     onClick = {}
                 )
             ),

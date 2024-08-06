@@ -91,7 +91,7 @@ internal fun StartConversationScreen(
                     Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
                     QrImage(
                         string = accountId,
-                        Modifier.contentDescription(R.string.AccessibilityId_qr_code),
+                        Modifier.contentDescription(R.string.AccessibilityId_qrCode),
                         icon = R.drawable.session
                     )
                 }

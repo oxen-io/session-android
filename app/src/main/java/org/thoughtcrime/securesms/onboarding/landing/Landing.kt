@@ -84,12 +84,12 @@ internal fun LandingScreen(
             buttons = listOf(
                 DialogButtonModel(
                     text = GetString(R.string.onboardingTos),
-                    contentDescription = GetString(R.string.AccessibilityId_terms_of_service_button),
+                    contentDescription = GetString(R.string.AccessibilityId_onboardingTos),
                     onClick = openTerms
                 ),
                 DialogButtonModel(
                     text = GetString(R.string.onboardingPrivacy),
-                    contentDescription = GetString(R.string.AccessibilityId_privacy_policy_button),
+                    contentDescription = GetString(R.string.AccessibilityId_onboardingPrivacy),
                     onClick = openPrivacyPolicy
                 )
             )
@@ -158,7 +158,7 @@ internal fun LandingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
-                    .contentDescription(R.string.AccessibilityId_create_account_button),
+                    .contentDescription(R.string.AccessibilityId_onboardingAccountCreate),
                 onClick = createAccount
             )
             Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
@@ -167,7 +167,7 @@ internal fun LandingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
-                    .contentDescription(R.string.AccessibilityId_restore_account_button),
+                    .contentDescription(R.string.AccessibilityId_onboardingAccountExists),
                 onClick = loadAccount
             )
             BorderlessHtmlButton(
@@ -175,7 +175,7 @@ internal fun LandingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
-                    .contentDescription(R.string.AccessibilityId_open_url),
+                    .contentDescription(R.string.AccessibilityId_urlOpenBrowser),
                 onClick = { isUrlDialogVisible = true }
             )
             Spacer(modifier = Modifier.height(LocalDimensions.current.xxsSpacing))

@@ -171,7 +171,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.settings_general, menu)
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            menu.findItem(R.id.action_qr_code)?.contentDescription = resources.getString(R.string.AccessibilityId_view_qr_code)
+            menu.findItem(R.id.action_qr_code)?.contentDescription = resources.getString(R.string.AccessibilityId_qrView)
         }
         return true
     }
@@ -523,7 +523,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                         LargeItemButton(
                             R.string.sessionRecoveryPassword,
                             R.drawable.ic_shield_outline,
-                            Modifier.contentDescription(R.string.AccessibilityId_recovery_password_menu_item)
+                            Modifier.contentDescription(R.string.AccessibilityId_sessionRecoveryPasswordMenuItem)
                         ) { show<RecoveryPasswordActivity>() }
                         Divider()
                     }

@@ -72,7 +72,7 @@ internal fun MessageNotificationsScreen(
         NotificationRadioButton(
             R.string.notificationsFastMode,
             R.string.notificationsFastModeDescriptionAndroid,
-            modifier = Modifier.contentDescription(R.string.AccessibilityId_fast_mode_notifications_button),
+            modifier = Modifier.contentDescription(R.string.AccessibilityId_notificationsFastMode),
             tag = R.string.recommended,
             checked = state.pushEnabled,
             onClick = { setEnabled(true) }
@@ -86,7 +86,7 @@ internal fun MessageNotificationsScreen(
         NotificationRadioButton(
             R.string.notificationsSlowMode,
             R.string.notificationsSlowModeDescription,
-            modifier = Modifier.contentDescription(R.string.AccessibilityId_slow_mode_notifications_button),
+            modifier = Modifier.contentDescription(R.string.AccessibilityId_notificationsSlowMode),
             checked = state.pushDisabled,
             onClick = { setEnabled(false) }
         )
