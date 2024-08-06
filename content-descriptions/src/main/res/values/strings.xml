@@ -184,8 +184,10 @@
     <string name="AccessibilityId_closeDialog">Close Dialog</string>
     <string name="attachment_type_selector__gallery_description">Image or video</string>
     <string name="attachment_type_selector__drawer_description">Toggle attachment drawer</string>
-    <string name="expiration_type_disappear_legacy_description">Original version of disappearing messages.</string>
     <string name="expand">Expand</string>
-
     <string name="contentDescriptionMediaMessage">Media message</string>
+
+    <!-- REMOVE AFTER ONBOARDING GOES OUT -->
+    <string name="expiration_type_disappear_legacy_description">Original version of disappearing messages.</string>
+
 </resources>
