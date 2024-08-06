@@ -46,7 +46,7 @@ class IpToCountryName @Inject constructor(
     }
 
     private object IpToCountry {
-        const val FILE_NAME = "geolite2_country_blocks_ipv4.csv"
+        const val FILE_NAME = "geolite2_country_blocks_ipv4.dat"
         const val IP = "network"
         const val COUNTRY_ID = "registered_country_geoname_id"
     }

@@ -186,7 +186,7 @@ object OnionRequestAPI {
                         // For the last node: We need to make sure the version is >= 2.8.0
                         // to help with an issue that will disappear once the nodes are all updated
                         if(index == pathSize - 2) {
-                            val suitableSnodes = unusedSnodes.filter { Util.compareVersions(it.version, "2.8.0") >= 0 }
+                            val suitableSnodes = unusedSnodes.filter { it.version >= Snode.Version("2.8.0") }
                             pathSnode = if (suitableSnodes.isNotEmpty()) {
                                 suitableSnodes.random()
                             } else {

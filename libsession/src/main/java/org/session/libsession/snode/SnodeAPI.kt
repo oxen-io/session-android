@@ -94,7 +94,7 @@ object SnodeAPI {
     const val KEY_ED25519 = "pubkey_ed25519"
     const val KEY_VERSION = "storage_server_version"
 
-    const val EMPTY_VERSION = "0.0.0"
+    val VERSION_ZERO = Snode.Version(0)
 
     // Error
     sealed class Error(val description: String) : Exception(description) {
@@ -191,7 +191,7 @@ object SnodeAPI {
                             val x25519Key = rawSnodeAsJSON?.get(KEY_X25519) as? String
                             val version = (rawSnodeAsJSON?.get(KEY_VERSION) as? ArrayList<*>)
                                 ?.filterIsInstance<Int>() // get the array as Integers
-                                ?.joinToString(separator = ".") // turn it int a version string
+                                ?.let(Snode::Version) // turn it int a version string
 
                             if (address != null && port != null && ed25519Key != null && x25519Key != null
                                 && address != "0.0.0.0" && version != null) {
@@ -746,7 +746,7 @@ object SnodeAPI {
                 val x25519Key = rawSnodeAsJSON?.get(KEY_X25519) as? String
 
                 if (address != null && port != null && ed25519Key != null && x25519Key != null && address != "0.0.0.0") {
-                    Snode("https://$address", port, Snode.KeySet(ed25519Key, x25519Key), EMPTY_VERSION)
+                    Snode("https://$address", port, Snode.KeySet(ed25519Key, x25519Key), VERSION_ZERO)
                 } else {
                     Log.d("Loki", "Failed to parse snode from: ${rawSnode?.prettifiedDescription()}.")
                     null
