@@ -23,10 +23,10 @@
     <string name="AccessibilityId_urlOpenBrowser">Open URL</string>
     <string name="AccessibilityId_onboardingTos">Terms of service button</string>
     <string name="AccessibilityId_onboardingPrivacy">Privacy policy button</string>
-    <string name="AccessibilityId_recoveryPhrase">Recovery phrase input</string>
-    <string name="AccessibilityId_reveal_recovery_phrase_button">Reveal recovery phrase button</string>
-    <string name="AccessibilityId_help_desk_link">Help desk link</string>
-    <string name="AccessibilityId_invite_friend_button">Invite friend button</string>
+    <string name="AccessibilityId_recoveryPasswordEnter">Recovery phrase input</string>
+    <string name="AccessibilityId_recoveryPasswordBanner">Reveal recovery phrase button</string>
+    <string name="AccessibilityId_messageNewDescriptionMobile">Help desk link</string>
+    <string name="AccessibilityId_sessionInviteAFriend">Invite friend button</string>
     <!-- Landing Page -->
     <string name="AccessibilityId_create_session_id">Create session ID</string>
     <string name="AccessibilityId_link_a_device">Link a device</string>

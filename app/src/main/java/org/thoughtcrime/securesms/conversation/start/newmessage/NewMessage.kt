@@ -143,7 +143,7 @@ private fun EnterAccountId(
                     BorderlessButtonWithIcon(
                         text = stringResource(R.string.messageNewDescriptionMobile),
                         modifier = Modifier
-                            .contentDescription(R.string.AccessibilityId_help_desk_link)
+                            .contentDescription(R.string.AccessibilityId_messageNewDescriptionMobile)
                             .padding(horizontal = LocalDimensions.current.mediumSpacing)
                             .fillMaxWidth(),
                         style = LocalType.current.small,

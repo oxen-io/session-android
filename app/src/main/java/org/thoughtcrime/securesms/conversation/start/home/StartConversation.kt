@@ -72,7 +72,7 @@ internal fun StartConversationScreen(
                 ItemButton(
                     textId = R.string.sessionInviteAFriend,
                     icon = R.drawable.ic_invite_friend,
-                    Modifier.contentDescription(R.string.AccessibilityId_invite_friend_button),
+                    Modifier.contentDescription(R.string.AccessibilityId_sessionInviteAFriend),
                     onClick = delegate::onInviteFriend
                 )
                 Column(
