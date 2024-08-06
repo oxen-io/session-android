@@ -107,22 +107,8 @@ private fun EnterAccountId(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
 
-//<<<<<<< HEAD
-//            BorderlessButtonWithIcon(
-//                text = stringResource(R.string.messageNewDescriptionMobile),
-//                modifier = Modifier
-//                    .contentDescription(R.string.AccessibilityId_help_desk_link)
-//                    .padding(horizontal = LocalDimensions.current.mediumSpacing)
-//                    .fillMaxWidth(),
-//                style = LocalType.current.small,
-//                color = LocalColors.current.textSecondary,
-//                iconRes = R.drawable.ic_circle_question_mark,
-//                onClick = onHelp
-//            )
-//        }
-//=======
             // There is a known issue with the ime padding on android versions below 30
-             /// So on these older versions we need to resort to some manual padding based on the visible height
+            // So on these older versions we need to resort to some manual padding based on the visible height
             // when the keyboard is up
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
                 val keyboardHeight by keyboardHeight()
