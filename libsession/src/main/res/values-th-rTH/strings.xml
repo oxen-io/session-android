@@ -77,7 +77,6 @@
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">กล้อง</string>
     <string name="attachment_type_selector__gallery_description">ภาพหรือวิดีโอ</string>
-    <string name="attachment_type_selector__gallery">คลังภาพ</string>
     <string name="attachment_type_selector__drawer_description">สลับแถบเมนูไฟล์แนบ</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -102,7 +101,6 @@
     <string name="disappearingMessagesSent">ส่งแล้ว</string>
     <string name="received">ได้รับแล้ว</string>
     <string name="message_details_header__disappears">ลบตัวเอง</string>
-    <string name="via">ผ่าน</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">ปิดเสียง 1 ชั่วโมง</string>

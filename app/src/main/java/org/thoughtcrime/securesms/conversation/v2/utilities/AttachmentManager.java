@@ -256,7 +256,7 @@ public class AttachmentManager {
     String needStoragePermissionTxt = Phrase.from(c, R.string.permissionsStorageSend)
             .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
             .format().toString();
-    String storagePermissionDeniedTxt = Phrase.from(c, R.string.cameraGrantAccessStorageDenied)
+    String storagePermissionDeniedTxt = Phrase.from(c, R.string.permissionsStorageSaveDenied)
             .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
             .format().toString();
 

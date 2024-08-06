@@ -81,7 +81,6 @@
     <string name="contentDescriptionCamera">Kamera</string>
     <string name="gif">gif</string>
     <string name="attachment_type_selector__gallery_description">picha au video</string>
-    <string name="attachment_type_selector__gallery">nyumba ya sanaa</string>
     <string name="attachment_type_selector__drawer_description">Toggle kiambatisho drawer</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -106,7 +105,6 @@
     <string name="disappearingMessagesSent">Imetumwa</string>
     <string name="received">Imepokelewa</string>
     <string name="message_details_header__disappears">kutoweka</string>
-    <string name="via">Kupitia</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">nyamaza kwa saa 1</string>

@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">Kamera</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Billed eller video</string>
-    <string name="attachment_type_selector__gallery">Billeder</string>
     <string name="attachment_type_selector__drawer_description">Skift vedhæftet fil</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -112,7 +111,6 @@
     <string name="disappearingMessagesSent">Sendt</string>
     <string name="received">Modtaget</string>
     <string name="message_details_header__disappears">Udløber</string>
-    <string name="via">Via</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Udsæt 1 time</string>
@@ -189,7 +187,6 @@
     <string name="useFastMode">Brug Hurtig Tilstand</string>
     <string name="clearDataAll">Ryd Alt Data</string>
     <string name="qrCode">QR-kode</string>
-    <string name="contactsContacts">Kontakter</string>
     <!-- Next round of translation -->
     <string name="done">Færdig</string>
     <string name="groupEdit">Rediger Gruppe</string>

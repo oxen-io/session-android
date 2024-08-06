@@ -82,7 +82,6 @@
     <string name="contentDescriptionCamera">Kamera</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Obrázok alebo video</string>
-    <string name="attachment_type_selector__gallery">Galéria</string>
     <string name="attachment_type_selector__drawer_description">Prepnúť zobrazenie príloh</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -110,7 +109,6 @@
     <string name="disappearingMessagesSent">Odoslané</string>
     <string name="received">Prijaté</string>
     <string name="message_details_header__disappears">Miznúce</string>
-    <string name="via">Cez</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Stlmiť na 1 hodinu</string>
@@ -187,7 +185,6 @@
     <string name="sessionPrivacy">Súkromie</string>
     <string name="clearDataAll">Odstrániť všetky dáta</string>
     <string name="qrCode">QR kód</string>
-    <string name="contactsContacts">Kontakty</string>
     <!-- Next round of translation -->
     <string name="done">Dokončené</string>
     <string name="groupEdit">Upraviť skupinu</string>

@@ -79,7 +79,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="attachment_type_selector__gallery_description">Delwedd neu fideo</string>
-    <string name="attachment_type_selector__gallery">Oriel</string>
     <string name="attachment_type_selector__drawer_description">Newid drôr yr atodiad</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -105,7 +104,6 @@
     <string name="disappearingMessagesSent">Anfonwyd</string>
     <string name="received">Derbyniwyd</string>
     <string name="message_details_header__disappears">Yn diflannu</string>
-    <string name="via">Drwy</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Tewi am 1 awr</string>

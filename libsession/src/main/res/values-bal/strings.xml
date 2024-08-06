@@ -81,7 +81,6 @@
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>
     <string name="attachment_type_selector__gallery_description">Gambar atau video</string>
-    <string name="attachment_type_selector__gallery">Galeri</string>
     <string name="attachment_type_selector__drawer_description">Jungkitkan laci lampiran</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -180,6 +179,5 @@
     <string name="notificationsStrategy">Strategi notofikasi</string>
     <string name="clearDataAll">Hapus semua data</string>
     <string name="qrCode">Kode QR</string>
-    <string name="contactsContacts">Kontak</string>
     <!-- Next round of translation -->
 </resources>

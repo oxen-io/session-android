@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MessageRecord -->
-    <string name="disappearingMessagesNewGroup">Vous avez créé un nouveau groupe.</string>
-    <string name="disappearingMessagesAddedYou">%1$s vous a ajouté·e dans le groupe.</string>
-    <string name="groupNameUpdatedBy">{name} a renommé le groupe en : {group_name}</string>
-    <string name="groupYouAdded">Vous avez ajouté {members} au groupe.</string>
-    <string name="groupNameAdded">%1$s a ajouté %2$s au groupe.</string>
     <string name="you">Vous</string>
 
     <!-- RecipientProvider -->
-    <string name="groupUnnamed">Groupe sans nom</string>
-
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="delete">Supprimer</string>
@@ -95,7 +88,6 @@
     <string name="contentDescriptionCamera">Appareil photo</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Image ou vidéo</string>
-    <string name="attachment_type_selector__gallery">Galerie</string>
     <string name="attachment_type_selector__drawer_description">Afficher, masquer le tiroir des pièces jointes</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -123,7 +115,6 @@
     <string name="disappearingMessagesSent">Envoyé</string>
     <string name="received">Reçu</string>
     <string name="message_details_header__disappears">Disparaît dans </string>
-    <string name="via">Par</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Sourdine pendant 1 heure</string>
@@ -207,7 +198,6 @@
     <string name="useFastMode">Utiliser le Mode Rapide</string>
     <string name="clearDataAll">Effacer toutes les données</string>
     <string name="qrCode">QR Code</string>
-    <string name="contactsContacts">Contacts</string>
     <!-- Next round of translation -->
     <string name="done">Terminé</string>
     <string name="groupEdit">Modifier le groupe</string>

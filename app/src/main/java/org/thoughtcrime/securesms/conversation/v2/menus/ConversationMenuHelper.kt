@@ -19,12 +19,14 @@ import androidx.core.graphics.drawable.IconCompat
 import com.squareup.phrase.Phrase
 import java.io.IOException
 import network.loki.messenger.R
+import org.session.libsession.LocalisedTimeUtil
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.leave
 import org.session.libsession.utilities.GroupUtil.doubleDecodeGroupID
 import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.MediaOverviewActivity
@@ -41,6 +43,7 @@ import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.BitmapUtil
+import kotlin.time.Duration.Companion.milliseconds
 
 object ConversationMenuHelper {
     
@@ -322,7 +325,7 @@ object ConversationMenuHelper {
     }
 
     private fun mute(context: Context, thread: Recipient) {
-        showMuteDialog(ContextThemeWrapper(context, context.theme)) { until ->
+        showMuteDialog(ContextThemeWrapper(context, context.theme)) { until: Long ->
             DatabaseComponent.get(context).recipientDatabase().setMuted(thread, until)
         }
     }

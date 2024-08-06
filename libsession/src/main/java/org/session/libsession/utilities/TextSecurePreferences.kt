@@ -296,8 +296,6 @@ interface TextSecurePreferences {
 
         const val ALLOW_MESSAGE_REQUESTS = "libsession.ALLOW_MESSAGE_REQUESTS"
 
-        const val PATCH_SNODE_VERSION_2024_07_23 = "libsession.patch_snode_version_2024_07_23"
-
         @JvmStatic
         fun getLastConfigurationSyncTime(context: Context): Long {
             return getLongPreference(context, LAST_CONFIGURATION_SYNC_TIME, 0)
@@ -981,16 +979,6 @@ interface TextSecurePreferences {
         @JvmStatic
         fun clearAll(context: Context) {
             getDefaultSharedPreferences(context).edit().clear().commit()
-        }
-
-        @JvmStatic
-        fun hasAppliedPatchSnodeVersion(context: Context): Boolean {
-            return getBooleanPreference(context, PATCH_SNODE_VERSION_2024_07_23, false)
-        }
-
-        @JvmStatic
-        fun setHasAppliedPatchSnodeVersion(context: Context, applied: Boolean) {
-            setBooleanPreference(context, PATCH_SNODE_VERSION_2024_07_23, applied)
         }
     }
 }

@@ -521,7 +521,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       // If we received some manner of notification but Session is locked..
       } else if (KeyCachingService.isLocked(context)) {
-        body = SpanUtil.italic(context.getString(R.string.messageNewYouveGotA));
+        // Note: We provide 0 because `messageNewYouveGot` is now a plurals string and we don't have a count yet, so just
+        // giving it zero will result in "You got a new message".
+        body = SpanUtil.italic(context.getResources().getQuantityString(R.plurals.messageNewYouveGot, 0, 0));
 
       // ----- All further cases assume we know the contact and that Session isn't locked -----
 

@@ -1,12 +1,15 @@
 package org.thoughtcrime.securesms.components.emoji;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
+
+import org.session.libsession.utilities.ThemeUtil;
 
 import java.util.List;
 
@@ -26,7 +29,9 @@ public class EmojiVariationSelectorPopup extends PopupWindow {
     this.listener = listener;
     this.list     = (ViewGroup) getContentView();
 
-    setBackgroundDrawable(null);
+    setBackgroundDrawable(
+            new ColorDrawable(ThemeUtil.getThemedColor(context, R.attr.colorPrimary))
+    );
     setOutsideTouchable(true);
   }
 

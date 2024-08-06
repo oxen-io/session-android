@@ -6,7 +6,6 @@ import app.cash.copper.Query
 import app.cash.copper.flow.observeQuery
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -60,20 +59,16 @@ interface ConversationRepository {
     fun setApproved(recipient: Recipient, isApproved: Boolean)
     fun isKicked(recipient: Recipient): Boolean
 
-    suspend fun deleteForEveryone(
-        threadId: Long,
-        recipient: Recipient,
-        message: MessageRecord,
-    ): ResultOf<Unit>
+    suspend fun deleteForEveryone(threadId: Long, recipient: Recipient, message: MessageRecord): Result<Unit>
     fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
-    suspend fun deleteMessageWithoutUnsendRequest(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit>
-    suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit>
-    suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
-    suspend fun deleteThread(threadId: Long): ResultOf<Unit>
-    suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit>
-    suspend fun clearAllMessageRequests(block: Boolean): ResultOf<Unit>
-    suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit>
-    fun declineMessageRequest(threadId: Long, recipient: Recipient)
+    suspend fun deleteMessageWithoutUnsendRequest(threadId: Long, messages: Set<MessageRecord>): Result<Unit>
+    suspend fun banUser(threadId: Long, recipient: Recipient): Result<Unit>
+    suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): Result<Unit>
+    suspend fun deleteThread(threadId: Long): Result<Unit>
+    suspend fun deleteMessageRequest(thread: ThreadRecord): Result<Unit>
+    suspend fun clearAllMessageRequests(block: Boolean): Result<Unit>
+    suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): Result<Unit>
+    fun declineMessageRequest(threadId: Long)
     fun hasReceived(threadId: Long): Boolean
     fun getInvitingAdmin(threadId: Long): Recipient?
 }
@@ -202,8 +197,8 @@ class DefaultConversationRepository @Inject constructor(
     override suspend fun deleteForEveryone(
         threadId: Long,
         recipient: Recipient,
-        message: MessageRecord,
-    ): ResultOf<Unit> = suspendCoroutine { continuation ->
+        message: MessageRecord
+    ): Result<Unit> = suspendCoroutine { continuation ->
         // Un-send only works for legacy closed groups and 1to1, handled by null return otherwise
         buildUnsendRequest(recipient, message)?.let { unsendRequest ->
             MessageSender.send(unsendRequest, recipient.address)
@@ -215,10 +210,10 @@ class DefaultConversationRepository @Inject constructor(
                 OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
                     .success {
                         messageDataProvider.deleteMessage(message.id, !message.isMms)
-                        continuation.resume(ResultOf.Success(Unit))
+                        continuation.resume(Result.success(Unit))
                     }.fail { error ->
                         Log.w("TAG", "Call to OpenGroupApi.deleteForEveryone failed - attempting to resume..")
-                        continuation.resumeWithException(error)
+                        continuation.resume(Result.failure(error))
                     }
             }
 
@@ -249,14 +244,14 @@ class DefaultConversationRepository @Inject constructor(
                 if (recipient.isClosedGroupV2Recipient) {
                     // admin check internally, assume either admin or all belong to user
                     storage.sendGroupUpdateDeleteMessage(recipient.address.serialize(), listOf(serverHash))
-                    continuation.resume(ResultOf.Success(Unit))
+                    continuation.resume(Result.success(Unit))
                 } else {
                     SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
                         .success {
-                            continuation.resume(ResultOf.Success(Unit))
+                            continuation.resume(Result.success(Unit))
                         }.fail { error ->
-                            Log.w("[onversationRepository", "Call to SnodeAPI.deleteMessage failed - attempting to resume..")
-                            continuation.resumeWithException(error)
+                            Log.w("ConversationRepository", "Call to SnodeAPI.deleteMessage failed - attempting to resume..")
+                            continuation.resume(Result.failure(error))
                         }
                 }
             }
@@ -276,7 +271,7 @@ class DefaultConversationRepository @Inject constructor(
     override suspend fun deleteMessageWithoutUnsendRequest(
         threadId: Long,
         messages: Set<MessageRecord>
-    ): ResultOf<Unit> = suspendCoroutine { continuation ->
+    ): Result<Unit> = suspendCoroutine { continuation ->
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
         if (openGroup != null) {
             val messageServerIDs = mutableMapOf<Long, MessageRecord>()
@@ -290,7 +285,7 @@ class DefaultConversationRepository @Inject constructor(
                     .success {
                         messageDataProvider.deleteMessage(message.id, !message.isMms)
                     }.fail { error ->
-                        continuation.resumeWithException(error)
+                        continuation.resume(Result.failure(error))
                     }
             }
         } else {
@@ -302,22 +297,22 @@ class DefaultConversationRepository @Inject constructor(
                 }
             }
         }
-        continuation.resume(ResultOf.Success(Unit))
+        continuation.resume(Result.success(Unit))
     }
 
-    override suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit> =
+    override suspend fun banUser(threadId: Long, recipient: Recipient): Result<Unit> =
         suspendCoroutine { continuation ->
             val accountID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
             OpenGroupApi.ban(accountID, openGroup.room, openGroup.server)
                 .success {
-                    continuation.resume(ResultOf.Success(Unit))
+                    continuation.resume(Result.success(Unit))
                 }.fail { error ->
-                    continuation.resumeWithException(error)
+                    continuation.resume(Result.failure(error))
                 }
         }
 
-    override suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit> =
+    override suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): Result<Unit> =
         suspendCoroutine { continuation ->
             // Note: This accountId could be the blinded Id
             val accountID = recipient.address.toString()
@@ -325,24 +320,24 @@ class DefaultConversationRepository @Inject constructor(
 
             OpenGroupApi.banAndDeleteAll(accountID, openGroup.room, openGroup.server)
                 .success {
-                    continuation.resume(ResultOf.Success(Unit))
+                    continuation.resume(Result.success(Unit))
                 }.fail { error ->
-                    continuation.resumeWithException(error)
+                    continuation.resume(Result.failure(error))
                 }
         }
 
-    override suspend fun deleteThread(threadId: Long): ResultOf<Unit> {
+    override suspend fun deleteThread(threadId: Long): Result<Unit> {
         sessionJobDb.cancelPendingMessageSendJobs(threadId)
         storage.deleteConversation(threadId)
-        return ResultOf.Success(Unit)
+        return Result.success(Unit)
     }
 
-    override suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit> {
+    override suspend fun deleteMessageRequest(thread: ThreadRecord): Result<Unit> {
         declineMessageRequest(thread.threadId, thread.recipient)
-        return ResultOf.Success(Unit)
+        return Result.success(Unit)
     }
 
-    override suspend fun clearAllMessageRequests(block: Boolean): ResultOf<Unit> {
+    override suspend fun clearAllMessageRequests(block: Boolean): Result<Unit> {
         threadDb.readerFor(threadDb.unapprovedConversationList).use { reader ->
             while (reader.next != null) {
                 deleteMessageRequest(reader.current)
@@ -352,10 +347,10 @@ class DefaultConversationRepository @Inject constructor(
                 }
             }
         }
-        return ResultOf.Success(Unit)
+        return Result.success(Unit)
     }
 
-    override suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
+    override suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): Result<Unit> = suspendCoroutine { continuation ->
         storage.setRecipientApproved(recipient, true)
         if (recipient.isClosedGroupV2Recipient) {
             storage.respondToClosedGroupInvitation(threadId, recipient, true)
@@ -364,9 +359,9 @@ class DefaultConversationRepository @Inject constructor(
             MessageSender.send(message, Destination.from(recipient.address), isSyncMessage = recipient.isLocalNumber)
                 .success {
                     threadDb.setHasSent(threadId, true)
-                    continuation.resume(ResultOf.Success(Unit))
+                    continuation.resume(Result.success(Unit))
                 }.fail { error ->
-                    continuation.resumeWithException(error)
+                    continuation.resume(Result.failure(error))
                 }
         }
     }

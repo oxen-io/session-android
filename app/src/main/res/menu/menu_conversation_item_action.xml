@@ -27,7 +27,7 @@
         app:showAsAction="never" />
 
     <item
-        android:title="@string/messageCopy"
+        android:title="@string/copy"
         android:id="@+id/menu_context_copy"
         android:icon="?menu_copy_icon"
         app:showAsAction="always" />

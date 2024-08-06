@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">Տեսախցիկ</string>
     <string name="gif">Գիֆ</string>
     <string name="attachment_type_selector__gallery_description">Նկար կամ վիդեո</string>
-    <string name="attachment_type_selector__gallery">Պատկերասրահ</string>
     <string name="attachment_type_selector__drawer_description">Ցույց տալ կցորդի դարակը</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -112,7 +111,6 @@
     <string name="disappearingMessagesSent">Ուղարկված է</string>
     <string name="received">Ստացվել է</string>
     <string name="message_details_header__disappears">Կանհետանա</string>
-    <string name="via">Միջոցով</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Անջատել 1 ժամ</string>
@@ -194,7 +192,6 @@
     <string name="useFastMode">Օգտագործել արագ ռեժիմը</string>
     <string name="clearDataAll">Ջնջել բոլոր տվյալները</string>
     <string name="qrCode">QR կոդ</string>
-    <string name="contactsContacts">Կոնտակտներ</string>
     <!-- Next round of translation -->
     <string name="done">Վերջ</string>
     <string name="groupEdit">Խմբագրել խումբը</string>

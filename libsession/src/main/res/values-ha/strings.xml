@@ -78,7 +78,6 @@
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>
     <string name="attachment_type_selector__gallery_description">Wêne yan vidyo</string>
-    <string name="attachment_type_selector__gallery">Pêşangeh</string>
     <string name="attachment_type_selector__drawer_description">Çaviya servehiya din bijerînin</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -103,7 +102,6 @@
     <string name="disappearingMessagesSent">Hat şandin</string>
     <string name="received">Hat</string>
     <string name="message_details_header__disappears">Winda dibe</string>
-    <string name="via">Bi riya</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Heta 1 demjimêrê bêdeng bike</string>

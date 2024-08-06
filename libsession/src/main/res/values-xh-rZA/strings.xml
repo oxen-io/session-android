@@ -88,7 +88,6 @@
     <string name="disappearingMessagesSent">Esindikiddwa</string>
     <string name="received">Etuuse</string>
     <string name="message_details_header__disappears">Kibula</string>
-    <string name="via">Okuyita</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Silisa okumala essawa emu  </string>

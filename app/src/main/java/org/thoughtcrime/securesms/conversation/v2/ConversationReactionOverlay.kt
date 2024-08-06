@@ -564,9 +564,17 @@ class ConversationReactionOverlay : FrameLayout {
         if (message.isSyncFailed) {
             items += ActionItem(R.attr.menu_reply_icon, R.string.resync, { handleActionItemClicked(Action.RESYNC) })
         }
-        // Save media
-        if (message.isMms && (message as MediaMmsMessageRecord).containsMediaSlide()) {
-            items += ActionItem(R.attr.menu_save_icon, R.string.save, { handleActionItemClicked(Action.DOWNLOAD) }, R.string.AccessibilityId_save_attachment)
+        // Save media..
+        if (message.isMms) {
+            // ..but only provide the save option if the there is a media attachment which has finished downloading.
+            val mmsMessage = message as MediaMmsMessageRecord
+            if (mmsMessage.containsMediaSlide() && !mmsMessage.isMediaPending) {
+                items += ActionItem(R.attr.menu_save_icon,
+                            R.string.save,
+                            { handleActionItemClicked(Action.DOWNLOAD) },
+                            R.string.AccessibilityId_save_attachment
+                )
+            }
         }
         backgroundView.visibility = VISIBLE
         foregroundView.visibility = VISIBLE

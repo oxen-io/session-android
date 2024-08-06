@@ -193,17 +193,6 @@ object OnionRequestAPI {
                     val result = listOf( guardSnode ) + (0 until (pathSize - 1)).mapIndexed() { index, _ ->
                         var pathSnode = unusedSnodes.getRandomElement()
 
-                        // For the last node: We need to make sure the version is >= 2.8.0
-                        // to help with an issue that will disappear once the nodes are all updated
-                        if(index == pathSize - 2) {
-                            val suitableSnodes = unusedSnodes.filter { Util.compareVersions(it.version, "2.8.0") >= 0 }
-                            pathSnode = if (suitableSnodes.isNotEmpty()) {
-                                suitableSnodes.random()
-                            } else {
-                                throw InsufficientSnodesException()
-                            }
-                        }
-
                         // remove the snode from the unused list and return it
                         unusedSnodes = unusedSnodes.minus(pathSnode)
                         pathSnode

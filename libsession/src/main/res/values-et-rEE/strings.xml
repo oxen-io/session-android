@@ -80,7 +80,6 @@
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kaamera</string>
     <string name="attachment_type_selector__gallery_description">Pilt või video</string>
-    <string name="attachment_type_selector__gallery">Galerii</string>
     <string name="attachment_type_selector__drawer_description">Lülita manusesahtlit</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -106,7 +105,6 @@
     <string name="disappearingMessagesSent">Saadetud</string>
     <string name="received">Vastuvõetud</string>
     <string name="message_details_header__disappears">Haihtub</string>
-    <string name="via">Saatmisviis:</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Vaigista 1 tunniks</string>

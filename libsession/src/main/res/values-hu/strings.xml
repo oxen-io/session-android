@@ -85,7 +85,6 @@
     <string name="contentDescriptionCamera">Kamera</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Kép vagy videó</string>
-    <string name="attachment_type_selector__gallery">Galéria</string>
     <string name="attachment_type_selector__drawer_description">Mellékletcsatoló kapcsoló</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -113,7 +112,6 @@
     <string name="disappearingMessagesSent">Elküldve</string>
     <string name="received">Érkezett</string>
     <string name="message_details_header__disappears">Eltűnik</string>
-    <string name="via">Csatorna</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Némítás 1 órára</string>
@@ -195,7 +193,6 @@
     <string name="useFastMode">Használja a Gyors módot</string>
     <string name="clearDataAll">Az összes adat törlése</string>
     <string name="qrCode">QR kód</string>
-    <string name="contactsContacts">Kapcsolatok</string>
     <!-- Next round of translation -->
     <string name="done">Kész</string>
     <string name="groupEdit">Csoport szerkesztése</string>

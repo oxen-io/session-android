@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">Камера</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Изображение или видео</string>
-    <string name="attachment_type_selector__gallery">Галерея</string>
     <string name="attachment_type_selector__drawer_description">Показать панель вложений</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -112,7 +111,6 @@
     <string name="disappearingMessagesSent">Отправлено</string>
     <string name="received">Получено</string>
     <string name="message_details_header__disappears">Исчезнет</string>
-    <string name="via">Через</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Отключить звук на 1 час</string>
@@ -194,7 +192,6 @@
     <string name="useFastMode">Использовать быстрый режим</string>
     <string name="clearDataAll">Очистить все данные</string>
     <string name="qrCode">QR-код</string>
-    <string name="contactsContacts">Контакты</string>
     <!-- Next round of translation -->
     <string name="done">Готово</string>
     <string name="groupEdit">Редактировать группу</string>

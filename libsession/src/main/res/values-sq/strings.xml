@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">Kamera</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Figurë ose video</string>
-    <string name="attachment_type_selector__gallery">Galeri</string>
     <string name="attachment_type_selector__drawer_description">Hapni/mbyllni sirtarin e bashkëngjitjeve</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -112,7 +111,6 @@
     <string name="disappearingMessagesSent">Dërguar më</string>
     <string name="received">Marrë më</string>
     <string name="message_details_header__disappears">Zhduket më</string>
-    <string name="via">Përmes</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">Heshtoje për 1 orë</string>

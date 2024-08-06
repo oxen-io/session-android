@@ -82,7 +82,6 @@
     <string name="contentDescriptionCamera">కెమెరా</string>
     <string name="gif">గిఫ్</string>
     <string name="attachment_type_selector__gallery_description">ఇమెజ్   ఆర్   వీడియో</string>
-    <string name="attachment_type_selector__gallery">వారపాక</string>
     <string name="attachment_type_selector__drawer_description">టోగుల్ అటాచ్మెంట్ సొరుగు</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -107,7 +106,6 @@
     <string name="disappearingMessagesSent">పంపిన</string>
     <string name="received">అందుకున్న</string>
     <string name="message_details_header__disappears">అదృశ్యమవుతుంది</string>
-    <string name="via">ద్వారా</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">1 గంట నిశబ్దంగా ఉంచు</string>

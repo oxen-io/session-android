@@ -75,7 +75,6 @@
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Shuyullukchik</string>
     <string name="attachment_type_selector__gallery_description">Shuyu manakashpaka shuyukuyuriy.</string>
-    <string name="attachment_type_selector__gallery">Shuyukunata allichik</string>
     <string name="attachment_type_selector__drawer_description">Kimichishka millkakunata rurana</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -100,7 +99,6 @@
     <string name="disappearingMessagesSent">Kachashka</string>
     <string name="received">Chaskishka</string>
     <string name="message_details_header__disappears">Chinkarishka</string>
-    <string name="via">Kay ñianta</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">1  pachata upallayachina</string>

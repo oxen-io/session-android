@@ -84,7 +84,6 @@
     <string name="contentDescriptionCamera">相機</string>
     <string name="gif">動態圖檔</string>
     <string name="attachment_type_selector__gallery_description">圖片或影片</string>
-    <string name="attachment_type_selector__gallery">圖片庫</string>
     <string name="attachment_type_selector__drawer_description">切換附件抽屜</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
@@ -112,7 +111,6 @@
     <string name="disappearingMessagesSent">傳送</string>
     <string name="received">接受</string>
     <string name="message_details_header__disappears">銷毀</string>
-    <string name="via">來自</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsMute1Hour">靜音 1 小時</string>
@@ -194,7 +192,6 @@
     <string name="useFastMode">使用快速模式</string>
     <string name="clearDataAll">清除所有數據</string>
     <string name="qrCode">QR Code</string>
-    <string name="contactsContacts">聯絡人</string>
     <!-- Next round of translation -->
     <string name="done">完成</string>
     <string name="groupEdit">編輯群組</string>

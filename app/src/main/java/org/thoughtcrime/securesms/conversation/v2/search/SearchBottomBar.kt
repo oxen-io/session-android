@@ -37,10 +37,7 @@ class SearchBottomBar : LinearLayout {
             }
         }
         if (count > 0) {
-            searchPosition.text = Phrase.from(context, R.string.searchMatches)
-                .put(COUNT_KEY, position + 1)
-                .put(TOTAL_COUNT_KEY, count)
-                .format()
+            searchPosition.text = resources.getQuantityString(R.plurals.searchMatches, count, position + 1, count)
         } else {
             searchPosition.text = ""
         }
