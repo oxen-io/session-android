@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Button
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentDescription="@string/AccessibilityId_blocked_contacts"
+    android:contentDescription="@string/AccessibilityId_conversationsBlockedContacts"
     style="@style/Widget.Session.Button.Common.Borderless"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

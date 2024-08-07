@@ -26,7 +26,7 @@
                 android:layout_width="@dimen/large_profile_picture_size"
                 android:layout_height="@dimen/large_profile_picture_size"
                 android:layout_marginTop="@dimen/medium_spacing"
-                android:contentDescription="@string/AccessibilityId_profile_picture" />
+                android:contentDescription="@string/AccessibilityId_profilePicture" />
 
             <RelativeLayout
                 android:id="@+id/ctnGroupNameSection"
@@ -83,7 +83,7 @@
                 android:textColor="?android:textColorPrimary"
                 android:fontFamily="@font/space_mono_regular"
                 android:textAlignment="center"
-                android:contentDescription="@string/AccessibilityId_account_id"
+                android:contentDescription="@string/AccessibilityId_shareAccountId"
                 tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />
 
             <androidx.compose.ui.platform.ComposeView

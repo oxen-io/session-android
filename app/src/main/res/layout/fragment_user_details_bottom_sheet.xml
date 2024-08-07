@@ -114,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_spacing"
-        android:contentDescription="@string/AccessibilityId_account_id"
+        android:contentDescription="@string/AccessibilityId_shareAccountId"
         android:textSize="@dimen/medium_font_size"
         android:textIsSelectable="true"
         tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />

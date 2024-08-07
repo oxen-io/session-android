@@ -12,7 +12,7 @@
     <TextView
         android:id="@+id/detailsTextView"
         style="@style/BottomSheetActionItem"
-        android:contentDescription="@string/AccessibilityId_details"
+        android:contentDescription="@string/AccessibilityId_contactUserDetails"
         android:drawableStart="@drawable/ic_info_outline_white_24dp"
         android:drawableTint="?attr/colorControlNormal"
         android:text="@string/contactUserDetails" />

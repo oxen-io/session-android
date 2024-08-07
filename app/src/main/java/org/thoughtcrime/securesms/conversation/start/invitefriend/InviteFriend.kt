@@ -53,7 +53,7 @@ internal fun InviteFriend(
             Text(
                 accountId,
                 modifier = Modifier
-                    .contentDescription(R.string.AccessibilityId_account_id)
+                    .contentDescription(R.string.AccessibilityId_shareAccountId)
                     .fillMaxWidth()
                     .border()
                     .padding(LocalDimensions.current.spacing),

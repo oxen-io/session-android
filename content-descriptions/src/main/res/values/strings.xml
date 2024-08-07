@@ -36,21 +36,17 @@
     <string name="AccessibilityId_displayNameEnter">Enter display name</string>
     <!--Message Notifications Options-->
     <string name="AccessibilityId_notificationsMessageContinue">Continue with settings</string>
-    <string name="AccessibilityId_fast_mode_notifications_option">Fast mode notifications option</string>
-    <string name="AccessibilityId_message_notifications">Message Notifications</string>
-    <string name="AccessibilityId_slow_mode_notifications_option">Slow mode notifications option</string>
     <!--Recovery Phrase reminder-->
-    <string name="AccessibilityId_copy_recovery_phrase">Copy Recovery Phrase</string>
-    <string name="AccessibilityId_recovery_phrase">Recovery Phrase</string>
+    <string name="AccessibilityId_sessionRecoveryPasswordCopy">Copy Recovery Phrase</string>
     <!--Home Page-->
-    <string name="AccessibilityId_conversation_list_item">Conversation list item</string>
-    <string name="AccessibilityId_details">Details</string>
+    <string name="AccessibilityId_conversationListItem">Conversation list item</string>
+    <string name="AccessibilityId_contactUserDetails">Details</string>
     <string name="AccessibilityId_pin">Pin</string>
-    <string name="AccessibilityId_profile_picture">User settings</string>
-    <string name="AccessibilityId_search_icon">Search icon</string>
+    <string name="AccessibilityId_profilePicture">User settings</string>
+    <string name="AccessibilityId_searchIcon">Search icon</string>
     <!--Settings Page -->
-    <string name="AccessibilityId_blocked_contacts">Blocked contacts</string>
-    <string name="AccessibilityId_account_id">Account ID</string>
+    <string name="AccessibilityId_conversationsBlockedContacts">Blocked contacts</string>
+    <string name="AccessibilityId_shareAccountId">Account ID</string>
     <string name="activity_settings_display_name_edit_text_hint">Enter a display name</string>
     <!--Message requests-->
     <string name="AccessibilityId_clear_all_message_requests">Clear all</string>

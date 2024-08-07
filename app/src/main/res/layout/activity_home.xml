@@ -57,7 +57,7 @@
                 <RelativeLayout
                     android:id="@+id/searchViewContainer"
                     android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/AccessibilityId_search_icon"
+                    android:contentDescription="@string/AccessibilityId_searchIcon"
                     android:layout_width="@dimen/small_profile_picture_size"
                     android:layout_height="@dimen/small_profile_picture_size"
                     android:layout_alignParentRight="true"
