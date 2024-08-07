@@ -33,7 +33,7 @@
     <EditText
         style="@style/SessionEditText"
         android:id="@+id/displayNameEditText"
-        android:contentDescription="@string/AccessibilityId_enter_display_name"
+        android:contentDescription="@string/AccessibilityId_displayNameEnter"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginLeft="@dimen/very_large_spacing"

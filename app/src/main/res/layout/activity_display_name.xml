@@ -32,7 +32,7 @@
 
     <EditText
         style="@style/SmallSessionEditText"
-        android:contentDescription="@string/AccessibilityId_enter_display_name"
+        android:contentDescription="@string/AccessibilityId_displayNameEnter"
         android:id="@+id/displayNameEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"

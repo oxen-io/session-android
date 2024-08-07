@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:contentDescription="@string/AccessibilityId_enter_display_name"
+                    android:contentDescription="@string/AccessibilityId_displayNameEnter"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:visibility="invisible"

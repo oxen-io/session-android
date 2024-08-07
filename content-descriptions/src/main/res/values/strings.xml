@@ -28,22 +28,14 @@
     <string name="AccessibilityId_messageNewDescriptionMobile">Help desk link</string>
     <string name="AccessibilityId_sessionInviteAFriend">Invite friend button</string>
     <!-- Landing Page -->
-    <string name="AccessibilityId_create_session_id">Create session ID</string>
-    <string name="AccessibilityId_link_a_device">Link a device</string>
-    <string name="AccessibilityId_link_device">Link Device</string>
-    <string name="AccessibilityId_restore_your_session">Restore Your Session</string>
     <!-- Session ID Page-->
     <string name="AccessibilityId_continue">Continue</string>
-    <string name="AccessibilityId_recovery_phrase_reminder">Recovery phrase reminder</string>
-    <string name="AccessibilityId_session_id">Session ID</string>
     <!-- Recovery phrase input -->
-    <string name="AccessibilityId_copy_session_id">Copy Session ID</string>
     <!--Restore by seed page-->
-    <string name="AccessibilityId_enter_your_recovery_phrase">Enter your recovery phrase</string>
     <!--Create Display Name    -->
-    <string name="AccessibilityId_enter_display_name">Enter display name</string>
+    <string name="AccessibilityId_displayNameEnter">Enter display name</string>
     <!--Message Notifications Options-->
-    <string name="AccessibilityId_continue_message_notifications">Continue with settings</string>
+    <string name="AccessibilityId_notificationsMessageContinue">Continue with settings</string>
     <string name="AccessibilityId_fast_mode_notifications_option">Fast mode notifications option</string>
     <string name="AccessibilityId_message_notifications">Message Notifications</string>
     <string name="AccessibilityId_slow_mode_notifications_option">Slow mode notifications option</string>
