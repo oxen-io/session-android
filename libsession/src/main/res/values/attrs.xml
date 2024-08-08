@@ -270,22 +270,6 @@
         <attr name="labeledEditText_textLayout" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="WaveformSeekBar">
-        <attr name="progress" format="float"/>
-        <attr name="bar_width" format="dimension"/>
-        <attr name="bar_gap" format="dimension"/>
-        <attr name="bar_min_height" format="dimension"/>
-        <attr name="bar_corner_radius" format="dimension"/>
-        <attr name="bar_background_color" format="color"/>
-        <attr name="bar_progress_color" format="color"/>
-        <!-- Corresponds to WaveformSeekBar.WaveGravity enum. -->
-        <attr name="bar_gravity" format="enum">
-            <enum name="top" value="1" />
-            <enum name="center" value="2" />
-            <enum name="bottom" value="3" />
-        </attr>
-    </declare-styleable>
-
     <declare-styleable name="KeyboardPageSearchView">
         <attr name="show_always" format="boolean" />
         <attr name="search_bar_tint" format="color|reference" />
