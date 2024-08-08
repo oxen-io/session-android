@@ -47,16 +47,15 @@
     <!--Settings Page -->
     <string name="AccessibilityId_conversationsBlockedContacts">Blocked contacts</string>
     <string name="AccessibilityId_shareAccountId">Account ID</string>
-    <string name="activity_settings_display_name_edit_text_hint">Enter a display name</string>
     <!--Message requests-->
-    <string name="AccessibilityId_clear_all_message_requests">Clear all</string>
-    <string name="AccessibilityId_empty_message_request_folder">No pending message requests</string>
-    <string name="AccessibilityId_message_request">Message request</string>
-    <string name="AccessibilityId_message_request_banner">Message requests banner</string>
+    <string name="AccessibilityId_clearAll">Clear all</string>
+    <string name="AccessibilityId_messageRequestsNonePending">No pending message requests</string>
+    <string name="AccessibilityId_messageRequestsNew">Message request</string>
+    <string name="AccessibilityId_sessionMessageRequests">Message requests banner</string>
     <!--New conversation pop up-->
-    <string name="AccessibilityId_create_group">Create group</string>
-    <string name="AccessibilityId_join_community">Join community button</string>
-    <string name="AccessibilityId_new_conversation_button">New conversation button</string>
+    <string name="AccessibilityId_groupCreate">Create group</string>
+    <string name="AccessibilityId_communityJoin">Join community button</string>
+    <string name="AccessibilityId_conversationsNew">New conversation button</string>
     <string name="AccessibilityId_new_direct_message">New direct message</string>
     <!-- Join community pop up -->
     <string name="AccessibilityId_community_input_box">Community input</string>

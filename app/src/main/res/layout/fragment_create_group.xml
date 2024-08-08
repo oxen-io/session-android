@@ -105,7 +105,7 @@
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginVertical="@dimen/large_spacing"
-        android:contentDescription="@string/AccessibilityId_create_group"
+        android:contentDescription="@string/AccessibilityId_groupCreate"
         android:text="@string/create"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -166,7 +166,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/newConversationButton"
-            android:contentDescription="@string/AccessibilityId_new_conversation_button"
+            android:contentDescription="@string/AccessibilityId_conversationsNew"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

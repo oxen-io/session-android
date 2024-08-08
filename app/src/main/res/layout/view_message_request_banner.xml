@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/conversation_unread_background"
-    android:contentDescription="@string/AccessibilityId_message_request_banner"
+    android:contentDescription="@string/AccessibilityId_sessionMessageRequests"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="@dimen/accent_line_thickness"
