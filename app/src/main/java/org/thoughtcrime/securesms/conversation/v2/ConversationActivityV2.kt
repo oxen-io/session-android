@@ -1157,7 +1157,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 .put(NAME_KEY, recipient.name)
                 .format()
             )
-            dangerButton(R.string.block, R.string.AccessibilityId_block_confirm) {
+            dangerButton(R.string.block, R.string.AccessibilityId_blockConfirm) {
                 viewModel.block()
 
                 // Block confirmation toast added as per SS-64
@@ -1217,7 +1217,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             )
             dangerButton(
                 R.string.blockUnblock,
-                R.string.AccessibilityId_unblock_confirm
+                R.string.AccessibilityId_unblockConfirm
             ) {
                 viewModel.unblock()
 

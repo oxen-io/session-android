@@ -5,6 +5,6 @@
     <item
         android:title="@string/disappearingMessages"
         android:id="@+id/menu_expiring_messages"
-        android:contentDescription="@string/AccessibilityId_disappearing_messages" />
+        android:contentDescription="@string/AccessibilityId_disappearingMessages" />
 
 </menu>

@@ -43,7 +43,7 @@ class DownloadDialog(private val recipient: Recipient) : DialogFragment() {
         spannable.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + name.count(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         text(spannable)
 
-        button(R.string.download, R.string.AccessibilityId_download_media) { trust() }
+        button(R.string.download, R.string.AccessibilityId_download) { trust() }
         cancelButton { dismiss() }
     }
 

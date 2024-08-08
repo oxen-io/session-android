@@ -3,5 +3,5 @@
     <item
         android:title="@string/sessionNotifications"
         android:id="@+id/menu_notification_settings"
-        android:contentDescription="@string/AccessibilityId_notification_settings"/>
+        android:contentDescription="@string/AccessibilityId_sessionNotifications"/>
 </menu>

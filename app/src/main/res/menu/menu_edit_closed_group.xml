@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_apply"
         android:title="@string/set"
-        android:contentDescription="@string/AccessibilityId_apply_changes"
+        android:contentDescription="@string/AccessibilityId_set"
         app:showAsAction="always|withText" />
 
 </menu>

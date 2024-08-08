@@ -18,7 +18,7 @@
 
     <EditText
         android:id="@+id/communityUrlEditText"
-        android:contentDescription="@string/AccessibilityId_community_input_box"
+        android:contentDescription="@string/AccessibilityId_communityEnterUrl"
         style="@style/SmallSessionEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -92,7 +92,7 @@
     <Button
         android:id="@+id/joinCommunityButton"
         style="@style/Widget.Session.Button.Common.ProminentOutline"
-        android:contentDescription="@string/AccessibilityId_join_community_button"
+        android:contentDescription="@string/AccessibilityId_communityJoin"
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginVertical="@dimen/large_spacing"

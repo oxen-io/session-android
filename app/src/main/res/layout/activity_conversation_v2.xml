@@ -122,7 +122,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="@dimen/input_bar_button_expanded_size"
             android:layout_height="@dimen/input_bar_button_expanded_size"
-            android:contentDescription="@string/AccessibilityId_documents_folder"
+            android:contentDescription="@string/AccessibilityId_files"
             android:alpha="0" />
 
         <FrameLayout
@@ -223,7 +223,7 @@
 
     <FrameLayout
         android:id="@+id/blockedBanner"
-        android:contentDescription="@string/AccessibilityId_blocked_banner"
+        android:contentDescription="@string/AccessibilityId_blockedBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
@@ -233,7 +233,7 @@
 
         <TextView
             android:id="@+id/blockedBannerTextView"
-            android:contentDescription="@string/AccessibilityId_blocked_banner_text"
+            android:contentDescription="@string/AccessibilityId_blockedBannerText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -279,7 +279,7 @@
         app:layout_constraintTop_toBottomOf="@+id/outdatedBanner"
         android:elevation="8dp"
         android:contentDescription="@string/AccessibilityId_control_message"
-        tools:text="@string/activity_conversation_empty_state_default"
+        tools:text="Some Control Message Text"
         />
 
     <LinearLayout
@@ -298,7 +298,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:contentDescription="@string/AccessibilityId_block_message_request_button"
+            android:contentDescription="@string/AccessibilityId_messageRequestsBlock"
             android:textColor="?danger"
             android:paddingHorizontal="@dimen/massive_spacing"
             android:paddingVertical="@dimen/small_spacing"
@@ -325,7 +325,7 @@
             <Button
                 android:id="@+id/acceptMessageRequestButton"
                 style="@style/Widget.Session.Button.Common.ProminentOutline"
-                android:contentDescription="@string/AccessibilityId_accept_message_request_button"
+                android:contentDescription="@string/AccessibilityId_messageRequestsAccept"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/medium_button_height"
                 android:layout_weight="1"
@@ -334,7 +334,7 @@
             <Button
                 android:id="@+id/declineMessageRequestButton"
                 style="@style/Widget.Session.Button.Common.DangerOutline"
-                android:contentDescription="@string/AccessibilityId_decline_message_request_button"
+                android:contentDescription="@string/AccessibilityId_decline"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/medium_button_height"
                 android:layout_marginStart="@dimen/medium_spacing"

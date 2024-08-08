@@ -687,7 +687,7 @@
     <string name="sessionHelp">Help</string>
     <string name="sessionInviteAFriend">Invite a Friend</string>
     <string name="sessionMessageRequests">Message Requests</string>
-    <string name="sessionMessenger">Session</string>
+    <string name="sessionMessenger" translatable="false">Session</string>
     <string name="sessionNotifications">Notifications</string>
     <string name="sessionPermissions">Permissions</string>
     <string name="sessionPrivacy">Privacy</string>

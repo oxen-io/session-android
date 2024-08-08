@@ -60,7 +60,7 @@
         android:layout_marginTop="@dimen/medium_spacing"
         android:layout_marginRight="@dimen/large_spacing"
         android:layout_marginBottom="@dimen/medium_spacing"
-        android:contentDescription="@string/AccessibilityId_group_name_input"
+        android:contentDescription="@string/AccessibilityId_groupNameEnter"
         android:hint="@string/groupNameEnter"
         android:imeOptions="actionDone"
         android:inputType="textCapWords"

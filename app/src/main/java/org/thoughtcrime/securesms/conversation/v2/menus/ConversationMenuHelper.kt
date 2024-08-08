@@ -19,14 +19,12 @@ import androidx.core.graphics.drawable.IconCompat
 import com.squareup.phrase.Phrase
 import java.io.IOException
 import network.loki.messenger.R
-import org.session.libsession.LocalisedTimeUtil
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.leave
 import org.session.libsession.utilities.GroupUtil.doubleDecodeGroupID
 import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.MediaOverviewActivity
@@ -43,7 +41,6 @@ import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.BitmapUtil
-import kotlin.time.Duration.Companion.milliseconds
 
 object ConversationMenuHelper {
     
@@ -171,7 +168,7 @@ object ConversationMenuHelper {
             context.showSessionDialog {
                 title(R.string.callsPermissionsRequired)
                 text(R.string.callsPermissionsRequiredDescription)
-                button(R.string.sessionSettings, R.string.AccessibilityId_settings) {
+                button(R.string.sessionSettings, R.string.AccessibilityId_sessionSettings) {
                     Intent(context, PrivacySettingsActivity::class.java).let(context::startActivity)
                 }
                 cancelButton()
@@ -185,7 +182,6 @@ object ConversationMenuHelper {
         Intent(context, WebRtcCallActivity::class.java)
             .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
             .let(context::startActivity)
-
     }
 
     @SuppressLint("StaticFieldLeak")

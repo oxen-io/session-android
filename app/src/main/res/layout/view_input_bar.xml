@@ -27,7 +27,7 @@
 
         <RelativeLayout
             android:id="@+id/attachmentsButtonContainer"
-            android:contentDescription="@string/AccessibilityId_attachments_button"
+            android:contentDescription="@string/AccessibilityId_attachmentsButton"
             android:layout_width="@dimen/input_bar_button_expanded_size"
             android:layout_height="@dimen/input_bar_button_expanded_size"
             android:layout_alignParentStart="true"

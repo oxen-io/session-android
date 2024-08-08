@@ -52,7 +52,7 @@ internal fun StartConversationScreen(
                 ItemButton(
                     textId = R.string.messageNew,
                     icon = R.drawable.ic_message,
-                    modifier = Modifier.contentDescription(R.string.AccessibilityId_new_direct_message),
+                    modifier = Modifier.contentDescription(R.string.AccessibilityId_messageNew),
                     onClick = delegate::onNewMessageSelected)
                 Divider(startIndent = LocalDimensions.current.dividerIndent)
                 ItemButton(

@@ -5,6 +5,6 @@
     <item
         android:title="@string/notificationsMute"
         android:id="@+id/menu_mute_notifications"
-        android:contentDescription="@string/AccessibilityId_mute_notifications" />
+        android:contentDescription="@string/AccessibilityId_notificationsMute" />
 
 </menu>

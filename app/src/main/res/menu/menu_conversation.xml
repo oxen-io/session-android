@@ -6,7 +6,7 @@
     <item
         android:title="@string/conversationsSettingsAllMedia"
         android:id="@+id/menu_view_all_media"
-        android:contentDescription="@string/AccessibilityId_all_media"/>
+        android:contentDescription="@string/AccessibilityId_conversationsSettingsAllMedia"/>
 
     <item
         android:title="@string/search"
