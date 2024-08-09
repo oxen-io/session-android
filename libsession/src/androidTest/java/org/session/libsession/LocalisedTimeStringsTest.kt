@@ -13,6 +13,12 @@ import org.junit.runner.RunWith
 import org.session.libsession.LocalisedTimeUtil.toShortTwoPartString
 import org.session.libsignal.utilities.Log
 
+import android.text.format.DateUtils
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlin.math.abs
+
+
 /**
  * Instrumented test, which will execute on an Android device.
  *
@@ -20,7 +26,7 @@ import org.session.libsignal.utilities.Log
  */
 @RunWith(AndroidJUnit4::class)
 class LocalisedTimeStringTests {
-    private val TAG = "LocalisedTimeStringTest"
+    private val TAG = "LocalisedTimeStringsTest"
 
     // Whether or not to print debug info during the test - can be useful
     private val printDebug = true
@@ -104,6 +110,65 @@ class LocalisedTimeStringTests {
             if (printDebug) println("Short time strings - expected: ${shortTimeDescriptions[i]} - got: $txt")
             TestCase.assertEquals(shortTimeDescriptions[i], txt)
         }
+    }
+
+    fun getRelativeTimeLocalized(timestampMS: Long): String {
+        // Get the current system time
+        val nowMS = System.currentTimeMillis()
+
+        // Calculate the time difference in milliseconds - this value will be negative if it's in the
+        // future or positive if it's in the past.
+        val timeDifferenceMS = nowMS - timestampMS
+
+        // Choose a desired time resolution based on the time difference.
+        // Note: We do this against the absolute time difference so this function can still work for
+        // both future/past times without having separate future/past cases.
+        val desiredResolution = when (abs(timeDifferenceMS)) {
+            in 0..DateUtils.MINUTE_IN_MILLIS -> DateUtils.SECOND_IN_MILLIS
+            in DateUtils.MINUTE_IN_MILLIS..DateUtils.HOUR_IN_MILLIS -> DateUtils.MINUTE_IN_MILLIS
+            in DateUtils.HOUR_IN_MILLIS..DateUtils.DAY_IN_MILLIS    -> DateUtils.HOUR_IN_MILLIS
+            in DateUtils.DAY_IN_MILLIS..DateUtils.WEEK_IN_MILLIS    -> DateUtils.DAY_IN_MILLIS
+
+            // We don't do months or years, so if the result is 53 weeks then so be it - also, the
+            // getRelativeTimeSpanString method's resolution maxes out at weeks!
+            else -> DateUtils.WEEK_IN_MILLIS
+        }
+
+        // Get the system locale
+        val locale = Locale.getDefault()
+
+        // Use DateUtils to get the relative time span string
+        return DateUtils.getRelativeTimeSpanString(
+            timestampMS,
+            nowMS,
+            desiredResolution,
+            DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_RELATIVE // Try this w/ just FORMAT_ABBREV_RELATIVE
+        ).toString()
+    }
+
+    @Test
+    fun testSystemGeneratedRelativeTimes() {
+        var t = 0L
+
+        // 1 and 2 seconds ago
+        t = System.currentTimeMillis() - 1.seconds.inWholeMilliseconds
+        print(getRelativeTimeLocalized(t))
+        t = System.currentTimeMillis() - 2.seconds.inWholeMilliseconds
+        print(getRelativeTimeLocalized(t))
+
+        // 1 and 2 minutes ago
+        t = System.currentTimeMillis() - 1.minutes.inWholeMilliseconds
+        print(getRelativeTimeLocalized(t))
+        t = System.currentTimeMillis() - 2.minutes.inWholeMilliseconds
+        print(getRelativeTimeLocalized(t))
+
+        // 1 and 2 hours ago
+        t = System.currentTimeMillis() - 1.hours.inWholeMilliseconds
+        print(getRelativeTimeLocalized(t))
+        t = System.currentTimeMillis() - 2.hours.inWholeMilliseconds
+        print(getRelativeTimeLocalized(t))
+
+        assert(true)
     }
 
     // Unit test for durations in the English language. Note: We can pre-load the time-units string

@@ -61,6 +61,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxJsonVersion"
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"
+
+    // Note: kotlinx-datetime:0.6.0 is the latest version as of 2024/08/09 -AL
+    implementation 'org.jetbrains.kotlinx:kotlinx-datetime:0.6.0'
+
     testImplementation "junit:junit:$junitVersion"
     testImplementation 'org.assertj:assertj-core:3.11.1'
     testImplementation "org.mockito:mockito-inline:4.11.0"
