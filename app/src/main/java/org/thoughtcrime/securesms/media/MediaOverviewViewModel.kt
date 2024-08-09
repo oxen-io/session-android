@@ -12,9 +12,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
@@ -25,6 +28,8 @@ import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.MediaDatabase
 import org.thoughtcrime.securesms.database.MediaDatabase.MediaRecord
 import org.thoughtcrime.securesms.database.ThreadDatabase
+import org.thoughtcrime.securesms.mms.Slide
+import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.asSequence
 import org.thoughtcrime.securesms.util.observeChanges
 import java.time.Instant
@@ -46,18 +51,19 @@ class MediaOverviewViewModel(
     private val monthTimeBucketFormatter =
         DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())
 
-    val title: StateFlow<String> = application.contentResolver
+    private val recipient: SharedFlow<Recipient> = application.contentResolver
         .observeChanges(DatabaseContentProviders.Attachment.CONTENT_URI)
-        .map {
-            Recipient.from(application, address, false).toShortString()
-        }
+        .onStart { emit(DatabaseContentProviders.Attachment.CONTENT_URI) }
+        .map { Recipient.from(application, address, false) }
+        .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
+
+    val title: StateFlow<String> = recipient
+        .map { it.toShortString() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
 
-    val mediaListState: StateFlow<MediaOverviewContent?> = application.contentResolver
-        .observeChanges(DatabaseContentProviders.Attachment.CONTENT_URI)
-        .map {
+    val mediaListState: StateFlow<MediaOverviewContent?> = recipient
+        .map { recipient ->
             withContext(Dispatchers.Default) {
-                val recipient = Recipient.from(application, address, false)
                 val threadId = threadDatabase.getOrCreateThreadIdFor(recipient)
                 val mediaItems = mediaDatabase.getGalleryMediaForThread(threadId)
                     .use { cursor ->
@@ -113,7 +119,10 @@ class MediaOverviewViewModel(
                 }
 
                 bucketTitle to records.map { record ->
-                    MediaOverviewItem(record.attachment.attachmentId.rowId, record.attachment)
+                    MediaOverviewItem(
+                        id = record.attachment.attachmentId.rowId,
+                        slide = MediaUtil.getSlideForAttachment(application, record.attachment)
+                    )
                 }
             }
     }
@@ -128,6 +137,9 @@ class MediaOverviewViewModel(
             }
 
             mutableSelectedItemIDs.value = newSet
+            if (newSet.isEmpty()) {
+                mutableInSelectionMode.value = false
+            }
         } else {
             mutableEvents.tryEmit(MediaOverviewEvent.NavigateToMediaDetail(id))
         }
@@ -159,6 +171,26 @@ class MediaOverviewViewModel(
     fun onSelectAllClicked() {
         if (!inSelectionMode.value) return
 
+        val allItems = mediaListState.value?.let { content ->
+            when (selectedTab.value) {
+                MediaOverviewTab.Media -> content.mediaContent
+                MediaOverviewTab.Documents -> content.documentContent
+            }
+        } ?: return
+
+        mutableSelectedItemIDs.value = allItems
+            .asSequence()
+            .flatMap { it.second }
+            .mapTo(hashSetOf()) { it.id }
+    }
+
+    fun onBackClicked() {
+        if (inSelectionMode.value) {
+            mutableInSelectionMode.value = false
+            mutableSelectedItemIDs.value = emptySet()
+        } else {
+            mutableEvents.tryEmit(MediaOverviewEvent.Close)
+        }
     }
 
     @dagger.assisted.AssistedFactory
@@ -216,6 +248,7 @@ enum class MediaOverviewTab {
 }
 
 sealed interface MediaOverviewEvent {
+    data object Close : MediaOverviewEvent
     data class NavigateToMediaDetail(val id: Long) : MediaOverviewEvent
 }
 
@@ -229,6 +262,6 @@ data class MediaOverviewContent(
 
 data class MediaOverviewItem(
     val id: Long,
-    val attachment: DatabaseAttachment
+    val slide: Slide
 )
 
