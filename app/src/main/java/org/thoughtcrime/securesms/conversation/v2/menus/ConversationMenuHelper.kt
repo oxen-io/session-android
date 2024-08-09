@@ -24,7 +24,7 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
-import org.thoughtcrime.securesms.MediaOverviewActivity
+import org.thoughtcrime.securesms.media.MediaOverviewActivity
 import org.thoughtcrime.securesms.ShortcutLauncherActivity
 import org.thoughtcrime.securesms.calls.WebRtcCallActivity
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity
@@ -149,10 +149,8 @@ object ConversationMenuHelper {
     }
 
     private fun showAllMedia(context: Context, thread: Recipient) {
-        val intent = Intent(context, MediaOverviewActivity::class.java)
-        intent.putExtra(MediaOverviewActivity.ADDRESS_EXTRA, thread.address)
         val activity = context as AppCompatActivity
-        activity.startActivity(intent)
+        activity.startActivity(MediaOverviewActivity.createIntent(context, thread.address))
     }
 
     private fun search(context: Context) {
