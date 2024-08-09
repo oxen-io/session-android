@@ -63,6 +63,7 @@ class PeerConnectionWrapper(private val context: Context,
         val configuration = PeerConnection.RTCConfiguration(iceServers).apply {
             bundlePolicy = PeerConnection.BundlePolicy.MAXBUNDLE
             rtcpMuxPolicy = PeerConnection.RtcpMuxPolicy.REQUIRE
+            sdpSemantics = PeerConnection.SdpSemantics.PLAN_B
             if (relay) {
                 iceTransportsType = PeerConnection.IceTransportsType.RELAY
             }
@@ -73,10 +74,7 @@ class PeerConnectionWrapper(private val context: Context,
         newPeerConnection.setAudioPlayout(true)
         newPeerConnection.setAudioRecording(true)
 
-        // Calls to `addStream` are deprecated & cause errors so we must use `addTracks` when
-        // using `io.github.webrtc-sdk:android:114.5735.10` and newer.
-        newPeerConnection.addTrack(mediaStream.audioTracks[0])
-        if (mediaStream.videoTracks.isNotEmpty()) newPeerConnection.addTrack(mediaStream.videoTracks[0])
+        newPeerConnection.addStream(mediaStream)
     }
 
     init {
