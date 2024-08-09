@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.media
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -22,17 +23,16 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -40,9 +40,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalType
@@ -52,26 +52,45 @@ import kotlin.math.ceil
 @Composable
 fun MediaOverviewScreen(
     viewModel: MediaOverviewViewModel,
-    onBack: () -> Unit,
+    onClose: () -> Unit,
 ) {
     val selected by viewModel.selectedItemIDs.collectAsState()
     val selectionMode by viewModel.inSelectionMode.collectAsState()
 
     val topAppBarState = rememberTopAppBarState()
 
-    val appBarScrollBahavior = if (selectionMode) {
+    val appBarScrollBehavior = if (selectionMode) {
         TopAppBarDefaults.pinnedScrollBehavior(topAppBarState)
     } else {
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
+        TopAppBarDefaults.enterAlwaysScrollBehavior(topAppBarState)
+    }
+
+    BackHandler(onBack = viewModel::onBackClicked)
+
+    LaunchedEffect(viewModel) {
+        viewModel.events.collect { event ->
+            when (event) {
+                MediaOverviewEvent.Close -> onClose()
+                is MediaOverviewEvent.NavigateToMediaDetail -> {
+                    TODO()
+                }
+            }
+        }
     }
 
     Scaffold(
-        modifier = Modifier.nestedScroll(appBarScrollBahavior.nestedScrollConnection),
+        modifier = Modifier.nestedScroll(appBarScrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
-                title = { Text(viewModel.title.collectAsState().value) },
+            TopAppBar(
+                title = {
+                    if (selectionMode) {
+                        Text(selected.size.toString())
+                    } else {
+                        Text(viewModel.title.collectAsState().value)
+                    }
+                },
                 navigationIcon = {
-                    IconButton(onBack) {
+                    IconButton(viewModel::onBackClicked) {
                         Icon(
                             Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = stringResource(R.string.AccessibilityId_done),
@@ -79,7 +98,7 @@ fun MediaOverviewScreen(
                         )
                     }
                 },
-                scrollBehavior = appBarScrollBahavior,
+                scrollBehavior = appBarScrollBehavior,
                 actions = {
                     if (selectionMode) {
                         IconButton(onClick = viewModel::onSaveClicked) {
@@ -109,7 +128,11 @@ fun MediaOverviewScreen(
                 })
         }
     ) { paddings ->
-        Column(modifier = Modifier.padding(paddings)) {
+        Column(
+            modifier = Modifier
+                .padding(paddings)
+                .fillMaxSize()
+        ) {
             val pagerState = rememberPagerState(pageCount = { MediaOverviewTab.entries.size })
             val selectedTab by viewModel.selectedTab.collectAsState()
             LaunchedEffect(selectedTab) {
@@ -118,9 +141,14 @@ fun MediaOverviewScreen(
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 MediaOverviewTab.entries.forEach { tab ->
-                    TextButton(onClick = { viewModel.onTabItemClicked(tab) }) {
+                    TextButton(
+                        onClick = { viewModel.onTabItemClicked(tab) },
+                        modifier = Modifier.weight(1f)
+                    ) {
                         Text(
                             text = stringResource(tab.titleResId),
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
                             style = LocalType.current.large,
                             color = if (selectedTab == tab) {
                                 LocalColors.current.text
@@ -147,7 +175,7 @@ fun MediaOverviewScreen(
                             content = content.value?.mediaContent,
                             selectedItemIDs = selected,
                             onItemClicked = viewModel::onItemClicked,
-                            nestedScrollConnection = appBarScrollBahavior.nestedScrollConnection,
+                            nestedScrollConnection = appBarScrollBehavior.nestedScrollConnection,
                             onItemLongClicked = viewModel::onItemLongClicked.takeIf { canLongPress }
                         )
                     }
@@ -246,7 +274,7 @@ private fun ThumbnailRow(
                         }
                 ) {
                     GlideImage(
-                        item.attachment.thumbnailUri!!,
+                        item.slide.thumbnailUri!!,
                         modifier = Modifier.fillMaxSize(),
                         contentDescription = null,
                     )

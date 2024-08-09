@@ -24,8 +24,10 @@ class MediaOverviewActivity : PassphraseRequiredActionBarActivity() {
         super.onCreate(savedInstanceState)
 
         setComposeContent {
-            MediaOverviewScreen(viewModel, onBack = this::finish)
+            MediaOverviewScreen(viewModel, onClose = this::finish)
         }
+
+        supportActionBar?.hide()
     }
 
     companion object {
