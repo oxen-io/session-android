@@ -29,6 +29,7 @@ import org.thoughtcrime.securesms.audio.AudioSlidePlayer
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
+import org.thoughtcrime.securesms.mms.AudioSlide
 import org.thoughtcrime.securesms.repository.ConversationRepository
 import java.util.UUID
 
@@ -37,8 +38,7 @@ class ConversationViewModel(
     val edKeyPair: KeyPair?,
     private val repository: ConversationRepository,
     private val storage: Storage,
-    private val messageDataProvider: MessageDataProvider,
-    database: MmsDatabase,
+    private val messageDataProvider: MessageDataProvider
 ) : ViewModel() {
 
     val showSendAfterApprovalText: Boolean
@@ -152,18 +152,42 @@ class ConversationViewModel(
         repository.deleteThread(threadId)
     }
 
-    fun deleteLocally(message: MessageRecord) {
-        stopPlayingAudioMessage(message)
-        val recipient = recipient ?: return Log.w("Loki", "Recipient was null for delete locally action")
-        repository.deleteLocally(recipient, message)
+    /**
+     * This will delete these messages from the db
+     * Not to be confused with 'marking messages as deleted'
+     */
+    fun deleteMessages(messages: Set<MessageRecord>, threadId: Long) {
+        repository.deleteMessages(messages, threadId)
+    }
+
+    /**
+     * This will mark the messages as deleted, locally only.
+     * Attachments and other related data will be removed from the db,
+     * but the messages themselves won't be removed from the db.
+     * Instead they will appear as a special type of message
+     * that says something like "This message was deleted"
+     *
+     * @displayedMessage is the message that will be displayed in place of the deleted message.
+     */
+    fun markAsDeletedLocally(messages: Set<MessageRecord>, displayedMessage: String) {
+        // make sure to stop audio messages, if any
+        messages.filterIsInstance<MmsMessageRecord>()
+            .mapNotNull { it.slideDeck.audioSlide }
+            .forEach(::stopMessageAudio)
+
+
+        repository.markAsDeletedLocally(messages, displayedMessage)
     }
 
     /**
      * Stops audio player if its current playing is the one given in the message.
      */
-    private fun stopPlayingAudioMessage(message: MessageRecord) {
+    private fun stopMessageAudio(message: MessageRecord) {
         val mmsMessage = message as? MmsMessageRecord ?: return
         val audioSlide = mmsMessage.slideDeck.audioSlide ?: return
+        stopMessageAudio(audioSlide)
+    }
+    private fun stopMessageAudio(audioSlide: AudioSlide) {
         AudioSlidePlayer.getInstance()?.takeIf { it.audioSlide == audioSlide }?.stop()
     }
 
@@ -172,24 +196,23 @@ class ConversationViewModel(
         repository.setApproved(recipient, true)
     }
 
-    fun deleteForEveryone(message: MessageRecord) = viewModelScope.launch {
+    /**
+     * This will mark the messages as deleted, for everyone.
+     * Attachments and other related data will be removed from the db,
+     * but the messages themselves won't be removed from the db.
+     * Instead they will appear as a special type of message
+     * that says something like "This message was deleted"
+     */
+    fun markAsDeletedForEveryone(message: MessageRecord) = viewModelScope.launch {
         val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
-        stopPlayingAudioMessage(message)
+        stopMessageAudio(message)
 
-        repository.deleteForEveryone(threadId, recipient, message)
+        repository.markAsDeletedForEveryone(threadId, recipient, message)
             .onSuccess {
                 Log.d("Loki", "Deleted message ${message.id} ")
-                stopPlayingAudioMessage(message)
             }
             .onFailure {
                 Log.w("Loki", "FAILED TO delete message ${message.id} ")
-                showMessage("Couldn't delete message due to error: $it")
-            }
-    }
-
-    fun deleteMessagesWithoutUnsendRequest(messages: Set<MessageRecord>) = viewModelScope.launch {
-        repository.deleteMessageWithoutUnsendRequest(threadId, messages)
-            .onFailure {
                 showMessage("Couldn't delete message due to error: $it")
             }
     }
@@ -283,7 +306,6 @@ class ConversationViewModel(
         @Assisted private val edKeyPair: KeyPair?,
         private val repository: ConversationRepository,
         private val storage: Storage,
-        private val mmsDatabase: MmsDatabase,
         private val messageDataProvider: MessageDataProvider,
     ) : ViewModelProvider.Factory {
 
@@ -293,8 +315,7 @@ class ConversationViewModel(
                 edKeyPair = edKeyPair,
                 repository = repository,
                 storage = storage,
-                messageDataProvider = messageDataProvider,
-                database = mmsDatabase
+                messageDataProvider = messageDataProvider
             ) as T
         }
     }

@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
+import org.session.libsession.messaging.messages.MarkAsDeletedMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
@@ -56,12 +57,12 @@ interface ConversationRepository {
     fun clearDrafts(threadId: Long)
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
     fun setBlocked(recipient: Recipient, blocked: Boolean)
-    fun deleteLocally(recipient: Recipient, message: MessageRecord)
+    fun markAsDeletedLocally(messages: Set<MessageRecord>, displayedMessage: String)
+    fun deleteMessages(messages: Set<MessageRecord>, threadId: Long)
     fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
-    suspend fun deleteForEveryone(threadId: Long, recipient: Recipient, message: MessageRecord): ResultOf<Unit>
+    suspend fun markAsDeletedForEveryone(threadId: Long, recipient: Recipient, message: MessageRecord): ResultOf<Unit>
     fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
-    suspend fun deleteMessageWithoutUnsendRequest(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit>
     suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit>
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
     suspend fun deleteThread(threadId: Long): ResultOf<Unit>
@@ -159,13 +160,54 @@ class DefaultConversationRepository @Inject constructor(
         storage.setBlocked(listOf(recipient), blocked)
     }
 
-    override fun deleteLocally(recipient: Recipient, message: MessageRecord) {
-        buildUnsendRequest(recipient, message)?.let { unsendRequest ->
-            textSecurePreferences.getLocalNumber()?.let {
-                MessageSender.send(unsendRequest, Address.fromSerialized(it))
-            }
+    /**
+     * This will delete these messages from the db
+     * Not to be confused with 'marking messages as deleted'
+     */
+    override fun deleteMessages(messages: Set<MessageRecord>, threadId: Long) {
+        // split the messages into mms and sms
+        val (mms, sms) = messages.partition { it.isMms }
+
+        if(mms.isNotEmpty()){
+            messageDataProvider.deleteMessages(mms.map { it.id }, threadId, isSms = false)
         }
-        messageDataProvider.deleteMessage(message.id, !message.isMms)
+
+        if(sms.isNotEmpty()){
+            messageDataProvider.deleteMessages(sms.map { it.id }, threadId, isSms = true)
+        }
+    }
+
+    /**
+     * This will mark the messages as deleted.
+     * They won't be removed from the db but instead will appear as a special type
+     * of message that says something like "This message was deleted"
+     */
+    override fun markAsDeletedLocally(messages: Set<MessageRecord>, displayedMessage: String) {
+        // split the messages into mms and sms
+        val (mms, sms) = messages.partition { it.isMms }
+
+        if(mms.isNotEmpty()){
+            messageDataProvider.markMessagesAsDeleted(mms.map { MarkAsDeletedMessage(
+                messageId = it.id,
+                isOutgoing = it.isOutgoing
+            ) },
+                isSms = false,
+                displayedMessage = displayedMessage
+            )
+        }
+
+        if(sms.isNotEmpty()){
+            messageDataProvider.markMessagesAsDeleted(sms.map { MarkAsDeletedMessage(
+                messageId = it.id,
+                isOutgoing = it.isOutgoing
+            ) },
+                isSms = true,
+                displayedMessage = displayedMessage
+            )
+        }
+
+        //todo DELETION delete attachments and links
+        //todo DELETION delete notifications
     }
 
     override fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord) {
@@ -181,7 +223,7 @@ class DefaultConversationRepository @Inject constructor(
         storage.setRecipientApproved(recipient, isApproved)
     }
 
-    override suspend fun deleteForEveryone(
+    override suspend fun markAsDeletedForEveryone(
         threadId: Long,
         recipient: Recipient,
         message: MessageRecord
@@ -245,38 +287,6 @@ class DefaultConversationRepository @Inject constructor(
             author = message.takeUnless { it.isOutgoing }?.run { individualRecipient.address.contactIdentifier() } ?: textSecurePreferences.getLocalNumber(),
             timestamp = message.timestamp
         )
-    }
-
-    override suspend fun deleteMessageWithoutUnsendRequest(
-        threadId: Long,
-        messages: Set<MessageRecord>
-    ): ResultOf<Unit> = suspendCoroutine { continuation ->
-        val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
-        if (openGroup != null) {
-            val messageServerIDs = mutableMapOf<Long, MessageRecord>()
-            for (message in messages) {
-                val messageServerID =
-                    lokiMessageDb.getServerID(message.id, !message.isMms) ?: continue
-                messageServerIDs[messageServerID] = message
-            }
-            messageServerIDs.forEach { (messageServerID, message) ->
-                OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
-                    .success {
-                        messageDataProvider.deleteMessage(message.id, !message.isMms)
-                    }.fail { error ->
-                        continuation.resumeWithException(error)
-                    }
-            }
-        } else {
-            for (message in messages) {
-                if (message.isMms) {
-                    mmsDb.deleteMessage(message.id)
-                } else {
-                    smsDb.deleteMessage(message.id)
-                }
-            }
-        }
-        continuation.resume(ResultOf.Success(Unit))
     }
 
     override suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit> =

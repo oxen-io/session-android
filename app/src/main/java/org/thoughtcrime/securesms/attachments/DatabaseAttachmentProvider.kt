@@ -6,6 +6,7 @@ import com.google.protobuf.ByteString
 import org.greenrobot.eventbus.EventBus
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.MarkAsDeletedMessage
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
@@ -215,18 +216,35 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         threadId?.let{ MessagingModuleConfiguration.shared.lastSentTimestampCache.delete(it, messages.map { it.timestamp }) }
     }
 
-    override fun updateMessageAsDeleted(timestamp: Long, author: String): Long? {
+    override fun markMessageAsDeleted(timestamp: Long, author: String, displayedMessage: String): Long? {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val address = Address.fromSerialized(author)
         val message = database.getMessageFor(timestamp, address) ?: return null
-        val messagingDatabase: MessagingDatabase = if (message.isMms)  DatabaseComponent.get(context).mmsDatabase()
-                                                   else DatabaseComponent.get(context).smsDatabase()
-        messagingDatabase.markAsDeleted(message.id, message.isRead, message.hasMention)
-        if (message.isOutgoing) {
-            messagingDatabase.deleteMessage(message.id)
-        }
+
+        markMessagesAsDeleted(
+            messages = listOf(MarkAsDeletedMessage(
+                messageId = message.id,
+                isOutgoing = message.isOutgoing
+            )),
+            isSms = !message.isMms,
+            displayedMessage = displayedMessage
+        )
 
         return message.id
+    }
+
+    override fun markMessagesAsDeleted(
+        messages: List<MarkAsDeletedMessage>,
+        isSms: Boolean,
+        displayedMessage: String
+    ) {
+        val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
+        else DatabaseComponent.get(context).mmsDatabase()
+
+        //todo DELETION can this be batched?
+        messages.forEach { message ->
+            messagingDatabase.markAsDeleted(message.messageId, message.isOutgoing, displayedMessage)
+        }
     }
 
     override fun getServerHashForMessage(messageID: Long, mms: Boolean): String? =

@@ -246,6 +246,7 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
 }
 
 fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
+    //todo DELETION modify unsend request validation
     val userPublicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
     if (message.sender != message.author && (message.sender != userPublicKey && userPublicKey != null)) { return null }
     val context = MessagingModuleConfiguration.shared.context
@@ -257,7 +258,11 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
     messageDataProvider.getServerHashForMessage(messageIdToDelete, mms)?.let { serverHash ->
         SnodeAPI.deleteMessage(author, listOf(serverHash))
     }
-    val deletedMessageId = messageDataProvider.updateMessageAsDeleted(timestamp, author)
+    val deletedMessageId = messageDataProvider.markMessageAsDeleted(
+            timestamp = timestamp,
+            author = author,
+            displayedMessage = "[UPDATE THIS!] This message was deleted on this device" //todo DELETION update once we have strings
+        )
     if (!messageDataProvider.isOutgoingMessage(timestamp)) {
         SSKEnvironment.shared.notificationManager.updateNotification(context)
     }
