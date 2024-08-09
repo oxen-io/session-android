@@ -209,8 +209,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             //  - 1 hour ago / 2 hours ago
             //  - Yesterday / 2 days ago
             //  - August 2nd / 2 weeks ago / 14 weeks ago <-- Note: Date running this test is August 9th.
-
-            //DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_RELATIVE // Try this w/ just FORMAT_ABBREV_RELATIVE
         ).toString()
     }
 
