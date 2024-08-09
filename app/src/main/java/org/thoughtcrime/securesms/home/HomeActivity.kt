@@ -371,12 +371,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
         updateLegacyConfigView()
 
-        // TODO: remove this after enough updates that we can rely on ConfigBase.isNewConfigEnabled to always return true
-        // This will only run if we aren't using new configs, as they are schedule to sync when there are changes applied
-        if (textSecurePreferences.getConfigurationMessageSynced()) {
-            lifecycleScope.launch(Dispatchers.IO) {
-                ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@HomeActivity)
-            }
+        // Sync config changes if there are any
+        lifecycleScope.launch(Dispatchers.IO) {
+            ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@HomeActivity)
         }
     }
 

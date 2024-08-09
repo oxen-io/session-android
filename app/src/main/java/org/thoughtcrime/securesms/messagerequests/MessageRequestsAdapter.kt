@@ -1,13 +1,14 @@
 package org.thoughtcrime.securesms.messagerequests
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.database.Cursor
+import android.os.Build
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
 import org.session.libsession.utilities.ThemeUtil
@@ -63,10 +64,17 @@ class MessageRequestsAdapter(
             val s = SpannableString(item.title)
             val danger = ThemeUtil.getThemedColor(context, R.attr.danger)
             s.setSpan(ForegroundColorSpan(danger), 0, s.length, 0)
-            item.iconTintList = ColorStateList.valueOf(danger)
+            item.icon?.let {
+                DrawableCompat.setTint(
+                    it,
+                    danger
+                )
+            }
             item.title = s
         }
-        popupMenu.setForceShowIcon(true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popupMenu.setForceShowIcon(true)
+        }
         popupMenu.show()
     }
 

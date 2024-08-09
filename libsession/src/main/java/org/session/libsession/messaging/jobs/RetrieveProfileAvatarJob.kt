@@ -39,7 +39,7 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
 
     override suspend fun execute(dispatcherName: String) {
         val delegate = delegate ?: return Log.w(TAG, "RetrieveProfileAvatarJob has no delegate method to work with!")
-        if (profileAvatar in errorUrls) return delegate.handleJobFailed(this, dispatcherName, Exception("Profile URL 404'd this app instance"))
+        if (profileAvatar != null && profileAvatar in errorUrls) return delegate.handleJobFailed(this, dispatcherName, Exception("Profile URL 404'd this app instance"))
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
         val recipient = Recipient.from(context, recipientAddress, true)
