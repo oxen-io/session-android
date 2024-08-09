@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,8 +42,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.Transition
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalType
@@ -60,9 +64,15 @@ fun MediaOverviewScreen(
     val topAppBarState = rememberTopAppBarState()
 
     val appBarScrollBehavior = if (selectionMode) {
-        TopAppBarDefaults.pinnedScrollBehavior(topAppBarState)
+        TopAppBarDefaults.pinnedScrollBehavior(topAppBarState, canScroll = { false })
     } else {
         TopAppBarDefaults.enterAlwaysScrollBehavior(topAppBarState)
+    }
+
+    LaunchedEffect(selectionMode) {
+        if (selectionMode) {
+            topAppBarState.heightOffset = 0f
+        }
     }
 
     BackHandler(onBack = viewModel::onBackClicked)
@@ -219,10 +229,23 @@ private fun MediaPage(
         }
 
         else -> {
-            LazyColumn(modifier = Modifier.nestedScroll(nestedScrollConnection)) {
+            LazyColumn(
+                modifier = Modifier
+                    .nestedScroll(nestedScrollConnection)
+                    .padding(2.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
                 for ((header, thumbnails) in content) {
                     stickyHeader {
-                        Text(text = header)
+                        Text(
+                            modifier = Modifier
+                                .background(LocalColors.current.background)
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            text = header,
+                            style = LocalType.current.base,
+                            color = LocalColors.current.text
+                        )
                     }
 
                     val numRows = ceil(thumbnails.size / columnCount.toFloat()).toInt()
@@ -254,7 +277,7 @@ private fun ThumbnailRow(
     onItemLongClicked: ((Long) -> Unit)?,
     selectedItemIDs: Set<Long>
 ) {
-    Row {
+    Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
         repeat(columnCount) { columnIndex ->
             val item = thumbnails.getOrNull(rowIndex * columnCount + columnIndex)
             if (item != null) {
@@ -274,9 +297,11 @@ private fun ThumbnailRow(
                         }
                 ) {
                     GlideImage(
-                        item.slide.thumbnailUri!!,
+                        item.slide.thumbnailUri,
                         modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
                         contentDescription = null,
+                        transition = CrossFade,
                     )
 
                     Crossfade(

@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
@@ -189,7 +190,9 @@ class MediaOverviewViewModel(
             mutableInSelectionMode.value = false
             mutableSelectedItemIDs.value = emptySet()
         } else {
-            mutableEvents.tryEmit(MediaOverviewEvent.Close)
+            viewModelScope.launch {
+                mutableEvents.emit(MediaOverviewEvent.Close)
+            }
         }
     }
 
