@@ -1,6 +1,8 @@
 package org.thoughtcrime.securesms.media
 
 import android.app.Application
+import android.content.Context
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
@@ -8,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
-import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
+import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
@@ -128,21 +129,24 @@ class MediaOverviewViewModel(
             }
     }
 
-    fun onItemClicked(id: Long) {
+    fun onItemClicked(item: MediaOverviewItem) {
         if (inSelectionMode.value) {
             val newSet = mutableSelectedItemIDs.value.toMutableSet()
-            if (id in newSet) {
-                newSet.remove(id)
+            if (item.id in newSet) {
+                newSet.remove(item.id)
             } else {
-                newSet.add(id)
+                newSet.add(item.id)
             }
 
             mutableSelectedItemIDs.value = newSet
             if (newSet.isEmpty()) {
                 mutableInSelectionMode.value = false
             }
+        } else if (item.showRetryButton) {
+            // The item clicked as a "retry" button, so we should retry the download
+            TODO()
         } else {
-            mutableEvents.tryEmit(MediaOverviewEvent.NavigateToMediaDetail(id))
+            mutableEvents.tryEmit(MediaOverviewEvent.NavigateToMediaDetail(item.id))
         }
     }
 
@@ -157,8 +161,7 @@ class MediaOverviewViewModel(
 
     fun onItemLongClicked(id: Long) {
         mutableInSelectionMode.value = true
-        mutableSelectedItemIDs.value = emptySet()
-        onItemClicked(id)
+        mutableSelectedItemIDs.value = setOf(id)
     }
 
     fun onSaveClicked() {
@@ -265,6 +268,25 @@ data class MediaOverviewContent(
 
 data class MediaOverviewItem(
     val id: Long,
-    val slide: Slide
-)
+    private val slide: Slide
+) {
+    val showRetryButton: Boolean
+        get() = slide.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_FAILED
+
+    val showLoadingOverlay: Boolean
+        get() = slide.isInProgress
+
+    val showPlayOverlay: Boolean
+        get() = slide.hasPlayOverlay()
+
+    val thumbnailUri: Uri?
+        get() = slide.thumbnailUri
+
+    val hasPlaceholder: Boolean
+        get() = slide.hasPlaceholder()
+
+    fun placeholder(context: Context): Int {
+        return slide.getPlaceholderRes(context.theme)
+    }
+}
 
