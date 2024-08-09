@@ -134,14 +134,9 @@ class VisibleMessageContentView : ConstraintLayout {
         }
 
         if (message is MmsMessageRecord) {
-            message.slideDeck.asAttachments().forEach { attach ->
-                val dbAttachment = attach as? DatabaseAttachment ?: return@forEach
-                onAttachmentNeedsDownload(dbAttachment)
-            }
-            message.linkPreviews.forEach { preview ->
-                val previewThumbnail = preview.getThumbnail().orNull() as? DatabaseAttachment ?: return@forEach
-                onAttachmentNeedsDownload(previewThumbnail)
-            }
+            message.slideDeck.asAttachments().asSequence() + message.linkPreviews.map { it.thumbnail }
+                .filterIsInstance<DatabaseAttachment>()
+                .forEach(onAttachmentNeedsDownload)
         }
 
         when {

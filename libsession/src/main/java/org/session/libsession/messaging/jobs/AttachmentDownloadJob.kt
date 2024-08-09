@@ -130,7 +130,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
         try {
             val attachment = messageDataProvider.getDatabaseAttachment(attachmentID)
                 ?: return handleFailure(Error.NoAttachment, null)
-            if (attachment.hasData()) {
+            if (attachment.hasData) {
                 handleFailure(Error.DuplicateData, attachment.attachmentId)
                 return
             }

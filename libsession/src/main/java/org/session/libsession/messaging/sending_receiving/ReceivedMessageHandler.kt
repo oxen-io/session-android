@@ -1,7 +1,5 @@
 package org.session.libsession.messaging.sending_receiving
 
-import android.text.TextUtils
-import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -51,7 +49,6 @@ import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
 import java.security.MessageDigest
@@ -355,6 +352,8 @@ fun MessageReceiver.handleVisibleMessage(
     if (message.quote != null && proto.dataMessage.hasQuote()) {
         val quote = proto.dataMessage.quote
 
+        val author2 = quote.author.takeUnless { quote.author == userBlindedKey }?.let(Address::fromSerialized) ?: Address.fromSerialized(userPublicKey!!)
+
         val author = if (quote.author == userBlindedKey) {
             Address.fromSerialized(userPublicKey!!)
         } else {
@@ -372,21 +371,20 @@ fun MessageReceiver.handleVisibleMessage(
         }
     }
     // Parse link preview if needed
-    val linkPreviews: MutableList<LinkPreview?> = mutableListOf()
-    if (message.linkPreview != null && proto.dataMessage.previewCount > 0) {
-        for (preview in proto.dataMessage.previewList) {
+    val linkPreviews = proto.dataMessage.takeIf { (message.linkPreview != null && it.previewCount > 0) }?.let {
+        it.previewList.mapNotNull { preview ->
             val thumbnail = PointerAttachment.forPointer(preview.image)
-            val url = Optional.fromNullable(preview.url)
-            val title = Optional.fromNullable(preview.title)
-            val hasContent = !TextUtils.isEmpty(title.or("")) || thumbnail.isPresent
-            if (hasContent) {
-                val linkPreview = LinkPreview(url.get(), title.or(""), thumbnail)
-                linkPreviews.add(linkPreview)
-            } else {
-                Log.w("Loki", "Discarding an invalid link preview. hasContent: $hasContent")
+            val title = preview.title
+            val hasContent = !title.isNullOrEmpty() || thumbnail != null
+            when {
+                hasContent -> LinkPreview(preview.url, title, null, thumbnail)
+                else -> {
+                    Log.w("Loki", "Discarding an invalid link preview.")
+                    null
+                }
             }
         }
-    }
+    } ?: emptyList()
     // Parse attachments if needed
     val attachments = proto.dataMessage.attachmentsList.map(Attachment::fromProto).filter { it.isValid() }
     // Cancel any typing indicators if needed

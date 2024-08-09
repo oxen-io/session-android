@@ -32,9 +32,9 @@ class LinkPreviewDraftView : LinearLayout {
         binding.linkPreviewDraftContainer.isVisible = true
         binding.linkPreviewDraftLoader.isVisible = false
         binding.thumbnailImageView.root.setRoundedCorners(toPx(4, resources))
-        if (linkPreview.getThumbnail().isPresent) {
+        linkPreview.thumbnail?.let {
             // This internally fetches the thumbnail
-            binding.thumbnailImageView.root.setImageResource(glide, ImageSlide(context, linkPreview.getThumbnail().get()), false)
+            binding.thumbnailImageView.root.setImageResource(glide, ImageSlide(context, it), false)
         }
         binding.linkPreviewDraftTitleTextView.text = linkPreview.title
     }

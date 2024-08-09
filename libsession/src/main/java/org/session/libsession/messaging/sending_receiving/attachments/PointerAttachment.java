@@ -5,6 +5,8 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.esotericsoftware.kryo.util.Null;
+
 import org.session.libsignal.utilities.guava.Optional;
 import org.session.libsignal.messages.SignalServiceAttachment;
 import org.session.libsignal.messages.SignalServiceDataMessage;
@@ -115,8 +117,8 @@ public class PointerAttachment extends Attachment {
 
   }
 
-  public static Optional<Attachment> forPointer(SignalServiceProtos.AttachmentPointer pointer) {
-    return Optional.of(new PointerAttachment(pointer.getContentType(),
+  public static Attachment forPointer(@Nullable SignalServiceProtos.AttachmentPointer pointer) {
+    return new PointerAttachment(pointer.getContentType(),
             AttachmentTransferProgress.TRANSFER_PROGRESS_PENDING,
             (long)pointer.getSize(),
             pointer.getFileName(),
@@ -129,7 +131,7 @@ public class PointerAttachment extends Attachment {
             pointer.getWidth(),
             pointer.getHeight(),
             pointer.getCaption(),
-            pointer.getUrl()));
+            pointer.getUrl());
   }
 
   public static Optional<Attachment> forPointer(SignalServiceProtos.DataMessage.Quote.QuotedAttachment pointer) {

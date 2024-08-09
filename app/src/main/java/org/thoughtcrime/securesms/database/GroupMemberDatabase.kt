@@ -8,6 +8,7 @@ import org.session.libsession.messaging.open_groups.GroupMember
 import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.util.asSequence
+import org.thoughtcrime.securesms.util.map
 import java.util.EnumSet
 
 class GroupMemberDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper) {
@@ -61,8 +62,7 @@ class GroupMemberDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         """.trimIndent()
 
         return readableDatabase.rawQuery(sql, groupId, JSONArray(memberIDs).toString()).use { cursor ->
-            cursor.asSequence()
-                .map { readGroupMember(it) }
+            cursor.map { readGroupMember(it) }
                 .groupBy(keySelector = { it.profileId }, valueTransform = { it.role })
         }
     }

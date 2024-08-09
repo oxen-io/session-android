@@ -707,8 +707,8 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
       try {
         //noinspection ConstantConditions
-        mediaView.set(glideRequests, window, mediaRecord.getAttachment().getDataUri(),
-                      mediaRecord.getAttachment().getContentType(), mediaRecord.getAttachment().getSize(), autoplay);
+        mediaView.set(glideRequests, window, mediaRecord.attachment.getDataUri(),
+                      mediaRecord.attachment.getContentType(), mediaRecord.attachment.getSize(), autoplay);
       } catch (IOException e) {
         Log.w(TAG, e);
       }
@@ -731,15 +731,15 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     public MediaItem getMediaItemFor(int position) {
       cursor.moveToPosition(getCursorPosition(position));
       MediaRecord mediaRecord = MediaRecord.from(context, cursor);
-      Address     address     = mediaRecord.getAddress();
+      Address     address     = mediaRecord.address;
 
-      if (mediaRecord.getAttachment().getDataUri() == null) throw new AssertionError();
+      if (mediaRecord.attachment.getDataUri() == null) throw new AssertionError();
 
       return new MediaItem(address != null ? Recipient.from(context, address,true) : null,
-                           mediaRecord.getAttachment(),
-                           mediaRecord.getAttachment().getDataUri(),
+              mediaRecord.attachment,
+                           mediaRecord.attachment.getDataUri(),
                            mediaRecord.getContentType(),
-                           mediaRecord.getDate(),
+              mediaRecord.date,
                            mediaRecord.isOutgoing());
     }
 
