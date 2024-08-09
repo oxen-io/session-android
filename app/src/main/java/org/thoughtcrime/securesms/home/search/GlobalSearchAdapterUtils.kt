@@ -6,12 +6,14 @@ import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
+import java.util.Locale
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.truncateIdForDisplay
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.ContentView
+import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Contact as ContactModel
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.GroupConversation
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Header
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Message
@@ -19,9 +21,6 @@ import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.SavedMes
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.SubHeader
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.SearchUtil
-import java.util.Locale
-import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Contact as ContactModel
-
 
 class GlobalSearchDiff(
     private val oldQuery: String?,
@@ -78,8 +77,8 @@ fun ContentView.bindQuery(query: String, model: GlobalSearchAdapter.Model) {
             }
             binding.searchResultSubtitle.text = getHighlight(query, membersString)
         }
-        is Header, // do nothing for header
-        is SubHeader, // do nothing for subheader
+        is Header,               // do nothing for header
+        is SubHeader,            // do nothing for subheader
         is SavedMessages -> Unit // do nothing for saved messages (displays note to self)
     }
 }
@@ -112,7 +111,7 @@ fun ContentView.bindModel(query: String?, model: ContactModel) = binding.run {
     searchResultSubtitle.text = null
     val recipient = Recipient.from(root.context, Address.fromSerialized(model.contact.accountID), false)
     searchResultProfilePicture.update(recipient)
-    val nameString = if (model.isSelf) root.context.getString(R.string.note_to_self)
+    val nameString = if (model.isSelf) root.context.getString(R.string.noteToSelf)
         else model.contact.getSearchName()
     searchResultTitle.text = getHighlight(query, nameString)
 }
@@ -120,7 +119,7 @@ fun ContentView.bindModel(query: String?, model: ContactModel) = binding.run {
 fun ContentView.bindModel(model: SavedMessages) {
     binding.searchResultSubtitle.isVisible = false
     binding.searchResultTimestamp.isVisible = false
-    binding.searchResultTitle.setText(R.string.note_to_self)
+    binding.searchResultTitle.setText(R.string.noteToSelf)
     binding.searchResultProfilePicture.update(Address.fromSerialized(model.currentUserPublicKey))
     binding.searchResultProfilePicture.isVisible = true
 }
@@ -128,11 +127,13 @@ fun ContentView.bindModel(model: SavedMessages) {
 fun ContentView.bindModel(query: String?, model: Message) = binding.apply {
     searchResultProfilePicture.isVisible = true
     searchResultTimestamp.isVisible = true
+
 //    val hasUnreads = model.unread > 0
 //    unreadCountIndicator.isVisible = hasUnreads
 //    if (hasUnreads) {
 //        unreadCountTextView.text = model.unread.toString()
 //    }
+
     searchResultTimestamp.text = DateUtils.getDisplayFormattedTimeSpanString(root.context, Locale.getDefault(), model.messageResult.sentTimestampMs)
     searchResultProfilePicture.update(model.messageResult.conversationRecipient)
     val textSpannable = SpannableStringBuilder()
@@ -146,7 +147,7 @@ fun ContentView.bindModel(query: String?, model: Message) = binding.apply {
             model.messageResult.bodySnippet
     ))
     searchResultSubtitle.text = textSpannable
-    searchResultTitle.text = if (model.isSelf) root.context.getString(R.string.note_to_self)
+    searchResultTitle.text = if (model.isSelf) root.context.getString(R.string.noteToSelf)
         else model.messageResult.conversationRecipient.getSearchName()
     searchResultSubtitle.isVisible = true
 }

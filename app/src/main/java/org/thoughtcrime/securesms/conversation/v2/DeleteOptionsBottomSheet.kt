@@ -58,7 +58,7 @@ class DeleteOptionsBottomSheet : BottomSheetDialogFragment(), View.OnClickListen
         }
         if (!recipient.isGroupRecipient && !contact.isNullOrEmpty()) {
             binding.deleteForEveryoneTextView.text =
-                resources.getString(R.string.delete_message_for_me_and_recipient, contact)
+                resources.getString(R.string.clearMessagesForEveryone, contact)
         }
         binding.deleteForEveryoneTextView.isVisible = !recipient.isClosedGroupRecipient
         binding.deleteForMeTextView.setOnClickListener(this)

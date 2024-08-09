@@ -15,8 +15,7 @@ enum class EmojiCategory(val priority: Int, val key: String, @AttrRes val icon: 
   PLACES(4, "Places", R.attr.emoji_category_places),
   OBJECTS(5, "Objects", R.attr.emoji_category_objects),
   SYMBOLS(6, "Symbols", R.attr.emoji_category_symbol),
-  FLAGS(7, "Flags", R.attr.emoji_category_flags),
-  EMOTICONS(8, "Emoticons", R.attr.emoji_category_emoticons);
+  FLAGS(7, "Flags", R.attr.emoji_category_flags);
 
   @StringRes
   fun getCategoryLabel(): Int {
@@ -31,15 +30,14 @@ enum class EmojiCategory(val priority: Int, val key: String, @AttrRes val icon: 
     @StringRes
     fun getCategoryLabel(@AttrRes iconAttr: Int): Int {
       return when (iconAttr) {
-        R.attr.emoji_category_people -> R.string.ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people
-        R.attr.emoji_category_nature -> R.string.ReactWithAnyEmojiBottomSheetDialogFragment__nature
-        R.attr.emoji_category_foods -> R.string.ReactWithAnyEmojiBottomSheetDialogFragment__food
-        R.attr.emoji_category_activity -> R.string.ReactWithAnyEmojiBottomSheetDialogFragment__activities
-        R.attr.emoji_category_places -> R.string.ReactWithAnyEmojiBottomSheetDialogFragment__places
-        R.attr.emoji_category_objects -> R.string.ReactWithAnyEmojiBottomSheetDialogFragment__objects
-        R.attr.emoji_category_symbol -> R.string.ReactWithAnyEmojiBottomSheetDialogFragment__symbols
-        R.attr.emoji_category_flags -> R.string.ReactWithAnyEmojiBottomSheetDialogFragment__flags
-        R.attr.emoji_category_emoticons -> R.string.ReactWithAnyEmojiBottomSheetDialogFragment__emoticons
+        R.attr.emoji_category_people -> R.string.emojiCategorySmileys
+        R.attr.emoji_category_nature -> R.string.emojiCategoryAnimals
+        R.attr.emoji_category_foods -> R.string.emojiCategoryFood
+        R.attr.emoji_category_activity -> R.string.emojiCategoryActivities
+        R.attr.emoji_category_places -> R.string.emojiCategoryTravel
+        R.attr.emoji_category_objects -> R.string.emojiCategoryObjects
+        R.attr.emoji_category_symbol -> R.string.emojiCategorySymbols
+        R.attr.emoji_category_flags -> R.string.emojiCategoryFlags
         else -> throw AssertionError()
       }
     }

@@ -8,8 +8,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.PluralsRes
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -17,6 +20,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -42,6 +46,9 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.toHexString
+import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.conversation.start.StartConversationFragment
@@ -73,12 +80,20 @@ import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.ui.setThemedContent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.IP2Country
+import org.thoughtcrime.securesms.util.RelativeDay
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import org.thoughtcrime.securesms.util.start
 import java.io.IOException
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 private const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
 private const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
@@ -87,6 +102,13 @@ private const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
 class HomeActivity : PassphraseRequiredActionBarActivity(),
     ConversationClickListener,
     GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
+
+    private val TAG = "HomeActivity"
+
+//    companion object {
+//        const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
+//        const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
+//    }
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: RequestManager
@@ -138,9 +160,128 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private val isFromOnboarding: Boolean get() = intent.getBooleanExtra(FROM_ONBOARDING, false)
     private val isNewAccount: Boolean get() = intent.getBooleanExtra(NEW_ACCOUNT, false)
 
+
+
+
+
+
+
+    // ACL REMOVE BLOCK START
+
+    fun getRelativeTimeLocalized(timestampMS: Long): String {
+        // Get the current system time
+        val nowMS = System.currentTimeMillis()
+
+        // Calculate the time difference in milliseconds - this value will be negative if it's in the
+        // future or positive if it's in the past.
+        val timeDifferenceMS = nowMS - timestampMS
+
+        // Choose a desired time resolution based on the time difference.
+        // Note: We do this against the absolute time difference so this function can still work for
+        // both future/past times without having separate future/past cases.
+        val desiredResolution = when (abs(timeDifferenceMS)) {
+            in 0..DateUtils.MINUTE_IN_MILLIS -> DateUtils.SECOND_IN_MILLIS
+            in DateUtils.MINUTE_IN_MILLIS..DateUtils.HOUR_IN_MILLIS -> DateUtils.MINUTE_IN_MILLIS
+            in DateUtils.HOUR_IN_MILLIS..DateUtils.DAY_IN_MILLIS    -> DateUtils.HOUR_IN_MILLIS
+            in DateUtils.DAY_IN_MILLIS..DateUtils.WEEK_IN_MILLIS    -> DateUtils.DAY_IN_MILLIS
+
+            // We don't do months or years, so if the result is 53 weeks then so be it - also, the
+            // getRelativeTimeSpanString method's resolution maxes out at weeks!
+            else -> DateUtils.WEEK_IN_MILLIS
+        }
+
+        // Use DateUtils to get the relative time span string
+        return DateUtils.getRelativeTimeSpanString(
+            timestampMS,
+            nowMS,
+            desiredResolution,
+            DateUtils.FORMAT_ABBREV_RELATIVE
+            // Using either DateUtils.FORMAT_ABBREV_RELATIVE or DateUtils.FORMAT_ABBREV_ALL gives:
+            //  - 1 sec. ago / 2 sec. ago
+            //  - 1 min. ago / 2 min. ago
+            //  - 1 hr. ago / 2 hr. ago
+            //  - Yesterday / 2 days ago
+            //  - August 2 / 2 wk. ago / 14 wk. ago <-- Note: Date running this test is August 9th.
+
+            // Using either 0 or DateUtils.FORMAT_ABBREV_TIME gives:
+            //  - 1 second ago / 2 seconds ago
+            //  - 1 minute ago / 2 minutes ago
+            //  - 1 hour ago / 2 hours ago
+            //  - Yesterday / 2 days ago
+            //  - August 2nd / 2 weeks ago / 14 weeks ago <-- Note: Date running this test is August 9th.
+        ).toString()
+    }
+
+    fun testRelativeTimes(op: (Long, Long) -> Long) {
+        var t = 0L
+
+        // 1 and 2 seconds
+        t = op(System.currentTimeMillis(), 1.seconds.inWholeMilliseconds)
+        Log.w("ACL", "1s -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 2.seconds.inWholeMilliseconds)
+        Log.w("ACL", "2s -> ${getRelativeTimeLocalized(t)}")
+
+        // 1 and 2 minutes
+        t = op(System.currentTimeMillis(), 1.minutes.inWholeMilliseconds)
+        Log.w("ACL", "1m -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 2.minutes.inWholeMilliseconds)
+        Log.w("ACL", "2m -> ${getRelativeTimeLocalized(t)}")
+
+        // 1 and 2 hours
+        t = op(System.currentTimeMillis(), 1.hours.inWholeMilliseconds)
+        Log.w("ACL", "1h -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 2.hours.inWholeMilliseconds)
+        Log.w("ACL", "2h -> ${getRelativeTimeLocalized(t)}")
+
+        // 1 and 2 days
+        t = op(System.currentTimeMillis(), 1.days.inWholeMilliseconds)
+        Log.w("ACL", "1d -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 2.days.inWholeMilliseconds)
+        Log.w("ACL", "2d -> ${getRelativeTimeLocalized(t)}")
+
+        // 1 week, 2 weeks, and 100 days (14.285 weeks)
+        t = op(System.currentTimeMillis(), 7.days.inWholeMilliseconds)
+        Log.w("ACL", "1w -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 14.days.inWholeMilliseconds)
+        Log.w("ACL", "2w -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 100.days.inWholeMilliseconds)
+        Log.w("ACL", "100d -> ${getRelativeTimeLocalized(t)}")
+    }
+
+    fun testSystemGeneratedRelativeTimes() {
+        // Print relative times in the past
+        var op: (Long, Long) -> Long = Long::minus
+        testRelativeTimes(op)
+
+        // Print relative times in the future
+        op = Long::plus
+        testRelativeTimes(op)
+    }
+
+    // ACL REMOVE BLOCK END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
+
+        // ACL REMOVE THIS WHEN UNIT TESTS ARE FIXED
+        //Locale.setDefault(Locale.FRENCH)
+        //testSystemGeneratedRelativeTimes()
 
         // Set content view
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -244,17 +385,17 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 globalSearchViewModel.result.map { result ->
                     result.query to when {
                         result.query.isEmpty() -> buildList {
-                            add(GlobalSearchAdapter.Model.Header(R.string.contacts))
+                            add(GlobalSearchAdapter.Model.Header(R.string.contactContacts))
                             add(GlobalSearchAdapter.Model.SavedMessages(publicKey))
                             addAll(result.groupedContacts)
                         }
                         else -> buildList {
                             result.contactAndGroupList.takeUnless { it.isEmpty() }?.let {
-                                add(GlobalSearchAdapter.Model.Header(R.string.conversations))
+                                add(GlobalSearchAdapter.Model.Header(R.string.sessionConversations))
                                 addAll(it)
                             }
                             result.messageResults.takeUnless { it.isEmpty() }?.let {
-                                add(GlobalSearchAdapter.Model.Header(R.string.global_search_messages))
+                                add(GlobalSearchAdapter.Model.Header(R.string.messages))
                                 addAll(it)
                             }
                         }
@@ -427,7 +568,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 val clip = ClipData.newPlainText("Account ID", thread.recipient.address.toString())
                 val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 manager.setPrimaryClip(clip)
-                Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
             }
             else if (thread.recipient.isCommunityRecipient) {
                 val threadId = threadDb.getThreadIdIfExistsFor(thread.recipient)
@@ -436,7 +577,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 val clip = ClipData.newPlainText("Community URL", openGroup.joinURL)
                 val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 manager.setPrimaryClip(clip)
-                Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
             }
         }
         bottomSheet.onBlockTapped = {
@@ -482,9 +623,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private fun blockConversation(thread: ThreadRecord) {
         showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_block_this_contact_question)
-            text(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
-            button(R.string.RecipientPreferenceActivity_block) {
+            title(R.string.block)
+            text(Phrase.from(context, R.string.blockDescription)
+                .put(NAME_KEY, thread.recipient.name)
+                .format())
+            button(R.string.block) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     storage.setBlocked(listOf(thread.recipient), true)
 
@@ -492,6 +635,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         binding.recyclerView.adapter!!.notifyDataSetChanged()
                     }
                 }
+                // Block confirmation toast added as per SS-64
+                val txt = Phrase.from(context, R.string.blockBlockedUser).put(NAME_KEY, thread.recipient.name).format().toString()
+                Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
             }
             cancelButton()
         }
@@ -499,16 +645,18 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private fun unblockConversation(thread: ThreadRecord) {
         showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_unblock_this_contact_question)
-            text(R.string.RecipientPreferenceActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact)
-            button(R.string.RecipientPreferenceActivity_unblock) {
+            title(R.string.blockUnblock)
+            text(Phrase.from(context, R.string.blockUnblockName).put(NAME_KEY, thread.recipient.name).format())
+            button(R.string.blockUnblock) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     storage.setBlocked(listOf(thread.recipient), false)
-
                     withContext(Dispatchers.Main) {
                         binding.recyclerView.adapter!!.notifyDataSetChanged()
                     }
                 }
+                // Unblock confirmation toast added as per SS-64
+                val txt = Phrase.from(context, R.string.blockUnblockedUser).put(NAME_KEY, thread.recipient.name).format().toString()
+                Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
             }
             cancelButton()
         }
@@ -559,18 +707,42 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun deleteConversation(thread: ThreadRecord) {
         val threadID = thread.threadId
         val recipient = thread.recipient
-        val message = if (recipient.isGroupRecipient) {
+        val title: String
+        val message: CharSequence
+
+        if (recipient.isGroupRecipient) {
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
+
+            // If you are an admin of this group you can delete it
             if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
-                getString(R.string.admin_group_leave_warning)
+                title = getString(R.string.groupDelete)
+                message = Phrase.from(this.applicationContext, R.string.groupDeleteDescription)
+                    .put(GROUP_NAME_KEY, group.title)
+                    .format()
             } else {
-                resources.getString(R.string.activity_home_leave_group_dialog_message)
+                // Otherwise this is either a community, or it's a group you're not an admin of
+                title = if (recipient.isCommunityRecipient) getString(R.string.communityLeave) else getString(R.string.groupLeave)
+                message = Phrase.from(this.applicationContext, R.string.groupLeaveDescription)
+                    .put(GROUP_NAME_KEY, group.title)
+                    .format()
             }
         } else {
-            resources.getString(R.string.activity_home_delete_conversation_dialog_message)
+            // If this is a 1-on-1 conversation
+            if (recipient.name != null) {
+                title = getString(R.string.conversationsDelete)
+                message = Phrase.from(this.applicationContext, R.string.conversationsDeleteDescription)
+                    .put(NAME_KEY, recipient.name)
+                    .format()
+            }
+            else {
+                // If not group-related and we don't have a recipient name then this must be our Note to Self conversation
+                title = getString(R.string.noteToSelf)
+                message = getString(R.string.clearMessagesNoteToSelfDescription)
+            }
         }
 
         showSessionDialog {
+            title(title)
             text(message)
             button(R.string.yes) {
                 lifecycleScope.launch(Dispatchers.Main) {
@@ -583,7 +755,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                             GroupUtil.doubleDecodeGroupID(recipient.address.toString()).toHexString()
                                 .takeIf(DatabaseComponent.get(context).lokiAPIDatabase()::isClosedGroup)
                                 ?.let { MessageSender.explicitLeave(it, false) }
-                        } catch (_: IOException) {
+                        } catch (ioe: IOException) {
+                            Log.w(TAG, "Got an IOException while sending leave group message")
                         }
                     }
                     // Delete the conversation
@@ -597,8 +770,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     }
                     // Update the badge count
                     ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
+
                     // Notify the user
-                    val toastMessage = if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
+                    val toastMessage = if (recipient.isGroupRecipient) R.string.groupMemberYouLeft else R.string.conversationsDeleted
                     Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
                 }
             }
@@ -618,7 +792,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private fun hideMessageRequests() {
         showSessionDialog {
-            text(getString(R.string.hide_message_requests))
+            text(getString(R.string.hide))
             button(R.string.yes) {
                 textSecurePreferences.setHasHiddenMessageRequests()
                 homeViewModel.tryReload()

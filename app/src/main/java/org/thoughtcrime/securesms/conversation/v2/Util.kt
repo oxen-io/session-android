@@ -33,9 +33,6 @@ import android.view.View
 import com.annimon.stream.Stream
 import com.google.android.mms.pdu_alt.CharacterSets
 import com.google.android.mms.pdu_alt.EncodedStringValue
-import network.loki.messenger.R
-import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.components.ComposeText
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.UnsupportedEncodingException
@@ -43,6 +40,9 @@ import java.util.Collections
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
+import network.loki.messenger.R
+import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.components.ComposeText
 
 object Util {
     private val TAG: String = Log.tag(Util::class.java)
@@ -293,7 +293,7 @@ object Util {
     }
 
     fun writeTextToClipboard(context: Context, text: String) {
-        writeTextToClipboard(context, context.getString(R.string.app_name), text)
+        writeTextToClipboard(context, context.getString(R.string.sessionMessenger), text)
     }
 
     fun writeTextToClipboard(context: Context, label: String, text: String) {

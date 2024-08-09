@@ -78,7 +78,7 @@
         app:layout_constraintEnd_toStartOf="@id/emoji_search_clear"
         app:layout_constraintStart_toEndOf="@id/emoji_search_nav"
         app:layout_constraintTop_toTopOf="parent"
-        tools:hint="@string/KeyboardPagerFragment_search_emoji" />
+        tools:hint="@string/search" />
 
     <FrameLayout
         android:id="@+id/keyboard_search_click_only"

@@ -78,9 +78,9 @@ class MessageDetailsViewModel @Inject constructor(
                 MessageDetailsState(
                     attachments = slides.map(::Attachment),
                     record = record,
-                    sent = dateSent.let(::Date).toString().let { TitledText(R.string.message_details_header__sent, it) },
-                    received = dateReceived.let(::Date).toString().let { TitledText(R.string.message_details_header__received, it) },
-                    error = lokiMessageDatabase.getErrorMessage(id)?.let { TitledText(R.string.message_details_header__error, it) },
+                    sent = dateSent.let(::Date).toString().let { TitledText(R.string.sent, it) },
+                    received = dateReceived.let(::Date).toString().let { TitledText(R.string.received, it) },
+                    error = lokiMessageDatabase.getErrorMessage(id)?.let { TitledText(R.string.theError, it) },
                     senderInfo = individualRecipient.run { name?.let { TitledText(it, address.serialize()) } },
                     sender = individualRecipient,
                     thread = threadDb.getRecipientForThreadId(threadId)!!,
@@ -90,14 +90,14 @@ class MessageDetailsViewModel @Inject constructor(
 
     private val Slide.details: List<TitledText>
         get() = listOfNotNull(
-            fileName.orNull()?.let { TitledText(R.string.message_details_header__file_id, it) },
-            TitledText(R.string.message_details_header__file_type, asAttachment().contentType),
-            TitledText(R.string.message_details_header__file_size, Util.getPrettyFileSize(fileSize)),
+            fileName.orNull()?.let { TitledText(R.string.attachmentsFileId, it) },
+            TitledText(R.string.attachmentsFileType, asAttachment().contentType),
+            TitledText(R.string.attachmentsFileSize, Util.getPrettyFileSize(fileSize)),
             takeIf { it is ImageSlide }
                 ?.let(Slide::asAttachment)
                 ?.run { "${width}x$height" }
-                ?.let { TitledText(R.string.message_details_header__resolution, it) },
-            attachmentDb.duration(this)?.let { TitledText(R.string.message_details_header__duration, it) },
+                ?.let { TitledText(R.string.attachmentsResolution, it) },
+            attachmentDb.duration(this)?.let { TitledText(R.string.attachmentsDuration, it) },
         )
 
     private fun AttachmentDatabase.duration(slide: Slide): String? =
@@ -157,7 +157,7 @@ data class MessageDetailsState(
     val sender: Recipient? = null,
     val thread: Recipient? = null,
 ) {
-    val fromTitle = GetString(R.string.message_details_header__from)
+    val fromTitle = GetString(R.string.from)
     val canReply = record?.isOpenGroupInvitation != true
 }
 

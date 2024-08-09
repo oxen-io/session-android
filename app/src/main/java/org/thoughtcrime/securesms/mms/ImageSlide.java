@@ -62,6 +62,6 @@ public class ImageSlide extends Slide {
   @NonNull
   @Override
   public String getContentDescription() {
-    return context.getString(R.string.Slide_image);
+    return context.getString(R.string.image);
   }
 }

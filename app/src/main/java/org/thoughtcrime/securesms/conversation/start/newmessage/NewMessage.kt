@@ -58,7 +58,7 @@ import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
 import org.thoughtcrime.securesms.ui.theme.ThemeColors
 import kotlin.math.max
 
-private val TITLES = listOf(R.string.enter_account_id, R.string.qrScan)
+private val TITLES = listOf(R.string.accountIdEnter, R.string.qrScan)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -80,7 +80,7 @@ internal fun NewMessage(
         SessionTabRow(pagerState, TITLES)
         HorizontalPager(pagerState) {
             when (TITLES[it]) {
-                R.string.enter_account_id -> EnterAccountId(state, callbacks, onHelp)
+                R.string.accountIdEnter -> EnterAccountId(state, callbacks, onHelp)
                 R.string.qrScan -> MaybeScanQrCode(qrErrors, onScan = callbacks::onScanQrCode)
             }
         }
@@ -108,7 +108,7 @@ private fun EnterAccountId(
                 .verticalScroll(rememberScrollState())
 
             // There is a known issue with the ime padding on android versions below 30
-             /// So on these older versions we need to resort to some manual padding based on the visible height
+            // So on these older versions we need to resort to some manual padding based on the visible height
             // when the keyboard is up
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
                 val keyboardHeight by keyboardHeight()
@@ -141,9 +141,9 @@ private fun EnterAccountId(
                     Spacer(modifier = Modifier.height(LocalDimensions.current.xxxsSpacing))
 
                     BorderlessButtonWithIcon(
-                        text = stringResource(R.string.messageNewDescription),
+                        text = stringResource(R.string.messageNewDescriptionMobile),
                         modifier = Modifier
-                            .contentDescription(R.string.AccessibilityId_help_desk_link)
+                            .contentDescription(R.string.AccessibilityId_messageNewDescriptionMobile)
                             .padding(horizontal = LocalDimensions.current.mediumSpacing)
                             .fillMaxWidth(),
                         style = LocalType.current.small,

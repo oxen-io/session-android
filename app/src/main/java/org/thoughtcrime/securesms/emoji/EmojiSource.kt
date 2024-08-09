@@ -110,10 +110,12 @@ class EmojiSource(
         val parsedData: ParsedEmojiData = EmojiJsonParser.parse(it, ::getAssetsUri).getOrThrow()
         return EmojiSource(
           ScreenDensity.xhdpiRelativeDensityScaleFactor("xhdpi"),
+
           parsedData.copy(
-            displayPages = parsedData.displayPages + PAGE_EMOTICONS,
-            dataPages = parsedData.dataPages + PAGE_EMOTICONS
+            displayPages = parsedData.displayPages,
+            dataPages = parsedData.dataPages
           )
+
         ) { uri: Uri -> EmojiPage.Asset(uri) }
       }
     }
@@ -137,25 +139,3 @@ data class ObsoleteEmoji(val obsolete: String, val replaceWith: String)
 data class EmojiMetrics(val rawHeight: Int, val rawWidth: Int, val perRow: Int)
 
 private fun getAssetsUri(name: String, format: String): Uri = Uri.parse("file:///android_asset/emoji/$name.$format")
-
-private val PAGE_EMOTICONS: EmojiPageModel = StaticEmojiPageModel(
-  EmojiCategory.EMOTICONS,
-  arrayOf(
-    ":-)", ";-)", "(-:", ":->", ":-D", "\\o/",
-    ":-P", "B-)", ":-$", ":-*", "O:-)", "=-O",
-    "O_O", "O_o", "o_O", ":O", ":-!", ":-x",
-    ":-|", ":-\\", ":-(", ":'(", ":-[", ">:-(",
-    "^.^", "^_^", "\\(\u02c6\u02da\u02c6)/",
-    "\u30fd(\u00b0\u25c7\u00b0 )\u30ce", "\u00af\\(\u00b0_o)/\u00af",
-    "\u00af\\_(\u30c4)_/\u00af", "(\u00ac_\u00ac)",
-    "(>_<)", "(\u2565\ufe4f\u2565)", "(\u261e\uff9f\u30ee\uff9f)\u261e",
-    "\u261c(\uff9f\u30ee\uff9f\u261c)", "\u261c(\u2312\u25bd\u2312)\u261e",
-    "(\u256f\u00b0\u25a1\u00b0)\u256f\ufe35", "\u253b\u2501\u253b",
-    "\u252c\u2500\u252c", "\u30ce(\u00b0\u2013\u00b0\u30ce)",
-    "(^._.^)\uff89", "\u0e05^\u2022\ufecc\u2022^\u0e05",
-    "\u0295\u2022\u1d25\u2022\u0294", "(\u2022_\u2022)",
-    " \u25a0-\u25a0\u00ac <(\u2022_\u2022) ", "(\u25a0_\u25a0\u00ac)",
-    "\u01aa(\u0693\u05f2)\u200e\u01aa\u200b\u200b"
-  ),
-  null
-)

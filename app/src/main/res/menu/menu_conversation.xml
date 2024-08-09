@@ -4,19 +4,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="@string/conversation__menu_view_all_media"
+        android:title="@string/conversationsSettingsAllMedia"
         android:id="@+id/menu_view_all_media"
-        android:contentDescription="@string/AccessibilityId_all_media"/>
+        android:contentDescription="@string/AccessibilityId_conversationsSettingsAllMedia"/>
 
     <item
-        android:title="@string/SearchToolbar_search"
+        android:title="@string/search"
         android:id="@+id/menu_search"
         android:contentDescription="@string/AccessibilityId_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="collapseActionView" />
 
     <item
-        android:title="@string/conversation__menu_add_shortcut"
+        android:title="@string/conversationsAddToHome"
         android:id="@+id/menu_add_shortcut" />
 
 </menu>

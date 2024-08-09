@@ -28,13 +28,15 @@ class UpdateMessageData () {
         class GroupNameChange(val name: String): Kind() {
             constructor(): this("") //default constructor required for json serialization
         }
-        class GroupMemberAdded(val updatedMembers: Collection<String>): Kind() {
-            constructor(): this(Collections.emptyList())
+        class GroupMemberAdded(val updatedMembers: Collection<String>, val groupName: String): Kind() {
+            constructor(): this(Collections.emptyList(), "")
         }
-        class GroupMemberRemoved(val updatedMembers: Collection<String>): Kind() {
-            constructor(): this(Collections.emptyList())
+        class GroupMemberRemoved(val updatedMembers: Collection<String>, val groupName:String): Kind() {
+            constructor(): this(Collections.emptyList(), "")
         }
-        class GroupMemberLeft(): Kind()
+        class GroupMemberLeft(val updatedMembers: Collection<String>, val groupName:String): Kind() {
+            constructor(): this(Collections.emptyList(), "")
+        }
         class OpenGroupInvitation(val groupUrl: String, val groupName: String): Kind() {
             constructor(): this("", "")
         }
@@ -49,11 +51,11 @@ class UpdateMessageData () {
 
         fun buildGroupUpdate(type: SignalServiceGroup.Type, name: String, members: Collection<String>): UpdateMessageData? {
             return when(type) {
-                SignalServiceGroup.Type.CREATION -> UpdateMessageData(Kind.GroupCreation())
-                SignalServiceGroup.Type.NAME_CHANGE -> UpdateMessageData(Kind.GroupNameChange(name))
-                SignalServiceGroup.Type.MEMBER_ADDED -> UpdateMessageData(Kind.GroupMemberAdded(members))
-                SignalServiceGroup.Type.MEMBER_REMOVED -> UpdateMessageData(Kind.GroupMemberRemoved(members))
-                SignalServiceGroup.Type.QUIT -> UpdateMessageData(Kind.GroupMemberLeft())
+                SignalServiceGroup.Type.CREATION       -> UpdateMessageData(Kind.GroupCreation())
+                SignalServiceGroup.Type.NAME_CHANGE    -> UpdateMessageData(Kind.GroupNameChange(name))
+                SignalServiceGroup.Type.MEMBER_ADDED   -> UpdateMessageData(Kind.GroupMemberAdded(members, name))
+                SignalServiceGroup.Type.MEMBER_REMOVED -> UpdateMessageData(Kind.GroupMemberRemoved(members, name))
+                SignalServiceGroup.Type.MEMBER_LEFT    -> UpdateMessageData(Kind.GroupMemberLeft(members, name))
                 else -> null
             }
         }

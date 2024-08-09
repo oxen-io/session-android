@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="@string/conversation_expiring_off__disappearing_messages"
+        android:title="@string/disappearingMessages"
         android:id="@+id/menu_expiring_messages"
-        android:contentDescription="@string/AccessibilityId_disappearing_messages" />
+        android:contentDescription="@string/AccessibilityId_disappearingMessages" />
 
 </menu>

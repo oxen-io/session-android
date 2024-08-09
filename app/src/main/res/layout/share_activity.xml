@@ -42,9 +42,8 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-
     <fragment android:id="@+id/contact_selection_list_fragment"
-              android:layout_below="@id/toolbar"
+              android:layout_below="@id/search_toolbar"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:name="org.thoughtcrime.securesms.contacts.ContactSelectionListFragment" />

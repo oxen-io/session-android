@@ -7,10 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.copper.flow.observeQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
@@ -23,7 +21,6 @@ import network.loki.messenger.R
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.Storage
-import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.adapter.SelectableItem
 import javax.inject.Inject
 
@@ -75,35 +72,9 @@ class BlockedContactsViewModel @Inject constructor(private val storage: Storage)
         }
     }
 
-    fun getTitle(context: Context): String =
-        if (state.selectedItems.size == 1) {
-            context.getString(R.string.Unblock_dialog__title_single, state.selectedItems.first().name)
-        } else {
-            context.getString(R.string.Unblock_dialog__title_multiple)
-        }
+    fun getTitle(context: Context): String = context.getString(R.string.blockUnblock)
 
-    fun getMessage(context: Context): String {
-        if (state.selectedItems.size == 1) {
-            return context.getString(R.string.Unblock_dialog__message, state.selectedItems.first().name)
-        }
-        val stringBuilder = StringBuilder()
-        val iterator = state.selectedItems.iterator()
-        var numberAdded = 0
-        while (iterator.hasNext() && numberAdded < 3) {
-            val nextRecipient = iterator.next()
-            if (numberAdded > 0) stringBuilder.append(", ")
-
-            stringBuilder.append(nextRecipient.name)
-            numberAdded++
-        }
-        val overflow = state.selectedItems.size - numberAdded
-        if (overflow > 0) {
-            stringBuilder.append(" ")
-            val string = context.resources.getQuantityString(R.plurals.Unblock_dialog__message_multiple_overflow, overflow)
-            stringBuilder.append(string.format(overflow))
-        }
-       return context.getString(R.string.Unblock_dialog__message, stringBuilder.toString())
-    }
+    fun getMessage(context: Context): String = context.getString(R.string.blockUnblock)
 
     fun toggle(selectable: SelectableItem<Recipient>) {
         _state.value = state.run {

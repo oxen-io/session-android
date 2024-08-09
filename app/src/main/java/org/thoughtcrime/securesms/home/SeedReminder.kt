@@ -18,15 +18,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.ui.theme.LocalDimensions
-import org.thoughtcrime.securesms.ui.theme.PreviewTheme
-import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
 import org.thoughtcrime.securesms.ui.SessionShieldIcon
-import org.thoughtcrime.securesms.ui.theme.ThemeColors
-import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.components.SlimPrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.contentDescription
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
 
 @Composable
 internal fun SeedReminder(startRecoveryPasswordActivity: () -> Unit) {
@@ -49,23 +49,23 @@ internal fun SeedReminder(startRecoveryPasswordActivity: () -> Unit) {
             Column(Modifier.weight(1f)) {
                 Row {
                     Text(
-                        stringResource(R.string.save_your_recovery_password),
+                        stringResource(R.string.recoveryPasswordBannerTitle),
                         style = LocalType.current.h8
                     )
                     Spacer(Modifier.requiredWidth(LocalDimensions.current.xxsSpacing))
                     SessionShieldIcon()
                 }
                 Text(
-                    stringResource(R.string.save_your_recovery_password_to_make_sure_you_don_t_lose_access_to_your_account),
+                    stringResource(R.string.recoveryPasswordBannerDescription),
                     style = LocalType.current.small
                 )
             }
             Spacer(Modifier.width(LocalDimensions.current.xsSpacing))
             SlimPrimaryOutlineButton(
-                text = stringResource(R.string.continue_2),
+                text = stringResource(R.string.theContinue),
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .contentDescription(R.string.AccessibilityId_reveal_recovery_phrase_button),
+                    .contentDescription(R.string.AccessibilityId_recoveryPasswordBanner),
                 onClick = startRecoveryPasswordActivity
             )
         }
@@ -78,6 +78,6 @@ private fun PreviewSeedReminder(
     @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
-        SeedReminder {}
+        SeedReminder { }
     }
 }

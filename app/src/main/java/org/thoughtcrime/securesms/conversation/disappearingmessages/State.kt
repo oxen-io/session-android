@@ -24,8 +24,8 @@ data class State(
     val showDebugOptions: Boolean = false
 ) {
     val subtitle get() = when {
-        isGroup || isNoteToSelf -> GetString(R.string.activity_disappearing_messages_subtitle_sent)
-        else -> GetString(R.string.activity_disappearing_messages_subtitle)
+        isGroup || isNoteToSelf -> GetString(R.string.disappearingMessagesDisappearAfterSendDescription)
+        else -> GetString(R.string.disappearingMessagesDescription1)
     }
 
     val typeOptionsHidden get() = isNoteToSelf || (isGroup && isNewConfigEnabled)
@@ -51,7 +51,7 @@ enum class ExpiryType(
 ) {
     NONE(
         { ExpiryMode.NONE },
-        R.string.expiration_off,
+        R.string.off,
         contentDescription = R.string.AccessibilityId_disable_disappearing_messages,
     ),
     LEGACY(
@@ -61,14 +61,14 @@ enum class ExpiryType(
     ),
     AFTER_READ(
         ExpiryMode::AfterRead,
-        R.string.expiration_type_disappear_after_read,
-        R.string.expiration_type_disappear_after_read_description,
+        R.string.disappearingMessagesDisappearAfterRead,
+        R.string.disappearingMessagesDisappearAfterReadDescription,
         R.string.AccessibilityId_disappear_after_read_option
     ),
     AFTER_SEND(
         ExpiryMode::AfterSend,
-        R.string.expiration_type_disappear_after_send,
-        R.string.expiration_type_disappear_after_send_description,
+        R.string.disappearingMessagesDisappearAfterSend,
+        R.string.disappearingMessagesDisappearAfterSendDescription,
         R.string.AccessibilityId_disappear_after_send_option
     );
 

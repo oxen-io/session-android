@@ -34,8 +34,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.squareup.phrase.Phrase
 import kotlinx.coroutines.delay
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.ui.AlertDialog
 import org.thoughtcrime.securesms.ui.DialogButtonModel
 import org.thoughtcrime.securesms.ui.GetString
@@ -81,13 +83,13 @@ internal fun LandingScreen(
             showCloseButton = true, // display the 'x' button
             buttons = listOf(
                 DialogButtonModel(
-                    text = GetString(R.string.activity_landing_terms_of_service),
-                    contentDescription = GetString(R.string.AccessibilityId_terms_of_service_button),
+                    text = GetString(R.string.onboardingTos),
+                    contentDescription = GetString(R.string.AccessibilityId_onboardingTos),
                     onClick = openTerms
                 ),
                 DialogButtonModel(
-                    text = GetString(R.string.activity_landing_privacy_policy),
-                    contentDescription = GetString(R.string.AccessibilityId_privacy_policy_button),
+                    text = GetString(R.string.onboardingPrivacy),
+                    contentDescription = GetString(R.string.AccessibilityId_onboardingPrivacy),
                     onClick = openPrivacyPolicy
                 )
             )
@@ -129,10 +131,21 @@ internal fun LandingScreen(
                     MESSAGES.take(count),
                     key = { it.stringId }
                 ) { item ->
-                    AnimateMessageText(
-                        stringResource(item.stringId),
-                        item.isOutgoing
-                    )
+                    // Perform string substitution in the bubbles that require it
+                    if (item.stringId == R.string.onboardingBubbleWelcomeToSession ||
+                        item.stringId == R.string.onboardingBubbleSessionIsEngineered) {
+                        AnimateMessageText(
+                            Phrase.from(stringResource(item.stringId))
+                                .put(APP_NAME_KEY, stringResource(R.string.sessionMessenger))
+                                .format().toString(),
+                            item.isOutgoing
+                        )
+                    } else { // Non-substituted text bubbles
+                        AnimateMessageText(
+                            stringResource(item.stringId),
+                            item.isOutgoing
+                        )
+                    }
                 }
             }
 
@@ -145,7 +158,7 @@ internal fun LandingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
-                    .contentDescription(R.string.AccessibilityId_create_account_button),
+                    .contentDescription(R.string.AccessibilityId_onboardingAccountCreate),
                 onClick = createAccount
             )
             Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
@@ -154,7 +167,7 @@ internal fun LandingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
-                    .contentDescription(R.string.AccessibilityId_restore_account_button),
+                    .contentDescription(R.string.AccessibilityId_onboardingAccountExists),
                 onClick = loadAccount
             )
             BorderlessHtmlButton(
@@ -162,7 +175,7 @@ internal fun LandingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
-                    .contentDescription(R.string.AccessibilityId_open_url),
+                    .contentDescription(R.string.AccessibilityId_urlOpenBrowser),
                 onClick = { isUrlDialogVisible = true }
             )
             Spacer(modifier = Modifier.height(LocalDimensions.current.xxsSpacing))

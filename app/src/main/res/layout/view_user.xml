@@ -38,7 +38,7 @@
 
         <ImageView
             android:id="@+id/actionIndicatorImageView"
-            android:contentDescription="@string/AccessibilityId_select_contact"
+            android:contentDescription="@string/AccessibilityId_selectContact"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="@dimen/medium_spacing"

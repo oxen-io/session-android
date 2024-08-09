@@ -132,7 +132,7 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
   }
 
   private void initializeToolbar() {
-    Toolbar toolbar = findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.search_toolbar);
     setSupportActionBar(toolbar);
     ActionBar actionBar = getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);

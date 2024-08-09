@@ -29,7 +29,7 @@
                 android:src="@drawable/ic_crown"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:contentDescription="@string/AccessibilityId_contact_mentions"/>
+                android:contentDescription="@string/AccessibilityId_contactMentions"/>
 
         </RelativeLayout>
 
@@ -42,7 +42,7 @@
             android:textColor="?android:textColorPrimary"
             android:maxLines="1"
             tools:text="Alice"
-            android:contentDescription="@string/AccessibilityId_contact_mentions"
+            android:contentDescription="@string/AccessibilityId_contactMentions"
             android:ellipsize="end" />
 
     </LinearLayout>

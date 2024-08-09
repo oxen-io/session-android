@@ -10,13 +10,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.PowerManager;
+import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Pair;
-import android.widget.Toast;
-
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -32,22 +30,16 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-
-import org.jetbrains.annotations.NotNull;
-import org.thoughtcrime.securesms.attachments.AttachmentServer;
-import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.mms.AudioSlide;
-import org.session.libsession.utilities.ServiceUtil;
-
-import org.session.libsession.utilities.Util;
-
-import org.session.libsignal.utilities.guava.Optional;
-
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-
 import network.loki.messenger.BuildConfig;
-import network.loki.messenger.R;
+import org.jetbrains.annotations.NotNull;
+import org.session.libsession.utilities.ServiceUtil;
+import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.Log;
+import org.session.libsignal.utilities.guava.Optional;
+import org.thoughtcrime.securesms.attachments.AttachmentServer;
+import org.thoughtcrime.securesms.mms.AudioSlide;
 
 public class AudioSlidePlayer implements SensorEventListener {
 

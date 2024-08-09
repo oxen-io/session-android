@@ -3,6 +3,7 @@ package org.session.libsession.utilities
 // String substitution keys for use with the Phrase library.
 // Note: The substitution will be to {app_name} etc. in the strings - but do NOT include the curly braces in these keys!
 object StringSubstitutionConstants {
+    const val ACCOUNT_ID_KEY                 = "account_id"
     const val APP_NAME_KEY                   = "app_name"
     const val COMMUNITY_NAME_KEY             = "community_name"
     const val CONVERSATION_COUNT_KEY         = "conversation_count"

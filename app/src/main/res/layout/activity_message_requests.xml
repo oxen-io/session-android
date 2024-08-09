@@ -39,17 +39,17 @@
             android:visibility="gone">
 
             <TextView
-                android:contentDescription="@string/AccessibilityId_empty_message_request_folder"
+                android:contentDescription="@string/AccessibilityId_messageRequestsNonePending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/message_request_empty_state_message"
+                android:text="@string/messageRequestsNonePending"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size" />
 
         </LinearLayout>
 
         <Button
-            android:contentDescription="@string/AccessibilityId_clear_all_message_requests"
+            android:contentDescription="@string/AccessibilityId_clearAll"
             android:id="@+id/clearAllMessageRequestsButton"
             style="@style/Widget.Session.Button.Common.DangerOutline"
             android:layout_width="196dp"
@@ -58,7 +58,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/medium_spacing"
             android:layout_marginBottom="@dimen/massive_spacing"
-            android:text="@string/message_requests_clear_all" />
+            android:text="@string/clearAll" />
 
     </RelativeLayout>
 
