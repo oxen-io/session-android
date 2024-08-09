@@ -14,8 +14,6 @@ import org.session.libsession.LocalisedTimeUtil.toShortTwoPartString
 import org.session.libsignal.utilities.Log
 
 import android.text.format.DateUtils
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlin.math.abs
 
 

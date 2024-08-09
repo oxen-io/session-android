@@ -21,6 +21,12 @@ android {
         testOptions {
             execution 'ANDROIDX_TEST_ORCHESTRATOR'
         }
+
+        sourceSets {
+            test {
+                java.srcDirs = ['src/AndroidTest/java/org/session/libsession']
+            }
+        }
     }
 
     compileOptions {

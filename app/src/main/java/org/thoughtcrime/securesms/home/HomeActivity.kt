@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.PluralsRes
@@ -88,6 +89,11 @@ import java.io.IOException
 import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 private const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
 private const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
@@ -154,9 +160,130 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private val isFromOnboarding: Boolean get() = intent.getBooleanExtra(FROM_ONBOARDING, false)
     private val isNewAccount: Boolean get() = intent.getBooleanExtra(NEW_ACCOUNT, false)
 
+
+
+
+
+
+
+    // ACL REMOVE BLOCK START
+
+    fun getRelativeTimeLocalized(timestampMS: Long): String {
+        // Get the current system time
+        val nowMS = System.currentTimeMillis()
+
+        // Calculate the time difference in milliseconds - this value will be negative if it's in the
+        // future or positive if it's in the past.
+        val timeDifferenceMS = nowMS - timestampMS
+
+        // Choose a desired time resolution based on the time difference.
+        // Note: We do this against the absolute time difference so this function can still work for
+        // both future/past times without having separate future/past cases.
+        val desiredResolution = when (abs(timeDifferenceMS)) {
+            in 0..DateUtils.MINUTE_IN_MILLIS -> DateUtils.SECOND_IN_MILLIS
+            in DateUtils.MINUTE_IN_MILLIS..DateUtils.HOUR_IN_MILLIS -> DateUtils.MINUTE_IN_MILLIS
+            in DateUtils.HOUR_IN_MILLIS..DateUtils.DAY_IN_MILLIS    -> DateUtils.HOUR_IN_MILLIS
+            in DateUtils.DAY_IN_MILLIS..DateUtils.WEEK_IN_MILLIS    -> DateUtils.DAY_IN_MILLIS
+
+            // We don't do months or years, so if the result is 53 weeks then so be it - also, the
+            // getRelativeTimeSpanString method's resolution maxes out at weeks!
+            else -> DateUtils.WEEK_IN_MILLIS
+        }
+
+        // Use DateUtils to get the relative time span string
+        return DateUtils.getRelativeTimeSpanString(
+            timestampMS,
+            nowMS,
+            desiredResolution,
+            DateUtils.FORMAT_ABBREV_RELATIVE
+            // Using either DateUtils.FORMAT_ABBREV_RELATIVE or DateUtils.FORMAT_ABBREV_ALL gives:
+            //  - 1 sec. ago / 2 sec. ago
+            //  - 1 min. ago / 2 min. ago
+            //  - 1 hr. ago / 2 hr. ago
+            //  - Yesterday / 2 days ago
+            //  - August 2 / 2 wk. ago / 14 wk. ago <-- Note: Date running this test is August 9th.
+
+            // Using either 0 or DateUtils.FORMAT_ABBREV_TIME gives:
+            //  - 1 second ago / 2 seconds ago
+            //  - 1 minute ago / 2 minutes ago
+            //  - 1 hour ago / 2 hours ago
+            //  - Yesterday / 2 days ago
+            //  - August 2nd / 2 weeks ago / 14 weeks ago <-- Note: Date running this test is August 9th.
+
+            //DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_RELATIVE // Try this w/ just FORMAT_ABBREV_RELATIVE
+        ).toString()
+    }
+
+    fun testRelativeTimes(op: (Long, Long) -> Long) {
+        var t = 0L
+
+        // 1 and 2 seconds
+        t = op(System.currentTimeMillis(), 1.seconds.inWholeMilliseconds)
+        Log.w("ACL", "1s -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 2.seconds.inWholeMilliseconds)
+        Log.w("ACL", "2s -> ${getRelativeTimeLocalized(t)}")
+
+        // 1 and 2 minutes
+        t = op(System.currentTimeMillis(), 1.minutes.inWholeMilliseconds)
+        Log.w("ACL", "1m -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 2.minutes.inWholeMilliseconds)
+        Log.w("ACL", "2m -> ${getRelativeTimeLocalized(t)}")
+
+        // 1 and 2 hours
+        t = op(System.currentTimeMillis(), 1.hours.inWholeMilliseconds)
+        Log.w("ACL", "1h -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 2.hours.inWholeMilliseconds)
+        Log.w("ACL", "2h -> ${getRelativeTimeLocalized(t)}")
+
+        // 1 and 2 days
+        t = op(System.currentTimeMillis(), 1.days.inWholeMilliseconds)
+        Log.w("ACL", "1d -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 2.days.inWholeMilliseconds)
+        Log.w("ACL", "2d -> ${getRelativeTimeLocalized(t)}")
+
+        // 1 week, 2 weeks, and 100 days (14.285 weeks)
+        t = op(System.currentTimeMillis(), 7.days.inWholeMilliseconds)
+        Log.w("ACL", "1w -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 14.days.inWholeMilliseconds)
+        Log.w("ACL", "2w -> ${getRelativeTimeLocalized(t)}")
+        t = op(System.currentTimeMillis(), 100.days.inWholeMilliseconds)
+        Log.w("ACL", "100d -> ${getRelativeTimeLocalized(t)}")
+    }
+
+    fun testSystemGeneratedRelativeTimes() {
+        // Print relative times in the past
+        var op: (Long, Long) -> Long = Long::minus
+        testRelativeTimes(op)
+
+        // Print relative times in the future
+        op = Long::plus
+        testRelativeTimes(op)
+    }
+
+    // ACL REMOVE BLOCK END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
+
+        // ACL REMOVE THIS WHEN UNIT TESTS ARE FIXED
+        //Locale.setDefault(Locale.FRENCH)
+        //testSystemGeneratedRelativeTimes()
 
         // Set content view
         binding = ActivityHomeBinding.inflate(layoutInflater)
