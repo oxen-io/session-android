@@ -76,7 +76,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="contentDescriptionCamera">Kamera</string>
     <string name="attachment_type_selector__gallery_description">Wêne yan vidyo</string>
     <string name="attachment_type_selector__drawer_description">Çaviya servehiya din bijerînin</string>
     <!-- contact_selection_group_activity -->

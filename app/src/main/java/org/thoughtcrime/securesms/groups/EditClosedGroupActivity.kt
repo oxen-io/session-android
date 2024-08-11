@@ -109,13 +109,9 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         groupID = intent.getStringExtra(groupIDKey)!!
         val groupInfo = DatabaseComponent.get(this).groupDatabase().getGroup(groupID).get()
         originalName = groupInfo.title
-        isSelfAdmin = groupInfo.admins.any{ it.serialize() == TextSecurePreferences.getLocalNumber(this) }
+        isSelfAdmin = groupInfo.admins.any { it.serialize() == TextSecurePreferences.getLocalNumber(this) }
 
         name = originalName
-
-        // Update the group member count
-        val memberCountTV = findViewById<TextView>(R.id.editGroupMemberCount)
-        memberCountTV.text = resources.getQuantityString(R.plurals.members, members.size, members.size)
 
         mainContentContainer = findViewById(R.id.mainContentContainer)
         cntGroupNameEdit     = findViewById(R.id.cntGroupNameEdit)
@@ -179,6 +175,10 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
                 originalMembers.clear()
                 originalMembers.addAll(members + zombies)
                 updateMembers()
+
+                // Now that we have the group members we can update the text on the member count
+                val memberCountTV = findViewById<TextView>(R.id.editGroupMemberCount)
+                memberCountTV.text = resources.getQuantityString(R.plurals.members, members.size, members.size)
             }
 
             override fun onLoaderReset(loader: Loader<GroupMembers>) {

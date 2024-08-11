@@ -71,7 +71,6 @@
     <!-- TransferControlView -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="contentDescriptionCamera">ကင်မရာ </string>
     <string name="attachment_type_selector__gallery_description">ဓာတ်ပုံ သို့မဟုတ် ဗီဒီယို </string>
     <string name="attachment_type_selector__drawer_description">ပူးတွဲဖိုင် drawer အားတစ်ချက်နှိပ်ပါ </string>
     <!-- contact_selection_group_activity -->

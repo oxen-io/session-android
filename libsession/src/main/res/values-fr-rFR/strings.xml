@@ -88,7 +88,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="contentDescriptionCamera">Appareil photo</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Image ou vidéo</string>
     <string name="attachment_type_selector__drawer_description">Afficher, masquer le tiroir des pièces jointes</string>

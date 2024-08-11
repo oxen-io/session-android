@@ -251,7 +251,6 @@
     <string name="contactNone">You don\'t have any contacts yet</string>
     <string name="contactSelect">Select Contacts</string>
     <string name="contactUserDetails">User Details</string>
-    <string name="contentDescriptionCamera">Camera</string>
     <string name="conversationsAddToHome">Add to home screen</string>
     <string name="conversationsAddedToHome">Added to home screen</string>
     <string name="conversationsAudioMessages">Audio Messages</string>

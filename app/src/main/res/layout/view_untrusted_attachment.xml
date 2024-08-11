@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:contentDescription="@string/AccessibilityId_untrusted_attachment_message"
+    android:contentDescription="@string/AccessibilityId_attachmentsClickToDownload"
     android:orientation="horizontal"
     android:padding="@dimen/medium_spacing"
     android:gravity="center">

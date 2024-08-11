@@ -73,7 +73,6 @@
     <!-- TransferControlView -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="contentDescriptionCamera">Shuyullukchik</string>
     <string name="attachment_type_selector__gallery_description">Shuyu manakashpaka shuyukuyuriy.</string>
     <string name="attachment_type_selector__drawer_description">Kimichishka millkakunata rurana</string>
     <!-- contact_selection_group_activity -->

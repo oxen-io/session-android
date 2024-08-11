@@ -80,7 +80,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="contentDescriptionCamera">Камера</string>
     <string name="attachment_type_selector__gallery_description">Изображение или видео</string>
     <string name="attachment_type_selector__drawer_description">Затваряне/отваряне на чекмеджето с прикачени файлове</string>
     <!-- contact_selection_group_activity -->

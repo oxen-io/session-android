@@ -36,7 +36,7 @@
 
         <org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarEditText
             android:id="@+id/inputBarEditText"
-            android:contentDescription="@string/AccessibilityId_message_input"
+            android:contentDescription="@string/AccessibilityId_inputBox"
             android:inputType="textMultiLine"
             android:layout_width="match_parent"
             android:layout_height="40dp"

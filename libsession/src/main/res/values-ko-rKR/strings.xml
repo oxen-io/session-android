@@ -74,7 +74,6 @@
     <!-- TransferControlView -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="contentDescriptionCamera">카메라</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">보내기</string>

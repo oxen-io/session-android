@@ -80,7 +80,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="contentDescriptionCamera">Камера</string>
     <string name="gif">Гиф</string>
     <string name="attachment_type_selector__gallery_description">Слика или видео</string>
     <string name="attachment_type_selector__drawer_description">Фиока прилога</string>

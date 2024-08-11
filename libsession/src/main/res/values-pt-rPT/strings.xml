@@ -82,7 +82,6 @@
     <!-- TransferControlView -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="contentDescriptionCamera">Câmara</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Imagem ou vídeo</string>
     <string name="attachment_type_selector__drawer_description">Comutar gaveta de anexos</string>

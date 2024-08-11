@@ -81,7 +81,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="contentDescriptionCamera">Cameră</string>
     <string name="gif">Gif</string>
     <string name="attachment_type_selector__gallery_description">Imagine sau video</string>
     <string name="attachment_type_selector__drawer_description">Comutare panou atașamente</string>

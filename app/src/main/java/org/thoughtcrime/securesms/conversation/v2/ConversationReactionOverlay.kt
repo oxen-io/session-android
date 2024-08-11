@@ -531,7 +531,7 @@ class ConversationReactionOverlay : FrameLayout {
         // Reply
         val canWrite = openGroup == null || openGroup.canWrite
         if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation) {
-            items += ActionItem(R.attr.menu_reply_icon, R.string.reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply_message)
+            items += ActionItem(R.attr.menu_reply_icon, R.string.reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply)
         }
         // Copy message text
         if (!containsControlMessage && hasText) {
@@ -544,7 +544,7 @@ class ConversationReactionOverlay : FrameLayout {
         // Delete message
         if (userCanDeleteSelectedItems(context, message, openGroup, userPublicKey, blindedPublicKey)) {
             items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) },
-                R.string.AccessibilityId_delete_message, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
+                R.string.AccessibilityId_deleteMessage, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
         }
         // Ban user
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
@@ -572,7 +572,7 @@ class ConversationReactionOverlay : FrameLayout {
                 items += ActionItem(R.attr.menu_save_icon,
                             R.string.save,
                             { handleActionItemClicked(Action.DOWNLOAD) },
-                            R.string.AccessibilityId_save_attachment
+                            R.string.AccessibilityId_save
                 )
             }
         }

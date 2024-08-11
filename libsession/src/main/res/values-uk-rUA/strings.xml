@@ -82,7 +82,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="contentDescriptionCamera">Камера</string>
     <string name="gif">Гіф</string>
     <string name="attachment_type_selector__gallery_description">Зображення або відео</string>
     <string name="attachment_type_selector__drawer_description">Увімк/вимк скриньку вкладень</string>
