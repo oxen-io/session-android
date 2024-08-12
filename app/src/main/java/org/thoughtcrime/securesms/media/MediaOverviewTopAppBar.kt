@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalType
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,11 +31,15 @@ fun MediaOverviewTopAppBar(
 ) {
     TopAppBar(
         title = {
-            if (selectionMode) {
-                Text(selected.size.toString())
-            } else {
-                Text(title)
-            }
+            Text(
+                text = if (selectionMode) {
+                    selected.size.toString()
+                } else {
+                    title
+                },
+                style = LocalType.current.h6,
+                color = LocalColors.current.text,
+            )
         },
         navigationIcon = {
             IconButton(onBackClicked) {

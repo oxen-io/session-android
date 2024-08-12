@@ -19,7 +19,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -33,13 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.AlertDialog
 import org.thoughtcrime.securesms.ui.DialogButtonModel
 import org.thoughtcrime.securesms.ui.GetString
+import org.thoughtcrime.securesms.ui.components.SessionTabRow
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalType
 
@@ -148,26 +146,10 @@ fun MediaOverviewScreen(
                 viewModel.onTabItemClicked(MediaOverviewTab.entries[pagerState.currentPage])
             }
 
-            Row(modifier = Modifier.fillMaxWidth()) {
-                MediaOverviewTab.entries.forEach { tab ->
-                    TextButton(
-                        onClick = { viewModel.onTabItemClicked(tab) },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = stringResource(tab.titleResId),
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = LocalType.current.large,
-                            color = if (selectedTab == tab) {
-                                LocalColors.current.text
-                            } else {
-                                LocalColors.current.textSecondary
-                            }
-                        )
-                    }
-                }
-            }
+            SessionTabRow(
+                pagerState = pagerState,
+                titles = MediaOverviewTab.entries.map { it.titleResId }
+            )
 
             val content = viewModel.mediaListState.collectAsState()
             val canLongPress = viewModel.canLongPress.collectAsState().value

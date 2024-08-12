@@ -7,7 +7,7 @@ import java.time.temporal.WeekFields
 import java.util.Locale
 
 /**
- * A data structure that describes certain a series of time of interests in the past. It's primarily
+ * A data structure that describes a series of time points in the past. It's primarily
  * used to bucket items into categories like "Today", "Yesterday", "This week", "This month", etc.
  *
  * Call [getBucketText] to get the appropriate string resource for a given time. If no bucket is
