@@ -347,8 +347,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         ApplicationContext.getInstance(this).messageNotifier.setHomeScreenVisible(true)
         if (textSecurePreferences.getLocalNumber() == null) { return; } // This can be the case after a secondary device is auto-cleared
         IdentityKeyUtil.checkUpdate(this)
-        binding.profileButton.recycle() // clear cached image before update tje profilePictureView
-        binding.profileButton.update()
+        binding.profileButton.load(Address.fromSerialized(publicKey))
         if (textSecurePreferences.getHasViewedSeed()) {
             binding.seedReminderView.isVisible = false
         }
@@ -388,10 +387,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun updateProfileButton() {
-        binding.profileButton.publicKey = publicKey
-        binding.profileButton.displayName = textSecurePreferences.getProfileName()
-        binding.profileButton.recycle()
-        binding.profileButton.update()
+        binding.profileButton.load(Address.fromSerialized(publicKey))
     }
     // endregion
 
