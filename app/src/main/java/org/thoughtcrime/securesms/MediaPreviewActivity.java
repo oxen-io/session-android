@@ -17,7 +17,6 @@
 package org.thoughtcrime.securesms;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,7 +25,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -57,6 +55,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment;
@@ -70,10 +71,9 @@ import org.thoughtcrime.securesms.components.MediaView;
 import org.thoughtcrime.securesms.database.MediaDatabase.MediaRecord;
 import org.thoughtcrime.securesms.database.loaders.PagingMediaLoader;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
+import org.thoughtcrime.securesms.media.MediaOverviewActivity;
 import org.thoughtcrime.securesms.mediapreview.MediaPreviewViewModel;
 import org.thoughtcrime.securesms.mediapreview.MediaRailAdapter;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.util.AttachmentUtil;
@@ -391,9 +391,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   }
 
   private void showOverview() {
-    Intent intent = new Intent(this, MediaOverviewActivity.class);
-    intent.putExtra(MediaOverviewActivity.ADDRESS_EXTRA, conversationRecipient.getAddress());
-    startActivity(intent);
+    startActivity(MediaOverviewActivity.createIntent(this, conversationRecipient.getAddress()));
   }
 
   private void forward() {
