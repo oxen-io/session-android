@@ -95,6 +95,7 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
+// Intent extra keys so we know where we came from
 private const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
 private const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
 
@@ -104,11 +105,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     private val TAG = "HomeActivity"
-
-//    companion object {
-//        const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
-//        const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
-//    }
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: RequestManager
@@ -159,12 +155,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private val isFromOnboarding: Boolean get() = intent.getBooleanExtra(FROM_ONBOARDING, false)
     private val isNewAccount: Boolean get() = intent.getBooleanExtra(NEW_ACCOUNT, false)
-
-
-
-
-
-
 
     // ACL REMOVE BLOCK START
 

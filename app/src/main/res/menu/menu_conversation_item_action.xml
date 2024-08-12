@@ -47,9 +47,8 @@
         android:id="@+id/menu_context_ban_user"
         app:showAsAction="never" />
 
-    <!-- ACL - we don't have a "Ban and delete all" string - ping Lucy -->
     <item
-        android:title="Ban and delete all NEED STRING!"
+        android:title="@string/banDeleteAll"
         android:id="@+id/menu_context_ban_and_delete_all"
         app:showAsAction="never" />
 

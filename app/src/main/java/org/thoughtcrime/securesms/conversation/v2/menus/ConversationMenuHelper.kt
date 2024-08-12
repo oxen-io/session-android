@@ -52,11 +52,11 @@ object ConversationMenuHelper {
     ) {
         // Prepare
         menu.clear()
-        val isOpenGroup = thread.isCommunityRecipient
+        val isCommunity = thread.isCommunityRecipient
         // Base menu (options that should always be present)
         inflater.inflate(R.menu.menu_conversation, menu)
         // Expiring messages
-        if (!isOpenGroup && (thread.hasApprovedMe() || thread.isClosedGroupRecipient || thread.isLocalNumber)) {
+        if (!isCommunity && (thread.hasApprovedMe() || thread.isClosedGroupRecipient || thread.isLocalNumber)) {
             inflater.inflate(R.menu.menu_conversation_expiration, menu)
         }
         // One-on-one chat menu allows copying the account id
@@ -76,7 +76,7 @@ object ConversationMenuHelper {
             inflater.inflate(R.menu.menu_conversation_closed_group, menu)
         }
         // Open group menu
-        if (isOpenGroup) {
+        if (isCommunity) {
             inflater.inflate(R.menu.menu_conversation_open_group, menu)
         }
         // Muting
