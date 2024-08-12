@@ -2,8 +2,8 @@ package org.thoughtcrime.securesms.media
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
-import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -22,16 +22,21 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import network.loki.messenger.R
-import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
+import org.session.libsession.messaging.messages.control.DataExtractionNotification
+import org.session.libsession.messaging.sending_receiving.MessageSender
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
+import org.thoughtcrime.securesms.MediaPreviewActivity
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.MediaDatabase
 import org.thoughtcrime.securesms.database.MediaDatabase.MediaRecord
 import org.thoughtcrime.securesms.database.ThreadDatabase
+import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.mms.Slide
+import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
+import org.thoughtcrime.securesms.util.SaveAttachmentTask
 import org.thoughtcrime.securesms.util.asSequence
 import org.thoughtcrime.securesms.util.observeChanges
 import java.time.Instant
@@ -39,12 +44,10 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.WeekFields
 import java.util.Locale
-import javax.inject.Inject
 
 class MediaOverviewViewModel(
-    address: Address,
+    private val address: Address,
     private val application: Application,
     private val threadDatabase: ThreadDatabase,
     private val mediaDatabase: MediaDatabase
@@ -71,14 +74,14 @@ class MediaOverviewViewModel(
                     .use { cursor ->
                         cursor.asSequence()
                             .map { MediaRecord.from(application, it) }
-                            .groupRecordsByDate()
+                            .groupRecordsByTimeBuckets()
                     }
 
                 val documentItems = mediaDatabase.getDocumentMediaForThread(threadId)
                     .use { cursor ->
                         cursor.asSequence()
                             .map { MediaRecord.from(application, it) }
-                            .groupRecordsByDate()
+                            .groupRecordsByRelativeTime()
                     }
 
                 MediaOverviewContent(
@@ -105,7 +108,10 @@ class MediaOverviewViewModel(
     private val mutableSelectedTab = MutableStateFlow(MediaOverviewTab.Media)
     val selectedTab: StateFlow<MediaOverviewTab> get() = mutableSelectedTab
 
-    private fun Sequence<MediaRecord>.groupRecordsByDate(): List<Pair<BucketTitle, List<MediaOverviewItem>>> {
+    private val mutableShowSavingProgress = MutableStateFlow(false)
+    val showSavingProgress: StateFlow<Boolean> get() = mutableShowSavingProgress
+
+    private fun Sequence<MediaRecord>.groupRecordsByTimeBuckets(): List<Pair<BucketTitle, List<MediaOverviewItem>>> {
         return this
             .groupBy { record ->
                 val time =
@@ -123,11 +129,31 @@ class MediaOverviewViewModel(
                 bucketTitle to records.map { record ->
                     MediaOverviewItem(
                         id = record.attachment.attachmentId.rowId,
-                        slide = MediaUtil.getSlideForAttachment(application, record.attachment)
+                        slide = MediaUtil.getSlideForAttachment(application, record.attachment),
+                        mediaRecord = record,
+                        date = bucketTitle
                     )
                 }
             }
     }
+
+    private fun Sequence<MediaRecord>.groupRecordsByRelativeTime(): List<Pair<BucketTitle, List<MediaOverviewItem>>> {
+        return this
+            .groupBy { record ->
+                DateUtils.getRelativeDate(application, Locale.getDefault(), record.date)
+            }
+            .map { (bucket, records) ->
+                bucket to records.map { record ->
+                    MediaOverviewItem(
+                        id = record.attachment.attachmentId.rowId,
+                        slide = MediaUtil.getSlideForAttachment(application, record.attachment),
+                        mediaRecord = record,
+                        date = bucket
+                    )
+                }
+            }
+    }
+
 
     fun onItemClicked(item: MediaOverviewItem) {
         if (inSelectionMode.value) {
@@ -142,11 +168,36 @@ class MediaOverviewViewModel(
             if (newSet.isEmpty()) {
                 mutableInSelectionMode.value = false
             }
-        } else if (item.showRetryButton) {
-            // The item clicked as a "retry" button, so we should retry the download
-            TODO()
+        } else if (!item.slide.hasDocument()) {
+            val mediaRecord = item.mediaRecord
+
+            // The item clicked is a media item, so we should open the media viewer
+            val intent = Intent(application, MediaPreviewActivity::class.java)
+            intent.putExtra(MediaPreviewActivity.DATE_EXTRA, mediaRecord.date)
+            intent.putExtra(MediaPreviewActivity.SIZE_EXTRA, mediaRecord.attachment.size)
+            intent.putExtra(MediaPreviewActivity.ADDRESS_EXTRA, address)
+            intent.putExtra(MediaPreviewActivity.OUTGOING_EXTRA, mediaRecord.isOutgoing)
+            intent.putExtra(MediaPreviewActivity.LEFT_IS_RECENT_EXTRA, true)
+
+            intent.setDataAndType(
+                mediaRecord.attachment.dataUri,
+                mediaRecord.contentType
+            )
+
+            viewModelScope.launch {
+                mutableEvents.emit(MediaOverviewEvent.NavigateToActivity(intent))
+            }
         } else {
-            mutableEvents.tryEmit(MediaOverviewEvent.NavigateToMediaDetail(item.id))
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            intent.setDataAndType(
+                PartAuthority.getAttachmentPublicUri(item.slide.uri),
+                item.slide.contentType
+            )
+
+            viewModelScope.launch {
+                mutableEvents.emit(MediaOverviewEvent.NavigateToActivity(intent))
+            }
         }
     }
 
@@ -165,7 +216,78 @@ class MediaOverviewViewModel(
     }
 
     fun onSaveClicked() {
-        TODO("Not yet implemented")
+        if (!inSelectionMode.value) return
+
+        viewModelScope.launch {
+            mutableShowSavingProgress.value = true
+            val allMedia = mediaListState.value?.mediaContent.orEmpty()
+            val selectedIDs = selectedItemIDs.value
+
+            val selectedMedia = allMedia.asSequence()
+                .flatMap { it.second.asSequence() }
+                .filter { it.id in selectedIDs }
+                .toList()
+
+            val attachments = selectedMedia
+                .asSequence()
+                .mapNotNull {
+                    val uri = it.mediaRecord.attachment.dataUri ?: return@mapNotNull null
+                    SaveAttachmentTask.Attachment(
+                        uri = uri,
+                        contentType = it.mediaRecord.contentType,
+                        date = it.mediaRecord.date,
+                        fileName = it.mediaRecord.attachment.fileName,
+                    )
+                }
+
+            var savedDirectory: String? = null
+            var successCount = 0
+            var errorCount = 0
+
+            for (attachment in attachments) {
+                val directory = withContext(Dispatchers.Default) {
+                    kotlin.runCatching {
+                        SaveAttachmentTask.saveAttachment(application, attachment)
+                    }.getOrNull()
+                }
+
+                if (directory == null) {
+                    errorCount += 1
+                } else {
+                    savedDirectory = directory
+                    successCount += 1
+                }
+            }
+
+            if (successCount > 0) {
+                mutableEvents.emit(MediaOverviewEvent.ShowSaveAttachmentSuccess(
+                    savedDirectory.orEmpty(),
+                    successCount
+                ))
+            } else if (errorCount > 0) {
+                mutableEvents.emit(MediaOverviewEvent.ShowSaveAttachmentError(errorCount))
+            }
+
+            // Send a notification of attachment saved if we are in a 1to1 chat and the
+            // attachments saved are from the other party (a.k.a let other person know
+            // that you saved their attachments, but don't need to let the whole world know as
+            // in groups/communities)
+            if (selectedMedia.any { !it.mediaRecord.isOutgoing } &&
+                successCount > 0 &&
+                !address.isGroup) {
+                withContext(Dispatchers.Default) {
+                    val timestamp = SnodeAPI.nowWithOffset
+                    val kind = DataExtractionNotification.Kind.MediaSaved(timestamp)
+                    val message = DataExtractionNotification(kind)
+                    MessageSender.send(message, address)
+                }
+            }
+
+            mutableShowSavingProgress.value = false
+            mutableSelectedItemIDs.value = emptySet()
+            mutableInSelectionMode.value = false
+        }
+
     }
 
     fun onDeleteClicked() {
@@ -221,33 +343,6 @@ class MediaOverviewViewModel(
 }
 
 
-class FixedTimeBuckets(
-    private val startOfToday: ZonedDateTime,
-    private val startOfYesterday: ZonedDateTime,
-    private val startOfThisWeek: ZonedDateTime,
-    private val startOfThisMonth: ZonedDateTime
-) {
-    constructor(now: ZonedDateTime = ZonedDateTime.now()) : this(
-        startOfToday = now.toLocalDate().atStartOfDay(now.zone),
-        startOfYesterday = now.toLocalDate().minusDays(1).atStartOfDay(now.zone),
-        startOfThisWeek = now.toLocalDate()
-            .with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1)
-            .atStartOfDay(now.zone),
-        startOfThisMonth = now.toLocalDate().withDayOfMonth(1).atStartOfDay(now.zone)
-    )
-
-    @StringRes
-    fun getBucketText(time: ZonedDateTime): Int? {
-        return when {
-            time >= startOfToday -> R.string.BucketedThreadMedia_Today
-            time >= startOfYesterday -> R.string.BucketedThreadMedia_Yesterday
-            time >= startOfThisWeek -> R.string.BucketedThreadMedia_This_week
-            time >= startOfThisMonth -> R.string.BucketedThreadMedia_This_month
-            else -> null
-        }
-    }
-}
-
 enum class MediaOverviewTab {
     Media,
     Documents,
@@ -255,7 +350,9 @@ enum class MediaOverviewTab {
 
 sealed interface MediaOverviewEvent {
     data object Close : MediaOverviewEvent
-    data class NavigateToMediaDetail(val id: Long) : MediaOverviewEvent
+    data class ShowSaveAttachmentError(val errorCount: Int) : MediaOverviewEvent
+    data class ShowSaveAttachmentSuccess(val directory: String, val successCount: Int) : MediaOverviewEvent
+    data class NavigateToActivity(val intent: Intent) : MediaOverviewEvent
 }
 
 typealias BucketTitle = String
@@ -268,14 +365,10 @@ data class MediaOverviewContent(
 
 data class MediaOverviewItem(
     val id: Long,
-    private val slide: Slide
+    val slide: Slide,
+    val date: String,
+    val mediaRecord: MediaRecord,
 ) {
-    val showRetryButton: Boolean
-        get() = slide.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_FAILED
-
-    val showLoadingOverlay: Boolean
-        get() = slide.isInProgress
-
     val showPlayOverlay: Boolean
         get() = slide.hasPlayOverlay()
 
@@ -284,6 +377,12 @@ data class MediaOverviewItem(
 
     val hasPlaceholder: Boolean
         get() = slide.hasPlaceholder()
+
+    val fileName: String?
+        get() = slide.fileName.orNull()
+
+    val fileSize: Long
+        get() = slide.fileSize
 
     fun placeholder(context: Context): Int {
         return slide.getPlaceholderRes(context.theme)

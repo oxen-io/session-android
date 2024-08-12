@@ -1,8 +1,11 @@
 package org.thoughtcrime.securesms.media
 
+import android.content.ActivityNotFoundException
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,17 +13,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,12 +29,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.AlertDialog
 import org.thoughtcrime.securesms.ui.DialogButtonModel
@@ -42,7 +43,9 @@ import org.thoughtcrime.securesms.ui.GetString
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalType
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
+)
 @Composable
 fun MediaOverviewScreen(
     viewModel: MediaOverviewViewModel,
@@ -52,6 +55,8 @@ fun MediaOverviewScreen(
     val selectionMode by viewModel.inSelectionMode.collectAsState()
     val topAppBarState = rememberTopAppBarState()
     var showingDeleteConfirmation by remember { mutableStateOf(false) }
+    var showingSaveAttachmentWarning by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     // In selection mode, the app bar should not be scrollable and should be pinned
     val appBarScrollBehavior = if (selectionMode) {
@@ -69,12 +74,42 @@ fun MediaOverviewScreen(
 
     BackHandler(onBack = viewModel::onBackClicked)
 
-    LaunchedEffect(viewModel) {
+    // Event handling
+    LaunchedEffect(viewModel.events) {
         viewModel.events.collect { event ->
             when (event) {
                 MediaOverviewEvent.Close -> onClose()
-                is MediaOverviewEvent.NavigateToMediaDetail -> {
-                    TODO()
+                is MediaOverviewEvent.NavigateToActivity -> {
+                    try {
+                        context.startActivity(event.intent)
+                    } catch (e: ActivityNotFoundException) {
+                        Toast.makeText(
+                            context,
+                            R.string.ConversationItem_unable_to_open_media,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                is MediaOverviewEvent.ShowSaveAttachmentError -> {
+                    val message = context.resources.getQuantityText(
+                        R.plurals.ConversationFragment_error_while_saving_attachments_to_sd_card,
+                        event.errorCount
+                    )
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                }
+
+                is MediaOverviewEvent.ShowSaveAttachmentSuccess -> {
+                    val message = if (event.directory.isNotBlank()) {
+                        context.resources.getString(
+                            R.string.SaveAttachmentTask_saved_to,
+                            event.directory
+                        )
+                    } else {
+                        context.resources.getString(R.string.SaveAttachmentTask_saved)
+                    }
+
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -88,7 +123,7 @@ fun MediaOverviewScreen(
                 selected = selected,
                 title = viewModel.title.collectAsState().value,
                 onBackClicked = viewModel::onBackClicked,
-                onSaveClicked = viewModel::onSaveClicked,
+                onSaveClicked = { showingSaveAttachmentWarning = true },
                 onDeleteClicked = { showingDeleteConfirmation = true },
                 onSelectAllClicked = viewModel::onSelectAllClicked,
                 appBarScrollBehavior = appBarScrollBehavior
@@ -154,94 +189,111 @@ fun MediaOverviewScreen(
                         )
                     }
 
-                    MediaOverviewTab.Documents -> DocumentsPage()
+                    MediaOverviewTab.Documents -> DocumentsPage(
+                        nestedScrollConnection = appBarScrollBehavior.nestedScrollConnection,
+                        content = content.value?.documentContent,
+                        onItemClicked = viewModel::onItemClicked
+                    )
                 }
             }
         }
     }
 
     if (showingDeleteConfirmation) {
-        val context = LocalContext.current
-
-        AlertDialog(
+        DeleteConfirmationDialog(
             onDismissRequest = { showingDeleteConfirmation = false },
-            title = context.resources.getQuantityString(
-                R.plurals.ConversationFragment_delete_selected_messages, selected.size
-            ),
-            text = context.resources.getQuantityString(
-                R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages,
-                selected.size,
-                selected.size
-            ),
-            buttons = listOf(
-                DialogButtonModel(GetString(R.string.delete), onClick = viewModel::onDeleteClicked),
-                DialogButtonModel(GetString(android.R.string.cancel), dismissOnClick = true)
-            )
+            onAccepted = viewModel::onDeleteClicked,
+            numSelected = selected.size
         )
+    }
+
+    if (showingSaveAttachmentWarning) {
+        SaveAttachmentWarningDialog(
+            onDismissRequest = { showingSaveAttachmentWarning = false },
+            onAccepted = viewModel::onSaveClicked,
+            numSelected = selected.size
+        )
+    }
+
+    if (viewModel.showSavingProgress.collectAsState().value) {
+        SaveAttachmentProgressDialog(selected.size)
     }
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun MediaOverviewTopAppBar(
-    selectionMode: Boolean,
-    selected: Set<Long>,
-    title: String,
-    onBackClicked: () -> Unit,
-    onSaveClicked: () -> Unit,
-    onDeleteClicked: () -> Unit,
-    onSelectAllClicked: () -> Unit,
-    appBarScrollBehavior: TopAppBarScrollBehavior
+private fun SaveAttachmentWarningDialog(
+    onDismissRequest: () -> Unit,
+    onAccepted: () -> Unit,
+    numSelected: Int,
 ) {
-    TopAppBar(
-        title = {
-            if (selectionMode) {
-                Text(selected.size.toString())
-            } else {
-                Text(title)
-            }
-        },
-        navigationIcon = {
-            IconButton(onBackClicked) {
-                Icon(
-                    Icons.AutoMirrored.Default.ArrowBack,
-                    contentDescription = stringResource(R.string.AccessibilityId_done),
-                    tint = LocalColors.current.text
-                )
-            }
-        },
-        scrollBehavior = appBarScrollBehavior,
-        actions = {
-            Crossfade(selectionMode, label = "Action icons animation") { mode ->
-                if (mode) {
-                    Row {
-                        IconButton(onClick = onSaveClicked) {
-                            Icon(
-                                painterResource(R.drawable.ic_baseline_save_24),
-                                contentDescription = stringResource(R.string.save),
-                                tint = LocalColors.current.text,
-                            )
-                        }
+    val context = LocalContext.current
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = context.getString(R.string.ConversationFragment_save_to_sd_card),
+        text = context.resources.getQuantityString(
+            R.plurals.ConversationFragment_saving_n_media_to_storage_warning,
+            numSelected,
+            numSelected
+        ),
+        buttons = listOf(
+            DialogButtonModel(GetString(R.string.save), onClick = onAccepted),
+            DialogButtonModel(GetString(android.R.string.cancel), dismissOnClick = true)
+        )
+    )
+}
 
-                        IconButton(onClick = onDeleteClicked) {
-                            Icon(
-                                painterResource(R.drawable.ic_baseline_delete_24),
-                                contentDescription = stringResource(R.string.delete),
-                                tint = LocalColors.current.text,
-                            )
-                        }
+@Composable
+private fun DeleteConfirmationDialog(
+    onDismissRequest: () -> Unit,
+    onAccepted: () -> Unit,
+    numSelected: Int,
+) {
+    val context = LocalContext.current
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = context.resources.getQuantityString(
+            R.plurals.ConversationFragment_delete_selected_messages, numSelected
+        ),
+        text = context.resources.getQuantityString(
+            R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages,
+            numSelected,
+            numSelected,
+        ),
+        buttons = listOf(
+            DialogButtonModel(GetString(R.string.delete), onClick = onAccepted),
+            DialogButtonModel(GetString(android.R.string.cancel), dismissOnClick = true)
+        )
+    )
+}
 
-                        IconButton(onClick = onSelectAllClicked) {
-                            Icon(
-                                painterResource(R.drawable.ic_baseline_select_all_24),
-                                contentDescription = stringResource(R.string.MediaOverviewActivity_Select_all),
-                                tint = LocalColors.current.text,
-                            )
-                        }
-                    }
-                }
-            }
-        })
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun SaveAttachmentProgressDialog(
+    numSelected: Int,
+) {
+    val context = LocalContext.current
+    BasicAlertDialog(
+        onDismissRequest = {},
+    ) {
+        Row(
+            modifier = Modifier
+                .background(LocalColors.current.background, shape = RoundedCornerShape(16.dp))
+                .padding(32.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            CircularProgressIndicator(color = LocalColors.current.primary)
+            Text(
+                context.resources.getQuantityString(
+                    R.plurals.ConversationFragment_saving_n_attachments,
+                    numSelected,
+                    numSelected,
+                ),
+                style = LocalType.current.large,
+                color = LocalColors.current.text
+            )
+        }
+    }
 }
 
 private val MediaOverviewTab.titleResId: Int
@@ -249,9 +301,4 @@ private val MediaOverviewTab.titleResId: Int
         MediaOverviewTab.Media -> R.string.MediaOverviewActivity_Media
         MediaOverviewTab.Documents -> R.string.MediaOverviewActivity_Documents
     }
-
-@Composable
-private fun DocumentsPage() {
-    Text("Documents Page")
-}
 

@@ -27,13 +27,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.conversation.v2.utilities.ThumbnailProgressBar
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalType
@@ -165,17 +163,6 @@ private fun ThumbnailRow(
                     }
 
                     when {
-                        item.showRetryButton -> {
-                            Image(
-                                painter = painterResource(R.drawable.ic_download_circle_filled_48),
-                                contentDescription = stringResource(R.string.audio_view__download_accessibility_description),
-                            )
-                        }
-
-                        item.showLoadingOverlay -> {
-                            AndroidView(factory = ::ThumbnailProgressBar)
-                        }
-
                         item.showPlayOverlay -> {
                             Image(
                                 painter = painterResource(R.drawable.ic_baseline_play_circle_filled_48),
