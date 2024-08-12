@@ -162,7 +162,7 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
     external fun allOneToOnes(): List<Conversation.OneToOne>
     external fun allCommunities(): List<Conversation.Community>
     external fun allLegacyClosedGroups(): List<Conversation.LegacyGroup>
-    external fun all(): List<Conversation>
+    external fun all(): List<Conversation?>
 
 }
 
