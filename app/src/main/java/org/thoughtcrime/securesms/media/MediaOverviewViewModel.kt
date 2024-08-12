@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import network.loki.messenger.R
 import org.session.libsession.messaging.messages.control.DataExtractionNotification
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.snode.SnodeAPI
@@ -34,6 +35,7 @@ import org.thoughtcrime.securesms.database.MediaDatabase.MediaRecord
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.mms.Slide
+import org.thoughtcrime.securesms.util.AttachmentUtil
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
@@ -108,8 +110,19 @@ class MediaOverviewViewModel(
     private val mutableSelectedTab = MutableStateFlow(MediaOverviewTab.Media)
     val selectedTab: StateFlow<MediaOverviewTab> get() = mutableSelectedTab
 
-    private val mutableShowSavingProgress = MutableStateFlow(false)
-    val showSavingProgress: StateFlow<Boolean> get() = mutableShowSavingProgress
+    private val mutableShowingActionProgress = MutableStateFlow<String?>(null)
+    val showingActionProgress: StateFlow<String?> get() = mutableShowingActionProgress
+
+    private val selectedMedia: Sequence<MediaOverviewItem>
+        get() {
+            val selected = selectedItemIDs.value
+            return mediaListState.value
+                ?.mediaContent
+                ?.asSequence()
+                .orEmpty()
+                .flatMap { it.second.asSequence() }
+                .filter { it.id in selected }
+        }
 
     private fun Sequence<MediaRecord>.groupRecordsByTimeBuckets(): List<Pair<BucketTitle, List<MediaOverviewItem>>> {
         return this
@@ -219,14 +232,13 @@ class MediaOverviewViewModel(
         if (!inSelectionMode.value) return
 
         viewModelScope.launch {
-            mutableShowSavingProgress.value = true
-            val allMedia = mediaListState.value?.mediaContent.orEmpty()
-            val selectedIDs = selectedItemIDs.value
+            val selectedMedia = selectedMedia.toList()
 
-            val selectedMedia = allMedia.asSequence()
-                .flatMap { it.second.asSequence() }
-                .filter { it.id in selectedIDs }
-                .toList()
+            mutableShowingActionProgress.value = application.resources.getQuantityString(
+                R.plurals.ConversationFragment_saving_n_attachments,
+                selectedMedia.size,
+                selectedMedia.size,
+            )
 
             val attachments = selectedMedia
                 .asSequence()
@@ -283,7 +295,7 @@ class MediaOverviewViewModel(
                 }
             }
 
-            mutableShowSavingProgress.value = false
+            mutableShowingActionProgress.value = null
             mutableSelectedItemIDs.value = emptySet()
             mutableInSelectionMode.value = false
         }
@@ -291,7 +303,23 @@ class MediaOverviewViewModel(
     }
 
     fun onDeleteClicked() {
-        TODO("Not yet implemented")
+        if (!inSelectionMode.value) return
+
+        viewModelScope.launch {
+            mutableShowingActionProgress.value = application.getString(R.string.MediaOverviewActivity_Media_delete_progress_message)
+
+            withContext(Dispatchers.Default) {
+                for (media in selectedMedia) {
+                    kotlin.runCatching {
+                        AttachmentUtil.deleteAttachment(application, media.mediaRecord.attachment)
+                    }
+                }
+            }
+
+            mutableShowingActionProgress.value = null
+            mutableSelectedItemIDs.value = emptySet()
+            mutableInSelectionMode.value = false
+        }
     }
 
     fun onSelectAllClicked() {
