@@ -131,7 +131,7 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
             contentValues.put(MediaStore.MediaColumns.DATE_MODIFIED, TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()))
             if (Build.VERSION.SDK_INT > 28) {
                 contentValues.put(MediaStore.MediaColumns.IS_PENDING, 1)
-            } else if (Objects.equals(outputUri.scheme, ContentResolver.SCHEME_FILE)) {
+            } else if (outputUri.scheme == ContentResolver.SCHEME_FILE) {
                 val outputDirectory = File(outputUri.path)
                 var outputFile = File(outputDirectory, "$base.$extension")
                 var i = 0
@@ -248,4 +248,5 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
     }
 
     data class Attachment(val uri: Uri, val contentType: String, val date: Long, val fileName: String?)
+
 }
