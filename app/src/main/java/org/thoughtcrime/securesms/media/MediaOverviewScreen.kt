@@ -215,8 +215,9 @@ fun MediaOverviewScreen(
         )
     }
 
-    if (viewModel.showSavingProgress.collectAsState().value) {
-        SaveAttachmentProgressDialog(selected.size)
+    val showingActionDialog = viewModel.showingActionProgress.collectAsState().value
+    if (showingActionDialog != null) {
+        ActionProgressDialog(showingActionDialog)
     }
 }
 
@@ -268,10 +269,9 @@ private fun DeleteConfirmationDialog(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun SaveAttachmentProgressDialog(
-    numSelected: Int,
+private fun ActionProgressDialog(
+    text: String
 ) {
-    val context = LocalContext.current
     BasicAlertDialog(
         onDismissRequest = {},
     ) {
@@ -284,11 +284,7 @@ private fun SaveAttachmentProgressDialog(
         ) {
             CircularProgressIndicator(color = LocalColors.current.primary)
             Text(
-                context.resources.getQuantityString(
-                    R.plurals.ConversationFragment_saving_n_attachments,
-                    numSelected,
-                    numSelected,
-                ),
+                text,
                 style = LocalType.current.large,
                 color = LocalColors.current.text
             )
