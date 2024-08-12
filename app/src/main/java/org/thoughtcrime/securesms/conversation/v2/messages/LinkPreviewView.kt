@@ -16,7 +16,12 @@ import org.thoughtcrime.securesms.conversation.v2.ModalUrlBottomSheet
 import org.thoughtcrime.securesms.conversation.v2.utilities.MessageBubbleUtilities
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import com.bumptech.glide.RequestManager
+import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.SessionDialogBuilder
 import org.thoughtcrime.securesms.mms.ImageSlide
+
+import org.thoughtcrime.securesms.showOpenUrlDialogPublicFacing
+
 
 class LinkPreviewView : LinearLayout {
     private val binding: ViewLinkPreviewBinding by lazy { ViewLinkPreviewBinding.bind(this) }
@@ -85,9 +90,16 @@ class LinkPreviewView : LinearLayout {
     }
 
     fun openURL() {
-        val url = this.url ?: return
+        val url = this.url ?: return Log.w("LinkPreviewView", "Cannot open a null URL")
         val activity = context as AppCompatActivity
-        ModalUrlBottomSheet(url).show(activity.supportFragmentManager, "Open URL Dialog")
+
+        // OLDE!
+        //ModalUrlBottomSheet(url).show(activity.supportFragmentManager, "Open URL Dialog")
+
+        activity.showOpenUrlDialogPublicFacing(url)
+
+
+
     }
     // endregion
 }

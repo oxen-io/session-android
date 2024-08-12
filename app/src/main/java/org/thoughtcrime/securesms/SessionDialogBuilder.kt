@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -10,6 +11,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.LinearLayout.VERTICAL
+import android.widget.ScrollView
 import android.widget.Space
 import android.widget.TextView
 import androidx.annotation.AttrRes
@@ -21,6 +23,7 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.conversation.v2.Util.writeTextToClipboard
 import org.thoughtcrime.securesms.util.toPx
 
 @DslMarker
@@ -66,6 +69,26 @@ class SessionDialogBuilder(val context: Context) {
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
                 .apply { updateMargins(dp40, 0, dp40, 0) }
         }
+    }
+
+    fun textWithMaxOfFiveLines(text: CharSequence?, @StyleRes style: Int = 0) {
+
+        ScrollView(context, null, 0).apply {
+            layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+
+            // fix this so it adds and shows a scrollbar if it exceeds 5 lines
+            here!
+            text(text, style) {
+                maxLines = 5
+                layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+                    .apply { updateMargins(dp40, 0, dp40, 0) }
+            }.apply { refreshDrawableState() }
+
+        }
+
+
+
+
     }
 
     private fun text(text: CharSequence?, @StyleRes style: Int, modify: TextView.() -> Unit) {
@@ -127,6 +150,9 @@ class SessionDialogBuilder(val context: Context) {
     fun okButton(listener: (() -> Unit) = {}) = button(android.R.string.ok) { listener() }
     fun cancelButton(listener: (() -> Unit) = {}) = button(android.R.string.cancel, R.string.AccessibilityId_cancel) { listener() }
 
+    fun copyUrlButton(listener: (() -> Unit) = {}) = button(android.R.string.copyUrl, R.string.AccessibilityId_copy) { listener() }
+
+
     fun button(
         @StringRes text: Int,
         @StringRes contentDescriptionRes: Int = text,
@@ -149,18 +175,29 @@ class SessionDialogBuilder(val context: Context) {
 
 fun Context.showSessionDialog(build: SessionDialogBuilder.() -> Unit): AlertDialog =
     SessionDialogBuilder(this).apply { build() }.show()
-fun Context.showOpenUrlDialog(build: SessionDialogBuilder.() -> Unit): AlertDialog =
+
+private fun Context.showOpenUrlDialogInner(build: SessionDialogBuilder.() -> Unit): AlertDialog =
     SessionDialogBuilder(this).apply {
         title(R.string.urlOpen)
         text(R.string.urlOpenBrowser)
         build()
     }.show()
 
-fun Context.showOpenUrlDialog(url: String): AlertDialog =
-    showOpenUrlDialog {
-        okButton { openUrl(url) }
-        cancelButton()
-    }
+fun Context.showOpenUrlDialogPublicFacing(url: String): AlertDialog {
+    return SessionDialogBuilder(this).apply {
+        title(R.string.urlOpen)
+        val txt = getString(R.string.urlOpenBrowser) + "\n\n" + "https://github.com/oxen-io/session-android/theworldslongrsturlisverylongindeedandshouldgoover5linesbecausethatswhatIneedtotestbecausemaryhadalittlelamb" //url
+        textWithMaxOfFiveLines(txt)
+        dangerButton(R.string.open) { openUrl(url) }
+        copyUrlButton { writeTextToClipboard(context, url) }
+    }.show()
+
+
+}
+//    showOpenUrlDialogInner {
+//        okButton { openUrl(url) }
+//        cancelButton()
+//    }
 
 fun Context.openUrl(url: String) = Intent(Intent.ACTION_VIEW, Uri.parse(url)).let(::startActivity)
 
