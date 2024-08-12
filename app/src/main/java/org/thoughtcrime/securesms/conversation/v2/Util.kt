@@ -293,7 +293,7 @@ object Util {
     }
 
     fun writeTextToClipboard(context: Context, text: String) {
-        writeTextToClipboard(context, context.getString(R.string.sessionMessenger), text)
+        writeTextToClipboard(context, context.getString(R.string.app_name), text)
     }
 
     fun writeTextToClipboard(context: Context, label: String, text: String) {

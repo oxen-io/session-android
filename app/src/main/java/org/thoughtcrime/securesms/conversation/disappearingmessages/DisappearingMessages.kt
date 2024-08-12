@@ -58,7 +58,7 @@ class DisappearingMessages @Inject constructor(
 
         dangerButton(
                 text = if (message.expiresIn == 0L) R.string.confirm else R.string.set,
-                contentDescription = if (message.expiresIn == 0L) R.string.AccessibilityId_confirm else R.string.AccessibilityId_set_button
+                contentDescription = if (message.expiresIn == 0L) R.string.AccessibilityId_confirm else R.string.AccessibilityId_setButton
         ) {
             set(message.threadId, message.recipient.address, message.expiryMode, message.recipient.isClosedGroupRecipient)
         }

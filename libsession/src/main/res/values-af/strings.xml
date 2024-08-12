@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sessionMessenger">Sessie</string>
+    <string name="app_name">Sessie</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
     <string name="delete">Skrap</string>

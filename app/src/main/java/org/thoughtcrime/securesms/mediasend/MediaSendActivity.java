@@ -363,10 +363,10 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
 
     Context c = getApplicationContext();
     String permanentDenialTxt = Phrase.from(c, R.string.cameraGrantAccessDenied)
-            .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
             .format().toString();
     String requireCameraPermissionsTxt = Phrase.from(c, R.string.cameraGrantAccessDescription)
-            .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
             .format().toString();
 
     Permissions.with(this)

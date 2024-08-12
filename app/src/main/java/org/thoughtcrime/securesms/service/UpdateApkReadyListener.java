@@ -68,10 +68,10 @@ public class UpdateApkReadyListener extends BroadcastReceiver {
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
     CharSequence title = Phrase.from(context, R.string.updateSession)
-            .put(APP_NAME_KEY, context.getString(R.string.sessionMessenger)).format();
+            .put(APP_NAME_KEY, context.getString(R.string.app_name)).format();
 
     CharSequence txt = Phrase.from(context, R.string.updateNewVersion)
-            .put(APP_NAME_KEY, context.getString(R.string.sessionMessenger)).format();
+            .put(APP_NAME_KEY, context.getString(R.string.app_name)).format();
 
 
     Notification notification = new NotificationCompat.Builder(context, NotificationChannels.APP_UPDATES)

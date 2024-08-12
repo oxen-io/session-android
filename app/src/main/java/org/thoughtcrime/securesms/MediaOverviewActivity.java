@@ -334,11 +334,11 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
                 .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P)
                 .withPermanentDenialDialog(Phrase.from(context, R.string.permissionsStorageSaveDenied)
-                        .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                        .put(APP_NAME_KEY, getString(R.string.app_name))
                         .format().toString())
                 .onAnyDenied(() -> Toast.makeText(getContext(),
                                        Phrase.from(context, R.string.permissionsStorageSaveDenied)
-                                           .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                                           .put(APP_NAME_KEY, getString(R.string.app_name))
                                            .format().toString(),
                                        Toast.LENGTH_LONG).show())
                 .onAllGranted(() -> {

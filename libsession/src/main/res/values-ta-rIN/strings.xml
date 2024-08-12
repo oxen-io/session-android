@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sessionMessenger">செஸ்ஸன்</string>
+    <string name="app_name">செஸ்ஸன்</string>
     <string name="yes">ஆம்</string>
     <string name="no">இல்லை</string>
     <string name="delete">நீக்கு</string>

@@ -52,24 +52,24 @@ enum class ExpiryType(
     NONE(
         { ExpiryMode.NONE },
         R.string.off,
-        contentDescription = R.string.AccessibilityId_disable_disappearing_messages,
+        contentDescription = R.string.AccessibilityId_disappearingMessagesOff,
     ),
     LEGACY(
         ExpiryMode::Legacy,
         R.string.expiration_type_disappear_legacy,
-        contentDescription = R.string.expiration_type_disappear_legacy_description
+        contentDescription = R.string.AccessibilityId_disappearingMessagesLegacy
     ),
     AFTER_READ(
         ExpiryMode::AfterRead,
         R.string.disappearingMessagesDisappearAfterRead,
         R.string.disappearingMessagesDisappearAfterReadDescription,
-        R.string.AccessibilityId_disappear_after_read_option
+        R.string.AccessibilityId_disappearingMessagesDisappearAfterRead
     ),
     AFTER_SEND(
         ExpiryMode::AfterSend,
         R.string.disappearingMessagesDisappearAfterSend,
         R.string.disappearingMessagesDisappearAfterSendDescription,
-        R.string.AccessibilityId_disappear_after_send_option
+        R.string.AccessibilityId_disappearingMessagesDisappearAfterSent
     );
 
     fun mode(seconds: Long) = if (seconds != 0L) createMode(seconds) else ExpiryMode.NONE

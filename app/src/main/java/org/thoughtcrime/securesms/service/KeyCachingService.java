@@ -245,7 +245,7 @@ public class KeyCachingService extends Service {
     // Replace app name in title string
     Context c = getApplicationContext();
     String unlockedTxt = Phrase.from(c, R.string.lockAppUnlocked)
-            .put(APP_NAME_KEY, c.getString(R.string.sessionMessenger))
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
             .format().toString();
     builder.setContentTitle(unlockedTxt);
 

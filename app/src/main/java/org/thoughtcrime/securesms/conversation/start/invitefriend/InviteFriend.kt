@@ -66,7 +66,7 @@ internal fun InviteFriend(
             Text(
                 stringResource(R.string.shareAccountIdDescription).let { txt ->
                     val c = LocalContext.current
-                    Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.sessionMessenger)).format().toString()
+                    Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString()
                 },
                 textAlign = TextAlign.Center,
                 style = LocalType.current.small,

@@ -62,7 +62,7 @@ internal fun MessageNotificationsScreen(
             Spacer(Modifier.height(LocalDimensions.current.smallSpacing))
             Text(
                 Phrase.from(stringResource(R.string.onboardingMessageNotificationExplanation))
-                    .put(APP_NAME_KEY, stringResource(R.string.sessionMessenger))
+                    .put(APP_NAME_KEY, stringResource(R.string.app_name))
                     .format().toString(),
                 style = LocalType.current.base
             )
@@ -81,7 +81,7 @@ internal fun MessageNotificationsScreen(
         // spacing between buttons is provided by ripple/downstate of NotificationRadioButton
 
         val txt = Phrase.from(stringResource(R.string.onboardingMessageNotificationExplanation))
-            .put(APP_NAME_KEY, stringResource(R.string.sessionMessenger))
+            .put(APP_NAME_KEY, stringResource(R.string.app_name))
             .format().toString()
         NotificationRadioButton(
             R.string.notificationsSlowMode,
@@ -131,7 +131,7 @@ private fun NotificationRadioButton(
                 // If this radio button is the one for slow mode notifications then substitute the app name..
                 if (explanation == R.string.notificationsSlowModeDescription) {
                     val txt = Phrase.from(stringResource(explanation))
-                        .put(APP_NAME_KEY, stringResource(R.string.sessionMessenger))
+                        .put(APP_NAME_KEY, stringResource(R.string.app_name))
                         .format().toString()
                     Text(
                         txt,

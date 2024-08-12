@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/small_spacing"
         android:clickable="true"
-        android:contentDescription="@string/AccessibilityId_closeDialog"
+        android:contentDescription="@string/AccessibilityId_close"
         android:focusable="true"
         android:src="@drawable/ic_baseline_close_24"
         app:layout_constraintBottom_toBottomOf="@id/titleText"

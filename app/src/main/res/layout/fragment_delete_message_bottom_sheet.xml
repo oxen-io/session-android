@@ -11,7 +11,7 @@
 
     <TextView
         android:id="@+id/deleteForMeTextView"
-        android:contentDescription="@string/AccessibilityId_deleteMessageMe"
+        android:contentDescription="@string/AccessibilityId_deleteMessageDeviceOnly"
         style="@style/BottomSheetActionItem"
         android:text="@string/clearMessagesForMe"
         android:textColor="?danger" />

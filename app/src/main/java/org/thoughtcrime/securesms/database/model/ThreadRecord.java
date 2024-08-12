@@ -120,7 +120,7 @@ public class ThreadRecord extends DisplayRecord {
             return emphasisAdded(context.getString(R.string.communityInvitation));
         } else if (MmsSmsColumns.Types.isLegacyType(type)) {
             String txt = Phrase.from(context, R.string.messageErrorOld)
-                    .put(APP_NAME_KEY, context.getString(R.string.sessionMessenger))
+                    .put(APP_NAME_KEY, context.getString(R.string.app_name))
                     .format().toString();
             return emphasisAdded(txt);
         } else if (MmsSmsColumns.Types.isDraftMessageType(type)) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sessionMessenger">සෙෂන්</string>
+    <string name="app_name">සෙෂන්</string>
     <string name="yes">ඔව්</string>
     <string name="no">නැහැ</string>
     <string name="save">සුරකින්න</string>

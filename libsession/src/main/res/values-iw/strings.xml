@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sessionMessenger">ישיבה</string>
+    <string name="app_name">ישיבה</string>
     <string name="yes">כן</string>
     <string name="no">לא</string>
     <string name="delete">מחק</string>

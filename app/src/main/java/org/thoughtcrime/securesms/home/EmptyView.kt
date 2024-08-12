@@ -49,7 +49,7 @@ internal fun EmptyView(newAccount: Boolean) {
             Text(
                 stringResource(R.string.onboardingBubbleWelcomeToSession).let { txt ->
                     val c = LocalContext.current
-                    Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.sessionMessenger)).format().toString()
+                    Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString()
                 },
                 style = LocalType.current.base,
                 color = LocalColors.current.primary,

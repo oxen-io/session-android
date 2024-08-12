@@ -11,7 +11,7 @@ class SettingsDialog {
             context.showSessionDialog {
                 title(R.string.permissionsRequired)
                 text(message)
-                button(R.string.theContinue, R.string.AccessibilityId_continue) {
+                button(R.string.theContinue, R.string.AccessibilityId_theContinue) {
                     context.startActivity(Permissions.getApplicationSettingsIntent(context))
                 }
                 cancelButton()

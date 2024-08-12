@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sessionMessenger">ಸೆಷನ್</string>
+    <string name="app_name">ಸೆಷನ್</string>
     <string name="yes">ಹೌದು</string>
     <string name="no">ಇಲ್ಲ</string>
     <string name="delete">ಅಳಿಸಿ ಹಾಕು</string>

@@ -23,7 +23,7 @@ fun OnboardingBackPressAlertDialog(
         title = stringResource(R.string.warning),
         text = stringResource(textId).let { txt ->
             val c = LocalContext.current
-            Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.sessionMessenger)).format().toString()
+            Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString()
         },
         buttons = listOf(
             DialogButtonModel(

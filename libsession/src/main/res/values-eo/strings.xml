@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sessionMessenger">Sesio</string>
+    <string name="app_name">Sesio</string>
     <string name="yes">Jes</string>
     <string name="no">Ne</string>
     <string name="delete">Forviŝi</string>

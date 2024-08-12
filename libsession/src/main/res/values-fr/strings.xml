@@ -2,7 +2,7 @@
 <resources>
 
     <!-- ACL REMOVE THE LINE BELOW - JUST A TEST! -->
-    <string name="sessionMessenger" translatable="false">Le Session</string>
+    <string name="app_name" translatable="false">Le Session</string>
 
 
     <!-- MessageRecord -->

@@ -48,13 +48,13 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
         // String sub the summary text of the `export_logs` element in preferences_help.xml
         var exportPref = preferenceScreen.findPreference<Preference>(EXPORT_LOGS)
         exportPref?.summary = Phrase.from(context, R.string.helpReportABugExportLogsDescription)
-            .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+            .put(APP_NAME_KEY, getString(R.string.app_name))
             .format()
 
         // String sub the summary text of the `translate_session` element in preferences_help.xml
         var translatePref = preferenceScreen.findPreference<Preference>(TRANSLATE)
         translatePref?.title = Phrase.from(context, R.string.helpHelpUsTranslateSession)
-            .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+            .put(APP_NAME_KEY, getString(R.string.app_name))
             .format()
     }
 
@@ -102,11 +102,11 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
             .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             .maxSdkVersion(Build.VERSION_CODES.P)
             .withPermanentDenialDialog(Phrase.from(context, R.string.permissionsStorageSaveDenied)
-                .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                .put(APP_NAME_KEY, getString(R.string.app_name))
                 .format().toString())
             .onAnyDenied {
                 val txt = Phrase.from(context, R.string.permissionsStorageSaveDenied)
-                    .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                    .put(APP_NAME_KEY, getString(R.string.app_name))
                     .format().toString()
                 Toast.makeText(requireActivity(), txt, Toast.LENGTH_LONG).show()
             }

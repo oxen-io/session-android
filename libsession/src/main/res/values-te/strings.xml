@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sessionMessenger">Sandarbham</string>
+    <string name="app_name">Sandarbham</string>
     <string name="yes">అవును</string>
     <string name="no">కాదు</string>
     <string name="delete">తొలగించండి</string>

@@ -100,6 +100,7 @@
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> and <b>{other_name}</b> were promoted to Admin.</string>
     <string name="andMore">+{count}</string>
     <string name="anonymous">Anonymous</string>
+    <string name="app_name" translatable="false">Session</string>
     <string name="appearanceAutoDarkMode">Auto dark-mode</string>
     <string name="appearanceHideMenuBar">Hide Menu Bar</string>
     <string name="appearancePreview1">How are you?</string>
@@ -226,7 +227,6 @@
     <string name="clearMessagesGroupDescription">Are you sure you want to clear all <b>{group_name}</b> messages from your device?</string>
     <string name="clearMessagesNoteToSelfDescription">Are you sure you want to clear all Note to Self messages from your device?</string>
     <string name="close">Close</string>
-    <string name="closeWindow">Close Window</string>
     <string name="communityEnterUrl">Enter Community URL</string>
     <string name="communityEnterUrlErrorInvalid">Invalid URL</string>
     <string name="communityEnterUrlErrorInvalidDescription">Please check the Community URL and try again.</string>
@@ -537,7 +537,6 @@
     <string name="notificationsContentShowNoNameOrContent">No Name or Content</string>
     <string name="notificationsFastMode">Fast Mode</string>
     <string name="notificationsFastModeDescriptionAndroid">You\'ll be notified of new messages reliably and immediately using Google\'s notification Servers.</string>
-    <string name="notificationsGoToAndroidSettings">Go to Android notification settings</string>
     <string name="notificationsGoToDevice">Go to device notification settings</string>
     <string name="notificationsLedColor">LED color</string>
     <string name="notificationsMentionsOnly">Mentions Only</string>
@@ -686,7 +685,6 @@
     <string name="sessionHelp">Help</string>
     <string name="sessionInviteAFriend">Invite a Friend</string>
     <string name="sessionMessageRequests">Message Requests</string>
-    <string name="sessionMessenger" translatable="false">Session</string>
     <string name="sessionNotifications">Notifications</string>
     <string name="sessionPermissions">Permissions</string>
     <string name="sessionPrivacy">Privacy</string>

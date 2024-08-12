@@ -26,7 +26,7 @@
             android:id="@+id/conversationTitleView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/AccessibilityId_conversation_header_name"
+            android:contentDescription="@string/AccessibilityId_conversationTitle"
             tools:text="@tools:sample/full_names"
             android:textColor="?android:textColorPrimary"
             android:textStyle="bold"

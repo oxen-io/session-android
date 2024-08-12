@@ -24,7 +24,7 @@ class ScanQRCodePlaceholderFragment: Fragment() {
         binding.grantCameraAccessButton.setOnClickListener { delegate?.requestCameraAccess() }
 
         binding.needCameraPermissionsTV.text = Phrase.from(context, R.string.cameraGrantAccessQr)
-                                                  .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                                                  .put(APP_NAME_KEY, getString(R.string.app_name))
                                                   .format()
     }
 }

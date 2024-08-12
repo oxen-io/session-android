@@ -263,7 +263,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
       }
 
       CharSequence errorTxt = Phrase.from(context, R.string.databaseErrorGeneric)
-              .put(APP_NAME_KEY, R.string.sessionMessenger)
+              .put(APP_NAME_KEY, R.string.app_name)
               .format();
 
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)

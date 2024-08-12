@@ -302,7 +302,7 @@ fun ExpandButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_expand),
-            contentDescription = stringResource(id = R.string.expand),
+            contentDescription = stringResource(id = R.string.AccessibilityId_expand),
             modifier = Modifier.clickable { onClick() },
         )
     }

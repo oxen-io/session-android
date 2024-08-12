@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sessionMessenger">सैशन</string>
+    <string name="app_name">सैशन</string>
     <string name="yes">हाँ </string>
     <string name="no">नहीं</string>
     <string name="delete">मिटाएं</string>

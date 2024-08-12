@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sessionMessenger">세션</string>
+    <string name="app_name">세션</string>
     <string name="yes">예</string>
     <string name="no">아니요</string>
     <string name="delete">삭제</string>

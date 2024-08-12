@@ -34,7 +34,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="9dp"
-                    android:contentDescription="@string/AccessibilityId_user_settings" />
+                    android:contentDescription="@string/AccessibilityId_profilePicture" />
 
                 <org.thoughtcrime.securesms.home.PathStatusView
                     android:id="@+id/pathStatusView"

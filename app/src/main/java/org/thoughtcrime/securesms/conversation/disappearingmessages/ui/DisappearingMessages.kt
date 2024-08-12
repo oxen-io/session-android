@@ -74,7 +74,7 @@ fun DisappearingMessages(
         if (state.showSetButton) SlimOutlineButton(
             stringResource(R.string.set),
             modifier = Modifier
-                .contentDescription(R.string.AccessibilityId_set_button)
+                .contentDescription(R.string.AccessibilityId_setButton)
                 .align(Alignment.CenterHorizontally)
                 .padding(bottom = LocalDimensions.current.spacing),
             onClick = callbacks::onSetClick

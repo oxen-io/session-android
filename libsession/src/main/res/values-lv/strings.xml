@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sessionMessenger">Session</string>
+    <string name="app_name">Session</string>
     <string name="yes">Jā</string>
     <string name="no">Nē</string>
     <string name="delete">Dzēst</string>

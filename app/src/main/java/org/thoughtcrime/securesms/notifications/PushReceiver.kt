@@ -54,7 +54,7 @@ class PushReceiver @Inject constructor(@ApplicationContext val context: Context)
         val builder = NotificationCompat.Builder(context, NotificationChannels.OTHER)
             .setSmallIcon(R.drawable.ic_notification)
             .setColor(context.getColor(R.color.textsecure_primary))
-            .setContentTitle(getString(context, R.string.sessionMessenger))
+            .setContentTitle(getString(context, R.string.app_name))
 
             // Note: We set the count to 1 in the below plurals string so it says "You've got a new message" (singular)
             .setContentText(context.resources.getQuantityString(R.plurals.messageNewYouveGot, 1, 1))

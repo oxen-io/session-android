@@ -23,7 +23,6 @@ import org.session.libsession.LocalisedTimeUtil
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.utilities.ExpirationUtil
-import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.TIME_LARGE_KEY
@@ -118,7 +117,7 @@ class ConversationActionBarView @JvmOverloads constructor(
                 subtitleTxt,
                 ConversationSettingType.EXPIRATION,
                 R.drawable.ic_timer,
-                resources.getString(R.string.AccessibilityId_disappearing_messages_type_and_time)
+                resources.getString(R.string.AccessibilityId_disappearingMessagesDisappear)
             )
         }
 

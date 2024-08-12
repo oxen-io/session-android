@@ -125,7 +125,7 @@ class SessionDialogBuilder(val context: Context) {
     ) { listener() }
 
     fun okButton(listener: (() -> Unit) = {}) = button(android.R.string.ok) { listener() }
-    fun cancelButton(listener: (() -> Unit) = {}) = button(android.R.string.cancel, R.string.AccessibilityId_cancel_button) { listener() }
+    fun cancelButton(listener: (() -> Unit) = {}) = button(android.R.string.cancel, R.string.AccessibilityId_cancel) { listener() }
 
     fun button(
         @StringRes text: Int,

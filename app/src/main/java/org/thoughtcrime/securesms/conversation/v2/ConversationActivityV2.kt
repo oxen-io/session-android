@@ -1734,7 +1734,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (!hasSeenGIFMetaDataWarning) {
             showSessionDialog {
                 title(R.string.giphyWarning)
-                text(Phrase.from(context, R.string.giphyWarningDescription).put(APP_NAME_KEY, getString(R.string.sessionMessenger)).format())
+                text(Phrase.from(context, R.string.giphyWarningDescription).put(APP_NAME_KEY, getString(R.string.app_name)).format())
                 button(R.string.theContinue) {
                     textSecurePreferences.setHasSeenGIFMetaDataWarning()
                     selectGif()
@@ -1867,7 +1867,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 .request(Manifest.permission.RECORD_AUDIO)
                 .withRationaleDialog(getString(R.string.permissionsMicrophoneAccessRequired), R.drawable.ic_baseline_mic_48)
                 .withPermanentDenialDialog(Phrase.from(applicationContext, R.string.permissionsMicrophoneAccessRequiredAndroid)
-                    .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                    .put(APP_NAME_KEY, getString(R.string.app_name))
                     .format().toString())
                 .execute()
         }
@@ -2164,12 +2164,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P)
                 .withPermanentDenialDialog(Phrase.from(applicationContext, R.string.permissionsStorageSaveDenied)
-                    .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                    .put(APP_NAME_KEY, getString(R.string.app_name))
                     .format().toString())
                 .onAnyDenied {
                     endActionMode()
                     val txt = Phrase.from(applicationContext, R.string.permissionsStorageSaveDenied)
-                                .put(APP_NAME_KEY, getString(R.string.sessionMessenger))
+                                .put(APP_NAME_KEY, getString(R.string.app_name))
                                 .format().toString()
                     Toast.makeText(this@ConversationActivityV2, txt, Toast.LENGTH_LONG).show()
                 }

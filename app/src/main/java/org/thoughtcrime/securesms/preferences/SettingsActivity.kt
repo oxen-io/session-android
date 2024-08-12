@@ -498,25 +498,25 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                     LargeItemButton(
                         R.string.sessionConversations,
                         R.drawable.ic_conversations,
-                        Modifier.contentDescription(R.string.AccessibilityId_conversations)
+                        Modifier.contentDescription(R.string.AccessibilityId_sessionConversations)
                     ) { show<ChatSettingsActivity>() }
                     Divider()
                     LargeItemButton(
                         R.string.sessionMessageRequests,
                         R.drawable.ic_message_requests,
-                        Modifier.contentDescription(R.string.AccessibilityId_message_requests)
+                        Modifier.contentDescription(R.string.AccessibilityId_sessionMessageRequests)
                     ) { show<MessageRequestsActivity>() }
                     Divider()
                     LargeItemButton(
                         R.string.sessionAppearance,
                         R.drawable.ic_appearance,
-                        Modifier.contentDescription(R.string.AccessibilityId_appearance)
+                        Modifier.contentDescription(R.string.AccessibilityId_sessionAppearance)
                     ) { show<AppearanceSettingsActivity>() }
                     Divider()
                     LargeItemButton(
                         R.string.sessionInviteAFriend,
                         R.drawable.ic_invite_friend,
-                        Modifier.contentDescription(R.string.AccessibilityId_invite_friend)
+                        Modifier.contentDescription(R.string.AccessibilityId_sessionInviteAFriend)
                     ) { sendInvitationToUseSession() }
                     Divider()
                     if (!prefs.getHidePassword()) {
@@ -536,7 +536,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                     LargeItemButton(
                         R.string.sessionClearData,
                         R.drawable.ic_message_details__trash,
-                        Modifier.contentDescription(R.string.AccessibilityId_clear_data),
+                        Modifier.contentDescription(R.string.AccessibilityId_sessionClearData),
                         dangerButtonColors()
                     ) { ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog") }
                 }
