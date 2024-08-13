@@ -40,6 +40,7 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import org.thoughtcrime.securesms.showOpenUrlDialog
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.getAccentColor
@@ -293,7 +294,7 @@ class VisibleMessageContentView : ConstraintLayout {
                 val updatedUrl = urlSpan.url.let { it.toHttpUrlOrNull().toString() }
                 val replacementSpan = ModalURLSpan(updatedUrl) { url ->
                     val activity = context as AppCompatActivity
-                    ModalUrlBottomSheet(url).show(activity.supportFragmentManager, "Open URL Dialog")
+                    activity.showOpenUrlDialog(url)
                 }
                 val start = body.getSpanStart(urlSpan)
                 val end = body.getSpanEnd(urlSpan)

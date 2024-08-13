@@ -122,11 +122,13 @@
 
     <style name="Widget.Session.Button.Dialog.UnimportantText">
         <item name="android:background">@drawable/unimportant_dialog_text_button_background</item>
+        <item name="android:textStyle">bold</item>
     </style>
     
     <style name="Widget.Session.Button.Dialog.DangerText">
         <item name="android:background">@drawable/danger_dialog_text_button_background</item>
         <item name="android:textColor">?danger</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Widget.Session.EditText.Compose" parent="@style/Signal.Text.Body">

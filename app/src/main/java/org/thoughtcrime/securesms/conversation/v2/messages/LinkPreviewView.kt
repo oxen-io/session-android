@@ -8,20 +8,16 @@ import android.view.MotionEvent
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import com.bumptech.glide.RequestManager
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewLinkPreviewBinding
 import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.components.CornerMask
-import org.thoughtcrime.securesms.conversation.v2.ModalUrlBottomSheet
 import org.thoughtcrime.securesms.conversation.v2.utilities.MessageBubbleUtilities
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
-import com.bumptech.glide.RequestManager
-import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.SessionDialogBuilder
 import org.thoughtcrime.securesms.mms.ImageSlide
-
-import org.thoughtcrime.securesms.showOpenUrlDialogPublicFacing
-
+import org.thoughtcrime.securesms.showOpenUrlDialog
 
 class LinkPreviewView : LinearLayout {
     private val binding: ViewLinkPreviewBinding by lazy { ViewLinkPreviewBinding.bind(this) }
@@ -89,17 +85,11 @@ class LinkPreviewView : LinearLayout {
         }
     }
 
-    fun openURL() {
+    // Method to show the open or copy URL dialog
+    private fun openURL() {
         val url = this.url ?: return Log.w("LinkPreviewView", "Cannot open a null URL")
         val activity = context as AppCompatActivity
-
-        // OLDE!
-        //ModalUrlBottomSheet(url).show(activity.supportFragmentManager, "Open URL Dialog")
-
-        activity.showOpenUrlDialogPublicFacing(url)
-
-
-
+        activity.showOpenUrlDialog(url)
     }
     // endregion
 }
