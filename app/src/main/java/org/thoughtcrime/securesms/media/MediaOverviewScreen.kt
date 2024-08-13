@@ -1,8 +1,11 @@
 package org.thoughtcrime.securesms.media
 
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.ActivityNotFoundException
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -55,6 +58,18 @@ fun MediaOverviewScreen(
     var showingDeleteConfirmation by remember { mutableStateOf(false) }
     var showingSaveAttachmentWarning by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val requestStoragePermission =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                viewModel.onSaveClicked()
+            } else {
+                Toast.makeText(
+                    context,
+                    R.string.AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
     // In selection mode, the app bar should not be scrollable and should be pinned
     val appBarScrollBehavior = if (selectionMode) {
@@ -192,7 +207,9 @@ fun MediaOverviewScreen(
     if (showingSaveAttachmentWarning) {
         SaveAttachmentWarningDialog(
             onDismissRequest = { showingSaveAttachmentWarning = false },
-            onAccepted = viewModel::onSaveClicked,
+            onAccepted = {
+                requestStoragePermission.launch(WRITE_EXTERNAL_STORAGE)
+            },
             numSelected = selected.size
         )
     }
