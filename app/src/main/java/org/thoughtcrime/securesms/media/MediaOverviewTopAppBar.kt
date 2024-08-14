@@ -20,12 +20,14 @@ fun MediaOverviewTopAppBar(
     onSaveClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onSelectAllClicked: () -> Unit,
+    onCloseClicked: () -> Unit,
     appBarScrollBehavior: TopAppBarScrollBehavior
 ) {
     AppBar(
         title = title,
         onBack = onBackClicked,
         scrollBehavior = appBarScrollBehavior,
+        onClose = onCloseClicked,
         actionMode = selectionMode,
         actionModeActions = {
             IconButton(onClick = onSaveClicked) {

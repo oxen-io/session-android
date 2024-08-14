@@ -139,6 +139,7 @@ fun MediaOverviewScreen(
                 onSaveClicked = { showingSaveAttachmentWarning = true },
                 onDeleteClicked = { showingDeleteConfirmation = true },
                 onSelectAllClicked = viewModel::onSelectAllClicked,
+                onCloseClicked = onClose,
                 appBarScrollBehavior = appBarScrollBehavior
             )
         }
