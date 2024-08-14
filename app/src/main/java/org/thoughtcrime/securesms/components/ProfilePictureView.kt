@@ -38,10 +38,13 @@ class ProfilePictureView @JvmOverloads constructor(
     var additionalDisplayName: String? = null
 
     private val profilePicturesCache = mutableMapOf<View, Recipient>()
+    private val resourcePadding by lazy {
+        context.resources.getDimensionPixelSize(R.dimen.normal_padding).toFloat()
+    }
     private val unknownRecipientDrawable by lazy { ResourceContactPhoto(R.drawable.ic_profile_default)
-        .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false) }
+        .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false, resourcePadding) }
     private val unknownOpenGroupDrawable by lazy { ResourceContactPhoto(R.drawable.ic_notification)
-        .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false) }
+        .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false, resourcePadding) }
 
     constructor(context: Context, sender: Recipient): this(context) {
         update(sender)

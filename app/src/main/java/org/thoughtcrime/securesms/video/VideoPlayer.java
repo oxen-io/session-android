@@ -18,56 +18,46 @@ package org.thoughtcrime.securesms.video;
 
 import android.content.Context;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.PlayerControlView;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import org.thoughtcrime.securesms.attachments.AttachmentServer;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.Player;
+import androidx.media3.common.AudioAttributes;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.LegacyPlayerControlView;
+import androidx.media3.ui.PlayerView;
+
+
+import org.session.libsession.utilities.ViewUtil;
 import org.session.libsignal.utilities.Log;
+import org.thoughtcrime.securesms.attachments.AttachmentServer;
 import org.thoughtcrime.securesms.mms.PartAuthority;
 import org.thoughtcrime.securesms.mms.VideoSlide;
-import org.session.libsession.utilities.ViewUtil;
-import org.thoughtcrime.securesms.video.exo.AttachmentDataSourceFactory;
 
 import java.io.IOException;
 
 import network.loki.messenger.R;
 
+@UnstableApi
 public class VideoPlayer extends FrameLayout {
 
   private static final String TAG = VideoPlayer.class.getSimpleName();
 
   @Nullable private final VideoView           videoView;
-  @Nullable private final PlayerView          exoView;
+  @Nullable private final PlayerView exoView;
 
-  @Nullable private       SimpleExoPlayer     exoPlayer;
-  @Nullable private       PlayerControlView   exoControls;
+  @Nullable private ExoPlayer exoPlayer;
+  @Nullable private LegacyPlayerControlView exoControls;
   @Nullable private       AttachmentServer    attachmentServer;
   @Nullable private       Window              window;
 
@@ -84,23 +74,16 @@ public class VideoPlayer extends FrameLayout {
 
     inflate(context, R.layout.video_player, this);
 
-    if (Build.VERSION.SDK_INT >= 16) {
-      this.exoView   = ViewUtil.findById(this, R.id.video_view);
-      this.videoView = null;
-      this.exoControls = new PlayerControlView(getContext());
-      this.exoControls.setShowTimeoutMs(-1);
-    } else {
-      this.videoView = ViewUtil.findById(this, R.id.video_view);
-      this.exoView   = null;
-      initializeVideoViewControls(videoView);
-    }
+    this.exoView   = ViewUtil.findById(this, R.id.video_view);
+    this.videoView = null;
+    this.exoControls = new LegacyPlayerControlView(getContext());
+    this.exoControls.setShowTimeoutMs(-1);
   }
 
   public void setVideoSource(@NonNull VideoSlide videoSource, boolean autoplay)
       throws IOException
   {
-    if (Build.VERSION.SDK_INT >= 16) setExoViewSource(videoSource, autoplay);
-    else                             setVideoViewSource(videoSource, autoplay);
+    setExoViewSource(videoSource, autoplay);
   }
 
   public void pause() {
@@ -141,25 +124,20 @@ public class VideoPlayer extends FrameLayout {
   private void setExoViewSource(@NonNull VideoSlide videoSource, boolean autoplay)
       throws IOException
   {
-    BandwidthMeter         bandwidthMeter             = new DefaultBandwidthMeter();
-    TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-    TrackSelector          trackSelector              = new DefaultTrackSelector(videoTrackSelectionFactory);
-    LoadControl            loadControl                = new DefaultLoadControl();
-
-    exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
+    exoPlayer = new ExoPlayer.Builder(getContext()).build();
     exoPlayer.addListener(new ExoPlayerListener(window));
+    exoPlayer.setAudioAttributes(AudioAttributes.DEFAULT, true);
     //noinspection ConstantConditions
     exoView.setPlayer(exoPlayer);
     //noinspection ConstantConditions
     exoControls.setPlayer(exoPlayer);
 
-    DefaultDataSourceFactory    defaultDataSourceFactory    = new DefaultDataSourceFactory(getContext(), "GenericUserAgent", null);
-    AttachmentDataSourceFactory attachmentDataSourceFactory = new AttachmentDataSourceFactory(getContext(), defaultDataSourceFactory, null);
-    ExtractorsFactory           extractorsFactory           = new DefaultExtractorsFactory();
+    if(videoSource.getUri() != null){
+      MediaItem mediaItem = MediaItem.fromUri(videoSource.getUri());
+      exoPlayer.setMediaItem(mediaItem);
+    }
 
-    MediaSource mediaSource = new ExtractorMediaSource(videoSource.getUri(), attachmentDataSourceFactory, extractorsFactory, null, null);
-
-    exoPlayer.prepare(mediaSource);
+    exoPlayer.prepare();
     exoPlayer.setPlayWhenReady(autoplay);
   }
 
@@ -189,15 +167,7 @@ public class VideoPlayer extends FrameLayout {
     if (autoplay) this.videoView.start();
   }
 
-  private void initializeVideoViewControls(@NonNull VideoView videoView) {
-    MediaController mediaController = new MediaController(getContext());
-    mediaController.setAnchorView(videoView);
-    mediaController.setMediaPlayer(videoView);
-
-    videoView.setMediaController(mediaController);
-  }
-
-  private static class ExoPlayerListener extends Player.DefaultEventListener {
+  private static class ExoPlayerListener implements Player.Listener {
     private final Window window;
 
     ExoPlayerListener(Window window) {

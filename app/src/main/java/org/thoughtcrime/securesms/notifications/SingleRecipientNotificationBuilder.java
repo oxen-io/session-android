@@ -28,7 +28,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.session.libsession.avatars.ContactColors;
 import org.session.libsession.avatars.ContactPhoto;
-import org.session.libsession.avatars.GeneratedContactPhoto;
+import org.session.libsession.avatars.ResourceContactPhoto;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -59,6 +59,8 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
   private SlideDeck    slideDeck;
   private CharSequence contentTitle;
   private CharSequence contentText;
+
+  private static final Integer ICON_SIZE = 128;
 
   public SingleRecipientNotificationBuilder(@NonNull Context context, @NonNull NotificationPrivacyPreference privacy)
   {
@@ -108,7 +110,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
 
     } else {
       setContentTitle(context.getString(R.string.app_name));
-      setLargeIcon(new GeneratedContactPhoto("Unknown", R.drawable.ic_profile_default).asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context)));
+      setLargeIcon(AvatarPlaceholderGenerator.generate(context, ICON_SIZE, "", "Unknown"));
     }
   }
 
@@ -330,7 +332,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
   private static Drawable getPlaceholderDrawable(Context context, Recipient recipient) {
     String publicKey = recipient.getAddress().serialize();
     String displayName = recipient.getName();
-    return AvatarPlaceholderGenerator.generate(context, 128, publicKey, displayName);
+    return AvatarPlaceholderGenerator.generate(context, ICON_SIZE, publicKey, displayName);
   }
 
   /**

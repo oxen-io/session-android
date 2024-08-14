@@ -868,9 +868,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onDestroy() {
-        viewModel.saveDraft(binding.inputBar.text.trim())
-        cancelVoiceMessage()
-        tearDownRecipientObserver()
+        if(::binding.isInitialized) {
+            viewModel.saveDraft(binding.inputBar.text.trim())
+            cancelVoiceMessage()
+            tearDownRecipientObserver()
+        }
         super.onDestroy()
     }
     // endregion

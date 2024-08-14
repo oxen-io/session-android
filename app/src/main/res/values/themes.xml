@@ -29,7 +29,6 @@
        <item name="android:colorControlNormal">?android:textColorPrimary</item>
        <item name="conversation_menu_border_color">?colorDividerBackground</item>
        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Fix.Settings</item>
-       <item name="searchViewStyle">@style/Widget.Session.SearchView</item>
        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
        <item name="elementBorderColor">?android:textColorSecondary</item>
        <item name="colorOnSurface">?android:textColorPrimary</item>

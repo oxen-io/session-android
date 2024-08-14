@@ -56,7 +56,6 @@ allprojects {
                 includeGroupByRegex "org\\.signal.*"
             }
         }
-        jcenter()
         maven { url "https://jitpack.io" }
         if (project.hasProperty('huawei')) maven {
             url 'https://developer.huawei.com/repo/'

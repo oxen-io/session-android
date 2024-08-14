@@ -18,6 +18,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,8 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageContract
 import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -111,6 +114,48 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     private val hexEncodedPublicKey: String get() = TextSecurePreferences.getLocalNumber(this)!!
 
+    private val onAvatarCropped = registerForActivityResult(CropImageContract()) { result ->
+        when {
+            result.isSuccessful -> {
+                Log.i(TAG, result.getUriFilePath(this).toString())
+
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        val profilePictureToBeUploaded =
+                            BitmapUtil.createScaledBytes(
+                                this@SettingsActivity,
+                                result.getUriFilePath(this@SettingsActivity).toString(),
+                                ProfileMediaConstraints()
+                            ).bitmap
+                        launch(Dispatchers.Main) {
+                            updateProfilePicture(profilePictureToBeUploaded)
+                        }
+                    } catch (e: BitmapDecodingException) {
+                        Log.e(TAG, e)
+                    }
+                }
+            }
+            result is CropImage.CancelledResult -> {
+                Log.i(TAG, "Cropping image was cancelled by the user")
+            }
+            else -> {
+                Log.e(TAG, "Cropping image failed")
+            }
+        }
+    }
+
+    private val onPickImage = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ){ result ->
+        if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+
+        val outputFile = Uri.fromFile(File(cacheDir, "cropped"))
+        val inputFile: Uri? = result.data?.data ?: tempFile?.let(Uri::fromFile)
+        cropImage(inputFile, outputFile)
+    }
+
+    private val avatarSelection = AvatarSelection(this, onAvatarCropped, onPickImage)
+
     companion object {
         private const val SCROLL_STATE = "SCROLL_STATE"
     }
@@ -183,32 +228,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_OK) return
-        when (requestCode) {
-            AvatarSelection.REQUEST_CODE_AVATAR -> {
-                val outputFile = Uri.fromFile(File(cacheDir, "cropped"))
-                val inputFile: Uri? = data?.data ?: tempFile?.let(Uri::fromFile)
-                AvatarSelection.circularCropImage(this, inputFile, outputFile, R.string.photo)
-            }
-
-            AvatarSelection.REQUEST_CODE_CROP_IMAGE -> {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    try {
-                        val profilePictureToBeUploaded = BitmapUtil.createScaledBytes(this@SettingsActivity, AvatarSelection.getResultUri(data), ProfileMediaConstraints()).bitmap
-                        launch(Dispatchers.Main) {
-                            updateProfilePicture(profilePictureToBeUploaded)
-                        }
-                    } catch (e: BitmapDecodingException) {
-                        Log.e(TAG, e)
-                    }
-                }
-            }
         }
     }
 
@@ -417,9 +436,16 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         Permissions.with(this)
             .request(Manifest.permission.CAMERA)
             .onAnyResult {
-                tempFile = AvatarSelection.startAvatarSelection(this, false, true)
+                tempFile = avatarSelection.startAvatarSelection( false, true)
             }
             .execute()
+    }
+
+    private fun cropImage(inputFile: Uri?, outputFile: Uri?){
+        avatarSelection.circularCropImage(
+            inputFile = inputFile,
+            outputFile = outputFile,
+        )
     }
     // endregion
 
