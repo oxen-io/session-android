@@ -193,6 +193,7 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import kotlin.time.Duration.Companion.minutes
 
 private const val TAG = "ConversationActivityV2"
 
@@ -287,18 +288,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private var emojiPickerVisible = false
 
-    // Queue of timestamps of emoji reactions
+    // Queue of timestamps used to rate-limit emoji reactions
     private val emojiRateLimiterQueue = LinkedList<Long>()
 
-    // Our emoji queue size is the maximum number of emoji reactions allowed per minute - above this we'll
-    // display the "Slow down" toast (`emojiReactsCoolDown`) rather than performing the emoji reaction.
-    private val emojiRateLimiterQueueSize = 20
-
-    // Remove an emoji from the queue after this many milliseconds (60_000L is 1 minute in milliseconds)
-    private val emojiRateLimiterRemovalDelayMS = 60_000L / emojiRateLimiterQueueSize
-
-    // Handler to perform the emoji queue removal
-    private val emojiRateLimitHandler = Handler(Looper.getMainLooper())
+    // Constants used to enforce the given maximum emoji reactions allowed per minute (emoji reactions
+    // that occur above this limit will result in a "Slow down" toast rather than adding the reaction).
+    private val EMOJI_REACTIONS_ALLOWED_PER_MINUTE = 5
+    private val ONE_MINUTE_IN_MILLISECONDS = 1.minutes.inWholeMilliseconds
 
     private val isScrolledToBottom: Boolean
         get() = binding.conversationRecyclerView.isScrolledToBottom
@@ -1358,27 +1354,39 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // Method to add an emoji to a queue and remove it a short while later - this is used as a
     // rate-limiting mechanism and is called from the `sendEmojiReaction` method, below.
-    private fun currentlyEmojiReactRateLimited(): Boolean {
-        // Note: While we could check if the queue is full AND THEN if the first element in
-        // the queue is less than 1 minute old and use that as our condition to rate-limit,
-        // just using the queue size (20) is functionality identical with a removal rate of
-        // 3 seconds.
-        if (emojiRateLimiterQueue.size >= emojiRateLimiterQueueSize) {
-            return true
-        } else {
-            // Add the emoji to the queue, then a little while later remove it
-            emojiRateLimiterQueue.add(System.currentTimeMillis())
-            emojiRateLimitHandler.postDelayed({
+
+    fun canPerformEmojiReaction(timestamp: Long): Boolean {
+        // If the emoji reaction queue is full..
+        if (emojiRateLimiterQueue.size >= EMOJI_REACTIONS_ALLOWED_PER_MINUTE) {
+            // ..grab the timestamp of the oldest emoji reaction.
+            val headTimestamp = emojiRateLimiterQueue.peekFirst()
+            if (headTimestamp == null) {
+                Log.w(TAG, "Could not get emoji react head timestamp - should never happen, but we'll allow the emoji reaction.")
+                return true
+            }
+
+            // With the queue full, if the earliest emoji reaction occurred less than 1 minute ago
+            // then we reject it..
+            if (System.currentTimeMillis() - headTimestamp <= ONE_MINUTE_IN_MILLISECONDS) {
+                return false
+            } else {
+                // ..otherwise if the earliest emoji reaction was more than a minute ago we'll
+                // remove that early reaction to move the timestamp at index 1 into index 0,, add
+                // our new timestamp and return true to accept the emoji reaction.
                 emojiRateLimiterQueue.removeFirst()
-            }, emojiRateLimiterRemovalDelayMS)
-            return false
+                emojiRateLimiterQueue.addLast(timestamp)
+                return true
+            }
+        } else {
+            // If the queue isn't already full then we add the new timestamp to the back of the queue and allow the emoji reaction
+            emojiRateLimiterQueue.addLast(timestamp)
+            return true
         }
     }
 
     private fun sendEmojiReaction(emoji: String, originalMessage: MessageRecord) {
-
         // Only allow the emoji reaction if we aren't currently rate limited
-        if (currentlyEmojiReactRateLimited()) {
+        if (!canPerformEmojiReaction(System.currentTimeMillis())) {
             Toast.makeText(this, getString(R.string.emojiReactsCoolDown), Toast.LENGTH_SHORT).show()
             return
         }
