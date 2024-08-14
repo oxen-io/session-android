@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import network.loki.messenger.R
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.task.ProgressDialogAsyncTask
 import org.session.libsignal.utilities.ExternalStorageUtil
 import org.session.libsignal.utilities.Log
@@ -47,10 +48,20 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         @JvmOverloads
         fun showWarningDialog(context: Context, count: Int = 1, onAcceptListener: () -> Unit = {}) {
             context.showSessionDialog {
-                title(R.string.permissionsRequired)
+                title(R.string.warning)
                 iconAttribute(R.attr.dialog_alert_icon)
                 text(context.getString(R.string.attachmentsWarning))
-                button(R.string.accept) { onAcceptListener() }
+                dangerButton(R.string.save) {
+                    // On Android API 30+ there is no WRITE_EXTERNAL_STORAGE permission to save files so we can't
+                    // check against that to show a one-time warning that saved attachments can be accessed by other
+                    // apps - so on such devices we'll use a saved boolean preference.
+                    val haveWarned = TextSecurePreferences.getHaveWarnedUserAboutSavingAttachments(context)
+                    if (!haveWarned && Build.VERSION.SDK_INT >= 30) {
+                        TextSecurePreferences.setHaveWarnedUserAboutSavingAttachments(context)
+                    }
+
+                    onAcceptListener()
+                }
                 button(R.string.cancel)
             }
         }

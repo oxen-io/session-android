@@ -301,6 +301,12 @@ interface TextSecurePreferences {
 
         const val ALLOW_MESSAGE_REQUESTS = "libsession.ALLOW_MESSAGE_REQUESTS"
 
+        // Key name for if we've warned the user that saving attachments will allow other apps to access them.
+        // Note: This is only a concern on Android API 30+ which does not have the WRITE_EXTERNAL_STORAGE permission
+        // for us to check against - and we only display this once, or until the user consents to this and continues
+        // to save the attachment(s).
+        const val HAVE_WARNED_USER_ABOUT_SAVING_ATTACHMENTS = "libsession.HAVE_WARNED_USER_ABOUT_SAVING_ATTACHMENTS"
+
         @JvmStatic
         fun getLastConfigurationSyncTime(context: Context): Long {
             return getLongPreference(context, LAST_CONFIGURATION_SYNC_TIME, 0)
@@ -980,6 +986,19 @@ interface TextSecurePreferences {
         fun setFingerprintKeyGenerated(context: Context) {
             setBooleanPreference(context, FINGERPRINT_KEY_GENERATED, true)
         }
+
+
+        // ----- Get / set methods for if we have already warned the user that saving attachments will allow other apps to access them -----
+        @JvmStatic
+        fun getHaveWarnedUserAboutSavingAttachments(context: Context): Boolean {
+            return getBooleanPreference(context, HAVE_WARNED_USER_ABOUT_SAVING_ATTACHMENTS, false)
+        }
+
+        @JvmStatic
+        fun setHaveWarnedUserAboutSavingAttachments(context: Context) {
+            setBooleanPreference(context, HAVE_WARNED_USER_ABOUT_SAVING_ATTACHMENTS, true)
+        }
+        // ---------------------------------------------------------------------------------------------------------------------------------
 
         @JvmStatic
         fun clearAll(context: Context) {

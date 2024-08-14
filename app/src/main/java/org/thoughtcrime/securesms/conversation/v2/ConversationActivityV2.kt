@@ -1,12 +1,14 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.Manifest
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.animation.FloatEvaluator
 import android.animation.ValueAnimator
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.database.Cursor
 import android.graphics.Rect
@@ -35,6 +37,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -50,19 +53,9 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.annimon.stream.Stream
+import com.bumptech.glide.Glide
 import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.ref.WeakReference
-import java.util.Locale
-import java.util.concurrent.ExecutionException
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicLong
-import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.min
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -169,7 +162,6 @@ import org.thoughtcrime.securesms.mediasend.Media
 import org.thoughtcrime.securesms.mediasend.MediaSendActivity
 import org.thoughtcrime.securesms.mms.AudioSlide
 import org.thoughtcrime.securesms.mms.GifSlide
-import com.bumptech.glide.Glide
 import org.thoughtcrime.securesms.mms.ImageSlide
 import org.thoughtcrime.securesms.mms.MediaConstraints
 import org.thoughtcrime.securesms.mms.Slide
@@ -190,6 +182,18 @@ import org.thoughtcrime.securesms.util.isScrolledToWithin30dpOfBottom
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import org.thoughtcrime.securesms.util.toPx
+import java.lang.ref.WeakReference
+import java.util.Locale
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicReference
+import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
+
 
 private const val TAG = "ConversationActivityV2"
 
@@ -2148,6 +2152,26 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         endActionMode()
     }
 
+    private fun saveAttachments(message: MmsMessageRecord) {
+        val attachments: List<SaveAttachmentTask.Attachment?> = Stream.of(message.slideDeck.slides)
+            .filter { s: Slide -> s.uri != null && (s.hasImage() || s.hasVideo() || s.hasAudio() || s.hasDocument()) }
+            .map { s: Slide -> SaveAttachmentTask.Attachment(s.uri!!, s.contentType, message.dateReceived, s.fileName.orNull()) }
+            .toList()
+        if (attachments.isNotEmpty()) {
+            val saveTask = SaveAttachmentTask(this)
+            saveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, *attachments.toTypedArray())
+            if (!message.isOutgoing) { sendMediaSavedNotification() }
+            return
+        }
+        // Implied else that there were no attachment(s)
+        Toast.makeText(this, resources.getString(R.string.attachmentsSaveError), Toast.LENGTH_LONG).show()
+    }
+
+    private fun hasPermission(permission: String): Boolean {
+        val result = ContextCompat.checkSelfPermission(this, permission)
+        return result == PackageManager.PERMISSION_GRANTED
+    }
+
     override fun saveAttachment(messages: Set<MessageRecord>) {
         val message = messages.first() as MmsMessageRecord
 
@@ -2159,37 +2183,64 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             return
         }
 
+        // On Android versions below 30 we require the WRITE_EXTERNAL_STORAGE permission to save attachments.
+        // However, we would like to  on more recent Android API versions there is scoped storage
+        // If we already have permission to write to external storage then just get on with it & return..
+        //
+        // Android versions will j
+        if (Build.VERSION.SDK_INT < 30) {
+            // Save the attachment(s) then bail if we already have permission to do so
+            if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                saveAttachments(message)
+                return
+            }
+        } else {
+            // On more modern versions of Android on API 30+ WRITE_EXTERNAL_STORAGE is no longer used and we can just
+            // save files to the public directories like "Downloads", "Pictures" etc. - but... we would still like to
+            // inform the user just _once_ that saving attachments means that other apps can access them - so we'll
+            val haveWarned = TextSecurePreferences.getHaveWarnedUserAboutSavingAttachments(this)
+            if (haveWarned) {
+                saveAttachments(message)
+                return
+            }
+        }
+
+        // ..otherwise we must ask for it first.
         SaveAttachmentTask.showWarningDialog(this) {
             Permissions.with(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .maxSdkVersion(Build.VERSION_CODES.P)
+                .maxSdkVersion(Build.VERSION_CODES.P) // P is 28
                 .withPermanentDenialDialog(Phrase.from(applicationContext, R.string.permissionsStorageSaveDenied)
                     .put(APP_NAME_KEY, getString(R.string.app_name))
                     .format().toString())
                 .onAnyDenied {
                     endActionMode()
-                    val txt = Phrase.from(applicationContext, R.string.permissionsStorageSaveDenied)
-                                .put(APP_NAME_KEY, getString(R.string.app_name))
-                                .format().toString()
-                    Toast.makeText(this@ConversationActivityV2, txt, Toast.LENGTH_LONG).show()
+
+                    showSessionDialog {
+                        title(R.string.permissionsRequired)
+
+                        val txt = Phrase.from(applicationContext, R.string.permissionsStorageSaveDenied)
+                            .put(APP_NAME_KEY, getString(R.string.app_name))
+                            .format().toString()
+                        text(txt)
+
+                        // Take the user directly to the settings app for Session to grant the permission if they
+                        // initially denied it but then have a change of heart when they realise they can't
+                        // proceed without it.
+                        dangerButton(R.string.theContinue) {
+                            val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            val uri = Uri.fromParts("package", packageName, null)
+                            intent.setData(uri)
+                            startActivity(intent)
+                        }
+
+                        button(R.string.cancel)
+                    }
                 }
                 .onAllGranted {
                     endActionMode()
-                    val attachments: List<SaveAttachmentTask.Attachment?> = Stream.of(message.slideDeck.slides)
-                        .filter { s: Slide -> s.uri != null && (s.hasImage() || s.hasVideo() || s.hasAudio() || s.hasDocument()) }
-                        .map { s: Slide -> SaveAttachmentTask.Attachment(s.uri!!, s.contentType, message.dateReceived, s.fileName.orNull()) }
-                        .toList()
-                    if (attachments.isNotEmpty()) {
-                        val saveTask = SaveAttachmentTask(this)
-                        saveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, *attachments.toTypedArray())
-                        if (!message.isOutgoing) {
-                            sendMediaSavedNotification()
-                        }
-                        return@onAllGranted
-                    }
-                    Toast.makeText(this,
-                        resources.getString(R.string.attachmentsSaveError),
-                        Toast.LENGTH_LONG).show()
+                    saveAttachments(message)
                 }
                 .execute()
         }
