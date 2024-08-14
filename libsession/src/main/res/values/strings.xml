@@ -192,7 +192,7 @@
     <string name="callsPermissionsRequiredDescription">You can enable the \"Voice and Video Calls\" permission in Privacy Settings.</string>
     <string name="callsReconnecting">Reconnecting…</string>
     <string name="callsRinging">Ringing...</string>
-    <string name="callsSessionCall">Session Call</string>
+    <string name="callsSessionCall">{app_name} Call</string>
     <string name="callsSettings">Calls (Beta)</string>
     <string name="callsVoiceAndVideo">Voice and Video Calls</string>
     <string name="callsVoiceAndVideoBeta">Voice and Video Calls (Beta)</string>
