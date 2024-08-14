@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.media
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.ActivityNotFoundException
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -207,7 +208,11 @@ fun MediaOverviewScreen(
         SaveAttachmentWarningDialog(
             onDismissRequest = { showingSaveAttachmentWarning = false },
             onAccepted = {
-                requestStoragePermission.launch(WRITE_EXTERNAL_STORAGE)
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                    requestStoragePermission.launch(WRITE_EXTERNAL_STORAGE)
+                } else {
+                    viewModel.onSaveClicked()
+                }
             },
             numSelected = selected.size
         )
