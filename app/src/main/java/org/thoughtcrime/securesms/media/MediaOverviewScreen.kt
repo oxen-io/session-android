@@ -133,7 +133,6 @@ fun MediaOverviewScreen(
         topBar = {
             MediaOverviewTopAppBar(
                 selectionMode = selectionMode,
-                selected = selected,
                 title = viewModel.title.collectAsState().value,
                 onBackClicked = viewModel::onBackClicked,
                 onSaveClicked = { showingSaveAttachmentWarning = true },
