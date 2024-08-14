@@ -293,7 +293,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // Constants used to enforce the given maximum emoji reactions allowed per minute (emoji reactions
     // that occur above this limit will result in a "Slow down" toast rather than adding the reaction).
-    private val EMOJI_REACTIONS_ALLOWED_PER_MINUTE = 5
+    private val EMOJI_REACTIONS_ALLOWED_PER_MINUTE = 20
     private val ONE_MINUTE_IN_MILLISECONDS = 1.minutes.inWholeMilliseconds
 
     private val isScrolledToBottom: Boolean
