@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.Manifest
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.animation.FloatEvaluator
 import android.animation.ValueAnimator
 import android.content.ClipData
@@ -183,6 +182,7 @@ import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import org.thoughtcrime.securesms.util.toPx
 import java.lang.ref.WeakReference
+import java.util.LinkedList
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
@@ -193,7 +193,6 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
-
 
 private const val TAG = "ConversationActivityV2"
 
@@ -285,7 +284,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     var searchViewItem: MenuItem? = null
 
     private val bufferedLastSeenChannel = Channel<Long>(capacity = 512, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
     private var emojiPickerVisible = false
+    private val emojiRateLimiterQueue = LinkedList<String>()
+    private val emojiRateLimiterQueueSize      = 4     // Maximum number of emoji reactions allowed per 20 seconds (as removal delay is 5 secs)
+    private val emojiRateLimiterRemovalDelayMS = 5000L // Remove an emoji from the queue after this many milliseconds
+    private val emojiRateLimitHandler = Handler(Looper.getMainLooper())
 
     private val isScrolledToBottom: Boolean
         get() = binding.conversationRecyclerView.isScrolledToBottom
@@ -1343,7 +1347,29 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
+    // Method to add an emoji to a queue and remove it a short while later - this is used as a
+    // rate-limiting mechanism and is called from the `sendEmojiReaction` method, below.
+    private fun currentlyEmojiReactRateLimited(emoji: String): Boolean {
+        if (emojiRateLimiterQueue.size >= emojiRateLimiterQueueSize) {
+            return true
+        } else {
+            // Add the emoji to the queue, then a little while later remove it
+            emojiRateLimiterQueue.add(emoji)
+            emojiRateLimitHandler.postDelayed({
+                emojiRateLimiterQueue.remove(emoji)
+            }, emojiRateLimiterRemovalDelayMS)
+            return false
+        }
+    }
+
     private fun sendEmojiReaction(emoji: String, originalMessage: MessageRecord) {
+
+        // Only allow the emoji reaction if we aren't currently rate limited
+        if (currentlyEmojiReactRateLimited(emoji)) {
+            Toast.makeText(this, getString(R.string.emojiReactsCoolDown), Toast.LENGTH_SHORT).show()
+            return
+        }
+
         // Create the message
         val recipient = viewModel.recipient ?: return Log.w(TAG, "Could not locate recipient when sending emoji reaction")
         val reactionMessage = VisibleMessage()
@@ -1389,6 +1415,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
+    // Method to remove a emoji reaction from a message.
+    // Note: We do not count emoji removal towards the emojiRateLimiterQueue.
     private fun sendEmojiRemoval(emoji: String, originalMessage: MessageRecord) {
         val recipient = viewModel.recipient ?: return
         val message = VisibleMessage()
