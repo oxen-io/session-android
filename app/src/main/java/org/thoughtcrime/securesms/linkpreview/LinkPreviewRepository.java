@@ -68,7 +68,7 @@ public class LinkPreviewRepository {
       }
 
       if (!metadata.getImageUrl().isPresent()) {
-        callback.onComplete(Optional.of(new LinkPreview(url, metadata.getTitle().get(), Optional.absent())));
+        callback.onComplete(Optional.of(new LinkPreview(url, metadata.getTitle().get())));
         return;
       }
 
@@ -76,7 +76,7 @@ public class LinkPreviewRepository {
         if (!metadata.getTitle().isPresent() && !attachment.isPresent()) {
           callback.onComplete(Optional.absent());
         } else {
-          callback.onComplete(Optional.of(new LinkPreview(url, metadata.getTitle().or(""), attachment)));
+          callback.onComplete(Optional.of(new LinkPreview(url, metadata.getTitle().or(""), attachment.orNull())));
         }
       });
 

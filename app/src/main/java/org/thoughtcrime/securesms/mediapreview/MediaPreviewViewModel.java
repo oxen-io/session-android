@@ -57,7 +57,7 @@ public class MediaPreviewViewModel extends ViewModel {
 
     while (cursor.moveToPrevious()) {
       MediaRecord record = MediaRecord.from(context, cursor);
-      if (record.getAttachment().getMmsId() == activeRecord.getAttachment().getMmsId()) {
+      if (record.attachment.mmsId == activeRecord.attachment.mmsId) {
         Media media = toMedia(record);
         if (media != null) rail.addFirst(media);
       } else {
@@ -69,7 +69,7 @@ public class MediaPreviewViewModel extends ViewModel {
 
     while (cursor.moveToNext()) {
       MediaRecord record = MediaRecord.from(context, cursor);
-      if (record.getAttachment().getMmsId() == activeRecord.getAttachment().getMmsId()) {
+      if (record.attachment.mmsId == activeRecord.attachment.mmsId) {
         Media media = toMedia(record);
         if (media != null) rail.addLast(media);
       } else {
@@ -82,7 +82,7 @@ public class MediaPreviewViewModel extends ViewModel {
     }
 
     previewData.postValue(new PreviewData(rail.size() > 1 ? rail : Collections.emptyList(),
-                                          activeRecord.getAttachment().getCaption(),
+                                          activeRecord.attachment.getCaption(),
                                           rail.indexOf(activeMedia)));
   }
 
@@ -96,8 +96,8 @@ public class MediaPreviewViewModel extends ViewModel {
   }
 
   private @Nullable Media toMedia(@NonNull MediaRecord mediaRecord) {
-    Uri uri = mediaRecord.getAttachment().getThumbnailUri() != null ? mediaRecord.getAttachment().getThumbnailUri()
-                                                                    : mediaRecord.getAttachment().getDataUri();
+    Uri uri = mediaRecord.attachment.getThumbnailUri() != null ? mediaRecord.attachment.getThumbnailUri()
+                                                                    : mediaRecord.attachment.getDataUri();
 
     if (uri == null) {
       return null;
@@ -105,12 +105,12 @@ public class MediaPreviewViewModel extends ViewModel {
 
     return new Media(uri,
                      mediaRecord.getContentType(),
-                     mediaRecord.getDate(),
-                     mediaRecord.getAttachment().getWidth(),
-                     mediaRecord.getAttachment().getHeight(),
-                     mediaRecord.getAttachment().getSize(),
+            mediaRecord.date,
+                     mediaRecord.attachment.getWidth(),
+                     mediaRecord.attachment.getHeight(),
+                     mediaRecord.attachment.getSize(),
                      Optional.absent(),
-                     Optional.fromNullable(mediaRecord.getAttachment().getCaption()));
+                     Optional.fromNullable(mediaRecord.attachment.getCaption()));
   }
 
   public LiveData<PreviewData> getPreviewData() {

@@ -100,7 +100,7 @@ public class BucketedThreadMediaLoader extends AsyncTaskLoader<BucketedThreadMed
 
     public void add(MediaDatabase.MediaRecord mediaRecord) {
       for (TimeBucket timeSection : TIME_SECTIONS) {
-        if (timeSection.inRange(mediaRecord.getDate())) {
+        if (timeSection.inRange(mediaRecord.date)) {
           timeSection.add(mediaRecord);
           return;
         }
@@ -188,7 +188,7 @@ public class BucketedThreadMediaLoader extends AsyncTaskLoader<BucketedThreadMed
 
       void add(MediaDatabase.MediaRecord record) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(record.getDate());
+        calendar.setTimeInMillis(record.date);
 
         int  year  = calendar.get(Calendar.YEAR) - 1900;
         int  month = calendar.get(Calendar.MONTH);
