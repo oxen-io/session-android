@@ -8,10 +8,10 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
@@ -39,8 +39,6 @@ class ProfilePictureView : FrameLayout {
     lateinit var groupDatabase: GroupDatabase
 
     private val binding = ViewProfilePictureBinding.inflate(LayoutInflater.from(context), this)
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
     private var lastLoadJob: Job? = null
 
     private val unknownRecipientDrawable by lazy(LazyThreadSafetyMode.NONE) {
@@ -58,10 +56,20 @@ class ProfilePictureView : FrameLayout {
         binding.singleModeImageView.isVisible = !showAsDouble
     }
 
-    private fun loadAsDoubleImages(groupAddress: Address, knownRecipient: Recipient?, allowMemoryCache: Boolean) {
+    private fun cancelLastLoadJob() {
         lastLoadJob?.cancel()
+        lastLoadJob = null
+    }
 
-        lastLoadJob = scope.launch {
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun loadAsDoubleImages(groupAddress: Address, knownRecipient: Recipient?, allowMemoryCache: Boolean) {
+        cancelLastLoadJob()
+
+        // The use of GlobalScope is intentional here, as there is no better lifecycle scope that we can use
+        // to launch a coroutine from a view. The potential memory leak is not a concern here, as
+        // the coroutine is very short-lived. If you change the code here to be long live then you'll
+        // need to find a better scope to launch the coroutine from.
+        lastLoadJob = GlobalScope.launch(Dispatchers.Main) {
             // Load group avatar if available, otherwise load member avatars
             val groupAvatarOrMemberAvatars = withContext(Dispatchers.Default) {
                 (knownRecipient ?: Recipient.from(context, groupAddress, false)).contactPhoto
@@ -110,18 +118,19 @@ class ProfilePictureView : FrameLayout {
     }
 
     private fun loadAsSingleImage(address: Address, allowMemoryCache: Boolean) {
-        lastLoadJob?.cancel()
+        cancelLastLoadJob()
 
-        val error: Any = when {
+        setShowAsDoubleMode(false)
+
+        val errorModel: Any = when {
             address.isCommunity -> unknownOpenGroupDrawable
             address.isContact -> PlaceholderAvatarPhoto(address.serialize(), null)
             else -> unknownRecipientDrawable
         }
 
-        setShowAsDoubleMode(false)
         Glide.with(this)
             .load(address)
-            .error(error)
+            .error(errorModel)
             .circleCrop()
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(!allowMemoryCache)
