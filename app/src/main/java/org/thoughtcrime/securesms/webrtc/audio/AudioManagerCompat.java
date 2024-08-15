@@ -8,10 +8,8 @@ import android.media.AudioDeviceInfo;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsignal.utilities.Log;
@@ -116,14 +114,9 @@ public abstract class AudioManagerCompat {
     abstract public void abandonCallAudioFocus();
 
     public static AudioManagerCompat create(@NonNull Context context) {
-        if (Build.VERSION.SDK_INT >= 26) {
-            return new Api26AudioManagerCompat(context);
-        } else {
-            return new Api21AudioManagerCompat(context);
-        }
+        return new Api26AudioManagerCompat(context);
     }
 
-    @RequiresApi(26)
     private static class Api26AudioManagerCompat extends AudioManagerCompat {
 
         private static AudioAttributes AUDIO_ATTRIBUTES = new AudioAttributes.Builder()
@@ -178,46 +171,6 @@ public abstract class AudioManagerCompat {
             }
 
             audioFocusRequest = null;
-        }
-    }
-
-    @RequiresApi(21)
-    private static class Api21AudioManagerCompat extends AudioManagerCompat {
-
-        private static AudioAttributes AUDIO_ATTRIBUTES = new AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
-                .setLegacyStreamType(AudioManager.STREAM_VOICE_CALL)
-                .build();
-
-        private Api21AudioManagerCompat(@NonNull Context context) {
-            super(context);
-        }
-
-        @Override
-        public SoundPool createSoundPool() {
-            return new SoundPool.Builder()
-                    .setAudioAttributes(AUDIO_ATTRIBUTES)
-                    .setMaxStreams(1)
-                    .build();
-        }
-
-        @Override
-        public void requestCallAudioFocus() {
-            int result = audioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_VOICE_CALL, AUDIOFOCUS_GAIN);
-
-            if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                Log.w(TAG, "Audio focus not granted. Result code: " + result);
-            }
-        }
-
-        @Override
-        public void abandonCallAudioFocus() {
-            int result = audioManager.abandonAudioFocus(onAudioFocusChangeListener);
-
-            if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                Log.w(TAG, "Audio focus abandon failed. Result code: " + result);
-            }
         }
     }
 }

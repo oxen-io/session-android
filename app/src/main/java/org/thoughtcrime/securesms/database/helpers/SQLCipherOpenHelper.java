@@ -252,11 +252,9 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
       NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
       String channelId = context.getString(R.string.NotificationChannel_failures);
 
-      if (NotificationChannels.supported()) {
-        NotificationChannel channel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_HIGH);
-        channel.enableVibration(true);
-        notificationManager.createNotificationChannel(channel);
-      }
+      NotificationChannel channel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_HIGH);
+      channel.enableVibration(true);
+      notificationManager.createNotificationChannel(channel);
 
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
         .setSmallIcon(R.drawable.ic_notification)
@@ -265,10 +263,6 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         .setContentTitle(context.getString(R.string.ErrorNotifier_migration))
         .setContentText(context.getString(R.string.ErrorNotifier_migration_downgrade))
         .setAutoCancel(true);
-
-      if (!NotificationChannels.supported()) {
-        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
-      }
 
       notificationManager.notify(5874, builder.build());
 

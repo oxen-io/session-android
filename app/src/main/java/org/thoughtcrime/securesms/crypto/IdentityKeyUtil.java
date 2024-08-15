@@ -129,27 +129,19 @@ public class IdentityKeyUtil {
   }
 
   private static String getUnencryptedSecret(String key, String unencryptedSecret, Context context) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      return unencryptedSecret;
-    } else {
-      KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(unencryptedSecret.getBytes());
+    KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(unencryptedSecret.getBytes());
 
-      // save the encrypted suffix secret "key_encrypted"
-      save(context,key+ENCRYPTED_SUFFIX,encryptedSecret.serialize());
-      // delete the regular secret "key"
-      delete(context,key);
+    // save the encrypted suffix secret "key_encrypted"
+    save(context,key+ENCRYPTED_SUFFIX,encryptedSecret.serialize());
+    // delete the regular secret "key"
+    delete(context,key);
 
-      return unencryptedSecret;
-    }
+    return unencryptedSecret;
   }
 
   private static String getEncryptedSecret(String encryptedSecret) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      throw new AssertionError("OS downgrade not supported. KeyStore sealed data exists on platform < M!");
-    } else {
-      KeyStoreHelper.SealedData sealedData = KeyStoreHelper.SealedData.fromString(encryptedSecret);
-      return new String(KeyStoreHelper.unseal(sealedData));
-    }
+    KeyStoreHelper.SealedData sealedData = KeyStoreHelper.SealedData.fromString(encryptedSecret);
+    return new String(KeyStoreHelper.unseal(sealedData));
   }
 
 
@@ -157,17 +149,14 @@ public class IdentityKeyUtil {
     SharedPreferences preferences   = context.getSharedPreferences(MASTER_SECRET_UTIL_PREFERENCES_NAME, 0);
     Editor preferencesEditor        = preferences.edit();
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      boolean isEncryptedSuffix = key.endsWith(ENCRYPTED_SUFFIX);
-      if (isEncryptedSuffix) {
-        preferencesEditor.putString(key, value);
-      } else {
-        KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(value.getBytes());
-        preferencesEditor.putString(key+ENCRYPTED_SUFFIX, encryptedSecret.serialize());
-      }
-    } else {
+    boolean isEncryptedSuffix = key.endsWith(ENCRYPTED_SUFFIX);
+    if (isEncryptedSuffix) {
       preferencesEditor.putString(key, value);
+    } else {
+      KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(value.getBytes());
+      preferencesEditor.putString(key+ENCRYPTED_SUFFIX, encryptedSecret.serialize());
     }
+
     if (!preferencesEditor.commit()) throw new AssertionError("failed to save identity key/value to shared preferences");
   }
 

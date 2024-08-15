@@ -13,7 +13,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.text.SpannableStringBuilder;
 
 import androidx.annotation.NonNull;
@@ -24,11 +23,10 @@ import androidx.core.app.NotificationCompat.Action;
 import androidx.core.app.RemoteInput;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import org.session.libsession.avatars.ContactColors;
 import org.session.libsession.avatars.ContactPhoto;
-import org.session.libsession.avatars.ResourceContactPhoto;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -38,7 +36,6 @@ import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.SessionContactDatabase;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader;
-import com.bumptech.glide.Glide;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.mms.SlideDeck;
 import org.thoughtcrime.securesms.util.AvatarPlaceholderGenerator;
@@ -69,10 +66,6 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
     setSmallIcon(R.drawable.ic_notification);
     setColor(ContextCompat.getColor(context, R.color.accent_green));
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
-
-    if (!NotificationChannels.supported()) {
-      setPriority(TextSecurePreferences.getNotificationPriority(context));
-    }
   }
 
   public void setThread(@NonNull Recipient recipient) {
@@ -179,13 +172,11 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
 
       Action replyAction = new Action(R.drawable.ic_reply_white_36dp, actionName, quickReplyIntent);
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        replyAction = new Action.Builder(R.drawable.ic_reply_white_36dp,
-                actionName,
-                wearableReplyIntent)
-                .addRemoteInput(new RemoteInput.Builder(DefaultMessageNotifier.EXTRA_REMOTE_REPLY).setLabel(label).build())
-                .build();
-      }
+      replyAction = new Action.Builder(R.drawable.ic_reply_white_36dp,
+              actionName,
+              wearableReplyIntent)
+              .addRemoteInput(new RemoteInput.Builder(DefaultMessageNotifier.EXTRA_REMOTE_REPLY).setLabel(label).build())
+              .build();
 
       Action wearableReplyAction = new Action.Builder(R.drawable.ic_reply,
               actionName,
