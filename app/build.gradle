@@ -193,7 +193,7 @@ android {
         dependsOn 'testPlayDebugUnitTest'
 
         reports {
-            xml.enabled(true)
+            xml.required = true
         }
 
         // Add files that should not be listed in the report (e.g. generated Files from dagger)
