@@ -1096,6 +1096,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val blindedRecipient = viewModel.blindedRecipient
         val openGroup = viewModel.openGroup
 
+        val isClosedGroup = recipient.isGroupRecipient
+
         // Get the correct placeholder text for this type of empty conversation
         val isNoteToSelf = recipient.isLocalNumber
         val txtCS: CharSequence = when {
@@ -1115,11 +1117,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     .format()
             }
 
-            else -> {
+            recipient.isGroupRecipient -> {
                 // If this is a group or community that we CAN send messages to
                 Phrase.from(applicationContext, R.string.groupNoMessages)
                     .put(GROUP_NAME_KEY, recipient.toShortString())
                     .format()
+            }
+
+            else -> {
+                Log.w(TAG, "Something else happened in updatePlaceholder - we're not sure what.")
+                ""
             }
         }
 

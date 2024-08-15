@@ -70,7 +70,10 @@ fun MessageSender.create(
 
         // Notify the user
         val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
-        storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.CREATION, name, members, admins, threadID, sentTime)
+
+        // ACL Note: Commenting out this line prevents the timestamp of room creation being added to a new closed group,
+        // which in turn allows us to show the `groupNoMessages` control message text.
+        //storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.CREATION, name, members, admins, threadID, sentTime)
 
         val ourPubKey = storage.getUserPublicKey()
         for (member in members) {
