@@ -16,7 +16,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -26,6 +25,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewEmojiReactionsBinding
@@ -52,8 +53,6 @@ import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.toDp
@@ -179,8 +178,7 @@ class VisibleMessageView : FrameLayout {
 
         if (isGroupThread && !message.isOutgoing) {
             if (isEndOfMessageCluster) {
-                binding.profilePictureView.publicKey = senderAccountID
-                binding.profilePictureView.update(message.individualRecipient)
+                binding.profilePictureView.load(message.individualRecipient)
                 binding.profilePictureView.setOnClickListener {
                     if (thread.isCommunityRecipient) {
                         val openGroup = lokiThreadDb.getOpenGroupChat(threadID)
@@ -456,7 +454,6 @@ class VisibleMessageView : FrameLayout {
     }
 
     fun recycle() {
-        binding.profilePictureView.recycle()
         binding.messageContentView.root.recycle()
     }
 

@@ -35,6 +35,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImage
 import com.canhub.cropper.CropImageContract
 import dagger.hilt.android.AndroidEntryPoint
@@ -169,7 +170,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         super.onStart()
 
         binding.run {
-            setupProfilePictureView(profilePictureView)
+            loadProfilePicture(profilePictureView)
             profilePictureView.setOnClickListener { showEditProfilePictureUI() }
             ctnGroupNameSection.setOnClickListener { startActionMode(DisplayNameEditActionModeCallback()) }
             btnGroupNameDisplay.text = getDisplayName()
@@ -186,12 +187,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private fun getDisplayName(): String =
         TextSecurePreferences.getProfileName(this) ?: truncateIdForDisplay(hexEncodedPublicKey)
 
-    private fun setupProfilePictureView(view: ProfilePictureView) {
-        view.apply {
-            publicKey = hexEncodedPublicKey
-            displayName = getDisplayName()
-            update()
-        }
+    private fun loadProfilePicture(view: ProfilePictureView) {
+        // Always reload the profile picture as it can change on this page.
+        view.load(Address.fromSerialized(hexEncodedPublicKey), allowMemoryCache = false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -332,9 +330,12 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
 
-            // Update our visuals
-            binding.profilePictureView.recycle()
-            binding.profilePictureView.update()
+            // We don't have any easy way to clear the cache just for current user. Clearing
+            // all image caching is the only correct way we can easily do to refresh the profile
+            // page on other screens (on this screen we have disabled memory cache so it will always
+            // work).
+            Glide.get(this).clearMemory()
+            loadProfilePicture(binding.profilePictureView)
         }
 
         // If the sync failed then inform the user
@@ -409,7 +410,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             cancelButton()
         }.apply {
             val profilePic = findViewById<ProfilePictureView>(R.id.profile_picture_view)
-                ?.also(::setupProfilePictureView)
+                ?.also(::loadProfilePicture)
 
             val pictureIcon = findViewById<View>(R.id.ic_pictures)
 

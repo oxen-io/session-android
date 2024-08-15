@@ -23,7 +23,9 @@ class PlaceholderAvatarLoader(private val appContext: Context): ModelLoader<Plac
         val displayName: String = when {
             !model.displayName.isNullOrBlank() -> model.displayName.orEmpty()
             model.hashString == TextSecurePreferences.getLocalNumber(appContext) -> TextSecurePreferences.getProfileName(appContext).orEmpty()
-            else -> Recipient.from(appContext, Address.fromSerialized(model.hashString), false).profileName.orEmpty()
+            else -> Recipient.from(appContext, Address.fromSerialized(model.hashString), false).let {
+                it.profileName ?: it.name ?: ""
+            }
         }
 
         return LoadData(model, PlaceholderAvatarFetcher(appContext, model.hashString, displayName))
