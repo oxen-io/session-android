@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.session.libsession.utilities.Util
 import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -56,7 +57,7 @@ fun DocumentsPage(
                     .nestedScroll(nestedScrollConnection)
                     .fillMaxSize()
                     .padding(2.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.xxsSpacing)
             ) {
                 for ((bucketTitle, files) in content) {
                     stickyHeader {
@@ -67,8 +68,8 @@ fun DocumentsPage(
                         Row(
                             modifier = Modifier
                                 .clickable(onClick = { onItemClicked(file) })
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                .padding(LocalDimensions.current.smallSpacing),
+                            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.xxsSpacing),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Image(
@@ -76,7 +77,7 @@ fun DocumentsPage(
                                 contentDescription = null
                             )
 
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Column(verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.xxxsSpacing)) {
                                 Text(
                                     text = file.fileName.orEmpty(),
                                     style = LocalType.current.large,

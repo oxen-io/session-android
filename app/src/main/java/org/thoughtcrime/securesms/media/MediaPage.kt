@@ -37,6 +37,8 @@ import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import kotlin.math.ceil
 
+private val MEDIA_SPACING = 2.dp
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MediaPage(
@@ -69,8 +71,8 @@ fun MediaPage(
                     modifier = Modifier
                         .nestedScroll(nestedScrollConnection)
                         .fillMaxSize()
-                        .padding(2.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                        .padding(MEDIA_SPACING),
+                    verticalArrangement = Arrangement.spacedBy(MEDIA_SPACING)
                 ) {
                     for ((header, thumbnails) in state) {
                         stickyHeader {
@@ -109,7 +111,7 @@ private fun ThumbnailRow(
     onItemLongClicked: ((Long) -> Unit)?,
     selectedItemIDs: Set<Long>
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(MEDIA_SPACING)) {
         repeat(columnCount) { columnIndex ->
             val item = thumbnails.getOrNull(rowIndex * columnCount + columnIndex)
             if (item != null) {

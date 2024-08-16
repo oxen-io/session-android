@@ -273,7 +273,7 @@ private fun DeleteConfirmationDialog(
             numSelected,
         ),
         buttons = listOf(
-            DialogButtonModel(GetString(R.string.delete), onClick = onAccepted),
+            DialogButtonModel(GetString(R.string.delete), color = LocalColors.current.danger, onClick = onAccepted),
             DialogButtonModel(GetString(android.R.string.cancel), dismissOnClick = true)
         )
     )
