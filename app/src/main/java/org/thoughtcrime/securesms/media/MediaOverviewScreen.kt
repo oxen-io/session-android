@@ -28,14 +28,17 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.AlertDialog
@@ -53,8 +56,8 @@ fun MediaOverviewScreen(
     viewModel: MediaOverviewViewModel,
     onClose: () -> Unit,
 ) {
-    val selected by viewModel.selectedItemIDs.collectAsState()
-    val selectionMode by viewModel.inSelectionMode.collectAsState()
+    val selectedItems by viewModel.selectedItemIDs.collectAsState()
+    val selectionMode by remember { derivedStateOf { selectedItems.isNotEmpty() } }
     val topAppBarState = rememberTopAppBarState()
     var showingDeleteConfirmation by remember { mutableStateOf(false) }
     var showingSaveAttachmentWarning by remember { mutableStateOf(false) }
@@ -178,12 +181,17 @@ fun MediaOverviewScreen(
             ) { index ->
                 when (MediaOverviewTab.entries[index]) {
                     MediaOverviewTab.Media -> {
+                        val haptics = LocalHapticFeedback.current
+
                         MediaPage(
                             content = content.value?.mediaContent,
-                            selectedItemIDs = selected,
+                            selectedItemIDs = selectedItems,
                             onItemClicked = viewModel::onItemClicked,
                             nestedScrollConnection = appBarScrollBehavior.nestedScrollConnection,
-                            onItemLongClicked = viewModel::onItemLongClicked.takeIf { canLongPress }
+                            onItemLongClicked = if(canLongPress){{
+                                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    viewModel.onItemLongClicked(it)
+                            }} else null
                         )
                     }
 
@@ -201,7 +209,7 @@ fun MediaOverviewScreen(
         DeleteConfirmationDialog(
             onDismissRequest = { showingDeleteConfirmation = false },
             onAccepted = viewModel::onDeleteClicked,
-            numSelected = selected.size
+            numSelected = selectedItems.size
         )
     }
 
@@ -215,7 +223,7 @@ fun MediaOverviewScreen(
                     viewModel.onSaveClicked()
                 }
             },
-            numSelected = selected.size
+            numSelected = selectedItems.size
         )
     }
 

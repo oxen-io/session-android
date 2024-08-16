@@ -97,11 +97,8 @@ class MediaOverviewViewModel(
     private val mutableSelectedItemIDs = MutableStateFlow(emptySet<Long>())
     val selectedItemIDs: StateFlow<Set<Long>> get() = mutableSelectedItemIDs
 
-    private val mutableInSelectionMode = MutableStateFlow(false)
-    val inSelectionMode: StateFlow<Boolean> get() = mutableInSelectionMode
-
-    val canLongPress: StateFlow<Boolean> = inSelectionMode
-        .map { !it }
+    val canLongPress: StateFlow<Boolean> = selectedItemIDs
+        .map { it.isEmpty() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     private val mutableEvents = MutableSharedFlow<MediaOverviewEvent>()
@@ -169,7 +166,7 @@ class MediaOverviewViewModel(
 
 
     fun onItemClicked(item: MediaOverviewItem) {
-        if (inSelectionMode.value) {
+        if (mutableSelectedItemIDs.value.isNotEmpty()) {
             val newSet = mutableSelectedItemIDs.value.toMutableSet()
             if (item.id in newSet) {
                 newSet.remove(item.id)
@@ -178,9 +175,6 @@ class MediaOverviewViewModel(
             }
 
             mutableSelectedItemIDs.value = newSet
-            if (newSet.isEmpty()) {
-                mutableInSelectionMode.value = false
-            }
         } else if (!item.slide.hasDocument()) {
             val mediaRecord = item.mediaRecord
 
@@ -215,7 +209,7 @@ class MediaOverviewViewModel(
     }
 
     fun onTabItemClicked(tab: MediaOverviewTab) {
-        if (inSelectionMode.value) {
+        if (mutableSelectedItemIDs.value.isNotEmpty()) {
             // Not allowing to switch tabs while in selection mode
             return
         }
@@ -224,12 +218,11 @@ class MediaOverviewViewModel(
     }
 
     fun onItemLongClicked(id: Long) {
-        mutableInSelectionMode.value = true
         mutableSelectedItemIDs.value = setOf(id)
     }
 
     fun onSaveClicked() {
-        if (!inSelectionMode.value) return
+        if (mutableSelectedItemIDs.value.isEmpty()) return
 
         viewModelScope.launch {
             val selectedMedia = selectedMedia.toList()
@@ -297,13 +290,12 @@ class MediaOverviewViewModel(
 
             mutableShowingActionProgress.value = null
             mutableSelectedItemIDs.value = emptySet()
-            mutableInSelectionMode.value = false
         }
 
     }
 
     fun onDeleteClicked() {
-        if (!inSelectionMode.value) return
+        if (mutableSelectedItemIDs.value.isEmpty()) return
 
         viewModelScope.launch {
             mutableShowingActionProgress.value = application.getString(R.string.MediaOverviewActivity_Media_delete_progress_message)
@@ -318,12 +310,11 @@ class MediaOverviewViewModel(
 
             mutableShowingActionProgress.value = null
             mutableSelectedItemIDs.value = emptySet()
-            mutableInSelectionMode.value = false
         }
     }
 
     fun onSelectAllClicked() {
-        if (!inSelectionMode.value) return
+        if (mutableSelectedItemIDs.value.isEmpty()) return
 
         val allItems = mediaListState.value?.let { content ->
             when (selectedTab.value) {
@@ -339,8 +330,7 @@ class MediaOverviewViewModel(
     }
 
     fun onBackClicked() {
-        if (inSelectionMode.value) {
-            mutableInSelectionMode.value = false
+        if (mutableSelectedItemIDs.value.isNotEmpty()) {
             mutableSelectedItemIDs.value = emptySet()
         } else {
             viewModelScope.launch {
