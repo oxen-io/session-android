@@ -8,7 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.ui.components.AppBar
+import org.thoughtcrime.securesms.ui.components.ActionAppBar
+import org.thoughtcrime.securesms.ui.components.AppBarBackIcon
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 
 @Composable
@@ -20,14 +21,12 @@ fun MediaOverviewTopAppBar(
     onSaveClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onSelectAllClicked: () -> Unit,
-    onCloseClicked: () -> Unit,
     appBarScrollBehavior: TopAppBarScrollBehavior
 ) {
-    AppBar(
+    ActionAppBar(
         title = title,
-        onBack = onBackClicked,
+        navigationIcon = {AppBarBackIcon(onBack = onBackClicked)},
         scrollBehavior = appBarScrollBehavior,
-        onClose = onCloseClicked,
         actionMode = selectionMode,
         actionModeActions = {
             IconButton(onClick = onSaveClicked) {

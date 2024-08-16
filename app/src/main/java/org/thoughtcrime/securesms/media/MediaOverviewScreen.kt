@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -46,6 +47,7 @@ import org.thoughtcrime.securesms.ui.DialogButtonModel
 import org.thoughtcrime.securesms.ui.GetString
 import org.thoughtcrime.securesms.ui.components.SessionTabRow
 import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
 
 @OptIn(
@@ -142,7 +144,6 @@ fun MediaOverviewScreen(
                 onSaveClicked = { showingSaveAttachmentWarning = true },
                 onDeleteClicked = { showingDeleteConfirmation = true },
                 onSelectAllClicked = viewModel::onSelectAllClicked,
-                onCloseClicked = onClose,
                 appBarScrollBehavior = appBarScrollBehavior
             )
         }
@@ -289,9 +290,9 @@ private fun ActionProgressDialog(
     ) {
         Row(
             modifier = Modifier
-                .background(LocalColors.current.background, shape = RoundedCornerShape(16.dp))
-                .padding(32.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                .background(LocalColors.current.background, shape = MaterialTheme.shapes.medium)
+                .padding(LocalDimensions.current.mediumSpacing),
+            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             CircularProgressIndicator(color = LocalColors.current.primary)

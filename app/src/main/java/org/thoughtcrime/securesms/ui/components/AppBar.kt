@@ -8,15 +8,20 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.Divider
+import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
@@ -29,15 +34,17 @@ fun AppBarPreview(
     @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            AppBar(title = "No back button")
+        Column() {
+            BasicAppBar(title = "Basic App Bar")
             Divider()
-            AppBar(title = "Simple", onBack = {})
+            BasicAppBar(title = "Basic App Bar With Color", backgroundColor = LocalColors.current.backgroundSecondary)
             Divider()
-            AppBar(
+            BackAppBar(title = "Back Bar", onBack = {})
+            Divider()
+            ActionAppBar(
                 title = "Action mode",
-                onBack = {},
-                actionMode = true, actionModeActions = {
+                actionMode = true,
+                actionModeActions = {
                     IconButton(onClick = {}) {
                         Icon(
                             painter = painterResource(id = R.drawable.check),
@@ -49,47 +56,121 @@ fun AppBarPreview(
     }
 }
 
+/**
+ * Basic structure for an app bar.
+ * It can be passed navigation content and actions
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BasicAppBar(
+    title: String,
+    modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    backgroundColor: Color = LocalColors.current.background,
+    navigationIcon: @Composable () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
+){
+    CenterAlignedTopAppBar(
+        modifier = modifier,
+        title = {
+            AppBarText(title = title)
+        },
+        colors = appBarColors(backgroundColor),
+        navigationIcon = navigationIcon,
+        actions = actions,
+        scrollBehavior = scrollBehavior
+    )
+}
+
+/**
+ * Common use case of an app bar with a back button
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BackAppBar(
+    title: String,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    backgroundColor: Color = LocalColors.current.background,
+    actions: @Composable RowScope.() -> Unit = {},
+){
+    BasicAppBar(
+        modifier = modifier,
+        title = title,
+        navigationIcon = {
+            AppBarBackIcon(onBack = onBack)
+        },
+        actions = actions,
+        scrollBehavior = scrollBehavior,
+        backgroundColor = backgroundColor
+    )
+}
 
 @ExperimentalMaterial3Api
 @Composable
-fun AppBar(
+fun ActionAppBar(
     title: String,
     modifier: Modifier = Modifier,
-    onClose: () -> Unit = {},
-    onBack: (() -> Unit)? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    backgroundColor: Color = LocalColors.current.background,
     actionMode: Boolean = false,
+    navigationIcon: @Composable () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
     actionModeActions: @Composable (RowScope.() -> Unit) = {},
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
         title = {
             if (!actionMode) {
-                Text(text = title, style = LocalType.current.h4)
+                AppBarText(title = title)
             }
         },
-        navigationIcon = {
-            onBack?.let {
-                IconButton(onClick = it) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_prev),
-                        contentDescription = "back"
-                    )
-                }
-            }
-        },
+        navigationIcon =navigationIcon,
         scrollBehavior = scrollBehavior,
+        colors = appBarColors(backgroundColor),
         actions = {
             if (actionMode) {
                 actionModeActions()
             } else {
-                IconButton(onClick = onClose) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_x),
-                        contentDescription = "close"
-                    )
-                }
+                actions()
             }
-        },
+        }
     )
 }
+
+@Composable
+fun AppBarText(title: String) {
+    Text(text = title, style = LocalType.current.h4)
+}
+
+@Composable
+fun AppBarBackIcon(onBack: () -> Unit) {
+    IconButton(onClick = onBack) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_baseline_arrow_back_24),
+            contentDescription = "Back" //todo use a translated resource when available!!!
+        )
+    }
+}
+
+@Composable
+fun AppBarCloseIcon(onClose: () -> Unit) {
+    IconButton(onClick = onClose) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_x),
+            contentDescription = stringResource(id = R.string.close)
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun appBarColors(backgroundColor: Color) = TopAppBarDefaults.centerAlignedTopAppBarColors()
+    .copy(
+        containerColor = backgroundColor,
+        scrolledContainerColor = backgroundColor,
+        navigationIconContentColor = LocalColors.current.text,
+        titleContentColor = LocalColors.current.text,
+        actionIconContentColor = LocalColors.current.text
+    )
