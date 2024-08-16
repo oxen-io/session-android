@@ -60,15 +60,7 @@ fun DocumentsPage(
             ) {
                 for ((bucketTitle, files) in content) {
                     stickyHeader {
-                        Text(
-                            modifier = Modifier
-                                .background(LocalColors.current.background)
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            text = bucketTitle,
-                            style = LocalType.current.base,
-                            color = LocalColors.current.text
-                        )
+                        AttachmentHeader(text = bucketTitle)
                     }
 
                     items(files) { file ->

@@ -74,15 +74,7 @@ fun MediaPage(
                 ) {
                     for ((header, thumbnails) in state) {
                         stickyHeader {
-                            Text(
-                                modifier = Modifier
-                                    .background(LocalColors.current.background)
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                                text = header,
-                                style = LocalType.current.base,
-                                color = LocalColors.current.text
-                            )
+                            AttachmentHeader(text = header)
                         }
 
                         val numRows = ceil(thumbnails.size / columnCount.toFloat()).toInt()
