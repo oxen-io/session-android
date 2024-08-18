@@ -149,7 +149,7 @@ fun AppBarBackIcon(onBack: () -> Unit) {
     IconButton(onClick = onBack) {
         Icon(
             painter = painterResource(id = R.drawable.ic_baseline_arrow_back_24),
-            contentDescription = "Back" //todo use a translated resource when available!!!
+            contentDescription = stringResource(R.string.back)
         )
     }
 }
