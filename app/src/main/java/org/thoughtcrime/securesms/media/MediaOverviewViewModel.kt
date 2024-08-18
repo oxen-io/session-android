@@ -97,8 +97,12 @@ class MediaOverviewViewModel(
     private val mutableSelectedItemIDs = MutableStateFlow(emptySet<Long>())
     val selectedItemIDs: StateFlow<Set<Long>> get() = mutableSelectedItemIDs
 
-    val canLongPress: StateFlow<Boolean> = selectedItemIDs
-        .map { it.isEmpty() }
+    val inSelectionMode: StateFlow<Boolean> = selectedItemIDs
+        .map { it.isNotEmpty() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, mutableSelectedItemIDs.value.isNotEmpty())
+
+    val canLongPress: StateFlow<Boolean> = inSelectionMode
+        .map { !it }
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     private val mutableEvents = MutableSharedFlow<MediaOverviewEvent>()
@@ -166,7 +170,7 @@ class MediaOverviewViewModel(
 
 
     fun onItemClicked(item: MediaOverviewItem) {
-        if (mutableSelectedItemIDs.value.isNotEmpty()) {
+        if (inSelectionMode.value) {
             val newSet = mutableSelectedItemIDs.value.toMutableSet()
             if (item.id in newSet) {
                 newSet.remove(item.id)
@@ -209,7 +213,7 @@ class MediaOverviewViewModel(
     }
 
     fun onTabItemClicked(tab: MediaOverviewTab) {
-        if (mutableSelectedItemIDs.value.isNotEmpty()) {
+        if (inSelectionMode.value) {
             // Not allowing to switch tabs while in selection mode
             return
         }
@@ -222,7 +226,10 @@ class MediaOverviewViewModel(
     }
 
     fun onSaveClicked() {
-        if (mutableSelectedItemIDs.value.isEmpty()) return
+        if (!inSelectionMode.value) {
+            // Not in selection mode, so we should not be able to save
+            return
+        }
 
         viewModelScope.launch {
             val selectedMedia = selectedMedia.toList()
@@ -295,7 +302,10 @@ class MediaOverviewViewModel(
     }
 
     fun onDeleteClicked() {
-        if (mutableSelectedItemIDs.value.isEmpty()) return
+        if (!inSelectionMode.value) {
+            // Not in selection mode, so we should not be able to delete
+            return
+        }
 
         viewModelScope.launch {
             mutableShowingActionProgress.value = application.getString(R.string.MediaOverviewActivity_Media_delete_progress_message)
@@ -314,7 +324,10 @@ class MediaOverviewViewModel(
     }
 
     fun onSelectAllClicked() {
-        if (mutableSelectedItemIDs.value.isEmpty()) return
+        if (!inSelectionMode.value) {
+            // Not in selection mode, so we should not be able to select all
+            return
+        }
 
         val allItems = mediaListState.value?.let { content ->
             when (selectedTab.value) {
@@ -330,7 +343,8 @@ class MediaOverviewViewModel(
     }
 
     fun onBackClicked() {
-        if (mutableSelectedItemIDs.value.isNotEmpty()) {
+        if (inSelectionMode.value) {
+            // Clear selection mode by clear selecting items
             mutableSelectedItemIDs.value = emptySet()
         } else {
             viewModelScope.launch {

@@ -59,7 +59,7 @@ fun MediaOverviewScreen(
     onClose: () -> Unit,
 ) {
     val selectedItems by viewModel.selectedItemIDs.collectAsState()
-    val selectionMode by remember { derivedStateOf { selectedItems.isNotEmpty() } }
+    val selectionMode by viewModel.inSelectionMode.collectAsState()
     val topAppBarState = rememberTopAppBarState()
     var showingDeleteConfirmation by remember { mutableStateOf(false) }
     var showingSaveAttachmentWarning by remember { mutableStateOf(false) }
