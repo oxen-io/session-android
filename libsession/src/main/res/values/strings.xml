@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- ==========  NEW PLURALS FROM MORGAN SECTION - 2024/07/24 ========== -->
+    <!-- Plurals sections -->
     <plurals name="members">
         <item quantity="one">%1$d member</item>
         <item quantity="other">%1$d members</item>
@@ -27,20 +26,17 @@
         <item quantity="other">And %1$d others have reacted %2$s to this message.</item>
     </plurals>
 
+    <!-- Note: Currently unused and no 'old' string for this as of 2024/08/19 -->
     <plurals name="deleteMessagesFailed">
         <item quantity="one">Failed to delete message</item>
         <item quantity="other">Failed to delete messages</item>
     </plurals>
-    <!-- CURRENTLY UNUSED and no 'old' string for this as of 2024/07/24 -ACL -->
 
+    <!-- Note: Currently unused and no 'old' string for this as of 2024/08/19 -->
     <plurals name="clearDataErrorDescription">
         <item quantity="one">Data not deleted by %1$d Service Node. Service Node ID: %2$s.</item>
         <item quantity="other">Data not deleted by %1$d Service Nodes. Service Node IDs: %2$s.</item>
     </plurals>
-    <!-- CURRENTLY UNUSED and no 'old' string for this as of 2024/07/24 -ACL -->
-
-    <!-- ========== END OF NEW PLURALS SECTION ========== -->
-
 
     <!-- ========== STRAGGLERS SECTION ========== -->
 
