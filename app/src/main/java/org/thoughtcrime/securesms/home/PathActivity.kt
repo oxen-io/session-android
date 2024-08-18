@@ -15,6 +15,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.squareup.phrase.Phrase
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +41,6 @@ import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
 import org.thoughtcrime.securesms.util.getAccentColor
-import org.thoughtcrime.securesms.util.getColorWithID
 
 class PathActivity : PassphraseRequiredActionBarActivity() {
     private lateinit var binding: ActivityPathBinding
@@ -292,7 +292,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         private fun expand() {
             dotView.animateSizeChange(R.dimen.path_row_dot_size, R.dimen.path_row_expanded_dot_size)
             @ColorRes val startColorID = if (UiModeUtilities.isDayUiMode(context)) R.color.transparent_black_30 else R.color.black
-            val startColor = context.resources.getColorWithID(startColorID, context.theme)
+            val startColor = ContextCompat.getColor(context, startColorID)
             val endColor = context.getAccentColor()
             GlowViewUtilities.animateShadowColorChange(dotView, startColor, endColor)
         }
@@ -301,7 +301,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
             dotView.animateSizeChange(R.dimen.path_row_expanded_dot_size, R.dimen.path_row_dot_size)
             @ColorRes val endColorID = if (UiModeUtilities.isDayUiMode(context)) R.color.transparent_black_30 else R.color.black
             val startColor = context.getAccentColor()
-            val endColor = context.resources.getColorWithID(endColorID, context.theme)
+            val endColor = ContextCompat.getColor(context, endColorID)
             GlowViewUtilities.animateShadowColorChange(dotView, startColor, endColor)
         }
 

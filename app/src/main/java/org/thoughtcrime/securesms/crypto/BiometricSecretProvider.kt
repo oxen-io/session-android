@@ -42,9 +42,8 @@ class BiometricSecretProvider {
             builder.setUnlockedDeviceRequired(true)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            builder.setInvalidatedByBiometricEnrollment(true)
-        }
+        builder.setInvalidatedByBiometricEnrollment(true)
+
         keyGenerator.initialize(builder.build())
         keyGenerator.generateKeyPair()
     }

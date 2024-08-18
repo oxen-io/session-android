@@ -43,7 +43,7 @@ public class AudioSlidePlayer implements SensorEventListener {
   private final @NonNull  Handler           progressEventHandler;
   private final @NonNull  AudioManager      audioManager;
   private final @NonNull  SensorManager     sensorManager;
-  private final @NonNull  Sensor            proximitySensor;
+  private final Sensor            proximitySensor;
   private final @Nullable WakeLock          wakeLock;
 
   private @NonNull  WeakReference<Listener> listener;
@@ -129,7 +129,9 @@ public class AudioSlidePlayer implements SensorEventListener {
                 mediaPlayer.seekTo((long) (mediaPlayer.getDuration() * progress));
               }
 
-              sensorManager.registerListener(AudioSlidePlayer.this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+              if(proximitySensor != null) {
+                sensorManager.registerListener(AudioSlidePlayer.this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+              }
 
               setPlaying(AudioSlidePlayer.this);
             }

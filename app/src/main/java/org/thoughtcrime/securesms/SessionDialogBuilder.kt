@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
@@ -31,7 +33,6 @@ import androidx.fragment.app.Fragment
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.utilities.StringSubstitutionConstants.URL_KEY
-import org.thoughtcrime.securesms.conversation.v2.Util.writeTextToClipboard
 import org.thoughtcrime.securesms.util.toPx
 
 @DslMarker
@@ -171,6 +172,12 @@ class SessionDialogBuilder(val context: Context) {
 fun Context.showSessionDialog(build: SessionDialogBuilder.() -> Unit): AlertDialog =
     SessionDialogBuilder(this).apply { build() }.show()
 
+public fun Context.copyURLToClipboard(url: String) {
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText(url, url)
+    clipboard.setPrimaryClip(clip)
+}
+
 // Method to show a dialog used to open or copy a URL
 fun Context.showOpenUrlDialog(url: String, showCloseButton: Boolean = true): AlertDialog {
     return SessionDialogBuilder(this).apply {
@@ -281,7 +288,7 @@ fun Context.showOpenUrlDialog(url: String, showCloseButton: Boolean = true): Ale
         // Note: The text and contentDescription are set on the `copyUrlButton` by the function.
         contentView.addView(scrollView)
         dangerButton(R.string.open, R.string.AccessibilityId_urlOpenBrowser) { openUrl(url) }
-        copyUrlButton { writeTextToClipboard(context, url) }
+        copyUrlButton { context.copyURLToClipboard(url) }
     }.show()
 }
 

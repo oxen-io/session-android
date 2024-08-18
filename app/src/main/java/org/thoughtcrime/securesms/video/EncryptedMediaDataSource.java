@@ -1,22 +1,20 @@
 package org.thoughtcrime.securesms.video;
 
 
-import android.annotation.TargetApi;
 import android.media.MediaDataSource;
-import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.session.libsession.utilities.Util;
 import org.thoughtcrime.securesms.crypto.AttachmentSecret;
 import org.thoughtcrime.securesms.crypto.ClassicDecryptingPartInputStream;
 import org.thoughtcrime.securesms.crypto.ModernDecryptingPartInputStream;
-import org.session.libsession.utilities.Util;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-@TargetApi(Build.VERSION_CODES.M)
 public class EncryptedMediaDataSource extends MediaDataSource {
 
   private final AttachmentSecret attachmentSecret;

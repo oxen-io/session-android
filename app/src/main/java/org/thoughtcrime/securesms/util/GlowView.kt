@@ -11,7 +11,6 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import network.loki.messenger.R
 import kotlin.math.roundToInt
 
@@ -22,36 +21,12 @@ interface GlowView {
 
 object GlowViewUtilities {
 
-    fun animateColorIdChange(context: Context, view: GlowView, @ColorRes startColorID: Int, @ColorRes endColorID: Int) {
-        val startColor = context.resources.getColorWithID(startColorID, context.theme)
-        val endColor = context.resources.getColorWithID(endColorID, context.theme)
-        val animation = ValueAnimator.ofObject(ArgbEvaluator(), startColor, endColor)
-        animation.duration = 250
-        animation.addUpdateListener { animator ->
-            val color = animator.animatedValue as Int
-            view.mainColor = color
-        }
-        animation.start()
-    }
-
     fun animateColorChange(view: GlowView, @ColorInt startColor: Int, @ColorInt endColor: Int) {
         val animation = ValueAnimator.ofObject(ArgbEvaluator(), startColor, endColor)
         animation.duration = 250
         animation.addUpdateListener { animator ->
             val color = animator.animatedValue as Int
             view.mainColor = color
-        }
-        animation.start()
-    }
-
-    fun animateShadowColorIdChange(context: Context, view: GlowView, @ColorRes startColorID: Int, @ColorRes endColorID: Int) {
-        val startColor = context.resources.getColorWithID(startColorID, context.theme)
-        val endColor = context.resources.getColorWithID(endColorID, context.theme)
-        val animation = ValueAnimator.ofObject(ArgbEvaluator(), startColor, endColor)
-        animation.duration = 250
-        animation.addUpdateListener { animator ->
-            val color = animator.animatedValue as Int
-            view.sessionShadowColor = color
         }
         animation.start()
     }

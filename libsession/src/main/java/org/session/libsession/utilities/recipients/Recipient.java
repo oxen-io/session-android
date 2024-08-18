@@ -718,7 +718,7 @@ public class Recipient implements RecipientModifiedListener {
   }
 
   public synchronized @Nullable String getNotificationChannel() {
-    return !(Build.VERSION.SDK_INT >= 26) ? null : notificationChannel;
+    return notificationChannel;
   }
 
   public void setNotificationChannel(@Nullable String value) {
