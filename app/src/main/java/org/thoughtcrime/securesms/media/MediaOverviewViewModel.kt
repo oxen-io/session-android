@@ -310,12 +310,20 @@ class MediaOverviewViewModel(
         viewModelScope.launch {
             mutableShowingActionProgress.value = application.getString(R.string.MediaOverviewActivity_Media_delete_progress_message)
 
-            withContext(Dispatchers.Default) {
+            // Delete the selected media items, and retrieve the thread ID for the address if any
+            val threadId = withContext(Dispatchers.Default) {
                 for (media in selectedMedia) {
                     kotlin.runCatching {
                         AttachmentUtil.deleteAttachment(application, media.mediaRecord.attachment)
                     }
                 }
+
+                threadDatabase.getThreadIdIfExistsFor(address.serialize())
+            }
+
+            // Notify the content provider that the thread has been updated
+            if (threadId >= 0) {
+                application.contentResolver.notifyChange(DatabaseContentProviders.Conversation.getUriForThread(threadId), null)
             }
 
             mutableShowingActionProgress.value = null
