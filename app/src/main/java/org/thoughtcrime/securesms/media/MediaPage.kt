@@ -174,7 +174,7 @@ private fun ThumbnailRow(
                                 Image(
                                     painter = painterResource(R.drawable.triangle_right),
                                     contentDescription = null,
-                                    colorFilter = ColorFilter.tint(colorResource(R.color.core_blue)),
+                                    colorFilter = ColorFilter.tint(LocalColors.current.primary),
                                     modifier = Modifier.size(19.dp, 24.dp),
                                 )
                             }
