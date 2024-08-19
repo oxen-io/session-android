@@ -1,19 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-    <color name="unimportant">#D8D8D8</color>
     <color name="profile_picture_background">#353535</color>
-    <color name="cell_background">#1B1B1B</color>
     <color name="cell_selected">#0C0C0C</color>
     <color name="action_bar_background">#171717</color>
     <color name="separator">#36383C</color>
-    <color name="unimportant_button_background">#323232</color>
-    <color name="dialog_background">#101011</color>
-    <color name="unimportant_dialog_button_background">@color/unimportant_button_background</color>
     <color name="app_icon_background">#333132</color>
-    <color name="progress_bar_background">#0AFFFFFF</color>
     <color name="compose_view_background">#1B1B1B</color>
     <color name="compose_text_view_background">#141414</color>
-    <color name="quote_not_found_background">#80FFFFFF</color>
     <color name="paths_building">#FFCE3A</color>
 
     <array name="profile_picture_placeholder_colors">
@@ -33,16 +26,12 @@
 
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
-    <color name="gray12">#ffe0e0e0</color>
     <color name="gray13">#ffababab</color>
-    <color name="gray20">#ffcccccc</color>
     <color name="gray27">#ffbbbbbb</color>
     <color name="gray50">#ff808080</color>
     <color name="gray65">#ff595959</color>
-    <color name="gray78">#ff383838</color>
 
     <color name="transparent_black_30">#30000000</color>
-    <color name="transparent_black_40">#40000000</color>
     <color name="transparent_black_70">#70000000</color>
     <color name="transparent_black_90">#90000000</color>
 
@@ -52,9 +41,7 @@
     <color name="transparent_white_bb">#bbffffff</color>
 
     <color name="action_mode_status_bar">@color/gray65</color>
-    <color name="touch_highlight">#22000000</color>
 
-    <color name="device_link_item_background_light">#ffffffff</color>
     <color name="device_link_item_background_dark">#ff333333</color>
 
     <color name="transparent">#00FFFFFF</color>
@@ -63,9 +50,6 @@
     <color name="MediaOverview_Media_selected_overlay">#88000000</color>
 
     <color name="avatar_background">@color/transparent_black_90</color>
-
-    <color name="default_background_start">#121212</color>
-    <color name="default_background_end">#171717</color>
 
     <color name="accent_green">#ff31F196</color>
     <color name="accent_blue">#ff57C9FA</color>

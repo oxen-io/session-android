@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.mediasend;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -200,14 +199,12 @@ class MediaRepository {
     }).toList();
   }
 
-  @TargetApi(16)
   @SuppressWarnings("SuspiciousNameCombination")
   private String getWidthColumn(int orientation) {
     if (orientation == 0 || orientation == 180) return Images.Media.WIDTH;
     else                                        return Images.Media.HEIGHT;
   }
 
-  @TargetApi(16)
   @SuppressWarnings("SuspiciousNameCombination")
   private String getHeightColumn(int orientation) {
     if (orientation == 0 || orientation == 180) return Images.Media.HEIGHT;

@@ -966,11 +966,6 @@ public class AttachmentDatabase extends Database {
 
     @SuppressLint("NewApi")
     private ThumbnailData generateVideoThumbnail(AttachmentId attachmentId) {
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-        Log.w(TAG, "Video thumbnails not supported...");
-        return null;
-      }
-
       DataInfo dataInfo = getAttachmentDataFileInfo(attachmentId, DATA);
 
       if (dataInfo == null) {

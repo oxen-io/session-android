@@ -292,10 +292,6 @@
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
             android:theme="@style/Theme.Session.ForceDark" />
         <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat" />
-        <activity
             android:name="org.thoughtcrime.securesms.ShortcutLauncherActivity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
             android:exported="true"
@@ -310,6 +306,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.thoughtcrime.securesms.home.HomeActivity" />
         </activity>
+        <activity android:name="org.thoughtcrime.securesms.media.MediaOverviewActivity" />
+
         <service android:enabled="true" android:name="org.thoughtcrime.securesms.service.WebRtcCallService"
             android:foregroundServiceType="microphone"
             android:exported="false" />

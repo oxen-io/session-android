@@ -5,17 +5,12 @@ import android.media.MediaCodec
 import android.media.MediaDataSource
 import android.media.MediaExtractor
 import android.media.MediaFormat
-import android.os.Build
-
-import androidx.annotation.RequiresApi
-
 import java.io.FileDescriptor
 import java.io.IOException
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.ShortBuffer
-import kotlin.jvm.Throws
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -44,7 +39,6 @@ class DecodedAudio {
         }
 
         @JvmStatic
-        @RequiresApi(api = Build.VERSION_CODES.M)
         @Throws(IOException::class)
         fun create(dataSource: MediaDataSource): DecodedAudio {
             val mediaExtractor = MediaExtractor().apply { setDataSource(dataSource) }
@@ -69,15 +63,7 @@ class DecodedAudio {
 
     val samples: ShortBuffer
         get() {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
-                    Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1
-            ) {
-                // Hack for Nougat where asReadOnlyBuffer fails to respect byte ordering.
-                // See https://code.google.com/p/android/issues/detail?id=223824
-                decodedSamples
-            } else {
-                decodedSamples.asReadOnlyBuffer()
-            }
+            return decodedSamples.asReadOnlyBuffer()
         }
 
     /**
@@ -128,15 +114,13 @@ class DecodedAudio {
         codec.start()
 
         // Check if the track is in PCM 16 bit encoding.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            try {
-                val pcmEncoding = codec.outputFormat.getInteger(MediaFormat.KEY_PCM_ENCODING)
-                if (pcmEncoding != AudioFormat.ENCODING_PCM_16BIT) {
-                    throw IOException("Unsupported PCM encoding code: $pcmEncoding")
-                }
-            } catch (e: NullPointerException) {
-                // If KEY_PCM_ENCODING is not specified, means it's ENCODING_PCM_16BIT.
+        try {
+            val pcmEncoding = codec.outputFormat.getInteger(MediaFormat.KEY_PCM_ENCODING)
+            if (pcmEncoding != AudioFormat.ENCODING_PCM_16BIT) {
+                throw IOException("Unsupported PCM encoding code: $pcmEncoding")
             }
+        } catch (e: NullPointerException) {
+            // If KEY_PCM_ENCODING is not specified, means it's ENCODING_PCM_16BIT.
         }
 
         var decodedSamplesSize: Int = 0  // size of the output buffer containing decoded samples.

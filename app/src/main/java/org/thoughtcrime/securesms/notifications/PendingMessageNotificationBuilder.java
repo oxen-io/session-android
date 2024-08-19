@@ -32,9 +32,5 @@ public class PendingMessageNotificationBuilder extends AbstractNotificationBuild
     setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE));
     setAutoCancel(true);
     setAlarms(null, Recipient.VibrateState.DEFAULT);
-
-    if (!NotificationChannels.supported()) {
-      setPriority(TextSecurePreferences.getNotificationPriority(context));
-    }
   }
 }

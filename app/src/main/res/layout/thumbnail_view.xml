@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent_black_6">
+    android:background="@drawable/image_loading_background">
 
     <ImageView
         android:id="@+id/thumbnail_image"

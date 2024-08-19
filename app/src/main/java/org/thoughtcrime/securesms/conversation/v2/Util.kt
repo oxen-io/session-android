@@ -16,15 +16,9 @@
  */
 package org.thoughtcrime.securesms.conversation.v2
 
-import android.annotation.TargetApi
-import android.app.ActivityManager
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Typeface
 import android.net.Uri
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextUtils
@@ -33,21 +27,15 @@ import android.view.View
 import com.annimon.stream.Stream
 import com.google.android.mms.pdu_alt.CharacterSets
 import com.google.android.mms.pdu_alt.EncodedStringValue
-import network.loki.messenger.R
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.components.ComposeText
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.util.Collections
-import java.util.concurrent.TimeUnit
-import kotlin.math.max
-import kotlin.math.min
 
 object Util {
     private val TAG: String = Log.tag(Util::class.java)
-
-    private val BUILD_LIFESPAN = TimeUnit.DAYS.toMillis(90)
 
     fun <T> asList(vararg elements: T): List<T> {
         val result = mutableListOf<T>() // LinkedList()
@@ -104,19 +92,6 @@ object Util {
         return sb.toString()
     }
 
-    fun rightPad(value: String, length: Int): String {
-        if (value.length >= length) {
-            return value
-        }
-
-        val out = StringBuilder(value)
-        while (out.length < length) {
-            out.append(" ")
-        }
-
-        return out.toString()
-    }
-
     fun isEmpty(value: Array<EncodedStringValue?>?): Boolean {
         return value == null || value.size == 0
     }
@@ -131,64 +106,6 @@ object Util {
 
     fun isEmpty(charSequence: CharSequence?): Boolean {
         return charSequence == null || charSequence.length == 0
-    }
-
-    fun hasItems(collection: Collection<*>?): Boolean {
-        return collection != null && !collection.isEmpty()
-    }
-
-    fun <K, V> getOrDefault(map: Map<K, V>, key: K, defaultValue: V): V? {
-        return if (map.containsKey(key)) map[key] else defaultValue
-    }
-
-    fun getFirstNonEmpty(vararg values: String?): String {
-        for (value in values) {
-            if (!value.isNullOrEmpty()) { return value }
-        }
-        return ""
-    }
-
-    fun emptyIfNull(value: String?): String {
-        return value ?: ""
-    }
-
-    fun emptyIfNull(value: CharSequence?): CharSequence {
-        return value ?: ""
-    }
-
-    fun getBoldedString(value: String?): CharSequence {
-        val spanned = SpannableString(value)
-        spanned.setSpan(
-            StyleSpan(Typeface.BOLD), 0,
-            spanned.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
-        return spanned
-    }
-
-    fun toIsoString(bytes: ByteArray?): String {
-        try {
-            return String(bytes!!, charset(CharacterSets.MIMENAME_ISO_8859_1))
-        } catch (e: UnsupportedEncodingException) {
-            throw AssertionError("ISO_8859_1 must be supported!")
-        }
-    }
-
-    fun toIsoBytes(isoString: String): ByteArray {
-        try {
-            return isoString.toByteArray(charset(CharacterSets.MIMENAME_ISO_8859_1))
-        } catch (e: UnsupportedEncodingException) {
-            throw AssertionError("ISO_8859_1 must be supported!")
-        }
-    }
-
-    fun toUtf8Bytes(utf8String: String): ByteArray {
-        try {
-            return utf8String.toByteArray(charset(CharacterSets.MIMENAME_UTF_8))
-        } catch (e: UnsupportedEncodingException) {
-            throw AssertionError("UTF_8 must be supported!")
-        }
     }
 
     fun wait(lock: Any, timeout: Long) {
@@ -225,20 +142,6 @@ object Util {
         return parts
     }
 
-    fun combine(vararg elements: ByteArray?): ByteArray {
-        try {
-            val baos = ByteArrayOutputStream()
-
-            for (element in elements) {
-                baos.write(element)
-            }
-
-            return baos.toByteArray()
-        } catch (e: IOException) {
-            throw AssertionError(e)
-        }
-    }
-
     fun trim(input: ByteArray?, length: Int): ByteArray {
         val result = ByteArray(length)
         System.arraycopy(input, 0, result, 0, result.size)
@@ -251,26 +154,6 @@ object Util {
         else Uri.parse(uri)
     }
 
-    @TargetApi(VERSION_CODES.KITKAT)
-    fun isLowMemory(context: Context): Boolean {
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-
-        return (VERSION.SDK_INT >= VERSION_CODES.KITKAT && activityManager.isLowRamDevice) ||
-                activityManager.largeMemoryClass <= 64
-    }
-
-    fun clamp(value: Int, min: Int, max: Int): Int {
-        return min(max(value.toDouble(), min.toDouble()), max.toDouble()).toInt()
-    }
-
-    fun clamp(value: Long, min: Long, max: Long): Long {
-        return min(max(value.toDouble(), min.toDouble()), max.toDouble()).toLong()
-    }
-
-    fun clamp(value: Float, min: Float, max: Float): Float {
-        return min(max(value.toDouble(), min.toDouble()), max.toDouble()).toFloat()
-    }
-
     /**
      * Returns half of the difference between the given length, and the length when scaled by the
      * given scale.
@@ -278,74 +161,6 @@ object Util {
     fun halfOffsetFromScale(length: Int, scale: Float): Float {
         val scaledLength = length * scale
         return (length - scaledLength) / 2
-    }
-
-    fun readTextFromClipboard(context: Context): String? {
-        run {
-            val clipboardManager =
-                context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            return if (clipboardManager.hasPrimaryClip() && clipboardManager.primaryClip!!.itemCount > 0) {
-                clipboardManager.primaryClip!!.getItemAt(0).text.toString()
-            } else {
-                null
-            }
-        }
-    }
-
-    fun writeTextToClipboard(context: Context, text: String) {
-        writeTextToClipboard(context, context.getString(R.string.app_name), text)
-    }
-
-    fun writeTextToClipboard(context: Context, label: String, text: String) {
-        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText(label, text)
-        clipboard.setPrimaryClip(clip)
-    }
-
-    fun toIntExact(value: Long): Int {
-        if (value.toInt().toLong() != value) {
-            throw ArithmeticException("integer overflow")
-        }
-        return value.toInt()
-    }
-
-    fun isEquals(first: Long?, second: Long): Boolean {
-        return first != null && first == second
-    }
-
-    @SafeVarargs
-    fun <T> concatenatedList(vararg items: Collection<T>): List<T> {
-        val concat: MutableList<T> = ArrayList(
-            Stream.of(*items).reduce(0) { sum: Int, list: Collection<T> -> sum + list.size })
-
-        for (list in items) {
-            concat.addAll(list)
-        }
-
-        return concat
-    }
-
-    fun isLong(value: String): Boolean {
-        try {
-            value.toLong()
-            return true
-        } catch (e: NumberFormatException) {
-            return false
-        }
-    }
-
-    fun parseInt(integer: String, defaultValue: Int): Int {
-        return try {
-            integer.toInt()
-        } catch (e: NumberFormatException) {
-            defaultValue
-        }
-    }
-
-    // Method to determine if we're currently in a left-to-right or right-to-left language like Arabic
-    fun usingRightToLeftLanguage(context: Context): Boolean {
-        val config = context.resources.configuration
-        return config.layoutDirection == View.LAYOUT_DIRECTION_RTL
     }
 
     // Method to determine if we're currently in a left-to-right or right-to-left language like Arabic

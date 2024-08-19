@@ -1139,4 +1139,5 @@
     <string name="you_cannot_go_back_further_in_order_to_stop_loading_your_account_session_needs_to_quit">You cannot go back further. In order to stop loading your account, Session needs to quit.</string>
     <string name="you_cannot_go_back_further_cancel_account_creation">You cannot go back further. In order to cancel your account creation, Session needs to quit.</string>
     <string name="quit">Quit</string>
+    <string name="back">Back</string>
 </resources>

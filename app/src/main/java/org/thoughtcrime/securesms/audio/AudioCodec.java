@@ -1,22 +1,19 @@
 package org.thoughtcrime.securesms.audio;
 
-import android.annotation.TargetApi;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.MediaRecorder;
-import android.os.Build;
-import org.session.libsignal.utilities.Log;
 
 import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.Log;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class AudioCodec {
 
   private static final String TAG = AudioCodec.class.getSimpleName();

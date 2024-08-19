@@ -47,7 +47,7 @@
                     android:textAlignment="center"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
-                    android:inputType="text"
+                    android:inputType="textCapWords"
                     android:singleLine="true"
                     android:imeOptions="actionDone"
                     android:maxLength="@integer/max_group_and_community_name_length_chars"

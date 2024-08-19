@@ -17,6 +17,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -29,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -43,7 +45,8 @@ import kotlinx.coroutines.flow.emptyFlow
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.conversation.start.StartConversationFragment.Companion.PEEK_RATIO
 import org.thoughtcrime.securesms.ui.LoadingArcOr
-import org.thoughtcrime.securesms.ui.components.AppBar
+import org.thoughtcrime.securesms.ui.components.AppBarCloseIcon
+import org.thoughtcrime.securesms.ui.components.BackAppBar
 import org.thoughtcrime.securesms.ui.components.BorderlessButtonWithIcon
 import org.thoughtcrime.securesms.ui.components.MaybeScanQrCode
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
@@ -60,7 +63,7 @@ import kotlin.math.max
 
 private val TITLES = listOf(R.string.enter_account_id, R.string.qrScan)
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun NewMessage(
     state: State,
@@ -76,7 +79,12 @@ internal fun NewMessage(
         LocalColors.current.backgroundSecondary,
         shape = MaterialTheme.shapes.small
     )) {
-        AppBar(stringResource(R.string.messageNew), onClose = onClose, onBack = onBack)
+        BackAppBar(
+            title = stringResource(R.string.messageNew),
+            backgroundColor = Color.Transparent, // transparent to show the rounded shape of the container
+            onBack = onBack,
+            actions = { AppBarCloseIcon(onClose = onClose) }
+        )
         SessionTabRow(pagerState, TITLES)
         HorizontalPager(pagerState) {
             when (TITLES[it]) {

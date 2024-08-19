@@ -210,15 +210,8 @@ public class Permissions {
                  .toArray(new String[0]);
   }
 
-  public static boolean hasAny(@NonNull Context context, String... permissions) {
-    return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-        Stream.of(permissions).anyMatch(permission -> ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED);
-
-  }
-
   public static boolean hasAll(@NonNull Context context, String... permissions) {
-    return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-        Stream.of(permissions).allMatch(permission -> ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED);
+    return Stream.of(permissions).allMatch(permission -> ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED);
 
   }
 

@@ -118,32 +118,6 @@
       <item>vi</item>
   </string-array>
 
-  <string-array name="pref_led_color_values" translatable="false">
-    <item>green</item>
-    <item>red</item>
-    <item>blue</item>
-    <item>yellow</item>
-    <item>cyan</item>
-    <item>magenta</item>
-    <item>white</item>
-    <item>none</item>
-  </string-array>
-
-  <string-array name="pref_led_blink_pattern_values" translatable="false">
-    <item>300,300</item>
-    <item>500,2000</item>
-    <item>3000,3000</item>
-  </string-array>
-
-  <string-array name="pref_repeat_alerts_values" translatable="false">
-      <item>0</item>
-      <item>1</item>
-      <item>2</item>
-      <item>3</item>
-      <item>5</item>
-      <item>10</item>
-  </string-array>
-
   <string-array name="default_or_custom_values" translatable="false">
       <item>default</item>
       <item>custom</item>
@@ -173,21 +147,6 @@
 
     <!-- RedPhone -->
 
-    <integer-array name="expiration_times">
-        <item>0</item>
-        <item>5</item>
-        <item>10</item>
-        <item>30</item>
-        <item>60</item>
-        <item>300</item>
-        <item>1800</item>
-        <item>3600</item>
-        <item>21600</item>
-        <item>43200</item>
-        <item>86400</item>
-        <item>604800</item>
-    </integer-array>
-
     <array name="scribble_colors">
         <item>#ffffff</item>
         <item>#ff0000</item>
@@ -199,11 +158,5 @@
         <item>#ff5500</item>
         <item>#000000</item>
     </array>
-
-    <string-array name="pref_notification_priority_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
 
 </resources>

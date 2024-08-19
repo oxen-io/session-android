@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('stickyheadergrid-0.9.4.aar'))

@@ -8,7 +8,6 @@
     <dimen name="medium_font_size">17sp</dimen>
     <dimen name="large_font_size">20sp</dimen>
     <dimen name="very_large_font_size">26sp</dimen>
-    <dimen name="massive_font_size">50sp</dimen>
 
     <!-- Element Sizes -->
     <dimen name="dialog_button_height">60dp</dimen>
@@ -23,17 +22,12 @@
     <dimen name="large_profile_picture_size">80dp</dimen>
     <dimen name="conversation_view_status_indicator_size">14dp</dimen>
     <dimen name="border_thickness">1dp</dimen>
-    <dimen name="new_conversation_button_collapsed_size">60dp</dimen>
-    <dimen name="new_conversation_button_expanded_size">72dp</dimen>
     <dimen name="tab_bar_height">36dp</dimen>
     <dimen name="text_view_corner_radius">8dp</dimen>
-    <dimen name="fake_chat_view_bubble_width">224dp</dimen>
     <dimen name="fake_chat_view_bubble_corner_radius">10dp</dimen>
-    <dimen name="fake_chat_view_height">250dp</dimen>
     <dimen name="setting_button_height">64dp</dimen>
     <dimen name="dialog_corner_radius">8dp</dimen>
     <dimen name="video_inset_radius">11dp</dimen>
-    <dimen name="dialog_button_corner_radius">4dp</dimen>
     <dimen name="pn_option_corner_radius">8dp</dimen>
     <dimen name="path_status_view_size">8dp</dimen>
     <dimen name="path_row_height">56dp</dimen>
@@ -53,14 +47,12 @@
     <dimen name="new_conversation_button_bottom_offset">56dp</dimen>
     <dimen name="onboarding_button_bottom_offset">40dp</dimen>
 
-    <dimen name="emoji_drawer_size">32sp</dimen>
     <dimen name="min_keyboard_size">50dp</dimen>
     <dimen name="default_custom_keyboard_size">220dp</dimen>
     <dimen name="min_custom_keyboard_size">110dp</dimen>
     <dimen name="min_custom_keyboard_top_margin_portrait">170dp</dimen>
     <dimen name="emoji_drawer_item_width">48dp</dimen>
     <dimen name="conversation_item_body_text_size">16sp</dimen>
-    <dimen name="conversation_item_date_text_size">12sp</dimen>
     <dimen name="contact_photo_target_size">64dp</dimen>
 
     <dimen name="album_total_width">210dp</dimen>
@@ -69,25 +61,16 @@
     <dimen name="album_3_total_height">140dp</dimen>
     <dimen name="album_3_cell_width_big">139dp</dimen>
     <dimen name="album_3_cell_size_small">69dp</dimen>
-    <dimen name="album_4_total_height">210dp</dimen>
-    <dimen name="album_4_cell_size">104dp</dimen>
-    <dimen name="album_5_total_height">175dp</dimen>
-    <dimen name="album_5_cell_size_big">104dp</dimen>
     <dimen name="album_5_cell_size_small">69dp</dimen>
 
     <dimen name="message_corner_radius">18dp</dimen>
     <dimen name="message_corner_collapse_radius">4dp</dimen>
     <dimen name="message_bubble_corner_radius">2dp</dimen>
     <dimen name="message_bubble_shadow_distance">1.5dp</dimen>
-    <dimen name="message_bubble_horizontal_padding">@dimen/medium_spacing</dimen>
-    <dimen name="message_bubble_bottom_padding">@dimen/medium_spacing</dimen>
     <dimen name="media_bubble_remove_button_size">24dp</dimen>
     <dimen name="media_bubble_edit_button_size">24dp</dimen>
     <dimen name="media_bubble_default_dimens">210dp</dimen>
     <dimen name="media_bubble_min_width">150dp</dimen>
-    <dimen name="media_bubble_max_width">240dp</dimen>
-    <dimen name="media_bubble_min_height">100dp</dimen>
-    <dimen name="media_bubble_max_height">320dp</dimen>
 
     <dimen name="media_picker_folder_width">175dp</dimen>
     <dimen name="media_picker_item_width">85dp</dimen>
@@ -97,14 +80,7 @@
 
     <dimen name="mediasend_progress_dialog_size">120dp</dimen>
 
-    <dimen name="thumbnail_default_radius">4dp</dimen>
-
     <dimen name="conversation_compose_height">40dp</dimen>
-    <dimen name="conversation_vertical_message_spacing_default">8dp</dimen>
-    <dimen name="conversation_vertical_message_spacing_collapse">1dp</dimen>
-
-    <dimen name="quote_corner_radius_bottom">2dp</dimen>
-    <dimen name="quote_corner_radius_preview">16dp</dimen>
 
     <integer name="media_overview_cols">3</integer>
 
@@ -125,12 +101,9 @@
 
     <dimen name="alertview_small_icon_size">14dp</dimen>
 
-    <dimen name="recording_voice_lock_target">-96dp</dimen>
-
     <dimen name="drawable_padding">24dp</dimen>
     <dimen name="normal_padding">16dp</dimen>
     <dimen name="action_item_height">56dp</dimen>
-    <dimen name="conversation_item_quote_width">120dp</dimen>
 
     <dimen name="context_menu_corner_radius">18dp</dimen>
 
@@ -144,12 +117,8 @@
     <dimen name="reaction_scrubber_anim_end_translation_y">0dp</dimen>
     <dimen name="reaction_scrubber_width">320dp</dimen>
 
-    <dimen name="keyboard_toolbar_height">44dp</dimen>
-
-    <dimen name="react_with_any_emoji_bottom_sheet_dialog_fragment_min_height">390dp</dimen>
     <dimen name="react_with_any_emoji_bottom_sheet_dialog_fragment_tabs_height">40dp</dimen>
     <dimen name="max_text_width">200dp</dimen>
-    <dimen name="preference_corner_radius" />
     <dimen name="radial_size">34dp</dimen>
     <dimen name="small_radial_size">24dp</dimen>
 

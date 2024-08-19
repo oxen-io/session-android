@@ -9,6 +9,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.coroutineScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,6 @@ import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import org.session.libsession.snode.OnionRequestAPI
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil
-import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toPx
 
 class PathStatusView : View {
@@ -104,7 +104,7 @@ class PathStatusView : View {
                     sessionShadowColor = hasPathsColor
                 } else {
                     setBackgroundResource(R.drawable.paths_building_dot)
-                    val pathsBuildingColor = resources.getColorWithID(R.color.paths_building, context.theme)
+                    val pathsBuildingColor = ContextCompat.getColor(context, R.color.paths_building)
                     mainColor = pathsBuildingColor
                     sessionShadowColor = pathsBuildingColor
                 }

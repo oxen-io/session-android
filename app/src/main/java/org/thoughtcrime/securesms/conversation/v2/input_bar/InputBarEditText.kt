@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.conversation.v2.input_bar
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
-import android.os.Build
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
@@ -57,7 +56,7 @@ class InputBarEditText : AppCompatEditText {
                 InputConnectionCompat.OnCommitContentListener { inputContentInfo, flags, opts ->
                     val lacksPermission = (flags and InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0
                     // read and display inputContentInfo asynchronously
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1 && lacksPermission) {
+                    if (lacksPermission) {
                         try {
                             inputContentInfo.requestPermission()
                         } catch (e: Exception) {

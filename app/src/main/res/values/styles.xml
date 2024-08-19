@@ -29,10 +29,6 @@
         <item name="textColorAlertDialogListItem">?android:textColorPrimary</item>
     </style>
 
-    <style name="PreferenceTitleStyle" parent="@android:style/Widget.TextView">
-        <item name="android:textColorPrimary">?android:textColorSecondary</item>
-    </style>
-
     <style name="Widget.Session.BottomSheetDialog" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.6</item>
@@ -41,10 +37,6 @@
 
     <style name="Widget.Session.AppBarLayout" parent="@style/Widget.Design.AppBarLayout">
 
-    </style>
-
-    <style name="Widget.Session.TabBar" parent="Widget.AppCompat.ActionBar.TabBar">
-        <item name="elevation">1dp</item>
     </style>
 
     <style name="Widget.Session.TabLayout" parent="Widget.Design.TabLayout">
@@ -79,11 +71,6 @@
         <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <style name="Widget.Session.Button.Common.ProminentFilled">
-        <item name="android:background">@drawable/prominent_filled_button_medium_background</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
     <style name="Widget.Session.Button.Common.Filled">
         <item name="android:background">@drawable/filled_button_medium_background</item>
         <item name="android:textColor">?android:textColorPrimary</item>
@@ -92,11 +79,6 @@
     <style name="Widget.Session.Button.Common.ProminentOutline">
         <item name="android:background">@drawable/prominent_outline_button_medium_background</item>
         <item name="android:textColor">@color/prominent_button_color</item>
-    </style>
-
-    <style name="Widget.Session.Button.Common.UnimportantOutline">
-        <item name="android:background">@drawable/unimportant_outline_button_medium_background</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
     <style name="Widget.Session.Button.Common.Borderless">
@@ -206,15 +188,6 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="AppCompatAlertDialogStyleLight" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/signal_primary_dark</item>
-    </style>
-
-    <style name="AppCompatDialogStyleLight" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorAccent">@color/signal_primary_dark</item>
-        <item name="android:windowBackground">@drawable/dialog_background</item>
-    </style>
-
     <!-- ActionBar styles -->
 
     <!-- For Holo Light Dialog Activity Styling Emulation -->
@@ -234,14 +207,6 @@
            clear out android:textOn and android:textOff, to avoid the default
            text label behavior of the ToggleButton class.) -->
 
-    <style name="BackupPassphrase">
-        <item name="android:fontFamily">monospace</item>
-        <item name="android:typeface">monospace</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:clickable">false</item>
-        <item name="android:focusable">false</item>
-    </style>
-
     <style name="PreferenceThemeOverlay.Fix" parent="PreferenceThemeOverlay.v14.Material">
     </style>
 
@@ -254,10 +219,6 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:selectable">true</item>
         <item name="android:background">?attr/selectableItemBackground</item>
-    </style>
-
-    <style name="PopupMenu.ConversationItem" parent="@style/Widget.AppCompat.PopupMenu">
-        <item name="android:dropDownHorizontalOffset">@dimen/medium_spacing</item>
     </style>
 
     <style name="PopupMenu.MessageRequests" parent="@style/Widget.AppCompat.PopupMenu">

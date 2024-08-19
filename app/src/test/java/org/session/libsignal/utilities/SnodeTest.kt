@@ -5,8 +5,9 @@ import org.hamcrest.core.IsEqual.equalTo
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
+import org.robolectric.ParameterizedRobolectricTestRunner
 
-@RunWith(Parameterized::class)
+@RunWith(ParameterizedRobolectricTestRunner::class)
 class SnodeVersionTest(
     private val v1: String,
     private val v2: String,
@@ -15,7 +16,7 @@ class SnodeVersionTest(
 ) {
     companion object {
         @JvmStatic
-        @Parameterized.Parameters(name = "{index}: testVersion({0},{1}) = (equalTo: {2}, lessThan: {3})")
+        @ParameterizedRobolectricTestRunner.Parameters(name = "{index}: testVersion({0},{1}) = (equalTo: {2}, lessThan: {3})")
         fun data(): Collection<Array<Any>> = listOf(
             arrayOf("1", "1", true, false),
             arrayOf("1", "2", false, true),
