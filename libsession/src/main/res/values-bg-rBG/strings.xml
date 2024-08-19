@@ -80,8 +80,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="attachment_type_selector__gallery_description">Изображение или видео</string>
-    <string name="attachment_type_selector__drawer_description">Затваряне/отваряне на чекмеджето с прикачени файлове</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Изпращане</string>
@@ -89,7 +87,6 @@
     <string name="messageVoiceSlideToCancel">Плъзнете за отказ</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Доставено</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -105,12 +102,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Изпратен</string>
     <string name="received">Получен</string>
-    <string name="message_details_header__disappears">Изчезва</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Тих режим за 1 час</string>
-    <string name="notificationsMute2Hours">Тих режим за 2 часа</string>
-    <string name="notificationsMute1Day">Тих режим за 1 ден</string>
     <string name="notificationsContentShowNameOnly">Само име</string>
     <string name="audio">Аудио</string>
     <string name="video">Видео</string>

@@ -73,15 +73,12 @@
     <!-- TransferControlView -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="attachment_type_selector__gallery_description">Shuyu manakashpaka shuyukuyuriy.</string>
-    <string name="attachment_type_selector__drawer_description">Kimichishka millkakunata rurana</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Kachana</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Chayashka</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -97,12 +94,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Kachashka</string>
     <string name="received">Chaskishka</string>
-    <string name="message_details_header__disappears">Chinkarishka</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">1  pachata upallayachina</string>
-    <string name="notificationsMute2Hours">2 pachata upallayachina</string>
-    <string name="notificationsMute1Day">1 punchata upallayachina</string>
     <string name="notificationsContentShowNameOnly">Shutilla</string>
     <string name="audio">Uyariy</string>
     <string name="video">Shuyurikuchik</string>

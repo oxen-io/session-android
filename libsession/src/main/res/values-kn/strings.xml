@@ -89,7 +89,6 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">ಕಳುಹಿಸಿದೆ</string>
     <string name="received">ಸ್ವೀಕರಿಸಲಾಗಿದೆ</string>
-    <string name="message_details_header__disappears">ಮಾಯವಾಗು</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
     <string name="notificationsContentShowNameOnly">ಹೆಸರು ಮಾತ್ರ</string>

@@ -80,15 +80,12 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">గిఫ్</string>
-    <string name="attachment_type_selector__gallery_description">ఇమెజ్   ఆర్   వీడియో</string>
-    <string name="attachment_type_selector__drawer_description">టోగుల్ అటాచ్మెంట్ సొరుగు</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">పంపించు</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">పంపిణి ఐనది</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -104,12 +101,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">పంపిన</string>
     <string name="received">అందుకున్న</string>
-    <string name="message_details_header__disappears">అదృశ్యమవుతుంది</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">1 గంట నిశబ్దంగా ఉంచు</string>
-    <string name="notificationsMute2Hours">2 గంటలు నిశబ్దంగా ఉంచు</string>
-    <string name="notificationsMute1Day">1 రోజు నిశబ్దంగా ఉంచు</string>
     <string name="notificationsContentShowNameOnly">పేరు మాత్రమే </string>
     <string name="audio">ఆడియో</string>
     <string name="video">వీడియో</string>

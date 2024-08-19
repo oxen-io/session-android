@@ -83,8 +83,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Gif</string>
-    <string name="attachment_type_selector__gallery_description">Kép vagy videó</string>
-    <string name="attachment_type_selector__drawer_description">Mellékletcsatoló kapcsoló</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Küldés</string>
@@ -92,7 +90,6 @@
     <string name="messageVoiceSlideToCancel">Megszakításhoz csúsztasd</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Kézbesítve</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -110,12 +107,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Elküldve</string>
     <string name="received">Érkezett</string>
-    <string name="message_details_header__disappears">Eltűnik</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Némítás 1 órára</string>
-    <string name="notificationsMute2Hours">Némítás 2 órára</string>
-    <string name="notificationsMute1Day">Némítás 1 napra</string>
     <string name="notificationsContentShowNameOnly">Csak név</string>
     <string name="audio">Hang</string>
     <string name="video">Videó</string>

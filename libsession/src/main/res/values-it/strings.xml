@@ -82,8 +82,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Gif</string>
-    <string name="attachment_type_selector__gallery_description">Immagine o video</string>
-    <string name="attachment_type_selector__drawer_description">Mostra/nascondi pannello degli allegati</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Invia</string>
@@ -91,7 +89,6 @@
     <string name="messageVoiceSlideToCancel">Scorri per cancellare</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Consegnato</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -109,12 +106,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Inviato</string>
     <string name="received">Ricevuto</string>
-    <string name="message_details_header__disappears">Scomparsi</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Silenzia per 1 ora</string>
-    <string name="notificationsMute2Hours">Silenzia per 2 ore</string>
-    <string name="notificationsMute1Day">Silenzia per 1 giorno</string>
     <string name="notificationsContentShowNameOnly">Solo nome</string>
     <string name="audio">Audio</string>
     <string name="video">Video</string>

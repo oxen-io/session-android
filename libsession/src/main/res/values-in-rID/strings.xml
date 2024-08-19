@@ -82,14 +82,12 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Gif</string>
-    <string name="attachment_type_selector__gallery_description">Gambar atau video</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Kirim</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Terkirim</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -106,12 +104,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Terkirim</string>
     <string name="received">Diterima</string>
-    <string name="message_details_header__disappears">Menghilang</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Senyapkan selama 1 jam</string>
-    <string name="notificationsMute2Hours">Senyapkan selama 2 jam</string>
-    <string name="notificationsMute1Day">Senyapkan selama 1 hari</string>
     <string name="notificationsContentShowNameOnly">Hanya nama</string>
     <string name="audio">Suara</string>
     <string name="video">Video</string>

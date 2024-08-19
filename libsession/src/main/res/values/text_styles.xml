@@ -22,10 +22,4 @@
         <item name="android:letterSpacing" tools:ignore="NewApi">0.03</item>
     </style>
 
-
-    <style name="Signal.Text.Caption.MessageSent">
-        <item name="android:textColor">?conversation_item_sent_text_secondary_color</item>
-        <item name="android:shadowRadius">0</item>
-    </style>
-
 </resources>

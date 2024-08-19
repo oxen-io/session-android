@@ -78,8 +78,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="attachment_type_selector__gallery_description">Delwedd neu fideo</string>
-    <string name="attachment_type_selector__drawer_description">Newid drôr yr atodiad</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Anfon</string>
@@ -87,7 +85,6 @@
     <string name="messageVoiceSlideToCancel">Llithro i ddiddymu</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Wedi\'i drosglwyddo</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -103,12 +100,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Anfonwyd</string>
     <string name="received">Derbyniwyd</string>
-    <string name="message_details_header__disappears">Yn diflannu</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Tewi am 1 awr</string>
-    <string name="notificationsMute2Hours">Tewi am 2 awr</string>
-    <string name="notificationsMute1Day">Tewi am 1 diwrnod</string>
     <string name="notificationsContentShowNameOnly">Enw yn unig</string>
     <string name="audio">Sain</string>
     <string name="video">Fideo</string>

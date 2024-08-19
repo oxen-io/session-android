@@ -82,8 +82,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Gif</string>
-    <string name="attachment_type_selector__gallery_description">Figurë ose video</string>
-    <string name="attachment_type_selector__drawer_description">Hapni/mbyllni sirtarin e bashkëngjitjeve</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Dërgoje</string>
@@ -91,7 +89,6 @@
     <string name="messageVoiceSlideToCancel">Rrëshqiteni që të anulohet</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">U dorëzua</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -109,12 +106,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Dërguar më</string>
     <string name="received">Marrë më</string>
-    <string name="message_details_header__disappears">Zhduket më</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Heshtoje për 1 orë</string>
-    <string name="notificationsMute2Hours">Heshtoje për 2 orë</string>
-    <string name="notificationsMute1Day">Heshtoje për 1 ditë</string>
     <string name="notificationsContentShowNameOnly">Vetëm emrin</string>
     <string name="audio">Audio</string>
     <string name="video">Video</string>

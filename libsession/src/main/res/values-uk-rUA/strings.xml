@@ -83,8 +83,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Гіф</string>
-    <string name="attachment_type_selector__gallery_description">Зображення або відео</string>
-    <string name="attachment_type_selector__drawer_description">Увімк/вимк скриньку вкладень</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Надіслати</string>
@@ -92,7 +90,6 @@
     <string name="messageVoiceSlideToCancel">Проведіть щоб відмінити</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Доставлено</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -110,12 +107,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Надіслано</string>
     <string name="received">Одержано</string>
-    <string name="message_details_header__disappears">Зникає</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Вимкнути звук на 1 годину</string>
-    <string name="notificationsMute2Hours">Вимкнути звук на 2 години</string>
-    <string name="notificationsMute1Day">Вимкнути звук на 1 день</string>
     <string name="notificationsContentShowNameOnly">Тільки ім\'я</string>
     <string name="audio">Аудіо</string>
     <string name="video">Відео</string>

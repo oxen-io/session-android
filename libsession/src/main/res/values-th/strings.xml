@@ -75,15 +75,12 @@
     <!-- TransferControlView -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="attachment_type_selector__gallery_description">ภาพหรือวิดีโอ</string>
-    <string name="attachment_type_selector__drawer_description">สลับแถบเมนูไฟล์แนบ</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">ส่ง</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">ส่งแล้ว</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -99,12 +96,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">ส่งแล้ว</string>
     <string name="received">ได้รับแล้ว</string>
-    <string name="message_details_header__disappears">ลบตัวเอง</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">ปิดเสียง 1 ชั่วโมง</string>
-    <string name="notificationsMute2Hours">ปิดเสียง 2 ชั่วโมง</string>
-    <string name="notificationsMute1Day">ปิดเสียง 1 วัน</string>
     <string name="notificationsContentShowNameOnly">ชื่อเท่านั้น</string>
     <string name="audio">เสียง</string>
     <string name="video">วิดีโอ</string>

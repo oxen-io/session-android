@@ -79,8 +79,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="attachment_type_selector__gallery_description">រូបភាព ឬវីដេអូ</string>
-    <string name="attachment_type_selector__drawer_description">បិទបើកថតឯកសារភ្ជាប់</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">ផ្ញើ</string>
@@ -88,7 +86,6 @@
     <string name="messageVoiceSlideToCancel">អូសដើម្បីបោះបង់</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">បានបញ្ចូន</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -104,12 +101,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">បានផ្ញើ</string>
     <string name="received">បានទទួល</string>
-    <string name="message_details_header__disappears">បាត់</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">បិទសំឡេង 1 ម៉ោង</string>
-    <string name="notificationsMute2Hours">បិទសំឡេង 2 ម៉ោង</string>
-    <string name="notificationsMute1Day">បិទសំឡេង 1 ថ្ងៃ</string>
     <string name="notificationsContentShowNameOnly">ឈ្មោះតែប៉ុណ្ណោះ</string>
     <string name="audio">សំឡេង</string>
     <string name="video">វីដេអូ</string>

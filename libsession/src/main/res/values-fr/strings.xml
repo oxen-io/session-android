@@ -86,8 +86,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Gif</string>
-    <string name="attachment_type_selector__gallery_description">Image ou vidéo</string>
-    <string name="attachment_type_selector__drawer_description">Afficher, masquer le tiroir des pièces jointes</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Envoyer</string>
@@ -95,7 +93,6 @@
     <string name="messageVoiceSlideToCancel">Faire glisser pour annuler</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Transmis</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -113,12 +110,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Envoyé</string>
     <string name="received">Reçu</string>
-    <string name="message_details_header__disappears">Disparaît dans </string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Sourdine pendant 1 heure</string>
-    <string name="notificationsMute2Hours">Sourdine pendant 2 heures</string>
-    <string name="notificationsMute1Day">Sourdine pendant 1 jour</string>
     <string name="notificationsContentShowNameOnly">Nom uniquement</string>
     <string name="audio">Son</string>
     <string name="video">Vidéo</string>
@@ -245,7 +238,5 @@
     <string name="emojiCategoryFlags">Drapeaux</string>
     <!-- ReactionsConversationView -->
     <!-- ReactionsRecipientAdapter -->
-    <string name="KeyboardPagerfragment_back_to_emoji">Retour à l\'émoticône</string>
-    <string name="KeyboardPagerfragment_clear_search_entry">Effacer la recherche</string>
     <string name="appearanceAutoDarkMode">Thème sombre automatique</string>
 </resources>

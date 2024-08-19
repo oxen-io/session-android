@@ -82,8 +82,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Gif</string>
-    <string name="attachment_type_selector__gallery_description">Изображение или видео</string>
-    <string name="attachment_type_selector__drawer_description">Показать панель вложений</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Отправить</string>
@@ -91,7 +89,6 @@
     <string name="messageVoiceSlideToCancel">Проведите для отмены</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Доставлено</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -109,12 +106,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Отправлено</string>
     <string name="received">Получено</string>
-    <string name="message_details_header__disappears">Исчезнет</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Отключить звук на 1 час</string>
-    <string name="notificationsMute2Hours">Отключить звук на 2 часа</string>
-    <string name="notificationsMute1Day">Отключить звук на 1 день</string>
     <string name="notificationsContentShowNameOnly">Только имя</string>
     <string name="audio">Аудио</string>
     <string name="video">Видео</string>

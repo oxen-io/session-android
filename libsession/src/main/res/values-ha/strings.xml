@@ -76,15 +76,12 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="attachment_type_selector__gallery_description">Wêne yan vidyo</string>
-    <string name="attachment_type_selector__drawer_description">Çaviya servehiya din bijerînin</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Bişîne</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Hat gihandin</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -100,12 +97,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Hat şandin</string>
     <string name="received">Hat</string>
-    <string name="message_details_header__disappears">Winda dibe</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Heta 1 demjimêrê bêdeng bike</string>
-    <string name="notificationsMute2Hours">Heta 2 demjimêran bêdeng bike</string>
-    <string name="notificationsMute1Day">Heta 1 rojê bêdeng bike</string>
     <string name="notificationsContentShowNameOnly">Tenê nav</string>
     <string name="audio">Deng</string>
     <string name="video">Vîdyo</string>

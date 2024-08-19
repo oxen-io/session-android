@@ -72,7 +72,6 @@
     <string name="messageVoiceSlideToCancel">Kasindike okusazamu</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Etuuse</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -87,12 +86,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Esindikiddwa</string>
     <string name="received">Etuuse</string>
-    <string name="message_details_header__disappears">Kibula</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Silisa okumala essawa emu  </string>
-    <string name="notificationsMute2Hours">Silisa okumala esawa bbiri </string>
-    <string name="notificationsMute1Day">Silisa okumala olunaku 1</string>
     <string name="notificationsContentShowNameOnly">Linnya lyoka</string>
     <string name="audio">Doboozi</string>
     <string name="video">Vidiyo</string>

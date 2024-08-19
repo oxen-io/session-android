@@ -81,7 +81,6 @@
     <string name="messageVoiceSlideToCancel">취소하려면 슬라이드</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">전송됨</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -98,9 +97,6 @@
     <string name="received">받은 시간:</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">1시간 동안 알림 끄기</string>
-    <string name="notificationsMute2Hours">2시간 동안 알림 끄기</string>
-    <string name="notificationsMute1Day">하루 동안 알림 끄기</string>
     <string name="notificationsContentShowNameOnly">이름</string>
     <string name="audio">오디오</string>
     <string name="video">동영상</string>

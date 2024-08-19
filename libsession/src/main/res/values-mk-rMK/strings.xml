@@ -71,15 +71,12 @@
     <!-- TransferControlView -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="attachment_type_selector__gallery_description">ဓာတ်ပုံ သို့မဟုတ် ဗီဒီယို </string>
-    <string name="attachment_type_selector__drawer_description">ပူးတွဲဖိုင် drawer အားတစ်ချက်နှိပ်ပါ </string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">ပို့ပါ</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">ပေးပို့ပြီး</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -94,12 +91,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">ပို့ပြီးပြီ</string>
     <string name="received">လက်ခံရရှိသည်</string>
-    <string name="message_details_header__disappears">ပျောက်သွားမည်</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">အသံကို ၁ နာရီ ပိတ်ထားပါ။</string>
-    <string name="notificationsMute2Hours">အသံကို ၂ နာရီ ပိတ်ထားပါ။</string>
-    <string name="notificationsMute1Day">အသံကို ၁ ရက် ပိတ်ထားပါ</string>
     <string name="notificationsContentShowNameOnly">အမည်တစ်ခုတည်းသာ</string>
     <string name="audio">အသံ</string>
     <string name="video">ဗီဒီယို</string>

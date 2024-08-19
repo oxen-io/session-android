@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="play_button_animation_duration">300</integer>
-
     <integer name="reaction_scrubber_reveal_duration">200</integer>
     <integer name="reaction_scrubber_reveal_offset">100</integer>
     <integer name="reaction_scrubber_hide_duration">150</integer>

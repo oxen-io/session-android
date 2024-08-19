@@ -82,8 +82,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Gif</string>
-    <string name="attachment_type_selector__gallery_description">Təsvir və ya video</string>
-    <string name="attachment_type_selector__drawer_description">Qoşma siyirməsini aç/bağla</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Göndər</string>
@@ -91,7 +89,6 @@
     <string name="messageVoiceSlideToCancel">İmtina etmək üçün sürüşdür</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Çatdırıldı</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -109,12 +106,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Göndərildi</string>
     <string name="received">Alındı</string>
-    <string name="message_details_header__disappears">Yox olur</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">1 saatlıq səssizə al</string>
-    <string name="notificationsMute2Hours">2 saatlıq səssizə al</string>
-    <string name="notificationsMute1Day">1 günlük səssizə al</string>
     <string name="notificationsContentShowNameOnly">Yalnız ad</string>
     <string name="audio">Səs</string>
     <string name="video">Video</string>

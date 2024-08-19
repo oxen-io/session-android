@@ -82,8 +82,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Gif</string>
-    <string name="attachment_type_selector__gallery_description">Paveikslas ar vaizdo įrašas</string>
-    <string name="attachment_type_selector__drawer_description">Perjungti priedų stalčių</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Siųsti</string>
@@ -91,7 +89,6 @@
     <string name="messageVoiceSlideToCancel">Perbraukite, norėdami atsisakyti</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Pristatyta</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -109,12 +106,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Išsiųsta</string>
     <string name="received">Gauta</string>
-    <string name="message_details_header__disappears">Išnyksta</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Nutildyti 1 valandai</string>
-    <string name="notificationsMute2Hours">Nutildyti 2 valandoms</string>
-    <string name="notificationsMute1Day">Nutildyti 1 dienai</string>
     <string name="notificationsContentShowNameOnly">Tik vardą</string>
     <string name="audio">Garso įrašai</string>
     <string name="video">Vaizdo įrašai</string>

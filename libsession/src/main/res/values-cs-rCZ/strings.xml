@@ -82,8 +82,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Gif</string>
-    <string name="attachment_type_selector__gallery_description">Obrázek nebo video</string>
-    <string name="attachment_type_selector__drawer_description">Vybrat úložiště pro přílohy</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Odeslat</string>
@@ -91,7 +89,6 @@
     <string name="messageVoiceSlideToCancel">Pro zrušení přejeďte</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Doručeno</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -109,12 +106,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Odesláno</string>
     <string name="received">Přijato</string>
-    <string name="message_details_header__disappears">Zmizí</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Ztišit na 1 hodinu</string>
-    <string name="notificationsMute2Hours">Ztišit na 2 hodiny</string>
-    <string name="notificationsMute1Day">Ztišit na 1 den</string>
     <string name="notificationsContentShowNameOnly">Pouze jméno</string>
     <string name="audio">Zvuk</string>
     <string name="video">Video</string>

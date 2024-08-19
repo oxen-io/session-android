@@ -81,15 +81,12 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Гиф</string>
-    <string name="attachment_type_selector__gallery_description">Слика или видео</string>
-    <string name="attachment_type_selector__drawer_description">Фиока прилога</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Пошаљи</string>
     <!-- conversation_input_panel -->
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Испоручена</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -107,12 +104,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Послата</string>
     <string name="received">Примљена</string>
-    <string name="message_details_header__disappears">Нестаје</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Утишај 1 сат</string>
-    <string name="notificationsMute2Hours">Утишај 2 сата</string>
-    <string name="notificationsMute1Day">Утишај 1 дан</string>
     <string name="notificationsContentShowNameOnly">Само име</string>
     <string name="audio">Звук</string>
     <string name="video">Видео</string>

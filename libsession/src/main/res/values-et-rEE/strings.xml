@@ -78,8 +78,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="attachment_type_selector__gallery_description">Pilt või video</string>
-    <string name="attachment_type_selector__drawer_description">Lülita manusesahtlit</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Saada</string>
@@ -87,7 +85,6 @@
     <string name="messageVoiceSlideToCancel">Libista tühistamiseks</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Kohale toimetatud</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -103,12 +100,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Saadetud</string>
     <string name="received">Vastuvõetud</string>
-    <string name="message_details_header__disappears">Haihtub</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Vaigista 1 tunniks</string>
-    <string name="notificationsMute2Hours">Vaigista 2 tunniks</string>
-    <string name="notificationsMute1Day">Vaigista 1 päevaks</string>
     <string name="notificationsContentShowNameOnly">Ainult nimi</string>
     <string name="audio">Heli</string>
     <string name="max">Maksimaalne</string>

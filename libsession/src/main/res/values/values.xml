@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="enable_job_service">false</bool>
     <bool name="screen_security_default">true</bool>
 </resources>

@@ -82,8 +82,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">Gif</string>
-    <string name="attachment_type_selector__gallery_description">Εικόνα ή βίντεο</string>
-    <string name="attachment_type_selector__drawer_description">Εναλλαγή συρταριού επισυνημμένων</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Αποστολή</string>
@@ -91,7 +89,6 @@
     <string name="messageVoiceSlideToCancel">Σύρετε για ακύρωση</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Παραδόθηκε</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -109,12 +106,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Στάλθηκε στις</string>
     <string name="received">Ελήφθη στις</string>
-    <string name="message_details_header__disappears">Εξαφανίζεται</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Σίγαση για 1 ώρα</string>
-    <string name="notificationsMute2Hours">Σίγαση για 2 ώρες</string>
-    <string name="notificationsMute1Day">Σίγαση για 1 ημέρα</string>
     <string name="notificationsContentShowNameOnly">Μόνο όνομα</string>
     <string name="audio">Ήχοι</string>
     <string name="video">Βίντεο</string>

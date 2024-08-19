@@ -82,8 +82,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">GIF</string>
-    <string name="attachment_type_selector__gallery_description">Bildo aŭ videaĵo</string>
-    <string name="attachment_type_selector__drawer_description">Baskuligi kunsendaĵojn</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Sendi</string>
@@ -91,7 +89,6 @@
     <string name="messageVoiceSlideToCancel">Deŝovu por nuligi</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">Liverita</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -109,12 +106,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">Sendita</string>
     <string name="received">Ricevita</string>
-    <string name="message_details_header__disappears">Malaperos je</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">Silentigi dum 1 horo</string>
-    <string name="notificationsMute2Hours">Silentigi dum 2 horoj</string>
-    <string name="notificationsMute1Day">Silentigi dum 1 tago</string>
     <string name="notificationsContentShowNameOnly">Nur nomon</string>
     <string name="audio">Sonaĵo</string>
     <string name="video">Videaĵo</string>

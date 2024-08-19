@@ -81,8 +81,6 @@
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="gif">GIF</string>
-    <string name="attachment_type_selector__gallery_description">תמונה או וידיאו</string>
-    <string name="attachment_type_selector__drawer_description">עורר מגירת צרופות</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">שלח</string>
@@ -90,7 +88,6 @@
     <string name="messageVoiceSlideToCancel">החלק כדי לבטל</string>
     <!-- conversation_item -->
     <!-- conversation_item_sent -->
-    <string name="conversation_item_sent__delivered_description">נמסר</string>
     <!-- conversation_item_received -->
     <!-- audio_view -->
     <!-- open_group_invitation_view -->
@@ -107,12 +104,8 @@
     <!-- message_details_header -->
     <string name="disappearingMessagesSent">נשלח</string>
     <string name="received">התקבל</string>
-    <string name="message_details_header__disappears">נעלם</string>
     <!-- AndroidManifest.xml -->
     <!-- arrays.xml -->
-    <string name="notificationsMute1Hour">השתק למשך שעה</string>
-    <string name="notificationsMute2Hours">השתק למשך שעתיים</string>
-    <string name="notificationsMute1Day">השתק למשך יום 1</string>
     <string name="notificationsContentShowNameOnly">שם בלבד</string>
     <string name="audio">שמע</string>
     <string name="video">וידיאו</string>
