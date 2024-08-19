@@ -79,7 +79,7 @@ class ProfilePictureView : FrameLayout {
 
             // Load group avatar if available, otherwise load member avatars
             val groupAvatarOrMemberAvatars = withContext(Dispatchers.Default) {
-                model.maybeLoadRecipient(context).contactPhoto
+                model.loadRecipient(context).contactPhoto
                     ?: groupDatabase.getGroupMembers(model.address.toGroupString(), true)
                         .map {
                             GroupMemberInfo(
@@ -152,7 +152,7 @@ class ProfilePictureView : FrameLayout {
         // need to find a better scope to launch the coroutine from.
         lastLoadJob = GlobalScope.launch(Dispatchers.Main) {
             val (contactPhoto, avatarPlaceholder) = withContext(Dispatchers.Default) {
-                model.maybeLoadRecipient(context).let {
+                model.loadRecipient(context).let {
                     it.contactPhoto to PlaceholderAvatarPhoto(it.address.serialize(), it.displayName())
                 }
             }
@@ -208,10 +208,10 @@ class ProfilePictureView : FrameLayout {
         /**
          * Load the recipient if it's not already loaded.
          */
-        fun maybeLoadRecipient(context: Context): Recipient
+        fun loadRecipient(context: Context): Recipient
 
         data class AddressModel(override val address: Address) : LoadModel {
-            override fun maybeLoadRecipient(context: Context): Recipient {
+            override fun loadRecipient(context: Context): Recipient {
                 return Recipient.from(context, address, false)
             }
         }
@@ -220,7 +220,7 @@ class ProfilePictureView : FrameLayout {
             override val address: Address
                 get() = recipient.address
 
-            override fun maybeLoadRecipient(context: Context): Recipient = recipient
+            override fun loadRecipient(context: Context): Recipient = recipient
         }
     }
 }
