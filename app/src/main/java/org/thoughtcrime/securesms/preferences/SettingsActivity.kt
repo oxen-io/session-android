@@ -34,7 +34,6 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImage
 import com.canhub.cropper.CropImageContract
 import dagger.hilt.android.AndroidEntryPoint
@@ -188,7 +187,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     private fun loadProfilePicture(view: ProfilePictureView) {
         // Always reload the profile picture as it can change on this page.
-        view.load(Address.fromSerialized(hexEncodedPublicKey), allowMemoryCache = false)
+        view.load(Address.fromSerialized(hexEncodedPublicKey))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -329,11 +328,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
 
-            // We don't have any easy way to clear the cache just for current user. Clearing
-            // all image caching is the only correct way we can easily do to refresh the profile
-            // page on other screens (on this screen we have disabled memory cache so it will always
-            // work).
-            Glide.get(this).clearMemory()
             loadProfilePicture(binding.profilePictureView)
         }
 

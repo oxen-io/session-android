@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.mms;
 
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,7 +14,6 @@ import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.load.engine.cache.DiskCache;
 import com.bumptech.glide.load.engine.cache.DiskCacheAdapter;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.UnitModelLoader;
 import com.bumptech.glide.load.resource.bitmap.Downsampler;
 import com.bumptech.glide.load.resource.bitmap.StreamBitmapDecoder;
@@ -26,10 +24,6 @@ import com.bumptech.glide.module.AppGlideModule;
 
 import org.session.libsession.avatars.ContactPhoto;
 import org.session.libsession.avatars.PlaceholderAvatarPhoto;
-import org.session.libsession.messaging.utilities.AccountId;
-import org.session.libsession.utilities.Address;
-import org.session.libsession.utilities.recipients.Recipient;
-import org.thoughtcrime.securesms.components.ProfilePictureLoader;
 import org.thoughtcrime.securesms.crypto.AttachmentSecret;
 import org.thoughtcrime.securesms.crypto.AttachmentSecretProvider;
 import org.thoughtcrime.securesms.giph.model.ChunkedImageUrl;
@@ -81,11 +75,6 @@ public class SignalGlideModule extends AppGlideModule {
     registry.append(AttachmentModel.class, InputStream.class, new AttachmentStreamUriLoader.Factory());
     registry.append(ChunkedImageUrl.class, InputStream.class, new ChunkedImageUrlLoader.Factory());
     registry.append(PlaceholderAvatarPhoto.class, BitmapDrawable.class, new PlaceholderAvatarLoader.Factory(context));
-
-    //noinspection rawtypes
-    ModelLoaderFactory profilePictureLoaderFactory = new ProfilePictureLoader.Factory((Application) context);
-    registry.append(Address.class, InputStream.class, profilePictureLoaderFactory);
-    registry.append(Recipient.class, InputStream.class, profilePictureLoaderFactory);
 
     registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory());
   }
