@@ -38,6 +38,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader
 import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import kotlin.math.ceil
 
@@ -167,15 +168,14 @@ private fun ThumbnailRow(
                             Box(
                                 modifier = Modifier
                                     .size(48.dp)
-                                    .background(Color.White, shape = CircleShape)
-                                    .padding(start = 5.dp),
+                                    .background(Color.White, shape = CircleShape),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Image(
+                                    modifier = Modifier.padding(start = LocalDimensions.current.xxxsSpacing),
                                     painter = painterResource(R.drawable.triangle_right),
                                     contentDescription = null,
-                                    colorFilter = ColorFilter.tint(LocalColors.current.primary),
-                                    modifier = Modifier.size(19.dp, 24.dp),
+                                    colorFilter = ColorFilter.tint(LocalColors.current.primary)
                                 )
                             }
                         }
