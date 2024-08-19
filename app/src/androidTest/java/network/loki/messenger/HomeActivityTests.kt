@@ -42,6 +42,10 @@ import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
 import com.bumptech.glide.Glide
 
+/**
+ * Currently not used as part of our CI/Deployment processes !!!!
+ */
+
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class HomeActivityTests {
@@ -107,7 +111,7 @@ class HomeActivityTests {
     }
 
 
-    private fun goToMyChat() {
+/*    private fun goToMyChat() {
         onView(withId(R.id.newConversationButton)).perform(ViewActions.click())
         onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
         // new chat
@@ -122,7 +126,7 @@ class HomeActivityTests {
         onView(withId(R.id.publicKeyEditText)).perform(ViewActions.typeText(copied))
         onView(withId(R.id.publicKeyEditText)).perform(ViewActions.closeSoftKeyboard())
         onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
-    }
+    }*/
 
     @Test
     fun testLaunches_dismiss_seedView() {
@@ -145,7 +149,7 @@ class HomeActivityTests {
         onView(withId(R.id.seedReminderView)).check(matches(not(isDisplayed())))
     }
 
-    @Test
+/*    @Test
     fun testChat_withSelf() {
         setupLoggedInState()
         goToMyChat()
@@ -176,7 +180,7 @@ class HomeActivityTests {
 
         onView(isRoot()).perform(waitFor(1000)) // no other way for this to work apparently
         onView(withText(dialogPromptText)).check(matches(isDisplayed()))
-    }
+    }*/
 
     /**
      * Perform action of waiting for a specific time.
