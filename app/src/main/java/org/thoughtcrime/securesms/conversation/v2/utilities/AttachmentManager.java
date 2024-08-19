@@ -65,6 +65,9 @@ public class AttachmentManager {
 
   private final static String TAG = AttachmentManager.class.getSimpleName();
 
+  // Max attachment size is 10MB, above which we display a warning toast rather than sending the msg
+  private final long MAX_ATTACHMENTS_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+
   private final @NonNull Context                    context;
   private final @NonNull AttachmentListener         attachmentListener;
 
@@ -360,9 +363,18 @@ public class AttachmentManager {
                                           final @Nullable Slide slide,
                                           final @NonNull  MediaConstraints constraints)
   {
-   return slide == null                                          ||
-          constraints.isSatisfied(context, slide.asAttachment()) ||
-          constraints.canResize(slide.asAttachment());
+    // Null attachment? Not satisfied.
+    if (slide == null) return false;
+
+    // Attachments are excessively large? Not satisfied.
+    if (slide.asAttachment().getSize() > MAX_ATTACHMENTS_FILE_SIZE_BYTES) {
+      Toast.makeText(context, R.string.attachmentsErrorSize, Toast.LENGTH_SHORT).show();
+      return false;
+    }
+
+    // Otherwise our constraints-satisfied condition becomes whether we can resize it (obviously
+    // this will only work on images).
+    return constraints.canResize(slide.asAttachment());
   }
 
   public interface AttachmentListener {

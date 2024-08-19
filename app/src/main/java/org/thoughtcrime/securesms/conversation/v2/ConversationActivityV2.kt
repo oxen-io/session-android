@@ -1840,6 +1840,22 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val mediaPreppedListener = object : ListenableFuture.Listener<Boolean> {
 
             override fun onSuccess(result: Boolean?) {
+                if (result == null) {
+                    Log.w(TAG, "Media prepper returned a null result - bailing.")
+                    return
+                }
+
+                // If the attachment was too large or MediaConstraints.isSatisfied failed for some
+                // other reason then we reset the attachment manager & shown buttons then bail..
+                if (!result) {
+                    attachmentManager.clear()
+                    if (isShowingAttachmentOptions) { toggleAttachmentOptions() }
+                    return
+                }
+
+                // ..otherwise we can attempt to send the attachment(s).
+                // Note: The only multi-attachment message type is when sending images - all others
+                // attempt send on initial attachment selection.
                 sendAttachments(attachmentManager.buildSlideDeck().asAttachments(), null)
             }
 
