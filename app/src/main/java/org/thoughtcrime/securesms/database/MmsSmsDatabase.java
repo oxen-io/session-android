@@ -37,6 +37,7 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 
 import java.io.Closeable;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -407,6 +408,14 @@ public class MmsSmsDatabase extends Database {
       }
     }
     return -1;
+  }
+
+  @Override
+  protected void setNotifyConversationListeners(Cursor cursor, long threadId) {
+    cursor.setNotificationUris(context.getContentResolver(), Arrays.asList(
+            DatabaseContentProviders.Conversation.getUriForThread(threadId),
+            DatabaseContentProviders.Attachment.CONTENT_URI
+    ));
   }
 
   private Cursor queryTables(String[] projection, String selection, String order, String limit) {
