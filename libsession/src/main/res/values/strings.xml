@@ -118,7 +118,6 @@
     <string name="attachmentsAutoDownloadModalTitle">Auto Download</string>
     <string name="attachmentsClearAll">Clear All Attachments</string>
     <string name="attachmentsClearAllDescription">Are you sure you want to clear all attachments? Messages with attachments will also be deleted.</string>
-    <string name="attachmentsClickToDownload">Click to download {file_type}</string>
     <string name="attachmentsCollapseOptions">Collapse attachment options</string>
     <string name="attachmentsCollecting">Collecting attachments...</string>
     <string name="attachmentsDownload">Download Attachment</string>

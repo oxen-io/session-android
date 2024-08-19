@@ -367,14 +367,17 @@ public class AttachmentManager {
     if (slide == null) return false;
 
     // Attachments are excessively large? Not satisfied.
+    // Note: This file size test must come BEFORE the `constraints.isSatisfied` check below because
+    // it is a more specific type of check.
     if (slide.asAttachment().getSize() > MAX_ATTACHMENTS_FILE_SIZE_BYTES) {
       Toast.makeText(context, R.string.attachmentsErrorSize, Toast.LENGTH_SHORT).show();
       return false;
     }
 
-    // Otherwise our constraints-satisfied condition becomes whether we can resize it (obviously
-    // this will only work on images).
-    return constraints.canResize(slide.asAttachment());
+    // Otherwise we return whether our constraints are satisfied OR if we can resize the attachment
+    // (in the case of one or more images) - either one will be acceptable, but if both aren't then
+    // we fail the constraint test.
+    return constraints.isSatisfied(context, slide.asAttachment()) || constraints.canResize(slide.asAttachment());
   }
 
   public interface AttachmentListener {
