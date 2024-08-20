@@ -263,8 +263,8 @@ public class AttachmentManager {
             .put(APP_NAME_KEY, c.getString(R.string.app_name))
             .format().toString();
 
-    builder.withPermanentDenialDialog(needStoragePermissionTxt)
-            .withRationaleDialog(storagePermissionDeniedTxt, R.drawable.ic_baseline_photo_library_24)
+    builder.withPermanentDenialDialog(storagePermissionDeniedTxt)
+            .withRationaleDialog(needStoragePermissionTxt, R.drawable.ic_baseline_photo_library_24)
             .onAllGranted(() -> selectMediaType(activity, "*/*", null, requestCode)) // Note: We can use startActivityForResult w/ the ACTION_OPEN_DOCUMENT or ACTION_OPEN_DOCUMENT_TREE intent if we need to modernise this.
             .execute();
   }
