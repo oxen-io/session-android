@@ -76,6 +76,7 @@ import org.thoughtcrime.securesms.components.MediaView;
 import org.thoughtcrime.securesms.database.MediaDatabase.MediaRecord;
 import org.thoughtcrime.securesms.database.loaders.PagingMediaLoader;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
+import org.thoughtcrime.securesms.media.MediaOverviewActivity;
 import org.thoughtcrime.securesms.mediapreview.MediaPreviewViewModel;
 import org.thoughtcrime.securesms.mediapreview.MediaRailAdapter;
 import org.thoughtcrime.securesms.mms.Slide;
@@ -387,9 +388,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   }
 
   private void showOverview() {
-    Intent intent = new Intent(this, MediaOverviewActivity.class);
-    intent.putExtra(MediaOverviewActivity.ADDRESS_EXTRA, conversationRecipient.getAddress());
-    startActivity(intent);
+    startActivity(MediaOverviewActivity.createIntent(this, conversationRecipient.getAddress()));
   }
 
   private void forward() {

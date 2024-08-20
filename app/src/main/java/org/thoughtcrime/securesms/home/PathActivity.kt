@@ -273,8 +273,8 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
             job?.cancel()
             job = GlobalScope.launch {
                 withContext(Dispatchers.Main) {
+                    delay(dotAnimationStartDelay)
                     while (isActive) {
-                        delay(dotAnimationStartDelay)
                         expand()
                         delay(EXPAND_ANIM_DELAY_MILLS)
                         collapse()

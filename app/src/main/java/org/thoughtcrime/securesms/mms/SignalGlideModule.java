@@ -56,6 +56,7 @@ public class SignalGlideModule extends AppGlideModule {
 //    builder.setDiskCache(new NoopDiskCacheFactory());
   }
 
+  /** @noinspection unchecked*/
   @Override
   public void registerComponents(@NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) {
     AttachmentSecret attachmentSecret = AttachmentSecretProvider.getInstance(context).getOrCreateAttachmentSecret();
@@ -74,6 +75,7 @@ public class SignalGlideModule extends AppGlideModule {
     registry.append(AttachmentModel.class, InputStream.class, new AttachmentStreamUriLoader.Factory());
     registry.append(ChunkedImageUrl.class, InputStream.class, new ChunkedImageUrlLoader.Factory());
     registry.append(PlaceholderAvatarPhoto.class, BitmapDrawable.class, new PlaceholderAvatarLoader.Factory(context));
+
     registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory());
   }
 

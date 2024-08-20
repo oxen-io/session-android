@@ -305,6 +305,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.thoughtcrime.securesms.home.HomeActivity" />
         </activity>
+        <activity android:name="org.thoughtcrime.securesms.media.MediaOverviewActivity" />
+
         <service android:enabled="true" android:name="org.thoughtcrime.securesms.service.WebRtcCallService"
             android:foregroundServiceType="microphone"
             android:exported="false" />

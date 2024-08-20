@@ -29,9 +29,9 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityWebrtcBinding
 import org.apache.commons.lang3.time.DurationFormatUtils
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.truncateIdForDisplay
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -197,13 +197,8 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         clipFloatingInsets()
 
         // set up the user avatar
-        TextSecurePreferences.getLocalNumber(this)?.let{
-            val username = TextSecurePreferences.getProfileName(this) ?: truncateIdForDisplay(it)
-            binding.userAvatar.apply {
-                publicKey = it
-                displayName = username
-                update()
-            }
+        TextSecurePreferences.getLocalNumber(this)?.let {
+            binding.userAvatar.load(Address.fromSerialized(it))
         }
 
 
@@ -340,8 +335,6 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
 
             launch {
                 viewModel.recipient.collect { latestRecipient ->
-                    binding.contactAvatar.recycle()
-
                     if (latestRecipient.recipient != null) {
                         val contactPublicKey = latestRecipient.recipient.address.serialize()
                         val contactDisplayName = getUserDisplayName(contactPublicKey)
@@ -349,11 +342,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                         binding.remoteRecipientName.text = contactDisplayName
 
                         // sort out the contact's avatar
-                        binding.contactAvatar.apply {
-                            publicKey = contactPublicKey
-                            displayName = contactDisplayName
-                            update()
-                        }
+                        binding.contactAvatar.load(latestRecipient.recipient)
                     }
                 }
             }

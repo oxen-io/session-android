@@ -36,11 +36,6 @@ class BlockedContactsAdapter(val viewModel: BlockedContactsViewModel) : ListAdap
         else holder.select(getItem(position).isSelected)
     }
 
-    override fun onViewRecycled(holder: ViewHolder) {
-        super.onViewRecycled(holder)
-        holder.binding.profilePictureView.recycle()
-    }
-
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         val glide = Glide.with(itemView)
@@ -48,9 +43,7 @@ class BlockedContactsAdapter(val viewModel: BlockedContactsViewModel) : ListAdap
 
         fun bind(selectable: SelectableRecipient, toggle: (SelectableRecipient) -> Unit) {
             binding.recipientName.text = selectable.item.name
-            with (binding.profilePictureView) {
-                update(selectable.item)
-            }
+            binding.profilePictureView.load(selectable.item)
             binding.root.setOnClickListener { toggle(selectable) }
             binding.selectButton.isSelected = selectable.isSelected
         }

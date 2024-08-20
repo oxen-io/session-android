@@ -155,6 +155,7 @@
     <string name="authenticateFailedTooManyAttempts">Too many failed authentication attempts. Please try again later.</string>
     <string name="authenticateNotAccessed">Authentication could not be accessed.</string>
     <string name="authenticateToOpen">Authenticate to open {app_name}.</string>
+    <string name="back">Back</string>
     <string name="banDeleteAll">Ban and Delete All</string>
     <string name="banErrorFailed">Ban failed</string>
     <string name="banUnbanErrorFailed">Unban failed</string>

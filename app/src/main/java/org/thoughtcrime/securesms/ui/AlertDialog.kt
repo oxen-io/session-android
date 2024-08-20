@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -26,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
@@ -56,11 +58,17 @@ fun AlertDialog(
         onDismissRequest = onDismissRequest,
         content = {
             Box(
-                modifier = Modifier.background(color = LocalColors.current.backgroundSecondary,
+                modifier = Modifier.background(
+                    color = LocalColors.current.backgroundSecondary,
                     shape = MaterialTheme.shapes.small)
+                    .border(
+                        width = 1.dp,
+                        color = LocalColors.current.borders,
+                        shape = MaterialTheme.shapes.small)
+
             ) {
                 // only show the 'x' button is required
-                if(showCloseButton) {
+                if (showCloseButton) {
                     IconButton(
                         onClick = onDismissRequest,
                         modifier = Modifier.align(Alignment.TopEnd)
@@ -78,7 +86,7 @@ fun AlertDialog(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = LocalDimensions.current.smallSpacing)
+                            .padding(top = LocalDimensions.current.spacing)
                             .padding(horizontal = LocalDimensions.current.smallSpacing)
                     ) {
                         title?.let {
@@ -123,7 +131,12 @@ fun AlertDialog(
 }
 
 @Composable
-fun DialogButton(text: String, modifier: Modifier, color: Color = Color.Unspecified, onClick: () -> Unit) {
+fun DialogButton(
+    text: String,
+    modifier: Modifier,
+    color: Color = Color.Unspecified,
+    onClick: () -> Unit
+) {
     TextButton(
         modifier = modifier,
         shape = RectangleShape,
@@ -135,8 +148,7 @@ fun DialogButton(text: String, modifier: Modifier, color: Color = Color.Unspecif
             style = LocalType.current.large.bold(),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(
-                top = LocalDimensions.current.smallSpacing,
-                bottom = LocalDimensions.current.spacing
+                vertical = LocalDimensions.current.smallSpacing
             )
         )
     }
@@ -144,7 +156,7 @@ fun DialogButton(text: String, modifier: Modifier, color: Color = Color.Unspecif
 
 @Preview
 @Composable
-fun PreviewSimpleDialog(){
+fun PreviewSimpleDialog() {
     PreviewTheme {
         AlertDialog(
             onDismissRequest = {},
@@ -166,7 +178,7 @@ fun PreviewSimpleDialog(){
 
 @Preview
 @Composable
-fun PreviewXCloseDialog(){
+fun PreviewXCloseDialog() {
     PreviewTheme {
         AlertDialog(
             title = stringResource(R.string.urlOpen),

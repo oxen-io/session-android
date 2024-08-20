@@ -152,7 +152,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
         callback.onRemoveReaction(reaction.getBaseEmoji(), messageId, reaction.getTimestamp());
       });
 
-      this.avatar.update(reaction.getSender());
+      this.avatar.load(reaction.getSender());
 
       if (reaction.getSender().isLocalNumber()) {
         this.recipient.setText(R.string.you);
@@ -170,7 +170,6 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
     }
 
     void unbind() {
-      avatar.recycle();
     }
 
   }

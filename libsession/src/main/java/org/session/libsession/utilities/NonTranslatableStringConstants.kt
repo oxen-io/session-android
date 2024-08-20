@@ -1,7 +1,7 @@
 package org.session.libsession.utilities
 
 // Non-translatable strings for use with the UI
-object StringSubstitutionConstants {
+object NonTranslatableStringConstants {
     const val APP_NAME               = "Session"
     const val ARBISCAN               = "Arbiscan"
     const val ARBITRUM               = "Arbitrum"

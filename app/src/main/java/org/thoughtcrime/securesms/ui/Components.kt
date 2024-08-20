@@ -11,7 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -361,7 +360,7 @@ fun RowScope.Avatar(recipient: Recipient) {
     ) {
         AndroidView(
             factory = {
-                ProfilePictureView(it).apply { update(recipient) }
+                ProfilePictureView(it).apply { load(recipient) }
             },
             modifier = Modifier
                 .width(46.dp)

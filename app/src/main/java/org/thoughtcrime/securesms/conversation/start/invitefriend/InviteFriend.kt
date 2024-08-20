@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -19,7 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
-import org.thoughtcrime.securesms.ui.components.AppBar
+import org.thoughtcrime.securesms.ui.components.AppBarCloseIcon
+import org.thoughtcrime.securesms.ui.components.BackAppBar
 import org.thoughtcrime.securesms.ui.components.SlimOutlineButton
 import org.thoughtcrime.securesms.ui.components.SlimOutlineCopyButton
 import org.thoughtcrime.securesms.ui.components.border
@@ -29,6 +32,7 @@ import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun InviteFriend(
     accountId: String,
@@ -41,10 +45,11 @@ internal fun InviteFriend(
         LocalColors.current.backgroundSecondary,
         shape = MaterialTheme.shapes.small
     )) {
-        AppBar(
-            stringResource(R.string.sessionInviteAFriend),
+        BackAppBar(
+            title = stringResource(R.string.sessionInviteAFriend),
+            backgroundColor = Color.Transparent, // transparent to show the rounded shape of the container
             onBack = onBack,
-            onClose = onClose
+            actions = { AppBarCloseIcon(onClose = onClose) }
         )
         Column(
             modifier = Modifier.padding(horizontal = LocalDimensions.current.spacing)

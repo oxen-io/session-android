@@ -6,4 +6,3 @@ include ':libsession'
 include ':libsignal'
 include ':libsession-util'
 include ':content-descriptions' // ONLY AccessibilityID strings (non-translated) used to identify UI elements in automated testing
-include ':stickyheader'

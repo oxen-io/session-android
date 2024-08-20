@@ -44,6 +44,10 @@ import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
 import com.bumptech.glide.Glide
 
+/**
+ * Currently not used as part of our CI/Deployment processes !!!!
+ */
+
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class HomeActivityTests {
@@ -108,23 +112,22 @@ class HomeActivityTests {
         PermissionGranter.allowPermissionsIfNeeded(Manifest.permission.POST_NOTIFICATIONS)
     }
 
-// ACL - COMMENTED OUT BECAUSE REFERENCES DELETED FRAGMENT `EnterPublicKeyFragment.kt` - which itself used R.id.<stuff_which_no_longer_exists>
-//    private fun goToMyChat() {
-//        onView(withId(R.id.newConversationButton)).perform(ViewActions.click())
-//        onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
-//        // new chat
-//        onView(withId(R.id.publicKeyEditText)).perform(ViewActions.closeSoftKeyboard())
-//        onView(withId(R.id.copyButton)).perform(ViewActions.click())
-//        val context = InstrumentationRegistry.getInstrumentation().targetContext
-//        lateinit var copied: String
-//        InstrumentationRegistry.getInstrumentation().runOnMainSync {
-//            val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-//            copied = clipboardManager.primaryClip!!.getItemAt(0).text.toString()
-//        }
-//        onView(withId(R.id.publicKeyEditText)).perform(ViewActions.typeText(copied))
-//        onView(withId(R.id.publicKeyEditText)).perform(ViewActions.closeSoftKeyboard())
-//        onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
-//    }
+/*    private fun goToMyChat() {
+        onView(withId(R.id.newConversationButton)).perform(ViewActions.click())
+        onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
+        // new chat
+        onView(withId(R.id.publicKeyEditText)).perform(ViewActions.closeSoftKeyboard())
+        onView(withId(R.id.copyButton)).perform(ViewActions.click())
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        lateinit var copied: String
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {
+            val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            copied = clipboardManager.primaryClip!!.getItemAt(0).text.toString()
+        }
+        onView(withId(R.id.publicKeyEditText)).perform(ViewActions.typeText(copied))
+        onView(withId(R.id.publicKeyEditText)).perform(ViewActions.closeSoftKeyboard())
+        onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
+    }*/
 
     @Test
     fun testLaunches_dismiss_seedView() {
@@ -147,44 +150,39 @@ class HomeActivityTests {
         onView(withId(R.id.seedReminderView)).check(matches(not(isDisplayed())))
     }
 
-// ACL - COMMENTED OUT BECAUSE REFERENCES DELETED FRAGMENT `EnterPublicKeyFragment.kt` - which itself used R.id.<stuff_which_no_longer_exists>
-//    @Test
-//    fun testChat_withSelf() {
-//        setupLoggedInState()
-//        goToMyChat()
-//        TextSecurePreferences.setLinkPreviewsEnabled(context, true)
-//        sendMessage("howdy")
-//        sendMessage("test")
-//        // tests url rewriter doesn't crash
-//        sendMessage("https://www.getsession.org?random_query_parameter=testtesttesttesttesttesttesttest&other_query_parameter=testtesttesttesttesttesttesttest")
-//        sendMessage("https://www.ámazon.com")
-//    }
+/*    @Test
+    fun testChat_withSelf() {
+        setupLoggedInState()
+        goToMyChat()
+        TextSecurePreferences.setLinkPreviewsEnabled(context, true)
+        sendMessage("howdy")
+        sendMessage("test")
+        // tests url rewriter doesn't crash
+        sendMessage("https://www.getsession.org?random_query_parameter=testtesttesttesttesttesttesttest&other_query_parameter=testtesttesttesttesttesttesttest")
+        sendMessage("https://www.ámazon.com")
+    }
 
-// ACL - COMMENTED OUT BECAUSE REFERENCES DELETED FRAGMENT `EnterPublicKeyFragment.kt` - which itself used R.id.<stuff_which_no_longer_exists>
-//    @Test
-//    fun testChat_displaysCorrectUrl() {
-//        setupLoggedInState()
-//        goToMyChat()
-//        TextSecurePreferences.setLinkPreviewsEnabled(InstrumentationRegistry.getInstrumentation().targetContext, true)
-//        // given the link url text
-//        val url = "https://www.ámazon.com"
-//        sendMessage(url, LinkPreview(url, "amazon", Optional.absent()))
-//
-//        // when the URL span is clicked
-//        onView(withSubstring(url)).perform(ViewActions.click())
-//
-//        // then the URL dialog should be displayed with a known punycode url
-//        val amazonPuny = "https://www.xn--mazon-wqa.com/"
-//
-//        // Substitute the URL into our string
-//        val c = InstrumentationRegistry.getInstrumentation().targetContext
-//        val dialogPromptText = Phrase.from(c, R.string.urlOpenDescription)
-//            .put(URL_KEY, amazonPuny)
-//            .format().toString()
-//
-//        onView(isRoot()).perform(waitFor(1000)) // no other way for this to work apparently
-//        onView(withText(dialogPromptText)).check(matches(isDisplayed()))
-//    }
+    @Test
+    fun testChat_displaysCorrectUrl() {
+        setupLoggedInState()
+        goToMyChat()
+        TextSecurePreferences.setLinkPreviewsEnabled(InstrumentationRegistry.getInstrumentation().targetContext, true)
+        // given the link url text
+        val url = "https://www.ámazon.com"
+        sendMessage(url, LinkPreview(url, "amazon", Optional.absent()))
+
+        // when the URL span is clicked
+        onView(withSubstring(url)).perform(ViewActions.click())
+
+        // then the URL dialog should be displayed with a known punycode url
+        val amazonPuny = "https://www.xn--mazon-wqa.com/"
+
+        val dialogPromptText = InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.dialog_open_url_explanation, amazonPuny)
+
+        onView(isRoot()).perform(waitFor(1000)) // no other way for this to work apparently
+        onView(withText(dialogPromptText)).check(matches(isDisplayed()))
+    }*/
+
 
     /**
      * Perform action of waiting for a specific time.

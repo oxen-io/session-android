@@ -81,9 +81,8 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
                     Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                         .putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .takeIf { IntentUtils.isResolvable(requireContext(), it) }.let {
-                        startActivity(it)
-                    }
+                        .takeIf { IntentUtils.isResolvable(requireContext(), it) }
+                        ?.let { startActivity(it) }
                 }
                 button(R.string.dismiss)
             }
