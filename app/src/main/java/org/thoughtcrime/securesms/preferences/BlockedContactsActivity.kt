@@ -27,7 +27,7 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
     val adapter: BlockedContactsAdapter by lazy { BlockedContactsAdapter(viewModel) }
 
     // Method to show a sequence of toasts one after the other
-    fun showToastSequence(toastStrings: List<String>, toastLengthSetting: Int,context: Context) {
+    private fun showToastSequence(toastStrings: List<String>, toastLengthSetting: Int,context: Context) {
         val handler = Handler(Looper.getMainLooper())
 
         val delayStepMilliseconds = when (toastLengthSetting) {
@@ -46,17 +46,11 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
         }
     }
 
-    fun unblock() {
+    private fun unblock() {
         showSessionDialog {
             title(viewModel.getTitle(this@BlockedContactsActivity))
 
-
             val contactsToUnblock = viewModel.state.selectedItems
-
-            // Get the names of each person to unblock for later user in the toast(s)
-            // Note: We must do this before `viewModel.unblock`
-            //val contactsToUnblockNames = contactsToUnblock.map { it.name }
-
             val numContactsToUnblock = contactsToUnblock.size
             val txt = when (numContactsToUnblock) {
                 // Note: We do not have to handle 0 because if no contacts are chosen then the unblock button is deactivated
@@ -74,7 +68,6 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
                         .format().toString()
                 }
             }
-
             text(txt)
 
             button(R.string.theContinue) {
@@ -108,6 +101,5 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
             }
 
         binding.unblockButton.setOnClickListener { unblock() }
-
     }
 }
