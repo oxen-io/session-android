@@ -38,6 +38,17 @@
         <item quantity="other">Data not deleted by %1$d Service Nodes. Service Node IDs: %2$s.</item>
     </plurals>
 
+    <!--
+    Need a plural for searches I guess - see: https://discord.com/channels/408081923835953153/1274899391207047269
+    OLD
+        • One: {count} of {total_count} match
+        • Other: {count} of {total_count} matches
+
+    NEW
+        • One: {found_count} of {count} match
+        • Other: {found_count} of {count} matches
+   -->
+
     <!-- ========== STRAGGLERS SECTION ========== -->
 
     <!-- USED as title on media picker when you go to send an image - this can be either to a specific
