@@ -81,7 +81,7 @@ class ConversationActionBarView @JvmOverloads constructor(
     }
 
     fun update(recipient: Recipient, openGroup: OpenGroup? = null, config: ExpirationConfiguration? = null) {
-        binding.profilePictureView.load(recipient)
+        binding.profilePictureView.update(recipient)
         binding.conversationTitleView.text = recipient.takeUnless { it.isLocalNumber }?.toShortString() ?: context.getString(R.string.note_to_self)
         updateSubtitle(recipient, openGroup, config)
 

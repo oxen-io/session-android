@@ -93,7 +93,7 @@ fun ContentView.bindModel(query: String?, model: GroupConversation) {
     binding.searchResultSubtitle.isVisible = model.groupRecord.isClosedGroup
     binding.searchResultTimestamp.isVisible = false
     val threadRecipient = Recipient.from(binding.root.context, Address.fromSerialized(model.groupRecord.encodedId), false)
-    binding.searchResultProfilePicture.load(threadRecipient)
+    binding.searchResultProfilePicture.update(threadRecipient)
     val nameString = model.groupRecord.title
     binding.searchResultTitle.text = getHighlight(query, nameString)
 
@@ -111,7 +111,7 @@ fun ContentView.bindModel(query: String?, model: ContactModel) = binding.run {
     searchResultTimestamp.isVisible = false
     searchResultSubtitle.text = null
     val recipient = Recipient.from(root.context, Address.fromSerialized(model.contact.accountID), false)
-    searchResultProfilePicture.load(recipient)
+    searchResultProfilePicture.update(recipient)
     val nameString = if (model.isSelf) root.context.getString(R.string.note_to_self)
         else model.contact.getSearchName()
     searchResultTitle.text = getHighlight(query, nameString)
@@ -121,7 +121,7 @@ fun ContentView.bindModel(model: SavedMessages) {
     binding.searchResultSubtitle.isVisible = false
     binding.searchResultTimestamp.isVisible = false
     binding.searchResultTitle.setText(R.string.note_to_self)
-    binding.searchResultProfilePicture.load(Address.fromSerialized(model.currentUserPublicKey))
+    binding.searchResultProfilePicture.update(Address.fromSerialized(model.currentUserPublicKey))
     binding.searchResultProfilePicture.isVisible = true
 }
 
@@ -134,7 +134,7 @@ fun ContentView.bindModel(query: String?, model: Message) = binding.apply {
 //        unreadCountTextView.text = model.unread.toString()
 //    }
     searchResultTimestamp.text = DateUtils.getDisplayFormattedTimeSpanString(root.context, Locale.getDefault(), model.messageResult.sentTimestampMs)
-    searchResultProfilePicture.load(model.messageResult.conversationRecipient)
+    searchResultProfilePicture.update(model.messageResult.conversationRecipient)
     val textSpannable = SpannableStringBuilder()
     if (model.messageResult.conversationRecipient != model.messageResult.messageRecipient) {
         // group chat, bind

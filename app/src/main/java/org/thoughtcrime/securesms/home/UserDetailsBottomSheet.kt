@@ -55,7 +55,8 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
         val recipient = Recipient.from(requireContext(), Address.fromSerialized(publicKey), false)
         val threadRecipient = threadDb.getRecipientForThreadId(threadID) ?: return dismiss()
         with(binding) {
-            profilePictureView.load(recipient)
+            profilePictureView.publicKey = publicKey
+            profilePictureView.update(recipient)
             nameTextViewContainer.visibility = View.VISIBLE
             nameTextViewContainer.setOnClickListener {
                 if (recipient.isOpenGroupInboxRecipient || recipient.isOpenGroupOutboxRecipient) return@setOnClickListener

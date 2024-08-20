@@ -168,7 +168,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         super.onStart()
 
         binding.run {
-            loadProfilePicture(profilePictureView)
+            setupProfilePictureView(profilePictureView)
             profilePictureView.setOnClickListener { showEditProfilePictureUI() }
             ctnGroupNameSection.setOnClickListener { startActionMode(DisplayNameEditActionModeCallback()) }
             btnGroupNameDisplay.text = getDisplayName()
@@ -185,9 +185,12 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private fun getDisplayName(): String =
         TextSecurePreferences.getProfileName(this) ?: truncateIdForDisplay(hexEncodedPublicKey)
 
-    private fun loadProfilePicture(view: ProfilePictureView) {
-        // Always reload the profile picture as it can change on this page.
-        view.load(Address.fromSerialized(hexEncodedPublicKey))
+    private fun setupProfilePictureView(view: ProfilePictureView) {
+        view.apply {
+            publicKey = hexEncodedPublicKey
+            displayName = getDisplayName()
+            update()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -328,7 +331,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
 
-            loadProfilePicture(binding.profilePictureView)
+            // Update our visuals
+            binding.profilePictureView.recycle()
+            binding.profilePictureView.update()
         }
 
         // If the sync failed then inform the user
@@ -403,7 +408,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             cancelButton()
         }.apply {
             val profilePic = findViewById<ProfilePictureView>(R.id.profile_picture_view)
-                ?.also(::loadProfilePicture)
+                ?.also(::setupProfilePictureView)
 
             val pictureIcon = findViewById<View>(R.id.ic_pictures)
 
