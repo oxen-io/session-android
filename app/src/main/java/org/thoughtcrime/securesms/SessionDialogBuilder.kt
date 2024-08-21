@@ -22,6 +22,7 @@ import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.Space
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
@@ -202,8 +203,6 @@ public fun Context.copyURLToClipboard(url: String) {
 fun Context.showOpenUrlDialog(url: String, showCloseButton: Boolean = true): AlertDialog {
 
     return SessionDialogBuilder(this).apply {
-
-
         // If we're not showing a close button we can just use a simple title..
         if (!showCloseButton) {
             title(R.string.urlOpen)
@@ -311,7 +310,10 @@ fun Context.showOpenUrlDialog(url: String, showCloseButton: Boolean = true): Ale
         // Note: The text and contentDescription are set on the `copyUrlButton` by the function.
         contentView.addView(scrollView)
         dangerButton(R.string.open, R.string.AccessibilityId_urlOpenBrowser) { openUrl(url) }
-        copyUrlButton { context.copyURLToClipboard(url) }
+        copyUrlButton {
+            context.copyURLToClipboard(url)
+            Toast.makeText(context, R.string.copied, Toast.LENGTH_SHORT).show()
+        }
     }.show()
 }
 
