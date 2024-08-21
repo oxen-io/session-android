@@ -11,7 +11,7 @@ class DeleteMediaPreviewDialog {
                 iconAttribute(R.attr.dialog_alert_icon)
                 title(R.string.deleteMessage)
                 text(R.string.deleteMessageDescriptionEveryone)
-                button(R.string.delete) { doDelete.run() }
+                dangerButton(R.string.delete) { doDelete.run() }
                 cancelButton()
             }
         }

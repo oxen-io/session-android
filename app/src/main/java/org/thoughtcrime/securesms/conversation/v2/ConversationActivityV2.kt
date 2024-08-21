@@ -2119,9 +2119,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         else // Finally, if this is a closed group and you are deleting someone else's message(s) then we can only delete locally.
         {
             showSessionDialog {
-                title(resources.getString(R.string.deleteMessage))
-                text(resources.getString(R.string.deleteMessageDescriptionEveryone))
-                button(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
+                val titleTxtId = if (messages.size == 1) { R.string.deleteMessage } else { R.string.deleteMessages }
+                title(resources.getString(titleTxtId))
+                text(resources.getString(R.string.deleteMessageDescriptionDevice))
+                dangerButton(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
                 cancelButton(::endActionMode)
             }
         }
