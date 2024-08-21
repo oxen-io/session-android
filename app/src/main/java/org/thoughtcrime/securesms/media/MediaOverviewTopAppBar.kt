@@ -16,6 +16,7 @@ import org.thoughtcrime.securesms.ui.theme.LocalColors
 @OptIn(ExperimentalMaterial3Api::class)
 fun MediaOverviewTopAppBar(
     selectionMode: Boolean,
+    numSelected: Int,
     title: String,
     onBackClicked: () -> Unit,
     onSaveClicked: () -> Unit,
@@ -25,7 +26,8 @@ fun MediaOverviewTopAppBar(
 ) {
     ActionAppBar(
         title = title,
-        navigationIcon = {AppBarBackIcon(onBack = onBackClicked)},
+        actionModeTitle = numSelected.toString(),
+        navigationIcon = { AppBarBackIcon(onBack = onBackClicked) },
         scrollBehavior = appBarScrollBehavior,
         actionMode = selectionMode,
         actionModeActions = {

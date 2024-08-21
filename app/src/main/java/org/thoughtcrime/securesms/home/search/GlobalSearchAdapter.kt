@@ -11,6 +11,7 @@ import network.loki.messenger.databinding.ViewGlobalSearchHeaderBinding
 import network.loki.messenger.databinding.ViewGlobalSearchResultBinding
 import network.loki.messenger.databinding.ViewGlobalSearchSubheaderBinding
 import org.session.libsession.utilities.GroupRecord
+import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.search.model.MessageResult
 import org.thoughtcrime.securesms.ui.GetString
 import java.security.InvalidParameterException
@@ -98,6 +99,12 @@ class GlobalSearchAdapter(private val modelCallback: (Model)->Unit): RecyclerVie
         }
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        if (holder is ContentView) {
+            holder.binding.searchResultProfilePicture.recycle()
+        }
+    }
+
     class ContentView(view: View, private val modelCallback: (Model) -> Unit) : RecyclerView.ViewHolder(view) {
 
         val binding = ViewGlobalSearchResultBinding.bind(view)
@@ -107,6 +114,7 @@ class GlobalSearchAdapter(private val modelCallback: (Model)->Unit): RecyclerVie
         }
 
         fun bind(query: String, model: Model) {
+            binding.searchResultProfilePicture.recycle()
             when (model) {
                 is Model.GroupConversation -> bindModel(query, model)
                 is Model.Contact -> bindModel(query, model)

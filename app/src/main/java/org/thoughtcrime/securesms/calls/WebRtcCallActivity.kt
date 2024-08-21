@@ -32,6 +32,7 @@ import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.truncateIdForDisplay
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -197,8 +198,13 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         clipFloatingInsets()
 
         // set up the user avatar
-        TextSecurePreferences.getLocalNumber(this)?.let {
-            binding.userAvatar.load(Address.fromSerialized(it))
+        TextSecurePreferences.getLocalNumber(this)?.let{
+            val username = TextSecurePreferences.getProfileName(this) ?: truncateIdForDisplay(it)
+            binding.userAvatar.apply {
+                publicKey = it
+                displayName = username
+                update()
+            }
         }
 
 
@@ -335,6 +341,8 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
 
             launch {
                 viewModel.recipient.collect { latestRecipient ->
+                    binding.contactAvatar.recycle()
+
                     if (latestRecipient.recipient != null) {
                         val contactPublicKey = latestRecipient.recipient.address.serialize()
                         val contactDisplayName = getUserDisplayName(contactPublicKey)
@@ -342,7 +350,11 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                         binding.remoteRecipientName.text = contactDisplayName
 
                         // sort out the contact's avatar
-                        binding.contactAvatar.load(latestRecipient.recipient)
+                        binding.contactAvatar.apply {
+                            publicKey = contactPublicKey
+                            displayName = contactDisplayName
+                            update()
+                        }
                     }
                 }
             }

@@ -2,26 +2,27 @@ package org.thoughtcrime.securesms.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
@@ -37,7 +38,10 @@ fun AppBarPreview(
         Column() {
             BasicAppBar(title = "Basic App Bar")
             Divider()
-            BasicAppBar(title = "Basic App Bar With Color", backgroundColor = LocalColors.current.backgroundSecondary)
+            BasicAppBar(
+                title = "Basic App Bar With Color",
+                backgroundColor = LocalColors.current.backgroundSecondary
+            )
             Divider()
             BackAppBar(title = "Back Bar", onBack = {})
             Divider()
@@ -69,7 +73,7 @@ fun BasicAppBar(
     backgroundColor: Color = LocalColors.current.background,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-){
+) {
     CenterAlignedTopAppBar(
         modifier = modifier,
         title = {
@@ -94,7 +98,7 @@ fun BackAppBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
     backgroundColor: Color = LocalColors.current.background,
     actions: @Composable RowScope.() -> Unit = {},
-){
+) {
     BasicAppBar(
         modifier = modifier,
         title = title,
@@ -115,6 +119,7 @@ fun ActionAppBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
     backgroundColor: Color = LocalColors.current.background,
     actionMode: Boolean = false,
+    actionModeTitle: String = "",
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     actionModeActions: @Composable (RowScope.() -> Unit) = {},
@@ -126,7 +131,19 @@ fun ActionAppBar(
                 AppBarText(title = title)
             }
         },
-        navigationIcon =navigationIcon,
+        navigationIcon = {
+            if (actionMode) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.xxxsSpacing),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    navigationIcon()
+                    AppBarText(title = actionModeTitle)
+                }
+            } else {
+                navigationIcon()
+            }
+        },
         scrollBehavior = scrollBehavior,
         colors = appBarColors(backgroundColor),
         actions = {

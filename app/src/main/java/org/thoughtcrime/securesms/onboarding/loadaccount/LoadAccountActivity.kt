@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
@@ -14,7 +15,6 @@ import org.thoughtcrime.securesms.onboarding.manager.LoadAccountManager
 import org.thoughtcrime.securesms.onboarding.messagenotifications.MessageNotificationsActivity
 import org.thoughtcrime.securesms.ui.setComposeContent
 import org.thoughtcrime.securesms.util.start
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoadAccountActivity : BaseActionBarActivity() {

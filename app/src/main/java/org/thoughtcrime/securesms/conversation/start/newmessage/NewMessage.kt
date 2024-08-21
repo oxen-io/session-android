@@ -48,7 +48,7 @@ import org.thoughtcrime.securesms.ui.LoadingArcOr
 import org.thoughtcrime.securesms.ui.components.AppBarCloseIcon
 import org.thoughtcrime.securesms.ui.components.BackAppBar
 import org.thoughtcrime.securesms.ui.components.BorderlessButtonWithIcon
-import org.thoughtcrime.securesms.ui.components.MaybeScanQrCode
+import org.thoughtcrime.securesms.ui.components.QRScannerScreen
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
 import org.thoughtcrime.securesms.ui.components.SessionTabRow
@@ -89,7 +89,7 @@ internal fun NewMessage(
         HorizontalPager(pagerState) {
             when (TITLES[it]) {
                 R.string.accountIdEnter -> EnterAccountId(state, callbacks, onHelp)
-                R.string.qrScan -> MaybeScanQrCode(qrErrors, onScan = callbacks::onScanQrCode)
+                R.string.qrScan -> QRScannerScreen(qrErrors, onScan = callbacks::onScanQrCode)
             }
         }
     }

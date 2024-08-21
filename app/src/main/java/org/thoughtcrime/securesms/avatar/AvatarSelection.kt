@@ -18,7 +18,6 @@ import org.session.libsignal.utilities.ExternalStorageUtil.getImageDir
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.NoExternalStorageException
 import org.thoughtcrime.securesms.util.FileProviderUtil
-import org.thoughtcrime.securesms.util.IntentUtils
 import java.io.File
 import java.io.IOException
 import java.util.LinkedList
@@ -104,13 +103,8 @@ class AvatarSelection(
         includeClear: Boolean
     ): Intent {
         val extraIntents: MutableList<Intent> = LinkedList()
-        var galleryIntent = Intent(Intent.ACTION_PICK)
-        galleryIntent.setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*")
-
-        if (!IntentUtils.isResolvable(context, galleryIntent)) {
-            galleryIntent = Intent(Intent.ACTION_GET_CONTENT)
-            galleryIntent.setType("image/*")
-        }
+        val galleryIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        galleryIntent.setType("image/*")
 
         if (tempCaptureFile != null) {
             val uri = FileProviderUtil.getUriFor(context, tempCaptureFile)

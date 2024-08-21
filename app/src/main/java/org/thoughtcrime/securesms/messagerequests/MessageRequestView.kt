@@ -49,11 +49,12 @@ class MessageRequestView : LinearLayout {
         binding.snippetTextView.text = snippet
 
         post {
-            binding.profilePictureView.load(thread.recipient)
+            binding.profilePictureView.update(thread.recipient)
         }
     }
 
     fun recycle() {
+        binding.profilePictureView.recycle()
     }
 
     private fun getUserDisplayName(recipient: Recipient): String? {

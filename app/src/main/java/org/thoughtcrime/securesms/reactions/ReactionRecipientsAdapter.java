@@ -14,6 +14,7 @@ import org.session.libsession.messaging.utilities.AccountId;
 import org.thoughtcrime.securesms.components.ProfilePictureView;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
+import com.bumptech.glide.Glide;
 
 final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecipientsAdapter.ViewHolder> {
 
@@ -152,7 +153,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
         callback.onRemoveReaction(reaction.getBaseEmoji(), messageId, reaction.getTimestamp());
       });
 
-      this.avatar.load(reaction.getSender());
+      this.avatar.update(reaction.getSender());
 
       if (reaction.getSender().isLocalNumber()) {
         this.recipient.setText(R.string.you);
@@ -170,6 +171,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
     }
 
     void unbind() {
+      avatar.recycle();
     }
 
   }

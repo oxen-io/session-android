@@ -6,6 +6,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
+import org.session.libsignal.utilities.Log
 
 object QRCodeUtilities {
 
@@ -34,5 +35,8 @@ object QRCodeUtilities {
                 }
             }
         }
-    }.getOrNull()
+    }.getOrElse {
+        Log.e("QRCodeUtilities", "Failed to generate QR Code", it)
+        null
+    }
 }

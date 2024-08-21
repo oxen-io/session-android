@@ -13,14 +13,14 @@ import org.session.libsession.avatars.ContactPhoto;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ContactPhotoFetcher implements DataFetcher<InputStream> {
+class ContactPhotoFetcher implements DataFetcher<InputStream> {
 
   private final Context   context;
   private final ContactPhoto contactPhoto;
 
   private InputStream inputStream;
 
-  public ContactPhotoFetcher(@NonNull Context context, @NonNull ContactPhoto contactPhoto) {
+  ContactPhotoFetcher(@NonNull Context context, @NonNull ContactPhoto contactPhoto) {
     this.context      = context.getApplicationContext();
     this.contactPhoto = contactPhoto;
   }

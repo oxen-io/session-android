@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -127,10 +128,11 @@ class ConversationView : LinearLayout {
             thread.isRead -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_filled_circle_check)
             else -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_circle_check)
         }
-        binding.profilePictureView.load(thread.recipient)
+        binding.profilePictureView.update(thread.recipient)
     }
 
     fun recycle() {
+        binding.profilePictureView.recycle()
     }
 
     private fun getTitle(recipient: Recipient): String? = when {
