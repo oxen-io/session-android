@@ -70,7 +70,7 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
             }
             text(txt)
 
-            button(R.string.theContinue) {
+            dangerButton(R.string.blockUnblock, R.string.AccessibilityId_unblockConfirm) {
                 // Show individual toasts for each unblocked user (we don't have suitable strings to do it as a single toast)
                 val contactsToUnblockNames = contactsToUnblock.map { it.name }
                 val toastStrings = mutableListOf<String>()

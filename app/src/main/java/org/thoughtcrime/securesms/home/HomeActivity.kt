@@ -617,7 +617,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             text(Phrase.from(context, R.string.blockDescription)
                 .put(NAME_KEY, thread.recipient.name)
                 .format())
-            button(R.string.block) {
+            dangerButton(R.string.block, R.string.AccessibilityId_blockConfirm) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     storage.setBlocked(listOf(thread.recipient), true)
 
@@ -637,7 +637,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         showSessionDialog {
             title(R.string.blockUnblock)
             text(Phrase.from(context, R.string.blockUnblockName).put(NAME_KEY, thread.recipient.name).format())
-            button(R.string.blockUnblock) {
+            dangerButton(R.string.blockUnblock, R.string.AccessibilityId_unblockConfirm) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     storage.setBlocked(listOf(thread.recipient), false)
                     withContext(Dispatchers.Main) {

@@ -89,7 +89,9 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
             text(Phrase.from(context, R.string.blockDescription)
                 .put(NAME_KEY, thread.recipient.name)
                 .format())
-            button(R.string.block) { doBlock() }
+            dangerButton(R.string.block, R.string.AccessibilityId_blockConfirm) {
+                doBlock()
+            }
             button(R.string.no)
         }
     }
