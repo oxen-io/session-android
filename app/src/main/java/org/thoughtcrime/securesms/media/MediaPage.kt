@@ -153,12 +153,15 @@ private fun ThumbnailRow(
                             it.diskCacheStrategy(DiskCacheStrategy.NONE)
                         }
                     } else if (item.hasPlaceholder) {
-                        Image(
-                            painter = painterResource(item.placeholder(LocalContext.current)),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Inside
-                        )
+                        val placeholder = item.placeholder(LocalContext.current)
+                        if (placeholder != 0) {
+                            Image(
+                                painter = painterResource(placeholder),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Inside
+                            )
+                        }
                     }
 
                     when {
