@@ -32,7 +32,7 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
 
         val delayStepMilliseconds = when (toastLengthSetting) {
             Toast.LENGTH_SHORT -> 2000L
-            Toast.LENGTH_LONG -> 3500L
+            Toast.LENGTH_LONG  -> 3500L
             else -> {
                 Log.w("BlockContactsActivity", "Invalid toast length setting - using Toast.LENGTH_SHORT")
                 2000L

@@ -56,7 +56,27 @@ class SessionDialogBuilder(val context: Context) {
         .apply { orientation = VERTICAL }
         .also(dialogBuilder::setCustomTitle)
 
-    val contentView = LinearLayout(context).apply { orientation = VERTICAL }
+    // Maximum height of the dialog. This comes into play in the Open URL dialog where we
+    // might have a a very, very long URL (which we provide a ScrollView for) - but without
+    // limiting the height of the dialog, the WRAP_CONTENT part can allow the dialog to be
+    // super tall!
+    // Note: I eye-balled this DP value for the max dialog height to make it match the
+    // height of regular not-scrollable dialogs.
+    val maxHeightInDp = 137
+    val scale = context.resources.displayMetrics.density
+    val maxHeightInPx = (maxHeightInDp * scale + 0.5f).toInt()
+
+    val contentView = LinearLayout(context).apply {
+        orientation = VERTICAL
+
+        // Limit the max height of the dialog to the above value
+        viewTreeObserver.addOnGlobalLayoutListener {
+            if (height > maxHeightInPx) {
+                layoutParams.height = maxHeightInPx
+                requestLayout()
+            }
+        }
+    }
 
     private val buttonLayout = LinearLayout(context)
 
@@ -180,7 +200,10 @@ public fun Context.copyURLToClipboard(url: String) {
 
 // Method to show a dialog used to open or copy a URL
 fun Context.showOpenUrlDialog(url: String, showCloseButton: Boolean = true): AlertDialog {
+
     return SessionDialogBuilder(this).apply {
+
+
         // If we're not showing a close button we can just use a simple title..
         if (!showCloseButton) {
             title(R.string.urlOpen)
