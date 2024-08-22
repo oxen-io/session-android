@@ -1326,7 +1326,6 @@ NOTE: Strings with blank lines have manually been replaced with '\n\n' - this wi
     <string name="notificationsFastMode">Fast Mode</string>
     <string name="notificationsFastModeDescriptionAndroid">You\'ll be notified of new messages reliably and immediately using Google\'s notification Servers.</string>
     <string name="notificationsFastModeDescriptionIos">You\'ll be notified of new messages reliably and immediately using Apple\'s notification Servers.</string>
-    <string name="notificationsGoToAndroidSettings">Go to Android notification settings</string>
     <string name="notificationsGoToDevice">Go to device notification settings</string>
     <string name="notificationsIosGroup">{name} to {conversation_name}</string>
     <string name="notificationsIosRestart">You may have received messages while your {device} was restarting.</string>
@@ -1556,5 +1555,9 @@ NOTE: Strings with blank lines have manually been replaced with '\n\n' - this wi
 
     <!-- Missing from CrowdIn circa 2024-08-22 -->
     <string name="messageStatusUploading">Uploading</string>
+
+    <!-- We need a non-translatable app_name string because we cannot get the NonTranslatableStringConstants.APP_NAME
+    value for use in the AndroidManifest to name the app! -->
+    <string name="app_name" translatable="false">Session</string>
 
 </resources>

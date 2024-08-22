@@ -409,6 +409,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         showSessionDialog {
             title(R.string.profileDisplayPictureSet)
             view(R.layout.dialog_change_avatar)
+
+            // Note: This is the only instance in a dialog where the "Save" button is not a `dangerButton`
             button(R.string.save) { startAvatarSelection() }
 
             if (prefs.getProfileAvatarId() != 0) {

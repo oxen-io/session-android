@@ -73,7 +73,7 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         fun saveAttachment(context: Context, attachment: Attachment): String? {
             val contentType = checkNotNull(MediaUtil.getCorrectedMimeType(attachment.contentType))
             var fileName = attachment.fileName
-            if (fileName == null) fileName = generateOutputFileName(contentType, attachment.date)
+            if (fileName.isNullOrEmpty()) fileName = generateOutputFileName(contentType, attachment.date)
             fileName = sanitizeOutputFileName(fileName)
             val outputUri: Uri = getMediaStoreContentUriForType(contentType)
             val mediaUri = createOutputUri(context, outputUri, contentType, fileName)
@@ -132,6 +132,17 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         }
 
         private fun createOutputUri(context: Context, outputUri: Uri, contentType: String, fileName: String): Uri? {
+
+            if (fileName == null)
+            {
+                Log.w("ACL", "Filename is null - wtf!")
+            }
+
+            if (fileName != null && fileName.isEmpty())
+            {
+                Log.w("ACL", "Filename is empty - wtf!")
+            }
+
             val fileParts: Array<String> = getFileNameParts(fileName)
             val base = fileParts[0]
             val extension = fileParts[1]
