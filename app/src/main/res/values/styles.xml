@@ -4,13 +4,18 @@
     <!-- Session -->
     <style name="Widget.Session.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
         <item name="android:background">?colorPrimary</item>
+        <item name="android:elevation">1dp</item>
         <item name="elevation">1dp</item>
         <item name="titleTextStyle">@style/TextAppearance.Session.DarkActionBar.TitleTextStyle</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_left</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_left</item>
     </style>
 
     <style name="Widget.Session.ActionBar.Flat">
         <item name="android:elevation">0dp</item>
         <item name="elevation">0dp</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_left</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_left</item>
     </style>
 
     <style name="TextAppearance.Session.DarkActionBar.TitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">

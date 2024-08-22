@@ -165,7 +165,7 @@ fun AppBarText(title: String) {
 fun AppBarBackIcon(onBack: () -> Unit) {
     IconButton(onClick = onBack) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_baseline_arrow_back_24),
+            painter = painterResource(id = R.drawable.ic_arrow_left),
             contentDescription = stringResource(R.string.back)
         )
     }

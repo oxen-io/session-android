@@ -18,7 +18,10 @@
         android:layout_marginBottom="32dp"
         android:layout_marginEnd="32dp"
         android:layout_gravity="bottom|end"
-        android:padding="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingEnd="4dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:background="@drawable/media_count_button_background"
@@ -37,15 +40,15 @@
             android:paddingBottom="2dp"
             android:gravity="center"
             android:background="@drawable/media_count_number_background"
-            android:textColor="?colorAccent"
+            android:textColor="?colorPrimary"
             android:textSize="18sp"
             tools:text="3" />
 
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginStart="2dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="@dimen/medium_spacing"
             android:src="@drawable/ic_arrow_right"
             app:tint="@color/core_white"/>
 
@@ -60,7 +63,7 @@
         android:layout_gravity="bottom|start"
         android:padding="12dp"
         android:src="@drawable/ic_camera_filled_24"
-        app:tint="@color/core_grey_60"
+        app:tint="?android:textColorPrimary"
         android:background="@drawable/media_camera_button_background"
         android:elevation="4dp"
         android:visibility="gone"

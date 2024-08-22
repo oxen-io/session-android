@@ -235,7 +235,7 @@ fun CellButtons(
             }
             LargeItemButton(
                 R.string.delete,
-                R.drawable.ic_message_details__trash,
+                R.drawable.ic_delete,
                 colors = dangerButtonColors(),
                 onClick = onDelete
             )

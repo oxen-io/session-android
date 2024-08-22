@@ -53,7 +53,7 @@
         android:elevation="8dp"
         android:layout_marginLeft="@dimen/small_spacing"
         android:layout_marginTop="@dimen/small_spacing"
-        android:src="@drawable/ic_baseline_arrow_back_24"
+        android:src="@drawable/ic_arrow_left"
         android:scaleType="centerInside"
         android:layout_width="@dimen/medium_profile_picture_size"
         android:layout_height="@dimen/medium_profile_picture_size"

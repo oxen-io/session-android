@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:alpha="0.6"
         android:visibility="gone"
-        android:src="@drawable/ic_baseline_keyboard_arrow_left_24dp"
+        android:src="@drawable/ic_arrow_left"
         app:tint="?android:textColorPrimary"
         tools:visibility="visible" />
 
@@ -48,7 +48,7 @@
         android:layout_gravity="center"
         android:alpha="0.6"
         android:visibility="gone"
-        android:src="@drawable/ic_baseline_keyboard_arrow_right_24dp"
+        android:src="@drawable/ic_arrow_right"
         app:tint="?android:textColorPrimary"
         tools:visibility="visible" />
 

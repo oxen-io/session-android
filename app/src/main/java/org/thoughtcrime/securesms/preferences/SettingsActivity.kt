@@ -286,6 +286,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 Log.w(TAG, "Cannot update display name - missing user details from configFactory.")
             } else {
                 user.setName(displayName)
+                // sync remote config
+                ConfigurationMessageUtilities.syncConfigurationIfNeeded(this)
                 binding.btnGroupNameDisplay.text = displayName
                 updateWasSuccessful = true
             }
@@ -560,9 +562,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                         Modifier.contentDescription(R.string.AccessibilityId_help)
                     ) { show<HelpSettingsActivity>() }
                     Divider()
-                    LargeItemButton(
-                        R.string.sessionClearData,
-                        R.drawable.ic_message_details__trash,
+
+                    LargeItemButton(R.string.sessionClearData,
+                        R.drawable.ic_delete,
                         Modifier.contentDescription(R.string.AccessibilityId_sessionClearData),
                         dangerButtonColors()
                     ) { ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog") }
