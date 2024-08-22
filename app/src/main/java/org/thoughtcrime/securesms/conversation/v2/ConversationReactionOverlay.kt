@@ -539,7 +539,7 @@ class ConversationReactionOverlay : FrameLayout {
         }
         // Copy Account ID
         if (recipient.isGroupRecipient && !recipient.isCommunityRecipient && message.recipient.address.toString() != userPublicKey) {
-            items += ActionItem(R.attr.menu_copy_icon, R.string.accountIdCopy, { handleActionItemClicked(Action.COPY_ACCOUNT_ID) })
+            items += ActionItem(R.attr.menu_copy_icon, R.string.accountIDCopy, { handleActionItemClicked(Action.COPY_ACCOUNT_ID) })
         }
         // Delete message
         if (userCanDeleteSelectedItems(context, message, openGroup, userPublicKey, blindedPublicKey)) {

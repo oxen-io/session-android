@@ -8,9 +8,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.lang.ref.WeakReference
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.task.ProgressDialogAsyncTask
@@ -18,13 +23,6 @@ import org.session.libsignal.utilities.ExternalStorageUtil
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.showSessionDialog
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.lang.ref.WeakReference
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * Saves attachment files to an external storage using [MediaStore] API.
@@ -47,22 +45,28 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         @JvmStatic
         @JvmOverloads
         fun showWarningDialog(context: Context, count: Int = 1, onAcceptListener: () -> Unit = {}) {
-            context.showSessionDialog {
-                title(R.string.warning)
-                iconAttribute(R.attr.dialog_alert_icon)
-                text(context.getString(R.string.attachmentsWarning))
-                dangerButton(R.string.save) {
-                    // On Android API 30+ there is no WRITE_EXTERNAL_STORAGE permission to save files so we can't
-                    // check against that to show a one-time warning that saved attachments can be accessed by other
-                    // apps - so on such devices we'll use a saved boolean preference.
-                    val haveWarned = TextSecurePreferences.getHaveWarnedUserAboutSavingAttachments(context)
-                    if (!haveWarned && Build.VERSION.SDK_INT >= 30) {
+            // If we've already warned the user that saved attachments can be accessed by other apps
+            // then we'll just perform the save..
+            val haveWarned = TextSecurePreferences.getHaveWarnedUserAboutSavingAttachments(context)
+            if (haveWarned) {
+                onAcceptListener()
+            } else {
+                // .. otherwise we'll show a warning dialog and only save if the user accepts the
+                // potential risks of other apps accessing their saved attachments.
+                context.showSessionDialog {
+                    title(R.string.warning)
+                    iconAttribute(R.attr.dialog_alert_icon)
+                    text(context.getString(R.string.attachmentsWarning))
+                    dangerButton(R.string.save) {
+                        // Regardless of Android API version, we'll always warn the user that saved attachments
+                        // can be accessed by other apps - but we'll only ever do this ONCE. When the user accepts
+                        // this warning and agrees to proceed we write a shared pref flag and will never show this
+                        // warning again due to the early-exit condition at the top of this method.
                         TextSecurePreferences.setHaveWarnedUserAboutSavingAttachments(context)
+                        onAcceptListener()
                     }
-
-                    onAcceptListener()
+                    button(R.string.cancel)
                 }
-                button(R.string.cancel)
             }
         }
 

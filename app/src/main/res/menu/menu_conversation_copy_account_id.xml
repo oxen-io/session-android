@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <item
-            android:title="@string/accountIdCopy"
+            android:title="@string/accountIDCopy"
             android:id="@+id/menu_copy_account_id"
             android:icon="@drawable/ic_content_copy_white_24dp"
             android:contentDescription="@string/AccessibilityId_accountIdCopy" />

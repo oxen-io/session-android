@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.mediasend;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -20,7 +22,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
+import com.squareup.phrase.Phrase;
+
 import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.guava.Optional;
 
 import network.loki.messenger.R;
@@ -110,11 +115,15 @@ public class MediaPickerFolderFragment extends Fragment implements MediaPickerFo
   private void initToolbar(Toolbar toolbar) {
     ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
     ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
-    actionBar.setTitle(getString(R.string.MediaPickerActivity_send_to, recipientName));
-    actionBar.setDisplayHomeAsUpEnabled(true);
-    actionBar.setHomeButtonEnabled(true);
-
-    toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
+    if (actionBar == null) {
+      Log.w("MediaPickerFolderFragment", "ActionBar is null in initToolbar - cannot continue.");
+    } else {
+      CharSequence txt = Phrase.from(requireContext(), R.string.attachmentsSendTo).put(NAME_KEY, recipientName).format();
+      actionBar.setTitle(txt);
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setHomeButtonEnabled(true);
+      toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
+    }
   }
 
   private void onScreenWidthChanged(int newWidth) {
