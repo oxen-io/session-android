@@ -772,12 +772,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val recipient = viewModel.recipient?.takeUnless { it.isGroupRecipient } ?: return
         binding.blockedBannerTextView.text = applicationContext.getString(R.string.blockBlockedDescription)
         binding.blockedBanner.isVisible = recipient.isBlocked
-        binding.blockedBanner.setOnClickListener {
-            viewModel.unblock()
-            // Unblock confirmation toast added as per SS-64
-            val txt = Phrase.from(applicationContext, R.string.blockUnblockedUser).put(NAME_KEY, recipient.name).format().toString()
-            Toast.makeText(applicationContext, txt, Toast.LENGTH_LONG).show()
-        }
+        binding.blockedBanner.setOnClickListener { viewModel.unblock() }
     }
 
     private fun setUpOutdatedClientBanner() {
@@ -1242,13 +1237,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     .put(NAME_KEY, recipient.name)
                     .format()
             )
-            dangerButton(R.string.blockUnblock, R.string.AccessibilityId_unblockConfirm) {
-                viewModel.unblock()
-
-                // Unblock confirmation toast added as per SS-64
-                val txt = Phrase.from(context, R.string.blockUnblockedUser).put(NAME_KEY, recipient.name).format().toString()
-                Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
-            }
+            dangerButton(R.string.blockUnblock, R.string.AccessibilityId_unblockConfirm) { viewModel.unblock() }
             cancelButton()
         }
     }
@@ -1259,10 +1248,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (actionMode != null) {
             onDeselect(message, position, actionMode)
         } else {
-            // NOTE:
-            // We have to use onContentClick (rather than a click listener directly on
+            // NOTE: We have to use onContentClick (rather than a click listener directly on
             // the view) so as to not interfere with all the other gestures. Do not add
-            // onClickListeners directly to message content views.
+            // onClickListeners directly to message content views!
             view.onContentClick(event)
         }
     }

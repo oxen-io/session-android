@@ -26,26 +26,6 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
 
     val adapter: BlockedContactsAdapter by lazy { BlockedContactsAdapter(viewModel) }
 
-    // Method to show a sequence of toasts one after the other
-    private fun showToastSequence(toastStrings: List<String>, toastLengthSetting: Int,context: Context) {
-        val handler = Handler(Looper.getMainLooper())
-
-        val delayStepMilliseconds = when (toastLengthSetting) {
-            Toast.LENGTH_SHORT -> 2000L
-            Toast.LENGTH_LONG  -> 3500L
-            else -> {
-                Log.w("BlockContactsActivity", "Invalid toast length setting - using Toast.LENGTH_SHORT")
-                2000L
-            }
-        }
-
-        var delayMilliseconds = 0L
-        toastStrings.forEach { message ->
-            handler.postDelayed( { Toast.makeText(context, message, Toast.LENGTH_SHORT).show() }, delayMilliseconds)
-            delayMilliseconds += delayStepMilliseconds // Increment delay by the duration of a Toast message
-        }
-    }
-
     private fun unblock() {
         showSessionDialog {
             title(viewModel.getTitle(this@BlockedContactsActivity))
@@ -70,17 +50,7 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
             }
             text(txt)
 
-            dangerButton(R.string.blockUnblock, R.string.AccessibilityId_unblockConfirm) {
-                // Show individual toasts for each unblocked user (we don't have suitable strings to do it as a single toast)
-                val contactsToUnblockNames = contactsToUnblock.map { it.name }
-                val toastStrings = mutableListOf<String>()
-                for (name in contactsToUnblockNames) {
-                    toastStrings.add(Phrase.from(context, R.string.blockUnblockedUser).put(NAME_KEY, name).format().toString())
-                }
-                showToastSequence(toastStrings, Toast.LENGTH_SHORT, this@BlockedContactsActivity)
-
-                viewModel.unblock()
-            }
+            dangerButton(R.string.blockUnblock, R.string.AccessibilityId_unblockConfirm) { viewModel.unblock() }
             cancelButton()
         }
     }
