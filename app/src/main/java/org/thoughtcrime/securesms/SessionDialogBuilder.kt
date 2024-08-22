@@ -299,7 +299,10 @@ fun Context.showOpenUrlDialog(url: String, showCloseButton: Boolean = true): Ale
             val maxLines = 5
             if (txtView.lineCount >= maxLines) {
                 scrollView.isVerticalScrollBarEnabled = true
-                scrollView.setScrollbarFadingEnabled(false)
+                // Note: `scrollView.isScrollbarFadingEnabled = false` does NOT
+                // work to prevent the scroll bar from fading away - so a hacky
+                // way to fix this is to allow it to fade out... after an hour, lol.
+                scrollView.scrollBarFadeDuration = 1000 * 60 * 60 // Value is in milliseconds
                 scrollView.isVerticalFadingEdgeEnabled = false
                 val lineHeight = txtView.lineHeight
                 scrollView.layoutParams.height = lineHeight * maxLines
