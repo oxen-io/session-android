@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+NOTE: The massive block of commented out strings below are the OG strings project strings - these
+have been replaced with a CrowdIn export (hundreds of lines below) - but I'm leaving these in just
+in case for the time being while we bed things in. -AL 2024-08-22
+-->
+
 <!--<resources>-->
 <!--    &lt;!&ndash; Plurals sections &ndash;&gt;-->
 <!--    <plurals name="members">-->
@@ -731,10 +738,10 @@
 <!--    <string name="you">You</string>-->
 <!--</resources>-->
 
-
-
-
-<!-- Crowdin stings circa 2024-08-22 -->
+<!--
+Crowdin strings circa 2024-08-22
+NOTE: Strings with blank lines have manually been replaced with '\n\n' - this will be fixed in the Android export script in the future
+-->
 <resources>
     <string name="about">About</string>
     <string name="accept">Accept</string>
@@ -745,11 +752,7 @@
     <string name="accountIdErrorInvalid">This Account ID is invalid. Please check and try again.</string>
     <string name="accountIdOrOnsEnter">Enter Account ID or ONS</string>
     <string name="accountIdOrOnsInvite">Invite Account ID or ONS</string>
-    <string name="accountIdShare">Hey, I\'ve been using {app_name} to chat with complete privacy and security. Come join me! My Account ID is
-
-{account_id}
-
-Download it at {download_url}</string>
+    <string name="accountIdShare">Hey, I\'ve been using {app_name} to chat with complete privacy and security. Come join me!\n\nMy Account ID is\n{account_id}\n\nDownload it at\n{download_url}</string>
     <string name="accountIdYours">Your Account ID</string>
     <string name="accountIdYoursDescription">This is your Account ID. Other users can scan it to start a conversation with you.</string>
     <string name="actualSize">Actual Size</string>
@@ -991,17 +994,9 @@ Download it at {download_url}</string>
     <string name="copy">Copy</string>
     <string name="create">Create</string>
     <string name="cut">Cut</string>
-    <string name="databaseErrorGeneric">A database error occurred.
-
-Export your application logs to share for troubleshooting. If this is unsuccessful, reinstall {app_name} and restore your account.
-
-Warning: This will result in loss of all messages, attachments, and account data older than two weeks.</string>
-    <string name="databaseErrorTimeout">We\'ve noticed {app_name} is taking a long time to start.
-
-You can continue to wait, export your device logs to share for troubleshooting, or try restarting {app_name}.</string>
-    <string name="databaseErrorUpdate">Your app database is incompatible with this version of {app_name}. Reinstall the app and restore your account to generate a new database and continue using {app_name}.
-
-Warning: This will result in the loss of all messages and attachments older than two weeks.</string>
+    <string name="databaseErrorGeneric">A database error occurred.\n\nExport your application logs to share for troubleshooting. If this is unsuccessful, reinstall {app_name} and restore your account.\n\nWarning: This will result in loss of all messages, attachments, and account data older than two weeks.</string>-->
+    <string name="databaseErrorTimeout">We\'ve noticed {app_name} is taking a long time to start.\n\nYou can continue to wait, export your device logs to share for troubleshooting, or try restarting {app_name}.</string>
+    <string name="databaseErrorUpdate">Your app database is incompatible with this version of {app_name}. Reinstall the app and restore your account to generate a new database and continue using {app_name}.\n\nWarning: This will result in the loss of all messages and attachments older than two weeks.</string>
     <string name="databaseOptimizing">Optimizing Database</string>
     <string name="debugLog">Debug Log</string>
     <string name="decline">Decline</string>
@@ -1182,9 +1177,7 @@ Warning: This will result in the loss of all messages and attachments older than
     <string name="groupNameNew">Group name is now {group_name}. </string>
     <string name="groupNameUpdated">Group name updated.</string>
     <string name="groupNoMessages">You have no messages from <b>{group_name}</b>. Send a message to start the conversation!</string>
-    <string name="groupOnlyAdmin">You are the only admin in <b>{group_name}</b>.
-
-Group members and settings cannot be changed without an admin.</string>
+    <string name="groupOnlyAdmin">You are the only admin in <b>{group_name}</b>.\n\nGroup members and settings cannot be changed without an admin.</string>
     <string name="groupPromotedYou"><b>You</b> were promoted to Admin.</string>
     <string name="groupPromotedYouMultiple"><b>You</b> and <b>{count} others</b> were promoted to Admin.</string>
     <string name="groupPromotedYouTwo"><b>You</b> and <b>{name}</b> were promoted to Admin.</string>
@@ -1235,9 +1228,7 @@ Group members and settings cannot be changed without an admin.</string>
     <string name="linkPreviewsSend">Send Link Previews</string>
     <string name="linkPreviewsSendModalDescription">You will not have full metadata protection when sending link previews.</string>
     <string name="linkPreviewsTurnedOff">Link Previews Are Off</string>
-    <string name="linkPreviewsTurnedOffDescription">{app_name} must contact linked websites to generate previews of links you send and receive.
-
-You can turn them on in {app_name}\'s settings.</string>
+    <string name="linkPreviewsTurnedOffDescription">{app_name} must contact linked websites to generate previews of links you send and receive.\n\nYou can turn them on in {app_name}\'s settings.</string>
     <string name="loadAccount">Load Account</string>
     <string name="loadAccountProgressMessage">Loading your account</string>
     <string name="loading">Loading...</string>
@@ -1445,22 +1436,16 @@ You can turn them on in {app_name}\'s settings.</string>
     <string name="recommended">Recommended</string>
     <string name="recoveryPasswordBannerDescription">Save your recovery password to make sure you don\'t lose access to your account.</string>
     <string name="recoveryPasswordBannerTitle">Save your recovery password</string>
-    <string name="recoveryPasswordDescription">Use your recovery password to load your account on new devices.
-
-Your account cannot be recovered without your recovery password. Make sure it\'s stored somewhere safe and secure — and don\'t share it with anyone.</string>
+    <string name="recoveryPasswordDescription">Use your recovery password to load your account on new devices.\n\nYour account cannot be recovered without your recovery password. Make sure it\'s stored somewhere safe and secure — and don\'t share it with anyone.</string>
     <string name="recoveryPasswordEnter">Enter your recovery password</string>
-    <string name="recoveryPasswordErrorLoad">An error occurred when trying to load your recovery password.
-
-Please export your logs, then upload the file though Session\'s Help Desk to help resolve this issue.</string>
+    <string name="recoveryPasswordErrorLoad">An error occurred when trying to load your recovery password.\n\nPlease export your logs, then upload the file though Session\'s Help Desk to help resolve this issue.</string>
     <string name="recoveryPasswordErrorMessageGeneric">Please check your recovery password and try again.</string>
     <string name="recoveryPasswordErrorMessageIncorrect">Some of the words in your Recovery Password are incorrect. Please check and try again.</string>
     <string name="recoveryPasswordErrorMessageShort">The Recovery Password you entered is not long enough. Please check and try again.</string>
     <string name="recoveryPasswordErrorTitle">Incorrect Recovery Password</string>
     <string name="recoveryPasswordExplanation">To load your account, enter your recovery password.</string>
     <string name="recoveryPasswordHidePermanently">Hide Recovery Password Permanently</string>
-    <string name="recoveryPasswordHidePermanentlyDescription1">Without your recovery password, you cannot load your account on new devices.
-
-We strongly recommend you save your recovery password in a safe and secure place before continuing.</string>
+    <string name="recoveryPasswordHidePermanentlyDescription1">Without your recovery password, you cannot load your account on new devices.\n\nWe strongly recommend you save your recovery password in a safe and secure place before continuing.</string>
     <string name="recoveryPasswordHidePermanentlyDescription2">Are you sure you want to permanently hide your recovery password on this device? This cannot be undone.</string>
     <string name="recoveryPasswordHideRecoveryPassword">Hide Recovery Password</string>
     <string name="recoveryPasswordHideRecoveryPasswordDescription">Permanently hide your recover password on this device.</string>
@@ -1547,9 +1532,7 @@ We strongly recommend you save your recovery password in a safe and secure place
     <string name="urlCopy">Copy URL</string>
     <string name="urlOpen">Open URL</string>
     <string name="urlOpenBrowser">This will open in your browser.</string>
-    <string name="urlOpenDescription">Are you sure you want to open this URL in your browser?
-
-{url}</string>
+    <string name="urlOpenDescription">Are you sure you want to open this URL in your browser?\n\n{url}</string>
     <string name="useFastMode">Use Fast Mode</string>
     <string name="video">Video</string>
     <string name="videoErrorPlay">Unable to play video.</string>
@@ -1571,7 +1554,7 @@ We strongly recommend you save your recovery password in a safe and secure place
     -->
     <string name="expiration_type_disappear_legacy">Legacy</string>
 
-    <!-- Missing from CrowdIn -->
+    <!-- Missing from CrowdIn circa 2024-08-22 -->
     <string name="messageStatusUploading">Uploading</string>
 
 </resources>
