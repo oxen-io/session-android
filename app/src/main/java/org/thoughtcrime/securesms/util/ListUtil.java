@@ -2,10 +2,7 @@ package org.thoughtcrime.securesms.util;
 
 import androidx.annotation.NonNull;
 
-import com.annimon.stream.Stream;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public final class ListUtil {
@@ -20,17 +17,5 @@ public final class ListUtil {
     }
 
     return chunks;
-  }
-
-  @SafeVarargs
-  public static <T> List<T> concat(Collection<T>... items) {
-    //noinspection Convert2MethodRef
-    final List<T> concat = new ArrayList<>(Stream.of(items).map(Collection::size).reduce(0, (lhs, rhs) -> lhs+rhs));
-
-    for (Collection<T> list : items) {
-      concat.addAll(list);
-    }
-
-    return concat;
   }
 }

@@ -58,7 +58,10 @@
        <item name="attachment_document_icon_small">@drawable/ic_document_small_dark</item>
        <item name="attachment_document_icon_large">@drawable/ic_document_large_dark</item>
        <item name="colorError">?danger</item>
-    </style>
+
+       <item name="conversation_icon_attach_audio">@drawable/ic_audio_dark</item>
+       <item name="conversation_icon_attach_video">@drawable/ic_video_dark</item>
+   </style>
 
     <!-- This should be the default theme for the application. -->
     <style name="Theme.Session.DayNight" parent="Base.Theme.Session">
@@ -205,9 +208,6 @@
         <item name="linkpreview_primary_text_color">?android:textColorPrimary</item>
         <item name="linkpreview_secondary_text_color">?android:textColorPrimary</item>
         <item name="linkpreview_divider_color">@color/transparent</item>
-
-        <item name="conversation_icon_attach_audio">@drawable/ic_audio_dark</item>
-        <item name="conversation_icon_attach_video">@drawable/ic_video_dark</item>
 
         <item name="sticker_management_icon">@drawable/sticker_button_dark</item>
         <item name="sticker_management_divider_color">@color/core_grey_75</item>

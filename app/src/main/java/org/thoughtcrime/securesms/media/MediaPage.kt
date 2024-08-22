@@ -152,12 +152,30 @@ private fun ThumbnailRow(
                         ) {
                             it.diskCacheStrategy(DiskCacheStrategy.NONE)
                         }
-                    } else if (item.hasPlaceholder) {
+                    } else {
+                        // The resource given by the placeholder needs tinting according to our theme.
+                        // But the missing thumbnail picture does not.
+                        var (placeholder, shouldTint) = if (item.hasPlaceholder) {
+                            item.placeholder(LocalContext.current) to true
+                        } else {
+                            R.drawable.ic_missing_thumbnail_picture to false
+                        }
+
+                        if (placeholder == 0) {
+                            placeholder = R.drawable.ic_missing_thumbnail_picture
+                            shouldTint = false
+                        }
+
                         Image(
-                            painter = painterResource(item.placeholder(LocalContext.current)),
+                            painter = painterResource(placeholder),
                             contentDescription = null,
                             modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Inside
+                            contentScale = ContentScale.Inside,
+                            colorFilter = if (shouldTint) {
+                                ColorFilter.tint(LocalColors.current.textSecondary)
+                            } else {
+                                null
+                            }
                         )
                     }
 

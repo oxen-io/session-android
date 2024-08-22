@@ -18,7 +18,7 @@
         android:layout_marginVertical="@dimen/medium_spacing"
         android:layout_marginStart="@dimen/medium_spacing"
         android:padding="10dp"
-        android:src="@drawable/ic_outline_message_requests_24"
+        android:src="@drawable/ic_message_requests"
         android:tint="?unreadIndicatorTextColor"
         app:circleColor="?unreadIndicatorBackgroundColor"
         app:layout_constraintBottom_toBottomOf="parent"
