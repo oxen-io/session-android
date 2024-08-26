@@ -13,8 +13,8 @@ configurations.forEach {
     it.exclude module: "commons-logging"
 }
 
-def canonicalVersionCode = 379
-def canonicalVersionName = "1.19.1"
+def canonicalVersionCode = 380
+def canonicalVersionName = "1.19.2"
 
 def postFixSize = 10
 def abiPostFix = ['armeabi-v7a' : 1,

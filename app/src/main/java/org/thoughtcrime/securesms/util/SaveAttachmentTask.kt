@@ -73,7 +73,12 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         fun saveAttachment(context: Context, attachment: Attachment): String? {
             val contentType = checkNotNull(MediaUtil.getCorrectedMimeType(attachment.contentType))
             var fileName = attachment.fileName
+
+            // Added for SES-2624 to prevent Android API 28 devices and lower from crashing because
+            // for unknown reasons it provides us with an empty filename when saving files.
+            // TODO: Further investigation into root cause and fix!
             if (fileName.isNullOrEmpty()) fileName = generateOutputFileName(contentType, attachment.date)
+            
             fileName = sanitizeOutputFileName(fileName)
             val outputUri: Uri = getMediaStoreContentUriForType(contentType)
             val mediaUri = createOutputUri(context, outputUri, contentType, fileName)
