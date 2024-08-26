@@ -127,7 +127,7 @@ class ClearAllDataDialog : DialogFragment() {
             }
             return
         }
-        ApplicationContext.getInstance(context).clearAllData().let { success ->
+        ApplicationContext.getInstance(context).clearAllDataAndRestart().let { success ->
             withContext(Main) {
                 if (success) {
                     dismiss()
@@ -164,7 +164,7 @@ class ClearAllDataDialog : DialogFragment() {
                     }
                     else if (deletionResultMap.values.all { it }) {
                         // ..otherwise if the network data deletion was successful proceed to delete the local data as well.
-                        ApplicationContext.getInstance(context).clearAllData()
+                        ApplicationContext.getInstance(context).clearAllDataAndRestart()
                         withContext(Main) { dismiss() }
                     }
                 }

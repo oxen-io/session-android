@@ -137,6 +137,10 @@
             android:screenOrientation="portrait"
             android:label="@string/sessionSettings" />
         <activity
+            android:name="org.thoughtcrime.securesms.debugmenu.DebugActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Session.DayNight.NoActionBar" />
+        <activity
             android:name="org.thoughtcrime.securesms.home.PathActivity"
             android:screenOrientation="portrait" />
         <activity

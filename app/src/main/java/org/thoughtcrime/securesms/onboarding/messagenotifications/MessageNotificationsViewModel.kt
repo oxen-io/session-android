@@ -72,7 +72,7 @@ internal class MessageNotificationsViewModel(
         _uiStates.update { it.copy(clearData = true) }
 
         viewModelScope.launch(Dispatchers.IO) {
-            ApplicationContext.getInstance(application).clearAllData()
+            ApplicationContext.getInstance(application).clearAllDataAndRestart()
         }
     }
 

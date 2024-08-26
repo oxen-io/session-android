@@ -2192,7 +2192,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun showMessageDetail(messages: Set<MessageRecord>) {
         Intent(this, MessageDetailActivity::class.java)
             .apply { putExtra(MESSAGE_TIMESTAMP, messages.first().timestamp) }
-            .let { handleMessageDetail.launch(it) }
+            .let {
+                handleMessageDetail.launch(it)
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+            }
 
         endActionMode()
     }

@@ -27,6 +27,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.pm.ShortcutInfoCompat;
+import androidx.core.content.pm.ShortcutManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
@@ -42,6 +45,7 @@ import org.session.libsession.snode.SnodeModule;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.ConfigFactoryUpdateListener;
 import org.session.libsession.utilities.Device;
+import org.session.libsession.utilities.Environment;
 import org.session.libsession.utilities.ProfilePictureUtilities;
 import org.session.libsession.utilities.SSKEnvironment;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -62,6 +66,7 @@ import org.thoughtcrime.securesms.database.LokiAPIDatabase;
 import org.thoughtcrime.securesms.database.Storage;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.EmojiSearchData;
+import org.thoughtcrime.securesms.debugmenu.DebugActivity;
 import org.thoughtcrime.securesms.dependencies.AppComponent;
 import org.thoughtcrime.securesms.dependencies.ConfigFactory;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
@@ -107,6 +112,7 @@ import dagger.hilt.EntryPoints;
 import dagger.hilt.android.HiltAndroidApp;
 import kotlin.Unit;
 import network.loki.messenger.BuildConfig;
+import network.loki.messenger.R;
 import network.loki.messenger.libsession_util.ConfigBase;
 import network.loki.messenger.libsession_util.UserProfile;
 
@@ -232,7 +238,8 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         messageNotifier = new OptimizedMessageNotifier(new DefaultMessageNotifier());
         broadcaster = new Broadcaster(this);
         LokiAPIDatabase apiDB = getDatabaseComponent().lokiAPIDatabase();
-        SnodeModule.Companion.configure(apiDB, broadcaster);
+        boolean useTestNet = textSecurePreferences.getEnvironment() == Environment.TEST_NET;
+        SnodeModule.Companion.configure(apiDB, broadcaster, useTestNet);
         initializeExpiringMessageManager();
         initializeTypingStatusRepository();
         initializeTypingStatusSender();
@@ -248,6 +255,22 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
         NetworkConstraint networkConstraint = new NetworkConstraint.Factory(this).create();
         HTTP.INSTANCE.setConnectedToNetwork(networkConstraint::isMet);
+
+        // add our shortcut debug menu if we are not in a release build
+        if (BuildConfig.BUILD_TYPE != "release") {
+            // add the config settings shortcut
+            Intent intent = new Intent(this, DebugActivity.class);
+            intent.setAction(Intent.ACTION_VIEW);
+
+            ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(this, "shortcut_debug_menu")
+                    .setShortLabel("Debug Menu")
+                    .setLongLabel("Debug Menu")
+                    .setIcon(IconCompat.createWithResource(this, R.drawable.ic_settings))
+                    .setIntent(intent)
+                    .build();
+
+            ShortcutManagerCompat.pushDynamicShortcut(this, shortcut);
+        }
     }
 
     @Override
@@ -486,7 +509,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     // Method to clear the local data - returns true on success otherwise false
 
     /**
-     * Clear all local profile data and message history then restart the app after a brief delay.
+     * Clear all local profile data and message history.
      * @return true on success, false otherwise.
      */
     @SuppressLint("ApplySharedPref")
@@ -498,6 +521,16 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             return false;
         }
         configFactory.keyPairChanged();
+        return true;
+    }
+
+    /**
+     * Clear all local profile data and message history then restart the app after a brief delay.
+     * @return true on success, false otherwise.
+     */
+    @SuppressLint("ApplySharedPref")
+    public boolean clearAllDataAndRestart() {
+        clearAllData();
         Util.runOnMain(() -> new Handler().postDelayed(ApplicationContext.this::restartApplication, 200));
         return true;
     }

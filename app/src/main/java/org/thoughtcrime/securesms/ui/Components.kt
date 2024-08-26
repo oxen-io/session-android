@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -105,7 +106,7 @@ fun <T> OptionsCard(card: OptionsCardData<T>, callbacks: Callbacks<T>) {
 
         Spacer(modifier = Modifier.height(LocalDimensions.current.xsSpacing))
 
-        CellNoMargin {
+        Cell {
             LazyColumn(
                 modifier = Modifier.heightIn(max = 5000.dp)
             ) {
@@ -170,6 +171,38 @@ fun LargeItemButton(
     ItemButton(
         textId, icon, modifier.heightIn(min = LocalDimensions.current.minLargeItemButtonHeight),
         LocalType.current.h8, colors, onClick
+    )
+}
+
+@Composable
+fun LargeItemButton(
+    text: String,
+    @DrawableRes icon: Int,
+    modifier: Modifier = Modifier,
+    colors: ButtonColors = transparentButtonColors(),
+    onClick: () -> Unit
+) {
+    ItemButton(
+        text, icon, modifier.heightIn(min = LocalDimensions.current.minLargeItemButtonHeight),
+        LocalType.current.h8, colors, onClick
+    )
+}
+
+@Composable
+fun ItemButton(text: String, icon: Int, modifier: Modifier, textStyle: TextStyle, colors: ButtonColors, onClick: () -> Unit) {
+    ItemButton(
+        text = text,
+        modifier = modifier,
+        icon = {
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        },
+        textStyle = textStyle,
+        colors = colors,
+        onClick = onClick
     )
 }
 
@@ -257,32 +290,19 @@ fun PreviewItemButton() {
 
 @Composable
 fun Cell(
-    padding: Dp = 0.dp,
-    margin: Dp = LocalDimensions.current.spacing,
-    content: @Composable () -> Unit
-) {
-    CellWithPaddingAndMargin(padding, margin) { content() }
-}
-@Composable
-fun CellNoMargin(content: @Composable () -> Unit) {
-    CellWithPaddingAndMargin(padding = 0.dp, margin = 0.dp) { content() }
-}
-
-@Composable
-fun CellWithPaddingAndMargin(
-    padding: Dp = LocalDimensions.current.spacing,
-    margin: Dp = LocalDimensions.current.spacing,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .padding(horizontal = margin)
-            .background(color = LocalColors.current.backgroundSecondary,
-                shape = MaterialTheme.shapes.small)
+        modifier = modifier
+            .background(
+                color = LocalColors.current.backgroundSecondary,
+                shape = MaterialTheme.shapes.small
+            )
             .wrapContentHeight()
             .fillMaxWidth(),
     ) {
-        Box(Modifier.padding(padding)) { content() }
+        content()
     }
 }
 

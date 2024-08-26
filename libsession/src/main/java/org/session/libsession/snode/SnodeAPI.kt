@@ -2,7 +2,6 @@
 
 package org.session.libsession.snode
 
-import android.os.Build
 import com.goterl.lazysodium.exceptions.SodiumException
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.PwHash
@@ -76,9 +75,7 @@ object SnodeAPI {
     // Use port 4433 to enforce pinned certificates
     private val seedNodePort = 4443
 
-    private const val useTestnet = false
-
-    private val seedNodePool = if (useTestnet) setOf(
+    private val seedNodePool = if (SnodeModule.shared.useTestNet) setOf(
         "http://public.loki.foundation:38157"
     ) else setOf(
         "https://seed1.getsession.org:$seedNodePort",

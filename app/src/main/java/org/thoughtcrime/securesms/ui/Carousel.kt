@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,14 +43,17 @@ import kotlin.math.sign
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BoxScope.HorizontalPagerIndicator(pagerState: PagerState) {
-    if (pagerState.pageCount >= 2) Box(
-        modifier = Modifier
-            .background(color = blackAlpha40, shape = pillShape)
-            .align(Alignment.BottomCenter)
-            .padding(LocalDimensions.current.xxsSpacing)
-    ) {
-        Box(modifier = Modifier.padding(LocalDimensions.current.xxsSpacing)) {
+fun BoxScope.HorizontalPagerIndicator(
+    pagerState: PagerState,
+    modifier: Modifier = Modifier
+) {
+    if (pagerState.pageCount >= 2){
+        Box(
+            modifier = modifier
+                .background(color = blackAlpha40, shape = pillShape)
+                .align(Alignment.BottomCenter)
+                .padding(LocalDimensions.current.xxsSpacing)
+        ) {
             ClickableHorizontalPagerIndicator(
                 pagerState = pagerState,
                 pageCount = pagerState.pageCount

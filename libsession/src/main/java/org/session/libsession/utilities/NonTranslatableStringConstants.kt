@@ -5,6 +5,7 @@ object NonTranslatableStringConstants {
     const val APP_NAME               = "Session"
     const val ARBISCAN               = "Arbiscan"
     const val ARBITRUM               = "Arbitrum"
+    const val DEBUG_MENU             = "Debug Menu"
     const val ETHEREUM               = "Ethereum"
     const val NETWORK_NAME           = "Session Network"
     const val TOKEN_NAME_LONG        = "Session Token"
