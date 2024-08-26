@@ -280,7 +280,7 @@ NOTE: Strings with blank lines have manually been replaced with '\n\n' - this wi
     <string name="deleteAfterLegacyDisappearingMessagesTheyChangedTimer"><b>{name}</b> set the disappearing message timer to <b>{time}</b></string>
     <string name="deleteAfterLegacyGroupsGroupCreation">Please wait while the group is created...</string>
     <string name="deleteAfterLegacyGroupsGroupUpdateErrorTitle">Failed to Update Group</string>
-    <string name="deleteAfterMessageDeletionStandardisationMessageDeletionForbidden">You don’t have permission to delete others’ messages</string>
+    <string name="deleteAfterMessageDeletionStandardisationMessageDeletionForbidden">You don\’t have permission to delete others\’ messages</string>
     <string name="deleteMessage">Delete Message</string>
     <string name="deleteMessageConfirm">Are you sure you want to delete this message?</string>
     <string name="deleteMessageDeleted">Message deleted</string>
@@ -425,11 +425,13 @@ NOTE: Strings with blank lines have manually been replaced with '\n\n' - this wi
     <string name="groupMemberNewHistoryTwo"><b>{name}</b> and <b>{other_name}</b> were invited to join the group. Chat history was shared.</string>
     <string name="groupMemberNewMultiple"><b>{name}</b> and <b>{count} others</b> were invited to join the group.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> and <b>{other_name}</b> were invited to join the group.</string>
-    <string name="groupMemberNewYouHistory"> <b>{name}</b> was invited to join the group. Chat history was shared.</string>
+    <string name="groupMemberNewYouHistory"><b>{name}</b> was invited to join the group. Chat history was shared.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>You</b> and <b>{count} others</b> were invited to join the group. Chat history was shared.</string>
     <string name="groupMemberNewYouHistoryTwo"><b>You</b> and <b>{name}</b> were invited to join the group. Chat history was shared.</string>
-    <string name="groupMemberNewYouMultiple"><b>You</b> and <b>{count} others</b> joined the group.</string>
-    <string name="groupMemberNewYouOther"><b>You</b> and <b>{other_name}</b> joined the group.</string>
+    <string name="groupMemberNewYouMultiple"><b>You</b> and <b>{count} others</b> were invited to join the group.</string>
+    <string name="groupMemberNewYouTwo"><b>You</b> and <b>{name}</b> were invited to join the group.</string>
+    <string name="groupMemberYouAndMoreNew"><b>You</b> and <b>{count} others</b> joined the group.</string>
+    <string name="groupMemberYouAndOtherNew"><b>You</b> and <b>{other_name}</b> joined the group.</string>
     <string name="groupMemberTwoNew"><b>{name}</b> and <b>{other_name}</b> joined the group.</string>
     <string name="groupMemberYouLeft"><b>You</b> left the group.</string>
     <string name="groupMemberYouNew"><b>You</b> joined the group.</string>

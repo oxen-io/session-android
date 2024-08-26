@@ -229,10 +229,7 @@
     <string name="appearancePrimaryColor">Couleur principale</string>
     <string name="emojiCategoryRecentlyUsed">Fréquemment Utilisés</string>
     <string name="emojiCategorySmileys">Émoticônes et personnes</string>
-    <string name="emojiCategoryAnimals" comment="Heading for an emoji list's category">Nature</string>
-    <string name="emojiCategoryFood" comment="Heading for an emoji list's category">Nourriture</string>
     <string name="emojiCategoryActivities">Activités</string>
-    <string name="emojiCategoryTravel" comment="Heading for an emoji list's category">Voyage</string>
     <string name="emojiCategoryObjects">Objets</string>
     <string name="emojiCategorySymbols">Symboles</string>
     <string name="emojiCategoryFlags">Drapeaux</string>

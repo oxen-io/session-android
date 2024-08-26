@@ -219,11 +219,7 @@
     <string name="dismiss">رد کردن</string>
     <string name="appearancePrimaryColor">رنگ اولیه</string>
     <string name="emojiCategoryRecentlyUsed">اخیرا استفاده شده</string>
-    <string name="emojiCategorySmileys">شکلک‌ها و مردم</string>
-    <string name="emojiCategoryAnimals" comment="Heading for an emoji list's category">حیوانات و طبیعت</string>
-    <string name="emojiCategoryFood" comment="Heading for an emoji list's category">غذا و نوشیدنی</string>
     <string name="emojiCategoryActivities">فعالیت ها</string>
-    <string name="emojiCategoryTravel" comment="Heading for an emoji list's category">مسافرت و اماکن</string>
     <string name="emojiCategoryObjects">اشیاء</string>
     <string name="emojiCategorySymbols">نمادها</string>
     <string name="emojiCategoryFlags">پرچم ها</string>

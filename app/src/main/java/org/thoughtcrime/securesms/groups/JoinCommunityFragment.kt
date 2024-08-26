@@ -71,8 +71,7 @@ class JoinCommunityFragment : Fragment() {
             } catch (e: OpenGroupUrlParser.Error) {
                 when (e) {
                     is OpenGroupUrlParser.Error.MalformedURL, OpenGroupUrlParser.Error.NoRoom -> {
-                        val txt = Phrase.from(context, R.string.groupErrorJoin).put(GROUP_NAME_KEY, url).format().toString()
-                        return Toast.makeText(activity, txt, Toast.LENGTH_SHORT).show()
+                        return Toast.makeText(activity, context?.resources?.getString(R.string.communityJoinError), Toast.LENGTH_SHORT).show()
                     }
                     is OpenGroupUrlParser.Error.InvalidPublicKey, OpenGroupUrlParser.Error.NoPublicKey -> {
                         return Toast.makeText(activity, R.string.communityEnterUrlErrorInvalidDescription, Toast.LENGTH_SHORT).show()
