@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">Tai liity johonkin näistä…</string>
     <string name="notificationsFastMode">Nopea tila</string>
     <string name="notificationsSlowMode">Hidastila</string>
-    <string name="notificationsFastModeDescriptionAndroid">Sinulle ilmoitetaan uusista viesteistä luotettavasti ja viivyttelemättä Applen ilmoituspalvelua käyttäen.</string>
+    <string name="notificationsFastModeDescription">Sinulle ilmoitetaan uusista viesteistä luotettavasti ja viivyttelemättä Applen ilmoituspalvelua käyttäen.</string>
     <string name="notificationsSlowModeDescription">Session tarkistaa taustalla ajoittain uudet viestit.</string>
     <string name="open">Avaa</string>
     <string name="urlCopy">Kopioi URL</string>

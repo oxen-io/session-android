@@ -20,7 +20,6 @@ import org.session.libsignal.utilities.Log
 import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
-import org.session.libsession.utilities.StringSubstitutionConstants.MEMBERS_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.OTHER_NAME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
@@ -65,8 +64,6 @@ object UpdateMessageBuilder {
 
                 val newMemberCount = updateData.updatedMembers.size
 
-                //val members = updateData.updatedMembers.joinToString(", ", transform = ::getSenderName)
-
                 // We previously differentiated between members added by us Vs. members added by someone
                 // else via checking against `isOutgoing` - but now we use the same strings regardless.
                 when (newMemberCount) {
@@ -101,8 +98,8 @@ object UpdateMessageBuilder {
 
                 // 1st case: you are part of the removed members
                 return if (userPublicKey in updateData.updatedMembers) {
-                    if (isOutgoing) context.getString(R.string.groupMemberYouLeft) // You chose to leave
-                    else Phrase.from(context, R.string.groupRemovedYou)            // You were forced to leave
+                    if (isOutgoing) context.getString(R.string.groupMemberYouLeft)                             // You chose to leave
+                    else Phrase.from(context, R.string.groupRemovedYou)  // You were forced to leave
                             .put(GROUP_NAME_KEY, updateData.groupName)
                             .format().toString()
                 }
@@ -132,9 +129,6 @@ object UpdateMessageBuilder {
                     }
                     else // b.) Someone else is the person doing the removing of one or more members
                     {
-                        // ACL TODO: Remove below line when confirmed that we aren't mentioning WHO removed anyone anymore.. or don't if we still are!
-                        //context.getString(R.string.MessageRecord_s_removed_s_from_the_group, senderName, members)
-
                         // Note: I don't think we're doing "Alice removed Bob from the group"-type
                         // messages anymore - just "Bob was removed from the group" - so this block
                         // is identical to the one above, but I'll leave it like this until I can
@@ -190,7 +184,7 @@ object UpdateMessageBuilder {
     fun buildExpirationTimerMessage(
         context: Context,
         duration: Long,
-        isGroup: Boolean, // ACL TODO: Does this include communities? (i.e., open groups)?
+        isGroup: Boolean, // Note: isGroup should cover both closed groups AND communities
         senderId: String? = null,
         isOutgoing: Boolean = false,
         timestamp: Long,
@@ -228,8 +222,8 @@ object UpdateMessageBuilder {
                     .put(TIME_KEY, time)
                     .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
                     .format().toString()
-            } else // 1-on-1 conversation
-            {
+            } else {
+                // 1-on-1 conversation
                 Phrase.from(context, R.string.disappearingMessagesSetYou)
                     .put(TIME_KEY, time)
                     .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)

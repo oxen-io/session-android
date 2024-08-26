@@ -41,7 +41,6 @@ internal class NewMessageViewModel @Inject constructor(
     override fun onChange(value: String) {
         loadOnsJob?.cancel()
         loadOnsJob = null
-
         _state.update { it.copy(newMessageIdOrOns = value, isTextErrorColor = false, loading = false) }
     }
 

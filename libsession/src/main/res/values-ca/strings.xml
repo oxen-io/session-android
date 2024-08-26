@@ -188,6 +188,6 @@
     <string name="communityJoinOfficial">O uneix-te a alguns d\'aquests…</string>
     <string name="notificationsFastMode">Mode ràpid</string>
     <string name="notificationsSlowMode">Mode lent</string>
-    <string name="notificationsFastModeDescriptionAndroid">Es notificaran els missatges de forma immediata i fiable fent servir els servidors de notificació de Google.</string>
+    <string name="notificationsFastModeDescription">Es notificaran els missatges de forma immediata i fiable fent servir els servidors de notificació de Google.</string>
     <string name="notificationsSlowModeDescription">Session ocasionalment comprovarà en pla secundari si hi ha nous missatges.</string>
 </resources>

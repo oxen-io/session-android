@@ -405,7 +405,6 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   @SuppressWarnings("CodeBlock2Expr")
   @SuppressLint("InlinedApi")
   private void saveToDisk() {
-    Log.w("ACL", "Asked to save to disk!");
     MediaItem mediaItem = getCurrentMediaItem();
     if (mediaItem == null) return;
 
@@ -487,6 +486,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     super.onOptionsItemSelected(item);
 
     switch (item.getItemId()) {
+      // TODO / WARNING: R.id values are NON-CONSTANT in Gradle 8.0+ - what would be the best way to address this?! -AL 2024/08/26
       case R.id.media_preview__overview: showOverview(); return true;
       case R.id.media_preview__forward:  forward();      return true;
       case R.id.save:                    saveToDisk();   return true;
@@ -537,15 +537,11 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       throw new RuntimeException("restartItem = " + restartItem + ", data.second = " + data.second + " leftIsRecent = " + leftIsRecent, e);
     }
 
-    if (item == 0) {
-      viewPagerListener.onPageSelected(0);
-    }
+    if (item == 0) { viewPagerListener.onPageSelected(0); }
   }
 
   @Override
-  public void onLoaderReset(@NonNull Loader<Pair<Cursor, Integer>> loader) {
-
-  }
+  public void onLoaderReset(@NonNull Loader<Pair<Cursor, Integer>> loader) { /* Do nothing */  }
 
   private class ViewPagerListener implements ViewPager.OnPageChangeListener {
 
@@ -580,13 +576,11 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+      /* Do nothing */
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
+    public void onPageScrollStateChanged(int state) { /* Do nothing */ }
   }
 
   private static class SingleItemPagerAdapter extends MediaItemAdapter {
@@ -651,9 +645,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     }
 
     @Override
-    public void pause(int position) {
-
-    }
+    public void pause(int position) { /* Do nothing */ }
 
     @Override
     public @Nullable View getPlaybackControls(int position) {

@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">或加入這些群組⋯</string>
     <string name="notificationsFastMode">快速模式</string>
     <string name="notificationsSlowMode">慢速模式</string>
-    <string name="notificationsFastModeDescriptionAndroid">您將會透過 Google 的通知服務可靠且迅速的收到通知。</string>
+    <string name="notificationsFastModeDescription">您將會透過 Google 的通知服務可靠且迅速的收到通知。</string>
     <string name="notificationsSlowModeDescription">Session 會偶爾在背景執行時檢查新訊息。</string>
     <string name="open">開啟</string>
     <string name="urlCopy">複製網址</string>

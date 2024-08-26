@@ -44,7 +44,7 @@ public class SwitchPreferenceCompat extends CheckBoxPreference {
             // Substitute app name into lockscreen preference summary
             if (key.equalsIgnoreCase(LOCK_SCREEN_KEY)) {
                 Context c = getContext();
-                CharSequence substitutedSummaryCS = Phrase.from(c, R.string.lockAppDescriptionAndroid)
+                CharSequence substitutedSummaryCS = Phrase.from(c, R.string.lockAppDescription)
                                                         .put(APP_NAME_KEY, c.getString(R.string.app_name))
                                                         .format();
                 this.setSummary(substitutedSummaryCS);

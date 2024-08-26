@@ -302,9 +302,8 @@ interface TextSecurePreferences {
         const val ALLOW_MESSAGE_REQUESTS = "libsession.ALLOW_MESSAGE_REQUESTS"
 
         // Key name for if we've warned the user that saving attachments will allow other apps to access them.
-        // Note: This is only a concern on Android API 30+ which does not have the WRITE_EXTERNAL_STORAGE permission
-        // for us to check against - and we only display this once, or until the user consents to this and continues
-        // to save the attachment(s).
+        // Note: We only ever display this once - and when the user has accepted the warning we never show it again
+        // for the lifetime of the Session installation.
         const val HAVE_WARNED_USER_ABOUT_SAVING_ATTACHMENTS = "libsession.HAVE_WARNED_USER_ABOUT_SAVING_ATTACHMENTS"
 
         @JvmStatic

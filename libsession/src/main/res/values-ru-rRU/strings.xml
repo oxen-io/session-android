@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">Или присоединитесь к одной из этих…</string>
     <string name="notificationsFastMode">Ускоренный режим</string>
     <string name="notificationsSlowMode">Медленный режим</string>
-    <string name="notificationsFastModeDescriptionAndroid">Вы будете получать уведомления о новых сообщениях надежно и сразу же с помощью серверов уведомлений Google.</string>
+    <string name="notificationsFastModeDescription">Вы будете получать уведомления о новых сообщениях надежно и сразу же с помощью серверов уведомлений Google.</string>
     <string name="notificationsSlowModeDescription">Session время от времени в фоновом режиме будeт проверять и получать новые сообщения.</string>
     <string name="open">Открыть</string>
     <string name="urlCopy">Копировать ссылку</string>

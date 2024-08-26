@@ -9,7 +9,7 @@
             android:key="pref_android_screen_lock"
             android:defaultValue="false"
             android:title="@string/lockApp"
-            android:summary="@string/lockAppDescriptionAndroid" />
+            android:summary="@string/lockAppDescription" />
 
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:defaultValue="@bool/screen_security_default"

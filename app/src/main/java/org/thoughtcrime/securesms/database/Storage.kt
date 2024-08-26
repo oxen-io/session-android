@@ -634,7 +634,7 @@ open class Storage(
                 val threadID = getOrCreateThreadIdFor(Address.fromSerialized(groupId))
                 threadDb.setDate(threadID, formationTimestamp)
 
-                // ACL Note: Commenting out this line prevents the timestamp of room creation being added to a new closed group,
+                // Note: Commenting out this line prevents the timestamp of room creation being added to a new closed group,
                 // which in turn allows us to show the `groupNoMessages` control message text.
                 //insertOutgoingInfoMessage(context, groupId, SignalServiceGroup.Type.CREATION, title, members.map { it.serialize() }, admins.map { it.serialize() }, threadID, formationTimestamp)
 

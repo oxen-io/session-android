@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">या इनमें से एक को जोड़ें...</string>
     <string name="notificationsFastMode">फास्ट मोड</string>
     <string name="notificationsSlowMode">स्लो मोड</string>
-    <string name="notificationsFastModeDescriptionAndroid">आपको नई सूचनाओं के बारे में google के नोटीफिकेशन servers से तत्काल सूचित किया जाएगा।</string>
+    <string name="notificationsFastModeDescription">आपको नई सूचनाओं के बारे में google के नोटीफिकेशन servers से तत्काल सूचित किया जाएगा।</string>
     <string name="notificationsSlowModeDescription">Session कभी-कभी पृष्ठभूमि में नए संदेशों की जांच करेगा।</string>
     <string name="open">खोलें</string>
     <string name="urlCopy">यूआरएल कॉपी करें</string>

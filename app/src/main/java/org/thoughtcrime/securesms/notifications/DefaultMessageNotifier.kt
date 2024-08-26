@@ -28,6 +28,8 @@ import android.database.Cursor
 import android.os.AsyncTask
 import android.os.Build
 import android.text.TextUtils
+import android.widget.Toast
+import androidx.camera.core.impl.utils.ContextUtil.getApplicationContext
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -45,6 +47,7 @@ import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities.blindedKeyPair
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.ServiceUtil
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getLocalNumber
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getNotificationPrivacy
@@ -67,6 +70,8 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
 import org.thoughtcrime.securesms.mms.SlideDeck
+import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.preferences.ShareLogsDialog
 import org.thoughtcrime.securesms.service.KeyCachingService
 import org.thoughtcrime.securesms.util.SessionMetaProtocol.canUserReplyToNotification
 import org.thoughtcrime.securesms.util.SpanUtil
@@ -209,7 +214,6 @@ class DefaultMessageNotifier : MessageNotifier {
                 return
             }
 
-            //var notificationState: NotificationState
             try {
                 val notificationState = constructNotificationState(context, telcoCursor)
 
@@ -353,7 +357,7 @@ class DefaultMessageNotifier : MessageNotifier {
 
         val notification = builder.build()
 
-        // ACL FIX THIS PROPERLY
+        // TODO - ACL to fix this properly & will do on 2024-08-26, but just skipping for now so review can start
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -435,7 +439,7 @@ class DefaultMessageNotifier : MessageNotifier {
 
         builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag)
 
-        // ACL FIX THIS PROPERLY
+        // TODO - ACL to fix this properly & will do on 2024-08-26, but just skipping for now so review can start
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -463,7 +467,7 @@ class DefaultMessageNotifier : MessageNotifier {
         val threadDatabase = get(context).threadDatabase()
         val cache: MutableMap<Long, String?> = HashMap()
 
-        // CAREFUL: Do not put this loop back as `while ((reader.next.also { record = it }) != null) {` because it breaks with a Null Pointer Exception - you have been warned.
+        // CAREFUL: Do not put this loop back as `while ((reader.next.also { record = it }) != null) {` because it breaks with a Null Pointer Exception!
         var record: MessageRecord? = null
         do {
             record = reader.next
@@ -587,7 +591,6 @@ class DefaultMessageNotifier : MessageNotifier {
             if (count == 0) ShortcutBadger.removeCount(context)
             else ShortcutBadger.applyCount(context, count)
         } catch (t: Throwable) {
-            // NOTE :: I don't totally trust this thing, so I'm catching everything.
             Log.w("MessageNotifier", t)
         }
     }

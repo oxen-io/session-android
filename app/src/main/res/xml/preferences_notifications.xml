@@ -7,7 +7,7 @@
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:key="pref_key_use_fcm"
             android:title="@string/useFastMode"
-            android:summary="@string/notificationsFastModeDescriptionAndroid"
+            android:summary="@string/notificationsFastModeDescription"
             android:defaultValue="false" />
 
         <Preference android:title="@string/notificationsGoToDevice"

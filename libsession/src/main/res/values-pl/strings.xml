@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">Lub dołącz do jednego z tych…</string>
     <string name="notificationsFastMode">Tryb szybki</string>
     <string name="notificationsSlowMode">Tryb wolny</string>
-    <string name="notificationsFastModeDescriptionAndroid">Zostaniesz natychmiast powiadomiony o nowych wiadomościach w niezawodny sposób przy użyciu serwerów powiadomień Google.</string>
+    <string name="notificationsFastModeDescription">Zostaniesz natychmiast powiadomiony o nowych wiadomościach w niezawodny sposób przy użyciu serwerów powiadomień Google.</string>
     <string name="notificationsSlowModeDescription">Session będzie czasami sprawdzać w tle czy są nowe wiadomości.</string>
     <string name="open">Otwórz</string>
     <string name="urlCopy">Skopiuj URL</string>

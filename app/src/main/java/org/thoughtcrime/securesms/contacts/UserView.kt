@@ -14,7 +14,6 @@ import com.bumptech.glide.RequestManager
 
 class UserView : LinearLayout {
     private lateinit var binding: ViewUserBinding
-    var openGroupThreadID: Long = -1L // FIXME: This is a bit ugly
 
     enum class ActionIndicator {
         None,
@@ -86,8 +85,6 @@ class UserView : LinearLayout {
         }
     }
 
-    fun unbind() {
-        binding.profilePictureView.recycle()
-    }
+    fun unbind() { binding.profilePictureView.recycle() }
     // endregion
 }

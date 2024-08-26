@@ -1368,7 +1368,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 return false
             } else {
                 // ..otherwise if the earliest emoji reaction was more than a minute ago we'll
-                // remove that early reaction to move the timestamp at index 1 into index 0,, add
+                // remove that early reaction to move the timestamp at index 1 into index 0, add
                 // our new timestamp and return true to accept the emoji reaction.
                 emojiRateLimiterQueue.removeFirst()
                 emojiRateLimiterQueue.addLast(timestamp)
@@ -1843,7 +1843,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
                 // ..otherwise we can attempt to send the attachment(s).
                 // Note: The only multi-attachment message type is when sending images - all others
-                // attempt send on initial attachment selection.
+                // attempt send the attachment immediately upon file selection.
                 sendAttachments(attachmentManager.buildSlideDeck().asAttachments(), null)
             }
 
@@ -1931,8 +1931,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             Permissions.with(this)
                 .request(Manifest.permission.RECORD_AUDIO)
-                .withRationaleDialog(getString(R.string.permissionsMicrophoneAccessRequiredAndroid), R.drawable.ic_baseline_mic_48)
-                .withPermanentDenialDialog(Phrase.from(applicationContext, R.string.permissionsMicrophoneAccessRequiredAndroid)
+                .withRationaleDialog(getString(R.string.permissionsMicrophoneAccessRequired), R.drawable.ic_baseline_mic_48)
+                .withPermanentDenialDialog(Phrase.from(applicationContext, R.string.permissionsMicrophoneAccessRequired)
                     .put(APP_NAME_KEY, getString(R.string.app_name))
                     .format().toString())
                 .execute()
@@ -2119,7 +2119,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun banUser(messages: Set<MessageRecord>) {
         showSessionDialog {
             title(R.string.banUser)
-            // ACL TODO - We need a string for the below `text` element
+            // ACL TODO - We need a string for the below `text` element - have asked Lucy about this 2024/08/26 -AL
             text("This will ban the selected user from this room. It won't ban them from other rooms.")
             button(R.string.banUser) { viewModel.banUser(messages.first().individualRecipient); endActionMode() }
             cancelButton(::endActionMode)
@@ -2129,7 +2129,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun banAndDeleteAll(messages: Set<MessageRecord>) {
         showSessionDialog {
             title(R.string.banUser)
-            // ACL TODO - We need a string for the below `text` element
+            // ACL TODO - We need a string for the below `text` element - have asked Lucy about this 2024/08/26 -AL
             text("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
             button(R.string.banUser) { viewModel.banAndDeleteAll(messages.first()); endActionMode() }
             cancelButton(::endActionMode)

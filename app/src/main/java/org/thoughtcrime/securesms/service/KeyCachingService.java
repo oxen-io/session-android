@@ -54,7 +54,7 @@ import org.thoughtcrime.securesms.notifications.NotificationChannels;
  *
  * @author Moxie Marlinspike
  */
-//TODO AC: This service does only serve one purpose now - to track the screen lock state and handle the timer.
+// TODO: This service does only serve one purpose now - to track the screen lock state and handle the timer.
 // We need to refactor it and cleanup from all the old Signal code.
 public class KeyCachingService extends Service {
 
@@ -70,7 +70,7 @@ public class KeyCachingService extends Service {
 
   private final IBinder binder  = new KeySetBinder();
 
-  // AC: This is a temporal drop off replacement for the refactoring time being.
+  // This is a temporal drop off replacement for the refactoring time being.
   // This field only indicates if the app was unlocked or not (null means locked).
   private static Object masterSecret = null;
 

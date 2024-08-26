@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">یا به یکی از این‌ها بپیوندید…</string>
     <string name="notificationsFastMode">حالت سریع</string>
     <string name="notificationsSlowMode">حالت آهسته</string>
-    <string name="notificationsFastModeDescriptionAndroid">شما سریع و مطمئن با استفاده از سرور‌های اطلاع‌رسانی گوگل از پیام‌های جدید مطلع می‌شوید.</string>
+    <string name="notificationsFastModeDescription">شما سریع و مطمئن با استفاده از سرور‌های اطلاع‌رسانی گوگل از پیام‌های جدید مطلع می‌شوید.</string>
     <string name="notificationsSlowModeDescription">نشست هرازگاهی در پس زمینه وجود پیام‌های جدید را بررسی می‌کند.</string>
     <string name="open">باز کردن</string>
     <string name="urlCopy">کپی URL</string>

@@ -35,9 +35,9 @@ class FixedTimeBuckets(
     @StringRes
     fun getBucketText(time: ZonedDateTime): Int? {
         return when {
-            time >= startOfToday -> R.string.BucketedThreadMedia_Today          // Should be replaced with call to getLocalisedRelativeDayString
-            time >= startOfYesterday -> R.string.BucketedThreadMedia_Yesterday  // Should be replaced with call to getLocalisedRelativeDayString
-            time >= startOfThisWeek -> R.string.attachmentsThisWeek
+            time >= startOfToday     -> R.string.BucketedThreadMedia_Today
+            time >= startOfYesterday -> R.string.BucketedThreadMedia_Yesterday
+            time >= startOfThisWeek  -> R.string.attachmentsThisWeek
             time >= startOfThisMonth -> R.string.attachmentsThisMonth
             else -> null
         }

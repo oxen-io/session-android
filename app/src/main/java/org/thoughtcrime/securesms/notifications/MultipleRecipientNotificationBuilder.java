@@ -18,7 +18,6 @@ import java.util.List;
 import network.loki.messenger.R;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
-import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.database.SessionContactDatabase;
@@ -41,12 +40,15 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
   }
 
   public void setMessageCount(int messageCount, int threadCount) {
-    String txt = Phrase.from(context, R.string.notificationsAndroidSystem)
+    String txt = Phrase.from(context, R.string.notificationsSystem)
             .put(MESSAGE_COUNT_KEY, messageCount)
             .put(CONVERSATION_COUNT_KEY, threadCount)
             .format().toString();
     setSubText(txt);
-    setContentInfo(String.valueOf(messageCount)); // Note: `setContentInfo` details are only visible in Android API 24 and below - remove when min. API is upgraded.
+
+    // Note: `setContentInfo` details are only visible in Android API 24 and below - as our minimum is now API 26 this can be skipped.
+    //setContentInfo(String.valueOf(messageCount));
+
     setNumber(messageCount);
   }
 

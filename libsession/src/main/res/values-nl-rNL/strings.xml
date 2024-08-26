@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">Of neem deel aan een van deze...</string>
     <string name="notificationsFastMode">Snelle modus</string>
     <string name="notificationsSlowMode">Langzame modus</string>
-    <string name="notificationsFastModeDescriptionAndroid">U wordt op een betrouwbare en directe manier op de hoogte gebracht van nieuwe berichten via Googles notificatieservers.</string>
+    <string name="notificationsFastModeDescription">U wordt op een betrouwbare en directe manier op de hoogte gebracht van nieuwe berichten via Googles notificatieservers.</string>
     <string name="notificationsSlowModeDescription">Sessie controleert af en toe op nieuwe berichten op de achtergrond.</string>
     <string name="open">Open</string>
     <string name="urlCopy">Kopieer URL</string>

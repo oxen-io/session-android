@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">Ή συνδεθείτε σε ένα από αυτά…</string>
     <string name="notificationsFastMode">Γρήγορη Επιλογή</string>
     <string name="notificationsSlowMode">Αργή Επιλογή</string>
-    <string name="notificationsFastModeDescriptionAndroid">Θα ειδοποιηθείτε για νέα μηνύματα αξιόπιστα και άμεσα χρησιμοποιώντας τους διακομιστές ειδοποιήσεων της Google.</string>
+    <string name="notificationsFastModeDescription">Θα ειδοποιηθείτε για νέα μηνύματα αξιόπιστα και άμεσα χρησιμοποιώντας τους διακομιστές ειδοποιήσεων της Google.</string>
     <string name="notificationsSlowModeDescription">Το Session θα ελέγχει κατά καιρούς για νέα μηνύματα στο παρασκήνιο.</string>
     <string name="open">Άνοιγμα</string>
     <string name="urlCopy">Αντιγραφή URL</string>

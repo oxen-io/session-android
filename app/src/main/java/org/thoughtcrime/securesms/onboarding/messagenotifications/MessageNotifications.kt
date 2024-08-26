@@ -71,7 +71,7 @@ internal fun MessageNotificationsScreen(
 
         NotificationRadioButton(
             R.string.notificationsFastMode,
-            R.string.notificationsFastModeDescriptionAndroid,
+            R.string.notificationsFastModeDescription,
             modifier = Modifier.contentDescription(R.string.AccessibilityId_notificationsFastMode),
             tag = R.string.recommended,
             checked = state.pushEnabled,

@@ -187,7 +187,7 @@
     <string name="communityJoinOfficial">Arba prisijunkite prie vienos iš šių…</string>
     <string name="notificationsFastMode">Greita veiksena</string>
     <string name="notificationsSlowMode">Lėta veiksena</string>
-    <string name="notificationsFastModeDescriptionAndroid">Jums bus nedelsiant ir patikimai pranešama apie naujas žinutes, naudojant „Google“ pranešimų serverius.</string>
+    <string name="notificationsFastModeDescription">Jums bus nedelsiant ir patikimai pranešama apie naujas žinutes, naudojant „Google“ pranešimų serverius.</string>
     <string name="notificationsSlowModeDescription">Session programėlė retkarčiais fone tikrins, ar yra naujų žinučių.</string>
     <string name="open">Atverti</string>
     <string name="enable">Įjungti</string>

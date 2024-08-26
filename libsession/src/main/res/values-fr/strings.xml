@@ -201,7 +201,7 @@
     <string name="communityJoinOfficial">Ou rejoignez l\'un(e) de ceux-ci…</string>
     <string name="notificationsFastMode">Mode rapide</string>
     <string name="notificationsSlowMode">Mode lent</string>
-    <string name="notificationsFastModeDescriptionAndroid">Vous serez averti de nouveaux messages de manière fiable et immédiate en utilisant les serveurs de notification de Google.</string>
+    <string name="notificationsFastModeDescription">Vous serez averti de nouveaux messages de manière fiable et immédiate en utilisant les serveurs de notification de Google.</string>
     <string name="notificationsSlowModeDescription">Session vérifiera occasionnellement la présence de nouveaux messages en tâche de fond.</string>
     <string name="open">Ouvrir</string>
     <string name="urlCopy">Copier l\'adresse URL</string>

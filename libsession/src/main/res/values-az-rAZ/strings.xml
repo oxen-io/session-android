@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">Və ya bunlardan birinə qoşulun…</string>
     <string name="notificationsFastMode">Sürətli rejim</string>
     <string name="notificationsSlowMode">Yavaş rejim</string>
-    <string name="notificationsFastModeDescriptionAndroid">Google-un bildiriş serverlərini istifadə edərək yeni mesajlardan dərhal və etibarlı şəkildə xəbərdar olacaqsınız.</string>
+    <string name="notificationsFastModeDescription">Google-un bildiriş serverlərini istifadə edərək yeni mesajlardan dərhal və etibarlı şəkildə xəbərdar olacaqsınız.</string>
     <string name="notificationsSlowModeDescription">Session, arada arxaplanda yeni mesajları yoxlayacaq.</string>
     <string name="open">Aç</string>
     <string name="urlCopy">URL-ni kopyala</string>

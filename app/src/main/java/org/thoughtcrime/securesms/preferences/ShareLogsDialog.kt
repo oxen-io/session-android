@@ -15,6 +15,11 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.squareup.phrase.Phrase
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.Objects
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
@@ -29,11 +34,6 @@ import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.util.FileProviderUtil
 import org.thoughtcrime.securesms.util.StreamUtil
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.util.Objects
-import java.util.concurrent.TimeUnit
 
 class ShareLogsDialog(private val updateCallback: (Boolean)->Unit): DialogFragment() {
 

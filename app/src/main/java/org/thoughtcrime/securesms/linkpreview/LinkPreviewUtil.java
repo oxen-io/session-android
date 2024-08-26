@@ -1,10 +1,5 @@
 package org.thoughtcrime.securesms.linkpreview;
 
-import static org.thoughtcrime.securesms.giph.util.InfiniteScrollListener.TAG;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.text.Html;
@@ -12,15 +7,9 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.annimon.stream.Stream;
-
-import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.util.DateUtils;
-import org.session.libsignal.utilities.guava.Optional;
-
-import org.session.libsession.utilities.Util;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -30,10 +19,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import android.text.format.DateFormat;
-
-
 import okhttp3.HttpUrl;
+import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.Log;
+import org.session.libsignal.utilities.guava.Optional;
 
 public final class LinkPreviewUtil {
 
@@ -71,9 +60,9 @@ public final class LinkPreviewUtil {
         if (linkUrl == null)                      return false;
 
         HttpUrl url = HttpUrl.parse(linkUrl);
-        return url != null                                   &&
-                !TextUtils.isEmpty(url.scheme())              &&
-                "https".equals(url.scheme())                  &&
+        return url != null                       &&
+                !TextUtils.isEmpty(url.scheme()) &&
+                "https".equals(url.scheme())     &&
                 isLegalUrl(linkUrl);
     }
 
@@ -84,9 +73,9 @@ public final class LinkPreviewUtil {
         if (mediaUrl == null) return false;
 
         HttpUrl url = HttpUrl.parse(mediaUrl);
-        return url != null                                                &&
-                !TextUtils.isEmpty(url.scheme())                           &&
-                "https".equals(url.scheme())                               &&
+        return url != null                       &&
+                !TextUtils.isEmpty(url.scheme()) &&
+                "https".equals(url.scheme())     &&
                 isLegalUrl(mediaUrl);
     }
 

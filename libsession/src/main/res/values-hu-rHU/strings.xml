@@ -194,7 +194,7 @@
     <string name="communityJoinOfficial">Vagy csatlakozz ezekhez…</string>
     <string name="notificationsFastMode">Gyorsított mód</string>
     <string name="notificationsSlowMode">Lassított mód</string>
-    <string name="notificationsFastModeDescriptionAndroid">A Google értesítési szerverein keresztül megbízhatóan és azonnal értesítést kapsz az új üzenetekről.</string>
+    <string name="notificationsFastModeDescription">A Google értesítési szerverein keresztül megbízhatóan és azonnal értesítést kapsz az új üzenetekről.</string>
     <string name="notificationsSlowModeDescription">A Session alkalmanként, az új üzeneteket a háttérben fogja ellenőrizni.</string>
     <string name="open">Megnyit</string>
     <string name="urlCopy">URL másolása</string>

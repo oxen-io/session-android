@@ -269,13 +269,6 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="org.thoughtcrime.securesms.MediaOverviewActivity"
-            android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Session.DayNight.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name="org.thoughtcrime.securesms.DummyActivity"
             android:allowTaskReparenting="true"
             android:alwaysRetainTaskState="false"

@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">Oder tritt diesen bei…</string>
     <string name="notificationsFastMode">Schneller Modus</string>
     <string name="notificationsSlowMode">Langsamer Modus</string>
-    <string name="notificationsFastModeDescriptionAndroid">Du wirst über neue Nachrichten zuverlässig und sofort über Google\'s Server benachrichtigt.</string>
+    <string name="notificationsFastModeDescription">Du wirst über neue Nachrichten zuverlässig und sofort über Google\'s Server benachrichtigt.</string>
     <string name="notificationsSlowModeDescription">Session sucht gelegentlich nach neuen Nachrichten im Hintergrund.</string>
     <string name="open">Öffnen</string>
     <string name="urlCopy">Link kopieren</string>

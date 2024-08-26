@@ -167,7 +167,6 @@ public class AudioSlidePlayer implements SensorEventListener {
         }
       }
 
-
       @Override
       public void onPlayerError(PlaybackException error) {
         Log.w(TAG, "MediaPlayer Error: " + error);
@@ -206,9 +205,7 @@ public class AudioSlidePlayer implements SensorEventListener {
       this.mediaPlayer.release();
     }
 
-    if (this.audioAttachmentServer != null) {
-      this.audioAttachmentServer.stop();
-    }
+    if (this.audioAttachmentServer != null) { this.audioAttachmentServer.stop(); }
 
     sensorManager.unregisterListener(AudioSlidePlayer.this);
 
@@ -217,9 +214,7 @@ public class AudioSlidePlayer implements SensorEventListener {
   }
 
   public synchronized static void stopAll() {
-    if (playing.isPresent()) {
-      playing.get().stop();
-    }
+    if (playing.isPresent()) { playing.get().stop(); }
   }
 
   public synchronized boolean isReady() {
@@ -361,9 +356,8 @@ public class AudioSlidePlayer implements SensorEventListener {
   }
 
   @Override
-  public void onAccuracyChanged(Sensor sensor, int accuracy) {
+  public void onAccuracyChanged(Sensor sensor, int accuracy) { /* Do nothing */ }
 
-  }
 
   public interface Listener {
     void onPlayerStart(@NonNull AudioSlidePlayer player);

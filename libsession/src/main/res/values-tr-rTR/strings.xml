@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">Veya bunlardan birine katılın…</string>
     <string name="notificationsFastMode">Hızlı Mod</string>
     <string name="notificationsSlowMode">Yavaş Mod</string>
-    <string name="notificationsFastModeDescriptionAndroid">Google\'ın bildirim sunucularını kullanarak yeni iletilerden güvenilir ve anında haberdar olacaksınız.</string>
+    <string name="notificationsFastModeDescription">Google\'ın bildirim sunucularını kullanarak yeni iletilerden güvenilir ve anında haberdar olacaksınız.</string>
     <string name="notificationsSlowModeDescription">Session ara sıra arka planda yeni mesajları kontrol eder.</string>
     <string name="open">Aç</string>
     <string name="urlCopy">Bağlantıyı kopyala</string>

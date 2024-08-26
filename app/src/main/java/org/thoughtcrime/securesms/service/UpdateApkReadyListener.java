@@ -10,12 +10,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-
 import com.squareup.phrase.Phrase;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.MessageDigest;
+import network.loki.messenger.R;
 import org.session.libsession.utilities.FileUtils;
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -23,13 +25,6 @@ import org.session.libsignal.utilities.Hex;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
 import org.thoughtcrime.securesms.util.FileProviderUtil;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.security.MessageDigest;
-
-import network.loki.messenger.R;
 
 public class UpdateApkReadyListener extends BroadcastReceiver {
 

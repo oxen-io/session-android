@@ -133,15 +133,9 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
 
         private fun createOutputUri(context: Context, outputUri: Uri, contentType: String, fileName: String): Uri? {
 
-            if (fileName == null)
-            {
-                Log.w("ACL", "Filename is null - wtf!")
-            }
-
-            if (fileName != null && fileName.isEmpty())
-            {
-                Log.w("ACL", "Filename is empty - wtf!")
-            }
+            // TODO: This method may pass an empty string as the filename in Android API 28 and below. This requires
+            // TODO: follow-up investigation, but has temporarily been worked around, see:
+            // TODO: https://github.com/oxen-io/session-android/commit/afbb71351a74220c312a09c25cc1c79738453c12
 
             val fileParts: Array<String> = getFileNameParts(fileName)
             val base = fileParts[0]

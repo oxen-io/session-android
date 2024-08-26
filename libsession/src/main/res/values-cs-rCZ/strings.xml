@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">Nebo se připojte k jedné z těchto…</string>
     <string name="notificationsFastMode">Rychlý režim</string>
     <string name="notificationsSlowMode">Pomalý režim</string>
-    <string name="notificationsFastModeDescriptionAndroid">Budete spolehlivě a okamžitě informováni o nových zprávách pomocí oznamovacích serverů Google.</string>
+    <string name="notificationsFastModeDescription">Budete spolehlivě a okamžitě informováni o nových zprávách pomocí oznamovacích serverů Google.</string>
     <string name="notificationsSlowModeDescription">Session občas zkontroluje nové zprávy na pozadí.</string>
     <string name="open">Otevřít</string>
     <string name="urlCopy">Zkopírovat URL</string>

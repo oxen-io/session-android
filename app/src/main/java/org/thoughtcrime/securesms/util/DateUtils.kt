@@ -31,7 +31,7 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 // Enums used to get the locale-aware String for one of the three relative days
-public enum class RelativeDay { TODAY, YESTERDAY, TOMORROW }
+enum class RelativeDay { TODAY, YESTERDAY, TOMORROW }
 
 /**
  * Utility methods to help display dates in a nice, easily readable way.
@@ -81,30 +81,6 @@ object DateUtils : android.text.format.DateUtils() {
             FORMAT_SHOW_DATE).toString()
     }
 
-    // Method to get the locale-aware String for the word "Now"
-//    public fun getLocalisedNowString(): String {
-//        val now = Calendar.getInstance().timeInMillis
-//        return getRelativeTimeSpanString(now, now,MINUTE_IN_MILLIS, FORMAT_SHOW_TIME).toString()
-//    }
-
-    // THIS DOES NOT WORK
-    public fun getLocalisedNowString(): String {
-
-        val now = Calendar.getInstance().timeInMillis
-        val relativeTime = getRelativeTimeSpanString(now, now, MINUTE_IN_MILLIS, FORMAT_SHOW_TIME).toString()
-
-        // Create a DateFormat instance for the current time
-        val timeFormat = getTimeInstance(SHORT, Locale.getDefault())
-        val formattedTime = timeFormat.format(Calendar.getInstance().time)
-
-        // Check if the relative time indicates "0 minutes ago" or similar and replace it with the formatted time
-        return if (relativeTime == "0 minutes ago" || relativeTime == "in 0 minutes") {
-            formattedTime
-        } else {
-            relativeTime
-        }
-    }
-
     fun getFormattedDateTime(time: Long, template: String, locale: Locale): String {
         val localizedPattern = getLocalizedPattern(template, locale)
         return SimpleDateFormat(localizedPattern, locale).format(Date(time))
@@ -117,8 +93,9 @@ object DateUtils : android.text.format.DateUtils() {
     fun getDisplayFormattedTimeSpanString(c: Context, locale: Locale, timestamp: Long): String {
         // If the timestamp is invalid (ie. 0) then assume we're waiting on data and just use the 'Now' copy
         return if (timestamp == 0L || isWithin(timestamp, 1, TimeUnit.MINUTES)) {
-            getLocalisedNowString()
-            //c.getString(R.string.DateUtils_just_now) // ACL REMOVE WHEN HAPPY
+            // TODO ACL: We need a string for "Now" because I can't seem to coax a localised version from DateUtils -
+            // TODO: although anyone seeing is this is more than welcome to try! - 2024-08-26
+            "Now"
         } else if (isToday(timestamp)) {
             getFormattedDateTime(timestamp, getHourFormat(c), locale)
         } else if (isWithin(timestamp, 6, TimeUnit.DAYS)) {

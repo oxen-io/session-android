@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">Կամ միացե՛ք սրանցից մեկին…</string>
     <string name="notificationsFastMode">Արագ ռեժիմ</string>
     <string name="notificationsSlowMode">Դանդաղ ռեժիմ</string>
-    <string name="notificationsFastModeDescriptionAndroid">Դուք մշտապես և անմիջապես կտեղեկացվեք նոր հաղորդագրությունների մասին՝ օգտագործելով Google-ի ծանուցումների սերվերները:</string>
+    <string name="notificationsFastModeDescription">Դուք մշտապես և անմիջապես կտեղեկացվեք նոր հաղորդագրությունների մասին՝ օգտագործելով Google-ի ծանուցումների սերվերները:</string>
     <string name="notificationsSlowModeDescription">Session-ը երբեմն, ֆոնային կստուգի նոր հաղորդագրությունների առկայությունը:</string>
     <string name="open">Բացել</string>
     <string name="urlCopy">Պատճենել հղումը</string>

@@ -193,7 +193,7 @@
     <string name="communityJoinOfficial">أو انضم إلى واحدة من…</string>
     <string name="notificationsFastMode">الوضع السريع</string>
     <string name="notificationsSlowMode">الوضع البطيء</string>
-    <string name="notificationsFastModeDescriptionAndroid">سوف يتم إشعارك بالرسائل بشكل موثوق و فوري بإستخدام خوادم جوجل للإشعارات.</string>
+    <string name="notificationsFastModeDescription">سوف يتم إشعارك بالرسائل بشكل موثوق و فوري بإستخدام خوادم جوجل للإشعارات.</string>
     <string name="notificationsSlowModeDescription">سيقوم سيشن بالتحقق من وجود رسائل جديدة بشكل دوري في الخلفية.</string>
     <string name="open">اِفتح</string>
     <string name="urlCopy">انسخ الرابط</string>

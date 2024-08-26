@@ -123,7 +123,7 @@
     <string name="messageVoice">Balss ziņojums</string>
     <string name="notificationsFastMode">Ātrais režīms</string>
     <string name="notificationsSlowMode">Lēnais režīms</string>
-    <string name="notificationsFastModeDescriptionAndroid">Jūs saņemsiet paziņojumus par jauniem ziņojumiem droši un nekavējoties, izmantojot Google paziņojumu serverus.</string>
+    <string name="notificationsFastModeDescription">Jūs saņemsiet paziņojumus par jauniem ziņojumiem droši un nekavējoties, izmantojot Google paziņojumu serverus.</string>
     <string name="notificationsSlowModeDescription">Session laiku pa laikam fonā pārbaudīs, vai nav jaunu ziņojumu.</string>
     <string name="open">Atvērt</string>
     <string name="urlCopy">Nokopēt URL</string>

@@ -33,7 +33,7 @@ class BlockedDialog(private val recipient: Recipient, private val context: Conte
 
         title(resources.getString(R.string.blockUnblock))
         text(spannable)
-        dangerButton(R.string.blockUnblock,R.string.AccessibilityId_unblockConfirm) { unblock() }
+        dangerButton(R.string.blockUnblock, R.string.AccessibilityId_unblockConfirm) { unblock() }
         cancelButton { dismiss() }
     }
 
