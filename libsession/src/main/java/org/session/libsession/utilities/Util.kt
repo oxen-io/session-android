@@ -9,6 +9,7 @@ import android.os.Looper
 import android.provider.Telephony
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.StyleSpan
 import org.session.libsignal.utilities.Log
@@ -357,6 +358,25 @@ object Util {
         val units = arrayOf("B", "kB", "MB", "GB", "TB")
         val digitGroups = (Math.log10(sizeBytes.toDouble()) / Math.log10(1024.0)).toInt()
         return DecimalFormat("#,##0.#").format(sizeBytes / Math.pow(1024.0, digitGroups.toDouble())) + " " + units[digitGroups]
+    }
+
+    // Method that takes a char sequence that contains one or more elements surrounded in bold tags
+    // like "Hello <b>world</b>" and returns a SpannableString that will display the appropriate
+    // elements in bold. If there are no such <b> or </b> elements then the original string is returned
+    // as a SpannableString without any bold highlighting.
+    @JvmStatic
+    fun makeBoldBetweenTags(input: CharSequence): SpannableString {
+        val spannable = SpannableString(input)
+        var startIndex = 0
+        while (true) {
+            startIndex = input.indexOf("<b>", startIndex)
+            if (startIndex == -1) break
+            val endIndex = input.indexOf("</b>", startIndex + 3)
+            if (endIndex == -1) break
+            spannable.setSpan(StyleSpan(Typeface.BOLD),startIndex + 3, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            startIndex = endIndex + 4
+        }
+        return spannable
     }
 }
 

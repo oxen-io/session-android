@@ -78,7 +78,7 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
             // for unknown reasons it provides us with an empty filename when saving files.
             // TODO: Further investigation into root cause and fix!
             if (fileName.isNullOrEmpty()) fileName = generateOutputFileName(contentType, attachment.date)
-            
+
             fileName = sanitizeOutputFileName(fileName)
             val outputUri: Uri = getMediaStoreContentUriForType(contentType)
             val mediaUri = createOutputUri(context, outputUri, contentType, fileName)

@@ -1072,24 +1072,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         updateUnreadCountIndicator()
     }
 
-    // Method that takes a char sequence that contains one or more elements surrounded in bold tags
-    // like "Hello <b>world</b>" and returns a SpannableString that will display the appropriate
-    // elements in bold. If there are no such <b> or </b> elements then the original string is returned
-    // as a SpannableString without any bold highlighting.
-    private fun makeBoldBetweenTags(input: CharSequence): SpannableString {
-        val spannable = SpannableString(input)
-        var startIndex = 0
-        while (true) {
-            startIndex = input.indexOf("<b>", startIndex)
-            if (startIndex == -1) break
-            val endIndex = input.indexOf("</b>", startIndex + 3)
-            if (endIndex == -1) break
-            spannable.setSpan(StyleSpan(Typeface.BOLD),startIndex + 3, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            startIndex = endIndex + 4
-        }
-        return spannable
-    }
-
     // Update placeholder / control messages in a conversation
     private fun updatePlaceholder() {
         val recipient = viewModel.recipient ?: return Log.w("Loki", "recipient was null in placeholder update")
@@ -1134,7 +1116,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding.placeholderText.isVisible = showPlaceholder
         if (showPlaceholder) {
             if (!isNoteToSelf) {
-                binding.placeholderText.text = makeBoldBetweenTags(txtCS)
+                binding.placeholderText.text = org.session.libsession.utilities.Util.makeBoldBetweenTags(txtCS)
             } else {
                 binding.placeholderText.text = txtCS
             }

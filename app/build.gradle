@@ -227,7 +227,6 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:$daggerHiltVersion")
     ksp("com.github.bumptech.glide:ksp:$glideVersion")
 
-    implementation 'androidx.compose.material3:material3-android:1.2.1'
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'

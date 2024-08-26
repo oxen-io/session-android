@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.utilities
 
 import android.content.Context
+import android.text.SpannableString
 import com.squareup.phrase.Phrase
 import org.session.libsession.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -23,6 +24,7 @@ import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_K
 import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.OTHER_NAME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
+import org.session.libsession.utilities.Util
 
 object UpdateMessageBuilder {
     const val TAG = "libsession"
@@ -33,29 +35,34 @@ object UpdateMessageBuilder {
         ?.displayName(Contact.ContactContext.REGULAR)
         ?: truncateIdForDisplay(senderId)
 
-    fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false): String {
+    //@RequiresApi(Build.VERSION_CODES.P)
+    fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false): CharSequence {
         val updateData = updateMessageData.kind
         if (updateData == null || !isOutgoing && senderId == null) return ""
-        val senderName: String = if (isOutgoing) context.getString(R.string.you) else getSenderName(senderId!!)
 
         return when (updateData) {
             // --- Group created or joined ---
             is UpdateMessageData.Kind.GroupCreation -> {
-                if (!isOutgoing) context.getString(R.string.groupInviteYou)
-                else "" // We no longer add a string like `disappearingMessagesNewGroup` ("You created a new group") and leave the group with its default empty state
+                if (!isOutgoing) {
+                    Util.makeBoldBetweenTags(SpannableString(context.getString(R.string.groupInviteYou)))
+                } else {
+                    "" // We no longer add a string like `disappearingMessagesNewGroup` ("You created a new group") and leave the group with its default empty state
+                }
             }
 
             // --- Group name changed ---
             is UpdateMessageData.Kind.GroupNameChange -> {
                 if (isOutgoing) {
-                        Phrase.from(context, R.string.groupNameNew)
+                        val cs = Phrase.from(context, R.string.groupNameNew)
                         .put(GROUP_NAME_KEY, updateData.name)
-                        .format().toString()
+                        .format()
+                        Util.makeBoldBetweenTags(cs)
                 }
                 else {
-                    Phrase.from(context, R.string.groupNameNew)
+                    val cs = Phrase.from(context, R.string.groupNameNew)
                         .put(GROUP_NAME_KEY, updateData.name)
-                        .format().toString()
+                        .format()
+                        Util.makeBoldBetweenTags(cs)
                 }
             }
 
@@ -74,20 +81,20 @@ object UpdateMessageBuilder {
                     1 -> {
                         Phrase.from(context, R.string.groupMemberNew)
                             .put(NAME_KEY, updateData.updatedMembers.elementAtOrNull(0))
-                            .format().toString()
+                            .format()
                     }
                     2 -> {
                         Phrase.from(context, R.string.groupMemberTwoNew)
                             .put(NAME_KEY, updateData.updatedMembers.elementAtOrNull(0))
                             .put(OTHER_NAME_KEY, updateData.updatedMembers.elementAtOrNull(1))
-                            .format().toString()
+                            .format()
                     }
                     else -> {
                         val newMemberCountMinusOne = newMemberCount - 1
                         Phrase.from(context, R.string.groupMemberMoreNew)
                             .put(NAME_KEY, updateData.updatedMembers.elementAtOrNull(0))
                             .put(COUNT_KEY, newMemberCountMinusOne)
-                            .format().toString()
+                            .format()
                     }
                 }
             }
@@ -98,15 +105,13 @@ object UpdateMessageBuilder {
 
                 // 1st case: you are part of the removed members
                 return if (userPublicKey in updateData.updatedMembers) {
-                    if (isOutgoing) context.getString(R.string.groupMemberYouLeft)                             // You chose to leave
-                    else Phrase.from(context, R.string.groupRemovedYou)  // You were forced to leave
+                    if (isOutgoing) context.getString(R.string.groupMemberYouLeft) // You chose to leave
+                    else Phrase.from(context, R.string.groupRemovedYou)            // You were forced to leave
                             .put(GROUP_NAME_KEY, updateData.groupName)
-                            .format().toString()
+                            .format()
                 }
                 else // 2nd case: you are not part of the removed members
                 {
-                    val members = updateData.updatedMembers.joinToString(", ", transform = ::getSenderName)
-
                     // a.) You are the person doing the removing of one or more members
                     if (isOutgoing) {
                         when (updateData.updatedMembers.size) {
@@ -116,15 +121,15 @@ object UpdateMessageBuilder {
                                 }
                             1 -> Phrase.from(context, R.string.groupRemoved)
                                 .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
-                                .format().toString()
+                                .format()
                             2 -> Phrase.from(context, R.string.groupRemovedTwo)
                                 .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                                 .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
-                                .format().toString()
+                                .format()
                             else -> Phrase.from(context, R.string.groupRemovedMore)
                                     .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                                     .put(COUNT_KEY, updateData.updatedMembers.size - 1)
-                                    .format().toString()
+                                    .format()
                         }
                     }
                     else // b.) Someone else is the person doing the removing of one or more members
@@ -140,15 +145,15 @@ object UpdateMessageBuilder {
                             }
                             1 -> Phrase.from(context, R.string.groupRemoved)
                                 .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
-                                .format().toString()
+                                .format()
                             2 -> Phrase.from(context, R.string.groupRemovedTwo)
                                 .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                                 .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
-                                .format().toString()
+                                .format()
                             else -> Phrase.from(context, R.string.groupRemovedMore)
                                 .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                                 .put(COUNT_KEY, updateData.updatedMembers.size - 1)
-                                .format().toString()
+                                .format()
                         }
                     }
                 }
@@ -165,15 +170,15 @@ object UpdateMessageBuilder {
                         }
                         1 -> Phrase.from(context, R.string.groupMemberLeft)
                             .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
-                            .format().toString()
+                            .format()
                         2 -> Phrase.from(context, R.string.groupMemberLeftTwo)
                             .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                             .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
-                            .format().toString()
+                            .format()
                         else -> Phrase.from(context, R.string.groupMemberLeftMore)
                             .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                             .put(COUNT_KEY, updateData.updatedMembers.size - 1)
-                            .format().toString()
+                            .format()
                     }
                 }
             }
