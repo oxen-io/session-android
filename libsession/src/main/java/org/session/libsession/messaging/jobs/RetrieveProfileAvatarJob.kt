@@ -12,11 +12,11 @@ import org.session.libsession.utilities.Util.equals
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.streams.ProfileCipherInputStream
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Util.SECURE_RANDOM
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.security.SecureRandom
 import java.util.concurrent.ConcurrentSkipListSet
 
 class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipientAddress: Address): Job {
@@ -39,7 +39,7 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
 
     override suspend fun execute(dispatcherName: String) {
         val delegate = delegate ?: return Log.w(TAG, "RetrieveProfileAvatarJob has no delegate method to work with!")
-        if (profileAvatar in errorUrls) return delegate.handleJobFailed(this, dispatcherName, Exception("Profile URL 404'd this app instance"))
+        if (profileAvatar != null && profileAvatar in errorUrls) return delegate.handleJobFailed(this, dispatcherName, Exception("Profile URL 404'd this app instance"))
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
         val recipient = Recipient.from(context, recipientAddress, true)
@@ -64,7 +64,7 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
             Log.w(TAG, "Removing profile avatar for: " + recipient.address.serialize())
 
             if (recipient.isLocalNumber) {
-                setProfileAvatarId(context, SecureRandom().nextInt())
+                setProfileAvatarId(context, SECURE_RANDOM.nextInt())
                 setProfilePictureURL(context, null)
             }
 
@@ -83,7 +83,7 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
             decryptDestination.renameTo(AvatarHelper.getAvatarFile(context, recipient.address))
 
             if (recipient.isLocalNumber) {
-                setProfileAvatarId(context, SecureRandom().nextInt())
+                setProfileAvatarId(context, SECURE_RANDOM.nextInt())
                 setProfilePictureURL(context, profileAvatar)
             }
 

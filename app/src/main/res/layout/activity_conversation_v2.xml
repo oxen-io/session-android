@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/conversationRecyclerView"
         app:layout_constraintStart_toStartOf="parent"
+        android:theme="@style/Widget.Session.ActionBar.Flat"
         android:background="?colorPrimary"
         app:contentInsetStart="0dp">
 

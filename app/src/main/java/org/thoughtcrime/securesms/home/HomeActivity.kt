@@ -62,8 +62,8 @@ import org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
 import org.thoughtcrime.securesms.home.search.GlobalSearchResult
 import org.thoughtcrime.securesms.home.search.GlobalSearchViewModel
 import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.notifications.PushRegistry
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.SettingsActivity
@@ -80,18 +80,16 @@ import org.thoughtcrime.securesms.util.start
 import java.io.IOException
 import javax.inject.Inject
 
+private const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
+private const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
+
 @AndroidEntryPoint
 class HomeActivity : PassphraseRequiredActionBarActivity(),
     ConversationClickListener,
     GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
-    companion object {
-        const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
-        const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
-    }
-
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var glide: GlideRequests
+    private lateinit var glide: RequestManager
 
     @Inject lateinit var threadDb: ThreadDatabase
     @Inject lateinit var mmsSmsDatabase: MmsSmsDatabase
@@ -137,13 +135,12 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
     }
 
-    private val isNewAccount: Boolean get() = intent.getBooleanExtra(FROM_ONBOARDING, false)
+    private val isFromOnboarding: Boolean get() = intent.getBooleanExtra(FROM_ONBOARDING, false)
+    private val isNewAccount: Boolean get() = intent.getBooleanExtra(NEW_ACCOUNT, false)
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
-
-        if (!isTaskRoot) { finish(); return }
 
         // Set content view
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -151,7 +148,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // Set custom toolbar
         setSupportActionBar(binding.toolbar)
         // Set up Glide
-        glide = GlideApp.with(this)
+        glide = Glide.with(this)
         // Set up toolbar buttons
         binding.profileButton.setOnClickListener { openSettings() }
         binding.searchViewContainer.setOnClickListener {
@@ -253,7 +250,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         }
                         else -> buildList {
                             result.contactAndGroupList.takeUnless { it.isEmpty() }?.let {
-                                add(GlobalSearchAdapter.Model.Header(R.string.contacts))
+                                add(GlobalSearchAdapter.Model.Header(R.string.conversations))
                                 addAll(it)
                             }
                             result.messageResults.takeUnless { it.isEmpty() }?.let {
@@ -266,8 +263,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             }
         }
         EventBus.getDefault().register(this@HomeActivity)
-        if (intent.hasExtra(FROM_ONBOARDING)
-            && intent.getBooleanExtra(FROM_ONBOARDING, false)) {
+        if (isFromOnboarding) {
             if (Build.VERSION.SDK_INT >= 33 &&
                 (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled().not()) {
                 Permissions.with(this)
@@ -359,12 +355,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
         updateLegacyConfigView()
 
-        // TODO: remove this after enough updates that we can rely on ConfigBase.isNewConfigEnabled to always return true
-        // This will only run if we aren't using new configs, as they are schedule to sync when there are changes applied
-        if (textSecurePreferences.getConfigurationMessageSynced()) {
-            lifecycleScope.launch(Dispatchers.IO) {
-                ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@HomeActivity)
-            }
+        // Sync config changes if there are any
+        lifecycleScope.launch(Dispatchers.IO) {
+            ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@HomeActivity)
         }
     }
 
@@ -639,10 +632,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 }
 
-fun Context.startHomeActivity(isNewAccount: Boolean) {
+fun Context.startHomeActivity(isFromOnboarding: Boolean, isNewAccount: Boolean) {
     Intent(this, HomeActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        putExtra(HomeActivity.NEW_ACCOUNT, true)
-        putExtra(HomeActivity.FROM_ONBOARDING, true)
+        putExtra(NEW_ACCOUNT, isNewAccount)
+        putExtra(FROM_ONBOARDING, isFromOnboarding)
     }.also(::startActivity)
 }

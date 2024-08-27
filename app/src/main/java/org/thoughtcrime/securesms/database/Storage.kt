@@ -536,7 +536,7 @@ open class Storage(
     }
 
     private fun updateConvoVolatile(convos: ConversationVolatileConfig, messageTimestamp: Long) {
-        val extracted = convos.all()
+        val extracted = convos.all().filterNotNull()
         for (conversation in extracted) {
             val threadId = when (conversation) {
                 is Conversation.OneToOne -> getThreadIdFor(conversation.accountId, null, null, createThread = false)

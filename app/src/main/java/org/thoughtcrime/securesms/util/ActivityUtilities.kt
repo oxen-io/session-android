@@ -53,7 +53,7 @@ fun AppCompatActivity.push(intent: Intent, isForResult: Boolean = false) {
     } else {
         startActivity(intent)
     }
-    overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
+    overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
 }
 
 fun AppCompatActivity.show(intent: Intent, isForResult: Boolean = false) {
@@ -108,5 +108,5 @@ data class ThemeState (
 )
 
 inline fun <reified T: Activity> Activity.show() = Intent(this, T::class.java).also(::startActivity).let { overridePendingTransition(R.anim.slide_from_bottom, R.anim.fade_scale_out) }
-inline fun <reified T: Activity> Activity.push(modify: Intent.() -> Unit = {}) = Intent(this, T::class.java).also(modify).also(::startActivity).let { overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out) }
+inline fun <reified T: Activity> Activity.push(modify: Intent.() -> Unit = {}) = Intent(this, T::class.java).also(modify).also(::startActivity).let { overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left) }
 inline fun <reified T: Activity> Context.start(modify: Intent.() -> Unit = {}) = Intent(this, T::class.java).also(modify).apply { addFlags(FLAG_ACTIVITY_SINGLE_TOP) }.let(::startActivity)

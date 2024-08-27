@@ -26,7 +26,7 @@ import network.loki.messenger.R
 import org.thoughtcrime.securesms.onboarding.ui.ContinuePrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
-import org.thoughtcrime.securesms.ui.components.MaybeScanQrCode
+import org.thoughtcrime.securesms.ui.components.QRScannerScreen
 import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
 import org.thoughtcrime.securesms.ui.components.SessionTabRow
 import org.thoughtcrime.securesms.ui.theme.LocalType
@@ -52,7 +52,7 @@ internal fun LoadAccountScreen(
         ) { page ->
             when (TITLES[page]) {
                 R.string.sessionRecoveryPassword -> RecoveryPassword(state, onChange, onContinue)
-                R.string.qrScan -> MaybeScanQrCode(qrErrors, onScan = onScan)
+                R.string.qrScan -> QRScannerScreen(qrErrors, onScan = onScan)
             }
         }
     }

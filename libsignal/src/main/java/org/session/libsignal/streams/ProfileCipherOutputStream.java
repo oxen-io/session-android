@@ -1,13 +1,13 @@
 package org.session.libsignal.streams;
 
 import static org.session.libsignal.crypto.CipherUtil.CIPHER_LOCK;
+import static org.session.libsignal.utilities.Util.SECURE_RANDOM;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -80,7 +80,7 @@ public class ProfileCipherOutputStream extends DigestingOutputStream {
 
   private byte[] generateNonce() {
     byte[] nonce = new byte[12];
-    new SecureRandom().nextBytes(nonce);
+    SECURE_RANDOM.nextBytes(nonce);
     return nonce;
   }
 

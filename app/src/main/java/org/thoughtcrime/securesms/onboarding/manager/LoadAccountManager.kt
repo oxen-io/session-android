@@ -12,6 +12,7 @@ import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
+import org.thoughtcrime.securesms.util.VersionDataFetcher
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,7 +20,8 @@ import javax.inject.Singleton
 class LoadAccountManager @Inject constructor(
     @dagger.hilt.android.qualifiers.ApplicationContext private val context: Context,
     private val configFactory: ConfigFactory,
-    private val prefs: TextSecurePreferences
+    private val prefs: TextSecurePreferences,
+    private val versionDataFetcher: VersionDataFetcher
 ) {
     private val database: LokiAPIDatabaseProtocol
         get() = SnodeModule.shared.storage
@@ -51,6 +53,8 @@ class LoadAccountManager @Inject constructor(
                 setRestorationTime(System.currentTimeMillis())
                 setHasViewedSeed(true)
             }
+
+            versionDataFetcher.startTimedVersionCheck()
 
             ApplicationContext.getInstance(context).retrieveUserProfile()
         }

@@ -787,6 +787,7 @@
     <string name="activity_settings_display_name_edit_text_hint">Enter a display name</string>
     <string name="activity_settings_display_name_missing_error">Please pick a display name</string>
     <string name="activity_settings_display_name_too_long_error">Please pick a shorter display name</string>
+    <string name="activity_settings_debug_button_title">Debug Menu</string>
     <string name="activity_settings_privacy_button_title">Privacy</string>
     <string name="activity_settings_notifications_button_title">Notifications</string>
     <string name="activity_settings_message_requests_button_title">Message Requests</string>
@@ -1139,4 +1140,5 @@
     <string name="you_cannot_go_back_further_in_order_to_stop_loading_your_account_session_needs_to_quit">You cannot go back further. In order to stop loading your account, Session needs to quit.</string>
     <string name="you_cannot_go_back_further_cancel_account_creation">You cannot go back further. In order to cancel your account creation, Session needs to quit.</string>
     <string name="quit">Quit</string>
+    <string name="back">Back</string>
 </resources>

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,6 @@ import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.crypto.MnemonicCodec.DecodingError.InputTooShort
 import org.session.libsignal.crypto.MnemonicCodec.DecodingError.InvalidWord
 import org.thoughtcrime.securesms.crypto.MnemonicUtilities
-import javax.inject.Inject
 
 class LoadAccountEvent(val mnemonic: ByteArray)
 
@@ -54,6 +54,7 @@ internal class LoadAccountViewModel @Inject constructor(
     }
 
     fun onScanQrCode(string: String) {
+
         viewModelScope.launch {
             try {
                 codec.decodeMnemonicOrHexAsByteArray(string).let(::onSuccess)

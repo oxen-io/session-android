@@ -10,7 +10,7 @@ import network.loki.messenger.databinding.ViewUserBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.mms.GlideRequests
+import com.bumptech.glide.RequestManager
 
 class UserView : LinearLayout {
     private lateinit var binding: ViewUserBinding
@@ -45,7 +45,7 @@ class UserView : LinearLayout {
     // endregion
 
     // region Updating
-    fun bind(user: Recipient, glide: GlideRequests, actionIndicator: ActionIndicator, isSelected: Boolean = false) {
+    fun bind(user: Recipient, glide: RequestManager, actionIndicator: ActionIndicator, isSelected: Boolean = false) {
         val isLocalUser = user.isLocalNumber
         fun getUserDisplayName(publicKey: String): String {
             if (isLocalUser) return context.getString(R.string.MessageRecord_you)

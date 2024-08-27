@@ -5,45 +5,64 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import org.session.libsignal.utilities.Log
 import com.opencsv.CSVReader
 import org.session.libsession.snode.OnionRequestAPI
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileReader
+import java.util.SortedMap
+import java.util.TreeMap
 
 class IP2Country private constructor(private val context: Context) {
     private val pathsBuiltEventReceiver: BroadcastReceiver
     val countryNamesCache = mutableMapOf<String, String>()
 
-    private fun Ipv4Int(ip:String) = ip.takeWhile { it != '/' }.split('.').foldIndexed(0L) { i, acc, s ->
-        val asInt = s.toLong()
-        acc + (asInt shl (8 * (3-i)))
+    private fun Ipv4Int(ip: String): Int {
+        var result = 0L
+        var currentValue = 0L
+        var octetIndex = 0
+
+        for (char in ip) {
+            if (char == '.' || char == '/') {
+                result = result or (currentValue shl (8 * (3 - octetIndex)))
+                currentValue = 0
+                octetIndex++
+                if (char == '/') break
+            } else {
+                currentValue = currentValue * 10 + (char - '0')
+            }
+        }
+
+        // Handle the last octet
+        result = result or (currentValue shl (8 * (3 - octetIndex)))
+
+        return result.toInt()
     }
 
-    private val ipv4ToCountry by lazy {
+    private val ipv4ToCountry: TreeMap<Int, Int?> by lazy {
         val file = loadFile("geolite2_country_blocks_ipv4.csv")
-        val csv = CSVReader(FileReader(file.absoluteFile)).apply {
-            skip(1)
-        }
+        CSVReader(FileReader(file.absoluteFile)).use { csv ->
+            csv.skip(1)
 
-        csv.readAll()
-                .associate { cols ->
-                    Ipv4Int(cols[0]) to cols[1].toIntOrNull()
-                }
+            csv.asSequence().associateTo(TreeMap()) { cols ->
+                Ipv4Int(cols[0]).toInt() to cols[1].toIntOrNull()
+            }
+        }
     }
 
-    private val countryToNames by lazy {
+    private val countryToNames: Map<Int, String> by lazy {
         val file = loadFile("geolite2_country_locations_english.csv")
-        val csv = CSVReader(FileReader(file.absoluteFile)).apply {
-            skip(1)
-        }
-        csv.readAll()
+        CSVReader(FileReader(file.absoluteFile)).use { csv ->
+            csv.skip(1)
+
+            csv.asSequence()
                 .filter { cols -> !cols[0].isNullOrEmpty() && !cols[1].isNullOrEmpty() }
                 .associate { cols ->
                     cols[0].toInt() to cols[5]
                 }
+        }
     }
 
     // region Initialization
@@ -95,9 +114,8 @@ class IP2Country private constructor(private val context: Context) {
         // return early if cached
         countryNamesCache[ip]?.let { return it }
 
-        val comps = ipv4ToCountry.asSequence()
-
-        val bestMatchCountry = comps.lastOrNull { it.key <= Ipv4Int(ip)  }?.let { (_, code) ->
+        val ipInt = Ipv4Int(ip)
+        val bestMatchCountry = ipv4ToCountry.floorEntry(ipInt)?.let { (_, code) ->
             if (code != null) {
                 countryToNames[code]
             } else {
@@ -127,3 +145,4 @@ class IP2Country private constructor(private val context: Context) {
     }
     // endregion
 }
+

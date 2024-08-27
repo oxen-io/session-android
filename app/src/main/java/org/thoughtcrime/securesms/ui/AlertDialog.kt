@@ -1,14 +1,18 @@
 package org.thoughtcrime.securesms.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,7 +30,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.ui.components.CircularProgressIndicator
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
@@ -46,6 +52,7 @@ class DialogButtonModel(
 @Composable
 fun AlertDialog(
     onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
     title: String? = null,
     text: String? = null,
     buttons: List<DialogButtonModel>? = null,
@@ -53,14 +60,12 @@ fun AlertDialog(
     content: @Composable () -> Unit = {}
 ) {
     BasicAlertDialog(
+        modifier = modifier,
         onDismissRequest = onDismissRequest,
         content = {
-            Box(
-                modifier = Modifier.background(color = LocalColors.current.backgroundSecondary,
-                    shape = MaterialTheme.shapes.small)
-            ) {
+            DialogBg {
                 // only show the 'x' button is required
-                if(showCloseButton) {
+                if (showCloseButton) {
                     IconButton(
                         onClick = onDismissRequest,
                         modifier = Modifier.align(Alignment.TopEnd)
@@ -78,7 +83,7 @@ fun AlertDialog(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = LocalDimensions.current.smallSpacing)
+                            .padding(top = LocalDimensions.current.spacing)
                             .padding(horizontal = LocalDimensions.current.smallSpacing)
                     ) {
                         title?.let {
@@ -123,7 +128,12 @@ fun AlertDialog(
 }
 
 @Composable
-fun DialogButton(text: String, modifier: Modifier, color: Color = Color.Unspecified, onClick: () -> Unit) {
+fun DialogButton(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    onClick: () -> Unit
+) {
     TextButton(
         modifier = modifier,
         shape = RectangleShape,
@@ -135,16 +145,71 @@ fun DialogButton(text: String, modifier: Modifier, color: Color = Color.Unspecif
             style = LocalType.current.large.bold(),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(
-                top = LocalDimensions.current.smallSpacing,
-                bottom = LocalDimensions.current.spacing
+                vertical = LocalDimensions.current.smallSpacing
             )
         )
     }
 }
 
+@Composable
+fun DialogBg(
+    content: @Composable BoxScope.() -> Unit
+){
+    Box(
+        modifier = Modifier
+            .background(
+                color = LocalColors.current.backgroundSecondary,
+                shape = MaterialTheme.shapes.small
+            )
+            .border(
+                width = 1.dp,
+                color = LocalColors.current.borders,
+                shape = MaterialTheme.shapes.small
+            )
+
+    ) {
+        content()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LoadingDialog(
+    modifier: Modifier = Modifier,
+    title: String? = null,
+){
+    BasicAlertDialog(
+        modifier = modifier,
+        onDismissRequest = {},
+        content = {
+            DialogBg {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(LocalDimensions.current.spacing)
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+
+                    Spacer(modifier = Modifier.height(LocalDimensions.current.spacing))
+
+                    title?.let {
+                        Text(
+                            it,
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            style = LocalType.current.large
+                        )
+                    }
+                }
+            }
+        }
+    )
+}
+
 @Preview
 @Composable
-fun PreviewSimpleDialog(){
+fun PreviewSimpleDialog() {
     PreviewTheme {
         AlertDialog(
             onDismissRequest = {},
@@ -166,7 +231,7 @@ fun PreviewSimpleDialog(){
 
 @Preview
 @Composable
-fun PreviewXCloseDialog(){
+fun PreviewXCloseDialog() {
     PreviewTheme {
         AlertDialog(
             title = stringResource(R.string.urlOpen),
@@ -185,6 +250,16 @@ fun PreviewXCloseDialog(){
                 )
             ),
             onDismissRequest = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewLoadingDialog() {
+    PreviewTheme {
+        LoadingDialog(
+            title = stringResource(R.string.warning)
         )
     }
 }

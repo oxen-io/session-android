@@ -148,11 +148,8 @@ class InputBarButton : RelativeLayout {
 
     private fun onDown(event: MotionEvent) {
         expand()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-        } else {
-            performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-        }
+        performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+
         longPressCallback?.let { gestureHandler.removeCallbacks(it) }
         val newLongPressCallback = Runnable { onLongPress?.invoke() }
         this.longPressCallback = newLongPressCallback

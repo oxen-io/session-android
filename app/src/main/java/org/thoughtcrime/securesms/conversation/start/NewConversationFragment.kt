@@ -27,7 +27,11 @@ import org.thoughtcrime.securesms.groups.JoinCommunityFragment
 @AndroidEntryPoint
 class StartConversationFragment : BottomSheetDialogFragment(), StartConversationDelegate {
 
-    private val defaultPeekHeight: Int by lazy { (Resources.getSystem().displayMetrics.heightPixels * 0.94).toInt() }
+    companion object{
+        const val PEEK_RATIO = 0.94f
+    }
+
+    private val defaultPeekHeight: Int by lazy { (Resources.getSystem().displayMetrics.heightPixels * PEEK_RATIO).toInt() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

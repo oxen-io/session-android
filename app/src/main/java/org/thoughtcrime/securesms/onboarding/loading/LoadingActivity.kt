@@ -32,7 +32,7 @@ class LoadingActivity: BaseActionBarActivity() {
 
         when {
             loadFailed -> startPickDisplayNameActivity(loadFailed = true)
-            else -> startHomeActivity(isNewAccount = false)
+            else -> startHomeActivity(isNewAccount = false, isFromOnboarding = true)
         }
 
         finish()

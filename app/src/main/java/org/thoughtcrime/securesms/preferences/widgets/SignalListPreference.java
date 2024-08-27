@@ -2,13 +2,11 @@ package org.thoughtcrime.securesms.preferences.widgets;
 
 
 import android.content.Context;
-import android.os.Build;
-import androidx.annotation.RequiresApi;
-import androidx.preference.ListPreference;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import androidx.preference.ListPreference;
+import androidx.preference.PreferenceViewHolder;
 
 import network.loki.messenger.R;
 
@@ -18,13 +16,11 @@ public class SignalListPreference extends ListPreference {
   private CharSequence              summary;
   private OnPreferenceClickListener clickListener;
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public SignalListPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     initialize();
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public SignalListPreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     initialize();

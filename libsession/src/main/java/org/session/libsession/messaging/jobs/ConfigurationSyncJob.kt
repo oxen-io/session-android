@@ -63,7 +63,6 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             // return a list of batch request objects
             val snodeMessage = MessageSender.buildConfigMessageToSnode(destination.destinationPublicKey(), message)
             val authenticated = SnodeAPI.buildAuthenticatedStoreBatchInfo(
-                destination.destinationPublicKey(),
                 config.configNamespace(),
                 snodeMessage
             ) ?: return@map null // this entry will be null otherwise

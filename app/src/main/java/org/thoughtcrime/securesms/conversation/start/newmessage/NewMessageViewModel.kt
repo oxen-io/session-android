@@ -46,7 +46,7 @@ internal class NewMessageViewModel @Inject constructor(
     }
 
     override fun onContinue() {
-        val idOrONS = state.value.newMessageIdOrOns
+        val idOrONS = state.value.newMessageIdOrOns.trim()
 
         if (PublicKeyValidation.isValid(idOrONS, isPrefixRequired = false)) {
             onUnvalidatedPublicKey(publicKey = idOrONS)

@@ -56,14 +56,14 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
 
                 true
             }
-        if (NotificationChannels.supported()) {
-            prefs.setNotificationRingtone(
-                NotificationChannels.getMessageRingtone(requireContext()).toString()
-            )
-            prefs.setNotificationVibrateEnabled(
-                NotificationChannels.getMessageVibrate(requireContext())
-            )
-        }
+
+        prefs.setNotificationRingtone(
+            NotificationChannels.getMessageRingtone(requireContext()).toString()
+        )
+        prefs.setNotificationVibrateEnabled(
+            NotificationChannels.getMessageVibrate(requireContext())
+        )
+
         findPreference<Preference>(TextSecurePreferences.RINGTONE_PREF)!!.onPreferenceChangeListener = RingtoneSummaryListener()
         findPreference<Preference>(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF)!!.onPreferenceChangeListener = NotificationPrivacyListener()
         findPreference<Preference>(TextSecurePreferences.VIBRATE_PREF)!!.onPreferenceChangeListener =
@@ -99,18 +99,18 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
                 true
             }
         initializeListSummary(findPreference<Preference>(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF) as ListPreference?)
-        if (NotificationChannels.supported()) {
-            findPreference<Preference>(TextSecurePreferences.NOTIFICATION_PRIORITY_PREF)!!.onPreferenceClickListener =
-                Preference.OnPreferenceClickListener {
-                    val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
-                    intent.putExtra(
-                        Settings.EXTRA_CHANNEL_ID, NotificationChannels.getMessagesChannel(requireContext())
-                    )
-                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
-                    startActivity(intent)
-                    true
-                }
-        }
+
+        findPreference<Preference>(TextSecurePreferences.NOTIFICATION_PRIORITY_PREF)!!.onPreferenceClickListener =
+            Preference.OnPreferenceClickListener {
+                val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                intent.putExtra(
+                    Settings.EXTRA_CHANNEL_ID, NotificationChannels.getMessagesChannel(requireContext())
+                )
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                startActivity(intent)
+                true
+            }
+
         initializeRingtoneSummary(findPreference(TextSecurePreferences.RINGTONE_PREF))
         initializeMessageVibrateSummary(findPreference<Preference>(TextSecurePreferences.VIBRATE_PREF) as SwitchPreferenceCompat?)
     }

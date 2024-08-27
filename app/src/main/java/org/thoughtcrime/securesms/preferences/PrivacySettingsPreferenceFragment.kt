@@ -78,17 +78,11 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
                 title(R.string.CallNotificationBuilder_system_notification_title)
                 text(R.string.CallNotificationBuilder_system_notification_message)
                 button(R.string.activity_notification_settings_title) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                            .putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID)
-                    } else {
-                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                            .setData(Uri.parse("package:" + BuildConfig.APPLICATION_ID))
-                    }
-                        .apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
-                        .takeIf { IntentUtils.isResolvable(requireContext(), it) }.let {
-                        startActivity(it)
-                    }
+                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .takeIf { IntentUtils.isResolvable(requireContext(), it) }
+                        ?.let { startActivity(it) }
                 }
                 button(R.string.dismiss)
             }

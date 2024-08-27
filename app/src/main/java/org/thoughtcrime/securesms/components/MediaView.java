@@ -3,23 +3,23 @@ package org.thoughtcrime.securesms.components;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 
-import network.loki.messenger.R;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.bumptech.glide.RequestManager;
+
+import org.session.libsession.utilities.Stub;
 import org.thoughtcrime.securesms.mms.VideoSlide;
 import org.thoughtcrime.securesms.video.VideoPlayer;
 
-import org.session.libsession.utilities.Stub;
-
 import java.io.IOException;
+
+import network.loki.messenger.R;
 
 public class MediaView extends FrameLayout {
 
@@ -41,12 +41,6 @@ public class MediaView extends FrameLayout {
     initialize();
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  public MediaView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-    initialize();
-  }
-
   private void initialize() {
     inflate(getContext(), R.layout.media_view, this);
 
@@ -54,7 +48,7 @@ public class MediaView extends FrameLayout {
     this.videoView = new Stub<>(findViewById(R.id.video_player_stub));
   }
 
-  public void set(@NonNull GlideRequests glideRequests,
+  public void set(@NonNull RequestManager glideRequests,
                   @NonNull Window window,
                   @NonNull Uri source,
                   @NonNull String mediaType,

@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 
 import org.thoughtcrime.securesms.components.emoji.EmojiPageViewGridAdapter.VariationSelectorListener;
-import org.thoughtcrime.securesms.mms.GlideRequests;
+import com.bumptech.glide.RequestManager;
 import org.thoughtcrime.securesms.util.ResUtil;
 
 import org.session.libsession.utilities.ThemeUtil;
@@ -87,7 +87,7 @@ public class EmojiKeyboardProvider implements MediaKeyboardProvider,
   }
 
   @Override
-  public void loadCategoryTabIcon(@NonNull GlideRequests glideRequests, @NonNull ImageView imageView, int index) {
+  public void loadCategoryTabIcon(@NonNull RequestManager glideRequests, @NonNull ImageView imageView, int index) {
     Drawable drawable = ResUtil.getDrawable(context, models.get(index).getIconAttr());
     imageView.setImageDrawable(drawable);
   }

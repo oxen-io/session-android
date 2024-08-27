@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.session.libsession.utilities.TextSecurePreferences
-import org.thoughtcrime.securesms.ui.theme.selectedTheme
+import org.thoughtcrime.securesms.ui.theme.invalidateComposeThemeColors
 import org.thoughtcrime.securesms.util.ThemeState
 import org.thoughtcrime.securesms.util.themeState
 import javax.inject.Inject
@@ -21,6 +21,8 @@ class AppearanceSettingsViewModel @Inject constructor(private val prefs: TextSec
         prefs.setAccentColorStyle(newAccentColorStyle)
         // update UI state
         _uiState.value = prefs.themeState()
+
+        invalidateComposeThemeColors()
     }
 
     fun setNewStyle(newThemeStyle: String) {
@@ -28,16 +30,13 @@ class AppearanceSettingsViewModel @Inject constructor(private val prefs: TextSec
         // update UI state
         _uiState.value = prefs.themeState()
 
-        // force compose to refresh its style reference
-        selectedTheme = null
+        invalidateComposeThemeColors()
     }
 
     fun setNewFollowSystemSettings(followSystemSettings: Boolean) {
         prefs.setFollowSystemSettings(followSystemSettings)
         _uiState.value = prefs.themeState()
 
-        // force compose to refresh its style reference
-        selectedTheme = null
+        invalidateComposeThemeColors()
     }
-
 }

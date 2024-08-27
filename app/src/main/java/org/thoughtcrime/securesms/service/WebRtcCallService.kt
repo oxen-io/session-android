@@ -7,9 +7,12 @@ import android.content.Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo
 import android.media.AudioManager
+import android.os.Build
 import android.os.ResultReceiver
 import android.telephony.TelephonyManager
+import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LifecycleService
@@ -723,9 +726,11 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
 
     private fun setCallInProgressNotification(type: Int, recipient: Recipient?) {
         try {
-            startForeground(
+            ServiceCompat.startForeground(
+                this,
                 CallNotificationBuilder.WEBRTC_NOTIFICATION,
-                CallNotificationBuilder.getCallInProgressNotification(this, type, recipient)
+                CallNotificationBuilder.getCallInProgressNotification(this, type, recipient),
+                if (Build.VERSION.SDK_INT >= 30) ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE else 0
             )
         } catch (e: IllegalStateException) {
             Log.e(TAG, "Failed to setCallInProgressNotification as a foreground service for type: ${type}, trying to update instead", e)

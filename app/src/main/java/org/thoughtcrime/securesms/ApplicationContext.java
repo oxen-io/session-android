@@ -23,11 +23,13 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.pm.ShortcutInfoCompat;
+import androidx.core.content.pm.ShortcutManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
@@ -43,6 +45,7 @@ import org.session.libsession.snode.SnodeModule;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.ConfigFactoryUpdateListener;
 import org.session.libsession.utilities.Device;
+import org.session.libsession.utilities.Environment;
 import org.session.libsession.utilities.ProfilePictureUtilities;
 import org.session.libsession.utilities.SSKEnvironment;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -63,6 +66,7 @@ import org.thoughtcrime.securesms.database.LokiAPIDatabase;
 import org.thoughtcrime.securesms.database.Storage;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.EmojiSearchData;
+import org.thoughtcrime.securesms.debugmenu.DebugActivity;
 import org.thoughtcrime.securesms.dependencies.AppComponent;
 import org.thoughtcrime.securesms.dependencies.ConfigFactory;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
@@ -86,12 +90,11 @@ import org.thoughtcrime.securesms.sskenvironment.ProfileManager;
 import org.thoughtcrime.securesms.sskenvironment.ReadReceiptManager;
 import org.thoughtcrime.securesms.sskenvironment.TypingStatusRepository;
 import org.thoughtcrime.securesms.util.Broadcaster;
+import org.thoughtcrime.securesms.util.VersionDataFetcher;
 import org.thoughtcrime.securesms.util.dynamiclanguage.LocaleParseHelper;
 import org.thoughtcrime.securesms.webrtc.CallMessageProcessor;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PeerConnectionFactory.InitializationOptions;
-import org.webrtc.voiceengine.WebRtcAudioManager;
-import org.webrtc.voiceengine.WebRtcAudioUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -99,9 +102,7 @@ import java.io.InputStream;
 import java.security.Security;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.Executors;
 
@@ -110,8 +111,8 @@ import javax.inject.Inject;
 import dagger.hilt.EntryPoints;
 import dagger.hilt.android.HiltAndroidApp;
 import kotlin.Unit;
-import kotlinx.coroutines.Job;
 import network.loki.messenger.BuildConfig;
+import network.loki.messenger.R;
 import network.loki.messenger.libsession_util.ConfigBase;
 import network.loki.messenger.libsession_util.UserProfile;
 
@@ -151,6 +152,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Inject PushRegistry pushRegistry;
     @Inject ConfigFactory configFactory;
     @Inject LastSentTimestampCache lastSentTimestampCache;
+    @Inject VersionDataFetcher versionDataFetcher;
     CallMessageProcessor callMessageProcessor;
     MessagingModuleConfiguration messagingModuleConfiguration;
 
@@ -214,6 +216,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         DatabaseModule.init(this);
         MessagingModuleConfiguration.configure(this);
         super.onCreate();
+
         messagingModuleConfiguration = new MessagingModuleConfiguration(
                 this,
                 storage,
@@ -235,7 +238,8 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         messageNotifier = new OptimizedMessageNotifier(new DefaultMessageNotifier());
         broadcaster = new Broadcaster(this);
         LokiAPIDatabase apiDB = getDatabaseComponent().lokiAPIDatabase();
-        SnodeModule.Companion.configure(apiDB, broadcaster);
+        boolean useTestNet = textSecurePreferences.getEnvironment() == Environment.TEST_NET;
+        SnodeModule.Companion.configure(apiDB, broadcaster, useTestNet);
         initializeExpiringMessageManager();
         initializeTypingStatusRepository();
         initializeTypingStatusSender();
@@ -251,6 +255,22 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
         NetworkConstraint networkConstraint = new NetworkConstraint.Factory(this).create();
         HTTP.INSTANCE.setConnectedToNetwork(networkConstraint::isMet);
+
+        // add our shortcut debug menu if we are not in a release build
+        if (BuildConfig.BUILD_TYPE != "release") {
+            // add the config settings shortcut
+            Intent intent = new Intent(this, DebugActivity.class);
+            intent.setAction(Intent.ACTION_VIEW);
+
+            ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(this, "shortcut_debug_menu")
+                    .setShortLabel("Debug Menu")
+                    .setLongLabel("Debug Menu")
+                    .setIcon(IconCompat.createWithResource(this, R.drawable.ic_settings))
+                    .setIntent(intent)
+                    .build();
+
+            ShortcutManagerCompat.pushDynamicShortcut(this, shortcut);
+        }
     }
 
     @Override
@@ -274,6 +294,9 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
             OpenGroupManager.INSTANCE.startPolling();
         });
+
+        // fetch last version data
+        versionDataFetcher.startTimedVersionCheck();
     }
 
     @Override
@@ -286,12 +309,14 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             poller.stopIfNeeded();
         }
         ClosedGroupPollerV2.getShared().stopAll();
+        versionDataFetcher.stopTimedVersionCheck();
     }
 
     @Override
     public void onTerminate() {
         stopKovenant(); // Loki
         OpenGroupManager.INSTANCE.stopPolling();
+        versionDataFetcher.stopTimedVersionCheck();
         super.onTerminate();
     }
 
@@ -387,33 +412,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
     private void initializeWebRtc() {
         try {
-            Set<String> HARDWARE_AEC_BLACKLIST = new HashSet<String>() {{
-                add("Pixel");
-                add("Pixel XL");
-                add("Moto G5");
-                add("Moto G (5S) Plus");
-                add("Moto G4");
-                add("TA-1053");
-                add("Mi A1");
-                add("E5823"); // Sony z5 compact
-                add("Redmi Note 5");
-                add("FP2"); // Fairphone FP2
-                add("MI 5");
-            }};
-
-            Set<String> OPEN_SL_ES_WHITELIST = new HashSet<String>() {{
-                add("Pixel");
-                add("Pixel XL");
-            }};
-
-            if (HARDWARE_AEC_BLACKLIST.contains(Build.MODEL)) {
-                WebRtcAudioUtils.setWebRtcBasedAcousticEchoCanceler(true);
-            }
-
-            if (!OPEN_SL_ES_WHITELIST.contains(Build.MODEL)) {
-                WebRtcAudioManager.setBlacklistDeviceForOpenSLESUsage(true);
-            }
-
             PeerConnectionFactory.initialize(InitializationOptions.builder(this).createInitializationOptions());
         } catch (UnsatisfiedLinkError e) {
             Log.w(TAG, e);
@@ -511,7 +509,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     // Method to clear the local data - returns true on success otherwise false
 
     /**
-     * Clear all local profile data and message history then restart the app after a brief delay.
+     * Clear all local profile data and message history.
      * @return true on success, false otherwise.
      */
     @SuppressLint("ApplySharedPref")
@@ -523,6 +521,16 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             return false;
         }
         configFactory.keyPairChanged();
+        return true;
+    }
+
+    /**
+     * Clear all local profile data and message history then restart the app after a brief delay.
+     * @return true on success, false otherwise.
+     */
+    @SuppressLint("ApplySharedPref")
+    public boolean clearAllDataAndRestart() {
+        clearAllData();
         Util.runOnMain(() -> new Handler().postDelayed(ApplicationContext.this::restartApplication, 200));
         return true;
     }

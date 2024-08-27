@@ -37,10 +37,6 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
     setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, HomeActivity.class), PendingIntent.FLAG_IMMUTABLE));
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
     setGroupSummary(true);
-
-    if (!NotificationChannels.supported()) {
-      setPriority(TextSecurePreferences.getNotificationPriority(context));
-    }
   }
 
   public void setMessageCount(int messageCount, int threadCount) {

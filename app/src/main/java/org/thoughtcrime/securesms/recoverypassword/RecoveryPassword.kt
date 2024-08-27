@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.recoverypassword
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -25,19 +26,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.ui.CellWithPaddingAndMargin
-import org.thoughtcrime.securesms.ui.theme.LocalDimensions
-import org.thoughtcrime.securesms.ui.theme.PreviewTheme
-import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.Cell
 import org.thoughtcrime.securesms.ui.SessionShieldIcon
-import org.thoughtcrime.securesms.ui.theme.ThemeColors
-import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.components.QrImage
 import org.thoughtcrime.securesms.ui.components.SlimOutlineButton
 import org.thoughtcrime.securesms.ui.components.SlimOutlineCopyButton
 import org.thoughtcrime.securesms.ui.components.border
 import org.thoughtcrime.securesms.ui.contentDescription
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
+import org.thoughtcrime.securesms.ui.theme.PreviewTheme
+import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
+import org.thoughtcrime.securesms.ui.theme.ThemeColors
 import org.thoughtcrime.securesms.ui.theme.monospace
 
 @Composable
@@ -53,6 +54,7 @@ internal fun RecoveryPasswordScreen(
             .contentDescription(R.string.AccessibilityId_recovery_password)
             .verticalScroll(rememberScrollState())
             .padding(bottom = LocalDimensions.current.smallSpacing)
+            .padding(horizontal = LocalDimensions.current.spacing)
     ) {
         RecoveryPasswordCell(mnemonic, seed, copyMnemonic)
         HideRecoveryPasswordCell(onHide)
@@ -69,8 +71,10 @@ private fun RecoveryPasswordCell(
         mutableStateOf(false)
     }
 
-    CellWithPaddingAndMargin {
-        Column {
+    Cell {
+        Column(
+            modifier = Modifier.padding(LocalDimensions.current.smallSpacing)
+        ) {
             Row {
                 Text(
                     stringResource(R.string.sessionRecoveryPassword),
@@ -148,8 +152,10 @@ private fun RecoveryPassword(mnemonic: String) {
 
 @Composable
 private fun HideRecoveryPasswordCell(onHide: () -> Unit = {}) {
-    CellWithPaddingAndMargin {
-        Row {
+    Cell {
+        Row(
+            modifier = Modifier.padding(LocalDimensions.current.smallSpacing)
+        ) {
             Column(
                 Modifier.weight(1f)
             ) {

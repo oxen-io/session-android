@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.SparseArray
@@ -18,6 +17,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,6 +34,8 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageContract
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -62,9 +64,11 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.truncateIdForDisplay
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Util.SECURE_RANDOM
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
+import org.thoughtcrime.securesms.debugmenu.DebugActivity
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.home.PathActivity
 import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
@@ -77,20 +81,18 @@ import org.thoughtcrime.securesms.ui.Cell
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.LargeItemButton
 import org.thoughtcrime.securesms.ui.LargeItemButtonWithDrawable
-import org.thoughtcrime.securesms.ui.theme.LocalDimensions
-import org.thoughtcrime.securesms.ui.theme.dangerButtonColors
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineCopyButton
 import org.thoughtcrime.securesms.ui.contentDescription
 import org.thoughtcrime.securesms.ui.setThemedContent
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.dangerButtonColors
 import org.thoughtcrime.securesms.util.BitmapDecodingException
 import org.thoughtcrime.securesms.util.BitmapUtil
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.NetworkUtils
 import org.thoughtcrime.securesms.util.push
-import org.thoughtcrime.securesms.util.show
 import java.io.File
-import java.security.SecureRandom
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -109,6 +111,48 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     private val hexEncodedPublicKey: String get() = TextSecurePreferences.getLocalNumber(this)!!
 
+    private val onAvatarCropped = registerForActivityResult(CropImageContract()) { result ->
+        when {
+            result.isSuccessful -> {
+                Log.i(TAG, result.getUriFilePath(this).toString())
+
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        val profilePictureToBeUploaded =
+                            BitmapUtil.createScaledBytes(
+                                this@SettingsActivity,
+                                result.getUriFilePath(this@SettingsActivity).toString(),
+                                ProfileMediaConstraints()
+                            ).bitmap
+                        launch(Dispatchers.Main) {
+                            updateProfilePicture(profilePictureToBeUploaded)
+                        }
+                    } catch (e: BitmapDecodingException) {
+                        Log.e(TAG, e)
+                    }
+                }
+            }
+            result is CropImage.CancelledResult -> {
+                Log.i(TAG, "Cropping image was cancelled by the user")
+            }
+            else -> {
+                Log.e(TAG, "Cropping image failed")
+            }
+        }
+    }
+
+    private val onPickImage = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ){ result ->
+        if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+
+        val outputFile = Uri.fromFile(File(cacheDir, "cropped"))
+        val inputFile: Uri? = result.data?.data ?: tempFile?.let(Uri::fromFile)
+        cropImage(inputFile, outputFile)
+    }
+
+    private val avatarSelection = AvatarSelection(this, onAvatarCropped, onPickImage)
+
     companion object {
         private const val SCROLL_STATE = "SCROLL_STATE"
     }
@@ -118,6 +162,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         super.onCreate(savedInstanceState, isReady)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // set the toolbar icon to a close icon
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_close_24)
     }
 
     override fun onStart() {
@@ -130,12 +177,18 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             btnGroupNameDisplay.text = getDisplayName()
             publicKeyTextView.text = hexEncodedPublicKey
             val gitCommitFirstSixChars = BuildConfig.GIT_HASH.take(6)
-            versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars)")
+            val environment: String = if(BuildConfig.BUILD_TYPE == "release") "" else " - ${prefs.getEnvironment().label}"
+            versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars) $environment")
         }
 
         binding.composeView.setThemedContent {
             Buttons()
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_bottom)
     }
 
     private fun getDisplayName(): String =
@@ -165,7 +218,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.settings_general, menu)
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (BuildConfig.DEBUG) {
             menu.findItem(R.id.action_qr_code)?.contentDescription = resources.getString(R.string.AccessibilityId_view_qr_code)
         }
         return true
@@ -178,31 +231,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_OK) return
-        when (requestCode) {
-            AvatarSelection.REQUEST_CODE_AVATAR -> {
-                val outputFile = Uri.fromFile(File(cacheDir, "cropped"))
-                val inputFile: Uri? = data?.data ?: tempFile?.let(Uri::fromFile)
-                AvatarSelection.circularCropImage(this, inputFile, outputFile, R.string.CropImageActivity_profile_avatar)
-            }
-            AvatarSelection.REQUEST_CODE_CROP_IMAGE -> {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    try {
-                        val profilePictureToBeUploaded = BitmapUtil.createScaledBytes(this@SettingsActivity, AvatarSelection.getResultUri(data), ProfileMediaConstraints()).bitmap
-                        launch(Dispatchers.Main) {
-                            updateProfilePicture(profilePictureToBeUploaded)
-                        }
-                    } catch (e: BitmapDecodingException) {
-                        Log.e(TAG, e)
-                    }
-                }
-            }
         }
     }
 
@@ -262,6 +290,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 Log.w(TAG, "Cannot update display name - missing user details from configFactory.")
             } else {
                 user.setName(displayName)
+                // sync remote config
+                ConfigurationMessageUtilities.syncConfigurationIfNeeded(this)
                 binding.btnGroupNameDisplay.text = displayName
                 updateWasSuccessful = true
             }
@@ -294,7 +324,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
             val userConfig = configFactory.user
             AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
-            prefs.setProfileAvatarId(SecureRandom().nextInt() )
+            prefs.setProfileAvatarId(SECURE_RANDOM.nextInt() )
             ProfileKeyUtil.setEncodedProfileKey(this, encodedProfileKey)
 
             // Attempt to grab the details we require to update the profile picture
@@ -407,9 +437,16 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         Permissions.with(this)
             .request(Manifest.permission.CAMERA)
             .onAnyResult {
-                tempFile = AvatarSelection.startAvatarSelection(this, false, true)
+                tempFile = avatarSelection.startAvatarSelection( false, true)
             }
             .execute()
+    }
+
+    private fun cropImage(inputFile: Uri?, outputFile: Uri?){
+        avatarSelection.circularCropImage(
+            inputFile = inputFile,
+            outputFile = outputFile,
+        )
     }
     // endregion
 
@@ -445,10 +482,12 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     @Composable
     fun Buttons() {
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = LocalDimensions.current.spacing)
+        ) {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = LocalDimensions.current.spacing)
                     .padding(top = LocalDimensions.current.xxsSpacing),
                 horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing),
             ) {
@@ -470,29 +509,35 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
             Cell {
                 Column {
+                    // add the debug menu in non release builds
+                    if (BuildConfig.BUILD_TYPE != "release") {
+                        LargeItemButton(R.string.activity_settings_debug_button_title, R.drawable.ic_settings) { push<DebugActivity>() }
+                        Divider()
+                    }
+
                     Crossfade(if (hasPaths) R.drawable.ic_status else R.drawable.ic_path_yellow, label = "path") {
-                        LargeItemButtonWithDrawable(R.string.activity_path_title, it) { show<PathActivity>() }
+                        LargeItemButtonWithDrawable(R.string.activity_path_title, it) { push<PathActivity>() }
                     }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_privacy_button_title, R.drawable.ic_privacy_icon) { show<PrivacySettingsActivity>() }
+                    LargeItemButton(R.string.activity_settings_privacy_button_title, R.drawable.ic_privacy_icon) { push<PrivacySettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_notifications_button_title, R.drawable.ic_speaker, Modifier.contentDescription(R.string.AccessibilityId_notifications)) { show<NotificationSettingsActivity>() }
+                    LargeItemButton(R.string.activity_settings_notifications_button_title, R.drawable.ic_speaker, Modifier.contentDescription(R.string.AccessibilityId_notifications)) { push<NotificationSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_conversations_button_title, R.drawable.ic_conversations, Modifier.contentDescription(R.string.AccessibilityId_conversations)) { show<ChatSettingsActivity>() }
+                    LargeItemButton(R.string.activity_settings_conversations_button_title, R.drawable.ic_conversations, Modifier.contentDescription(R.string.AccessibilityId_conversations)) { push<ChatSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_message_requests_button_title, R.drawable.ic_message_requests, Modifier.contentDescription(R.string.AccessibilityId_message_requests)) { show<MessageRequestsActivity>() }
+                    LargeItemButton(R.string.activity_settings_message_requests_button_title, R.drawable.ic_message_requests, Modifier.contentDescription(R.string.AccessibilityId_message_requests)) { push<MessageRequestsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_message_appearance_button_title, R.drawable.ic_appearance, Modifier.contentDescription(R.string.AccessibilityId_appearance)) { show<AppearanceSettingsActivity>() }
+                    LargeItemButton(R.string.activity_settings_message_appearance_button_title, R.drawable.ic_appearance, Modifier.contentDescription(R.string.AccessibilityId_appearance)) { push<AppearanceSettingsActivity>() }
                     Divider()
                     LargeItemButton(R.string.activity_settings_invite_button_title, R.drawable.ic_invite_friend, Modifier.contentDescription(R.string.AccessibilityId_invite_friend)) { sendInvitationToUseSession() }
                     Divider()
                     if (!prefs.getHidePassword()) {
-                        LargeItemButton(R.string.sessionRecoveryPassword, R.drawable.ic_shield_outline, Modifier.contentDescription(R.string.AccessibilityId_recovery_password_menu_item)) { show<RecoveryPasswordActivity>() }
+                        LargeItemButton(R.string.sessionRecoveryPassword, R.drawable.ic_shield_outline, Modifier.contentDescription(R.string.AccessibilityId_recovery_password_menu_item)) { push<RecoveryPasswordActivity>() }
                         Divider()
                     }
-                    LargeItemButton(R.string.activity_settings_help_button, R.drawable.ic_help, Modifier.contentDescription(R.string.AccessibilityId_help)) { show<HelpSettingsActivity>() }
+                    LargeItemButton(R.string.activity_settings_help_button, R.drawable.ic_help, Modifier.contentDescription(R.string.AccessibilityId_help)) { push<HelpSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_clear_all_data_button_title, R.drawable.ic_message_details__trash, Modifier.contentDescription(R.string.AccessibilityId_clear_data), dangerButtonColors()) { ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog") }
+                    LargeItemButton(R.string.activity_settings_clear_all_data_button_title, R.drawable.ic_delete, Modifier.contentDescription(R.string.AccessibilityId_clear_data), dangerButtonColors()) { ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog") }
                 }
             }
         }

@@ -18,17 +18,15 @@ package org.thoughtcrime.securesms.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.format.DateFormat;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import android.os.Build;
-import android.text.format.DateFormat;
 
 import org.session.libsignal.utilities.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -127,11 +125,7 @@ public class DateUtils extends android.text.format.DateUtils {
   @SuppressLint("ObsoleteSdkInt")
   public static long parseIso8601(@Nullable String date) {
     SimpleDateFormat format;
-    if (Build.VERSION.SDK_INT >= 24) {
-      format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.getDefault());
-    } else {
-      format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
-    }
+    format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.getDefault());
 
     if (date.isEmpty()) {
       return -1;

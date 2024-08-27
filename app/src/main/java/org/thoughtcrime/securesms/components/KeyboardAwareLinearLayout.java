@@ -16,25 +16,24 @@
  */
 package org.thoughtcrime.securesms.components;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.preference.PreferenceManager;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
-import org.session.libsignal.utilities.Log;
 import android.view.Surface;
 import android.view.View;
 
-import network.loki.messenger.R;
+import androidx.appcompat.widget.LinearLayoutCompat;
+
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.Log;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
+
+import network.loki.messenger.R;
 
 /**
  * LinearLayout that, when a view container, will report back when it thinks a soft keyboard
@@ -95,7 +94,7 @@ public class KeyboardAwareLinearLayout extends LinearLayoutCompat {
   }
 
   private void updateKeyboardState() {
-    if (viewInset == 0 && Build.VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) viewInset = getViewInset();
+    if (viewInset == 0) viewInset = getViewInset();
 
     getWindowVisibleDisplayFrame(rect);
 
@@ -118,7 +117,6 @@ public class KeyboardAwareLinearLayout extends LinearLayoutCompat {
     }
   }
 
-  @TargetApi(VERSION_CODES.LOLLIPOP)
   private int getViewInset() {
     try {
       Field attachInfoField = View.class.getDeclaredField("mAttachInfo");

@@ -47,25 +47,27 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import com.google.mlkit.vision.barcode.BarcodeScanner
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.common.InputImage
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.ChecksumException
+import com.google.zxing.FormatException
+import com.google.zxing.NotFoundException
+import com.google.zxing.PlanarYUVLuminanceSource
+import com.google.zxing.Result
+import com.google.zxing.common.HybridBinarizer
+import com.google.zxing.qrcode.QRCodeReader
+import java.util.concurrent.Executors
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
-import java.util.concurrent.Executors
 
 private const val TAG = "NewMessageFragment"
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MaybeScanQrCode(
+fun QRScannerScreen(
         errors: Flow<String>,
         onClickSettings: () -> Unit = LocalContext.current.run { {
             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -137,17 +139,13 @@ fun ScanQrCode(errors: Flow<String>, onScan: (String) -> Unit) {
     runCatching {
         cameraProvider.get().unbindAll()
 
-        val options = BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-            .build()
-        val scanner = BarcodeScanning.getClient(options)
-
         cameraProvider.get().bindToLifecycle(
             LocalLifecycleOwner.current,
             selector,
             preview,
-            buildAnalysisUseCase(scanner, onScan)
+            buildAnalysisUseCase(QRCodeReader(), onScan)
         )
+
     }.onFailure { Log.e(TAG, "error binding camera", it) }
 
     DisposableEffect(cameraProvider) {
@@ -211,32 +209,51 @@ fun ScanQrCode(errors: Flow<String>, onScan: (String) -> Unit) {
 
 @SuppressLint("UnsafeOptInUsageError")
 private fun buildAnalysisUseCase(
-    scanner: BarcodeScanner,
+    scanner: QRCodeReader,
     onBarcodeScanned: (String) -> Unit
 ): ImageAnalysis = ImageAnalysis.Builder()
     .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
     .build().apply {
-        setAnalyzer(Executors.newSingleThreadExecutor(), Analyzer(scanner, onBarcodeScanned))
+        setAnalyzer(Executors.newSingleThreadExecutor(), QRCodeAnalyzer(scanner, onBarcodeScanned))
     }
 
-class Analyzer(
-    private val scanner: BarcodeScanner,
+class QRCodeAnalyzer(
+    private val qrCodeReader: QRCodeReader,
     private val onBarcodeScanned: (String) -> Unit
 ): ImageAnalysis.Analyzer {
+
+    // Note: This analyze method is called once per frame of the camera feed.
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
-        InputImage.fromMediaImage(
-            image.image!!,
-            image.imageInfo.rotationDegrees
-        ).let(scanner::process).apply {
-            addOnSuccessListener { barcodes ->
-                barcodes.forEach {
-                    it.rawValue?.let(onBarcodeScanned)
-                }
-            }
-            addOnCompleteListener {
-                image.close()
-            }
+        // Grab the image data as a byte array so we can generate a PlanarYUVLuminanceSource from it
+        val buffer = image.planes[0].buffer
+        buffer.rewind()
+        val imageBytes = ByteArray(buffer.capacity())
+        buffer.get(imageBytes) // IMPORTANT: This transfers data from the buffer INTO the imageBytes array, although it looks like it would go the other way around!
+
+        // ZXing requires data as a BinaryBitmap to scan for QR codes, and to generate that we need to feed it a PlanarYUVLuminanceSource
+        val luminanceSource = PlanarYUVLuminanceSource(imageBytes, image.width, image.height, 0, 0, image.width, image.height, false)
+        val binaryBitmap = BinaryBitmap(HybridBinarizer(luminanceSource))
+
+        // Attempt to extract a QR code from the binary bitmap, and pass it through to our `onBarcodeScanned` method if we find one
+        try {
+            val result: Result = qrCodeReader.decode(binaryBitmap)
+            val resultTxt = result.text
+            // No need to close the image here - it'll always make it to the end, and calling `onBarcodeScanned`
+            // with a valid contact / recovery phrase / community code will stop calling this `analyze` method.
+            onBarcodeScanned(resultTxt)
         }
+        catch (nfe: NotFoundException) { /* Hits if there is no QR code in the image           */ }
+        catch (fe: FormatException)    { /* Hits if we found a QR code but failed to decode it */ }
+        catch (ce: ChecksumException)  { /* Hits if we found a QR code which is corrupted      */ }
+        catch (e: Exception) {
+            // Hits if there's a genuine problem
+            Log.e("QR", "error", e)
+        }
+
+        // Remember to close the image when we're done with it!
+        // IMPORTANT: It is CLOSING the image that allows this method to run again! If we don't
+        // close the image this method runs precisely ONCE and that's it, which is essentially useless.
+        image.close()
     }
 }

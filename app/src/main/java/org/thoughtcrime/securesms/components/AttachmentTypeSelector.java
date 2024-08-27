@@ -2,15 +2,10 @@ package org.thoughtcrime.securesms.components;
 
 import android.Manifest;
 import android.animation.Animator;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.loader.app.LoaderManager;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,8 +21,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import org.thoughtcrime.securesms.permissions.Permissions;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+
 import org.session.libsession.utilities.ViewUtil;
+import org.thoughtcrime.securesms.permissions.Permissions;
 
 import network.loki.messenger.R;
 
@@ -126,25 +125,19 @@ public class AttachmentTypeSelector extends PopupWindow {
       public void onGlobalLayout() {
         getContentView().getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          animateWindowInCircular(anchor, getContentView());
-        } else {
-          animateWindowInTranslate(getContentView());
-        }
+        animateWindowInCircular(anchor, getContentView());
       }
     });
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      animateButtonIn(imageButton, ANIMATION_DURATION / 2);
-      animateButtonIn(cameraButton, ANIMATION_DURATION / 2);
+    animateButtonIn(imageButton, ANIMATION_DURATION / 2);
+    animateButtonIn(cameraButton, ANIMATION_DURATION / 2);
 
-      animateButtonIn(audioButton, ANIMATION_DURATION / 3);
-      animateButtonIn(locationButton, ANIMATION_DURATION / 3);
-      animateButtonIn(documentButton, ANIMATION_DURATION / 4);
-      animateButtonIn(gifButton, ANIMATION_DURATION / 4);
-      animateButtonIn(contactButton, 0);
-      animateButtonIn(closeButton, 0);
-    }
+    animateButtonIn(audioButton, ANIMATION_DURATION / 3);
+    animateButtonIn(locationButton, ANIMATION_DURATION / 3);
+    animateButtonIn(documentButton, ANIMATION_DURATION / 4);
+    animateButtonIn(gifButton, ANIMATION_DURATION / 4);
+    animateButtonIn(contactButton, 0);
+    animateButtonIn(closeButton, 0);
   }
 
   private void updateHeight() {
@@ -159,11 +152,7 @@ public class AttachmentTypeSelector extends PopupWindow {
 
   @Override
   public void dismiss() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      animateWindowOutCircular(currentAnchor, getContentView());
-    } else {
-      animateWindowOutTranslate(getContentView());
-    }
+    animateWindowOutCircular(currentAnchor, getContentView());
   }
 
   public void setListener(@Nullable AttachmentClickedListener listener) {
@@ -182,7 +171,6 @@ public class AttachmentTypeSelector extends PopupWindow {
     button.startAnimation(animation);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   private void animateWindowInCircular(@Nullable View anchor, @NonNull View contentView) {
     Pair<Integer, Integer> coordinates = getClickOrigin(anchor, contentView);
     Animator animator = ViewAnimationUtils.createCircularReveal(contentView,
@@ -201,7 +189,6 @@ public class AttachmentTypeSelector extends PopupWindow {
     getContentView().startAnimation(animation);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   private void animateWindowOutCircular(@Nullable View anchor, @NonNull View contentView) {
     Pair<Integer, Integer> coordinates = getClickOrigin(anchor, contentView);
     Animator               animator    = ViewAnimationUtils.createCircularReveal(getContentView(),

@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
@@ -22,16 +24,18 @@ import org.thoughtcrime.securesms.conversation.start.NullStartConversationDelega
 import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.ItemButton
+import org.thoughtcrime.securesms.ui.components.AppBarCloseIcon
+import org.thoughtcrime.securesms.ui.components.BasicAppBar
+import org.thoughtcrime.securesms.ui.components.QrImage
+import org.thoughtcrime.securesms.ui.contentDescription
+import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
 import org.thoughtcrime.securesms.ui.theme.ThemeColors
-import org.thoughtcrime.securesms.ui.theme.LocalColors
-import org.thoughtcrime.securesms.ui.components.AppBar
-import org.thoughtcrime.securesms.ui.components.QrImage
-import org.thoughtcrime.securesms.ui.contentDescription
-import org.thoughtcrime.securesms.ui.theme.LocalType
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun StartConversationScreen(
     accountId: String,
@@ -41,7 +45,11 @@ internal fun StartConversationScreen(
         LocalColors.current.backgroundSecondary,
         shape = MaterialTheme.shapes.small
     )) {
-        AppBar(stringResource(R.string.dialog_start_conversation_title), onClose = delegate::onDialogClosePressed)
+        BasicAppBar(
+            title = stringResource(R.string.dialog_start_conversation_title),
+            backgroundColor = Color.Transparent, // transparent to show the rounded shape of the container
+            actions = { AppBarCloseIcon(onClose = delegate::onDialogClosePressed) }
+        )
         Surface(
             modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection()),
             color = LocalColors.current.backgroundSecondary

@@ -29,7 +29,6 @@
        <item name="android:colorControlNormal">?android:textColorPrimary</item>
        <item name="conversation_menu_border_color">?colorDividerBackground</item>
        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Fix.Settings</item>
-       <item name="searchViewStyle">@style/Widget.Session.SearchView</item>
        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
        <item name="elementBorderColor">?android:textColorSecondary</item>
        <item name="colorOnSurface">?android:textColorPrimary</item>
@@ -59,15 +58,14 @@
        <item name="attachment_document_icon_small">@drawable/ic_document_small_dark</item>
        <item name="attachment_document_icon_large">@drawable/ic_document_large_dark</item>
        <item name="colorError">?danger</item>
-    </style>
+
+       <item name="conversation_icon_attach_audio">@drawable/ic_audio_dark</item>
+       <item name="conversation_icon_attach_video">@drawable/ic_video_dark</item>
+   </style>
 
     <!-- This should be the default theme for the application. -->
     <style name="Theme.Session.DayNight" parent="Base.Theme.Session">
         <!-- leave empty to allow overriding -->
-    </style>
-
-    <style name="ThemeOverlay.App.Toolbar" parent="">
-        <item name="colorOnPrimary">?android:textColorPrimary</item>
     </style>
 
     <style name="Theme.Session.DayNight.NoActionBar" parent="Base.Theme.Session">
@@ -170,7 +168,6 @@
         <item name="device_link_item_card_background">@color/device_link_item_background_dark</item>
 
         <item name="fab_color">?colorAccent</item>
-        <item name="lower_right_divet">@drawable/divet_lower_right_light</item>
 
         <item name="conversation_background">@color/loki_darkest_gray</item>
         <item name="conversation_editor_background">#22ffffff</item>
@@ -183,7 +180,6 @@
         <item name="conversation_attach_image">@drawable/ic_image_dark</item>
         <item name="conversation_attach_video">@drawable/ic_movie_creation_dark</item>
         <item name="conversation_attach_sound">@drawable/ic_volume_up_dark</item>
-        <item name="conversation_attach_contact_info">@drawable/ic_account_box_dark</item>
         <item name="conversation_attach">@drawable/ic_attach_white_24dp</item>
         <item name="conversation_number_picker_text_color_normal">@color/gray13</item>
         <item name="conversation_number_picker_text_color_selected">@color/white</item>
@@ -212,9 +208,6 @@
         <item name="linkpreview_primary_text_color">?android:textColorPrimary</item>
         <item name="linkpreview_secondary_text_color">?android:textColorPrimary</item>
         <item name="linkpreview_divider_color">@color/transparent</item>
-
-        <item name="conversation_icon_attach_audio">@drawable/ic_audio_dark</item>
-        <item name="conversation_icon_attach_video">@drawable/ic_video_dark</item>
 
         <item name="sticker_management_icon">@drawable/sticker_button_dark</item>
         <item name="sticker_management_divider_color">@color/core_grey_75</item>
@@ -501,8 +494,6 @@
         <item name="textColorAlert">@color/ocean_dark_7</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:navigationBarColor">@color/navigation_bar</item>
-        <item name="default_background_end">?colorPrimary</item>
-        <item name="default_background_start">?colorPrimaryDark</item>
         <item name="colorCellBackground">@color/ocean_dark_3</item>
         <item name="colorDividerBackground">@color/ocean_dark_4</item>
         <item name="android:colorControlHighlight">@color/ocean_dark_4</item>
@@ -589,8 +580,6 @@
         <item name="textColorAlert">@color/ocean_light_0</item>
         <item name="android:navigationBarColor">@color/ocean_light_navigation_bar</item>
         <item name="android:windowBackground">?colorPrimary</item>
-        <item name="default_background_end">@color/ocean_light_7</item>
-        <item name="default_background_start">@color/ocean_light_6</item>
         <item name="colorCellBackground">@color/ocean_light_5</item>
         <item name="colorDividerBackground">@color/ocean_light_3</item>
         <item name="android:colorControlHighlight">@color/ocean_light_4</item>

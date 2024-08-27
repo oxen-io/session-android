@@ -8,11 +8,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 
-fun TextStyle.bold() = TextStyle.Default.copy(
+fun TextStyle.bold() = copy(
     fontWeight = FontWeight.Bold
 )
 
-fun TextStyle.monospace() = TextStyle.Default.copy(
+fun TextStyle.monospace() = copy(
     fontFamily = FontFamily.Monospace
 )
 

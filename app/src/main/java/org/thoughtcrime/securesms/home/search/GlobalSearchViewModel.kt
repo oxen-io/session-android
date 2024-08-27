@@ -10,21 +10,19 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
-import org.session.libsignal.utilities.SettableFuture
 import org.thoughtcrime.securesms.search.SearchRepository
 import org.thoughtcrime.securesms.search.model.SearchResult
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -47,11 +45,8 @@ class GlobalSearchViewModel @Inject constructor(
                 // User input delay in case we get a new query within a few hundred ms this
                 // coroutine will be cancelled and the expensive query will not be run.
                 delay(300)
-                val settableFuture = SettableFuture<SearchResult>()
-                searchRepository.query(query.toString(), settableFuture::set)
                 try {
-                    // search repository doesn't play nicely with suspend functions (yet)
-                    settableFuture.get(10_000, TimeUnit.MILLISECONDS).toGlobalSearchResult()
+                    searchRepository.suspendQuery(query.toString()).toGlobalSearchResult()
                 } catch (e: Exception) {
                     GlobalSearchResult(query.toString())
                 }
@@ -66,6 +61,12 @@ class GlobalSearchViewModel @Inject constructor(
         viewModelScope.launch {
             refreshes.emit(Unit)
         }
+    }
+}
+
+private suspend fun SearchRepository.suspendQuery(query: String): SearchResult {
+    return suspendCoroutine { cont ->
+        query(query, cont::resume)
     }
 }
 

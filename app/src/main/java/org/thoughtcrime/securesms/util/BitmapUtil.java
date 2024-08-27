@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.session.libsession.utilities.MediaTypes;
 import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.mms.GlideApp;
+import com.bumptech.glide.Glide;
 import org.thoughtcrime.securesms.mms.MediaConstraints;
 
 import org.session.libsession.utilities.Util;
@@ -98,7 +98,7 @@ public class BitmapUtil {
       int    attempts = 0;
       byte[] bytes;
 
-      Bitmap scaledBitmap = GlideApp.with(context.getApplicationContext())
+      Bitmap scaledBitmap = Glide.with(context.getApplicationContext())
                                     .asBitmap()
                                     .load(model)
                                     .skipMemoryCache(true)
@@ -164,7 +164,7 @@ public class BitmapUtil {
       throws BitmapDecodingException
   {
     try {
-      return GlideApp.with(context.getApplicationContext())
+      return Glide.with(context.getApplicationContext())
                      .asBitmap()
                      .load(model)
                      .centerInside()

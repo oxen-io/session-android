@@ -12,12 +12,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public class Util {
+  public static SecureRandom SECURE_RANDOM = new SecureRandom();
 
   public static byte[] join(byte[]... input) {
     try {
@@ -67,7 +65,7 @@ public class Util {
   }
 
   public static boolean isEmpty(String value) {
-    return value == null || value.trim().length() == 0;
+    return value == null || value.trim().isEmpty();
   }
 
   public static byte[] getSecretBytes(int size) {
@@ -78,13 +76,6 @@ public class Util {
     } catch (NoSuchAlgorithmException e) {
       throw new AssertionError(e);
     }
-  }
-
-  public static byte[] getRandomLengthBytes(int maxSize) {
-    SecureRandom secureRandom = new SecureRandom();
-    byte[]       result       = new byte[secureRandom.nextInt(maxSize) + 1];
-    secureRandom.nextBytes(result);
-    return result;
   }
 
   public static String readFully(InputStream in) throws IOException {
@@ -98,7 +89,7 @@ public class Util {
 
     in.close();
 
-    return new String(bout.toByteArray());
+    return bout.toString();
   }
 
   public static void readFully(InputStream in, byte[] buffer) throws IOException {
@@ -146,9 +137,4 @@ public class Util {
     }
     return (int)value;
   }
-
-  public static <T> List<T> immutableList(T... elements) {
-    return Collections.unmodifiableList(Arrays.asList(elements.clone()));
-  }
-
 }

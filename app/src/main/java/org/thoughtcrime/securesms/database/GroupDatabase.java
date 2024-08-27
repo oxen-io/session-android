@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.database;
 
+import static org.session.libsignal.utilities.Util.SECURE_RANDOM;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -26,7 +28,6 @@ import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.util.BitmapUtil;
 
 import java.io.Closeable;
-import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -303,7 +304,7 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
   public void updateProfilePicture(String groupID, byte[] newValue) {
     long avatarId;
 
-    if (newValue != null) avatarId = Math.abs(new SecureRandom().nextLong());
+    if (newValue != null) avatarId = Math.abs(SECURE_RANDOM.nextLong());
     else                  avatarId = 0;
 
 
@@ -456,12 +457,6 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
     ContentValues  values   = new ContentValues();
     values.put(ACTIVE, active ? 1 : 0);
     database.update(TABLE_NAME, values, GROUP_ID + " = ?", new String[] {groupId});
-  }
-
-  public byte[] allocateGroupId() {
-    byte[] groupId = new byte[16];
-    new SecureRandom().nextBytes(groupId);
-    return groupId;
   }
 
   public boolean hasGroup(@NonNull String groupId) {

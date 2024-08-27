@@ -1,9 +1,7 @@
 package org.thoughtcrime.securesms.components;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,7 +25,6 @@ public class ConversationItemAlertView extends LinearLayout {
     initialize(attrs);
   }
 
-  @TargetApi(VERSION_CODES.HONEYCOMB)
   public ConversationItemAlertView(final Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
     initialize(attrs);

@@ -45,7 +45,7 @@ internal fun MessageNotificationsScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator(LocalColors.current.primary)
+            CircularProgressIndicator(color = LocalColors.current.primary)
         }
 
         return

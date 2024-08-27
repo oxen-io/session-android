@@ -9,7 +9,6 @@
     <dimen name="medium_font_size">15sp</dimen>
     <dimen name="large_font_size">20sp</dimen>
     <dimen name="very_large_font_size">24sp</dimen>
-    <dimen name="massive_font_size">50sp</dimen>
 
     <!-- Session -->
 

@@ -551,6 +551,7 @@ class InstrumentedTests {
                     is Conversation.OneToOne -> seen.add("1-to-1: ${convo.accountId}")
                     is Conversation.Community -> seen.add("og: ${convo.baseCommunityInfo.baseUrl}/r/${convo.baseCommunityInfo.room}")
                     is Conversation.LegacyGroup -> seen.add("cl: ${convo.groupId}")
+                    null -> { /* ignore null cases */ }
                 }
             }
 

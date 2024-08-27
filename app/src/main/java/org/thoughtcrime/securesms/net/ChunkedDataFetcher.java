@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.net;
 
+import static org.session.libsignal.utilities.Util.SECURE_RANDOM;
+
 import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -15,7 +17,6 @@ import org.session.libsignal.utilities.guava.Optional;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class ChunkedDataFetcher {
   private RequestController fetchChunksWithUnknownTotalSize(@NonNull String url, @NonNull Callback callback) {
     CompositeRequestController compositeController = new CompositeRequestController();
 
-    long    chunkSize = new SecureRandom().nextInt(1024) + 1024;
+    long    chunkSize = SECURE_RANDOM.nextInt(1024) + 1024;
     Request request   = new Request.Builder()
                                    .url(url)
                                    .cacheControl(NO_CACHE)

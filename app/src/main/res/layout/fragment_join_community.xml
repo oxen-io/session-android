@@ -27,7 +27,7 @@
         android:layout_marginStart="@dimen/medium_spacing"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/ic_arrow_left_24"
+        android:src="@drawable/ic_arrow_left"
         app:layout_constraintBottom_toBottomOf="@id/titleText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/titleText"

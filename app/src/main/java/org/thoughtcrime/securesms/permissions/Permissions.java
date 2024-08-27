@@ -1,9 +1,9 @@
 package org.thoughtcrime.securesms.permissions;
 
+import static org.session.libsignal.utilities.Util.SECURE_RANDOM;
+
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,9 +11,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -28,12 +26,9 @@ import org.session.libsession.utilities.ServiceUtil;
 import org.thoughtcrime.securesms.util.LRUCache;
 
 import java.lang.ref.WeakReference;
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import network.loki.messenger.R;
 
 public class Permissions {
 
@@ -172,7 +167,7 @@ public class Permissions {
     }
 
     private void executePermissionsRequest(PermissionsRequest request) {
-      int requestCode = new SecureRandom().nextInt(65434) + 100;
+      int requestCode = SECURE_RANDOM.nextInt(65434) + 100;
 
       synchronized (OUTSTANDING) {
         OUTSTANDING.put(requestCode, request);
@@ -215,15 +210,8 @@ public class Permissions {
                  .toArray(new String[0]);
   }
 
-  public static boolean hasAny(@NonNull Context context, String... permissions) {
-    return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-        Stream.of(permissions).anyMatch(permission -> ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED);
-
-  }
-
   public static boolean hasAll(@NonNull Context context, String... permissions) {
-    return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-        Stream.of(permissions).allMatch(permission -> ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED);
+    return Stream.of(permissions).allMatch(permission -> ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED);
 
   }
 

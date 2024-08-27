@@ -57,14 +57,143 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
                 button(R.string.no)
             }
         }
+
+        fun saveAttachment(context: Context, attachment: Attachment): String? {
+            val contentType = checkNotNull(MediaUtil.getCorrectedMimeType(attachment.contentType))
+            var fileName = attachment.fileName
+
+            // Added for SES-2624 to prevent Android API 28 devices and lower from crashing because
+            // for unknown reasons it provides us with an empty filename when saving files.
+            // TODO: Further investigation into root cause and fix!
+            if (fileName.isNullOrEmpty()) fileName = generateOutputFileName(contentType, attachment.date)
+
+            fileName = sanitizeOutputFileName(fileName)
+            val outputUri: Uri = getMediaStoreContentUriForType(contentType)
+            val mediaUri = createOutputUri(context, outputUri, contentType, fileName)
+            val updateValues = ContentValues()
+            PartAuthority.getAttachmentStream(context, attachment.uri).use { inputStream ->
+                if (inputStream == null) {
+                    return null
+                }
+                if (outputUri.scheme == ContentResolver.SCHEME_FILE) {
+                    FileOutputStream(mediaUri!!.path).use { outputStream ->
+                        StreamUtil.copy(inputStream, outputStream)
+                        MediaScannerConnection.scanFile(context, arrayOf(mediaUri.path), arrayOf(contentType), null)
+                    }
+                } else {
+                    context.contentResolver.openOutputStream(mediaUri!!, "w").use { outputStream ->
+                        val total: Long = StreamUtil.copy(inputStream, outputStream)
+                        if (total > 0) {
+                            updateValues.put(MediaStore.MediaColumns.SIZE, total)
+                        }
+                    }
+                }
+            }
+            if (Build.VERSION.SDK_INT > 28) {
+                updateValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
+            }
+            if (updateValues.size() > 0) {
+                context.contentResolver.update(mediaUri!!, updateValues, null, null)
+            }
+            return outputUri.lastPathSegment
+        }
+
+        private fun generateOutputFileName(contentType: String, timestamp: Long): String {
+            val mimeTypeMap = MimeTypeMap.getSingleton()
+            val extension = mimeTypeMap.getExtensionFromMimeType(contentType) ?: "attach"
+            val dateFormatter = SimpleDateFormat("yyyy-MM-dd-HHmmss")
+            val base = "session-${dateFormatter.format(timestamp)}"
+
+            return "${base}.${extension}";
+        }
+
+        private fun sanitizeOutputFileName(fileName: String): String {
+            return File(fileName).name
+        }
+
+        private fun getMediaStoreContentUriForType(contentType: String): Uri {
+            return when {
+                contentType.startsWith("video/") ->
+                    ExternalStorageUtil.getVideoUri()
+                contentType.startsWith("audio/") ->
+                    ExternalStorageUtil.getAudioUri()
+                contentType.startsWith("image/") ->
+                    ExternalStorageUtil.getImageUri()
+                else ->
+                    ExternalStorageUtil.getDownloadUri()
+            }
+        }
+
+        private fun createOutputUri(context: Context, outputUri: Uri, contentType: String, fileName: String): Uri? {
+            val fileParts: Array<String> = getFileNameParts(fileName)
+            val base = fileParts[0]
+            val extension = fileParts[1]
+            val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            val contentValues = ContentValues()
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+            contentValues.put(MediaStore.MediaColumns.DATE_ADDED, TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()))
+            contentValues.put(MediaStore.MediaColumns.DATE_MODIFIED, TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()))
+            if (Build.VERSION.SDK_INT > 28) {
+                contentValues.put(MediaStore.MediaColumns.IS_PENDING, 1)
+            } else if (outputUri.scheme == ContentResolver.SCHEME_FILE) {
+                val outputDirectory = File(outputUri.path)
+                var outputFile = File(outputDirectory, "$base.$extension")
+                var i = 0
+                while (outputFile.exists()) {
+                    outputFile = File(outputDirectory, base + "-" + ++i + "." + extension)
+                }
+                if (outputFile.isHidden) {
+                    throw IOException("Specified name would not be visible")
+                }
+                return Uri.fromFile(outputFile)
+            } else {
+                var outputFileName = fileName
+                var dataPath = String.format("%s/%s", getExternalPathToFileForType(context, contentType), outputFileName)
+                var i = 0
+                while (pathTaken(context, outputUri, dataPath)) {
+                    Log.d(TAG, "The content exists. Rename and check again.")
+                    outputFileName = base + "-" + ++i + "." + extension
+                    dataPath = String.format("%s/%s", getExternalPathToFileForType(context, contentType), outputFileName)
+                }
+                contentValues.put(MediaStore.MediaColumns.DATA, dataPath)
+            }
+            return context.contentResolver.insert(outputUri, contentValues)
+        }
+
+        private fun getExternalPathToFileForType(context: Context, contentType: String): String {
+            val storage: File = when {
+                contentType.startsWith("video/") ->
+                    context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)!!
+                contentType.startsWith("audio/") ->
+                    context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)!!
+                contentType.startsWith("image/") ->
+                    context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+                else ->
+                    context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!
+            }
+            return storage.absolutePath
+        }
+
+        private fun getFileNameParts(fileName: String): Array<String> {
+            val tokens = fileName.split("\\.(?=[^\\.]+$)".toRegex()).toTypedArray()
+            return arrayOf(tokens[0], if (tokens.size > 1) tokens[1] else "")
+        }
+
+        private fun pathTaken(context: Context, outputUri: Uri, dataPath: String): Boolean {
+            context.contentResolver.query(outputUri, arrayOf(MediaStore.MediaColumns.DATA),
+                MediaStore.MediaColumns.DATA + " = ?", arrayOf(dataPath),
+                null).use { cursor ->
+                if (cursor == null) {
+                    throw IOException("Something is wrong with the filename to save")
+                }
+                return cursor.moveToFirst()
+            }
+        }
     }
 
-    private val contextReference: WeakReference<Context>
+    private val contextReference = WeakReference(context)
     private val attachmentCount: Int = count
-
-    init {
-        this.contextReference = WeakReference(context)
-    }
 
     @Deprecated("Deprecated in Java")
     override fun doInBackground(vararg attachments: Attachment?): Pair<Int, String?> {
@@ -97,137 +226,6 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         }
     }
 
-    @Throws(IOException::class)
-    private fun saveAttachment(context: Context, attachment: Attachment): String? {
-        val contentType = Objects.requireNonNull(MediaUtil.getCorrectedMimeType(attachment.contentType))!!
-        var fileName = attachment.fileName
-        if (fileName == null) fileName = generateOutputFileName(contentType, attachment.date)
-        fileName = sanitizeOutputFileName(fileName)
-        val outputUri: Uri = getMediaStoreContentUriForType(contentType)
-        val mediaUri = createOutputUri(outputUri, contentType, fileName)
-        val updateValues = ContentValues()
-        PartAuthority.getAttachmentStream(context, attachment.uri).use { inputStream ->
-            if (inputStream == null) {
-                return null
-            }
-            if (outputUri.scheme == ContentResolver.SCHEME_FILE) {
-                FileOutputStream(mediaUri!!.path).use { outputStream ->
-                    StreamUtil.copy(inputStream, outputStream)
-                    MediaScannerConnection.scanFile(context, arrayOf(mediaUri.path), arrayOf(contentType), null)
-                }
-            } else {
-                context.contentResolver.openOutputStream(mediaUri!!, "w").use { outputStream ->
-                    val total: Long = StreamUtil.copy(inputStream, outputStream)
-                    if (total > 0) {
-                        updateValues.put(MediaStore.MediaColumns.SIZE, total)
-                    }
-                }
-            }
-        }
-        if (Build.VERSION.SDK_INT > 28) {
-            updateValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
-        }
-        if (updateValues.size() > 0) {
-            getContext().contentResolver.update(mediaUri!!, updateValues, null, null)
-        }
-        return outputUri.lastPathSegment
-    }
-
-    private fun getMediaStoreContentUriForType(contentType: String): Uri {
-        return when {
-            contentType.startsWith("video/") ->
-                ExternalStorageUtil.getVideoUri()
-            contentType.startsWith("audio/") ->
-                ExternalStorageUtil.getAudioUri()
-            contentType.startsWith("image/") ->
-                ExternalStorageUtil.getImageUri()
-            else ->
-                ExternalStorageUtil.getDownloadUri()
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun createOutputUri(outputUri: Uri, contentType: String, fileName: String): Uri? {
-        val fileParts: Array<String> = getFileNameParts(fileName)
-        val base = fileParts[0]
-        val extension = fileParts[1]
-        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-        val contentValues = ContentValues()
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
-        contentValues.put(MediaStore.MediaColumns.DATE_ADDED, TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()))
-        contentValues.put(MediaStore.MediaColumns.DATE_MODIFIED, TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()))
-        if (Build.VERSION.SDK_INT > 28) {
-            contentValues.put(MediaStore.MediaColumns.IS_PENDING, 1)
-        } else if (Objects.equals(outputUri.scheme, ContentResolver.SCHEME_FILE)) {
-            val outputDirectory = File(outputUri.path)
-            var outputFile = File(outputDirectory, "$base.$extension")
-            var i = 0
-            while (outputFile.exists()) {
-                outputFile = File(outputDirectory, base + "-" + ++i + "." + extension)
-            }
-            if (outputFile.isHidden) {
-                throw IOException("Specified name would not be visible")
-            }
-            return Uri.fromFile(outputFile)
-        } else {
-            var outputFileName = fileName
-            var dataPath = String.format("%s/%s", getExternalPathToFileForType(contentType), outputFileName)
-            var i = 0
-            while (pathTaken(outputUri, dataPath)) {
-                Log.d(TAG, "The content exists. Rename and check again.")
-                outputFileName = base + "-" + ++i + "." + extension
-                dataPath = String.format("%s/%s", getExternalPathToFileForType(contentType), outputFileName)
-            }
-            contentValues.put(MediaStore.MediaColumns.DATA, dataPath)
-        }
-        return context.contentResolver.insert(outputUri, contentValues)
-    }
-
-    private fun getFileNameParts(fileName: String): Array<String> {
-        val tokens = fileName.split("\\.(?=[^\\.]+$)".toRegex()).toTypedArray()
-        return arrayOf(tokens[0], if (tokens.size > 1) tokens[1] else "")
-    }
-
-    private fun getExternalPathToFileForType(contentType: String): String {
-        val storage: File = when {
-            contentType.startsWith("video/") ->
-                context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)!!
-            contentType.startsWith("audio/") ->
-                context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)!!
-            contentType.startsWith("image/") ->
-                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
-            else ->
-                context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!
-        }
-        return storage.absolutePath
-    }
-
-    @Throws(IOException::class)
-    private fun pathTaken(outputUri: Uri, dataPath: String): Boolean {
-        context.contentResolver.query(outputUri, arrayOf(MediaStore.MediaColumns.DATA),
-                MediaStore.MediaColumns.DATA + " = ?", arrayOf(dataPath),
-                null).use { cursor ->
-            if (cursor == null) {
-                throw IOException("Something is wrong with the filename to save")
-            }
-            return cursor.moveToFirst()
-        }
-    }
-
-    private fun generateOutputFileName(contentType: String, timestamp: Long): String {
-        val mimeTypeMap = MimeTypeMap.getSingleton()
-        val extension = mimeTypeMap.getExtensionFromMimeType(contentType) ?: "attach"
-        val dateFormatter = SimpleDateFormat("yyyy-MM-dd-HHmmss")
-        val base = "session-${dateFormatter.format(timestamp)}"
-
-        return "${base}.${extension}";
-    }
-
-    private fun sanitizeOutputFileName(fileName: String): String {
-        return File(fileName).name
-    }
-
     @Deprecated("Deprecated in Java")
     override fun onPostExecute(result: Pair<Int, String?>) {
         super.onPostExecute(result)
@@ -255,4 +253,5 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
     }
 
     data class Attachment(val uri: Uri, val contentType: String, val date: Long, val fileName: String?)
+
 }

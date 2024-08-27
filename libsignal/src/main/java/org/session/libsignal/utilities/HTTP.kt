@@ -5,8 +5,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import okhttp3.Response
-import java.security.SecureRandom
+import org.session.libsignal.utilities.Util.SECURE_RANDOM
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
@@ -35,7 +34,7 @@ object HTTP {
             override fun getAcceptedIssuers(): Array<X509Certificate> { return arrayOf() }
         }
         val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, arrayOf( trustManager ), SecureRandom())
+        sslContext.init(null, arrayOf( trustManager ), SECURE_RANDOM)
         OkHttpClient().newBuilder()
             .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
@@ -55,7 +54,7 @@ object HTTP {
             override fun getAcceptedIssuers(): Array<X509Certificate> { return arrayOf() }
         }
         val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, arrayOf( trustManager ), SecureRandom())
+        sslContext.init(null, arrayOf( trustManager ), SECURE_RANDOM)
         return OkHttpClient().newBuilder()
             .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
@@ -115,18 +114,26 @@ object HTTP {
             }
             Verb.DELETE -> request.delete()
         }
-        lateinit var response: Response
-        try {
-            val connection: OkHttpClient = if (timeout != HTTP.timeout) { // Custom timeout
-                if (useSeedNodeConnection) {
-                    throw IllegalStateException("Setting a custom timeout is only allowed for requests to snodes.")
+        return try {
+            when {
+                // Custom timeout
+                timeout != HTTP.timeout -> {
+                    if (useSeedNodeConnection) {
+                        throw IllegalStateException("Setting a custom timeout is only allowed for requests to snodes.")
+                    }
+                    getDefaultConnection(timeout)
                 }
-                getDefaultConnection(timeout)
-            } else {
-                if (useSeedNodeConnection) seedNodeConnection else defaultConnection
+                useSeedNodeConnection -> seedNodeConnection
+                else -> defaultConnection
+            }.newCall(request.build()).execute().use { response ->
+                when (val statusCode = response.code) {
+                    200 -> response.body!!.bytes()
+                    else -> {
+                        Log.d("Loki", "${verb.rawValue} request to $url failed with status code: $statusCode.")
+                        throw HTTPRequestFailedException(statusCode, null)
+                    }
+                }
             }
-
-            response = connection.newCall(request.build()).execute()
         } catch (exception: Exception) {
             Log.d("Loki", "${verb.rawValue} request to $url failed due to error: ${exception.localizedMessage}.")
 
@@ -134,15 +141,6 @@ object HTTP {
 
             // Override the actual error so that we can correctly catch failed requests in OnionRequestAPI
             throw HTTPRequestFailedException(0, null, "HTTP request failed due to: ${exception.message}")
-        }
-        return when (val statusCode = response.code) {
-            200 -> {
-                response.body!!.bytes()
-            }
-            else -> {
-                Log.d("Loki", "${verb.rawValue} request to $url failed with status code: $statusCode.")
-                throw HTTPRequestFailedException(statusCode, null)
-            }
         }
     }
 }

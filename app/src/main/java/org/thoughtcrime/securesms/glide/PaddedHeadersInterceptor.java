@@ -1,9 +1,10 @@
 package org.thoughtcrime.securesms.glide;
 
+import static org.session.libsignal.utilities.Util.SECURE_RANDOM;
+
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
-import java.security.SecureRandom;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -30,15 +31,15 @@ public class PaddedHeadersInterceptor implements Interceptor {
 
   private @NonNull Headers getPaddedHeaders(@NonNull Headers headers) {
     return headers.newBuilder()
-                  .add(PADDING_HEADER, getRandomString(new SecureRandom(), MIN_RANDOM_BYTES, MAX_RANDOM_BYTES))
+                  .add(PADDING_HEADER, getRandomString(MIN_RANDOM_BYTES, MAX_RANDOM_BYTES))
                   .build();
   }
 
-  private static @NonNull String getRandomString(@NonNull SecureRandom secureRandom, int minLength, int maxLength) {
-    char[] buffer = new char[secureRandom.nextInt(maxLength - minLength) + minLength];
+  private static @NonNull String getRandomString(int minLength, int maxLength) {
+    char[] buffer = new char[SECURE_RANDOM.nextInt(maxLength - minLength) + minLength];
 
     for (int i = 0 ; i  < buffer.length; i++) {
-      buffer[i] = (char) (secureRandom.nextInt(74) + 48); // Random char from 0-Z
+      buffer[i] = (char) (SECURE_RANDOM.nextInt(74) + 48); // Random char from 0-Z
     }
 
     return new String(buffer);

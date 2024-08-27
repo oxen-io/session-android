@@ -30,6 +30,7 @@ set(SOURCES
         config_base.cpp
         contacts.cpp
         conversation.cpp
+        blinded_key.cpp
         util.cpp)
 
 add_library( # Sets the name of the library.

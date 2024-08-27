@@ -28,17 +28,6 @@ public class NetworkConstraint implements Constraint {
     return activeNetworkInfo != null && activeNetworkInfo.isConnected();
   }
 
-  @Override
-  public @NonNull String getFactoryKey() {
-    return KEY;
-  }
-
-  @RequiresApi(26)
-  @Override
-  public void applyToJobInfo(@NonNull JobInfo.Builder jobInfoBuilder) {
-    jobInfoBuilder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
-  }
-
   public static final class Factory implements Constraint.Factory<NetworkConstraint> {
 
     private final Application application;

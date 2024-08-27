@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-sdk tools:overrideLibrary="com.amulyakhare.textdrawable,com.astuetz.pagerslidingtabstrip,pl.tajchert.waitingdots,com.h6ah4i.android.multiselectlistpreferencecompat,android.support.v13,com.davemorrissey.labs.subscaleview,com.tomergoldst.tooltips,com.klinker.android.send_message,com.takisoft.colorpicker,android.support.v14.preference" />
+    <uses-sdk tools:overrideLibrary="com.astuetz.pagerslidingtabstrip,pl.tajchert.waitingdots,com.h6ah4i.android.multiselectlistpreferencecompat,android.support.v13,com.davemorrissey.labs.subscaleview,com.tomergoldst.tooltips,com.klinker.android.send_message,com.takisoft.colorpicker,android.support.v14.preference" />
 
     <permission
         android:name="network.loki.messenger.ACCESS_SESSION_SECRETS"
@@ -125,7 +125,7 @@
         <activity
             android:name="org.thoughtcrime.securesms.home.HomeActivity"
             android:screenOrientation="portrait"
-            android:launchMode="standard"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.Session.DayNight.NoActionBar" />
         <activity
             android:name="org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity"
@@ -136,6 +136,10 @@
             android:name="org.thoughtcrime.securesms.preferences.SettingsActivity"
             android:screenOrientation="portrait"
             android:label="@string/activity_settings_title" />
+        <activity
+            android:name="org.thoughtcrime.securesms.debugmenu.DebugActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Session.DayNight.NoActionBar" />
         <activity
             android:name="org.thoughtcrime.securesms.home.PathActivity"
             android:screenOrientation="portrait" />
@@ -292,10 +296,6 @@
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
             android:theme="@style/Theme.Session.ForceDark" />
         <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat" />
-        <activity
             android:name="org.thoughtcrime.securesms.ShortcutLauncherActivity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
             android:exported="true"
@@ -310,6 +310,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.thoughtcrime.securesms.home.HomeActivity" />
         </activity>
+        <activity android:name="org.thoughtcrime.securesms.media.MediaOverviewActivity" />
+
         <service android:enabled="true" android:name="org.thoughtcrime.securesms.service.WebRtcCallService"
             android:foregroundServiceType="microphone"
             android:exported="false" />
@@ -328,7 +330,6 @@
                 <action android:name="android.service.chooser.ChooserTargetService" />
             </intent-filter>
         </service>
-        <service android:name="org.thoughtcrime.securesms.service.GenericForegroundService" />
         <receiver
             android:name="org.thoughtcrime.securesms.notifications.MarkReadReceiver"
             android:enabled="true"
@@ -440,9 +441,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <service
-            android:name="org.thoughtcrime.securesms.jobmanager.KeepAliveService"
-            android:enabled="@bool/enable_alarm_manager" />
+
         <uses-library
             android:name="com.sec.android.app.multiwindow"
             android:required="false" />
