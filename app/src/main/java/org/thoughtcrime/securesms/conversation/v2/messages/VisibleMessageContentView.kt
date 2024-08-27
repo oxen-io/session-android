@@ -11,8 +11,12 @@ import android.text.util.Linkify
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.core.text.getSpans
@@ -40,7 +44,14 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import org.thoughtcrime.securesms.copyURLToClipboard
+import org.thoughtcrime.securesms.openUrl
 import org.thoughtcrime.securesms.showOpenUrlDialog
+import org.thoughtcrime.securesms.ui.AlertDialog
+import org.thoughtcrime.securesms.ui.DialogButtonModel
+import org.thoughtcrime.securesms.ui.GetString
+import org.thoughtcrime.securesms.ui.OpenURLAlertDialog
+import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.getAccentColor
@@ -60,6 +71,7 @@ class VisibleMessageContentView : ConstraintLayout {
     // endregion
 
     // region Updating
+    @Composable
     fun bind(
         message: MessageRecord,
         isStartOfMessageCluster: Boolean = true,
@@ -273,6 +285,7 @@ class VisibleMessageContentView : ConstraintLayout {
     // region Convenience
     companion object {
 
+        @Composable
         fun getBodySpans(context: Context, message: MessageRecord, searchQuery: String?): Spannable {
             var body = message.body.toSpannable()
 
@@ -293,8 +306,14 @@ class VisibleMessageContentView : ConstraintLayout {
             body.getSpans<URLSpan>(0, body.length).toList().forEach { urlSpan ->
                 val updatedUrl = urlSpan.url.let { it.toHttpUrlOrNull().toString() }
                 val replacementSpan = ModalURLSpan(updatedUrl) { url ->
-                    val activity = context as AppCompatActivity
-                    activity.showOpenUrlDialog(url)
+
+                    // @Thomas - PREVIOUS CODE WAS:
+                    //val activity = context as AppCompatActivity
+                    //activity.showOpenUrlDialog(url)
+
+                    // Now attempting to use compose for the dialog - but it's not happy =/
+                    OpenURLWarningDialog(url)
+
                 }
                 val start = body.getSpanStart(urlSpan)
                 val end = body.getSpanEnd(urlSpan)
@@ -303,6 +322,35 @@ class VisibleMessageContentView : ConstraintLayout {
                 body.setSpan(replacementSpan, start, end, flags)
             }
             return body
+        }
+
+        @Composable
+        private fun OpenURLWarningDialog(url: String) {
+            val context = LocalContext.current
+
+            OpenURLAlertDialog(
+                title = stringResource(R.string.urlOpen),
+                text = stringResource(R.string.urlOpenDescription),
+                showCloseButton = true, // display the 'x' button
+                buttons = listOf(
+                    DialogButtonModel(
+                        text = GetString(R.string.open),
+                        contentDescription = GetString(R.string.AccessibilityId_urlOpenBrowser),
+                        color = LocalColors.current.danger,
+                        onClick = { context.openUrl(url) }
+                    ),
+                    DialogButtonModel(
+                        text = GetString(android.R.string.copyUrl),
+                        contentDescription = GetString(R.string.AccessibilityId_copy),
+                        onClick = {
+                            context.copyURLToClipboard(url)
+                            Toast.makeText(context, R.string.copied, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                ),
+                url = url,
+                onDismissRequest = {}
+            )
         }
 
         @ColorInt

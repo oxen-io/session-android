@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,6 +28,7 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
@@ -57,7 +57,8 @@ fun AlertDialog(
     text: String? = null,
     buttons: List<DialogButtonModel>? = null,
     showCloseButton: Boolean = false,
-    content: @Composable () -> Unit = {}
+    content: @Composable () -> Unit = {},
+    optionalURL: String = ""
 ) {
     BasicAlertDialog(
         modifier = modifier,
@@ -88,19 +89,32 @@ fun AlertDialog(
                     ) {
                         title?.let {
                             Text(
-                                it,
+                                text = it,
                                 textAlign = TextAlign.Center,
                                 style = LocalType.current.h7,
                                 modifier = Modifier.padding(bottom = LocalDimensions.current.xxsSpacing)
                             )
                         }
                         text?.let {
-                            Text(
-                                it,
-                                textAlign = TextAlign.Center,
-                                style = LocalType.current.large,
-                                modifier = Modifier.padding(bottom = LocalDimensions.current.xxsSpacing)
-                            )
+                            if (optionalURL.isNotEmpty()) {
+                                // If this is an open URL dialog it should have a maximum height of 5 lines and truncate long URLs with an ellipsis
+                                Text(
+                                    text = it,
+                                    textAlign = TextAlign.Center,
+                                    style = LocalType.current.large,
+                                    modifier = Modifier.padding(bottom = LocalDimensions.current.xxsSpacing),
+                                    maxLines = 5,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            } else {
+                                // Otherwise it should be a regular, non-open-URL dialog
+                                Text(
+                                    text = it,
+                                    textAlign = TextAlign.Center,
+                                    style = LocalType.current.large,
+                                    modifier = Modifier.padding(bottom = LocalDimensions.current.xxsSpacing)
+                                )
+                            }
                         }
                         content()
                     }
@@ -124,6 +138,30 @@ fun AlertDialog(
                 }
             }
         }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OpenURLAlertDialog(
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    title: String? = null,
+    text: String? = null,
+    buttons: List<DialogButtonModel>? = null,
+    showCloseButton: Boolean = false,
+    content: @Composable () -> Unit = {},
+    url: String = ""
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        title = title,
+        text = text,
+        buttons = buttons,
+        showCloseButton = showCloseButton,
+        content = content,
+        optionalURL = url
     )
 }
 
@@ -224,7 +262,8 @@ fun PreviewSimpleDialog() {
                 DialogButtonModel(
                     GetString(stringResource(R.string.cancel))
                 )
-            )
+            ),
+            optionalURL = "https://slashdot.org"
         )
     }
 }
@@ -249,6 +288,33 @@ fun PreviewXCloseDialog() {
                     onClick = {}
                 )
             ),
+            onDismissRequest = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewOpenURLDialog() {
+    PreviewTheme {
+        OpenURLAlertDialog(
+            title = stringResource(R.string.urlOpen),
+            text = stringResource(R.string.urlOpenDescription),
+            showCloseButton = true, // display the 'x' button
+            buttons = listOf(
+                DialogButtonModel(
+                    text = GetString(R.string.open),
+                    contentDescription = GetString(R.string.AccessibilityId_urlOpenBrowser),
+                    color = LocalColors.current.danger,
+                    onClick = {}
+                ),
+                DialogButtonModel(
+                    text = GetString(android.R.string.copyUrl),
+                    contentDescription = GetString(R.string.AccessibilityId_copy),
+                    onClick = {}
+                )
+            ),
+            url = "http://slashdot.org",
             onDismissRequest = {}
         )
     }
