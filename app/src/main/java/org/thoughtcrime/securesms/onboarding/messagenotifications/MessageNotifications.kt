@@ -107,45 +107,15 @@ private fun NotificationRadioButton(
     checked: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    RadioButton(
-        onClick = onClick,
-        modifier = modifier,
-        selected = checked,
-        contentPadding = PaddingValues(horizontal = LocalDimensions.current.mediumSpacing, vertical = 7.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .border(
-                    LocalDimensions.current.borderStroke,
-                    LocalColors.current.borders,
-                    RoundedCornerShape(8.dp)
-                ),
-        ) {
-            Column(
-                modifier = Modifier.padding(horizontal = LocalDimensions.current.smallSpacing, vertical = LocalDimensions.current.xsSpacing)) {
-                Text(
-                    stringResource(titleId),
-                    style = LocalType.current.h8
-                )
-
-                Text(
-                    stringResource(explanationId),
-                    style = LocalType.current.small,
-                    modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing)
-                )
-
-                tag?.let {
-                    Text(
-                        stringResource(it),
-                        modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing),
-                        color = LocalColors.current.primary,
-                        style = LocalType.current.h9
-                    )
-                }
-            }
-        }
-    }
+    // Pass-through from this string ID version to the version that takes strings
+    NotificationRadioButton(
+        titleTxt       = stringResource(titleId),
+        explanationTxt = stringResource(explanationId),
+        modifier       = modifier,
+        tag            = tag,
+        checked        = checked,
+        onClick        = onClick
+    )
 }
 
 @Composable

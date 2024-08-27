@@ -816,7 +816,7 @@ NOTE: Strings with blank lines have manually been replaced with '\n\n' - this wi
 
     <!-- Missing from CrowdIn circa 2024-08-22 -->
     <string name="messageStatusUploading">Uploading</string>
-    
+
 <!-- TODO ACL: Add and tie in these plurals in the morning -ACL 2024-08-27
 
     deleteMessage 	Delete Message	Delete Messages
