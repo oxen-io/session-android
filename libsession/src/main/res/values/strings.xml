@@ -613,11 +613,11 @@ NOTE: Strings with blank lines have manually been replaced with '\n\n' - this wi
     <string name="onboardingAccountExists">I have an account</string>
     <string name="onboardingBackAccountCreation">You cannot go back further. In order to cancel your account creation, {app_name} needs to quit.</string>
     <string name="onboardingBackLoadAccount">You cannot go back further. In order to stop loading your account, {app_name} needs to quit.</string>
-    <string name="onboardingBubbleCreatingAnAccountIsEasy">Creating an account is instant, free, and anonymous </string>
+    <string name="onboardingBubbleCreatingAnAccountIsEasy">Creating an account is instant, free, and anonymous {emoji}</string>
     <string name="onboardingBubbleNoPhoneNumber">You don\'t even need a phone number to sign up.</string>
     <string name="onboardingBubblePrivacyInYourPocket">Privacy in your pocket.</string>
     <string name="onboardingBubbleSessionIsEngineered">{app_name} is engineered to protect your privacy.</string>
-    <string name="onboardingBubbleWelcomeToSession">Welcome to {app_name}</string>
+    <string name="onboardingBubbleWelcomeToSession">Welcome to {app_name} {emoji}</string>
     <string name="onboardingHitThePlusButton">Hit the plus button to start a chat, create a group, or join an official community!</string>
     <string name="onboardingMessageNotificationExplanation">There are two ways {app_name} can notify you of new messages.</string>
     <string name="onboardingPrivacy">Privacy Policy</string>

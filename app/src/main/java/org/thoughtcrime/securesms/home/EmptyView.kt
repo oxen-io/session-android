@@ -18,7 +18,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
+import org.session.libsession.utilities.NonTranslatableStringConstants.WAVING_HAND_EMOJI
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY
 import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
@@ -49,7 +51,10 @@ internal fun EmptyView(newAccount: Boolean) {
             Text(
                 stringResource(R.string.onboardingBubbleWelcomeToSession).let { txt ->
                     val c = LocalContext.current
-                    Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString()
+                    Phrase.from(txt)
+                        .put(APP_NAME_KEY, c.getString(R.string.app_name))
+                        .put(EMOJI_KEY, WAVING_HAND_EMOJI)
+                        .format().toString()
                 },
                 style = LocalType.current.base,
                 color = LocalColors.current.primary,
