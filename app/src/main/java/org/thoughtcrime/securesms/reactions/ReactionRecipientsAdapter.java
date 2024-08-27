@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.reactions;
 
+import static org.session.libsession.utilities.IdUtilKt.truncateIdForDisplay;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Collections;
 import java.util.List;
 import network.loki.messenger.R;
-import org.session.libsession.messaging.utilities.AccountId;
 import org.thoughtcrime.securesms.components.ProfilePictureView;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
-import com.bumptech.glide.Glide;
 
 final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecipientsAdapter.ViewHolder> {
 
@@ -128,7 +128,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
       EmojiImageView emojiView = itemView.findViewById(R.id.header_view_emoji);
       emojiView.setImageEmoji(emoji.getDisplayEmoji());
       TextView count = itemView.findViewById(R.id.header_view_emoji_count);
-      count.setText(String.format(" ·  %s", emoji.getCount()));
+      count.setText(String.format(" •  %s", emoji.getCount()));
     }
   }
 
@@ -159,11 +159,9 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
         this.recipient.setText(R.string.you);
         this.remove.setVisibility(View.VISIBLE);
       } else {
-        // TODO: The name we get here turns out to be null - Jira ticket: SES-2158
         String name = reaction.getSender().getName();
-        if (name != null && new AccountId(name).getPrefix() != null) {
-          name = name.substring(0, 4) + "..." + name.substring(name.length() - 4);
-
+        if (name == null){
+          name = truncateIdForDisplay(reaction.getSender().getAddress().serialize());
         }
         this.recipient.setText(name);
         this.remove.setVisibility(View.GONE);

@@ -10,6 +10,6 @@ interface VisibleMessageViewDelegate {
 
     fun onReactionClicked(emoji: String, messageId: MessageId, userWasSender: Boolean)
 
-    fun onReactionLongClicked(messageId: MessageId)
+    fun onReactionLongClicked(messageId: MessageId, emoji: String?)
 
 }

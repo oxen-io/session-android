@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import com.google.android.flexbox.JustifyContent
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
@@ -44,6 +45,8 @@ class EmojiReactionsView : ConstraintLayout, OnTouchListener {
     private var longPressCallback: Runnable? = null
     private var onDownTimestamp: Long = 0
     private var extended = false
+
+    private val overflowItemSize = ViewUtil.dpToPx(24)
 
     constructor(context: Context) : super(context) { init(null) }
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { init(attrs) }
@@ -83,7 +86,9 @@ class EmojiReactionsView : ConstraintLayout, OnTouchListener {
         if (v.tag == null) return false
         val reaction = v.tag as Reaction
         val action = event.action
-        if (action == MotionEvent.ACTION_DOWN) onDown(MessageId(reaction.messageId, reaction.isMms)) else if (action == MotionEvent.ACTION_CANCEL) removeLongPressCallback() else if (action == MotionEvent.ACTION_UP) onUp(reaction)
+        if (action == MotionEvent.ACTION_DOWN) onDown(MessageId(reaction.messageId, reaction.isMms), reaction.emoji)
+        else if (action == MotionEvent.ACTION_CANCEL) removeLongPressCallback()
+        else if (action == MotionEvent.ACTION_UP) onUp(reaction)
         return true
     }
 
@@ -93,18 +98,15 @@ class EmojiReactionsView : ConstraintLayout, OnTouchListener {
         binding.layoutEmojiContainer.removeAllViews()
         val overflowContainer = LinearLayout(context)
         overflowContainer.orientation = LinearLayout.HORIZONTAL
-        val innerPadding = ViewUtil.dpToPx(4)
-        overflowContainer.setPaddingRelative(innerPadding, innerPadding, innerPadding, innerPadding)
         val pixelSize = ViewUtil.dpToPx(1)
-        for (reaction in reactions) {
+        reactions.forEachIndexed { index, reaction ->
             if (binding.layoutEmojiContainer.childCount + 1 >= DEFAULT_THRESHOLD && threshold != Int.MAX_VALUE && reactions.size > threshold) {
                 if (overflowContainer.parent == null) {
                     binding.layoutEmojiContainer.addView(overflowContainer)
                     val overflowParams = overflowContainer.layoutParams as MarginLayoutParams
-                    overflowParams.height = ViewUtil.dpToPx(26)
+                    overflowParams.height = MarginLayoutParams.WRAP_CONTENT
                     overflowParams.setMargins(pixelSize, pixelSize, pixelSize, pixelSize)
                     overflowContainer.layoutParams = overflowParams
-                    overflowContainer.background = ContextCompat.getDrawable(context, R.drawable.reaction_pill_background)
                 }
                 val pill = buildPill(context, this, reaction, true)
                 pill.setOnClickListener { v: View? ->
@@ -113,6 +115,7 @@ class EmojiReactionsView : ConstraintLayout, OnTouchListener {
                 }
                 pill.findViewById<View>(R.id.reactions_pill_count).visibility = GONE
                 pill.findViewById<View>(R.id.reactions_pill_spacer).visibility = GONE
+                pill.z = reaction.count - index.toFloat() // make sure the overflow is stacked properly
                 overflowContainer.addView(pill)
             } else {
                 val pill = buildPill(context, this, reaction, false)
@@ -181,9 +184,10 @@ class EmojiReactionsView : ConstraintLayout, OnTouchListener {
         val countView = root.findViewById<TextView>(R.id.reactions_pill_count)
         val spacer = root.findViewById<View>(R.id.reactions_pill_spacer)
         if (isCompact) {
-            root.setPaddingRelative(1, 1, 1, 1)
+            root.setPadding(0)
             val layoutParams = root.layoutParams
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            layoutParams.height = overflowItemSize
+            layoutParams.width = overflowItemSize
             root.layoutParams = layoutParams
         }
         if (reaction.emoji != null) {
@@ -203,9 +207,8 @@ class EmojiReactionsView : ConstraintLayout, OnTouchListener {
             root.background = ContextCompat.getDrawable(context, R.drawable.reaction_pill_background_selected)
             countView.setTextColor(ThemeUtil.getThemedColor(context, R.attr.reactionsPillSelectedTextColor))
         } else {
-            if (!isCompact) {
-                root.background = ContextCompat.getDrawable(context, R.drawable.reaction_pill_background)
-            }
+            root.background = if(isCompact) ContextCompat.getDrawable(context, R.drawable.reaction_pill_background_bordered)
+                else ContextCompat.getDrawable(context, R.drawable.reaction_pill_background)
         }
         return root
     }
@@ -217,12 +220,12 @@ class EmojiReactionsView : ConstraintLayout, OnTouchListener {
         }
     }
 
-    private fun onDown(messageId: MessageId) {
+    private fun onDown(messageId: MessageId, emoji: String?) {
         removeLongPressCallback()
         val newLongPressCallback = Runnable {
             performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             if (delegate != null) {
-                delegate!!.onReactionLongClicked(messageId)
+                delegate!!.onReactionLongClicked(messageId, emoji)
             }
         }
         longPressCallback = newLongPressCallback

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
-    android:gravity="center_horizontal"
-    android:padding="@dimen/small_spacing"
+    android:gravity="center"
     android:id="@+id/footer_view_emoji_count"
-    android:layout_weight="1" />
+    android:layout_weight="1"
+    style="@style/Signal.Text.Preview"
+    android:textColor="?android:textColorTertiary"
+    tools:text="And 1244 other have reacted to this message" />
