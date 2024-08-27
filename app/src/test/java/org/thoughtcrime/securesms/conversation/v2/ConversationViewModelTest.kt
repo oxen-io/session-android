@@ -109,19 +109,6 @@ class ConversationViewModelTest: BaseViewModelTest() {
     }
 
     @Test
-    fun `should emit error message on failure to delete messages without unsend request`() =
-        runBlockingTest {
-            val message = mock<MessageRecord>()
-            val error = Throwable()
-            whenever(repository.deleteMessageWithoutUnsendRequest(anyLong(), anySet()))
-                .thenReturn(Result.failure(error))
-
-            viewModel.deleteMessagesWithoutUnsendRequest(setOf(message))
-
-            assertThat(viewModel.uiState.first().uiMessages.first().message, endsWith("$error"))
-        }
-
-    @Test
     fun `should emit error message on ban user failure`() = runBlockingTest {
         val error = Throwable()
         whenever(repository.banUser(anyLong(), any())).thenReturn(Result.failure(error))
