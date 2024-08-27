@@ -35,7 +35,6 @@ object UpdateMessageBuilder {
         ?.displayName(Contact.ContactContext.REGULAR)
         ?: truncateIdForDisplay(senderId)
 
-    //@RequiresApi(Build.VERSION_CODES.P)
     fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false): CharSequence {
         val updateData = updateMessageData.kind
         if (updateData == null || !isOutgoing && senderId == null) return ""
@@ -71,7 +70,7 @@ object UpdateMessageBuilder {
 
                 val newMemberCount = updateData.updatedMembers.size
 
-                // We previously differentiated between members added by us Vs. members added by someone
+                // Note: We previously differentiated between members added by us Vs. members added by someone
                 // else via checking against `isOutgoing` - but now we use the same strings regardless.
                 when (newMemberCount) {
                     0 -> {
@@ -126,7 +125,7 @@ object UpdateMessageBuilder {
                                 .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                                 .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
                                 .format()
-                            else -> Phrase.from(context, R.string.groupRemovedMore)
+                            else -> Phrase.from(context, R.string.groupRemovedMultiple)
                                     .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                                     .put(COUNT_KEY, updateData.updatedMembers.size - 1)
                                     .format()
@@ -150,7 +149,7 @@ object UpdateMessageBuilder {
                                 .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                                 .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
                                 .format()
-                            else -> Phrase.from(context, R.string.groupRemovedMore)
+                            else -> Phrase.from(context, R.string.groupRemovedMultiple)
                                 .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                                 .put(COUNT_KEY, updateData.updatedMembers.size - 1)
                                 .format()
@@ -175,7 +174,7 @@ object UpdateMessageBuilder {
                             .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                             .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
                             .format()
-                        else -> Phrase.from(context, R.string.groupMemberLeftMore)
+                        else -> Phrase.from(context, R.string.groupMemberLeftMultiple)
                             .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                             .put(COUNT_KEY, updateData.updatedMembers.size - 1)
                             .format()

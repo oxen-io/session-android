@@ -131,21 +131,17 @@ internal fun LandingScreen(
                     MESSAGES.take(count),
                     key = { it.stringId }
                 ) { item ->
-                    // Perform string substitution in the bubbles that require it
-                    if (item.stringId == R.string.onboardingBubbleWelcomeToSession ||
-                        item.stringId == R.string.onboardingBubbleSessionIsEngineered) {
-                        AnimateMessageText(
-                            Phrase.from(stringResource(item.stringId))
-                                .put(APP_NAME_KEY, stringResource(R.string.app_name))
-                                .format().toString(),
-                            item.isOutgoing
-                        )
-                    } else { // Non-substituted text bubbles
-                        AnimateMessageText(
-                            stringResource(item.stringId),
-                            item.isOutgoing
-                        )
+                    // Perform string substitution only in the bubbles that require it
+                    val bubbleTxt = if (item.stringId == R.string.onboardingBubbleWelcomeToSession     ||
+                                        item.stringId == R.string.onboardingBubbleSessionIsEngineered) {
+                        Phrase.from(stringResource(item.stringId)).put(APP_NAME_KEY, stringResource(R.string.app_name)).format().toString()
+                    } else {
+                        stringResource(item.stringId)
                     }
+                    AnimateMessageText(
+                        bubbleTxt,
+                        item.isOutgoing
+                    )
                 }
             }
 

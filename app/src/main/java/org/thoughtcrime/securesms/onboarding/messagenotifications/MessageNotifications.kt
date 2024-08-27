@@ -80,12 +80,13 @@ internal fun MessageNotificationsScreen(
 
         // spacing between buttons is provided by ripple/downstate of NotificationRadioButton
 
-        val txt = Phrase.from(stringResource(R.string.onboardingMessageNotificationExplanation))
+        val explanationTxt = Phrase.from(stringResource(R.string.notificationsSlowModeDescription))
             .put(APP_NAME_KEY, stringResource(R.string.app_name))
             .format().toString()
+
         NotificationRadioButton(
-            R.string.notificationsSlowMode,
-            R.string.notificationsSlowModeDescription,
+            stringResource(R.string.notificationsSlowMode),
+            explanationTxt,
             modifier = Modifier.contentDescription(R.string.AccessibilityId_notificationsSlowMode),
             checked = state.pushDisabled,
             onClick = { setEnabled(false) }
@@ -99,8 +100,8 @@ internal fun MessageNotificationsScreen(
 
 @Composable
 private fun NotificationRadioButton(
-    @StringRes title: Int,
-    @StringRes explanation: Int,
+    @StringRes titleId: Int,
+    @StringRes explanationId: Int,
     modifier: Modifier = Modifier,
     @StringRes tag: Int? = null,
     checked: Boolean = false,
@@ -124,28 +125,65 @@ private fun NotificationRadioButton(
             Column(
                 modifier = Modifier.padding(horizontal = LocalDimensions.current.smallSpacing, vertical = LocalDimensions.current.xsSpacing)) {
                 Text(
-                    stringResource(title),
+                    stringResource(titleId),
                     style = LocalType.current.h8
                 )
 
-                // If this radio button is the one for slow mode notifications then substitute the app name..
-                if (explanation == R.string.notificationsSlowModeDescription) {
-                    val txt = Phrase.from(stringResource(explanation))
-                        .put(APP_NAME_KEY, stringResource(R.string.app_name))
-                        .format().toString()
+                Text(
+                    stringResource(explanationId),
+                    style = LocalType.current.small,
+                    modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing)
+                )
+
+                tag?.let {
                     Text(
-                        txt,
-                        style = LocalType.current.small,
-                        modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing)
-                    )
-                } else {
-                    // ..otherwise just pass through the text as it is.
-                    Text(
-                        stringResource(explanation),
-                        style = LocalType.current.small,
-                        modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing)
+                        stringResource(it),
+                        modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing),
+                        color = LocalColors.current.primary,
+                        style = LocalType.current.h9
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NotificationRadioButton(
+    titleTxt: String,
+    explanationTxt: String,
+    modifier: Modifier = Modifier,
+    @StringRes tag: Int? = null,
+    checked: Boolean = false,
+    onClick: () -> Unit = {}
+) {
+    RadioButton(
+        onClick = onClick,
+        modifier = modifier,
+        selected = checked,
+        contentPadding = PaddingValues(horizontal = LocalDimensions.current.mediumSpacing, vertical = 7.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .border(
+                    LocalDimensions.current.borderStroke,
+                    LocalColors.current.borders,
+                    RoundedCornerShape(8.dp)
+                ),
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = LocalDimensions.current.smallSpacing, vertical = LocalDimensions.current.xsSpacing)) {
+                Text(
+                    titleTxt,
+                    style = LocalType.current.h8
+                )
+
+                Text(
+                    explanationTxt,
+                    style = LocalType.current.small,
+                    modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing)
+                )
 
                 tag?.let {
                     Text(

@@ -46,13 +46,13 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
         addPreferencesFromResource(R.xml.preferences_help)
 
         // String sub the summary text of the `export_logs` element in preferences_help.xml
-        var exportPref = preferenceScreen.findPreference<Preference>(EXPORT_LOGS)
+        val exportPref = preferenceScreen.findPreference<Preference>(EXPORT_LOGS)
         exportPref?.summary = Phrase.from(context, R.string.helpReportABugExportLogsDescription)
             .put(APP_NAME_KEY, getString(R.string.app_name))
             .format()
 
         // String sub the summary text of the `translate_session` element in preferences_help.xml
-        var translatePref = preferenceScreen.findPreference<Preference>(TRANSLATE)
+        val translatePref = preferenceScreen.findPreference<Preference>(TRANSLATE)
         translatePref?.title = Phrase.from(context, R.string.helpHelpUsTranslateSession)
             .put(APP_NAME_KEY, getString(R.string.app_name))
             .format()

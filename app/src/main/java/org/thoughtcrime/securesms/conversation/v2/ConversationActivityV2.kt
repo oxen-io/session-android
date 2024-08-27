@@ -2101,8 +2101,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun banUser(messages: Set<MessageRecord>) {
         showSessionDialog {
             title(R.string.banUser)
-            // ACL TODO - We need a string for the below `text` element - have asked Lucy about this 2024/08/26 -AL
-            text("This will ban the selected user from this room. It won't ban them from other rooms.")
+            text(R.string.communityBanDescription)
             button(R.string.banUser) { viewModel.banUser(messages.first().individualRecipient); endActionMode() }
             cancelButton(::endActionMode)
         }
@@ -2111,8 +2110,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun banAndDeleteAll(messages: Set<MessageRecord>) {
         showSessionDialog {
             title(R.string.banUser)
-            // ACL TODO - We need a string for the below `text` element - have asked Lucy about this 2024/08/26 -AL
-            text("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
+            text(R.string.communityBanDeleteDescription)
             button(R.string.banUser) { viewModel.banAndDeleteAll(messages.first()); endActionMode() }
             cancelButton(::endActionMode)
         }

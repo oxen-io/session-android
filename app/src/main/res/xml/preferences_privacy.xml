@@ -39,6 +39,7 @@
             android:key="pref_typing_indicators"
             android:title="@string/typingIndicators"
             android:summary="@string/typingIndicatorsDescription" />
+        <ImagePreference />
 
     </PreferenceCategory>
 

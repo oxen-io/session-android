@@ -3,14 +3,13 @@ package org.thoughtcrime.securesms.preferences
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceDataStore
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
@@ -24,7 +23,6 @@ import org.thoughtcrime.securesms.service.KeyCachingService
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.CallNotificationBuilder.Companion.areNotificationsEnabled
 import org.thoughtcrime.securesms.util.IntentUtils
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {

@@ -45,10 +45,6 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
             .put(CONVERSATION_COUNT_KEY, threadCount)
             .format().toString();
     setSubText(txt);
-
-    // Note: `setContentInfo` details are only visible in Android API 24 and below - as our minimum is now API 26 this can be skipped.
-    //setContentInfo(String.valueOf(messageCount));
-
     setNumber(messageCount);
   }
 
