@@ -17,7 +17,6 @@ import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.squareup.phrase.Phrase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -28,10 +27,12 @@ import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPathBinding
 import org.session.libsession.snode.OnionRequestAPI
+import org.session.libsession.utilities.NonTranslatableStringConstants.APP_NAME
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsignal.utilities.Snode
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.ui.getSubbedString
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.IP2Country
 import org.thoughtcrime.securesms.util.PathDotView
@@ -54,8 +55,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         supportActionBar!!.title = resources.getString(R.string.onionRoutingPath)
 
         // Substitute "Session" into the path description. Note: This is a non-translatable string.
-        val appName = applicationContext.getString(R.string.app_name)
-        val txt = Phrase.from(applicationContext, R.string.onionRoutingPathDescription).put(APP_NAME_KEY, appName).format().toString()
+        val txt = applicationContext.getSubbedString(R.string.onionRoutingPathDescription,APP_NAME_KEY to APP_NAME)
         binding.pathDescription.text = txt
 
         binding.pathRowsContainer.disableClipping()
@@ -259,13 +259,11 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
 
         override fun onAttachedToWindow() {
             super.onAttachedToWindow()
-
             startAnimation()
         }
 
         override fun onDetachedFromWindow() {
             super.onDetachedFromWindow()
-
             stopAnimation()
         }
 

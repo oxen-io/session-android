@@ -3,10 +3,10 @@ package org.thoughtcrime.securesms
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
-import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.LocalisedTimeUtil
 import org.session.libsession.utilities.StringSubstitutionConstants.TIME_LARGE_KEY
+import org.thoughtcrime.securesms.ui.getSubbedString
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -22,10 +22,8 @@ fun showMuteDialog(
         if (entry.stringRes == R.string.notificationsMute) {
             context.getString(R.string.notificationsMute)
         } else {
-            val largeTimeUnitText = LocalisedTimeUtil.getDurationWithSingleLargestTimeUnit(context, Option.entries[index].getTime().milliseconds)
-            Phrase.from(context, entry.stringRes)
-                .put(TIME_LARGE_KEY, largeTimeUnitText)
-                .format().toString()
+            val largeTimeUnitString = LocalisedTimeUtil.getDurationWithSingleLargestTimeUnit(context, Option.entries[index].getTime().milliseconds)
+            context.getSubbedString(entry.stringRes, TIME_LARGE_KEY to largeTimeUnitString)
         }
     }.toTypedArray()) {
         // Note: We add the current timestamp to the mute duration to get the un-mute timestamp
