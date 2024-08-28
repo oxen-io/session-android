@@ -423,7 +423,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 SessionMaterialTheme {
                     if(!openLinkDialogUrl.isNullOrEmpty()){
                         OpenURLAlertDialog(
-                            url = openLinkDialogUrl,
+                            url = openLinkDialogUrl!!,
                             onDismissRequest = {
                                 openLinkDialogUrl = null
                             }
