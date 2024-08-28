@@ -19,6 +19,14 @@ fun Context.createThemedComposeView(content: @Composable () -> Unit): ComposeVie
     setThemedContent(content)
 }
 
+fun Context.getSubbedString(stringId: Int, vararg substitutionPairs: Pair<String, String>): CharSequence {
+    val phrase = Phrase.from(this, stringId)
+    for ((key, value) in substitutionPairs) {
+        phrase.put(key, value)
+    }
+    return phrase.format()
+}
+
 fun ComposeView.setThemedContent(content: @Composable () -> Unit) = setContent {
     SessionMaterialTheme {
         content()

@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.text.format.DateFormat
+import androidx.compose.ui.text.capitalize
 import org.session.libsignal.utilities.Log
 import java.text.DateFormat.SHORT
 import java.text.DateFormat.getTimeInstance
@@ -93,8 +94,7 @@ object DateUtils : android.text.format.DateUtils() {
     fun getDisplayFormattedTimeSpanString(c: Context, locale: Locale, timestamp: Long): String {
         // If the timestamp is invalid (ie. 0) then assume we're waiting on data and just use the 'Now' copy
         return if (timestamp == 0L || isWithin(timestamp, 1, TimeUnit.MINUTES)) {
-            // TODO ACL: We need a string for "Now" because I can't seem to coax a localised version from DateUtils -
-            // TODO: although anyone seeing is this is more than welcome to try! - 2024-08-26
+            // TODO ACL: Adjust as per SES-360
             "Now"
         } else if (isToday(timestamp)) {
             getFormattedDateTime(timestamp, getHourFormat(c), locale)

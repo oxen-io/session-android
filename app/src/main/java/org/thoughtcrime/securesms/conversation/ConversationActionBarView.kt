@@ -30,6 +30,7 @@ import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
+import org.thoughtcrime.securesms.ui.getSubbedString
 
 @AndroidEntryPoint
 class ConversationActionBarView @JvmOverloads constructor(
@@ -107,10 +108,10 @@ class ConversationActionBarView @JvmOverloads constructor(
             val durationAbbreviated = ExpirationUtil.getExpirationAbbreviatedDisplayValue(config.expiryMode.expirySeconds)
 
             // ..then substitute into the string..
-            val subtitleTxt = Phrase.from(context, R.string.disappearingMessagesDisappear)
-                .put(DISAPPEARING_MESSAGES_TYPE_KEY, dmTypeString)
-                .put(TIME_KEY, durationAbbreviated)
-                .format().toString()
+            val subtitleTxt = context.getSubbedString(R.string.disappearingMessagesDisappear,
+                DISAPPEARING_MESSAGES_TYPE_KEY to dmTypeString,
+                TIME_KEY to durationAbbreviated
+                ).toString()
 
             // .. and apply to the subtitle.
             settings += ConversationSetting(
@@ -127,9 +128,7 @@ class ConversationActionBarView @JvmOverloads constructor(
                     ?.let {
                         val mutedDuration = (it - System.currentTimeMillis()).milliseconds
                         val durationString = LocalisedTimeUtil.getDurationWithSingleLargestTimeUnit(context, mutedDuration)
-                        Phrase.from(context, R.string.notificationsMuteFor)
-                            .put(TIME_LARGE_KEY, durationString)
-                            .format().toString()
+                        context.getSubbedString(R.string.notificationsMuteFor, TIME_LARGE_KEY to durationString).toString()
                     }
                     ?: context.getString(R.string.notificationsMuted),
                 ConversationSettingType.NOTIFICATION,

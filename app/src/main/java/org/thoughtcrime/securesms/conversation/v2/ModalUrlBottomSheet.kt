@@ -19,6 +19,8 @@ import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentModalUrlBottomSheetBinding
 import org.session.libsession.utilities.StringSubstitutionConstants.URL_KEY
+import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.ui.getSubbedString
 
 class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(), View.OnClickListener {
     private lateinit var binding: FragmentModalUrlBottomSheetBinding
@@ -30,9 +32,8 @@ class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val explanation = Phrase.from(context, R.string.urlOpenDescription)
-            .put(URL_KEY, url)
-            .format()
+        if (context == null) { return Log.w("MUBS", "Context is null") }
+        val explanation = requireContext().getSubbedString(R.string.urlOpenDescription, URL_KEY to url)
         val spannable = SpannableStringBuilder(explanation)
         val startIndex = explanation.indexOf(url)
         spannable.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + url.count(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
