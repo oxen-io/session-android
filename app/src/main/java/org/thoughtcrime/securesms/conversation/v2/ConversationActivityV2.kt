@@ -19,10 +19,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.text.SpannableString
-import android.text.Spanned
 import android.text.TextUtils
-import android.text.style.StyleSpan
 import android.util.Pair
 import android.util.TypedValue
 import android.view.ActionMode
@@ -36,6 +33,10 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isGone
@@ -171,6 +172,8 @@ import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.reactions.ReactionsDialogFragment
 import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiDialogFragment
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.OpenURLAlertDialog
+import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
@@ -195,6 +198,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 import kotlin.time.Duration.Companion.minutes
+
 
 private const val TAG = "ConversationActivityV2"
 
@@ -237,6 +241,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         ViewModelProvider(this, LinkPreviewViewModel.Factory(LinkPreviewRepository()))
             .get(LinkPreviewViewModel::class.java)
     }
+
+    private var openLinkDialogUrl: String? by mutableStateOf(null)
 
     private val threadId: Long by lazy {
         var threadId = intent.getLongExtra(THREAD_ID, -1L)
@@ -401,11 +407,32 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
     // endregion
 
+    fun showOpenUrlDialog(url: String){
+        openLinkDialogUrl = url
+    }
+
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
         binding = ActivityConversationV2Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // set the compose dialog content
+        binding.dialogOpenUrl.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                SessionMaterialTheme {
+                    if(!openLinkDialogUrl.isNullOrEmpty()){
+                        OpenURLAlertDialog(
+                            url = openLinkDialogUrl!!,
+                            onDismissRequest = {
+                                openLinkDialogUrl = null
+                            }
+                        )
+                    }
+                }
+            }
+        }
 
         // messageIdToScroll
         messageToScrollTimestamp.set(intent.getLongExtra(SCROLL_MESSAGE_ID, -1))

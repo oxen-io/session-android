@@ -4,25 +4,16 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
 import android.net.Uri
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.StyleSpan
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.LinearLayout.VERTICAL
-import android.widget.RelativeLayout
-import android.widget.ScrollView
 import android.widget.Space
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
@@ -31,9 +22,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
 import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
-import com.squareup.phrase.Phrase
 import network.loki.messenger.R
-import org.session.libsession.utilities.StringSubstitutionConstants.URL_KEY
 import org.thoughtcrime.securesms.util.toPx
 
 @DslMarker
@@ -197,127 +186,6 @@ public fun Context.copyURLToClipboard(url: String) {
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText(url, url)
     clipboard.setPrimaryClip(clip)
-}
-
-// Method to show a dialog used to open or copy a URL
-fun Context.showOpenUrlDialog(url: String, showCloseButton: Boolean = true): AlertDialog {
-
-    return SessionDialogBuilder(this).apply {
-        // If we're not showing a close button we can just use a simple title..
-        if (!showCloseButton) {
-            title(R.string.urlOpen)
-        } else {
-            // ..otherwise we have to jump through some hoops to add a close button.
-
-            // Create a RelativeLayout as the container for the custom title
-            val titleLayout = RelativeLayout(context).apply {
-                layoutParams = RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-                )
-            }
-
-            // Create a TextView for the title
-            val titleTextView = TextView(context).apply {
-                // Set the text and display it in the correct 'title' style
-                text = context.getString(R.string.urlOpen)
-                setTextAppearance(R.style.TextAppearance_AppCompat_Title)
-
-                layoutParams = RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    addRule(RelativeLayout.CENTER_HORIZONTAL)
-                    addRule(RelativeLayout.CENTER_VERTICAL)
-                }
-            }
-
-            // Create an ImageButton for the close button
-            val closeButton = ImageButton(context).apply {
-                setImageResource(android.R.drawable.ic_menu_close_clear_cancel) // Use a standard Android close icon
-                background = null // Remove the background to make it look like an icon
-                layoutParams = RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    addRule(RelativeLayout.ALIGN_PARENT_END) // Place the close button on the "right" side
-                    addRule(RelativeLayout.CENTER_VERTICAL)
-                }
-                contentDescription = context.getString(R.string.close)
-            }
-
-            // // Close the dialog when the button is clicked
-            closeButton.setOnClickListener { dismiss() }
-
-            // Add the TextView and ImageButton to the RelativeLayout..
-            titleLayout.addView(titleTextView)
-            titleLayout.addView(closeButton)
-
-            // ..and then add that layout to the contentView.
-            contentView.addView(titleLayout)
-        }
-
-        // Create a TextView for the "Are you sure you want to open this URL?"
-        val txtView = TextView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-                .apply { updateMargins(dp40, 0, dp40, 0) }
-
-            // Substitute the URL into the string then make it bold
-            val txt = Phrase.from(context, R.string.urlOpenDescription).put(URL_KEY, url).format().toString()
-            val txtWithBoldedURL = SpannableString(txt)
-            val urlStart = txt.indexOf(url)
-            if (urlStart >= 0) {
-                txtWithBoldedURL.setSpan(
-                    StyleSpan(Typeface.BOLD),
-                    urlStart,
-                    urlStart + url.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-            }
-            text = txtWithBoldedURL
-
-            gravity = Gravity.CENTER // Center the text
-        }
-
-        // Create a ScrollView and add the TextView to it
-        val scrollView = ScrollView(context).apply {
-            addView(txtView)
-
-            // Apply padding to the ScrollView so that the scroll bar isn't right up against the edge.
-            // We'll apply the same padding to both sides to keep the text centered.
-            setPadding(dp20, 0, dp20, 0)
-
-            // Place the scroll bar inside the container.
-            // See the following for how different options look: https://stackoverflow.com/questions/3103132/android-listview-scrollbarstyle
-            scrollBarStyle = ScrollView.SCROLLBARS_INSIDE_INSET
-        }
-
-        // If the textView takes up 5 lines or more then show the scroll bar, force it to remain visible,
-        // and set the ScrollView height accordingly.
-        txtView.viewTreeObserver.addOnGlobalLayoutListener {
-            // Only display the vertical scroll bar if the text takes up 5 lines or more
-            val maxLines = 5
-            if (txtView.lineCount >= maxLines) {
-                scrollView.isVerticalScrollBarEnabled = true
-                // Note: `scrollView.isScrollbarFadingEnabled = false` does NOT
-                // work to prevent the scroll bar from fading away - so a hacky
-                // way to fix this is to allow it to fade out... after an hour, lol.
-                scrollView.scrollBarFadeDuration = 1000 * 60 * 60 // Value is in milliseconds
-                scrollView.isVerticalFadingEdgeEnabled = false
-                val lineHeight = txtView.lineHeight
-                scrollView.layoutParams.height = lineHeight * maxLines
-            }
-        }
-
-        // Add the ScrollView to the contentView and then add the 'Open' and 'Copy URL' buttons.
-        // Note: The text and contentDescription are set on the `copyUrlButton` by the function.
-        contentView.addView(scrollView)
-        dangerButton(R.string.open, R.string.AccessibilityId_urlOpenBrowser) { openUrl(url) }
-        copyUrlButton {
-            context.copyURLToClipboard(url)
-            Toast.makeText(context, R.string.copied, Toast.LENGTH_SHORT).show()
-        }
-    }.show()
 }
 
 // Method to actually open a given URL via an Intent that will use the default browser

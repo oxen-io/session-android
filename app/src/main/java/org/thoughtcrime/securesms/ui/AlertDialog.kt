@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -12,7 +13,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,13 +28,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.times
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.URL_KEY
+import org.thoughtcrime.securesms.copyURLToClipboard
+import org.thoughtcrime.securesms.openUrl
 import org.thoughtcrime.securesms.ui.components.CircularProgressIndicator
+import org.thoughtcrime.securesms.ui.components.annotatedStringResource
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
@@ -48,13 +61,37 @@ class DialogButtonModel(
     val onClick: () -> Unit = {},
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlertDialog(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
     text: String? = null,
+    maxLines:  Int? = null,
+    buttons: List<DialogButtonModel>? = null,
+    showCloseButton: Boolean = false,
+    content: @Composable () -> Unit = {}
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        modifier = modifier,
+        title = if(title != null) AnnotatedString(title) else null,
+        text = if(text != null) AnnotatedString(text) else null,
+        maxLines = maxLines,
+        buttons = buttons,
+        showCloseButton = showCloseButton,
+        content = content
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AlertDialog(
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    title: AnnotatedString? = null,
+    text: AnnotatedString? = null,
+    maxLines: Int? = null,
     buttons: List<DialogButtonModel>? = null,
     showCloseButton: Boolean = false,
     content: @Composable () -> Unit = {}
@@ -88,18 +125,32 @@ fun AlertDialog(
                     ) {
                         title?.let {
                             Text(
-                                it,
+                                text = it,
                                 textAlign = TextAlign.Center,
                                 style = LocalType.current.h7,
                                 modifier = Modifier.padding(bottom = LocalDimensions.current.xxsSpacing)
                             )
                         }
                         text?.let {
+                            val textStyle = LocalType.current.large
+                            var textModifier = Modifier.padding(bottom = LocalDimensions.current.xxsSpacing)
+
+                            // if we have a maxLines, make the text scrollable
+                            if(maxLines != null) {
+                                val textHeight = with(LocalDensity.current) {
+                                    textStyle.lineHeight.toDp()
+                                } * maxLines
+
+                                textModifier = textModifier
+                                    .height(textHeight)
+                                    .verticalScroll(rememberScrollState())
+                            }
+
                             Text(
-                                it,
+                                text = it,
                                 textAlign = TextAlign.Center,
-                                style = LocalType.current.large,
-                                modifier = Modifier.padding(bottom = LocalDimensions.current.xxsSpacing)
+                                style = textStyle,
+                                modifier = textModifier
                             )
                         }
                         content()
@@ -124,6 +175,45 @@ fun AlertDialog(
                 }
             }
         }
+    )
+}
+
+@Composable
+fun OpenURLAlertDialog(
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    url: String,
+    content: @Composable () -> Unit = {}
+) {
+    val context = LocalContext.current
+    val unformattedText = Phrase.from(context.getText(R.string.urlOpenDescription))
+        .put(URL_KEY, url).format()
+
+
+    AlertDialog(
+        modifier = modifier,
+        title = AnnotatedString(stringResource(R.string.urlOpen)),
+        text = annotatedStringResource(text = unformattedText),
+        maxLines = 5,
+        showCloseButton = true, // display the 'x' button
+        buttons = listOf(
+            DialogButtonModel(
+                text = GetString(R.string.open),
+                contentDescription = GetString(R.string.AccessibilityId_urlOpenBrowser),
+                color = LocalColors.current.danger,
+                onClick = { context.openUrl(url) }
+            ),
+            DialogButtonModel(
+                text = GetString(android.R.string.copyUrl),
+                contentDescription = GetString(R.string.AccessibilityId_copy),
+                onClick = {
+                    context.copyURLToClipboard(url)
+                    Toast.makeText(context, R.string.copied, Toast.LENGTH_SHORT).show()
+                }
+            )
+        ),
+        onDismissRequest = onDismissRequest,
+        content = content
     )
 }
 
@@ -217,12 +307,12 @@ fun PreviewSimpleDialog() {
             text = stringResource(R.string.onboardingBackAccountCreation),
             buttons = listOf(
                 DialogButtonModel(
-                    GetString(stringResource(R.string.quit)),
+                    GetString(stringResource(R.string.cancel)),
                     color = LocalColors.current.danger,
                     onClick = { }
                 ),
                 DialogButtonModel(
-                    GetString(stringResource(R.string.cancel))
+                    GetString(stringResource(R.string.ok))
                 )
             )
         )
@@ -249,6 +339,17 @@ fun PreviewXCloseDialog() {
                     onClick = {}
                 )
             ),
+            onDismissRequest = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewOpenURLDialog() {
+    PreviewTheme {
+        OpenURLAlertDialog(
+            url = "https://getsession.org/",
             onDismissRequest = {}
         )
     }

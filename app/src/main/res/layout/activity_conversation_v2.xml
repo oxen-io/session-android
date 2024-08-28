@@ -346,4 +346,9 @@
 
     </LinearLayout>
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/dialog_open_url"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
