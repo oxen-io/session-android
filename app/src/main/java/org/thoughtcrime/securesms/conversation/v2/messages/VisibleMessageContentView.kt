@@ -287,8 +287,8 @@ class VisibleMessageContentView : ConstraintLayout {
             body.getSpans<URLSpan>(0, body.length).toList().forEach { urlSpan ->
                 val updatedUrl = urlSpan.url.let { it.toHttpUrlOrNull().toString() }
                 val replacementSpan = ModalURLSpan(updatedUrl) { url ->
-                    val activity = context as ConversationActivityV2
-                    activity.showOpenUrlDialog(url)
+                    val activity = context as? ConversationActivityV2
+                    activity?.showOpenUrlDialog(url)
                 }
                 val start = body.getSpanStart(urlSpan)
                 val end = body.getSpanEnd(urlSpan)

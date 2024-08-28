@@ -87,8 +87,8 @@ class LinkPreviewView : LinearLayout {
     // Method to show the open or copy URL dialog
     private fun openURL() {
         val url = this.url ?: return Log.w("LinkPreviewView", "Cannot open a null URL")
-        val activity = context as ConversationActivityV2
-        activity.showOpenUrlDialog(url)
+        val activity = context as? ConversationActivityV2
+        activity?.showOpenUrlDialog(url)
     }
     // endregion
 }
