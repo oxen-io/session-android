@@ -792,7 +792,7 @@ NOTE: Strings with blank lines have manually been replaced with '\n\n' - this wi
     <string name="urlCopy">Copy URL</string>
     <string name="urlOpen">Open URL</string>
     <string name="urlOpenBrowser">This will open in your browser.</string>
-    <string name="urlOpenDescription">Are you sure you want to open this URL in your browser?\n\n{url}</string>
+    <string name="urlOpenDescription">Are you sure you want to open this URL in your browser?\n\n<b>{url}</b></string>
     <string name="useFastMode">Use Fast Mode</string>
     <string name="video">Video</string>
     <string name="videoErrorPlay">Unable to play video.</string>
