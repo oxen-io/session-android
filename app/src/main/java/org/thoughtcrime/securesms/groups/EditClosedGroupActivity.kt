@@ -310,7 +310,7 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         val userPublicKey = TextSecurePreferences.getLocalNumber(this)!!
         val userAsRecipient = Recipient.from(this, Address.fromSerialized(userPublicKey), false)
 
-        // There's presently way in the UI to get into the state whereby you could remove yourself from the group when removing any other members
+        // There's presently no way in the UI to get into the state whereby you could remove yourself from the group when removing any other members
         // (you can't unselect yourself - the only way to leave is to "Leave Group" from the menu) - but it's possible that this was not always
         // the case - so we can leave this in as defensive code in-case something goes screwy.
         if (!members.contains(userAsRecipient) && !members.map { it.address.toString() }.containsAll(originalMembers.minus(userPublicKey))) {
