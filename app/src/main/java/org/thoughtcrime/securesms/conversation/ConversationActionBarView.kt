@@ -108,7 +108,7 @@ class ConversationActionBarView @JvmOverloads constructor(
             val durationAbbreviated = ExpirationUtil.getExpirationAbbreviatedDisplayValue(config.expiryMode.expirySeconds)
 
             // ..then substitute into the string..
-            val subtitleTxt = context.getString(R.string.disappearingMessagesDisappear,
+            val subtitleTxt = context.getSubbedString(R.string.disappearingMessagesDisappear,
                 DISAPPEARING_MESSAGES_TYPE_KEY to dmTypeString,
                 TIME_KEY to durationAbbreviated
                 )
