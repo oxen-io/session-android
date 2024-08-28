@@ -19,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
 import org.session.libsession.utilities.MediaTypes;
+import org.session.libsession.utilities.NonTranslatableStringConstants;
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.providers.BlobProvider;
@@ -165,7 +166,7 @@ public class GiphyActivity extends PassphraseRequiredActionBarActivity
 
     @Override
     public CharSequence getPageTitle(int position) {
-      if (position == 0) return context.getString(R.string.gif);
+      if (position == 0) return NonTranslatableStringConstants.GIF;
       else               return context.getString(R.string.stickers);
     }
   }

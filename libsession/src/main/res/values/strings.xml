@@ -377,7 +377,6 @@ NOTE: Strings with blank lines have manually been replaced with '\n\n' - this wi
     <string name="followSystemSettings">Follow system settings</string>
     <string name="from">From:</string>
     <string name="fullScreenToggle">Toggle Full Screen</string>
-    <string name="gif">GIF</string>
     <string name="giphyWarning">Giphy</string>
     <string name="giphyWarningDescription">{app_name} will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.</string>
     <string name="groupAddMemberMaximum">Groups have a maximum of 100 members</string>

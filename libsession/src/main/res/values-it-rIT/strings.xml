@@ -80,7 +80,6 @@
     <!-- SingleRecipientNotificationBuilder -->
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
-    <string name="gif">Gif</string>
     <!-- contact_selection_group_activity -->
     <!-- conversation_activity -->
     <string name="send">Invia</string>
