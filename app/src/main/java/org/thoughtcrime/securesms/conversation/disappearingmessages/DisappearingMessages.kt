@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.conversation.disappearingmessages
 
 import android.content.Context
-import com.squareup.phrase.Phrase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -21,6 +20,7 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.getExpirationTypeDisplayValue
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.getSubbedString
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 
 class DisappearingMessages @Inject constructor(
@@ -50,10 +50,9 @@ class DisappearingMessages @Inject constructor(
         text(if (message.expiresIn == 0L) {
             context.getString(R.string.disappearingMessagesFollowSettingOff)
         } else {
-            Phrase.from(context, R.string.disappearingMessagesFollowSettingOn)
-                .put(TIME_LARGE_KEY, ExpirationUtil.getExpirationDisplayValue(context, message.expiresIn.milliseconds))
-                .put(DISAPPEARING_MESSAGES_TYPE_KEY, context.getExpirationTypeDisplayValue(message.isNotDisappearAfterRead))
-                .format().toString()
+            context.getSubbedString(R.string.disappearingMessagesFollowSettingOn,
+                TIME_LARGE_KEY to ExpirationUtil.getExpirationDisplayValue(context, message.expiresIn.milliseconds),
+                DISAPPEARING_MESSAGES_TYPE_KEY to context.getExpirationTypeDisplayValue(message.isNotDisappearAfterRead))
         })
 
         dangerButton(
