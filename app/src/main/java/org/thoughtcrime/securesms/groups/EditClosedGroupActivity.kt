@@ -3,6 +3,8 @@ package org.thoughtcrime.securesms.groups
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -175,10 +177,6 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
                 originalMembers.clear()
                 originalMembers.addAll(members + zombies)
                 updateMembers()
-
-                // Now that we have the group members we can update the text on the member count
-                val memberCountTV = findViewById<TextView>(R.id.editGroupMemberCount)
-                memberCountTV.text = resources.getQuantityString(R.plurals.members, members.size, members.size)
             }
 
             override fun onLoaderReset(loader: Loader<GroupMembers>) {

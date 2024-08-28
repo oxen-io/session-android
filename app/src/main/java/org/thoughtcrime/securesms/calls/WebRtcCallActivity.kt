@@ -29,7 +29,6 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityWebrtcBinding
 import org.apache.commons.lang3.time.DurationFormatUtils
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.truncateIdForDisplay
@@ -206,7 +205,6 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                 update()
             }
         }
-
 
         // Substitute "Session" into the "{app_name} Call" text
         val sessionCallTV = findViewById<TextView>(R.id.sessionCallText)

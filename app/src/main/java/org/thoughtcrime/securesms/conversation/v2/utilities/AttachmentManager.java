@@ -16,6 +16,7 @@
  */
 package org.thoughtcrime.securesms.conversation.v2.utilities;
 
+import static com.google.android.gms.common.util.CollectionUtils.listOf;
 import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.Manifest;
@@ -256,9 +257,9 @@ public class AttachmentManager {
     }
 
     Context c = activity.getApplicationContext();
-    String needStoragePermissionTxt = Phrase.from(c, R.string.permissionsStorageSend)
-            .put(APP_NAME_KEY, c.getString(R.string.app_name))
-            .format().toString();
+
+    String needStoragePermissionTxt = Phrase.from(c, R.string.permissionsStorageSend).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString();
+
     String storagePermissionDeniedTxt = Phrase.from(c, R.string.permissionsStorageSaveDenied)
             .put(APP_NAME_KEY, c.getString(R.string.app_name))
             .format().toString();

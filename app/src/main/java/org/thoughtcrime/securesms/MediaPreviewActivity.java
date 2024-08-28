@@ -408,7 +408,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     MediaItem mediaItem = getCurrentMediaItem();
     if (mediaItem == null) return;
 
-    SaveAttachmentTask.showWarningDialog(this, 1, () -> {
+    SaveAttachmentTask.showOneTimeWarningDialogOrSave(this, 1, () -> {
       Permissions.with(this)
               .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
               .maxSdkVersion(Build.VERSION_CODES.P)

@@ -103,6 +103,7 @@ import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.SessionDialogBuilder
 import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel
@@ -2229,30 +2230,34 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             return
         }
 
-        // On Android versions below 30 we require the WRITE_EXTERNAL_STORAGE permission to save attachments.
-        // However, we would like to  on more recent Android API versions there is scoped storage
-        // If we already have permission to write to external storage then just get on with it & return..
-        //
-        // Android versions will j
-        if (Build.VERSION.SDK_INT < 30) {
-            // Save the attachment(s) then bail if we already have permission to do so
-            if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                saveAttachments(message)
-                return
-            }
-        } else {
-            // On more modern versions of Android on API 30+ WRITE_EXTERNAL_STORAGE is no longer used and we can just
-            // save files to the public directories like "Downloads", "Pictures" etc. - but... we would still like to
-            // inform the user just _once_ that saving attachments means that other apps can access them - so we'll
-            val haveWarned = TextSecurePreferences.getHaveWarnedUserAboutSavingAttachments(this)
-            if (haveWarned) {
+        // Before saving an attachment, regardless of Android API version or permissions, we always want to ensure
+        // that we've warned the user just _once_ that any attachments they save can be accessed by other apps.
+        val haveWarned = TextSecurePreferences.getHaveWarnedUserAboutSavingAttachments(this)
+        if (haveWarned) {
+
+            // On Android versions below 30 we require the WRITE_EXTERNAL_STORAGE permission to save attachments.
+            // However, we would like to  on more recent Android API versions there is scoped storage
+            // If we already have permission to write to external storage then just get on with it & return..
+            //
+            // Android versions will j
+            if (Build.VERSION.SDK_INT < 30) {
+                // Save the attachment(s) then bail if we already have permission to do so
+                if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    saveAttachments(message)
+                    return
+                } else {
+                    /* Do nothing - which means we continue on to the SaveAttachmentTask part below where we ask for permissions */
+                }
+            } else {
+                // On more modern versions of Android on API 30+ WRITE_EXTERNAL_STORAGE is no longer used and we can just
+                // save files to the public directories like "Downloads", "Pictures" etc.
                 saveAttachments(message)
                 return
             }
         }
 
-        // ..otherwise we must ask for it first.
-        SaveAttachmentTask.showWarningDialog(this) {
+        // ..otherwise we must ask for it first (only on Android APIs up to 28).
+        SaveAttachmentTask.showOneTimeWarningDialogOrSave(this) {
             Permissions.with(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P) // P is 28
@@ -2262,6 +2267,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 .onAnyDenied {
                     endActionMode()
 
+                    // If permissions were denied inform the user that we can't proceed without them and offer to take the user to Settings
                     showSessionDialog {
                         title(R.string.permissionsRequired)
 

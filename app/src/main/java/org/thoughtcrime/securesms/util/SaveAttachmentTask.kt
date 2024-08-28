@@ -44,7 +44,7 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
 
         @JvmStatic
         @JvmOverloads
-        fun showWarningDialog(context: Context, count: Int = 1, onAcceptListener: () -> Unit = {}) {
+        fun showOneTimeWarningDialogOrSave(context: Context, count: Int = 1, onAcceptListener: () -> Unit = {}) {
             // If we've already warned the user that saved attachments can be accessed by other apps
             // then we'll just perform the save..
             val haveWarned = TextSecurePreferences.getHaveWarnedUserAboutSavingAttachments(context)
@@ -58,10 +58,7 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
                     iconAttribute(R.attr.dialog_alert_icon)
                     text(context.getString(R.string.attachmentsWarning))
                     dangerButton(R.string.save) {
-                        // Regardless of Android API version, we'll always warn the user that saved attachments
-                        // can be accessed by other apps - but we'll only ever do this ONCE. When the user accepts
-                        // this warning and agrees to proceed we write a shared pref flag and will never show this
-                        // warning again due to the early-exit condition at the top of this method.
+                        // Set our 'haveWarned' SharedPref and perform the save on accept
                         TextSecurePreferences.setHaveWarnedUserAboutSavingAttachments(context)
                         onAcceptListener()
                     }
