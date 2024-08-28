@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.copper.flow.observeQuery
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -18,6 +19,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.Storage
@@ -73,6 +76,26 @@ class BlockedContactsViewModel @Inject constructor(private val storage: Storage)
     }
 
     fun getTitle(context: Context): String = context.getString(R.string.blockUnblock)
+
+    // Method to get the appropriate text to display when unblocking 1, 2, or several contacts
+    fun getText(context: Context, contactsToUnblock: Set<Recipient>): String {
+        return when (contactsToUnblock.size) {
+            // Note: We do not have to handle 0 because if no contacts are chosen then the unblock button is deactivated
+            1 -> Phrase.from(context, R.string.blockUnblockName)
+                .put(NAME_KEY, contactsToUnblock.elementAt(0).name)
+                .format().toString()
+            2 -> Phrase.from(context, R.string.blockUnblockNameTwo)
+                .put(NAME_KEY, contactsToUnblock.elementAt(0).name)
+                .format().toString()
+            else -> {
+                val othersCount = contactsToUnblock.size - 1
+                Phrase.from(context, R.string.blockUnblockNameMultiple)
+                    .put(NAME_KEY, contactsToUnblock.elementAt(0).name)
+                    .put(COUNT_KEY, othersCount)
+                    .format().toString()
+            }
+        }
+    }
 
     fun getMessage(context: Context): String = context.getString(R.string.blockUnblock)
 
