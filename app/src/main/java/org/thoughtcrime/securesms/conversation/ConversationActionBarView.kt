@@ -108,10 +108,10 @@ class ConversationActionBarView @JvmOverloads constructor(
             val durationAbbreviated = ExpirationUtil.getExpirationAbbreviatedDisplayValue(config.expiryMode.expirySeconds)
 
             // ..then substitute into the string..
-            val subtitleTxt = context.getSubbedString(R.string.disappearingMessagesDisappear,
+            val subtitleTxt = context.getString(R.string.disappearingMessagesDisappear,
                 DISAPPEARING_MESSAGES_TYPE_KEY to dmTypeString,
                 TIME_KEY to durationAbbreviated
-                ).toString()
+                )
 
             // .. and apply to the subtitle.
             settings += ConversationSetting(
@@ -128,7 +128,7 @@ class ConversationActionBarView @JvmOverloads constructor(
                     ?.let {
                         val mutedDuration = (it - System.currentTimeMillis()).milliseconds
                         val durationString = LocalisedTimeUtil.getDurationWithSingleLargestTimeUnit(context, mutedDuration)
-                        context.getSubbedString(R.string.notificationsMuteFor, TIME_LARGE_KEY to durationString).toString()
+                        context.getSubbedString(R.string.notificationsMuteFor, TIME_LARGE_KEY to durationString)
                     }
                     ?: context.getString(R.string.notificationsMuted),
                 ConversationSettingType.NOTIFICATION,
