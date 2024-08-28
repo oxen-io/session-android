@@ -96,9 +96,7 @@ class ClearAllDataDialog : DialogFragment() {
                     binding.dialogDescriptionText.setText(R.string.clearDataAllDescription)
                 }
                 Steps.NETWORK_PROMPT -> {
-                    // ACL TODO - This was `dialog_clear_all_data_clear_device_and_network_confirmation` - need an equivalent?
-                    val txt = "Are you sure you want to delete your data from the network? If you continue you will not be able to restore your messages or contacts."
-                    binding.dialogDescriptionText.text = txt
+                    binding.dialogDescriptionText.text = getString(R.string.clearDeviceAndNetworkConfirm)
                 }
                 Steps.DELETING -> { /* do nothing intentionally */ }
                 Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT -> {
