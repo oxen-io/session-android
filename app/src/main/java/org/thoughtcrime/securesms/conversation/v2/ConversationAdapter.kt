@@ -12,7 +12,6 @@ import androidx.core.util.getOrDefault
 import androidx.core.util.set
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.squareup.phrase.Phrase
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.min
 import kotlinx.coroutines.Dispatchers.IO
@@ -33,6 +32,7 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.getSubbedString
 
 class ConversationAdapter(
     context: Context,
@@ -156,14 +156,12 @@ class ConversationAdapter(
                 if (message.isCallLog && message.isFirstMissedCall) {
                     viewHolder.view.setOnClickListener {
                         context.showSessionDialog {
-                            val titleTxt = Phrase.from(context, R.string.callsMissedCallFrom)
-                                .put(NAME_KEY, message.individualRecipient.name)
-                                .format().toString()
+                            val titleTxt = context.getSubbedString(R.string.callsMissedCallFrom, NAME_KEY to message.individualRecipient.name!!)
                             title(titleTxt)
-                            val bodyTxt = Phrase.from(context, R.string.callsYouMissedCallPermissions)
-                                .put(NAME_KEY, message.individualRecipient.name)
-                                .format().toString()
+
+                            val bodyTxt = context.getSubbedString(R.string.callsYouMissedCallPermissions, NAME_KEY to message.individualRecipient.name!!)
                             text(bodyTxt)
+
                             button(R.string.sessionSettings) {
                                 Intent(context, PrivacySettingsActivity::class.java)
                                     .let(context::startActivity)
