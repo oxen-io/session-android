@@ -871,7 +871,7 @@ private fun MessageReceiver.handleClosedGroupMemberLeft(message: ClosedGroupCont
 
     // Notify the user
     if (!userLeft) {
-        storage.insertIncomingInfoMessage(context, senderPublicKey, groupID, SignalServiceGroup.Type.MEMBER_LEFT, name, members, admins, message.sentTimestamp!!)
+        storage.insertIncomingInfoMessage(context, senderPublicKey, groupID, SignalServiceGroup.Type.MEMBER_LEFT, name, listOf(senderPublicKey), admins, message.sentTimestamp!!)
     }
 }
 
