@@ -17,6 +17,8 @@ import org.thoughtcrime.securesms.calls.WebRtcCallActivity
 import org.thoughtcrime.securesms.notifications.NotificationChannels
 import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.service.WebRtcCallService
+import org.thoughtcrime.securesms.ui.getSubbedCharSequence
+import org.thoughtcrime.securesms.ui.getSubbedString
 
 class CallNotificationBuilder {
 
@@ -41,12 +43,11 @@ class CallNotificationBuilder {
 
             val pendingIntent = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-            val titleTxt = Phrase.from(context, R.string.callsMissedCallFrom)
-                .put(NAME_KEY, callerName)
-                .format().toString()
-            val bodyTxt = Phrase.from(context, R.string.callsYouMissedCallPermissions)
-                .put(NAME_KEY, callerName)
-                .format().toString()
+            val titleTxt = context.getSubbedString(R.string.callsMissedCallFrom, NAME_KEY to callerName)
+            val bodyTxt = context.getSubbedCharSequence(
+                R.string.callsYouMissedCallPermissions,
+                NAME_KEY to callerName
+            )
 
             val builder = NotificationCompat.Builder(context, NotificationChannels.CALLS)
                     .setSound(null)

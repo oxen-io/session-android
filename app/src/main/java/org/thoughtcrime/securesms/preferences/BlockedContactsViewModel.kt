@@ -78,21 +78,21 @@ class BlockedContactsViewModel @Inject constructor(private val storage: Storage)
     fun getTitle(context: Context): String = context.getString(R.string.blockUnblock)
 
     // Method to get the appropriate text to display when unblocking 1, 2, or several contacts
-    fun getText(context: Context, contactsToUnblock: Set<Recipient>): String {
+    fun getText(context: Context, contactsToUnblock: Set<Recipient>): CharSequence {
         return when (contactsToUnblock.size) {
             // Note: We do not have to handle 0 because if no contacts are chosen then the unblock button is deactivated
             1 -> Phrase.from(context, R.string.blockUnblockName)
                 .put(NAME_KEY, contactsToUnblock.elementAt(0).name)
-                .format().toString()
+                .format()
             2 -> Phrase.from(context, R.string.blockUnblockNameTwo)
                 .put(NAME_KEY, contactsToUnblock.elementAt(0).name)
-                .format().toString()
+                .format()
             else -> {
                 val othersCount = contactsToUnblock.size - 1
                 Phrase.from(context, R.string.blockUnblockNameMultiple)
                     .put(NAME_KEY, contactsToUnblock.elementAt(0).name)
                     .put(COUNT_KEY, othersCount)
-                    .format().toString()
+                    .format()
             }
         }
     }

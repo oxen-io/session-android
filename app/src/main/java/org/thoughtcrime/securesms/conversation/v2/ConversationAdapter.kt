@@ -32,6 +32,7 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.getSubbedCharSequence
 import org.thoughtcrime.securesms.ui.getSubbedString
 
 class ConversationAdapter(
@@ -159,7 +160,7 @@ class ConversationAdapter(
                             val titleTxt = context.getSubbedString(R.string.callsMissedCallFrom, NAME_KEY to message.individualRecipient.name!!)
                             title(titleTxt)
 
-                            val bodyTxt = context.getSubbedString(R.string.callsYouMissedCallPermissions, NAME_KEY to message.individualRecipient.name!!)
+                            val bodyTxt = context.getSubbedCharSequence(R.string.callsYouMissedCallPermissions, NAME_KEY to message.individualRecipient.name!!)
                             text(bodyTxt)
 
                             button(R.string.sessionSettings) {
