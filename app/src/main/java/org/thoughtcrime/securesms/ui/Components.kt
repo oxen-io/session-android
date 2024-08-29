@@ -11,8 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -189,7 +187,14 @@ fun LargeItemButton(
 }
 
 @Composable
-fun ItemButton(text: String, icon: Int, modifier: Modifier, textStyle: TextStyle, colors: ButtonColors, onClick: () -> Unit) {
+fun ItemButton(
+    text: String,
+    icon: Int,
+    modifier: Modifier,
+    textStyle: TextStyle = LocalType.current.xl,
+    colors: ButtonColors = transparentButtonColors(),
+    onClick: () -> Unit
+) {
     ItemButton(
         text = text,
         modifier = modifier,
@@ -211,20 +216,15 @@ fun ItemButton(text: String, icon: Int, modifier: Modifier, textStyle: TextStyle
  */
 @Composable
 fun ItemButton(
-    @StringRes textId: Any, // Type was: Int - see comment below.
+    @StringRes textId: Int,
     @DrawableRes icon: Int,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = LocalType.current.xl,
     colors: ButtonColors = transparentButtonColors(),
     onClick: () -> Unit
 ) {
-    // TODO: I don't know enough compose to fix this properly atm so I'm tweaking this
-    // ItemButton so I can send it an Int or a String and still get the right behavior.
-    // Sorry. -ACL 2024-08-29
-    val txtString = if (textId is Int) stringResource(textId) else textId as String
-
     ItemButton(
-        text = txtString,
+        text = stringResource(textId),
         modifier = modifier,
         icon = {
             Icon(

@@ -76,14 +76,14 @@ internal fun NewMessage(
 ) {
     val pagerState = rememberPagerState { TITLES.size }
 
-    // `messageNew` is now a plurals string so get the singular version
-    val context = LocalContext.current
-    val newMessageTitleTxt:String = context.resources.getQuantityString(R.plurals.messageNew, 1, 1)
-
     Column(modifier = Modifier.background(
         LocalColors.current.backgroundSecondary,
         shape = MaterialTheme.shapes.small
     )) {
+        // `messageNew` is now a plurals string so get the singular version
+        val context = LocalContext.current
+        val newMessageTitleTxt:String = context.resources.getQuantityString(R.plurals.messageNew, 1, 1)
+
         BackAppBar(
             title = newMessageTitleTxt,
             backgroundColor = Color.Transparent, // transparent to show the rounded shape of the container

@@ -43,8 +43,6 @@ internal fun StartConversationScreen(
     delegate: StartConversationDelegate
 ) {
     val context = LocalContext.current
-    val newMessageTitleTxt:String = context.resources.getQuantityString(R.plurals.messageNew, 1, 1)
-
 
     Column(modifier = Modifier.background(
         LocalColors.current.backgroundSecondary,
@@ -62,8 +60,9 @@ internal fun StartConversationScreen(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
+                val newMessageTitleTxt:String = context.resources.getQuantityString(R.plurals.messageNew, 1, 1)
                 ItemButton(
-                    textId = newMessageTitleTxt,
+                    text = newMessageTitleTxt,
                     icon = R.drawable.ic_message,
                     modifier = Modifier.contentDescription(R.string.AccessibilityId_messageNew),
                     onClick = delegate::onNewMessageSelected)
