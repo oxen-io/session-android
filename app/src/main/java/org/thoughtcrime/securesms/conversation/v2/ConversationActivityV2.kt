@@ -1106,8 +1106,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val blindedRecipient = viewModel.blindedRecipient
         val openGroup = viewModel.openGroup
 
-        val isClosedGroup = recipient.isGroupRecipient
-
         // Get the correct placeholder text for this type of empty conversation
         val isNoteToSelf = recipient.isLocalNumber
         val txtCS: CharSequence = when {
@@ -1143,11 +1141,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val showPlaceholder = adapter.itemCount == 0
         binding.placeholderText.isVisible = showPlaceholder
         if (showPlaceholder) {
-            if (!isNoteToSelf) {
-                binding.placeholderText.text = org.session.libsession.utilities.Util.makeBoldBetweenTags(txtCS)
-            } else {
-                binding.placeholderText.text = txtCS
-            }
+            binding.placeholderText.text = txtCS
         }
     }
 

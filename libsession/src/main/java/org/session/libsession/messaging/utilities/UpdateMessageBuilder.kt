@@ -43,7 +43,7 @@ object UpdateMessageBuilder {
             // --- Group created or joined ---
             is UpdateMessageData.Kind.GroupCreation -> {
                 if (!isOutgoing) {
-                    Util.makeBoldBetweenTags(SpannableString(context.getString(R.string.groupInviteYou)))
+                    context.getText(R.string.groupInviteYou)
                 } else {
                     "" // We no longer add a string like `disappearingMessagesNewGroup` ("You created a new group") and leave the group with its default empty state
                 }
@@ -51,18 +51,9 @@ object UpdateMessageBuilder {
 
             // --- Group name changed ---
             is UpdateMessageData.Kind.GroupNameChange -> {
-                if (isOutgoing) {
-                        val cs = Phrase.from(context, R.string.groupNameNew)
-                        .put(GROUP_NAME_KEY, updateData.name)
-                        .format()
-                        Util.makeBoldBetweenTags(cs)
-                }
-                else {
-                    val cs = Phrase.from(context, R.string.groupNameNew)
-                        .put(GROUP_NAME_KEY, updateData.name)
-                        .format()
-                        Util.makeBoldBetweenTags(cs)
-                }
+                Phrase.from(context, R.string.groupNameNew)
+                    .put(GROUP_NAME_KEY, updateData.name)
+                    .format()
             }
 
             // --- Group member(s) were added ---
@@ -193,7 +184,7 @@ object UpdateMessageBuilder {
         isOutgoing: Boolean = false,
         timestamp: Long,
         expireStarted: Long
-    ): String {
+    ): CharSequence {
         if (!isOutgoing && senderId == null) {
             Log.w(TAG, "buildExpirationTimerMessage: Cannot build for outgoing message when senderId is null.")
             return ""
@@ -205,13 +196,13 @@ object UpdateMessageBuilder {
         if (duration <= 0) {
             // ..by you..
             return if (isOutgoing) {
-                context.getString(R.string.disappearingMessagesTurnedOffYou)
+                context.getText(R.string.disappearingMessagesTurnedOffYou)
             }
             else // ..or by someone else.
             {
                 Phrase.from(context, R.string.disappearingMessagesTurnedOff)
                     .put(NAME_KEY, senderName)
-                    .format().toString()
+                    .format()
             }
         }
 
@@ -225,13 +216,13 @@ object UpdateMessageBuilder {
                 Phrase.from(context, R.string.disappearingMessagesSetYou)
                     .put(TIME_KEY, time)
                     .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
-                    .format().toString()
+                    .format()
             } else {
                 // 1-on-1 conversation
                 Phrase.from(context, R.string.disappearingMessagesSetYou)
                     .put(TIME_KEY, time)
                     .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
-                    .format().toString()
+                    .format()
             }
         }
         else // ..or by someone else.
@@ -240,7 +231,7 @@ object UpdateMessageBuilder {
                 .put(NAME_KEY, senderName)
                 .put(TIME_KEY, time)
                 .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
-                .format().toString()
+                .format()
         }
     }
 

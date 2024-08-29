@@ -2,8 +2,6 @@ package org.thoughtcrime.securesms.conversation.disappearingmessages
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -15,13 +13,16 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.SSKEnvironment.MessageExpirationManagerProtocol
 import org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
-import org.session.libsession.utilities.StringSubstitutionConstants.TIME_LARGE_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.getExpirationTypeDisplayValue
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.getSubbedCharSequence
 import org.thoughtcrime.securesms.ui.getSubbedString
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 class DisappearingMessages @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -48,10 +49,10 @@ class DisappearingMessages @Inject constructor(
     fun showFollowSettingDialog(context: Context, message: MessageRecord) = context.showSessionDialog {
         title(R.string.disappearingMessagesFollowSetting)
         text(if (message.expiresIn == 0L) {
-            context.getString(R.string.disappearingMessagesFollowSettingOff)
+            context.getText(R.string.disappearingMessagesFollowSettingOff)
         } else {
-            context.getSubbedString(R.string.disappearingMessagesFollowSettingOn,
-                TIME_LARGE_KEY to ExpirationUtil.getExpirationDisplayValue(context, message.expiresIn.milliseconds),
+            context.getSubbedCharSequence(R.string.disappearingMessagesFollowSettingOn,
+                TIME_KEY to ExpirationUtil.getExpirationDisplayValue(context, message.expiresIn.milliseconds),
                 DISAPPEARING_MESSAGES_TYPE_KEY to context.getExpirationTypeDisplayValue(message.isNotDisappearAfterRead))
         })
 
