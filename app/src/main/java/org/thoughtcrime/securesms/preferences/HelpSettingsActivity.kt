@@ -115,8 +115,7 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         } catch (e: Exception) {
-            // TODO: Have asked Rebecca about a new string for this to replace the hard-coded text below
-            Toast.makeText(requireActivity(), "Can't open URL", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireActivity(), requireContext().getString(R.string.errorUnknown), Toast.LENGTH_LONG).show()
         }
     }
 
