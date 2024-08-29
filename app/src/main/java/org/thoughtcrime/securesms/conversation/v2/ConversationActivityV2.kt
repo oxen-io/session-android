@@ -2065,9 +2065,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun showDeleteLocallyUI(messages: Set<MessageRecord>) {
-        val titleStringId = if (messages.count() == 1) R.string.deleteMessage else R.string.deleteMessages
         showSessionDialog {
-            title(resources.getString(titleStringId))
+            title(resources.getQuantityString(R.plurals.deleteMessage, messages.count()))
             text(resources.getString(R.string.deleteMessagesDescriptionDevice))
             button(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
             cancelButton(::endActionMode)
@@ -2089,7 +2088,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // If the recipient is a community OR a Note-to-Self then we delete the message for everyone
         if (recipient.isCommunityRecipient || recipient.isLocalNumber) {
             showSessionDialog {
-                title(resources.getString(R.string.deleteMessage))
+                title(resources.getQuantityString(R.plurals.deleteMessage, messages.count()))
                 text(resources.getString(R.string.deleteMessageDescriptionEveryone))
                 button(R.string.delete) { messages.forEach(viewModel::deleteForEveryone); endActionMode() }
                 cancelButton { endActionMode() }
@@ -2117,8 +2116,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         else // Finally, if this is a closed group and you are deleting someone else's message(s) then we can only delete locally.
         {
             showSessionDialog {
-                val titleTxtId = if (messages.size == 1) { R.string.deleteMessage } else { R.string.deleteMessages }
-                title(resources.getString(titleTxtId))
+                title(resources.getQuantityString(R.plurals.deleteMessage, messages.count()))
                 text(resources.getString(R.string.deleteMessageDescriptionDevice))
                 dangerButton(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
                 cancelButton(::endActionMode)

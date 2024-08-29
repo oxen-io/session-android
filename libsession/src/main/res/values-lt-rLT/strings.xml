@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">Renkami priedai...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Siųsti adresatui %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera neprieinama.</string>
     <!-- MediaRepository -->

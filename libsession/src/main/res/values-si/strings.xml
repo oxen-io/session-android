@@ -33,7 +33,6 @@
     <!-- MediaOverviewActivity -->
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">%s ට යවන්න</string>
     <!-- MediaSendActivity -->
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">සියලුම මාධ්‍යය</string>

@@ -9,7 +9,8 @@ class DeleteMediaPreviewDialog {
         fun show(context: Context, doDelete: Runnable) {
             context.showSessionDialog {
                 iconAttribute(R.attr.dialog_alert_icon)
-                title(R.string.deleteMessage)
+                title(context.resources.getQuantityString(R.plurals.deleteMessage, 1))
+
                 text(R.string.deleteMessageDescriptionEveryone)
                 dangerButton(R.string.delete) { doDelete.run() }
                 cancelButton()

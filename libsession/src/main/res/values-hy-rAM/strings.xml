@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">Կցորդների հավաքում...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Ուղարկել %s֊ին</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Տեսախցիկը հասանելի չէ</string>
     <!-- MediaRepository -->

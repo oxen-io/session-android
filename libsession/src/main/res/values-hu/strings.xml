@@ -41,7 +41,6 @@
     <string name="attachmentsCollecting">Mellékletek összegyűjtése...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Küldés neki: %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">A kamera nem érhető el.</string>
     <!-- MediaRepository -->

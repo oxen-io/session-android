@@ -8,7 +8,7 @@ class DeleteMediaDialog {
         @JvmStatic
         fun show(context: Context, recordCount: Int, doDelete: Runnable) = context.showSessionDialog {
             iconAttribute(R.attr.dialog_alert_icon)
-            title(context.resources.getString(R.string.deleteMessages))
+            title(context.resources.getQuantityString(R.plurals.deleteMessage, recordCount))
             text(context.resources.getString(R.string.deleteMessageDescriptionEveryone))
             button(R.string.delete) { doDelete.run() }
             cancelButton()

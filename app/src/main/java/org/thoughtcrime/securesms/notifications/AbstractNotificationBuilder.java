@@ -72,9 +72,9 @@ public abstract class AbstractNotificationBuilder extends NotificationCompat.Bui
     if (privacy.isDisplayMessage()) {
       setTicker(getStyledMessage(recipient, trimToDisplayLength(message)));
     } else if (privacy.isDisplayContact()) {
-      setTicker(getStyledMessage(recipient, context.getString(R.string.messageNew)));
+      setTicker(getStyledMessage(recipient, context.getResources().getQuantityString(R.plurals.messageNew, 1, 1)));
     } else {
-      setTicker(context.getString(R.string.messageNew));
+      setTicker(context.getResources().getQuantityString(R.plurals.messageNew, 1, 1));
     }
   }
 

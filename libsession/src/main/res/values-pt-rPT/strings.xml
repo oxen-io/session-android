@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">A recolher anexos...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Enviar para %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Câmara indisponível.</string>
     <!-- MediaRepository -->

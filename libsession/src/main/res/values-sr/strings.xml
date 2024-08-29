@@ -39,7 +39,6 @@
     <string name="attachmentsCollecting">Сакупљам прилоге...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Пошаљи %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Камера недоступна.</string>
     <!-- MediaRepository -->

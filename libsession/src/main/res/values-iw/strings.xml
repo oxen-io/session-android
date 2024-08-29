@@ -39,7 +39,6 @@
     <string name="attachmentsCollecting">אוסף צרופות...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">שלח אל %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">מצלמה אינה זמינה.</string>
     <!-- MediaRepository -->

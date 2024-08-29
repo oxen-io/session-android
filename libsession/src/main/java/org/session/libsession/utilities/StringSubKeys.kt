@@ -11,7 +11,7 @@ object StringSubstitutionConstants {
     const val COUNT_KEY                      = "count"
     const val DATE_TIME_KEY                  = "date_time"
     const val DISAPPEARING_MESSAGES_TYPE_KEY = "disappearing_messages_type"
-    const val DOWNLOAD_URL_KEY               = "download_url" // Used to invite people to download Session
+    const val DOWNLOAD_URL_KEY               = "session_download_url" // Used to invite people to download Session
     const val EMOJI_KEY                      = "emoji"
     const val FILE_TYPE_KEY                  = "file_type"
     const val GROUP_NAME_KEY                 = "group_name"

@@ -37,7 +37,6 @@
     <string name="attachmentsCollecting">Mengumpulkan lampiran...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Kirim ke %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera tidak tersedia.</string>
     <!-- MediaRepository -->

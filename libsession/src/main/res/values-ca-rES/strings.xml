@@ -39,7 +39,6 @@
     <string name="attachmentsCollecting">S\'estan adjuntant els fitxers...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Envia-ho a %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Càmera no disponible</string>
     <!-- MediaRepository -->

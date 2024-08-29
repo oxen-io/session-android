@@ -211,15 +211,20 @@ fun ItemButton(text: String, icon: Int, modifier: Modifier, textStyle: TextStyle
  */
 @Composable
 fun ItemButton(
-    @StringRes textId: Int,
+    @StringRes textId: Any, // Type was: Int - see comment below.
     @DrawableRes icon: Int,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = LocalType.current.xl,
     colors: ButtonColors = transparentButtonColors(),
     onClick: () -> Unit
 ) {
+    // TODO: I don't know enough compose to fix this properly atm so I'm tweaking this
+    // ItemButton so I can send it an Int or a String and still get the right behavior.
+    // Sorry. -ACL 2024-08-29
+    val txtString = if (textId is Int) stringResource(textId) else textId as String
+
     ItemButton(
-        text = stringResource(textId),
+        text = txtString,
         modifier = modifier,
         icon = {
             Icon(

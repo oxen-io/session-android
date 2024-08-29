@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +42,10 @@ internal fun StartConversationScreen(
     accountId: String,
     delegate: StartConversationDelegate
 ) {
+    val context = LocalContext.current
+    val newMessageTitleTxt:String = context.resources.getQuantityString(R.plurals.messageNew, 1, 1)
+
+
     Column(modifier = Modifier.background(
         LocalColors.current.backgroundSecondary,
         shape = MaterialTheme.shapes.small
@@ -58,7 +63,7 @@ internal fun StartConversationScreen(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 ItemButton(
-                    textId = R.string.messageNew,
+                    textId = newMessageTitleTxt,
                     icon = R.drawable.ic_message,
                     modifier = Modifier.contentDescription(R.string.AccessibilityId_messageNew),
                     onClick = delegate::onNewMessageSelected)

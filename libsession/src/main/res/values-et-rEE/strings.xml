@@ -37,7 +37,6 @@
     <string name="attachmentsCollecting">Kogun manuseid...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Saada kohta %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kaamera pole saadaval.</string>
     <!-- MediaRepository -->

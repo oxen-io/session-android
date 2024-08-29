@@ -37,7 +37,6 @@
     <string name="attachmentsCollecting">Casglu atodiadau...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Anfon i %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Camera ddim ar gael</string>
     <!-- MediaRepository -->

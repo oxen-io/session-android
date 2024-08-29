@@ -38,7 +38,6 @@
     <string name="attachmentsCollecting">កំពុងប្រមូលឯកសារភ្ជាប់...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">ផ្ញើទៅកាន់ %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">កាមេរ៉ាមិនដំណើរការ</string>
     <!-- MediaRepository -->

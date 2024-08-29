@@ -37,7 +37,6 @@
     <string name="attachmentsCollecting">kukusanya viambatisho</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">tuma kwa 1%s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">kamera haipatikani</string>
     <!-- MediaRepository -->

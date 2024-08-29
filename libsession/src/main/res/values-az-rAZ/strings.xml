@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">Qoşmalar yığılır...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">%s - göndər</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera əlçatmazdır.</string>
     <!-- MediaRepository -->

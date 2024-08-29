@@ -47,7 +47,6 @@
     <string name="attachmentsCollecting">Récupération des pièces jointes…</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Envoyer à %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">L’appareil photo n’est pas disponible</string>
     <!-- MediaRepository -->

@@ -38,7 +38,6 @@
     <string name="attachmentsCollecting">Ukladám prílohy...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Poslať používateľovi %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera je nedostupná.</string>
     <!-- MediaRepository -->

@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">Kolekto de kunsendaĵoj...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Sendi al %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Fotilo ne disponeblas.</string>
     <!-- MediaRepository -->

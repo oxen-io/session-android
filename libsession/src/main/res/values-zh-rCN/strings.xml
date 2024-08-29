@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">正在收集附件…</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">发送给%s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">摄像头不可用</string>
     <!-- MediaRepository -->

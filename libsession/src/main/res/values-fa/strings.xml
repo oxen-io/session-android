@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">در حال جمع‌آوری پیوست‌ها...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">ارسال به %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">دوربین در دسترس نیست</string>
     <!-- MediaRepository -->

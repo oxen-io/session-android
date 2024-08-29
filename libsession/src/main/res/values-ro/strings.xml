@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">Se colectează atașamentele...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Trimiteți la %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Cameră indisponibilă.</string>
     <!-- MediaRepository -->

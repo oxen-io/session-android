@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">Samlar bifogade filer...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Skicka till %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera otillgänglig.</string>
     <!-- MediaRepository -->

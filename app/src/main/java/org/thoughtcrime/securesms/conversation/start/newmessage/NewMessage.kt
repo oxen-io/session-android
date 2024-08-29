@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
@@ -75,12 +76,16 @@ internal fun NewMessage(
 ) {
     val pagerState = rememberPagerState { TITLES.size }
 
+    // `messageNew` is now a plurals string so get the singular version
+    val context = LocalContext.current
+    val newMessageTitleTxt:String = context.resources.getQuantityString(R.plurals.messageNew, 1, 1)
+
     Column(modifier = Modifier.background(
         LocalColors.current.backgroundSecondary,
         shape = MaterialTheme.shapes.small
     )) {
         BackAppBar(
-            title = stringResource(R.string.messageNew),
+            title = newMessageTitleTxt,
             backgroundColor = Color.Transparent, // transparent to show the rounded shape of the container
             onBack = onBack,
             actions = { AppBarCloseIcon(onClose = onClose) }

@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">Bijlagen aan het verzamelen…</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Verzenden naar %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Camera niet beschikbaar.</string>
     <!-- MediaRepository -->

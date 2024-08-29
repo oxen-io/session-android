@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">Henter vedlegg …</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Send til %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera utilgjengelig.</string>
     <!-- MediaRepository -->

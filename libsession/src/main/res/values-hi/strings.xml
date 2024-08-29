@@ -40,7 +40,6 @@
     <string name="attachmentsCollecting">अटैचमेंट्स इकट्ठे कर रहे हैं...</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">%s को भेजें</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">कैमरा अनुपलब्ध.</string>
     <!-- MediaRepository -->

@@ -36,7 +36,6 @@
     <string name="attachmentsCollecting">...Servehî tên berhevkirin</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
-    <string name="MediaPickerActivity_send_to">Ji %s re bişîne</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera nayê bikar anîn.</string>
     <!-- MediaRepository -->
