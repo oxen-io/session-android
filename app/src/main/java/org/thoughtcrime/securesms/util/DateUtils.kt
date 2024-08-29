@@ -92,11 +92,9 @@ object DateUtils : android.text.format.DateUtils() {
     }
 
     fun getDisplayFormattedTimeSpanString(c: Context, locale: Locale, timestamp: Long): String {
-        // If the timestamp is invalid (ie. 0) then assume we're waiting on data and just use the 'Now' copy
-        return if (timestamp == 0L || isWithin(timestamp, 1, TimeUnit.MINUTES)) {
-            // TODO ACL: Adjust as per SES-360
-            "Now"
-        } else if (isToday(timestamp)) {
+        // If the timestamp is within the last 24 hours we just give the time, e.g, "1:23 PM" or
+        // "13:23" depending on 12/24 hour formatting.
+        return if (isToday(timestamp)) {
             getFormattedDateTime(timestamp, getHourFormat(c), locale)
         } else if (isWithin(timestamp, 6, TimeUnit.DAYS)) {
             getFormattedDateTime(timestamp, "EEE " + getHourFormat(c), locale)
