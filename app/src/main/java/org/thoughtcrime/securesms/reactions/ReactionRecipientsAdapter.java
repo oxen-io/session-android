@@ -62,9 +62,6 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
   @Override
   public @NonNull
   ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-    // TODO: This will CRASH on Android 28 but it works on Android 34. The error is to do with a
-    // TODO: missing `secondary_text_material_dark` colour. Jira ticket: SES-2157
     switch (viewType) {
       case HEADER_TYPE:
         return new HeaderViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler_header, parent, false));

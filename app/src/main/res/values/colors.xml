@@ -119,8 +119,4 @@
     <color name="danger_light">#E12D19</color>
 
     <color name="outdated_client_banner_background_color">#00F782</color>
-
-    <!-- ACL attempt to stop API 28 crashing on long-press of emoji - doesn't work though... -->
-    <color name="secondary_text_material_dark">#61FFFF</color>
-
 </resources>

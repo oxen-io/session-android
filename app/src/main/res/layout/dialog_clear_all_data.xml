@@ -40,14 +40,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/large_spacing"
         android:orientation="horizontal">
 
         <Button
             style="@style/Widget.Session.Button.Dialog.DangerText"
             android:id="@+id/clearAllDataButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/small_button_height"
+            android:layout_height="@dimen/dialog_button_height"
             android:layout_weight="1"
             android:text="@string/clear" />
 
@@ -55,7 +54,7 @@
             style="@style/Widget.Session.Button.Dialog.UnimportantText"
             android:id="@+id/cancelButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/small_button_height"
+            android:layout_height="@dimen/dialog_button_height"
             android:layout_weight="1"
             android:text="@string/cancel" />
 

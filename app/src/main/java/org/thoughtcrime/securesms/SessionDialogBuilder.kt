@@ -46,27 +46,7 @@ class SessionDialogBuilder(val context: Context) {
         .apply { orientation = VERTICAL }
         .also(dialogBuilder::setCustomTitle)
 
-    // Maximum height of the dialog. This comes into play in the Open URL dialog where we
-    // might have a a very, very long URL (which we provide a ScrollView for) - but without
-    // limiting the height of the dialog, the WRAP_CONTENT part can allow the dialog to be
-    // super tall!
-    // Note: I eye-balled this DP value for the max dialog height to make it match the
-    // height of regular not-scrollable dialogs.
-    val maxHeightInDp = 137
-    val scale = context.resources.displayMetrics.density
-    val maxHeightInPx = (maxHeightInDp * scale + 0.5f).toInt()
-
-    val contentView = LinearLayout(context).apply {
-        orientation = VERTICAL
-
-        // Limit the max height of the dialog to the above value
-        viewTreeObserver.addOnGlobalLayoutListener {
-            if (height > maxHeightInPx) {
-                layoutParams.height = maxHeightInPx
-                requestLayout()
-            }
-        }
-    }
+    private val contentView = LinearLayout(context).apply { orientation = VERTICAL }
 
     private val buttonLayout = LinearLayout(context)
 
@@ -156,8 +136,6 @@ class SessionDialogBuilder(val context: Context) {
     fun okButton(listener: (() -> Unit) = {}) = button(android.R.string.ok) { listener() }
 
     fun cancelButton(listener: (() -> Unit) = {}) = button(android.R.string.cancel, R.string.AccessibilityId_cancel) { listener() }
-
-    fun copyUrlButton(listener: (() -> Unit) = {}) = button(android.R.string.copyUrl, R.string.AccessibilityId_copy) { listener() }
 
     fun button(
         @StringRes text: Int,
