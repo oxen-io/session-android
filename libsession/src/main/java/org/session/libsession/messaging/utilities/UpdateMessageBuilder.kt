@@ -95,7 +95,7 @@ object UpdateMessageBuilder {
 
                 // 1st case: you are part of the removed members
                 return if (userPublicKey in updateData.updatedMembers) {
-                    if (isOutgoing) context.getString(R.string.groupMemberYouLeft) // You chose to leave
+                    if (isOutgoing) context.getText(R.string.groupMemberYouLeft) // You chose to leave
                     else Phrase.from(context, R.string.groupRemovedYou)            // You were forced to leave
                             .put(GROUP_NAME_KEY, updateData.groupName)
                             .format()
@@ -151,7 +151,7 @@ object UpdateMessageBuilder {
 
             // --- Group members left ---
             is UpdateMessageData.Kind.GroupMemberLeft -> {
-                if (isOutgoing) context.getString(R.string.groupMemberYouLeft)
+                if (isOutgoing) context.getText(R.string.groupMemberYouLeft)
                 else {
                     when (updateData.updatedMembers.size) {
                         0 -> {
@@ -237,18 +237,18 @@ object UpdateMessageBuilder {
 
     fun buildDataExtractionMessage(context: Context,
                                    kind: DataExtractionNotificationInfoMessage.Kind,
-                                   senderId: String? = null): String {
+                                   senderId: String? = null): CharSequence {
 
         val senderName = if (senderId != null) getSenderName(senderId) else context.getString(R.string.unknown)
 
         return when (kind) {
             SCREENSHOT  -> Phrase.from(context, R.string.screenshotTaken)
                 .put(NAME_KEY, senderName)
-                .format().toString()
+                .format()
 
             MEDIA_SAVED -> Phrase.from(context, R.string.attachmentsMediaSaved)
                 .put(NAME_KEY, senderName)
-                .format().toString()
+                .format()
         }
     }
 
