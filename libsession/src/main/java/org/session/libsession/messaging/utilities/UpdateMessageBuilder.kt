@@ -70,19 +70,19 @@ object UpdateMessageBuilder {
                     }
                     1 -> {
                         Phrase.from(context, R.string.groupMemberNew)
-                            .put(NAME_KEY, updateData.updatedMembers.elementAtOrNull(0))
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                             .format()
                     }
                     2 -> {
                         Phrase.from(context, R.string.groupMemberTwoNew)
-                            .put(NAME_KEY, updateData.updatedMembers.elementAtOrNull(0))
-                            .put(OTHER_NAME_KEY, updateData.updatedMembers.elementAtOrNull(1))
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                            .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
                             .format()
                     }
                     else -> {
                         val newMemberCountMinusOne = newMemberCount - 1
                         Phrase.from(context, R.string.groupMemberMoreNew)
-                            .put(NAME_KEY, updateData.updatedMembers.elementAtOrNull(0))
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                             .put(COUNT_KEY, newMemberCountMinusOne)
                             .format()
                     }

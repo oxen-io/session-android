@@ -2,13 +2,11 @@ package org.thoughtcrime.securesms.components;
 
 import android.animation.Animator;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.Nullable;
@@ -19,7 +17,7 @@ import org.thoughtcrime.securesms.util.AnimationCompleteListener;
 
 import network.loki.messenger.R;
 
-public class SearchToolbar extends LinearLayout {
+public class SearchToolbar extends Toolbar {
 
   private float x, y;
   private MenuItem searchItem;
@@ -41,15 +39,10 @@ public class SearchToolbar extends LinearLayout {
   }
 
   private void initialize() {
-    inflate(getContext(), R.layout.search_toolbar, this);
-    setOrientation(VERTICAL);
+    setNavigationIcon(getContext().getResources().getDrawable(R.drawable.ic_baseline_clear_24));
+    inflateMenu(R.menu.conversation_list_search);
 
-    Toolbar toolbar = findViewById(R.id.search_toolbar);
-
-    toolbar.setNavigationIcon(getContext().getResources().getDrawable(R.drawable.ic_baseline_clear_24));
-    toolbar.inflateMenu(R.menu.conversation_list_search);
-
-    this.searchItem = toolbar.getMenu().findItem(R.id.action_filter_search);
+    this.searchItem = getMenu().findItem(R.id.action_filter_search);
     SearchView searchView = (SearchView) searchItem.getActionView();
     EditText   searchText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
 
@@ -82,7 +75,7 @@ public class SearchToolbar extends LinearLayout {
       }
     });
 
-    toolbar.setNavigationOnClickListener(v -> hide());
+    setNavigationOnClickListener(v -> hide());
   }
 
   @MainThread

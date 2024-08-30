@@ -84,7 +84,7 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
 
     setContentView(R.layout.share_activity);
 
-    initializeToolbar();
+  //  initializeToolbar();
     initializeResources();
     initializeSearch();
     initializeMedia();
@@ -126,13 +126,13 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
     else                           super.onBackPressed();
   }
 
-  private void initializeToolbar() {
-    Toolbar toolbar = findViewById(R.id.search_toolbar);
+ /* private void initializeToolbar() {
+    SearchToolbar toolbar = findViewById(R.id.search_toolbar);
     setSupportActionBar(toolbar);
     ActionBar actionBar = getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);
     actionBar.setHomeButtonEnabled(true);
-  }
+  }*/
 
   private void initializeResources() {
     progressWheel    = findViewById(R.id.progress_wheel);
