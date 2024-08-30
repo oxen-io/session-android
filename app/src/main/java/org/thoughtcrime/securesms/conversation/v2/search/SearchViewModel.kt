@@ -94,6 +94,8 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    public fun getActiveQuery() = activeQuery
+
     class SearchResult(private val results: CursorList<MessageResult?>, val position: Int) : Closeable {
 
         fun getResults(): List<MessageResult?> {

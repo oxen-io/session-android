@@ -11,21 +11,26 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationActionBarBinding
 import network.loki.messenger.databinding.ViewConversationSettingBinding
-import network.loki.messenger.libsession_util.util.ExpiryMode
+import network.loki.messenger.libsession_util.util.ExpiryMode.AfterRead
+import org.session.libsession.LocalisedTimeUtil
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.utilities.ExpirationUtil
+import org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.TIME_LARGE_KEY
 import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
-import org.thoughtcrime.securesms.util.DateUtils
-import java.util.Locale
-import javax.inject.Inject
+import org.thoughtcrime.securesms.ui.getSubbedString
 
 @AndroidEntryPoint
 class ConversationActionBarView @JvmOverloads constructor(
@@ -82,7 +87,7 @@ class ConversationActionBarView @JvmOverloads constructor(
 
     fun update(recipient: Recipient, openGroup: OpenGroup? = null, config: ExpirationConfiguration? = null) {
         binding.profilePictureView.update(recipient)
-        binding.conversationTitleView.text = recipient.takeUnless { it.isLocalNumber }?.toShortString() ?: context.getString(R.string.note_to_self)
+        binding.conversationTitleView.text = recipient.takeUnless { it.isLocalNumber }?.toShortString() ?: context.getString(R.string.noteToSelf)
         updateSubtitle(recipient, openGroup, config)
 
         binding.conversationTitleContainer.modifyLayoutParams<MarginLayoutParams> {
@@ -92,37 +97,56 @@ class ConversationActionBarView @JvmOverloads constructor(
 
     fun updateSubtitle(recipient: Recipient, openGroup: OpenGroup? = null, config: ExpirationConfiguration? = null) {
         val settings = mutableListOf<ConversationSetting>()
+
+        // Specify the disappearing messages subtitle if we should
         if (config?.isEnabled == true) {
-            val prefix = when (config.expiryMode) {
-                is ExpiryMode.AfterRead -> R.string.expiration_type_disappear_after_read
-                else -> R.string.expiration_type_disappear_after_send
-            }.let(context::getString)
+            // Get the type of disappearing message and the abbreviated duration..
+            val dmTypeString = when (config.expiryMode) {
+                is AfterRead -> context.getString(R.string.read)
+                else -> context.getString(R.string.send)
+            }
+            val durationAbbreviated = ExpirationUtil.getExpirationAbbreviatedDisplayValue(config.expiryMode.expirySeconds)
+
+            // ..then substitute into the string..
+            val subtitleTxt = context.getSubbedString(R.string.disappearingMessagesDisappear,
+                DISAPPEARING_MESSAGES_TYPE_KEY to dmTypeString,
+                TIME_KEY to durationAbbreviated
+                )
+
+            // .. and apply to the subtitle.
             settings += ConversationSetting(
-                "$prefix - ${ExpirationUtil.getExpirationAbbreviatedDisplayValue(context, config.expiryMode.expirySeconds)}",
+                subtitleTxt,
                 ConversationSettingType.EXPIRATION,
                 R.drawable.ic_timer,
-                resources.getString(R.string.AccessibilityId_disappearing_messages_type_and_time)
+                resources.getString(R.string.AccessibilityId_disappearingMessagesDisappear)
             )
         }
+
         if (recipient.isMuted) {
             settings += ConversationSetting(
                 recipient.mutedUntil.takeUnless { it == Long.MAX_VALUE }
-                    ?.let { context.getString(R.string.ConversationActivity_muted_until_date, DateUtils.getFormattedDateTime(it, "EEE, MMM d, yyyy HH:mm", Locale.getDefault())) }
-                    ?: context.getString(R.string.ConversationActivity_muted_forever),
+                    ?.let {
+                        val mutedDuration = (it - System.currentTimeMillis()).milliseconds
+                        val durationString = LocalisedTimeUtil.getDurationWithSingleLargestTimeUnit(context, mutedDuration)
+                        context.getSubbedString(R.string.notificationsMuteFor, TIME_LARGE_KEY to durationString)
+                    }
+                    ?: context.getString(R.string.notificationsMuted),
                 ConversationSettingType.NOTIFICATION,
                 R.drawable.ic_outline_notifications_off_24
             )
         }
+
         if (recipient.isGroupRecipient) {
             val title = if (recipient.isCommunityRecipient) {
                 val userCount = openGroup?.let { lokiApiDb.getUserCount(it.room, it.server) } ?: 0
-                context.getString(R.string.ConversationActivity_active_member_count, userCount)
+                resources.getQuantityString(R.plurals.membersActive, userCount, userCount)
             } else {
                 val userCount = groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size
-                context.getString(R.string.ConversationActivity_member_count, userCount)
+                resources.getQuantityString(R.plurals.members, userCount, userCount)
             }
             settings += ConversationSetting(title, ConversationSettingType.MEMBER_COUNT)
         }
+
         settingsAdapter.submitList(settings)
         binding.settingsTabLayout.isVisible = settings.size > 1
     }

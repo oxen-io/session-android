@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/deleteTitleTextView"
-        android:contentDescription="@string/AccessibilityId_deleted_message"
+        android:contentDescription="@string/AccessibilityId_deleteMessageDeleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"

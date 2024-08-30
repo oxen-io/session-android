@@ -18,7 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.onboarding.OnboardingBackPressAlertDialog
 import org.thoughtcrime.securesms.onboarding.messagenotifications.MessageNotificationsViewModel.UiState
 import org.thoughtcrime.securesms.onboarding.ui.ContinuePrimaryOutlineButton
@@ -55,29 +57,37 @@ internal fun MessageNotificationsScreen(
 
     Column {
         Spacer(Modifier.weight(1f))
-
         Column(modifier = Modifier.padding(horizontal = LocalDimensions.current.mediumSpacing)) {
             Text(stringResource(R.string.notificationsMessage), style = LocalType.current.h4)
             Spacer(Modifier.height(LocalDimensions.current.smallSpacing))
-            Text(stringResource(R.string.onboardingMessageNotificationExplaination), style = LocalType.current.base)
+            Text(
+                Phrase.from(stringResource(R.string.onboardingMessageNotificationExplanation))
+                    .put(APP_NAME_KEY, stringResource(R.string.app_name))
+                    .format().toString(),
+                style = LocalType.current.base
+            )
             Spacer(Modifier.height(LocalDimensions.current.spacing))
         }
 
         NotificationRadioButton(
-            R.string.activity_pn_mode_fast_mode,
-            R.string.activity_pn_mode_fast_mode_explanation,
-            modifier = Modifier.contentDescription(R.string.AccessibilityId_fast_mode_notifications_button),
-            tag = R.string.activity_pn_mode_recommended_option_tag,
+            R.string.notificationsFastMode,
+            R.string.notificationsFastModeDescription,
+            modifier = Modifier.contentDescription(R.string.AccessibilityId_notificationsFastMode),
+            tag = R.string.recommended,
             checked = state.pushEnabled,
             onClick = { setEnabled(true) }
         )
 
         // spacing between buttons is provided by ripple/downstate of NotificationRadioButton
 
+        val explanationTxt = Phrase.from(stringResource(R.string.notificationsSlowModeDescription))
+            .put(APP_NAME_KEY, stringResource(R.string.app_name))
+            .format().toString()
+
         NotificationRadioButton(
-            R.string.activity_pn_mode_slow_mode,
-            R.string.activity_pn_mode_slow_mode_explanation,
-            modifier = Modifier.contentDescription(R.string.AccessibilityId_slow_mode_notifications_button),
+            stringResource(R.string.notificationsSlowMode),
+            explanationTxt,
+            modifier = Modifier.contentDescription(R.string.AccessibilityId_notificationsSlowMode),
             checked = state.pushDisabled,
             onClick = { setEnabled(false) }
         )
@@ -90,8 +100,28 @@ internal fun MessageNotificationsScreen(
 
 @Composable
 private fun NotificationRadioButton(
-    @StringRes title: Int,
-    @StringRes explanation: Int,
+    @StringRes titleId: Int,
+    @StringRes explanationId: Int,
+    modifier: Modifier = Modifier,
+    @StringRes tag: Int? = null,
+    checked: Boolean = false,
+    onClick: () -> Unit = {}
+) {
+    // Pass-through from this string ID version to the version that takes strings
+    NotificationRadioButton(
+        titleTxt       = stringResource(titleId),
+        explanationTxt = stringResource(explanationId),
+        modifier       = modifier,
+        tag            = tag,
+        checked        = checked,
+        onClick        = onClick
+    )
+}
+
+@Composable
+private fun NotificationRadioButton(
+    titleTxt: String,
+    explanationTxt: String,
     modifier: Modifier = Modifier,
     @StringRes tag: Int? = null,
     checked: Boolean = false,
@@ -112,13 +142,19 @@ private fun NotificationRadioButton(
                     RoundedCornerShape(8.dp)
                 ),
         ) {
-            Column(modifier = Modifier
-                .padding(horizontal = LocalDimensions.current.smallSpacing,
-                    vertical = LocalDimensions.current.xsSpacing)
-                ) {
-                Text(stringResource(title), style = LocalType.current.h8)
+            Column(
+                modifier = Modifier.padding(horizontal = LocalDimensions.current.smallSpacing, vertical = LocalDimensions.current.xsSpacing)) {
+                Text(
+                    titleTxt,
+                    style = LocalType.current.h8
+                )
 
-                Text(stringResource(explanation), style = LocalType.current.small, modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing))
+                Text(
+                    explanationTxt,
+                    style = LocalType.current.small,
+                    modifier = Modifier.padding(top = LocalDimensions.current.xxsSpacing)
+                )
+
                 tag?.let {
                     Text(
                         stringResource(it),

@@ -23,7 +23,7 @@
         android:layout_gravity="center"
         android:paddingTop="12dp"
         android:paddingBottom="8dp"
-        app:search_hint="@string/KeyboardPagerFragment_search_emoji"
+        app:search_hint="@string/search"
         app:search_bar_tint="?conversationMenuSearchBackgroundColor"
         app:search_icon_tint="?searchHintColor"
         app:show_always="true" />

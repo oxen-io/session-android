@@ -21,18 +21,15 @@ import androidx.preference.PreferenceGroupAdapter;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.thoughtcrime.securesms.components.CustomDefaultPreference;
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
-
 import network.loki.messenger.R;
 
 public abstract class CorrectedPreferenceFragment extends PreferenceFragmentCompat {
 
-  public static final int SINGLE_TYPE = 21;
-  public static final int TOP_TYPE = 22;
-  public static final int MIDDLE_TYPE = 23;
-  public static final int BOTTOM_TYPE = 24;
+  public static final int SINGLE_TYPE   = 21;
+  public static final int TOP_TYPE      = 22;
+  public static final int MIDDLE_TYPE   = 23;
+  public static final int BOTTOM_TYPE   = 24;
   public static final int CATEGORY_TYPE = 25;
 
   public int horizontalPadding;
@@ -56,18 +53,7 @@ public abstract class CorrectedPreferenceFragment extends PreferenceFragmentComp
 
   @Override
   public void onDisplayPreferenceDialog(Preference preference) {
-    DialogFragment dialogFragment = null;
-
-    if (preference instanceof CustomDefaultPreference) {
-      dialogFragment = CustomDefaultPreference.CustomDefaultPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-    }
-
-    if (dialogFragment != null) {
-      dialogFragment.setTargetFragment(this, 0);
-      dialogFragment.show(getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
-    } else {
-      super.onDisplayPreferenceDialog(preference);
-    }
+    if (preference != null) super.onDisplayPreferenceDialog(preference);
   }
 
   @Override

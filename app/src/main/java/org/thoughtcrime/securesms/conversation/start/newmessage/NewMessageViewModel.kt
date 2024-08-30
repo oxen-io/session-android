@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.concurrent.TimeoutException
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
@@ -19,8 +21,6 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsignal.utilities.PublicKeyValidation
 import org.session.libsignal.utilities.timeout
 import org.thoughtcrime.securesms.ui.GetString
-import java.util.concurrent.TimeoutException
-import javax.inject.Inject
 
 @HiltViewModel
 internal class NewMessageViewModel @Inject constructor(
@@ -41,7 +41,6 @@ internal class NewMessageViewModel @Inject constructor(
     override fun onChange(value: String) {
         loadOnsJob?.cancel()
         loadOnsJob = null
-
         _state.update { it.copy(newMessageIdOrOns = value, isTextErrorColor = false, loading = false) }
     }
 
@@ -59,7 +58,7 @@ internal class NewMessageViewModel @Inject constructor(
         if (PublicKeyValidation.isValid(value, isPrefixRequired = false) && PublicKeyValidation.hasValidPrefix(value)) {
             onPublicKey(value)
         } else {
-            _qrErrors.tryEmit(application.getString(R.string.this_qr_code_does_not_contain_an_account_id))
+            _qrErrors.tryEmit(application.getString(R.string.qrNotAccountId))
         }
     }
 
@@ -99,7 +98,7 @@ internal class NewMessageViewModel @Inject constructor(
     private fun Exception.toMessage() = when (this) {
         is SnodeAPI.Error.Generic -> application.getString(R.string.onsErrorNotRecognized)
         is TimeoutException -> application.getString(R.string.onsErrorUnableToSearch)
-        else -> application.getString(R.string.fragment_enter_public_key_error_message)
+        else -> application.getString(R.string.accountIdErrorInvalid)
     }
 }
 

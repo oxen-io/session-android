@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">सैशन</string>
+    <string name="yes">हाँ </string>
+    <string name="no">नहीं</string>
+    <string name="delete">मिटाएं</string>
+    <string name="save">संरक्षित करें</string>
+    <string name="noteToSelf">अपने लिए नोट</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">नया सन्देश</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">इस महीना</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">अटैचमेंट जोड़ें</string>
+    <string name="message">मैसेज</string>
+    <string name="notificationsMuted">म्यूट हो गए</string>
+    <string name="blockUnblock">अनब्लॉक करें</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">कुछ नहीं</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">स्टिकर</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">अटैचमेंट्स इकट्ठे कर रहे हैं...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">कैमरा अनुपलब्ध.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">सभी मीडिया</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">ब्लॉक</string>
+    <!-- Slide -->
+    <string name="image">तस्वीर </string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">समूह अद्यतन</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session खुला है </string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">प्रारूप</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">पढ़ा हुआ चिह्नित करें</string>
+    <!-- Notification Channels -->
+    <string name="failures">विफलतायें </string>
+    <string name="lockAppStatus">लॉक स्थिति</string>
+    <string name="updateApp">ऐप अपडेट</string>
+    <string name="other">अन्य</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">सेव किया गया</string>
+    <!-- SearchToolbar -->
+    <string name="search">सर्च</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">अमान्य शॉर्टकट</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">भेजें</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">रद्द करने के लिए स्लाइड करें</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">ज्वॉइन करें</string>
+    <string name="read">पढ़ें</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">मूल संदेश नहीं मिला</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent"> भेजा गया </string>
+    <string name="received"> मिल गया </string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">केवल नाम</string>
+    <string name="audio">ऑडियो </string>
+    <string name="video">वीडियो </string>
+    <string name="max">अधिकतम</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">लिंक प्रिव्यू भेजें</string>
+    <string name="screenSecurity">स्क्रीन सुरक्षा</string>
+    <string name="sessionNotifications">सूचनाएं</string>
+    <string name="notificationsLedColor">LED रंग </string>
+    <string name="notificationsSound">आवाज़ </string>
+    <string name="notificationsVibrate"> वाइब्रेट</string>
+    <string name="theDefault">डिफ़ॉल्ट</string>
+    <string name="incognitoKeyboard">गुप्त कीबोर्ड</string>
+    <string name="readReceipts">पढ़ने की रसीदें</string>
+    <string name="typingIndicators">टाइपिंग सूचक</string>
+    <string name="conversationsMessageTrimming">संदेश ट्रिमिंग</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">प्रतिबंध उपयोगकर्ता</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">अनम्यूट</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">नोटिफिकेशन म्यूट करें</string>
+    <!-- conversation -->
+    <string name="groupLeave">समूह छोड़ दें</string>
+    <string name="conversationsAddToHome">होम स्क्रीन में शामिल करें</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">विलोपन</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">अनुमति की आवश्यकता</string>
+    <string name="notNow">अभी नहीं</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">जारी रखें</string>
+    <string name="copy">कॉपी करें</string>
+    <string name="communityEnterUrlErrorInvalid">अमान्य यूआरएल</string>
+    <string name="copied">क्लिपबोर्ड पर कॉपी किया गया है</string>
+    <string name="next">अगला</string>
+    <string name="share">साझा करें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="displayNamePick">अपना प्रदर्शन नाम चुनें</string>
+    <string name="recommended">सुझाया गया</string>
+    <string name="conversationsDeleted">बातचीत हटाई गई</string>
+    <string name="onionRoutingPath">पथ</string>
+    <string name="onionRoutingPathEntryNode">प्रवेश नोड</string>
+    <string name="onionRoutingPathServiceNode">सर्विस नोड</string>
+    <string name="onionRoutingPathDestination">गंतव्य</string>
+    <string name="learnMore">अधिक जानें</string>
+    <string name="resolving">हल किया जा रहा है</string>
+    <string name="qrScan">QR कोड को स्कैन करें</string>
+    <string name="cameraGrantAccessQr">क्यूआर कोड स्कैन करने के लिए Session को कैमरा एक्सेस की आवश्यकता है</string>
+    <string name="cameraGrantAccess">कैमरा केउपयोग को प्रदान करें</string>
+    <string name="groupNameEnter">ग्रुप का नाम डालें</string>
+    <string name="groupNameEnterPlease">कृपया ग्रुप नाम डालें</string>
+    <string name="sessionSettings">सेटिंग्स</string>
+    <string name="sessionInviteAFriend">किसी मित्र को आमंत्रित करें</string>
+    <string name="helpFAQ">अकसर किये गए सवाल</string>
+    <string name="sessionClearData">डेटा हटाएं</string>
+    <string name="notificationsStyle">अधिसूचना शैली</string>
+    <string name="notificationsContent">सूचना विषय सूची</string>
+    <string name="sessionPrivacy">गोपनियता</string>
+    <string name="notificationsStrategy">सूचना रणनीति</string>
+    <string name="useFastMode">तीव्र मोड इस्तेमाल करे</string>
+    <string name="clearDataAll">सभी डेटा हटाएं</string>
+    <string name="qrCode">QR कोड</string>
+    <!-- Next round of translation -->
+    <string name="done">पूरा हुआ</string>
+    <string name="groupEdit">ग्रुप बदलें</string>
+    <string name="contactSelect">कांटेक्ट चुनें</string>
+    <string name="appearanceThemes">थीम</string>
+    <string name="attachment">अटैचमेंट</string>
+    <string name="messageVoice">वौइस् मैसेज</string>
+    <string name="communityJoinOfficial">या इनमें से एक को जोड़ें...</string>
+    <string name="notificationsFastMode">फास्ट मोड</string>
+    <string name="notificationsSlowMode">स्लो मोड</string>
+    <string name="notificationsFastModeDescription">आपको नई सूचनाओं के बारे में google के नोटीफिकेशन servers से तत्काल सूचित किया जाएगा।</string>
+    <string name="notificationsSlowModeDescription">Session कभी-कभी पृष्ठभूमि में नए संदेशों की जांच करेगा।</string>
+    <string name="open">खोलें</string>
+    <string name="urlCopy">यूआरएल कॉपी करें</string>
+    <string name="enable">सक्षम करें</string>
+    <string name="download">डाउनलोड</string>
+    <string name="media">मीडिया</string>
+    <string name="theError">त्रुटि!</string>
+    <string name="warning">चेतावनी!</string>
+    <string name="pin">पिन करें</string>
+    <string name="pinUnpin">अनपिन करें</string>
+</resources>

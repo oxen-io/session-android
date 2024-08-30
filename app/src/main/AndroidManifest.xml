@@ -37,7 +37,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>
     <uses-permission android:name="network.loki.messenger.ACCESS_SESSION_SECRETS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Only used on Android API 29 and lower -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
@@ -79,7 +79,7 @@
         android:networkSecurityConfig="@xml/network_security_configuration"
         android:supportsRtl="true"
         android:theme="@style/Theme.Session.DayNight"
-        tools:replace="android:allowBackup">
+        tools:replace="android:allowBackup,android:label" >
 
         <!-- Disable all analytics -->
 
@@ -130,12 +130,12 @@
         <activity
             android:name="org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity"
             android:exported="false"
-            android:label="@string/activity_message_requests_title"
+            android:label="@string/sessionMessageRequests"
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.preferences.SettingsActivity"
             android:screenOrientation="portrait"
-            android:label="@string/activity_settings_title" />
+            android:label="@string/sessionSettings" />
         <activity
             android:name="org.thoughtcrime.securesms.debugmenu.DebugActivity"
             android:screenOrientation="portrait"
@@ -151,11 +151,11 @@
             android:name="org.thoughtcrime.securesms.preferences.BlockedContactsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar"
-            android:label="@string/blocked_contacts_title"
+            android:label="@string/conversationsBlockedContacts"
             />
         <activity
             android:name="org.thoughtcrime.securesms.groups.EditClosedGroupActivity"
-            android:label="@string/activity_edit_closed_group_title"
+            android:label="@string/groupEdit"
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.recoverypassword.RecoveryPasswordActivity"
@@ -165,7 +165,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.preferences.PrivacySettingsActivity"
-            android:label="@string/activity_privacy_settings_title"
+            android:label="@string/sessionPrivacy"
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.preferences.NotificationSettingsActivity"
@@ -175,7 +175,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.preferences.HelpSettingsActivity"
-            android:label="@string/activity_help_settings_title"
+            android:label="@string/sessionHelp"
             android:screenOrientation="portrait" />
         <activity android:name="org.thoughtcrime.securesms.preferences.appearance.AppearanceSettingsActivity"
             android:screenOrientation="portrait"/>
@@ -268,17 +268,9 @@
         <activity
             android:name="org.thoughtcrime.securesms.MediaPreviewActivity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
-            android:label="@string/AndroidManifest__media_preview"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.NoActionBar"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name="org.thoughtcrime.securesms.MediaOverviewActivity"
-            android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Session.DayNight.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="org.thoughtcrime.securesms.DummyActivity"

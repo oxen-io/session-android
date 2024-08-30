@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/unread_marker"
+        android:text="@string/messageUnread"
         android:textColor="?android:colorAccent"
         android:textSize="@dimen/small_font_size"
         android:textStyle="bold" />

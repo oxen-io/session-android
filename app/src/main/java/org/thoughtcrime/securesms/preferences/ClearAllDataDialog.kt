@@ -63,7 +63,6 @@ class ClearAllDataDialog : DialogFragment() {
         binding.recyclerView.apply {
             itemAnimator = null
             adapter = optionAdapter
-            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             setHasFixedSize(true)
         }
         optionAdapter.submitList(listOf(device, network))
@@ -93,10 +92,10 @@ class ClearAllDataDialog : DialogFragment() {
 
             when (step) {
                 Steps.INFO_PROMPT -> {
-                    binding.dialogDescriptionText.setText(R.string.dialog_clear_all_data_message)
+                    binding.dialogDescriptionText.setText(R.string.clearDataAllDescription)
                 }
                 Steps.NETWORK_PROMPT -> {
-                    binding.dialogDescriptionText.setText(R.string.dialog_clear_all_data_clear_device_and_network_confirmation)
+                    binding.dialogDescriptionText.text = getString(R.string.clearDeviceAndNetworkConfirm)
                 }
                 Steps.DELETING -> { /* do nothing intentionally */ }
                 Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT -> {

@@ -9,9 +9,9 @@ class SettingsDialog {
         @JvmStatic
         fun show(context: Context, message: String) {
             context.showSessionDialog {
-                title(R.string.Permissions_permission_required)
+                title(R.string.permissionsRequired)
                 text(message)
-                button(R.string.Permissions_continue, R.string.AccessibilityId_continue) {
+                button(R.string.theContinue, R.string.AccessibilityId_theContinue) {
                     context.startActivity(Permissions.getApplicationSettingsIntent(context))
                 }
                 cancelButton()

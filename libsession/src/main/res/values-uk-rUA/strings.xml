@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Session</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="delete">Видалити</string>
+    <string name="save">Зберегти</string>
+    <string name="noteToSelf">Замітка для себе</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Нове повідомлення</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Цього місяця</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Додати вкладення</string>
+    <string name="message">Написати</string>
+    <string name="notificationsMuted">Беззвучний</string>
+    <string name="blockUnblock">Розблокувати</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Жодного</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Наліпки</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Збираю вкладення...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Камера не доступна</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Всі медіа-файли
+Всі зображення</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Заблокувати</string>
+    <!-- Slide -->
+    <string name="image">Зображення</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Групу оновлено</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session розблоковано</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">Чернетка</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Позначити як прочитане</string>
+    <!-- Notification Channels -->
+    <string name="failures">Відмови</string>
+    <string name="lockAppStatus">Статус блокування</string>
+    <string name="updateApp">Оновлення додатку</string>
+    <string name="other">Інший</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Збережено</string>
+    <!-- SearchToolbar -->
+    <string name="search">Пошук</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Недопустимий ярлик</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Надіслати</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Проведіть щоб відмінити</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">Увійти</string>
+    <string name="read">Прочитано</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Оригінальне повідомлення не знайдено</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Надіслано</string>
+    <string name="received">Одержано</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">Тільки ім\'я</string>
+    <string name="audio">Аудіо</string>
+    <string name="video">Відео</string>
+    <string name="max">Максимум</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Перегляд відправлених посилань</string>
+    <string name="screenSecurity">Безпека екрану</string>
+    <string name="sessionNotifications">Сповіщення</string>
+    <string name="notificationsLedColor">Колір LED</string>
+    <string name="notificationsSound">Звук</string>
+    <string name="notificationsVibrate">Вібрувати</string>
+    <string name="theDefault">Типово</string>
+    <string name="incognitoKeyboard">Клавіатура в режимі \"інкогніто\"</string>
+    <string name="readReceipts">Звіти про прочитання</string>
+    <string name="typingIndicators">Індикатор введення тексту</string>
+    <string name="conversationsMessageTrimming">Обрізка повідомлень</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">Бан користувача</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Увімкнути звук</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Вимкнути звук сповіщень</string>
+    <!-- conversation -->
+    <string name="groupLeave">Вийти з групи</string>
+    <string name="conversationsAddToHome">Додати до домашнього екрану</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Видалення</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Необхідний дозвіл</string>
+    <string name="notNow">Не зараз</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Далі</string>
+    <string name="copy">Скопіювати</string>
+    <string name="communityEnterUrlErrorInvalid">Недійсне URL посилання</string>
+    <string name="copied">Скопійовано в буфер обміну</string>
+    <string name="next">Далі</string>
+    <string name="share">Поділитися</string>
+    <string name="cancel">Відміна</string>
+    <string name="displayNamePick">Виберіть ваш псевдонім для показу</string>
+    <string name="recommended">Рекомендовано</string>
+    <string name="conversationsDeleted">Бесіду видалено</string>
+    <string name="onionRoutingPath">Шлях</string>
+    <string name="onionRoutingPathEntryNode">Вхідний Вузел</string>
+    <string name="onionRoutingPathServiceNode">Сервісний Вузел</string>
+    <string name="onionRoutingPathDestination">Місце призначення</string>
+    <string name="learnMore">Дізнатися більше</string>
+    <string name="resolving">Визначаємо…</string>
+    <string name="qrScan">Сканувати QR-код</string>
+    <string name="cameraGrantAccessQr">Session потрібен дозвіл до камери, щоб сканувати QR-код</string>
+    <string name="cameraGrantAccess">Дозволити доступ до камери</string>
+    <string name="groupNameEnter">Введіть ім\'я групи</string>
+    <string name="groupNameEnterPlease">Будь ласка, введіть ім\'я групи</string>
+    <string name="sessionSettings">Параметри</string>
+    <string name="sessionInviteAFriend">Запросити друга</string>
+    <string name="helpFAQ">Часті питання</string>
+    <string name="sessionClearData">Видалити дані</string>
+    <string name="notificationsStyle">Стиль сповіщень</string>
+    <string name="notificationsContent">Вміст сповіщення</string>
+    <string name="sessionPrivacy">Конфіденційність</string>
+    <string name="notificationsStrategy">Стратегія сповіщення</string>
+    <string name="useFastMode">Використовувати швидкий режим</string>
+    <string name="clearDataAll">Видалити всі дані</string>
+    <string name="qrCode">QR-код</string>
+    <!-- Next round of translation -->
+    <string name="done">Готово</string>
+    <string name="groupEdit">Редагувати Групу</string>
+    <string name="contactSelect">Обрати контакти</string>
+    <string name="appearanceThemes">Тема</string>
+    <string name="attachment">Вкладення</string>
+    <string name="messageVoice">Голосове повідомлення</string>
+    <string name="communityJoinOfficial">Або приєднуйтесь до одного з цих…</string>
+    <string name="notificationsFastMode">Швидкий режим</string>
+    <string name="notificationsSlowMode">Медленний режим</string>
+    <string name="notificationsFastModeDescription">Вас надійно повідомлятимуть про нові сповіщщеня негайно, використовуючи сервери сповіщень Google.</string>
+    <string name="notificationsSlowModeDescription">Session буде періодично перевіряти наявність нових повідомлень у фоновому режимі.</string>
+    <string name="open">Відкрити</string>
+    <string name="urlCopy">Копіювати URL</string>
+    <string name="enable">Включити</string>
+    <string name="download">Скачати</string>
+    <string name="media">Медіа-файли</string>
+    <string name="theError">Помилка</string>
+    <string name="warning">Увага</string>
+</resources>

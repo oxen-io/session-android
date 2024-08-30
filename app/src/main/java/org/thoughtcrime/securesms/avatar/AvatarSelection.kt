@@ -32,7 +32,7 @@ class AvatarSelection(
     private val bgColor by lazy { activity.getColorFromAttr(android.R.attr.colorPrimary) }
     private val txtColor by lazy { activity.getColorFromAttr(android.R.attr.textColorPrimary) }
     private val imageScrim by lazy { ContextCompat.getColor(activity, R.color.avatar_background) }
-    private val activityTitle by lazy { activity.getString(R.string.CropImageActivity_profile_avatar) }
+    private val activityTitle by lazy { activity.getString(R.string.image) }
 
     /**
      * Returns result on [.REQUEST_CODE_CROP_IMAGE]
@@ -120,7 +120,7 @@ class AvatarSelection(
 
         val chooserIntent = Intent.createChooser(
             galleryIntent,
-            context.getString(R.string.CreateProfileActivity_profile_photo)
+            context.getString(R.string.image)
         )
 
         if (!extraIntents.isEmpty()) {

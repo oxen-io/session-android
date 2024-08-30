@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Session</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
+    <string name="delete">Slet</string>
+    <string name="save">Gem</string>
+    <string name="noteToSelf">Egen note</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Ny besked</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Denne måned</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Vedhæft fil</string>
+    <string name="message">Besked</string>
+    <string name="notificationsMuted">Lyden slået fra</string>
+    <string name="blockUnblock">Fjern blokering</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Ingen</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Klistermærker</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Samler vedhæftninger...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Kamera utilgængeligt</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Alle mediefiler</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Blokér</string>
+    <!-- Slide -->
+    <string name="image">Billede</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Gruppe opdateret</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session er låst op</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">Kladde</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Markér som læst</string>
+    <!-- Notification Channels -->
+    <string name="failures">Registrerede fejl</string>
+    <string name="lockAppStatus">Låse status</string>
+    <string name="updateApp">App opdateringer</string>
+    <string name="other">Andet</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Gemt</string>
+    <!-- SearchToolbar -->
+    <string name="search">Søg</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Ugyldig genvej</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Send</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Slide for at annullere</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">Deltag</string>
+    <string name="read">Læst</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Original besked ikke fundet</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Sendt</string>
+    <string name="received">Modtaget</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">Kun navn</string>
+    <string name="audio">Lyd</string>
+    <string name="video">Video</string>
+    <string name="max">Max.</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Send link eksempelvisning</string>
+    <string name="screenSecurity">Skærmsikkerhed</string>
+    <string name="sessionNotifications">Notifikationer</string>
+    <string name="notificationsLedColor">LED farve</string>
+    <string name="notificationsSound">Lyd</string>
+    <string name="notificationsVibrate">Vibration</string>
+    <string name="theDefault">Standard</string>
+    <string name="incognitoKeyboard">Inkognito tastatur</string>
+    <string name="readReceipts">Læst af modtager</string>
+    <string name="typingIndicators">Skrive indikator</string>
+    <string name="conversationsMessageTrimming">Trimning af beskeder</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">Udeluk bruger</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Fjern udsættelse</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Udsæt notifikationer</string>
+    <!-- conversation -->
+    <string name="groupLeave">Forlad gruppe</string>
+    <string name="conversationsAddToHome">Føj til startskærm</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Sletter</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Tilladelse krævet</string>
+    <string name="notNow">Ikke nu</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Fortsæt</string>
+    <string name="copy">Kopiér</string>
+    <string name="communityEnterUrlErrorInvalid">Ugyldig Webadresse</string>
+    <string name="copied">Kopieret til udklipsholder</string>
+    <string name="next">Næste</string>
+    <string name="share">Del</string>
+    <string name="cancel">Annuller</string>
+    <string name="displayNamePick">Vælg dit visningsnavn</string>
+    <string name="recommended">Anbefalet</string>
+    <string name="conversationsDeleted">Samtale slettet</string>
+    <string name="onionRoutingPath">Sti</string>
+    <string name="onionRoutingPathDestination">Destination</string>
+    <string name="learnMore">Læs mere</string>
+    <string name="qrScan">Skan QR-kode</string>
+    <string name="cameraGrantAccessQr">Session skal bruge kameraadgang for at scanne QR-koder</string>
+    <string name="cameraGrantAccess">Tildel Adgang Til Kamera</string>
+    <string name="groupNameEnter">Indtast et gruppenavn</string>
+    <string name="sessionSettings">Indstillinger</string>
+    <string name="sessionInviteAFriend">Inviter en ven</string>
+    <string name="helpFAQ">Ofte stillede spørgsmål</string>
+    <string name="sessionClearData">Ryd data</string>
+    <string name="notificationsStyle">Notifikationsstil</string>
+    <string name="notificationsContent">Meddelelsesindhold</string>
+    <string name="sessionPrivacy">Privatliv</string>
+    <string name="useFastMode">Brug Hurtig Tilstand</string>
+    <string name="clearDataAll">Ryd Alt Data</string>
+    <string name="qrCode">QR-kode</string>
+    <!-- Next round of translation -->
+    <string name="done">Færdig</string>
+    <string name="groupEdit">Rediger Gruppe</string>
+    <string name="contactSelect">Vælg Kontakter</string>
+    <string name="appearanceThemes">Tema</string>
+    <string name="messageVoice">Talebesked</string>
+    <string name="communityJoinOfficial">Eller deltag i en af disse…</string>
+    <string name="urlCopy">Kopier URL</string>
+    <string name="enable">Aktivér</string>
+    <string name="download">Hent</string>
+    <string name="media">Medie</string>
+    <string name="theError">Fejl</string>
+    <string name="warning">Advarsel</string>
+    <string name="pin">Fastgør</string>
+    <string name="pinUnpin">Frigør</string>
+</resources>

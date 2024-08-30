@@ -2,7 +2,7 @@
 <resources>
 
   <string-array name="language_entries">
-      <item>@string/preferences__default</item>
+      <item>@string/theDefault</item>
       <item>English</item>
       <item>Arabic العربية</item>
       <item>Azərbaycan</item>
@@ -124,15 +124,10 @@
       <item>custom</item>
   </string-array>
 
-  <string-array name="default_or_custom_entries">
-      <item>@string/arrays__use_default</item>
-      <item>@string/arrays__use_custom</item>
-  </string-array>
-
-    <string-array name="pref_notification_privacy_entries">
-      <item>@string/arrays__name_and_message</item>
-      <item>@string/arrays__name_only</item>
-      <item>@string/arrays__no_name_or_message</item>
+  <string-array name="pref_notification_privacy_entries">
+      <item>@string/notificationsContentShowNameAndContent</item>
+      <item>@string/notificationsContentShowNameOnly</item>
+      <item>@string/notificationsContentShowNoNameOrContent</item>
   </string-array>
 
   <string-array name="pref_notification_privacy_values">
@@ -140,10 +135,6 @@
       <item>contact</item>
       <item>none</item>
   </string-array>
-
-  <!-- discrete MIME type (the part before the "/") -->
-
-    <!-- RedPhone -->
 
     <array name="scribble_colors">
         <item>#ffffff</item>
@@ -158,8 +149,7 @@
     </array>
 
     <string-array name="notify_types">
-        <item>@string/notify_type_all</item>
-        <item>@string/notify_type_mentions</item>
+        <item>@string/notificationsMentionsOnly</item>
     </string-array>
 
 </resources>

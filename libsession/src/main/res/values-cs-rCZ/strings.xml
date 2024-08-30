@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Session</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
+    <string name="delete">Smazat</string>
+    <string name="save">Uložit</string>
+    <string name="noteToSelf">Poznámka sobě</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Nová zpráva</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Tento měsíc</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Přidat přílohu</string>
+    <string name="message">Zpráva</string>
+    <string name="notificationsMuted">Ztlumeno</string>
+    <string name="blockUnblock">Odblokovat</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Nic</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Nálepky</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Shromažďuji přílohy...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Kamera není dostupná.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Všechna media</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Blokovat</string>
+    <!-- Slide -->
+    <string name="image">Obrázek</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Skupina upravena</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session je odemčen</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">Koncept</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Označit jako přečtené</string>
+    <!-- Notification Channels -->
+    <string name="failures">Chyby</string>
+    <string name="lockAppStatus">Stav zámku</string>
+    <string name="updateApp">Aktulizace aplikace</string>
+    <string name="other">Ostatní</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Uloženo</string>
+    <!-- SearchToolbar -->
+    <string name="search">Hledat</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Chybná klávesová zkratka</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Odeslat</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Pro zrušení přejeďte</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">Přidat se</string>
+    <string name="read">Číst</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Původní zpráva nebyla nalezena</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Odesláno</string>
+    <string name="received">Přijato</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">Pouze jméno</string>
+    <string name="audio">Zvuk</string>
+    <string name="video">Video</string>
+    <string name="max">Maximum</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Odesílat náhledy odkazu</string>
+    <string name="screenSecurity">Zabezpečení obrazovky</string>
+    <string name="sessionNotifications">Upozornění</string>
+    <string name="notificationsLedColor">Barva LED</string>
+    <string name="notificationsSound">Zvuk</string>
+    <string name="notificationsVibrate">Vibrovat</string>
+    <string name="theDefault">Výchozí</string>
+    <string name="incognitoKeyboard">Inkognito klávesnice</string>
+    <string name="readReceipts">Info o přečtení</string>
+    <string name="typingIndicators">Indikátory psaní</string>
+    <string name="conversationsMessageTrimming">Ořezávání práv</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">Zablokovat uživatele</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Nahlas</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Ztišit upozornění</string>
+    <!-- conversation -->
+    <string name="groupLeave">Opustit skupinu</string>
+    <string name="conversationsAddToHome">Přidat na plochu</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Mažu</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Vyžadovaná oprávnění</string>
+    <string name="notNow">Teď ne</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Pokračovat</string>
+    <string name="copy">Kopírovat</string>
+    <string name="communityEnterUrlErrorInvalid">Neplatná adresa URL</string>
+    <string name="copied">Zkopírováno do schránky</string>
+    <string name="next">Další</string>
+    <string name="share">Sdílet</string>
+    <string name="cancel">Zrušit</string>
+    <string name="displayNamePick">Vaše jméno</string>
+    <string name="recommended">Doporučeno</string>
+    <string name="conversationsDeleted">Konverzace byla smazána</string>
+    <string name="onionRoutingPath">Cesta</string>
+    <string name="onionRoutingPathEntryNode">Vstupní uzel</string>
+    <string name="onionRoutingPathServiceNode">Provozní uzel</string>
+    <string name="onionRoutingPathDestination">Cíl</string>
+    <string name="learnMore">Další informace</string>
+    <string name="resolving">Připojování…</string>
+    <string name="qrScan">Naskenovat QR kód</string>
+    <string name="cameraGrantAccessQr">Session potřebuje přístup ke kameře, aby bylo možné skenovat QR kódy</string>
+    <string name="cameraGrantAccess">Udělit přístup k fotoaparátu</string>
+    <string name="groupNameEnter">Zadejte název skupiny</string>
+    <string name="groupNameEnterPlease">Zadejte prosím název skupiny</string>
+    <string name="sessionSettings">Nastavení</string>
+    <string name="sessionInviteAFriend">Pozvat přítele</string>
+    <string name="helpFAQ">Často kladené dotazy</string>
+    <string name="sessionClearData">Vymazat data</string>
+    <string name="notificationsStyle">Styl oznámení</string>
+    <string name="notificationsContent">Obsah oznámení</string>
+    <string name="sessionPrivacy">Soukromí</string>
+    <string name="notificationsStrategy">Styl oznámení</string>
+    <string name="useFastMode">Použít rychlý režim</string>
+    <string name="clearDataAll">Vymazat všechna data</string>
+    <string name="qrCode">QR kód</string>
+    <!-- Next round of translation -->
+    <string name="done">Hotovo</string>
+    <string name="groupEdit">Upravit skupinu</string>
+    <string name="contactSelect">Vyber kontakty</string>
+    <string name="appearanceThemes">Motiv</string>
+    <string name="attachment">Příloha</string>
+    <string name="messageVoice">Hlasová zpráva</string>
+    <string name="communityJoinOfficial">Nebo se připojte k jedné z těchto…</string>
+    <string name="notificationsFastMode">Rychlý režim</string>
+    <string name="notificationsSlowMode">Pomalý režim</string>
+    <string name="notificationsFastModeDescription">Budete spolehlivě a okamžitě informováni o nových zprávách pomocí oznamovacích serverů Google.</string>
+    <string name="notificationsSlowModeDescription">Session občas zkontroluje nové zprávy na pozadí.</string>
+    <string name="open">Otevřít</string>
+    <string name="urlCopy">Zkopírovat URL</string>
+    <string name="enable">Povolit</string>
+    <string name="download">Stáhnout</string>
+    <string name="media">Média</string>
+    <string name="theError">Chyba</string>
+    <string name="warning">Varování</string>
+    <string name="pin">Připnout</string>
+    <string name="pinUnpin">Odepnout</string>
+</resources>

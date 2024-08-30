@@ -1,18 +1,20 @@
 package org.thoughtcrime.securesms.database.helpers;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.database.Cursor;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-
+import com.squareup.phrase.Phrase;
+import java.io.File;
 import net.zetetic.database.sqlcipher.SQLiteConnection;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteDatabaseHook;
 import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
-
+import network.loki.messenger.R;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.crypto.DatabaseSecret;
@@ -39,12 +41,7 @@ import org.thoughtcrime.securesms.database.SessionContactDatabase;
 import org.thoughtcrime.securesms.database.SessionJobDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase;
 import org.thoughtcrime.securesms.database.ThreadDatabase;
-import org.thoughtcrime.securesms.notifications.NotificationChannels;
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities;
-
-import java.io.File;
-
-import network.loki.messenger.R;
 
 public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
@@ -250,18 +247,22 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
       // Notify the user of the issue so they know they can downgrade until the issue is fixed
       NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-      String channelId = context.getString(R.string.NotificationChannel_failures);
+      String channelId = context.getString(R.string.failures);
 
       NotificationChannel channel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_HIGH);
       channel.enableVibration(true);
       notificationManager.createNotificationChannel(channel);
 
+      CharSequence errorTxt = Phrase.from(context, R.string.databaseErrorGeneric)
+              .put(APP_NAME_KEY, R.string.app_name)
+              .format();
+
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
         .setSmallIcon(R.drawable.ic_notification)
         .setColor(context.getResources().getColor(R.color.textsecure_primary))
         .setCategory(NotificationCompat.CATEGORY_ERROR)
-        .setContentTitle(context.getString(R.string.ErrorNotifier_migration))
-        .setContentText(context.getString(R.string.ErrorNotifier_migration_downgrade))
+        .setContentTitle(context.getString(R.string.errorDatabase))
+        .setContentText(errorTxt)
         .setAutoCancel(true);
 
       notificationManager.notify(5874, builder.build());

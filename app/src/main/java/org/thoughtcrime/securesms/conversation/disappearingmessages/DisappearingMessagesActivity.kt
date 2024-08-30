@@ -52,7 +52,7 @@ class DisappearingMessagesActivity: PassphraseRequiredActionBarActivity() {
                 viewModel.event.collect {
                     when (it) {
                         Event.SUCCESS -> finish()
-                        Event.FAIL -> showToast(getString(R.string.DisappearingMessagesActivity_settings_not_updated))
+                        Event.FAIL -> showToast(getString(R.string.communityErrorDescription))
                     }
                 }
             }
@@ -72,9 +72,9 @@ class DisappearingMessagesActivity: PassphraseRequiredActionBarActivity() {
     }
 
     private fun setUpToolbar() {
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.searchToolbar)
         supportActionBar?.apply {
-            title = getString(R.string.activity_disappearing_messages_title)
+            title = getString(R.string.disappearingMessages)
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
         }

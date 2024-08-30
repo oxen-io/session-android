@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Session</string>
+    <string name="yes">Po</string>
+    <string name="no">Jo</string>
+    <string name="delete">Fshije</string>
+    <string name="save">Ruaje</string>
+    <string name="noteToSelf">Shënim për Veten</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Mesazh i ri</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Këtë muaj</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Shtoni bashkëngjitje</string>
+    <string name="message">Mesazh</string>
+    <string name="notificationsMuted">Heshtur</string>
+    <string name="blockUnblock">Zhbllokoje</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Asnjë</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Ngjitëse</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Po mblidhen bashkëngjitje…</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Kamera jo gati</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Krejt mediat</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Bllokoje</string>
+    <!-- Slide -->
+    <string name="image">Figurë</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Grupi u përditësua</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session-i u shkyç</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">Skicë:</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Vëri shenjë si të lexuar</string>
+    <!-- Notification Channels -->
+    <string name="failures">Dështime</string>
+    <string name="lockAppStatus">Gjendje kyçjeje</string>
+    <string name="updateApp">Përditësime aplikacioni</string>
+    <string name="other">Tjetër</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">U ruajt</string>
+    <!-- SearchToolbar -->
+    <string name="search">Kërko</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Shkurtore e pavlefshme</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Dërgoje</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Rrëshqiteni që të anulohet</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">Bashkohu</string>
+    <string name="read">Lexo</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">S\’u gjet mesazhi origjinal</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Dërguar më</string>
+    <string name="received">Marrë më</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">Vetëm emrin</string>
+    <string name="audio">Audio</string>
+    <string name="video">Video</string>
+    <string name="max">Maks.</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Dërgo paraparje lidhjesh</string>
+    <string name="screenSecurity">Siguri ekrani</string>
+    <string name="sessionNotifications">Njoftime</string>
+    <string name="notificationsLedColor">Ngjyrë LED-i</string>
+    <string name="notificationsSound">Tingull</string>
+    <string name="notificationsVibrate">Dridhu</string>
+    <string name="theDefault">Parazgjedhje</string>
+    <string name="incognitoKeyboard">Tastatur e fshehtë</string>
+    <string name="readReceipts">Dëftesa leximi</string>
+    <string name="typingIndicators">Tregues shtypjeje</string>
+    <string name="conversationsMessageTrimming">Shkurtim mesazhesh</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">Dëboni përdorues</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Çheshtoji</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Heshtoji njoftimet</string>
+    <!-- conversation -->
+    <string name="groupLeave">Braktise grupin</string>
+    <string name="conversationsAddToHome">Shtoje te skena e kreut</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Po fshihet</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Lyp leje</string>
+    <string name="notNow">Jo tani</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Vazhdo</string>
+    <string name="copy">Kopjoje</string>
+    <string name="communityEnterUrlErrorInvalid">URL e pavlefshme</string>
+    <string name="copied">Kopjo në klipbord</string>
+    <string name="next">Tutje</string>
+    <string name="share">Shpërndaje</string>
+    <string name="cancel">Anuloje</string>
+    <!-- Next round of translation -->
+</resources>

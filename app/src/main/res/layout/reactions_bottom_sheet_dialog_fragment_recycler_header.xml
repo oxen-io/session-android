@@ -32,7 +32,7 @@
             android:layout_gravity="center_vertical"
             android:textColor="?android:textColorTertiary"/>
         <TextView
-            android:text="@string/message_requests_clear_all"
+            android:text="@string/clearAll"
             android:textColor="?danger"
             android:visibility="gone"
             android:id="@+id/header_view_clear_all"

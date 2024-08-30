@@ -29,12 +29,14 @@ import android.provider.OpenableColumns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
-
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import network.loki.messenger.R;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.DistributionTypes;
 import org.session.libsession.utilities.ViewUtil;
@@ -49,12 +51,6 @@ import org.thoughtcrime.securesms.mms.PartAuthority;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.util.MediaUtil;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import network.loki.messenger.R;
-
 /**
  * An activity to quickly share content with contacts
  *
@@ -68,7 +64,6 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
   public static final String EXTRA_THREAD_ID          = "thread_id";
   public static final String EXTRA_ADDRESS_MARSHALLED = "address_marshalled";
   public static final String EXTRA_DISTRIBUTION_TYPE  = "distribution_type";
-
 
   private ContactSelectionListFragment contactsFragment;
   private SearchToolbar                searchToolbar;
@@ -132,7 +127,7 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
   }
 
   private void initializeToolbar() {
-    Toolbar toolbar = findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.search_toolbar);
     setSupportActionBar(toolbar);
     ActionBar actionBar = getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);

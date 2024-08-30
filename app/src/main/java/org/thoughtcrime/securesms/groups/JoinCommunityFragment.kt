@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.OpenGroupUrlParser
+import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
@@ -47,6 +49,7 @@ class JoinCommunityFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.backButton.setOnClickListener { delegate.onDialogBackPressed() }
         binding.closeButton.setOnClickListener { delegate.onDialogClosePressed() }
+
         fun showLoader() {
             binding.loader.visibility = View.VISIBLE
             binding.loader.animate().setDuration(150).alpha(1.0f).start()
@@ -61,18 +64,23 @@ class JoinCommunityFragment : Fragment() {
                 }
             })
         }
+
         fun joinCommunityIfPossible(url: String) {
             val openGroup = try {
                 OpenGroupUrlParser.parseUrl(url)
             } catch (e: OpenGroupUrlParser.Error) {
                 when (e) {
-                    is OpenGroupUrlParser.Error.MalformedURL -> return Toast.makeText(activity, R.string.activity_join_public_chat_error, Toast.LENGTH_SHORT).show()
-                    is OpenGroupUrlParser.Error.InvalidPublicKey -> return Toast.makeText(activity, R.string.invalid_public_key, Toast.LENGTH_SHORT).show()
-                    is OpenGroupUrlParser.Error.NoPublicKey -> return Toast.makeText(activity, R.string.invalid_public_key, Toast.LENGTH_SHORT).show()
-                    is OpenGroupUrlParser.Error.NoRoom -> return Toast.makeText(activity, R.string.activity_join_public_chat_error, Toast.LENGTH_SHORT).show()
+                    is OpenGroupUrlParser.Error.MalformedURL, OpenGroupUrlParser.Error.NoRoom -> {
+                        return Toast.makeText(activity, context?.resources?.getString(R.string.communityJoinError), Toast.LENGTH_SHORT).show()
+                    }
+                    is OpenGroupUrlParser.Error.InvalidPublicKey, OpenGroupUrlParser.Error.NoPublicKey -> {
+                        return Toast.makeText(activity, R.string.communityEnterUrlErrorInvalidDescription, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
+
             showLoader()
+
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     val sanitizedServer = openGroup.server.removeSuffix("/")
@@ -90,10 +98,11 @@ class JoinCommunityFragment : Fragment() {
                         delegate.onDialogClosePressed()
                     }
                 } catch (e: Exception) {
-                    Log.e("Loki", "Couldn't join open group.", e)
+                    Log.e("Loki", "Couldn't join community.", e)
                     withContext(Dispatchers.Main) {
                         hideLoader()
-                        Toast.makeText(activity, R.string.activity_join_public_chat_error, Toast.LENGTH_SHORT).show()
+                        val txt = Phrase.from(context, R.string.groupErrorJoin).put(GROUP_NAME_KEY, url).format().toString()
+                        Toast.makeText(activity, txt, Toast.LENGTH_SHORT).show()
                     }
                     return@launch
                 }
@@ -107,8 +116,8 @@ class JoinCommunityFragment : Fragment() {
         )
         val mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
             tab.text = when (pos) {
-                0 -> getString(R.string.activity_join_public_chat_enter_community_url_tab_title)
-                1 -> getString(R.string.activity_join_public_chat_scan_qr_code_tab_title)
+                0 -> getString(R.string.communityUrl)
+                1 -> getString(R.string.qrScan)
                 else -> throw IllegalStateException()
             }
         }

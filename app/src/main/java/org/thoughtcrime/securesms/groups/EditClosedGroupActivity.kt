@@ -3,6 +3,8 @@ package org.thoughtcrime.securesms.groups
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,7 +18,10 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
+import javax.inject.Inject
 import network.loki.messenger.R
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
@@ -26,6 +31,7 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.groupSizeLimit
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
+import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.recipients.Recipient
@@ -40,8 +46,6 @@ import org.thoughtcrime.securesms.groups.ClosedGroupManager.updateLegacyGroup
 import com.bumptech.glide.Glide
 import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
-import java.io.IOException
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
@@ -107,17 +111,17 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         groupID = intent.getStringExtra(groupIDKey)!!
         val groupInfo = DatabaseComponent.get(this).groupDatabase().getGroup(groupID).get()
         originalName = groupInfo.title
-        isSelfAdmin = groupInfo.admins.any{ it.serialize() == TextSecurePreferences.getLocalNumber(this) }
+        isSelfAdmin = groupInfo.admins.any { it.serialize() == TextSecurePreferences.getLocalNumber(this) }
 
         name = originalName
 
         mainContentContainer = findViewById(R.id.mainContentContainer)
-        cntGroupNameEdit = findViewById(R.id.cntGroupNameEdit)
-        cntGroupNameDisplay = findViewById(R.id.cntGroupNameDisplay)
-        edtGroupName = findViewById(R.id.edtGroupName)
-        emptyStateContainer = findViewById(R.id.emptyStateContainer)
-        lblGroupNameDisplay = findViewById(R.id.lblGroupNameDisplay)
-        loaderContainer = findViewById(R.id.loaderContainer)
+        cntGroupNameEdit     = findViewById(R.id.cntGroupNameEdit)
+        cntGroupNameDisplay  = findViewById(R.id.cntGroupNameDisplay)
+        edtGroupName         = findViewById(R.id.edtGroupName)
+        emptyStateContainer  = findViewById(R.id.emptyStateContainer)
+        lblGroupNameDisplay  = findViewById(R.id.lblGroupNameDisplay)
+        loaderContainer      = findViewById(R.id.loaderContainer)
 
         findViewById<View>(R.id.addMembersClosedGroupButton).setOnClickListener {
             onAddMembersClick()
@@ -129,7 +133,19 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         }
 
         lblGroupNameDisplay.text = originalName
-        cntGroupNameDisplay.setOnClickListener { isEditingName = true }
+
+        // Only allow admins to click on the name of closed groups to edit them..
+        if (isSelfAdmin) {
+            cntGroupNameDisplay.setOnClickListener { isEditingName = true }
+        }
+        else // ..and also hide the edit `drawableEnd` for non-admins.
+        {
+            // Note: compoundDrawables returns 4 drawables (drawablesStart/Top/End/Bottom) -
+            // so the `drawableEnd` component is at index 2, which we replace with null.
+            val cd = lblGroupNameDisplay.compoundDrawables
+            lblGroupNameDisplay.setCompoundDrawables(cd[0], cd[1], null, cd[3])
+        }
+
         findViewById<View>(R.id.btnCancelGroupNameEdit).setOnClickListener { isEditingName = false }
         findViewById<View>(R.id.btnSaveGroupNameEdit).setOnClickListener { saveName() }
         edtGroupName.setImeActionLabel(getString(R.string.save), EditorInfo.IME_ACTION_DONE)
@@ -245,10 +261,10 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
     private fun saveName() {
         val name = edtGroupName.text.toString().trim()
         if (name.isEmpty()) {
-            return Toast.makeText(this, R.string.activity_edit_closed_group_group_name_missing_error, Toast.LENGTH_SHORT).show()
+            return Toast.makeText(this, R.string.groupNameEnterPlease, Toast.LENGTH_SHORT).show()
         }
         if (name.length >= 64) {
-            return Toast.makeText(this, R.string.activity_edit_closed_group_group_name_too_long_error, Toast.LENGTH_SHORT).show()
+            return Toast.makeText(this, R.string.groupNameEnterShorter, Toast.LENGTH_SHORT).show()
         }
         this.name = name
         lblGroupNameDisplay.text = name
@@ -283,20 +299,22 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         }
 
         if (members.isEmpty()) {
-            return Toast.makeText(this, R.string.activity_edit_closed_group_not_enough_group_members_error, Toast.LENGTH_LONG).show()
+            return Toast.makeText(this, R.string.groupCreateErrorNoMembers, Toast.LENGTH_LONG).show()
         }
 
         val maxGroupMembers = if (isClosedGroup) groupSizeLimit else legacyGroupSizeLimit
         if (members.size >= maxGroupMembers) {
-            return Toast.makeText(this, R.string.activity_create_closed_group_too_many_group_members_error, Toast.LENGTH_LONG).show()
+            return Toast.makeText(this, R.string.groupAddMemberMaximum, Toast.LENGTH_LONG).show()
         }
 
         val userPublicKey = TextSecurePreferences.getLocalNumber(this)!!
         val userAsRecipient = Recipient.from(this, Address.fromSerialized(userPublicKey), false)
 
+        // There's presently no way in the UI to get into the state whereby you could remove yourself from the group when removing any other members
+        // (you can't unselect yourself - the only way to leave is to "Leave Group" from the menu) - but it's possible that this was not always
+        // the case - so we can leave this in as defensive code in-case something goes screwy.
         if (!members.contains(userAsRecipient) && !members.map { it.address.toString() }.containsAll(originalMembers.minus(userPublicKey))) {
-            val message = "Can't leave while adding or removing other members."
-            return Toast.makeText(this@EditClosedGroupActivity, message, Toast.LENGTH_LONG).show()
+            return Log.w("EditClosedGroup", "Can't leave group while adding or removing other members.")
         }
 
         if (isClosedGroup) {

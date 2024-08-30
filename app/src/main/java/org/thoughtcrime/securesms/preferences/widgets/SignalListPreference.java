@@ -1,13 +1,10 @@
 package org.thoughtcrime.securesms.preferences.widgets;
 
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
-
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceViewHolder;
-
 import network.loki.messenger.R;
 
 public class SignalListPreference extends ListPreference {

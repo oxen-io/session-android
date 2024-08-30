@@ -12,8 +12,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.google.android.flexbox.JustifyContent
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewEmojiReactionsBinding
+import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getLocalNumber
 import org.session.libsession.utilities.ThemeUtil
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView
@@ -199,7 +201,7 @@ class EmojiReactionsView : ConstraintLayout, OnTouchListener {
         } else {
             emojiView.visibility = GONE
             spacer.visibility = GONE
-            countView.text = context.getString(R.string.ReactionsConversationView_plus, reaction.count)
+            countView.text = Phrase.from(context, R.string.andMore).put(COUNT_KEY, reaction.count.toInt()).format()
         }
         if (reaction.userWasSender && !isCompact) {
             root.background = ContextCompat.getDrawable(context, R.drawable.reaction_pill_background_selected)

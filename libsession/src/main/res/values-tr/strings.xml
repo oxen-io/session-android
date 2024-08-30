@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Session</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="delete">Sil</string>
+    <string name="save">Kaydet</string>
+    <string name="noteToSelf">Kendime Not</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Yeni ileti</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Bu Ay</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Eklenti ekle</string>
+    <string name="message">İleti</string>
+    <string name="notificationsMuted">Sessize alındı</string>
+    <string name="blockUnblock">Engeli kaldır</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Hiçbiri</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Çıkartmalar</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Eklentiler toplanıyor...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Kamera kullanılamıyor.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Tüm medya</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Engelle</string>
+    <!-- Slide -->
+    <string name="image">Görüntü</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Grup güncellendi</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session kilidi açık</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">Taslak</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Okundu işaretle</string>
+    <!-- Notification Channels -->
+    <string name="failures">Hatalar</string>
+    <string name="lockAppStatus">Kilit durumu</string>
+    <string name="updateApp">Uygulama güncellemeleri</string>
+    <string name="other">Diğer</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Kaydedildi</string>
+    <!-- SearchToolbar -->
+    <string name="search">Ara</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Geçersiz kısayol</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Gönder</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">İptal etmek için kaydırın</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">Katıl</string>
+    <string name="read">Okundu</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">İletinin aslı bulunamadı</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Gönderildi</string>
+    <string name="received">Alındı</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">Yalnızca isim</string>
+    <string name="audio">Ses</string>
+    <string name="video">Video</string>
+    <string name="max">En Yüksek</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Bağlantı ön izlemelerini gönder</string>
+    <string name="screenSecurity">Ekran güvenliği</string>
+    <string name="sessionNotifications">Bildirimler</string>
+    <string name="notificationsLedColor">LED rengi</string>
+    <string name="notificationsSound">Zil Sesi</string>
+    <string name="notificationsVibrate">Titreşim</string>
+    <string name="theDefault">Varsayılan</string>
+    <string name="incognitoKeyboard">Gizli klavye</string>
+    <string name="readReceipts">Okundu bilgisi</string>
+    <string name="typingIndicators">\'Yazıyor\' göstergeleri</string>
+    <string name="conversationsMessageTrimming">İleti kırpma</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">Kullanıcıyı engelle</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Sesi aç</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Bildirimleri sessize al</string>
+    <!-- conversation -->
+    <string name="groupLeave">Gruptan ayrıl</string>
+    <string name="conversationsAddToHome">Ana ekrana ekle</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Siliniyor</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">İzin gerekli</string>
+    <string name="notNow">Şimdi değil</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Devam Et</string>
+    <string name="copy">Kopyala</string>
+    <string name="communityEnterUrlErrorInvalid">Geçersiz URL</string>
+    <string name="copied">Panoya kopyalandı</string>
+    <string name="next">İleri</string>
+    <string name="share">Paylaş</string>
+    <string name="cancel">İptal</string>
+    <string name="displayNamePick">Görünen adınızı seçin</string>
+    <string name="recommended">Önerilenler</string>
+    <string name="conversationsDeleted">Konuşma silindi</string>
+    <string name="onionRoutingPath">Yol</string>
+    <string name="onionRoutingPathEntryNode">Giriş Düğüm</string>
+    <string name="onionRoutingPathServiceNode">Hizmet Düğüm</string>
+    <string name="onionRoutingPathDestination">Hedef Konum</string>
+    <string name="learnMore">Fazlasını Öğrenin</string>
+    <string name="resolving">Çözümleniyor…</string>
+    <string name="qrScan">QR Kodunu Tara</string>
+    <string name="cameraGrantAccessQr">Session’ın QR kodlarını taramak için kamera erişimine ihtiyacı var</string>
+    <string name="cameraGrantAccess">Kameraya erişim izni ver</string>
+    <string name="groupNameEnter">Yeni grup adı girin</string>
+    <string name="groupNameEnterPlease">Lütfen bir grup adı girin</string>
+    <string name="sessionSettings">Ayarlar</string>
+    <string name="sessionInviteAFriend">Bir arkadaş davet et</string>
+    <string name="helpFAQ">SSS</string>
+    <string name="sessionClearData">Verileri Temizle</string>
+    <string name="notificationsStyle">Bildirim Stili</string>
+    <string name="notificationsContent">Bildirim içeriği</string>
+    <string name="sessionPrivacy">Gizlilik</string>
+    <string name="notificationsStrategy">Bildirim Stili</string>
+    <string name="useFastMode">Hızlı Modu Kullan</string>
+    <string name="clearDataAll">Tüm Verileri Temizle</string>
+    <string name="qrCode">QR kod</string>
+    <!-- Next round of translation -->
+    <string name="done">Tamamlandı</string>
+    <string name="groupEdit">Grubu Düzenle</string>
+    <string name="contactSelect">Kişileri Seçin</string>
+    <string name="appearanceThemes">Tema</string>
+    <string name="attachment">Ek</string>
+    <string name="messageVoice">Sesli mesaj</string>
+    <string name="communityJoinOfficial">Veya bunlardan birine katılın…</string>
+    <string name="notificationsFastMode">Hızlı Mod</string>
+    <string name="notificationsSlowMode">Yavaş Mod</string>
+    <string name="notificationsFastModeDescription">Google\'ın bildirim sunucularını kullanarak yeni iletilerden güvenilir ve anında haberdar olacaksınız.</string>
+    <string name="notificationsSlowModeDescription">Session ara sıra arka planda yeni mesajları kontrol eder.</string>
+    <string name="open">Aç</string>
+    <string name="urlCopy">Bağlantıyı kopyala</string>
+    <string name="enable">Etkinleştir</string>
+    <string name="download">İndir</string>
+    <string name="media">Medya</string>
+    <string name="theError">Hata</string>
+    <string name="warning">Uyarı</string>
+    <string name="pin">Sabitle</string>
+    <string name="pinUnpin">Sabitlemeyi kaldır</string>
+</resources>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Button
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentDescription="@string/AccessibilityId_blocked_contacts"
     style="@style/Widget.Session.Button.Common.Borderless"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingHorizontal="@dimen/medium_spacing"
     android:layout_marginHorizontal="@dimen/large_spacing"
     android:layout_marginVertical="@dimen/medium_spacing"
-    android:text="@string/blocked_contacts_title"
+    android:text="@string/conversationsBlockedContacts"
+    android:contentDescription="@string/AccessibilityId_conversationsBlockedContacts"
     android:textColor="?danger"
     android:textSize="16sp"
     android:textStyle="bold"

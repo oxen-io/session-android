@@ -33,7 +33,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginLeft="@dimen/medium_spacing"
-                    android:contentDescription="@string/AccessibilityId_cancel_name_change"
+                    android:contentDescription="@string/AccessibilityId_groupNameChangeCancel"
                     android:src="@drawable/ic_baseline_clear_24"/>
 
                 <EditText
@@ -51,8 +51,8 @@
                     android:singleLine="true"
                     android:imeOptions="actionDone"
                     android:maxLength="@integer/max_group_and_community_name_length_chars"
-                    android:contentDescription="@string/AccessibilityId_group_name"
-                    android:hint="@string/activity_edit_closed_group_edit_text_hint" />
+                    android:contentDescription="@string/AccessibilityId_groupName"
+                    android:hint="@string/groupNameEnter" />
 
                 <ImageView
                     android:id="@+id/btnSaveGroupNameEdit"
@@ -60,7 +60,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="@dimen/medium_spacing"
-                    android:contentDescription="@string/AccessibilityId_accept_name_change"
+                    android:contentDescription="@string/AccessibilityId_groupNameNew"
                     android:src="@drawable/ic_baseline_done_24"/>
 
             </LinearLayout>
@@ -78,7 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:contentDescription="@string/AccessibilityId_group_name"
+                    android:contentDescription="@string/AccessibilityId_groupName"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="@dimen/very_large_font_size"
                     android:textStyle="bold"
@@ -104,6 +104,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/editGroupMemberCount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/medium_spacing"
@@ -111,7 +112,7 @@
                 android:layout_marginEnd="@dimen/small_spacing"
                 android:layout_marginBottom="@dimen/small_spacing"
                 android:layout_weight="1"
-                android:text="@string/activity_edit_closed_group_edit_members"
+                android:text="@string/groupMembers"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size" />
 
@@ -123,10 +124,10 @@
                 android:layout_marginVertical="@dimen/small_spacing"
                 android:layout_marginEnd="@dimen/medium_spacing"
                 android:layout_marginStart="@dimen/small_spacing"
-                android:contentDescription="@string/AccessibilityId_add_members"
+                android:contentDescription="@string/AccessibilityId_membersInvite"
                 android:paddingStart="@dimen/medium_spacing"
                 android:paddingEnd="@dimen/medium_spacing"
-                android:text="@string/activity_edit_closed_group_add_members" />
+                android:text="@string/membersInvite" />
 
         </LinearLayout>
 

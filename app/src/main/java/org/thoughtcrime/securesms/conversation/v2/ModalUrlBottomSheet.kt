@@ -15,9 +15,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentModalUrlBottomSheetBinding
-import org.thoughtcrime.securesms.util.UiModeUtilities
+import org.session.libsession.utilities.StringSubstitutionConstants.URL_KEY
+import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.ui.getSubbedString
 
 class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(), View.OnClickListener {
     private lateinit var binding: FragmentModalUrlBottomSheetBinding
@@ -29,7 +32,8 @@ class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val explanation = resources.getString(R.string.dialog_open_url_explanation, url)
+        if (context == null) { return Log.w("MUBS", "Context is null") }
+        val explanation = requireContext().getSubbedString(R.string.urlOpenDescription, URL_KEY to url)
         val spannable = SpannableStringBuilder(explanation)
         val startIndex = explanation.indexOf(url)
         spannable.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + url.count(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -44,7 +48,7 @@ class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(),
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             requireContext().startActivity(intent)
         } catch (e: Exception) {
-            Toast.makeText(context, R.string.invalid_url, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.communityEnterUrlErrorInvalid, Toast.LENGTH_SHORT).show()
         }
         dismiss()
     }
@@ -53,7 +57,7 @@ class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(),
         val clip = ClipData.newPlainText("URL", url)
         val manager = requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         manager.setPrimaryClip(clip)
-        Toast.makeText(requireContext(), R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), R.string.copied, Toast.LENGTH_SHORT).show()
         dismiss()
     }
 

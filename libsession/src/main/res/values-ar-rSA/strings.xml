@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Session</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="delete">حذف</string>
+    <string name="save">حفظ</string>
+    <string name="noteToSelf">ملاحظة لنفسي</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">رسالة جديدة</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">هذا الشهر</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">إضافة مرفقات</string>
+    <string name="message">رسالة</string>
+    <string name="notificationsMuted">كتم</string>
+    <string name="blockUnblock">إلغاء الحظر</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">لا شيء </string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">لصاقات</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">جارٍ جمع المرفقات...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">الكاميرا غير متوفرة.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">جميع الوسائط</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">حظر</string>
+    <!-- Slide -->
+    <string name="image">صورة</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">تم تحديث المحموعة</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session غير مقفول</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">مسودة:</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">اعتبرها مقروءة</string>
+    <!-- Notification Channels -->
+    <string name="failures">إخفاقات</string>
+    <string name="lockAppStatus">حالة القفل</string>
+    <string name="updateApp">تحديثات التطبيق</string>
+    <string name="other">أخرى</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">تم الحفظ</string>
+    <!-- SearchToolbar -->
+    <string name="search">بحث</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">إختصار غير صالح</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">أرسل</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">إسحب للإلغاء</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">إنضم</string>
+    <string name="read">قراءة</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">لم يتم العثور على الرسالة الأصلية</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">أرسلت</string>
+    <string name="received">استلمت</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">الاسم فقط</string>
+    <string name="audio">صوت</string>
+    <string name="video">فيديو</string>
+    <string name="max">الأقصى</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">إرسال معاينة الرابط</string>
+    <string name="screenSecurity">تأمين الشاشة</string>
+    <string name="sessionNotifications">الإشعارات</string>
+    <string name="notificationsLedColor">لون ضوء التنبيه LED</string>
+    <string name="notificationsSound">صوت</string>
+    <string name="notificationsVibrate">هزاز</string>
+    <string name="theDefault">افتراضي</string>
+    <string name="incognitoKeyboard">وضع التستّر للوحة المفاتيح</string>
+    <string name="readReceipts">قراءة تقارير الإستلام</string>
+    <string name="typingIndicators">مؤشرات الكتابة</string>
+    <string name="conversationsMessageTrimming">تقليم الرسالة</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">منع المستخدم</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">إلغاء الكتم.</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">كتم الإشعارات</string>
+    <!-- conversation -->
+    <string name="groupLeave">أترك المجموعة</string>
+    <string name="conversationsAddToHome">أضف الى الشاشة الرئيسية</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">جارٍ الحذف</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">منح إحدى الأذونات مطلوب</string>
+    <string name="notNow">ليس الآن</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">متابعة</string>
+    <string name="copy">اِنسخ</string>
+    <string name="communityEnterUrlErrorInvalid">عنوان تعريف خاطئ</string>
+    <string name="copied">تم النسخ الى الحافظة المؤقتة</string>
+    <string name="next">التالي</string>
+    <string name="share">شارك</string>
+    <string name="cancel">إلغاء</string>
+    <string name="displayNamePick">أختر اِسم الاِظهار</string>
+    <string name="recommended">محبذ</string>
+    <string name="conversationsDeleted">تم حذف المحادثة</string>
+    <string name="onionRoutingPath">مسار</string>
+    <string name="onionRoutingPathEntryNode">عقدة الدخول</string>
+    <string name="onionRoutingPathServiceNode">عقدة الخدمة</string>
+    <string name="onionRoutingPathDestination">الوجهة</string>
+    <string name="learnMore">لمعرفة المزيد</string>
+    <string name="resolving">جار ربط الاِتصال…</string>
+    <string name="qrScan">مسح رمز الاستجابة السريع\"QR\"</string>
+    <string name="cameraGrantAccessQr">تحتاج الجلسة إلى الوصول إلى الكاميرا لمسح رموز QR</string>
+    <string name="cameraGrantAccess">منح صلاحية الكاميرا</string>
+    <string name="groupNameEnter">أدخل إسم المجموعة</string>
+    <string name="groupNameEnterPlease">الرجاء إدخال إسم للمجموعة</string>
+    <string name="sessionSettings">الإعدادات</string>
+    <string name="sessionInviteAFriend">أُدع صديق</string>
+    <string name="helpFAQ">الأسئلة الأكثر طرحاً</string>
+    <string name="sessionClearData">مسح البيانات</string>
+    <string name="notificationsStyle">طريقة الإشعارات</string>
+    <string name="notificationsContent">محتوى الإشعارات</string>
+    <string name="sessionPrivacy">الخصوصية</string>
+    <string name="notificationsStrategy">طريقة الإشعارات</string>
+    <string name="useFastMode">استخدام الوضع السريع</string>
+    <string name="clearDataAll">اِمسح جميع البيانات</string>
+    <string name="qrCode">رمز QR</string>
+    <!-- Next round of translation -->
+    <string name="done">تم</string>
+    <string name="groupEdit">عَدِل المجموعة</string>
+    <string name="contactSelect">اِختر متصلين</string>
+    <string name="appearanceThemes">الشكل</string>
+    <string name="attachment">مُرفق</string>
+    <string name="messageVoice">رسالة صوتية</string>
+    <string name="communityJoinOfficial">أو انضم إلى واحدة من…</string>
+    <string name="notificationsFastMode">الوضع السريع</string>
+    <string name="notificationsSlowMode">الوضع البطيء</string>
+    <string name="notificationsFastModeDescription">سوف يتم إشعارك بالرسائل بشكل موثوق و فوري بإستخدام خوادم جوجل للإشعارات.</string>
+    <string name="notificationsSlowModeDescription">سيقوم سيشن بالتحقق من وجود رسائل جديدة بشكل دوري في الخلفية.</string>
+    <string name="open">اِفتح</string>
+    <string name="urlCopy">انسخ الرابط</string>
+    <string name="enable">تفعيل</string>
+    <string name="download">تنزيل</string>
+    <string name="media">وسائط</string>
+    <string name="theError">خطأ</string>
+    <string name="warning">تحذير</string>
+    <string name="pin">ًًًُُثَبت</string>
+    <string name="pinUnpin">الغ التثبيت</string>
+</resources>

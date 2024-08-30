@@ -23,6 +23,15 @@
         <item name="android:textSize">@dimen/very_large_font_size</item>
     </style>
 
+    <style name="TextAppearance.Session.Dialog.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/medium2_font_size</item>
+    </style>
+
+    <style name="TextAppearance.Session.Dialog.Message" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/small2_font_size</item>
+    </style>
+
     <style name="ThemeOverlay.Session.AlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/default_dialog_background</item>
         <item name="android:colorBackground">?backgroundSecondary</item>
@@ -101,16 +110,17 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/small_font_size</item>
         <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Widget.Session.Button.Dialog.UnimportantText">
         <item name="android:background">@drawable/unimportant_dialog_text_button_background</item>
+        <item name="android:textStyle">bold</item>
     </style>
     
     <style name="Widget.Session.Button.Dialog.DangerText">
         <item name="android:background">@drawable/danger_dialog_text_button_background</item>
         <item name="android:textColor">?danger</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Widget.Session.EditText.Compose" parent="@style/Signal.Text.Body">
@@ -124,7 +134,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:imeOptions">flagNoEnterAction</item>
         <item name="android:inputType">textAutoCorrect|textCapSentences|textMultiLine</item>
-        <item name="android:contentDescription">@string/conversation_activity__compose_description</item>
+        <item name="android:contentDescription">@string/AccessibilityId_messageNew</item>
         <item name="android:textSize">@dimen/small_font_size</item>
         <item name="android:textCursorDrawable">@drawable/session_edit_text_cursor</item>
         <item name="android:textAlignment">viewStart</item>

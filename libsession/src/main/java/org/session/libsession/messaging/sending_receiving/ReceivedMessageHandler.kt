@@ -807,7 +807,7 @@ private fun MessageReceiver.handleClosedGroupMembersRemoved(message: ClosedGroup
     }
 
     // Notify the user
-    val type = if (senderLeft) SignalServiceGroup.Type.QUIT else SignalServiceGroup.Type.MEMBER_REMOVED
+    val type = if (senderLeft) SignalServiceGroup.Type.MEMBER_LEFT else SignalServiceGroup.Type.MEMBER_REMOVED
     // We don't display zombie members in the notification as users have already been notified when those members left
     val notificationMembers = removedMembers.minus(zombies)
     if (notificationMembers.isNotEmpty()) {
@@ -871,7 +871,7 @@ private fun MessageReceiver.handleClosedGroupMemberLeft(message: ClosedGroupCont
 
     // Notify the user
     if (!userLeft) {
-        storage.insertIncomingInfoMessage(context, senderPublicKey, groupID, SignalServiceGroup.Type.QUIT, name, members, admins, message.sentTimestamp!!)
+        storage.insertIncomingInfoMessage(context, senderPublicKey, groupID, SignalServiceGroup.Type.MEMBER_LEFT, name, listOf(senderPublicKey), admins, message.sentTimestamp!!)
     }
 }
 

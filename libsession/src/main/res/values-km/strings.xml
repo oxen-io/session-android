@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name"> Session</string>
+    <string name="yes">មែន</string>
+    <string name="no">ទេ</string>
+    <string name="delete">លុប</string>
+    <string name="save">រក្សាទុក</string>
+    <string name="noteToSelf">កំណត់ចំណាំខ្លួនឯង</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">សារថ្មី</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">ខែនេះ</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">ភ្ជាប់ឯកសារ</string>
+    <string name="blockUnblock">បើកវិញ</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">គ្មាន</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">ស្ទីកគ័រ</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">កំពុងប្រមូលឯកសារភ្ជាប់...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">កាមេរ៉ាមិនដំណើរការ</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">ព័ត៌មានទាំងអស់</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">ហាមឃាត់</string>
+    <!-- Slide -->
+    <string name="image">រូបភាព</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">បានធ្វើបច្ចុប្បន្នភាពក្រុម</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked"> Session បានដោះសោ</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">ព្រាង</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">សម្គាល់ថាបានអាន</string>
+    <!-- Notification Channels -->
+    <string name="failures">បរាជ័យ</string>
+    <string name="lockAppStatus">ស្ថានភាពចាក់សោរ</string>
+    <string name="updateApp">បច្ចុប្បន្នភាពកម្មវិធី</string>
+    <string name="other">ផ្សេងៗ</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">បានរក្សាទុក</string>
+    <!-- SearchToolbar -->
+    <string name="search">ស្វែងរក</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">រូបតំណាងផ្លូវកាត់មិនត្រឹមត្រូវ</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">ផ្ញើ</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">អូសដើម្បីបោះបង់</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">រកមិនឃើញសារដើម</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">បានផ្ញើ</string>
+    <string name="received">បានទទួល</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">ឈ្មោះតែប៉ុណ្ណោះ</string>
+    <string name="audio">សំឡេង</string>
+    <string name="video">វីដេអូ</string>
+    <string name="max">អតិបរិមា</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">ការមើល ការផ្ញើតំណភ្ជាប់</string>
+    <string name="screenSecurity">អេក្រង់សុវត្ថិភាព</string>
+    <string name="sessionNotifications">សារជូនដំណឹង</string>
+    <string name="notificationsLedColor">ពណ៌​LED</string>
+    <string name="notificationsSound">សំឡេង</string>
+    <string name="notificationsVibrate">ញ័រ</string>
+    <string name="theDefault">លំនាំដើម</string>
+    <string name="incognitoKeyboard">ក្តារចុចអនាមឹក</string>
+    <string name="readReceipts">ទទួលបានការអាន</string>
+    <string name="typingIndicators">វាស់ការវាយអក្សរ</string>
+    <string name="conversationsMessageTrimming">តម្រឹមសារ</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">បើកសំឡេង</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">បិទសំឡេងសារជូនដំណឹង</string>
+    <!-- conversation -->
+    <string name="groupLeave">ចាកចេញពីក្រុម</string>
+    <string name="conversationsAddToHome">បន្ថែមទៅអេក្រង់ដើម</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">កំពុងលុប</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">ទាមទារការអនុញ្ញាត</string>
+    <string name="notNow">ពេលក្រោយ</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <!-- Next round of translation -->
+</resources>

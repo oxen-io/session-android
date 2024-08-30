@@ -27,6 +27,13 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Date
+import java.util.Locale
+import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewEmojiReactionsBinding
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
@@ -58,13 +65,6 @@ import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.toDp
 import org.thoughtcrime.securesms.util.toPx
-import java.util.Date
-import java.util.Locale
-import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.min
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
 
 private const val TAG = "VisibleMessageView"
 
@@ -269,8 +269,7 @@ class VisibleMessageView : FrameLayout {
     // Method to display or hide the status of a message.
     // Note: Although most commonly used to display the delivery status of a message, we also use the
     // message status area to display the disappearing messages state - so in this latter case we'll
-    // be displaying the "Sent" and the animating clock icon for outgoing messages or "Read" and the
-    // animated clock icon for incoming messages.
+    // be displaying either "Sent" or "Read" and the animating clock icon.
     private fun showStatusMessage(message: MessageRecord) {
         // We'll start by hiding everything and then only make visible what we need
         binding.messageStatusTextView.isVisible  = false
@@ -384,37 +383,47 @@ class VisibleMessageView : FrameLayout {
         message.isFailed ->
             MessageStatusInfo(R.drawable.ic_delivery_status_failed,
                 getThemedColor(context, R.attr.danger),
-                R.string.delivery_status_failed
+                R.string.messageStatusFailedToSend
             )
         message.isSyncFailed ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_failed,
                 context.getColor(R.color.accent_orange),
-                R.string.delivery_status_sync_failed
+                R.string.messageStatusFailedToSync
             )
         message.isPending ->
-            MessageStatusInfo(
-                R.drawable.ic_delivery_status_sending,
-                context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sending
-            )
+            // Non-mms messages display 'Sending'..
+            if (!message.isMms) {
+                MessageStatusInfo(
+                    R.drawable.ic_delivery_status_sending,
+                    context.getColorFromAttr(R.attr.message_status_color),
+                    R.string.sending
+                )
+            } else {
+                // ..and Mms messages display 'Uploading'.
+                MessageStatusInfo(
+                    R.drawable.ic_delivery_status_sending,
+                    context.getColorFromAttr(R.attr.message_status_color),
+                    R.string.messageStatusUploading
+                )
+            }
         message.isSyncing || message.isResyncing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sending // We COULD tell the user that we're `syncing` (R.string.delivery_status_syncing) but it will likely make more sense to them if we say "Sending"
+                R.string.messageStatusSyncing
             )
         message.isRead || message.isIncoming ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_read,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_read
+                R.string.read
             )
         message.isSent ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sent,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sent
+                R.string.disappearingMessagesSent
             )
         else -> {
             // The message isn't one we care about for message statuses we display to the user (i.e.,

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sessie</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+    <string name="delete">Wissen</string>
+    <string name="save">Opslaan</string>
+    <string name="noteToSelf">Notitie aan mezelf</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Nieuw bericht</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Deze maand</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Bijlage toevoegen</string>
+    <string name="message">Bericht</string>
+    <string name="notificationsMuted">Dempen</string>
+    <string name="blockUnblock">Deblokkeren</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Geen</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Stickers</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Bijlagen aan het verzamelen…</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Camera niet beschikbaar.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Alle media</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Blokkeren</string>
+    <!-- Slide -->
+    <string name="image">Afbeelding</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Groep aangepast</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session is ontgrendeld</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">Concept</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Markeren als gelezen</string>
+    <!-- Notification Channels -->
+    <string name="failures">Mislukkingen</string>
+    <string name="lockAppStatus">Vergrendelingstoestand</string>
+    <string name="updateApp">Nieuwe versies van de app </string>
+    <string name="other">Anders</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Opgeslagen</string>
+    <!-- SearchToolbar -->
+    <string name="search">Zoeken</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Ongeldige snelkoppeling</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Verzenden</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Veeg om te annuleren</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">Aansluiten</string>
+    <string name="read">Gelezen</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Oorspronkelijk bericht niet gevonden</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Verzonden</string>
+    <string name="received">Ontvangen</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">Alleen naam</string>
+    <string name="audio">Geluid</string>
+    <string name="video">Video</string>
+    <string name="max">Maximaal</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Voorbeeldweergaven verzenden</string>
+    <string name="screenSecurity">Schermafdrukken blokkeren</string>
+    <string name="sessionNotifications">Meldingen</string>
+    <string name="notificationsLedColor">Notificatie-LED-kleur</string>
+    <string name="notificationsSound">Geluid</string>
+    <string name="notificationsVibrate">Trillen</string>
+    <string name="theDefault">Systeem-standaard</string>
+    <string name="incognitoKeyboard">Incognito toetsenbord</string>
+    <string name="readReceipts">Leesbevestigingen</string>
+    <string name="typingIndicators">Typindicatoren</string>
+    <string name="conversationsMessageTrimming">Beperk bewaartermijn</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">Verban gebruiker</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Niet langer dempen</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Demp meldingen</string>
+    <!-- conversation -->
+    <string name="groupLeave">Groep verlaten</string>
+    <string name="conversationsAddToHome">Aan thuisscherm toevoegen</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Aan het verwijderen</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Toestemming vereist</string>
+    <string name="notNow">Niet nu</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Doorgaan</string>
+    <string name="copy">Kopiëren</string>
+    <string name="communityEnterUrlErrorInvalid">Ongeldige URL</string>
+    <string name="copied">Gekopieerd naar klembord</string>
+    <string name="next">Volgende</string>
+    <string name="share">Delen</string>
+    <string name="cancel">Annuleren</string>
+    <string name="displayNamePick">Kies je weergavenaam</string>
+    <string name="recommended">Aanbevolen</string>
+    <string name="conversationsDeleted">Gesprek verwijderd</string>
+    <string name="onionRoutingPath">Locatie</string>
+    <string name="onionRoutingPathEntryNode">Invoer node</string>
+    <string name="onionRoutingPathServiceNode">Service node</string>
+    <string name="onionRoutingPathDestination">Bestemming</string>
+    <string name="learnMore">Kom meer te weten</string>
+    <string name="resolving">Bezig met verwerken...</string>
+    <string name="qrScan">Scan QR-code</string>
+    <string name="cameraGrantAccessQr">Sessie heeft cameratoegang nodig om QR-codes te scannen</string>
+    <string name="cameraGrantAccess">Toegang tot camera verlenen</string>
+    <string name="groupNameEnter">Vul een groepsnaam in</string>
+    <string name="groupNameEnterPlease">Vul een groepsnaam in</string>
+    <string name="sessionSettings">Instellingen</string>
+    <string name="sessionInviteAFriend">Nodig een vriend uit</string>
+    <string name="helpFAQ">Veelgestelde vragen (FAQ)</string>
+    <string name="sessionClearData">Gegevens wissen</string>
+    <string name="notificationsStyle">Notificatie stijl</string>
+    <string name="notificationsContent">Notificatie inhoud</string>
+    <string name="sessionPrivacy">Privacy</string>
+    <string name="notificationsStrategy">Notificatie strategie</string>
+    <string name="useFastMode">Gebruik snelle modus</string>
+    <string name="clearDataAll">Wis alle gegevens</string>
+    <string name="qrCode">QR-code</string>
+    <!-- Next round of translation -->
+    <string name="done">Klaar</string>
+    <string name="groupEdit">Groep bewerken</string>
+    <string name="contactSelect">Contacten selecteren</string>
+    <string name="appearanceThemes">Thema</string>
+    <string name="attachment">Bijlage</string>
+    <string name="messageVoice">Spraakbericht</string>
+    <string name="communityJoinOfficial">Of neem deel aan een van deze...</string>
+    <string name="notificationsFastMode">Snelle modus</string>
+    <string name="notificationsSlowMode">Langzame modus</string>
+    <string name="notificationsFastModeDescription">U wordt op een betrouwbare en directe manier op de hoogte gebracht van nieuwe berichten via Googles notificatieservers.</string>
+    <string name="notificationsSlowModeDescription">Sessie controleert af en toe op nieuwe berichten op de achtergrond.</string>
+    <string name="open">Open</string>
+    <string name="urlCopy">Kopieer URL</string>
+    <string name="enable">Inschakelen</string>
+    <string name="download">Download</string>
+    <string name="media">Media</string>
+    <string name="theError">Error</string>
+    <string name="warning">Waarschuwing</string>
+    <string name="pin">Vastzetten</string>
+    <string name="pinUnpin">Losmaken</string>
+</resources>

@@ -11,9 +11,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_clear_all_data_title"
+        android:text="@string/clearDataAll"
         android:textColor="?android:textColorPrimary"
-        android:textStyle="bold"
+        style="@style/TextAppearance.Session.Dialog.Title"
         android:textSize="@dimen/medium_font_size" />
 
     <TextView
@@ -22,17 +22,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="@dimen/large_spacing"
-        android:text="@string/dialog_clear_all_data_message"
+        android:layout_marginTop="@dimen/small_spacing"
+        android:text="@string/clearDataAllDescription"
         android:textAlignment="center"
         android:textColor="?android:textColorPrimary"
-        android:textSize="@dimen/small_font_size" />
+        style="@style/TextAppearance.Session.Dialog.Message" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/small_spacing"
+        android:layout_marginTop="@dimen/small_spacing"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="2"
         tools:listitem="@layout/item_selectable"/>
@@ -40,7 +40,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/large_spacing"
         android:orientation="horizontal">
 
         <Button
@@ -49,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/dialog_button_height"
             android:layout_weight="1"
-            android:text="@string/dialog_clear_all_data_clear" />
+            android:text="@string/clear" />
 
         <Button
             style="@style/Widget.Session.Button.Dialog.UnimportantText"

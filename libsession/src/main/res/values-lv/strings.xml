@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Session</string>
+    <string name="yes">Jā</string>
+    <string name="no">Nē</string>
+    <string name="delete">Dzēst</string>
+    <string name="save">Saglabāt</string>
+    <string name="noteToSelf">Piezīme sev</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Jauns ziņojums</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Šomēnes</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Pievienot pielikumu</string>
+    <string name="message">Paziņojums</string>
+    <string name="blockUnblock">Atbloķēt</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Neviens</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Uzlīmes</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Visa multivide</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Bloķēt</string>
+    <!-- Slide -->
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <!-- MediaPreviewActivity -->
+    <!-- MessageNotifier -->
+    <!-- Notification Channels -->
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <!-- SearchToolbar -->
+    <!-- ShortcutLauncherActivity -->
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- TransferControlView -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <!-- conversation_input_panel -->
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <!-- QuoteView -->
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <!-- plurals.xml -->
+    <!-- preferences.xml -->
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <!-- conversation_unmuted -->
+    <!-- conversation -->
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <!-- transport_selection_list_item -->
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="sessionSettings">Iestatījumi</string>
+    <string name="sessionInviteAFriend">Uzaicināt draugu</string>
+    <string name="helpFAQ">Biežāk uzdotie jautājumi</string>
+    <string name="sessionClearData">Izdzēst datus</string>
+    <string name="notificationsStyle">Paziņojuma izskats</string>
+    <string name="notificationsContent">Paziņojuma saturs</string>
+    <string name="clearDataAll">Izdzēst visus datus</string>
+    <string name="qrCode">QR kods</string>
+    <!-- Next round of translation -->
+    <string name="done">Pabeigts</string>
+    <string name="groupEdit">Rediģēt grupu</string>
+    <string name="contactSelect">Izvēlieties kontaktus</string>
+    <string name="appearanceThemes">Izskats</string>
+    <string name="attachment">Pielikums</string>
+    <string name="messageVoice">Balss ziņojums</string>
+    <string name="notificationsFastMode">Ātrais režīms</string>
+    <string name="notificationsSlowMode">Lēnais režīms</string>
+    <string name="notificationsFastModeDescription">Jūs saņemsiet paziņojumus par jauniem ziņojumiem droši un nekavējoties, izmantojot Google paziņojumu serverus.</string>
+    <string name="notificationsSlowModeDescription">Session laiku pa laikam fonā pārbaudīs, vai nav jaunu ziņojumu.</string>
+    <string name="open">Atvērt</string>
+    <string name="urlCopy">Nokopēt URL</string>
+    <string name="enable">Ieslēgt</string>
+    <string name="download">Lejupielādēt</string>
+    <string name="media">Multivide</string>
+    <string name="theError">Kļūda</string>
+    <string name="warning">Brīdinājums</string>
+    <string name="pin">Piespraust</string>
+    <string name="pinUnpin">Atspraust</string>
+</resources>

@@ -4,56 +4,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="@string/conversation_context__menu_reply_to_message"
+        android:title="@string/reply"
         android:id="@+id/menu_context_reply"
         android:icon="?menu_reply_icon"
         app:showAsAction="always" />
 
     <item
-        android:title="@string/conversation_context_image__save_attachment"
+        android:title="@string/save"
         android:id="@+id/menu_context_save_attachment"
         android:icon="?menu_save_icon"
         app:showAsAction="always" />
 
     <item
-        android:title="@string/conversation_context__menu_delete_message"
+        android:title="@plurals/deleteMessage"
         android:id="@+id/menu_context_delete_message"
         android:icon="?menu_trash_icon"
         app:showAsAction="always" />
 
     <item
-        android:title="@string/conversation_context__menu_message_details"
+        android:title="@string/info"
         android:id="@+id/menu_message_details"
         app:showAsAction="never" />
 
     <item
-        android:title="@string/conversation_context__menu_copy_text"
+        android:title="@string/copy"
         android:id="@+id/menu_context_copy"
         android:icon="?menu_copy_icon"
         app:showAsAction="always" />
 
     <item
-        android:title="@string/conversation_context__menu_resync_message"
+        android:title="@string/resync"
         android:id="@+id/menu_context_resync"
         app:showAsAction="never" />
 
     <item
-        android:title="@string/conversation_context__menu_resend_message"
+        android:title="@string/resend"
         android:id="@+id/menu_context_resend"
         app:showAsAction="never" />
 
     <item
-        android:title="@string/conversation_context__menu_ban_user"
+        android:title="@string/banUser"
         android:id="@+id/menu_context_ban_user"
         app:showAsAction="never" />
 
     <item
-        android:title="@string/conversation_context__menu_ban_and_delete_all"
+        android:title="@string/banDeleteAll"
         android:id="@+id/menu_context_ban_and_delete_all"
         app:showAsAction="never" />
 
     <item
-        android:title="@string/activity_conversation_menu_copy_account_id"
+        android:title="@string/accountIDCopy"
         android:id="@+id/menu_context_copy_public_key"
         app:showAsAction="never" />
 

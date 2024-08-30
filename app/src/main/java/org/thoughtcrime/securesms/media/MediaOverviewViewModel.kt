@@ -234,11 +234,7 @@ class MediaOverviewViewModel(
         viewModelScope.launch {
             val selectedMedia = selectedMedia.toList()
 
-            mutableShowingActionProgress.value = application.resources.getQuantityString(
-                R.plurals.ConversationFragment_saving_n_attachments,
-                selectedMedia.size,
-                selectedMedia.size,
-            )
+            mutableShowingActionProgress.value = application.resources.getString(R.string.saving)
 
             val attachments = selectedMedia
                 .asSequence()
@@ -308,7 +304,7 @@ class MediaOverviewViewModel(
         }
 
         viewModelScope.launch {
-            mutableShowingActionProgress.value = application.getString(R.string.MediaOverviewActivity_Media_delete_progress_message)
+            mutableShowingActionProgress.value = application.getString(R.string.deleting)
 
             // Delete the selected media items, and retrieve the thread ID for the address if any
             val threadId = withContext(Dispatchers.Default) {

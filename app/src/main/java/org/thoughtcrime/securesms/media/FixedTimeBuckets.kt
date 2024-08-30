@@ -35,10 +35,10 @@ class FixedTimeBuckets(
     @StringRes
     fun getBucketText(time: ZonedDateTime): Int? {
         return when {
-            time >= startOfToday -> R.string.BucketedThreadMedia_Today
+            time >= startOfToday     -> R.string.BucketedThreadMedia_Today
             time >= startOfYesterday -> R.string.BucketedThreadMedia_Yesterday
-            time >= startOfThisWeek -> R.string.BucketedThreadMedia_This_week
-            time >= startOfThisMonth -> R.string.BucketedThreadMedia_This_month
+            time >= startOfThisWeek  -> R.string.attachmentsThisWeek
+            time >= startOfThisMonth -> R.string.attachmentsThisMonth
             else -> null
         }
     }

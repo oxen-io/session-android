@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sesiune</string>
+    <string name="yes">Da</string>
+    <string name="no">Nu</string>
+    <string name="delete">Ștergeți</string>
+    <string name="save">Salvează</string>
+    <string name="noteToSelf">Notă personală</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Mesaj nou</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Luna asta</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Adăugați atașament</string>
+    <string name="message">Mesaj</string>
+    <string name="notificationsMuted">Ignoră</string>
+    <string name="blockUnblock">Deblochează</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Niciuna</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Autocolante</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Se colectează atașamentele...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Cameră indisponibilă.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Toate fișierele media</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Blochează</string>
+    <!-- Slide -->
+    <string name="image">Imagine</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Grupul a fost actualizat</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session este deblocat</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">Ciornă</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Marchează ca citit</string>
+    <!-- Notification Channels -->
+    <string name="failures">Erori</string>
+    <string name="lockAppStatus">Stare blocare</string>
+    <string name="updateApp">Actualizări aplicație</string>
+    <string name="other">Altul</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Salvat</string>
+    <!-- SearchToolbar -->
+    <string name="search">Căutați</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Scurtătură invalidă</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Trimite</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Glisați pentru a anula</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">Alătură-te</string>
+    <string name="read">Citește</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Mesajul original nu a fost găsit</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Trimis</string>
+    <string name="received">Primit</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">Doar numele</string>
+    <string name="audio">Audio</string>
+    <string name="video">Video</string>
+    <string name="max">Maximă</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Trimite previzualizarea link-urilor</string>
+    <string name="screenSecurity">Securitate ecran</string>
+    <string name="sessionNotifications">Notificări</string>
+    <string name="notificationsLedColor">Culoare LED</string>
+    <string name="notificationsSound">Sunet</string>
+    <string name="notificationsVibrate">Vibrează</string>
+    <string name="theDefault">Implicit</string>
+    <string name="incognitoKeyboard">Tastatură incognito</string>
+    <string name="readReceipts">Confirmări de citire</string>
+    <string name="typingIndicators">Indicatori tastare</string>
+    <string name="conversationsMessageTrimming">Scurtarea mesajelor</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">Blochează utilizator</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Activare sunet notificări</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Notificări fără sunet</string>
+    <!-- conversation -->
+    <string name="groupLeave">Părăseşte grupul</string>
+    <string name="conversationsAddToHome">Adaugă pe ecranul principal</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Se șterge</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">E nevoie de permisiune</string>
+    <string name="notNow">Nu acum</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Continuă</string>
+    <string name="copy">Copiază</string>
+    <string name="communityEnterUrlErrorInvalid">URL invalid</string>
+    <string name="copied">Copiat în clipboard</string>
+    <string name="next">Următorul</string>
+    <string name="share">Distribuie</string>
+    <string name="cancel">Anulare</string>
+    <string name="displayNamePick">Alegeți numele afișat</string>
+    <string name="onionRoutingPathEntryNode">Nod de intrare</string>
+    <string name="onionRoutingPathServiceNode">Nod servicii</string>
+    <string name="onionRoutingPathDestination">Destinație</string>
+    <string name="learnMore">Aflați mai multe</string>
+    <string name="resolving">Se rezolvă…</string>
+    <string name="qrScan">Scanați codul QR</string>
+    <!-- Next round of translation -->
+</resources>

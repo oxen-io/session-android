@@ -40,6 +40,8 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
         val edKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
         val blindedPublicKey = openGroup?.publicKey?.let { SodiumUtilities.blindedKeyPair(it, edKeyPair)?.publicKey?.asBytes }
             ?.let { AccountId(IdPrefix.BLINDED, it) }?.hexString
+
+        // Embedded function
         fun userCanDeleteSelectedItems(): Boolean {
             val allSentByCurrentUser = selectedItems.all { it.isOutgoing }
             val allReceivedByCurrentUser = selectedItems.all { !it.isOutgoing }
@@ -47,6 +49,8 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
             if (allSentByCurrentUser) { return true }
             return OpenGroupManager.isUserModerator(context, openGroup.groupId, userPublicKey, blindedPublicKey)
         }
+
+        // Embedded function
         fun userCanBanSelectedUsers(): Boolean {
             if (openGroup == null) { return false }
             val anySentByCurrentUser = selectedItems.any { it.isOutgoing }
@@ -55,6 +59,9 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
             if (selectedUsers.size > 1) { return false }
             return OpenGroupManager.isUserModerator(context, openGroup.groupId, userPublicKey, blindedPublicKey)
         }
+
+
+
         // Delete message
         menu.findItem(R.id.menu_context_delete_message).isVisible = userCanDeleteSelectedItems()
         // Ban user

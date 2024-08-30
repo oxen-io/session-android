@@ -8,10 +8,9 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.PowerManager;
 import android.util.Pair;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
@@ -23,7 +22,8 @@ import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.ExoPlayer;
-
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.Util;
@@ -31,9 +31,6 @@ import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.guava.Optional;
 import org.thoughtcrime.securesms.attachments.AttachmentServer;
 import org.thoughtcrime.securesms.mms.AudioSlide;
-
-import java.io.IOException;
-import java.lang.ref.WeakReference;
 
 public class AudioSlidePlayer implements SensorEventListener {
 
@@ -170,7 +167,6 @@ public class AudioSlidePlayer implements SensorEventListener {
         }
       }
 
-
       @Override
       public void onPlayerError(PlaybackException error) {
         Log.w(TAG, "MediaPlayer Error: " + error);
@@ -209,9 +205,7 @@ public class AudioSlidePlayer implements SensorEventListener {
       this.mediaPlayer.release();
     }
 
-    if (this.audioAttachmentServer != null) {
-      this.audioAttachmentServer.stop();
-    }
+    if (this.audioAttachmentServer != null) { this.audioAttachmentServer.stop(); }
 
     sensorManager.unregisterListener(AudioSlidePlayer.this);
 
@@ -220,9 +214,7 @@ public class AudioSlidePlayer implements SensorEventListener {
   }
 
   public synchronized static void stopAll() {
-    if (playing.isPresent()) {
-      playing.get().stop();
-    }
+    if (playing.isPresent()) { playing.get().stop(); }
   }
 
   public synchronized boolean isReady() {
@@ -364,9 +356,8 @@ public class AudioSlidePlayer implements SensorEventListener {
   }
 
   @Override
-  public void onAccuracyChanged(Sensor sensor, int accuracy) {
+  public void onAccuracyChanged(Sensor sensor, int accuracy) { /* Do nothing */ }
 
-  }
 
   public interface Listener {
     void onPlayerStart(@NonNull AudioSlidePlayer player);

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Session</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="delete">削除</string>
+    <string name="save">保存</string>
+    <string name="noteToSelf">自分用メモ</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">新着メッセージ</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">今月</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">添付ファイルを付ける</string>
+    <string name="message">メッセージ</string>
+    <string name="notificationsMuted">ミュート中</string>
+    <string name="blockUnblock">ブロック解除</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">なし</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">ステッカー</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">添付ファイルを集めています...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">カメラは利用できません。</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">すべてのメディア</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">ブロック</string>
+    <!-- Slide -->
+    <string name="image">画像</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">グループが更新されました</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Sessionのロック解除</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">下書き</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">既読にする</string>
+    <!-- Notification Channels -->
+    <string name="failures">障害</string>
+    <string name="lockAppStatus">ロック状態</string>
+    <string name="updateApp">アプリ更新</string>
+    <string name="other">その他</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">保存済み</string>
+    <!-- SearchToolbar -->
+    <string name="search">検索</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">不正なショートカット</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">送信</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">スライドしてキャンセル</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">参加する</string>
+    <string name="read">読む</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">元のメッセージが見つかりません</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">送信</string>
+    <string name="received">受信</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">名前のみ</string>
+    <string name="audio">音声</string>
+    <string name="video">動画</string>
+    <string name="max">最大</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">リンクプレビューを送る</string>
+    <string name="screenSecurity">画面セキュリティ</string>
+    <string name="sessionNotifications">通知</string>
+    <string name="notificationsLedColor">LED色</string>
+    <string name="notificationsSound">着信音</string>
+    <string name="notificationsVibrate">振動</string>
+    <string name="theDefault">初期設定の言語</string>
+    <string name="incognitoKeyboard">プライバシーキーボード</string>
+    <string name="readReceipts">既読通知</string>
+    <string name="typingIndicators">入力中アイコン</string>
+    <string name="conversationsMessageTrimming">メッセージの削減</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">ユーザーをバンする</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">ミュートを解除</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">通知をミュート</string>
+    <!-- conversation -->
+    <string name="groupLeave">グループを抜ける</string>
+    <string name="conversationsAddToHome">ホーム画面に追加する</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">削除中</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">アクセス許可が必要です</string>
+    <string name="notNow">後にする</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">続行する</string>
+    <string name="copy">コピーする</string>
+    <string name="communityEnterUrlErrorInvalid">URL が無効です</string>
+    <string name="copied">クリップボードにコピーされました</string>
+    <string name="next">次</string>
+    <string name="share">共有する</string>
+    <string name="cancel">取り消す</string>
+    <string name="displayNamePick">表示名を選択してください</string>
+    <string name="recommended">オススメ</string>
+    <string name="conversationsDeleted">会話を削除しました</string>
+    <string name="onionRoutingPath">パス</string>
+    <string name="onionRoutingPathEntryNode">エントリーノード</string>
+    <string name="onionRoutingPathServiceNode">サービスノード</string>
+    <string name="onionRoutingPathDestination">目的先</string>
+    <string name="learnMore">詳細</string>
+    <string name="resolving">解決中...</string>
+    <string name="qrScan">QR コードをスキャンする</string>
+    <string name="cameraGrantAccessQr">Session で QR コードをスキャンするにはカメラへのアクセスが必要です</string>
+    <string name="cameraGrantAccess">カメラへのアクセスを許可する</string>
+    <string name="groupNameEnter">グループ名を入力してください</string>
+    <string name="groupNameEnterPlease">グループ名を入力してください</string>
+    <string name="sessionSettings">設定</string>
+    <string name="sessionInviteAFriend">友達を招待</string>
+    <string name="helpFAQ">よくある質問</string>
+    <string name="sessionClearData">データを消去する</string>
+    <string name="notificationsStyle">通知スタイル</string>
+    <string name="notificationsContent">通知内容</string>
+    <string name="sessionPrivacy">プライバシー</string>
+    <string name="notificationsStrategy">通知戦略</string>
+    <string name="useFastMode">高速モードを使用する</string>
+    <string name="clearDataAll">すべてのデータを消去する</string>
+    <string name="qrCode">QR コード</string>
+    <!-- Next round of translation -->
+    <string name="done">完了</string>
+    <string name="groupEdit">グループを編集</string>
+    <string name="contactSelect">連絡先を選択</string>
+    <string name="appearanceThemes">テーマ</string>
+    <string name="attachment">添付ファイル</string>
+    <string name="messageVoice">音声メッセージ</string>
+    <string name="open">開く</string>
+    <string name="enable">有効にする</string>
+</resources>

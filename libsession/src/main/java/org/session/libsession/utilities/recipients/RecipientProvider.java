@@ -146,7 +146,7 @@ class RecipientProvider {
       return new RecipientDetails(title, avatarId, false, false, settings.orNull(), members);
     }
 
-    return new RecipientDetails(context.getString(R.string.RecipientProvider_unnamed_group), null, false, false, settings.orNull(), null);
+    return new RecipientDetails(context.getString(R.string.groupUnknown), null, false, false, settings.orNull(), null);
   }
 
   static class RecipientDetails {

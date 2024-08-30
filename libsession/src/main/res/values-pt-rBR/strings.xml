@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Session</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="delete">Excluir</string>
+    <string name="save">Salvar</string>
+    <string name="noteToSelf">Nota para Si</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Nova mensagem</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Este mês</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Adicionar anexo</string>
+    <string name="message">Mensagem</string>
+    <string name="notificationsMuted">Silenciado</string>
+    <string name="blockUnblock">Desbloquear</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Nenhum</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Figurinhas</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Coletando anexos...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Câmera indisponível.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Todas as mídias</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Bloquear</string>
+    <!-- Slide -->
+    <string name="image">Imagem</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Grupo atualizado</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session está destrancado</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">Rascunho</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Marcar como lida</string>
+    <!-- Notification Channels -->
+    <string name="failures">Falhas</string>
+    <string name="lockAppStatus">Status de tranca</string>
+    <string name="updateApp">Atualizações de app</string>
+    <string name="other">Outro</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Salvo</string>
+    <!-- SearchToolbar -->
+    <string name="search">Procurar</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Atalho inválido</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Enviar</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Deslizar para cancelar</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">Juntar-se</string>
+    <string name="read">Ler</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Mensagem original não encontrada</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Enviada</string>
+    <string name="received">Recebida</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">Nome somente</string>
+    <string name="audio">Áudio</string>
+    <string name="video">Vídeo</string>
+    <string name="max">Max</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Enviar previews de link</string>
+    <string name="screenSecurity">Segurança de tela</string>
+    <string name="sessionNotifications">Notificações</string>
+    <string name="notificationsLedColor">Cor do LED</string>
+    <string name="notificationsSound">Som</string>
+    <string name="notificationsVibrate">Vibrar</string>
+    <string name="theDefault">Default</string>
+    <string name="incognitoKeyboard">Teclado incógnito</string>
+    <string name="readReceipts">Recibos de leitura</string>
+    <string name="typingIndicators">Indicadores de digitação</string>
+    <string name="conversationsMessageTrimming">Aparamento de Mensagem</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">Banir usuário</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Desmutar</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Mutar notificações</string>
+    <!-- conversation -->
+    <string name="groupLeave">Sair de grupo</string>
+    <string name="conversationsAddToHome">Adicionar a tela inicial</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Deletando</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Permissão requerida</string>
+    <string name="notNow">Agora não</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Continuar</string>
+    <string name="copy">Copiar</string>
+    <string name="communityEnterUrlErrorInvalid">URL inválido</string>
+    <string name="copied">Copiado para clipboard</string>
+    <string name="next">Próximo</string>
+    <string name="share">Compartilhar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="displayNamePick">Escolha seu nome de display</string>
+    <string name="recommended">Recomendado</string>
+    <string name="conversationsDeleted">Conversa excluída</string>
+    <string name="onionRoutingPath">Caminho</string>
+    <string name="onionRoutingPathEntryNode">Nó de Entrada</string>
+    <string name="onionRoutingPathServiceNode">Nó de Serviço</string>
+    <string name="onionRoutingPathDestination">Destino</string>
+    <string name="learnMore">Saber mais</string>
+    <string name="resolving">Resolvendo…</string>
+    <string name="qrScan">Escanear código QR</string>
+    <string name="cameraGrantAccessQr">O Session precisa de acesso à câmera para escanear códigos QR</string>
+    <string name="cameraGrantAccess">Conceder acesso à câmera</string>
+    <string name="groupNameEnter">Digite o nome do grupo</string>
+    <string name="groupNameEnterPlease">Digite um nome de grupo</string>
+    <string name="sessionSettings">Configurações</string>
+    <string name="sessionInviteAFriend">Convide um amigo</string>
+    <string name="helpFAQ">Perguntas Frequentes</string>
+    <string name="sessionClearData">Limpar Dados</string>
+    <string name="notificationsStyle">Estilo de Notificação</string>
+    <string name="notificationsContent">Conteúdo de Notificação</string>
+    <string name="sessionPrivacy">Privacidade</string>
+    <string name="notificationsStrategy">Estratégia de Notificação</string>
+    <string name="useFastMode">Usar Modo Rápido</string>
+    <string name="clearDataAll">Limpar Todos os Dados</string>
+    <string name="qrCode">Código QR</string>
+    <!-- Next round of translation -->
+    <string name="done">Concluído</string>
+    <string name="groupEdit">Editar Grupo</string>
+    <string name="contactSelect">Selecionar Contatos</string>
+    <string name="appearanceThemes">Tema</string>
+    <string name="attachment">Anexo</string>
+    <string name="messageVoice">Mensagem de Voz</string>
+    <string name="communityJoinOfficial">Ou junte-se a um desses…</string>
+    <string name="notificationsFastMode">Modo Rápido</string>
+    <string name="notificationsSlowMode">Modo Lento</string>
+    <string name="notificationsFastModeDescription">Você será notificado de forma confiável e imediata sobre novas mensagens usando os servidores de notificação da Google.</string>
+    <string name="notificationsSlowModeDescription">O session verificará ocasionalmente por novas mensagens em segundo plano.</string>
+    <string name="open">Abrir</string>
+    <string name="urlCopy">Copiar URLs</string>
+    <string name="enable">Ativar</string>
+    <string name="download">Baixar</string>
+    <string name="media">Mídia</string>
+    <string name="theError">Erro</string>
+    <string name="warning">Aviso</string>
+    <string name="pin">Fixar</string>
+    <string name="pinUnpin">Desafixar</string>
+</resources>

@@ -15,7 +15,7 @@
         android:clickable="false"
         android:longClickable="false"
         android:scaleType="fitCenter"
-        android:contentDescription="@string/conversation_item__mms_image_description" />
+        android:contentDescription="@string/AccessibilityId_mediaMessage" />
 
     <org.thoughtcrime.securesms.conversation.v2.utilities.ThumbnailProgressBar
         android:id="@+id/thumbnail_load_indicator"

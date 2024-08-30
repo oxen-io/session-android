@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/screenSecurity">
+
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:key="pref_android_screen_lock"
+            android:defaultValue="false"
+            android:title="@string/lockApp"
+            android:summary="@string/lockAppDescription" />
+
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="@bool/screen_security_default"
+            android:key="pref_screen_security"
+            android:title="@string/screenshotNotifications"
+            android:summary="@string/screenshotNotificationsDescription" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/sessionMessageRequests"
+        android:key="@string/sessionMessageRequests"
+        android:persistent="false">
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/readReceipts">
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_read_receipts"
+            android:title="@string/readReceipts"
+            android:summary="@string/readReceiptsDescription" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/typingIndicators">
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_typing_indicators"
+            android:title="@string/typingIndicators"
+            android:summary="@string/typingIndicatorsDescription" />
+        <!-- TODO ACL: Need to show a live typing indicator here & remove the "(...)" from the above string (if it's there - it might have been removed now) -->
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/linkPreviews">
+
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_link_previews"
+            android:summary="@string/linkPreviewsDescription"
+            android:title="@string/linkPreviewsSend" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/callsVoiceAndVideoBeta">
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_call_notifications_enabled"
+            android:title="@string/callsVoiceAndVideo"
+            android:summary="@string/callsVoiceAndVideoToggleDescription"/>
+    </PreferenceCategory>
+
+    <!-- <PreferenceCategory android:layout="@layout/preference_divider"/>
+
+    <PreferenceCategory android:title="@string/preferences_communication__category_sealed_sender">
+
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_show_unidentifed_delivery_indicators"
+            android:title="@string/preferences_communication__sealed_sender_display_indicators"
+            android:summary="@string/preferences_communication__sealed_sender_display_indicators_description"/>
+
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_universal_unidentified_access"
+            android:title="@string/preferences_communication__sealed_sender_allow_from_anyone"
+            android:summary="@string/preferences_communication__sealed_sender_allow_from_anyone_description"/>
+
+        <Preference
+            android:key="pref_unidentified_learn_more"
+            android:layout="@layout/unidentified_delivery_learn_more" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:layout="@layout/preference_divider"/>
+
+    <PreferenceCategory android:title="@string/preferences_app_protection__registration_lock">
+
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_registration_lock"
+            android:title="@string/preferences_app_protection__registration_lock_pin"
+            android:summary="@string/preferences_app_protection__enable_a_registration_lock_pin_that_will_be_required"/>
+
+    </PreferenceCategory> -->
+
+    <PreferenceCategory android:title="@string/incognitoKeyboard">
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_incognito_keyboard"
+            android:title="@string/incognitoKeyboard"
+            android:summary="@string/incognitoKeyboardDescription"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

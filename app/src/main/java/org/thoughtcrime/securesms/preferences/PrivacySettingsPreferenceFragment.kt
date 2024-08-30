@@ -3,14 +3,13 @@ package org.thoughtcrime.securesms.preferences
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceDataStore
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
@@ -24,7 +23,6 @@ import org.thoughtcrime.securesms.service.KeyCachingService
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.CallNotificationBuilder.Companion.areNotificationsEnabled
 import org.thoughtcrime.securesms.util.IntentUtils
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
@@ -39,7 +37,7 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
             .onPreferenceChangeListener = TypingIndicatorsToggleListener()
         findPreference<Preference>(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED)!!
             .onPreferenceChangeListener = CallToggleListener(this) { setCall(it) }
-        findPreference<PreferenceCategory>(getString(R.string.preferences__message_requests_category))?.let { category ->
+        findPreference<PreferenceCategory>(getString(R.string.sessionMessageRequests))?.let { category ->
             when (val user = configFactory.user) {
                 null -> category.isVisible = false
                 else -> SwitchPreferenceCompat(requireContext()).apply {
@@ -61,8 +59,8 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
                             super.putBoolean(key, value)
                         }
                     }
-                    title = getString(R.string.preferences__message_requests_title)
-                    summary = getString(R.string.preferences__message_requests_summary)
+                    title = getString(R.string.messageRequestsCommunities)
+                    summary = getString(R.string.messageRequestsCommunitiesDescription)
                 }.let(category::addPreference)
             }
         }
@@ -75,9 +73,9 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
         if (isEnabled && !areNotificationsEnabled(requireActivity())) {
             // show a dialog saying that calls won't work properly if you don't have notifications on at a system level
             showSessionDialog {
-                title(R.string.CallNotificationBuilder_system_notification_title)
-                text(R.string.CallNotificationBuilder_system_notification_message)
-                button(R.string.activity_notification_settings_title) {
+                title(R.string.sessionNotifications)
+                text(R.string.callsNotificationsRequired)
+                button(R.string.sessionNotifications) {
                     Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                         .putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -100,7 +98,7 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        addPreferencesFromResource(R.xml.preferences_app_protection)
+        addPreferencesFromResource(R.xml.preferences_privacy)
     }
 
     override fun onResume() {
@@ -113,6 +111,8 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
                 requireContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             if (!keyguardManager.isKeyguardSecure) {
                 findPreference<SwitchPreferenceCompat>(TextSecurePreferences.SCREEN_LOCK)!!.isChecked = false
+
+                // TODO: Ticket SES-2182 raised to investigate & fix app lock / unlock functionality -ACL 2024/06/20
                 findPreference<Preference>(TextSecurePreferences.SCREEN_LOCK)!!.isEnabled = false
             }
         } else {

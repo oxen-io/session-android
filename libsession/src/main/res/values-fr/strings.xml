@@ -1,50 +1,236 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MessageRecord -->
-    <string name="MessageRecord_left_group">Vous avez quitté le groupe.</string>
-    <string name="MessageRecord_you_created_a_new_group">Vous avez créé un nouveau groupe.</string>
-    <string name="MessageRecord_s_added_you_to_the_group">%1$s vous a ajouté·e dans le groupe.</string>
-    <string name="MessageRecord_you_renamed_the_group_to_s">Vous avez renommé le groupe en %1$s</string>
-    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s a renommé le groupe en : %2$s</string>
-    <string name="MessageRecord_you_added_s_to_the_group">Vous avez ajouté %1$s au groupe.</string>
-    <string name="MessageRecord_s_added_s_to_the_group">%1$s a ajouté %2$s au groupe.</string>
-    <string name="MessageRecord_you_removed_s_from_the_group">Vous avez retiré %1$s du groupe.</string>
-    <string name="MessageRecord_s_removed_s_from_the_group">%1$s a supprimé %2$s du groupe.</string>
-    <string name="MessageRecord_you_were_removed_from_the_group">Vous avez été retiré·e du groupe.</string>
-    <string name="MessageRecord_you">Vous</string>
-    <string name="MessageRecord_s_called_you">%s vous a appelé·e</string>
-    <string name="MessageRecord_called_s">Vous avez appelé %s</string>
-    <string name="MessageRecord_missed_call_from">Appel manqué de %s</string>
-    <string name="MessageRecord_s_took_a_screenshot">%1$s a pris une capture d\'écran.</string>
-    <string name="MessageRecord_media_saved_by_s">%1$s a enregistré le média.</string>
-    <!-- expiration -->
-    <string name="expiration_off">Désactivé</string>
-    <plurals name="expiration_seconds">
-        <item quantity="one">%d seconde</item>
-        <item quantity="other">%d secondes</item>
-    </plurals>
-    <string name="expiration_seconds_abbreviated">%d s</string>
-    <plurals name="expiration_minutes">
-        <item quantity="one">%d minute</item>
-        <item quantity="other">%d minutes</item>
-    </plurals>
-    <string name="expiration_minutes_abbreviated">%d min</string>
-    <plurals name="expiration_hours">
-        <item quantity="one">%d heure</item>
-        <item quantity="other">%d heures</item>
-    </plurals>
-    <string name="expiration_hours_abbreviated">%d h</string>
-    <plurals name="expiration_days">
-        <item quantity="one">%d jour</item>
-        <item quantity="other">%d jours</item>
-    </plurals>
-    <string name="expiration_days_abbreviated">%d j</string>
-    <plurals name="expiration_weeks">
-        <item quantity="one">%d semaine</item>
-        <item quantity="other">%d semaines</item>
-    </plurals>
-    <string name="expiration_weeks_abbreviated">%d sem</string>
-    <string name="ConversationItem_group_action_left">%1$s a quitté le groupe.</string>
+    <string name="you">Vous</string>
+
     <!-- RecipientProvider -->
-    <string name="RecipientProvider_unnamed_group">Groupe sans nom</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="delete">Supprimer</string>
+    <string name="save">Enregistrer</string>
+    <string name="noteToSelf">Note à mon intention</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Nouveau message</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">Ce mois</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Ajouter une pièce jointe</string>
+    <string name="message">Message</string>
+    <string name="notificationsMuted">En sourdine</string>
+    <string name="blockUnblock">Débloquer</string>
+    <string name="callsPermissionsRequired">Autorisations d\'appel requises</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Aucun</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Autocollants</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Récupération des pièces jointes…</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">L’appareil photo n’est pas disponible</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Tous les médias</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Bloquer</string>
+    <!-- Slide -->
+    <string name="image">Image</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Le groupe a été mis à jour</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session est déverrouillé</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">Brouillon</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Marquer comme lu</string>
+    <!-- Notification Channels -->
+    <string name="failures">Échecs</string>
+    <string name="lockAppStatus">État de verrouillage</string>
+    <string name="updateApp">Mises à jour de l’appli</string>
+    <string name="other">Autre</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Enregistrée</string>
+    <!-- SearchToolbar -->
+    <string name="search">Recherche</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Le raccourci est invalide</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Envoyer</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Faire glisser pour annuler</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">Rejoindre</string>
+    <string name="read">Lire</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Le message original est introuvable</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Envoyé</string>
+    <string name="received">Reçu</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">Nom uniquement</string>
+    <string name="audio">Son</string>
+    <string name="video">Vidéo</string>
+    <string name="max">Maximale</string>
+    <!-- preferences.xml -->
+
+    <string name="linkPreviewsSend">Envoyer les aperçus des liens</string>
+
+    <string name="screenSecurity">Sécurité de l’écran</string>
+    <string name="sessionNotifications">Notifications</string>
+    <string name="notificationsLedColor">Couleur de la DEL</string>
+    <string name="notificationsSound">Son</string>
+    <string name="notificationsVibrate">Vibrer</string>
+    <string name="theDefault">Valeur par défaut</string>
+    <string name="incognitoKeyboard">Clavier incognito</string>
+    <string name="readReceipts">Accusés de lecture</string>
+    <string name="typingIndicators">Indicateurs de saisie</string>
+    <string name="conversationsMessageTrimming">Élagage des messages</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">Bannir l\'utilisateur</string>
+    <string name="call">Appeler</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Rétablir les notifications</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Notifications en sourdine</string>
+    <!-- conversation -->
+    <string name="groupLeave">Quitter le groupe</string>
+    <string name="conversationsAddToHome">Ajouter à l’écran d’accueil</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Suppression</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Permission exigée</string>
+    <string name="notNow">Pas maintenant</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">Continuer</string>
+    <string name="copy">Copier</string>
+    <string name="close">Fermer</string>
+    <string name="communityEnterUrlErrorInvalid">URL non valide</string>
+    <string name="copied">Copié dans le presse-papier</string>
+    <string name="next">Suivant</string>
+    <string name="share">Partager</string>
+    <string name="cancel">Annuler</string>
+    <string name="displayNamePick">Choisissez votre nom d\'utilisateur</string>
+    <string name="recommended">Recommandé</string>
+    <string name="conversationsDeleted">Conversation supprimée</string>
+    <string name="onionRoutingPath">Chemin</string>
+    <string name="onionRoutingPathEntryNode">Nœud d’entrée</string>
+    <string name="onionRoutingPathServiceNode">Nœud de service</string>
+    <string name="onionRoutingPathDestination">Destination</string>
+    <string name="learnMore">En savoir plus</string>
+    <string name="resolving">Contact en cours…</string>
+    <string name="qrScan">Scanner un QR Code</string>
+    <string name="cameraGrantAccessQr">Session a besoin d\'accéder à l\'appareil photo pour scanner les QR codes</string>
+    <string name="cameraGrantAccess">Autoriser l\'accès</string>
+    <string name="groupNameEnter">Saisissez un nom de groupe</string>
+    <string name="groupNameEnterPlease">Veuillez saisir un nom de groupe</string>
+    <string name="sessionSettings">Paramètres</string>
+    <string name="sessionInviteAFriend">Inviter un ami</string>
+    <string name="helpFAQ">FAQ</string>
+    <string name="sessionClearData">Effacer les données</string>
+    <string name="notificationsStyle">Style de notification</string>
+    <string name="notificationsContent">Contenu de notification</string>
+    <string name="sessionPrivacy">Confidentialité</string>
+    <string name="notificationsStrategy">Stratégie de notification</string>
+    <string name="useFastMode">Utiliser le Mode Rapide</string>
+    <string name="clearDataAll">Effacer toutes les données</string>
+    <string name="qrCode">QR Code</string>
+    <!-- Next round of translation -->
+    <string name="done">Terminé</string>
+    <string name="groupEdit">Modifier le groupe</string>
+    <string name="contactSelect">Sélectionner des contacts</string>
+    <string name="appearanceThemes">Thème</string>
+    <string name="attachment">Fichier joint</string>
+    <string name="messageVoice">Message vocal</string>
+    <string name="communityJoinOfficial">Ou rejoignez l\'un(e) de ceux-ci…</string>
+    <string name="notificationsFastMode">Mode rapide</string>
+    <string name="notificationsSlowMode">Mode lent</string>
+    <string name="notificationsFastModeDescription">Vous serez averti de nouveaux messages de manière fiable et immédiate en utilisant les serveurs de notification de Google.</string>
+    <string name="notificationsSlowModeDescription">Session vérifiera occasionnellement la présence de nouveaux messages en tâche de fond.</string>
+    <string name="open">Ouvrir</string>
+    <string name="urlCopy">Copier l\'adresse URL</string>
+    <string name="enable">Activer</string>
+    <string name="download">Télécharger</string>
+    <string name="media">Médias</string>
+    <string name="theError">Erreur</string>
+    <string name="warning">Attention</string>
+    <string name="pin">Épingler</string>
+    <string name="pinUnpin">Désépingler</string>
+    <string name="messages">Messages</string>
+    <string name="sessionMessageRequests">Demandes de message</string>
+    <string name="accept">Accepter</string>
+    <string name="decline">Refuser</string>
+    <string name="clearAll">Effacer tout</string>
+    <string name="messageRequestsAccepted">Votre demande de message a été acceptée.</string>
+    <string name="messageRequestPending">Votre demande de message est en attente.</string>
+    <string name="messageRequestsNonePending">Aucune demande de message en attente</string>
+    <string name="messageRequestsNew">Vous avez une nouvelle demande de message</string>
+    <string name="callsInProgress">Appel en cours</string>
+    <string name="callsEnd">Raccrocher</string>
+    <string name="callsReconnecting">Reconnexion…</string>
+    <string name="dismiss">Rejeter</string>
+    <string name="appearancePrimaryColor">Couleur principale</string>
+    <string name="emojiCategoryRecentlyUsed">Fréquemment Utilisés</string>
+    <string name="emojiCategorySmileys">Émoticônes et personnes</string>
+    <string name="emojiCategoryActivities">Activités</string>
+    <string name="emojiCategoryObjects">Objets</string>
+    <string name="emojiCategorySymbols">Symboles</string>
+    <string name="emojiCategoryFlags">Drapeaux</string>
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
+    <string name="appearanceAutoDarkMode">Thème sombre automatique</string>
 </resources>

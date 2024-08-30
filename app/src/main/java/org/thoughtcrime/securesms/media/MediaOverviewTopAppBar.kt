@@ -50,7 +50,7 @@ fun MediaOverviewTopAppBar(
             IconButton(onClick = onSelectAllClicked) {
                 Icon(
                     painterResource(R.drawable.ic_baseline_select_all_24),
-                    contentDescription = stringResource(R.string.MediaOverviewActivity_Select_all),
+                    contentDescription = stringResource(R.string.selectAll),
                     tint = LocalColors.current.text,
                 )
             }

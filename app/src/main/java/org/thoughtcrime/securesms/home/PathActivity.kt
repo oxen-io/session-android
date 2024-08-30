@@ -27,9 +27,12 @@ import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPathBinding
 import org.session.libsession.snode.OnionRequestAPI
+import org.session.libsession.utilities.NonTranslatableStringConstants.APP_NAME
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsignal.utilities.Snode
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.ui.getSubbedString
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.IP2Country
 import org.thoughtcrime.securesms.util.PathDotView
@@ -49,7 +52,12 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         super.onCreate(savedInstanceState, isReady)
         binding = ActivityPathBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar!!.title = resources.getString(R.string.activity_path_title)
+        supportActionBar!!.title = resources.getString(R.string.onionRoutingPath)
+
+        // Substitute "Session" into the path description. Note: This is a non-translatable string.
+        val txt = applicationContext.getSubbedString(R.string.onionRoutingPathDescription,APP_NAME_KEY to APP_NAME)
+        binding.pathDescription.text = txt
+
         binding.pathRowsContainer.disableClipping()
         binding.learnMoreButton.setOnClickListener { learnMore() }
         update(false)
@@ -98,6 +106,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
 
     private fun update(isAnimated: Boolean) {
         binding.pathRowsContainer.removeAllViews()
+
         if (OnionRequestAPI.paths.isNotEmpty()) {
             val path = OnionRequestAPI.paths.firstOrNull() ?: return finish()
             val dotAnimationRepeatInterval = path.count().toLong() * 1000 + 1000
@@ -105,8 +114,8 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
                 val isGuardSnode = (OnionRequestAPI.guardSnodes.contains(snode))
                 getPathRow(snode, LineView.Location.Middle, index.toLong() * 1000 + 2000, dotAnimationRepeatInterval, isGuardSnode)
             }
-            val youRow = getPathRow(resources.getString(R.string.activity_path_device_row_title), null, LineView.Location.Top, 1000, dotAnimationRepeatInterval)
-            val destinationRow = getPathRow(resources.getString(R.string.activity_path_destination_row_title), null, LineView.Location.Bottom, path.count().toLong() * 1000 + 2000, dotAnimationRepeatInterval)
+            val youRow = getPathRow(resources.getString(R.string.onionRoutingPath), null, LineView.Location.Top, 1000, dotAnimationRepeatInterval)
+            val destinationRow = getPathRow(resources.getString(R.string.onionRoutingPathDestination), null, LineView.Location.Bottom, path.count().toLong() * 1000 + 2000, dotAnimationRepeatInterval)
             val rows = listOf( youRow ) + pathRows + listOf( destinationRow )
             for (row in rows) {
                 binding.pathRowsContainer.addView(row)
@@ -162,11 +171,11 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
     }
 
     private fun getPathRow(snode: Snode, location: LineView.Location, dotAnimationStartDelay: Long, dotAnimationRepeatInterval: Long, isGuardSnode: Boolean): LinearLayout {
-        val title = if (isGuardSnode) resources.getString(R.string.activity_path_guard_node_row_title) else resources.getString(R.string.activity_path_service_node_row_title)
+        val title = if (isGuardSnode) resources.getString(R.string.onionRoutingPathEntryNode) else resources.getString(R.string.onionRoutingPathServiceNode)
         val subtitle = if (IP2Country.isInitialized) {
-            IP2Country.shared.countryNamesCache[snode.ip] ?: resources.getString(R.string.activity_path_resolving_progress)
+            IP2Country.shared.countryNamesCache[snode.ip] ?: resources.getString(R.string.resolving)
         } else {
-            resources.getString(R.string.activity_path_resolving_progress)
+            resources.getString(R.string.resolving)
         }
         return getPathRow(title, subtitle, location, dotAnimationStartDelay, dotAnimationRepeatInterval)
     }
@@ -179,7 +188,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         } catch (e: Exception) {
-            Toast.makeText(this, R.string.invalid_url, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.communityEnterUrlErrorInvalid, Toast.LENGTH_SHORT).show()
         }
     }
     // endregion
@@ -250,13 +259,11 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
 
         override fun onAttachedToWindow() {
             super.onAttachedToWindow()
-
             startAnimation()
         }
 
         override fun onDetachedFromWindow() {
             super.onDetachedFromWindow()
-
             stopAnimation()
         }
 

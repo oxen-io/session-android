@@ -43,7 +43,7 @@ class QRCodeActivity : PassphraseRequiredActionBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
-        supportActionBar!!.title = resources.getString(R.string.activity_qr_code_title)
+        supportActionBar!!.title = resources.getString(R.string.qrCode)
 
         setComposeContent {
             Tabs(
@@ -56,7 +56,7 @@ class QRCodeActivity : PassphraseRequiredActionBarActivity() {
 
     private fun onScan(string: String) {
         if (!PublicKeyValidation.isValid(string)) {
-            errors.tryEmit(getString(R.string.this_qr_code_does_not_contain_an_account_id))
+            errors.tryEmit(getString(R.string.qrNotAccountId))
         } else if (!isFinishing) {
             val recipient = Recipient.from(this, Address.fromSerialized(string), false)
             start<ConversationActivityV2> {
@@ -101,12 +101,12 @@ fun QrPage(string: String) {
             string = string,
             modifier = Modifier
                 .padding(top = LocalDimensions.current.mediumSpacing, bottom = LocalDimensions.current.xsSpacing)
-                .contentDescription(R.string.AccessibilityId_qr_code),
+                .contentDescription(R.string.AccessibilityId_qrCode),
             icon = R.drawable.session
         )
 
         Text(
-            text = stringResource(R.string.this_is_your_account_id_other_users_can_scan_it_to_start_a_conversation_with_you),
+            text = stringResource(R.string.accountIdYoursDescription),
             color = LocalColors.current.textSecondary,
             textAlign = TextAlign.Center,
             style = LocalType.current.small

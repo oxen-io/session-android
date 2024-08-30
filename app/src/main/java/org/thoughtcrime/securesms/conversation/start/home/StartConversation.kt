@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,12 +42,14 @@ internal fun StartConversationScreen(
     accountId: String,
     delegate: StartConversationDelegate
 ) {
+    val context = LocalContext.current
+
     Column(modifier = Modifier.background(
         LocalColors.current.backgroundSecondary,
         shape = MaterialTheme.shapes.small
     )) {
         BasicAppBar(
-            title = stringResource(R.string.dialog_start_conversation_title),
+            title = stringResource(R.string.conversationsStart),
             backgroundColor = Color.Transparent, // transparent to show the rounded shape of the container
             actions = { AppBarCloseIcon(onClose = delegate::onDialogClosePressed) }
         )
@@ -57,30 +60,31 @@ internal fun StartConversationScreen(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
+                val newMessageTitleTxt:String = context.resources.getQuantityString(R.plurals.messageNew, 1, 1)
                 ItemButton(
-                    textId = R.string.messageNew,
+                    text = newMessageTitleTxt,
                     icon = R.drawable.ic_message,
-                    modifier = Modifier.contentDescription(R.string.AccessibilityId_new_direct_message),
+                    modifier = Modifier.contentDescription(R.string.AccessibilityId_messageNew),
                     onClick = delegate::onNewMessageSelected)
                 Divider(startIndent = LocalDimensions.current.dividerIndent)
                 ItemButton(
-                    textId = R.string.activity_create_group_title,
+                    textId = R.string.groupCreate,
                     icon = R.drawable.ic_group,
-                    modifier = Modifier.contentDescription(R.string.AccessibilityId_create_group),
+                    modifier = Modifier.contentDescription(R.string.AccessibilityId_groupCreate),
                     onClick = delegate::onCreateGroupSelected
                 )
                 Divider(startIndent = LocalDimensions.current.dividerIndent)
                 ItemButton(
-                    textId = R.string.dialog_join_community_title,
+                    textId = R.string.communityJoin,
                     icon = R.drawable.ic_globe,
-                    modifier = Modifier.contentDescription(R.string.AccessibilityId_join_community),
+                    modifier = Modifier.contentDescription(R.string.AccessibilityId_communityJoin),
                     onClick = delegate::onJoinCommunitySelected
                 )
                 Divider(startIndent = LocalDimensions.current.dividerIndent)
                 ItemButton(
-                    textId = R.string.activity_settings_invite_button_title,
+                    textId = R.string.sessionInviteAFriend,
                     icon = R.drawable.ic_invite_friend,
-                    Modifier.contentDescription(R.string.AccessibilityId_invite_friend_button),
+                    Modifier.contentDescription(R.string.AccessibilityId_sessionInviteAFriendButton),
                     onClick = delegate::onInviteFriend
                 )
                 Column(
@@ -99,7 +103,7 @@ internal fun StartConversationScreen(
                     Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
                     QrImage(
                         string = accountId,
-                        Modifier.contentDescription(R.string.AccessibilityId_qr_code),
+                        Modifier.contentDescription(R.string.AccessibilityId_qrCode),
                         icon = R.drawable.session
                     )
                 }

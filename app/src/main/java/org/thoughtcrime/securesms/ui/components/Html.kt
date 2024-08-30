@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -26,6 +27,9 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.core.text.HtmlCompat
+import com.squareup.phrase.Phrase
+import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.URL_KEY
 
 // TODO Remove this file once we update to composeVersion=1.7.0-alpha06 fixes https://issuetracker.google.com/issues/139320238?pli=1
 // which allows Stylized string in string resources
@@ -67,6 +71,14 @@ fun annotatedStringResource(@StringRes id: Int): AnnotatedString {
     val density = LocalDensity.current
     return remember(id) {
         val text = resources.getText(id)
+        spannableStringToAnnotatedString(text, density)
+    }
+}
+
+@Composable
+fun annotatedStringResource(text: CharSequence): AnnotatedString {
+    val density = LocalDensity.current
+    return remember(text.hashCode()) {
         spannableStringToAnnotatedString(text, density)
     }
 }

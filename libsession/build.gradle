@@ -11,6 +11,22 @@ android {
 
     defaultConfig {
         minSdkVersion androidMinimumSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+        testOptions {
+            execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        }
+
+        sourceSets {
+            test {
+                java.srcDirs = ['src/AndroidTest/java/org/session/libsession']
+            }
+        }
     }
 
     compileOptions {
@@ -50,11 +66,16 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     implementation "com.github.oxen-io.session-android-curve-25519:curve25519-java:$curve25519Version"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.phrase:phrase:$phraseVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxJsonVersion"
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"
+
+    // Note: kotlinx-datetime:0.6.0 is the latest version as of 2024/08/09 -AL
+    implementation 'org.jetbrains.kotlinx:kotlinx-datetime:0.6.0'
+
     testImplementation "junit:junit:$junitVersion"
     testImplementation 'org.assertj:assertj-core:3.11.1'
     testImplementation "org.mockito:mockito-inline:4.11.0"

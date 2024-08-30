@@ -5,8 +5,8 @@
 
     <item
         android:id="@+id/action_apply"
-        android:title="@string/menu_apply_button"
-        android:contentDescription="@string/AccessibilityId_apply_changes"
+        android:title="@string/done"
+        android:contentDescription="@string/AccessibilityId_set"
         app:showAsAction="always|withText" />
 
 </menu>

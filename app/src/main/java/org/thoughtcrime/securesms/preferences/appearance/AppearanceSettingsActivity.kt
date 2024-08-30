@@ -116,7 +116,7 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
         setContentView(binding.root)
         savedInstanceState?.getSparseParcelableArray<Parcelable>(SCROLL_PARCEL)
             ?.let(binding.scrollView::restoreHierarchyState)
-        supportActionBar!!.title = getString(R.string.activity_settings_message_appearance_button_title)
+        supportActionBar!!.title = getString(R.string.sessionAppearance)
         with (binding) {
             // accent toggles
             accentContainer.children.forEach { view ->

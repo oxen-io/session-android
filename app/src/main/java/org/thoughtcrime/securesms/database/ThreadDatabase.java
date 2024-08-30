@@ -808,8 +808,8 @@ public class ThreadDatabase extends Database {
   private @NonNull String getFormattedBodyFor(@NonNull MessageRecord messageRecord) {
     if (messageRecord.isMms()) {
       MmsMessageRecord record = (MmsMessageRecord) messageRecord;
-      if (record.getSharedContacts().size() > 0) {
-        Contact contact = ((MmsMessageRecord) messageRecord).getSharedContacts().get(0);
+      if (!record.getSharedContacts().isEmpty()) {
+        Contact contact = ((MmsMessageRecord)messageRecord).getSharedContacts().get(0);
         return ContactUtil.getStringSummary(context, contact).toString();
       }
       String attachmentString = record.getSlideDeck().getBody();

@@ -22,7 +22,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
 import androidx.vectordrawable.graphics.drawable.AnimatorInflaterCompat
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
+import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -30,7 +34,9 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
+import org.session.libsession.LocalisedTimeUtil.toShortTwoPartString
 import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.utilities.StringSubstitutionConstants.TIME_LARGE_KEY
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getLocalNumber
 import org.session.libsession.utilities.ThemeUtil
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView
@@ -46,14 +52,6 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
 import org.thoughtcrime.securesms.repository.ConversationRepository
 import org.thoughtcrime.securesms.util.AnimationCompleteListener
 import org.thoughtcrime.securesms.util.DateUtils
-import java.util.Locale
-import javax.inject.Inject
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
 class ConversationReactionOverlay : FrameLayout {
@@ -529,11 +527,11 @@ class ConversationReactionOverlay : FrameLayout {
                 ?: return emptyList()
         val userPublicKey = getLocalNumber(context)!!
         // Select message
-        items += ActionItem(R.attr.menu_select_icon, R.string.conversation_context__menu_select, { handleActionItemClicked(Action.SELECT) }, R.string.AccessibilityId_select)
+        items += ActionItem(R.attr.menu_select_icon, R.string.select, { handleActionItemClicked(Action.SELECT) }, R.string.AccessibilityId_select)
         // Reply
         val canWrite = openGroup == null || openGroup.canWrite
         if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation) {
-            items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply_message)
+            items += ActionItem(R.attr.menu_reply_icon, R.string.reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply)
         }
         // Copy message text
         if (!containsControlMessage && hasText) {
@@ -541,34 +539,42 @@ class ConversationReactionOverlay : FrameLayout {
         }
         // Copy Account ID
         if (recipient.isGroupRecipient && !recipient.isCommunityRecipient && message.recipient.address.toString() != userPublicKey) {
-            items += ActionItem(R.attr.menu_copy_icon, R.string.activity_conversation_menu_copy_account_id, { handleActionItemClicked(Action.COPY_ACCOUNT_ID) })
+            items += ActionItem(R.attr.menu_copy_icon, R.string.accountIDCopy, { handleActionItemClicked(Action.COPY_ACCOUNT_ID) })
         }
         // Delete message
         if (userCanDeleteSelectedItems(context, message, openGroup, userPublicKey, blindedPublicKey)) {
             items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) },
-                R.string.AccessibilityId_delete_message, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
+                R.string.AccessibilityId_deleteMessage, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
         }
         // Ban user
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_block_icon, R.string.conversation_context__menu_ban_user, { handleActionItemClicked(Action.BAN_USER) })
+            items += ActionItem(R.attr.menu_block_icon, R.string.banUser, { handleActionItemClicked(Action.BAN_USER) })
         }
         // Ban and delete all
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_trash_icon, R.string.conversation_context__menu_ban_and_delete_all, { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
+            items += ActionItem(R.attr.menu_trash_icon, R.string.banDeleteAll, { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
         }
         // Message detail
-        items += ActionItem(R.attr.menu_info_icon, R.string.conversation_context__menu_message_details, { handleActionItemClicked(Action.VIEW_INFO) })
+        items += ActionItem(R.attr.menu_info_icon, R.string.messageInfo, { handleActionItemClicked(Action.VIEW_INFO) })
         // Resend
         if (message.isFailed) {
-            items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_resend_message, { handleActionItemClicked(Action.RESEND) })
+            items += ActionItem(R.attr.menu_reply_icon, R.string.resend, { handleActionItemClicked(Action.RESEND) })
         }
         // Resync
         if (message.isSyncFailed) {
-            items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_resync_message, { handleActionItemClicked(Action.RESYNC) })
+            items += ActionItem(R.attr.menu_reply_icon, R.string.resync, { handleActionItemClicked(Action.RESYNC) })
         }
-        // Save media
-        if (message.isMms && (message as MediaMmsMessageRecord).containsMediaSlide()) {
-            items += ActionItem(R.attr.menu_save_icon, R.string.conversation_context_image__save_attachment, { handleActionItemClicked(Action.DOWNLOAD) }, R.string.AccessibilityId_save_attachment)
+        // Save media..
+        if (message.isMms) {
+            // ..but only provide the save option if the there is a media attachment which has finished downloading.
+            val mmsMessage = message as MediaMmsMessageRecord
+            if (mmsMessage.containsMediaSlide() && !mmsMessage.isMediaPending) {
+                items += ActionItem(R.attr.menu_save_icon,
+                            R.string.save,
+                            { handleActionItemClicked(Action.DOWNLOAD) },
+                            R.string.AccessibilityId_save
+                )
+            }
         }
         backgroundView.visibility = VISIBLE
         foregroundView.visibility = VISIBLE
@@ -704,10 +710,6 @@ class ConversationReactionOverlay : FrameLayout {
     }
 }
 
-private fun Duration.to2partString(): String? =
-    toComponents { days, hours, minutes, seconds, nanoseconds -> listOf(days.days, hours.hours, minutes.minutes, seconds.seconds) }
-        .filter { it.inWholeSeconds > 0L }.take(2).takeIf { it.isNotEmpty() }?.joinToString(" ")
-
 private val MessageRecord.subtitle: ((Context) -> CharSequence?)?
     get() = if (expiresIn <= 0) {
         null
@@ -715,6 +717,10 @@ private val MessageRecord.subtitle: ((Context) -> CharSequence?)?
         (expiresIn - (SnodeAPI.nowWithOffset - (expireStarted.takeIf { it > 0 } ?: timestamp)))
             .coerceAtLeast(0L)
             .milliseconds
-            .to2partString()
-            ?.let { context.getString(R.string.auto_deletes_in, it) }
+            .toShortTwoPartString()
+            .let {
+                Phrase.from(context, R.string.disappearingMessagesCountdownBigMobile)
+                    .put(TIME_LARGE_KEY, it)
+                    .format().toString()
+            }
     }

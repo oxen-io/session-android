@@ -10,11 +10,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.preference.Preference
-
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.ui.getSubbedCharSequence
+import org.thoughtcrime.securesms.ui.getSubbedString
 
 class HelpSettingsActivity: PassphraseRequiredActionBarActivity() {
 
@@ -30,20 +32,27 @@ class HelpSettingsActivity: PassphraseRequiredActionBarActivity() {
 class HelpSettingsFragment: CorrectedPreferenceFragment() {
 
     companion object {
-        private const val EXPORT_LOGS = "export_logs"
-        private const val TRANSLATE = "translate_session"
-        private const val FEEDBACK = "feedback"
-        private const val FAQ = "faq"
-        private const val SUPPORT = "support"
-
-        private const val CROWDIN_URL = "https://getsession.org/translate"
+        private const val EXPORT_LOGS  = "export_logs"
+        private const val TRANSLATE    = "translate_session"
+        private const val FEEDBACK     = "feedback"
+        private const val FAQ          = "faq"
+        private const val SUPPORT      = "support"
+        private const val CROWDIN_URL  = "https://getsession.org/translate"
         private const val FEEDBACK_URL = "https://getsession.org/survey"
-        private const val FAQ_URL = "https://getsession.org/faq"
-        private const val SUPPORT_URL = "https://sessionapp.zendesk.com/hc/en-us"
+        private const val FAQ_URL      = "https://getsession.org/faq"
+        private const val SUPPORT_URL  = "https://sessionapp.zendesk.com/hc/en-us"
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences_help)
+
+        // String sub the summary text of the `export_logs` element in preferences_help.xml
+        val exportPref = preferenceScreen.findPreference<Preference>(EXPORT_LOGS)
+        exportPref?.summary = context?.getSubbedCharSequence(R.string.helpReportABugExportLogsDescription, APP_NAME_KEY to getString(R.string.app_name))
+
+        // String sub the summary text of the `translate_session` element in preferences_help.xml
+        val translatePref = preferenceScreen.findPreference<Preference>(TRANSLATE)
+        translatePref?.title = context?.getSubbedCharSequence(R.string.helpHelpUsTranslateSession, APP_NAME_KEY to getString(R.string.app_name))
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
@@ -77,7 +86,7 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
             // Change export logs button text
             val exportLogsButton = this.activity?.findViewById(R.id.export_logs_button) as TextView?
             if (exportLogsButton == null) { Log.w("Loki", "Could not find export logs button view.") }
-            exportLogsButton?.text = if (exportJobRunning) getString(R.string.cancel) else getString(R.string.activity_help_settings__export_logs)
+            exportLogsButton?.text = if (exportJobRunning) getString(R.string.cancel) else getString(R.string.helpReportABugExportLogs)
 
             // Show progress bar
             val exportProgressBar = this.activity?.findViewById(R.id.export_progress_bar) as ProgressBar?
@@ -89,9 +98,11 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
         Permissions.with(this)
             .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             .maxSdkVersion(Build.VERSION_CODES.P)
-            .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
+            .withPermanentDenialDialog(requireContext().getSubbedString(R.string.permissionsStorageSaveDenied, APP_NAME_KEY to getString(R.string.app_name)))
             .onAnyDenied {
-                Toast.makeText(requireActivity(), R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show()
+                val c = requireContext()
+                val txt = c.getSubbedString(R.string.permissionsStorageSaveDenied, APP_NAME_KEY to getString(R.string.app_name))
+                Toast.makeText(c, txt, Toast.LENGTH_LONG).show()
             }
             .onAllGranted {
                 ShareLogsDialog(::updateExportButtonAndProgressBarUI).show(parentFragmentManager,"Share Logs Dialog")
@@ -104,7 +115,7 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         } catch (e: Exception) {
-            Toast.makeText(requireActivity(), "Can't open URL", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireActivity(), requireContext().getString(R.string.errorUnknown), Toast.LENGTH_LONG).show()
         }
     }
 

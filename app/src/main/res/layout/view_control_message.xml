@@ -25,7 +25,7 @@
         android:layout_height="12dp"
         android:layout_marginBottom="@dimen/small_spacing"
         android:visibility="gone"
-        app:tint="?android:textColorPrimary"
+        app:tint="?android:textColorTertiary"
         tools:src="@drawable/ic_timer"
         tools:visibility="visible"/>
 
@@ -35,7 +35,7 @@
         android:layout_height="12dp"
         android:layout_marginBottom="@dimen/small_spacing"
         android:visibility="gone"
-        app:tint="?android:textColorPrimary"
+        app:tint="?android:textColorTertiary"
         tools:src="@drawable/ic_timer"
         tools:visibility="visible"/>
 
@@ -45,9 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="?android:textColorPrimary"
+        android:textColor="?android:textColorTertiary"
         android:textSize="@dimen/very_small_font_size"
-        android:textStyle="bold"
         tools:text="You disabled disappearing messages" />
 
     <FrameLayout
@@ -77,8 +76,8 @@
         android:layout_marginTop="4dp"
         android:textColor="@color/accent_green"
         android:textSize="@dimen/very_small_font_size"
-        android:text="@string/MessageRecord_follow_setting"
-        android:contentDescription="@string/AccessibilityId_follow_setting"
+        android:text="@string/disappearingMessagesFollowSetting"
+        android:contentDescription="@string/AccessibilityId_disappearingMessagesFollowSetting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

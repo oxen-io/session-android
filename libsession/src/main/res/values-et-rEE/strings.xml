@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yes">Jah</string>
+    <string name="no">Ei</string>
+    <string name="delete">Kustuta</string>
+    <string name="save">Salvesta</string>
+    <string name="noteToSelf">Märkus endale</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">Uus sõnum</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">See kuu</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">Lisa manus</string>
+    <string name="blockUnblock">Eemalda blokeering</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">Puudub</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">Kleepsud</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">Kogun manuseid...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">Kaamera pole saadaval.</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">Kogu meedia</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">Blokeeri</string>
+    <!-- Slide -->
+    <string name="image">Pilt</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">Grupp uuendatud</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session on avatud</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">Mustand</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">Märgi loetuks</string>
+    <!-- Notification Channels -->
+    <string name="failures">Ebaõnnestumised</string>
+    <string name="lockAppStatus">Luku olek</string>
+    <string name="updateApp">Rakenduse uuendused</string>
+    <string name="other">Muu</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">Salvestatud</string>
+    <!-- SearchToolbar -->
+    <string name="search">Otsi</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">Sobimatu otsetee</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">Saada</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">Libista tühistamiseks</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">Originaalsõnumit ei leitud</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">Saadetud</string>
+    <string name="received">Vastuvõetud</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">Ainult nimi</string>
+    <string name="audio">Heli</string>
+    <string name="max">Maksimaalne</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">Saada linkide eelvaateid</string>
+    <string name="screenSecurity">Kuva turvamine</string>
+    <string name="sessionNotifications">Teated</string>
+    <string name="notificationsLedColor">LEDi värv</string>
+    <string name="notificationsSound">Heli</string>
+    <string name="notificationsVibrate">Vibratsioon</string>
+    <string name="theDefault">Vaikimisi</string>
+    <string name="incognitoKeyboard">Inkognito klaviatuur</string>
+    <string name="readReceipts">Lugemiskinnitused</string>
+    <string name="typingIndicators">Kirjutamisindikaatorid</string>
+    <string name="conversationsMessageTrimming">Sõnumi piiramine</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">Keela vaigistus</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">Vaigista teated</string>
+    <!-- conversation -->
+    <string name="groupLeave">Lahku grupist</string>
+    <string name="conversationsAddToHome">Lisa avakuvale</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">Kustutan</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">Luba on vajalik</string>
+    <string name="notNow">Mitte praegu</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <!-- Next round of translation -->
+</resources>

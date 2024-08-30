@@ -36,7 +36,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.canhub.cropper.CropImage
 import com.canhub.cropper.CropImageContract
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -57,9 +60,11 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.NonTranslatableStringConstants.DEBUG_MENU
 import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.ProfilePictureUtilities
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
+import org.session.libsession.utilities.StringSubstitutionConstants.VERSION_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.truncateIdForDisplay
@@ -92,8 +97,7 @@ import org.thoughtcrime.securesms.util.BitmapUtil
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.NetworkUtils
 import org.thoughtcrime.securesms.util.push
-import java.io.File
-import javax.inject.Inject
+import org.thoughtcrime.securesms.util.show
 
 @AndroidEntryPoint
 class SettingsActivity : PassphraseRequiredActionBarActivity() {
@@ -178,7 +182,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             publicKeyTextView.text = hexEncodedPublicKey
             val gitCommitFirstSixChars = BuildConfig.GIT_HASH.take(6)
             val environment: String = if(BuildConfig.BUILD_TYPE == "release") "" else " - ${prefs.getEnvironment().label}"
-            versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars) $environment")
+            val versionDetails = " ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars) $environment"
+            val versionString = Phrase.from(applicationContext, R.string.updateVersion).put(VERSION_KEY, versionDetails).format()
+            versionTextView.text = versionString
         }
 
         binding.composeView.setThemedContent {
@@ -219,7 +225,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.settings_general, menu)
         if (BuildConfig.DEBUG) {
-            menu.findItem(R.id.action_qr_code)?.contentDescription = resources.getString(R.string.AccessibilityId_view_qr_code)
+            menu.findItem(R.id.action_qr_code)?.contentDescription = resources.getString(R.string.AccessibilityId_qrView)
         }
         return true
     }
@@ -397,24 +403,30 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
      */
     private fun saveDisplayName(): Boolean {
         val displayName = binding.displayNameEditText.text.toString().trim()
+
         if (displayName.isEmpty()) {
-            Toast.makeText(this, R.string.activity_settings_display_name_missing_error, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.displayNameErrorDescription, Toast.LENGTH_SHORT).show()
             return false
         }
+
         if (displayName.toByteArray().size > ProfileManagerProtocol.NAME_PADDED_LENGTH) {
-            Toast.makeText(this, R.string.activity_settings_display_name_too_long_error, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.displayNameErrorDescriptionShorter, Toast.LENGTH_SHORT).show()
             return false
         }
+
         return updateDisplayName(displayName)
     }
 
     private fun showEditProfilePictureUI() {
         showSessionDialog {
-            title(R.string.activity_settings_set_display_picture)
+            title(R.string.profileDisplayPictureSet)
             view(R.layout.dialog_change_avatar)
-            button(R.string.activity_settings_upload) { startAvatarSelection() }
+
+            // Note: This is the only instance in a dialog where the "Save" button is not a `dangerButton`
+            button(R.string.save) { startAvatarSelection() }
+
             if (prefs.getProfileAvatarId() != 0) {
-                button(R.string.activity_settings_remove) { removeProfilePicture() }
+                button(R.string.remove) { removeProfilePicture() }
             }
             cancelButton()
         }.apply {
@@ -453,7 +465,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private inner class DisplayNameEditActionModeCallback: ActionMode.Callback {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            mode.title = getString(R.string.activity_settings_display_name_edit_text_hint)
+            mode.title = getString(R.string.displayNameEnter)
             mode.menuInflater.inflate(R.menu.menu_apply, menu)
             this@SettingsActivity.displayNameEditActionMode = mode
             return true
@@ -511,33 +523,55 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 Column {
                     // add the debug menu in non release builds
                     if (BuildConfig.BUILD_TYPE != "release") {
-                        LargeItemButton(R.string.activity_settings_debug_button_title, R.drawable.ic_settings) { push<DebugActivity>() }
+                        LargeItemButton(DEBUG_MENU, R.drawable.ic_settings) { push<DebugActivity>() }
                         Divider()
                     }
 
                     Crossfade(if (hasPaths) R.drawable.ic_status else R.drawable.ic_path_yellow, label = "path") {
-                        LargeItemButtonWithDrawable(R.string.activity_path_title, it) { push<PathActivity>() }
+                        LargeItemButtonWithDrawable(R.string.onionRoutingPath, it) { push<PathActivity>() }
                     }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_privacy_button_title, R.drawable.ic_privacy_icon) { push<PrivacySettingsActivity>() }
+
+                    LargeItemButton(R.string.sessionPrivacy, R.drawable.ic_privacy_icon) { push<PrivacySettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_notifications_button_title, R.drawable.ic_speaker, Modifier.contentDescription(R.string.AccessibilityId_notifications)) { push<NotificationSettingsActivity>() }
+
+                    LargeItemButton(R.string.sessionNotifications, R.drawable.ic_speaker, Modifier.contentDescription(R.string.AccessibilityId_notifications)) { push<NotificationSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_conversations_button_title, R.drawable.ic_conversations, Modifier.contentDescription(R.string.AccessibilityId_conversations)) { push<ChatSettingsActivity>() }
+
+                    LargeItemButton(R.string.sessionConversations, R.drawable.ic_conversations, Modifier.contentDescription(R.string.AccessibilityId_sessionConversations)) { push<ChatSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_message_requests_button_title, R.drawable.ic_message_requests, Modifier.contentDescription(R.string.AccessibilityId_message_requests)) { push<MessageRequestsActivity>() }
+
+                    LargeItemButton(R.string.sessionMessageRequests, R.drawable.ic_message_requests, Modifier.contentDescription(R.string.AccessibilityId_sessionMessageRequests)) { push<MessageRequestsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_message_appearance_button_title, R.drawable.ic_appearance, Modifier.contentDescription(R.string.AccessibilityId_appearance)) { push<AppearanceSettingsActivity>() }
+
+                    LargeItemButton(R.string.sessionAppearance, R.drawable.ic_appearance, Modifier.contentDescription(R.string.AccessibilityId_sessionAppearance)) { push<AppearanceSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_invite_button_title, R.drawable.ic_invite_friend, Modifier.contentDescription(R.string.AccessibilityId_invite_friend)) { sendInvitationToUseSession() }
+
+                    LargeItemButton(
+                        R.string.sessionInviteAFriend,
+                        R.drawable.ic_invite_friend,
+                        Modifier.contentDescription(R.string.AccessibilityId_sessionInviteAFriend)
+                    ) { sendInvitationToUseSession() }
                     Divider()
+
+                    // Only show the recovery password option if the user has not chosen to permanently hide it
                     if (!prefs.getHidePassword()) {
-                        LargeItemButton(R.string.sessionRecoveryPassword, R.drawable.ic_shield_outline, Modifier.contentDescription(R.string.AccessibilityId_recovery_password_menu_item)) { push<RecoveryPasswordActivity>() }
+                        LargeItemButton(
+                            R.string.sessionRecoveryPassword,
+                            R.drawable.ic_shield_outline,
+                            Modifier.contentDescription(R.string.AccessibilityId_sessionRecoveryPasswordMenuItem)
+                        ) { push<RecoveryPasswordActivity>() }
                         Divider()
                     }
-                    LargeItemButton(R.string.activity_settings_help_button, R.drawable.ic_help, Modifier.contentDescription(R.string.AccessibilityId_help)) { push<HelpSettingsActivity>() }
+
+                    LargeItemButton(R.string.sessionHelp, R.drawable.ic_help, Modifier.contentDescription(R.string.AccessibilityId_help)) { push<HelpSettingsActivity>() }
                     Divider()
-                    LargeItemButton(R.string.activity_settings_clear_all_data_button_title, R.drawable.ic_delete, Modifier.contentDescription(R.string.AccessibilityId_clear_data), dangerButtonColors()) { ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog") }
+
+                    LargeItemButton(R.string.sessionClearData,
+                        R.drawable.ic_delete,
+                        Modifier.contentDescription(R.string.AccessibilityId_sessionClearData),
+                        dangerButtonColors()
+                    ) { ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog") }
                 }
             }
         }

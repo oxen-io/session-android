@@ -27,7 +27,7 @@
             android:gravity="center"
             android:textColor="?android:textColorTertiary"
             android:textSize="@dimen/small_font_size"
-            android:text="@string/your_account_id" />
+            android:text="@string/accountIdYours" />
     </FrameLayout>
 
 </FrameLayout>

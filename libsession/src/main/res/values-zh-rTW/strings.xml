@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Session</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="delete">刪除</string>
+    <string name="save">儲存</string>
+    <string name="noteToSelf">給自己的筆記</string>
+    <!-- AbstractNotificationBuilder -->
+    <string name="messageNew">新訊息</string>
+    <!-- AlbumThumbnailView -->
+    <!-- ApplicationPreferencesActivity -->
+    <!-- DraftDatabase -->
+    <!-- AttachmentManager -->
+    <!-- AudioSlidePlayer -->
+    <!-- BucketedThreadMedia -->
+    <string name="attachmentsThisMonth">本月</string>
+    <!-- CommunicationActions -->
+    <!-- ContactsCursorLoader -->
+    <!-- ConversationItem -->
+    <!-- ConversationActivity -->
+    <string name="attachmentsAdd">增加附件檔案</string>
+    <string name="message">訊息</string>
+    <string name="notificationsMuted">已靜音</string>
+    <string name="blockUnblock">解除封鎖</string>
+    <!-- ConversationFragment -->
+    <!-- CreateProfileActivity -->
+    <!-- CustomDefaultPreference -->
+    <string name="none">無</string>
+    <!-- DateUtils -->
+    <!-- DeviceListItem -->
+    <!-- DocumentView -->
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <string name="stickers">貼圖</string>
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <string name="attachmentsCollecting">正在收集附件...</string>
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <string name="cameraErrorUnavailable">相機無法使用。</string>
+    <!-- MediaRepository -->
+    <string name="conversationsSettingsAllMedia">所有的媒體</string>
+    <!-- MessageRecord -->
+    <!-- ExpirationDialog -->
+    <!-- PassphrasePromptActivity -->
+    <!-- RecipientPreferencesActivity -->
+    <string name="block">封鎖</string>
+    <!-- Slide -->
+    <string name="image">圖片</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <string name="groupUpdated">群組已更新</string>
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <string name="lockAppUnlocked">Session 已經解鎖</string>
+    <!-- MediaPreviewActivity -->
+    <string name="draft">草稿</string>
+    <!-- MessageNotifier -->
+    <string name="messageMarkRead">標示已讀</string>
+    <!-- Notification Channels -->
+    <string name="failures">失敗</string>
+    <string name="lockAppStatus">鎖定狀態</string>
+    <string name="updateApp">應用程式更新</string>
+    <string name="other">其他</string>
+    <!-- QuickResponseService -->
+    <!-- SaveAttachmentTask -->
+    <string name="saved">已儲存</string>
+    <!-- SearchToolbar -->
+    <string name="search">搜尋</string>
+    <!-- ShortcutLauncherActivity -->
+    <string name="invalidShortcut">無效的捷徑</string>
+    <!-- SingleRecipientNotificationBuilder -->
+    <!-- VideoPlayer -->
+    <!-- attachment_type_selector -->
+    <!-- contact_selection_group_activity -->
+    <!-- conversation_activity -->
+    <string name="send">送出</string>
+    <!-- conversation_input_panel -->
+    <string name="messageVoiceSlideToCancel">滑動以取消</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <string name="join">加入</string>
+    <string name="read">已讀</string>
+    <!-- QuoteView -->
+    <string name="messageErrorOriginal">無法找到原始訊息</string>
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <string name="disappearingMessagesSent">傳送</string>
+    <string name="received">接受</string>
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="notificationsContentShowNameOnly">僅名字</string>
+    <string name="audio">音訊</string>
+    <string name="video">影片</string>
+    <string name="max">最大的</string>
+    <!-- preferences.xml -->
+    <string name="linkPreviewsSend">傳送連結預覽</string>
+    <string name="screenSecurity">螢幕安全設定</string>
+    <string name="sessionNotifications">通知</string>
+    <string name="notificationsLedColor">LED燈號顏色</string>
+    <string name="notificationsSound">提示音效</string>
+    <string name="notificationsVibrate">震動</string>
+    <string name="theDefault">預設</string>
+    <string name="incognitoKeyboard">隱私鍵盤</string>
+    <string name="readReceipts">已讀標記</string>
+    <string name="typingIndicators">打字狀態</string>
+    <string name="conversationsMessageTrimming">訊息整理</string>
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <string name="banUser">封鎖用戶</string>
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <string name="notificationsMuteUnmute">取消靜音</string>
+    <!-- conversation_unmuted -->
+    <string name="notificationsMute">將通知調整為靜音</string>
+    <!-- conversation -->
+    <string name="groupLeave">離開對話群組</string>
+    <string name="conversationsAddToHome">新增到主畫面</string>
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <string name="deleting">正在刪除</string>
+    <!-- transport_selection_list_item -->
+    <string name="permissionsRequired">需要權限</string>
+    <string name="notNow">稍後</string>
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <string name="theContinue">繼續</string>
+    <string name="copy">複製</string>
+    <string name="communityEnterUrlErrorInvalid">無效網址</string>
+    <string name="copied">已複製到剪貼簿</string>
+    <string name="next">下一步</string>
+    <string name="share">分享</string>
+    <string name="cancel">取消</string>
+    <string name="displayNamePick">請輸入您的名稱</string>
+    <string name="recommended">建議</string>
+    <string name="conversationsDeleted">對話已刪除</string>
+    <string name="onionRoutingPath">路徑</string>
+    <string name="onionRoutingPathEntryNode">入口節點</string>
+    <string name="onionRoutingPathServiceNode">服務節點</string>
+    <string name="onionRoutingPathDestination">目的地</string>
+    <string name="learnMore">瞭解更多</string>
+    <string name="resolving">解決中...</string>
+    <string name="qrScan">掃描 QR Code</string>
+    <string name="cameraGrantAccessQr">Session 需要使用相機存取權來掃描 QR Codes</string>
+    <string name="cameraGrantAccess">授與相機權限</string>
+    <string name="groupNameEnter">請輸入群組名稱</string>
+    <string name="groupNameEnterPlease">請輸入群組名稱</string>
+    <string name="sessionSettings">設定</string>
+    <string name="sessionInviteAFriend">邀請好友</string>
+    <string name="helpFAQ">常見問題</string>
+    <string name="sessionClearData">清除資料</string>
+    <string name="notificationsStyle">通知樣式</string>
+    <string name="notificationsContent">通知內容</string>
+    <string name="sessionPrivacy">隱私權</string>
+    <string name="notificationsStrategy">通知類型</string>
+    <string name="useFastMode">使用快速模式</string>
+    <string name="clearDataAll">清除所有數據</string>
+    <string name="qrCode">QR Code</string>
+    <!-- Next round of translation -->
+    <string name="done">完成</string>
+    <string name="groupEdit">編輯群組</string>
+    <string name="contactSelect">選擇聯絡人</string>
+    <string name="appearanceThemes">主題</string>
+    <string name="attachment">附件</string>
+    <string name="messageVoice">語音訊息</string>
+    <string name="communityJoinOfficial">或加入這些群組⋯</string>
+    <string name="notificationsFastMode">快速模式</string>
+    <string name="notificationsSlowMode">慢速模式</string>
+    <string name="notificationsFastModeDescription">您將會透過 Google 的通知服務可靠且迅速的收到通知。</string>
+    <string name="notificationsSlowModeDescription">Session 會偶爾在背景執行時檢查新訊息。</string>
+    <string name="open">開啟</string>
+    <string name="urlCopy">複製網址</string>
+    <string name="enable">啟用</string>
+    <string name="download">下載</string>
+    <string name="media">媒體</string>
+    <string name="theError">錯誤</string>
+    <string name="warning">警告</string>
+    <string name="pin">釘選</string>
+    <string name="pinUnpin">取消釘選</string>
+    <string name="messages">訊息</string>
+</resources>

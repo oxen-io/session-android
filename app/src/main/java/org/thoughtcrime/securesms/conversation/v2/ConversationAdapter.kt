@@ -12,6 +12,8 @@ import androidx.core.util.getOrDefault
 import androidx.core.util.set
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import java.util.concurrent.atomic.AtomicLong
+import kotlin.math.min
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -20,6 +22,7 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
+import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
@@ -29,8 +32,8 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import com.bumptech.glide.RequestManager
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.showSessionDialog
-import java.util.concurrent.atomic.AtomicLong
-import kotlin.math.min
+import org.thoughtcrime.securesms.ui.getSubbedCharSequence
+import org.thoughtcrime.securesms.ui.getSubbedString
 
 class ConversationAdapter(
     context: Context,
@@ -154,9 +157,13 @@ class ConversationAdapter(
                 if (message.isCallLog && message.isFirstMissedCall) {
                     viewHolder.view.setOnClickListener {
                         context.showSessionDialog {
-                            title(R.string.CallNotificationBuilder_first_call_title)
-                            text(R.string.CallNotificationBuilder_first_call_message)
-                            button(R.string.activity_settings_title) {
+                            val titleTxt = context.getSubbedString(R.string.callsMissedCallFrom, NAME_KEY to message.individualRecipient.name!!)
+                            title(titleTxt)
+
+                            val bodyTxt = context.getSubbedCharSequence(R.string.callsYouMissedCallPermissions, NAME_KEY to message.individualRecipient.name!!)
+                            text(bodyTxt)
+
+                            button(R.string.sessionSettings) {
                                 Intent(context, PrivacySettingsActivity::class.java)
                                     .let(context::startActivity)
                             }
@@ -190,7 +197,7 @@ class ConversationAdapter(
     private fun getMessageBefore(position: Int, cursor: Cursor): MessageRecord? {
         // The message that's visually before the current one is actually after the current
         // one for the cursor because the layout is reversed
-        if (isReversed && !cursor.moveToPosition(position + 1)) { return null }
+        if (isReversed &&  !cursor.moveToPosition(position + 1)) { return null }
         if (!isReversed && !cursor.moveToPosition(position - 1)) { return null }
 
         return messageDB.readerFor(cursor).current
