@@ -23,6 +23,15 @@
         <item name="android:textSize">@dimen/very_large_font_size</item>
     </style>
 
+    <style name="TextAppearance.Session.Dialog.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/medium2_font_size</item>
+    </style>
+
+    <style name="TextAppearance.Session.Dialog.Message" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/small2_font_size</item>
+    </style>
+
     <style name="ThemeOverlay.Session.AlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/default_dialog_background</item>
         <item name="android:colorBackground">?backgroundSecondary</item>

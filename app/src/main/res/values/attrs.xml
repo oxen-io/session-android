@@ -34,6 +34,7 @@
     <attr name="danger" format="reference|color"/>
     <attr name="backgroundSecondary" format="reference|color"/>
     <attr name="prominentButtonColor" format="reference|color"/>
+    <attr name="textColorAlert" format="reference|color"/>
     <attr name="elementBorderColor" format="reference|color"/>
     <attr name="conversation_background" format="reference|color"/>
     <attr name="conversation_editor_background" format="reference|color"/>

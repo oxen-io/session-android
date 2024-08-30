@@ -317,6 +317,7 @@
         <item name="android:textColorTertiary">@color/classic_dark_5</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/gray27</item>
+        <item name="textColorAlert">@color/classic_dark_6</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:navigationBarColor">@color/navigation_bar</item>
         <item name="bottomSheetDialogTheme">@style/Classic.Dark.BottomSheet</item>
@@ -399,6 +400,7 @@
         <item name="android:textColorTertiary">@color/classic_light_1</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/gray27</item>
+        <item name="textColorAlert">@color/classic_light_0</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:navigationBarColor">@color/classic_light_navigation_bar</item>
         <item name="colorCellBackground">@color/classic_light_6</item>
@@ -489,6 +491,7 @@
         <item name="android:textColorTertiary">@color/ocean_dark_5</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/ocean_dark_5</item>
+        <item name="textColorAlert">@color/ocean_dark_7</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:navigationBarColor">@color/navigation_bar</item>
         <item name="colorCellBackground">@color/ocean_dark_3</item>
@@ -574,6 +577,7 @@
         <item name="android:textColorTertiary">@color/ocean_light_2</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/ocean_light_6</item>
+        <item name="textColorAlert">@color/ocean_light_0</item>
         <item name="android:navigationBarColor">@color/ocean_light_navigation_bar</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="colorCellBackground">@color/ocean_light_5</item>
@@ -680,6 +684,7 @@
         <item name="prominentButtonColor">?colorAccent</item>
         <item name="elementBorderColor">@color/classic_dark_3</item>
         <item name="danger">@color/danger_dark</item>
+        <item name="textColorAlert">@color/classic_dark_6</item>
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">#1B1B1B</item>

@@ -9,6 +9,10 @@
     <dimen name="large_font_size">20sp</dimen>
     <dimen name="very_large_font_size">26sp</dimen>
 
+    <!-- Need to be temporary added until the theming is properly centralised in Compose -->
+    <dimen name="small2_font_size">16sp</dimen>
+    <dimen name="medium2_font_size">18sp</dimen>
+
     <!-- Element Sizes -->
     <dimen name="dialog_button_height">60dp</dimen>
     <dimen name="small_button_height">34dp</dimen>
@@ -36,6 +40,7 @@
     <dimen name="input_bar_height">56dp</dimen>
     <dimen name="input_bar_button_collapsed_size">40dp</dimen>
     <dimen name="input_bar_button_expanded_size">48dp</dimen>
+    <dimen name="dialog_radio_height">42dp</dimen>
 
     <!-- Distances -->
     <dimen name="very_small_spacing">4dp</dimen>
@@ -120,6 +125,6 @@
     <dimen name="react_with_any_emoji_bottom_sheet_dialog_fragment_tabs_height">40dp</dimen>
     <dimen name="max_text_width">200dp</dimen>
     <dimen name="radial_size">34dp</dimen>
-    <dimen name="small_radial_size">24dp</dimen>
+    <dimen name="small_radial_size">26dp</dimen>
 
 </resources>
