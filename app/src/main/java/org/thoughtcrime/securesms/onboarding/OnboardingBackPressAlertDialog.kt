@@ -17,7 +17,7 @@ import org.thoughtcrime.securesms.ui.theme.LocalColors
 @Composable
 fun OnboardingBackPressAlertDialog(
     dismissDialog: () -> Unit,
-    @StringRes textId: Int = R.string.onboardingBackAccountCreation,
+    @StringRes textId: Int,
     quit: () -> Unit
 ) {
     val c = LocalContext.current

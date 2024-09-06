@@ -58,14 +58,19 @@ internal class MessageNotificationsViewModel(
     fun onBackPressed(): Boolean = when (state) {
         is State.CreateAccount -> false
         is State.LoadAccount -> {
-            _uiStates.update { it.copy(showDialog = true) }
+            _uiStates.update { it.copy(showBackWarningDialogForLoad = true) }
 
             true
         }
     }
 
     fun dismissDialog() {
-        _uiStates.update { it.copy(showDialog = false) }
+        _uiStates.update {
+            it.copy(
+                showBackWarningDialogForLoad = false,
+                showBackWarningDialogForNewAccount = false
+            )
+        }
     }
 
     fun quit() {
@@ -78,7 +83,8 @@ internal class MessageNotificationsViewModel(
 
     data class UiState(
         val pushEnabled: Boolean = true,
-        val showDialog: Boolean = false,
+        val showBackWarningDialogForNewAccount: Boolean = false,
+        val showBackWarningDialogForLoad: Boolean = false,
         val clearData: Boolean = false
     ) {
         val pushDisabled get() = !pushEnabled
