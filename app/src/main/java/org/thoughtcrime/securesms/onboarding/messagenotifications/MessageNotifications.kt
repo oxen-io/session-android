@@ -53,14 +53,11 @@ internal fun MessageNotificationsScreen(
         return
     }
 
-    if (state.showBackWarningDialogForNewAccount || state.showBackWarningDialogForLoad)  {
+    if (state.showingBackWarningDialogText != null)  {
         OnboardingBackPressAlertDialog(dismissDialog,
-            textId = if (state.showBackWarningDialogForNewAccount) {
-                R.string.onboardingBackAccountCreation
-            } else {
-                R.string.onboardingBackLoadAccount
-            },
-            quit = quit)
+            textId = state.showingBackWarningDialogText,
+            quit = quit
+        )
     }
 
     Column {

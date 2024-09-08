@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.notifications.PushRegistry
@@ -58,7 +59,7 @@ internal class MessageNotificationsViewModel(
     fun onBackPressed(): Boolean = when (state) {
         is State.CreateAccount -> false
         is State.LoadAccount -> {
-            _uiStates.update { it.copy(showBackWarningDialogForLoad = true) }
+            _uiStates.update { it.copy(showingBackWarningDialogText = R.string.onboardingBackLoadAccount) }
 
             true
         }
@@ -66,10 +67,7 @@ internal class MessageNotificationsViewModel(
 
     fun dismissDialog() {
         _uiStates.update {
-            it.copy(
-                showBackWarningDialogForLoad = false,
-                showBackWarningDialogForNewAccount = false
-            )
+            it.copy(showingBackWarningDialogText = null)
         }
     }
 
@@ -83,8 +81,7 @@ internal class MessageNotificationsViewModel(
 
     data class UiState(
         val pushEnabled: Boolean = true,
-        val showBackWarningDialogForNewAccount: Boolean = false,
-        val showBackWarningDialogForLoad: Boolean = false,
+        val showingBackWarningDialogText: Int? = null,
         val clearData: Boolean = false
     ) {
         val pushDisabled get() = !pushEnabled
