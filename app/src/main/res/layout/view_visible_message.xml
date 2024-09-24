@@ -118,7 +118,7 @@
 
             <TextView
                 android:id="@+id/messageStatusTextView"
-                android:contentDescription="@string/AccessibilityId_message_sent_status"
+                android:contentDescription="@string/AccessibilityId_sent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="2dp"

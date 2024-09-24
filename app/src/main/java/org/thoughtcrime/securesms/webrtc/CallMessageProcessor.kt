@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.webrtc
 
+import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -24,6 +25,7 @@ import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.OFFER
 import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.PRE_OFFER
 import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.PROVISIONAL_ANSWER
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.util.CallNotificationBuilder
 import org.webrtc.IceCandidate
@@ -59,18 +61,16 @@ class CallMessageProcessor(private val context: Context, private val textSecureP
                 Log.i("Loki", "Contact is approved?: $approvedContact")
                 if (!approvedContact && storage.getUserPublicKey() != sender) continue
 
-                if (!textSecurePreferences.isCallNotificationsEnabled()) {
+                // if the user has not enabled voice/video calls
+                // or if the user has not granted audio/microphone permissions
+                if (
+                    !textSecurePreferences.isCallNotificationsEnabled() ||
+                        !Permissions.hasAll(context, Manifest.permission.RECORD_AUDIO)
+                    ) {
                     Log.d("Loki","Dropping call message if call notifications disabled")
                     if (nextMessage.type != PRE_OFFER) continue
                     val sentTimestamp = nextMessage.sentTimestamp ?: continue
-                    if (textSecurePreferences.setShownCallNotification()) {
-                        // first time call notification encountered
-                        val notification = CallNotificationBuilder.getFirstCallNotification(context)
-                        context.getSystemService(NotificationManager::class.java).notify(CallNotificationBuilder.WEBRTC_NOTIFICATION, notification)
-                        insertMissedCall(sender, sentTimestamp, isFirstCall = true)
-                    } else {
-                        insertMissedCall(sender, sentTimestamp)
-                    }
+                    insertMissedCall(sender, sentTimestamp)
                     continue
                 }
 
@@ -92,14 +92,10 @@ class CallMessageProcessor(private val context: Context, private val textSecureP
         }
     }
 
-    private fun insertMissedCall(sender: String, sentTimestamp: Long, isFirstCall: Boolean = false) {
+    private fun insertMissedCall(sender: String, sentTimestamp: Long) {
         val currentUserPublicKey = storage.getUserPublicKey()
         if (sender == currentUserPublicKey) return // don't insert a "missed" due to call notifications disabled if it's our own sender
-        if (isFirstCall) {
-            storage.insertCallMessage(sender, CallMessageType.CALL_FIRST_MISSED, sentTimestamp)
-        } else {
-            storage.insertCallMessage(sender, CallMessageType.CALL_MISSED, sentTimestamp)
-        }
+        storage.insertCallMessage(sender, CallMessageType.CALL_MISSED, sentTimestamp)
     }
 
     private fun incomingHangup(callMessage: CallMessage) {

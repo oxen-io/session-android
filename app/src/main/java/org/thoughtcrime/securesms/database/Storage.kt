@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.database
 
 import android.content.Context
 import android.net.Uri
+import network.loki.messenger.R
 import java.security.MessageDigest
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_HIDDEN
@@ -633,7 +634,11 @@ open class Storage(
                 // Notify the user
                 val threadID = getOrCreateThreadIdFor(Address.fromSerialized(groupId))
                 threadDb.setDate(threadID, formationTimestamp)
-                insertOutgoingInfoMessage(context, groupId, SignalServiceGroup.Type.CREATION, title, members.map { it.serialize() }, admins.map { it.serialize() }, threadID, formationTimestamp)
+
+                // Note: Commenting out this line prevents the timestamp of room creation being added to a new closed group,
+                // which in turn allows us to show the `groupNoMessages` control message text.
+                //insertOutgoingInfoMessage(context, groupId, SignalServiceGroup.Type.CREATION, title, members.map { it.serialize() }, admins.map { it.serialize() }, threadID, formationTimestamp)
+
                 // Don't create config group here, it's from a config update
                 // Start polling
                 ClosedGroupPollerV2.shared.startPolling(group.accountId)
@@ -1444,7 +1449,10 @@ open class Storage(
         SSKEnvironment.shared.messageExpirationManager.maybeStartExpiration(sentTimestamp, senderPublicKey, expiryMode)
     }
 
-    override fun insertMessageRequestResponse(response: MessageRequestResponse) {
+    /**
+     * This will create a control message used to indicate that a contact has accepted our message request
+     */
+    override fun insertMessageRequestResponseFromContact(response: MessageRequestResponse) {
         val userPublicKey = getUserPublicKey()
         val senderPublicKey = response.sender!!
         val recipientPublicKey = response.recipient!!
@@ -1538,6 +1546,34 @@ open class Storage(
         }
     }
 
+    /**
+     * This will create a control message used to indicate that you have accepted a message request
+     */
+    override fun insertMessageRequestResponseFromYou(threadId: Long){
+        val userPublicKey = getUserPublicKey() ?: return
+
+        val mmsDb = DatabaseComponent.get(context).mmsDatabase()
+        val message = IncomingMediaMessage(
+            fromSerialized(userPublicKey),
+            SnodeAPI.nowWithOffset,
+            -1,
+            0,
+            0,
+            false,
+            false,
+            true,
+            false,
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent()
+        )
+        mmsDb.insertSecureDecryptedMessageInbox(message, threadId, runThreadUpdate = false)
+    }
+
     override fun getRecipientApproved(address: Address): Boolean {
         return DatabaseComponent.get(context).recipientDatabase().getApproved(address)
     }
@@ -1547,6 +1583,7 @@ open class Storage(
         if (recipient.isLocalNumber || !recipient.isContactRecipient) return
         configFactory.contacts?.upsertContact(recipient.address.serialize()) {
             this.approved = approved
+            this.priority = PRIORITY_VISIBLE
         }
     }
 

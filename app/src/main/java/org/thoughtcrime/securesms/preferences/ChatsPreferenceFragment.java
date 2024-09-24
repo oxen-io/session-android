@@ -9,7 +9,7 @@ import org.thoughtcrime.securesms.permissions.Permissions;
 
 import network.loki.messenger.R;
 
-public class ChatsPreferenceFragment extends ListSummaryPreferenceFragment {
+public class ChatsPreferenceFragment extends CorrectedPreferenceFragment {
   private static final String TAG = ChatsPreferenceFragment.class.getSimpleName();
 
   @Override

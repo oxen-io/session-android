@@ -40,7 +40,7 @@
 
                 <TextView
                     android:id="@+id/conversationViewDisplayNameTextView"
-                    android:contentDescription="@string/AccessibilityId_conversation_list_item"
+                    android:contentDescription="@string/AccessibilityId_conversationListItem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"

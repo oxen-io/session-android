@@ -16,6 +16,8 @@
  */
 package org.thoughtcrime.securesms;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -23,8 +25,8 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Build.VERSION;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,7 +44,6 @@ import android.view.WindowInsetsController;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -54,10 +55,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-
+import com.squareup.phrase.Phrase;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.WeakHashMap;
+import kotlin.Unit;
+import network.loki.messenger.R;
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment;
@@ -79,15 +84,8 @@ import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.util.AttachmentUtil;
 import org.thoughtcrime.securesms.util.DateUtils;
-import org.thoughtcrime.securesms.util.SaveAttachmentTask;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask.Attachment;
-
-import java.io.IOException;
-import java.util.Locale;
-import java.util.WeakHashMap;
-
-import kotlin.Unit;
-import network.loki.messenger.R;
+import org.thoughtcrime.securesms.util.SaveAttachmentTask;
 
 /**
  * Activity for displaying media attachments in-app
@@ -243,12 +241,12 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       CharSequence relativeTimeSpan;
 
       if (mediaItem.date > 0) {
-        relativeTimeSpan = DateUtils.getDisplayFormattedTimeSpanString(this, Locale.getDefault(), mediaItem.date);
+        relativeTimeSpan = DateUtils.INSTANCE.getDisplayFormattedTimeSpanString(this, Locale.getDefault(), mediaItem.date);
       } else {
-        relativeTimeSpan = getString(R.string.MediaPreviewActivity_draft);
+        relativeTimeSpan = getString(R.string.draft);
       }
 
-      if      (mediaItem.outgoing)          getSupportActionBar().setTitle(getString(R.string.MediaPreviewActivity_you));
+      if      (mediaItem.outgoing)          getSupportActionBar().setTitle(getString(R.string.you));
       else if (mediaItem.recipient != null) getSupportActionBar().setTitle(mediaItem.recipient.toShortString());
       else                                  getSupportActionBar().setTitle("");
 
@@ -259,7 +257,6 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   @Override
   public void onResume() {
     super.onResume();
-
     initializeMedia();
   }
 
@@ -292,7 +289,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     captionContainer          = findViewById(R.id.media_preview_caption_container);
     playbackControlsContainer = findViewById(R.id.media_preview_playback_controls_container);
 
-    setSupportActionBar(findViewById(R.id.toolbar));
+    setSupportActionBar(findViewById(R.id.search_toolbar));
     ActionBar actionBar = getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);
     actionBar.setHomeButtonEnabled(true);
@@ -362,7 +359,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   private void initializeMedia() {
     if (!isContentTypeSupported(initialMediaType)) {
       Log.w(TAG, "Unsupported media type sent to MediaPreviewActivity, finishing.");
-      Toast.makeText(getApplicationContext(), R.string.MediaPreviewActivity_unssuported_media_type, Toast.LENGTH_LONG).show();
+      Toast.makeText(getApplicationContext(), R.string.attachmentsErrorNotSupported, Toast.LENGTH_LONG).show();
       finish();
     }
 
@@ -412,12 +409,14 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     MediaItem mediaItem = getCurrentMediaItem();
     if (mediaItem == null) return;
 
-    SaveAttachmentTask.showWarningDialog(this, 1, () -> {
+    SaveAttachmentTask.showOneTimeWarningDialogOrSave(this, 1, () -> {
       Permissions.with(this)
               .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
               .maxSdkVersion(Build.VERSION_CODES.P)
-              .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
-              .onAnyDenied(() -> Toast.makeText(this, R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show())
+              .withPermanentDenialDialog(getPermanentlyDeniedStorageText())
+              .onAnyDenied(() -> {
+                Toast.makeText(this, getPermanentlyDeniedStorageText(), Toast.LENGTH_LONG).show();
+              })
               .onAllGranted(() -> {
                 SaveAttachmentTask saveTask = new SaveAttachmentTask(MediaPreviewActivity.this);
                 long saveDate = (mediaItem.date > 0) ? mediaItem.date : SnodeAPI.getNowWithOffset();
@@ -431,6 +430,12 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
               .execute();
       return Unit.INSTANCE;
     });
+  }
+
+  private String getPermanentlyDeniedStorageText(){
+      return Phrase.from(getApplicationContext(), R.string.permissionsStorageDeniedLegacy)
+              .put(APP_NAME_KEY, getString(R.string.app_name))
+              .format().toString();
   }
 
   private void sendMediaSavedNotificationIfNeeded() {
@@ -483,6 +488,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     super.onOptionsItemSelected(item);
 
     switch (item.getItemId()) {
+      // TODO / WARNING: R.id values are NON-CONSTANT in Gradle 8.0+ - what would be the best way to address this?! -AL 2024/08/26
       case R.id.media_preview__overview: showOverview(); return true;
       case R.id.media_preview__forward:  forward();      return true;
       case R.id.save:                    saveToDisk();   return true;
@@ -533,15 +539,11 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       throw new RuntimeException("restartItem = " + restartItem + ", data.second = " + data.second + " leftIsRecent = " + leftIsRecent, e);
     }
 
-    if (item == 0) {
-      viewPagerListener.onPageSelected(0);
-    }
+    if (item == 0) { viewPagerListener.onPageSelected(0); }
   }
 
   @Override
-  public void onLoaderReset(@NonNull Loader<Pair<Cursor, Integer>> loader) {
-
-  }
+  public void onLoaderReset(@NonNull Loader<Pair<Cursor, Integer>> loader) { /* Do nothing */  }
 
   private class ViewPagerListener implements ViewPager.OnPageChangeListener {
 
@@ -576,13 +578,11 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+      /* Do nothing */
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
+    public void onPageScrollStateChanged(int state) { /* Do nothing */ }
   }
 
   private static class SingleItemPagerAdapter extends MediaItemAdapter {
@@ -647,9 +647,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     }
 
     @Override
-    public void pause(int position) {
-
-    }
+    public void pause(int position) { /* Do nothing */ }
 
     @Override
     public @Nullable View getPlaybackControls(int position) {

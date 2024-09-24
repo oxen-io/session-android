@@ -35,7 +35,7 @@ class SelectContactsActivity : PassphraseRequiredActionBarActivity(), LoaderMana
         super.onCreate(savedInstanceState, isReady)
         binding = ActivitySelectContactsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar!!.title = resources.getString(R.string.activity_select_contacts_title)
+        supportActionBar!!.title = resources.getString(R.string.membersInvite)
 
         usersToExclude = intent.getStringArrayExtra(usersToExcludeKey)?.toSet() ?: setOf()
         val emptyStateText = intent.getStringExtra(emptyStateTextKey)

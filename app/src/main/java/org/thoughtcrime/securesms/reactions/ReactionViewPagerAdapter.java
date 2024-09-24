@@ -99,7 +99,7 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
       recycler.setLayoutParams(params);
       DividerItemDecoration decoration = new DividerItemDecoration(itemView.getContext(), LinearLayoutManager.VERTICAL);
-      decoration.setDrawable(ContextUtil.requireDrawable(itemView.getContext(), R.drawable.vertical_divider));
+      decoration.setDrawable(ContextUtil.requireDrawable(itemView.getContext(), R.drawable.horizontal_divider));
       recycler.addItemDecoration(decoration);
       recycler.setAdapter(adapter);
     }

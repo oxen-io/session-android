@@ -94,7 +94,7 @@ class MediaRepository {
     Uri allMediaThumbnail = imageFolders.getThumbnailTimestamp() > videoFolders.getThumbnailTimestamp() ? imageFolders.getThumbnail() : videoFolders.getThumbnail();
     if (allMediaThumbnail != null) {
       int allMediaCount = Stream.of(mediaFolders).reduce(0, (count, folder) -> count + folder.getItemCount());
-      mediaFolders.add(0, new MediaFolder(allMediaThumbnail, context.getString(R.string.MediaRepository_all_media), allMediaCount, Media.ALL_MEDIA_BUCKET_ID));
+      mediaFolders.add(0, new MediaFolder(allMediaThumbnail, context.getString(R.string.conversationsSettingsAllMedia), allMediaCount, Media.ALL_MEDIA_BUCKET_ID));
     }
 
     return mediaFolders;

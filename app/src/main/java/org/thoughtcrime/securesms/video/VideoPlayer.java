@@ -160,7 +160,7 @@ public class VideoPlayer extends FrameLayout {
       //noinspection ConstantConditions
       this.videoView.setVideoURI(videoSource.getUri());
     } else {
-      Toast.makeText(getContext(), getContext().getString(R.string.VideoPlayer_error_playing_video), Toast.LENGTH_LONG).show();
+      Toast.makeText(getContext(), getContext().getString(R.string.videoErrorPlay), Toast.LENGTH_LONG).show();
       return;
     }
 

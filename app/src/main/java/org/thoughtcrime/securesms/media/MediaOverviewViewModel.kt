@@ -130,7 +130,7 @@ class MediaOverviewViewModel(
             .groupBy { record ->
                 val time =
                     ZonedDateTime.ofInstant(Instant.ofEpochMilli(record.date), ZoneId.of("UTC"))
-                timeBuckets.getBucketText(time)?.let(application::getString)
+                timeBuckets.getBucketText(application, time)
                     ?: time.toLocalDate().withDayOfMonth(1)
             }
             .map { (bucket, records) ->
@@ -171,6 +171,11 @@ class MediaOverviewViewModel(
 
     fun onItemClicked(item: MediaOverviewItem) {
         if (inSelectionMode.value) {
+            if (item.slide.hasDocument()) {
+                // We don't support selecting documents in selection mode
+                return
+            }
+
             val newSet = mutableSelectedItemIDs.value.toMutableSet()
             if (item.id in newSet) {
                 newSet.remove(item.id)
@@ -213,11 +218,6 @@ class MediaOverviewViewModel(
     }
 
     fun onTabItemClicked(tab: MediaOverviewTab) {
-        if (inSelectionMode.value) {
-            // Not allowing to switch tabs while in selection mode
-            return
-        }
-
         mutableSelectedTab.value = tab
     }
 
@@ -234,11 +234,7 @@ class MediaOverviewViewModel(
         viewModelScope.launch {
             val selectedMedia = selectedMedia.toList()
 
-            mutableShowingActionProgress.value = application.resources.getQuantityString(
-                R.plurals.ConversationFragment_saving_n_attachments,
-                selectedMedia.size,
-                selectedMedia.size,
-            )
+            mutableShowingActionProgress.value = application.resources.getString(R.string.saving)
 
             val attachments = selectedMedia
                 .asSequence()
@@ -308,7 +304,7 @@ class MediaOverviewViewModel(
         }
 
         viewModelScope.launch {
-            mutableShowingActionProgress.value = application.getString(R.string.MediaOverviewActivity_Media_delete_progress_message)
+            mutableShowingActionProgress.value = application.getString(R.string.deleting)
 
             // Delete the selected media items, and retrieve the thread ID for the address if any
             val threadId = withContext(Dispatchers.Default) {

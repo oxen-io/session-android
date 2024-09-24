@@ -64,7 +64,7 @@ fun MediaPage(
             state.isEmpty() -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        text = stringResource(R.string.media_overview_activity__no_media),
+                        text = stringResource(R.string.attachmentsMediaEmpty),
                         style = LocalType.current.base,
                         color = LocalColors.current.text
                     )

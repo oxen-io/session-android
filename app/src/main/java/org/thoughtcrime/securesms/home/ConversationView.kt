@@ -103,7 +103,7 @@ class ConversationView : LinearLayout {
         }
         binding.muteIndicatorImageView.setImageResource(drawableRes)
         binding.snippetTextView.text = highlightMentions(
-            text = thread.getSnippet(),
+            text = thread.getDisplayBody(context),
             formatOnly = true, // no styling here, only text formatting
             threadID = thread.threadId,
             context = context
@@ -136,19 +136,8 @@ class ConversationView : LinearLayout {
     }
 
     private fun getTitle(recipient: Recipient): String? = when {
-        recipient.isLocalNumber -> context.getString(R.string.note_to_self)
+        recipient.isLocalNumber -> context.getString(R.string.noteToSelf)
         else -> recipient.toShortString() // Internally uses the Contact API
-    }
-
-    private fun ThreadRecord.getSnippet(): CharSequence = listOfNotNull(
-        getSnippetPrefix(),
-        getDisplayBody(context)
-    ).joinToString(": ")
-
-    private fun ThreadRecord.getSnippetPrefix(): CharSequence? = when {
-        recipient.isLocalNumber || lastMessage?.isControlMessage == true -> null
-        lastMessage?.isOutgoing == true -> resources.getString(R.string.MessageRecord_you)
-        else -> lastMessage?.individualRecipient?.toShortString()
     }
     // endregion
 }

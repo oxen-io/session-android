@@ -49,14 +49,11 @@ abstract class Slide(@JvmField protected val context: Context, protected val att
                 // A missing file name is the legacy way to determine if an audio attachment is
                 // a voice note vs. other arbitrary audio attachments.
                 if (attachment.isVoiceNote || attachment.fileName.isNullOrEmpty()) {
-                    val baseString = context.getString(R.string.attachment_type_voice_message)
-                    val languageIsLTR = Util.usingLeftToRightLanguage(context)
-                    val attachmentString = if (languageIsLTR) {
-                        "🎙 $baseString"
-                    } else {
-                        "$baseString 🎙"
-                    }
-                    return Optional.fromNullable(attachmentString)
+                     val voiceTxt = Phrase.from(context, R.string.messageVoiceSnippet)
+                        .put(EMOJI_KEY, "🎙")
+                        .format().toString()
+
+                    return Optional.fromNullable(voiceTxt)
                 }
             }
             val txt = Phrase.from(context, R.string.attachmentsNotification)
@@ -66,19 +63,19 @@ abstract class Slide(@JvmField protected val context: Context, protected val att
         }
 
     private fun emojiForMimeType(): String {
-        return if (MediaUtil.isGif(attachment)) {
-            "🎡"
-        } else if (MediaUtil.isImage(attachment)) {
-            "📷"
-        } else if (MediaUtil.isVideo(attachment)) {
-            "🎥"
-        } else if (MediaUtil.isAudio(attachment)) {
-            "🎧"
-        } else if (MediaUtil.isFile(attachment)) {
-            "📎"
-        } else {
+        return when{
+            MediaUtil.isGif(attachment) -> "🎡"
+
+            MediaUtil.isImage(attachment) -> "📷"
+
+            MediaUtil.isVideo(attachment) -> "🎥"
+
+            MediaUtil.isAudio(attachment) -> "🎧"
+
+            MediaUtil.isFile(attachment) -> "📎"
+
             // We don't provide emojis for other mime-types such as VCARD
-            ""
+            else -> ""
         }
     }
 

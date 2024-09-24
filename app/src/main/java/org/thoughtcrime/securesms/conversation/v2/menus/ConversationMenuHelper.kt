@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2.menus
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -16,15 +17,18 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.leave
 import org.session.libsession.utilities.GroupUtil.doubleDecodeGroupID
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
-import org.thoughtcrime.securesms.media.MediaOverviewActivity
 import org.thoughtcrime.securesms.ShortcutLauncherActivity
 import org.thoughtcrime.securesms.calls.WebRtcCallActivity
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity
@@ -33,10 +37,14 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity.Companion.groupIDKey
+import org.thoughtcrime.securesms.media.MediaOverviewActivity
+import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.findActivity
+import org.thoughtcrime.securesms.ui.getSubbedString
 import org.thoughtcrime.securesms.util.BitmapUtil
 import java.io.IOException
 
@@ -50,11 +58,11 @@ object ConversationMenuHelper {
     ) {
         // Prepare
         menu.clear()
-        val isOpenGroup = thread.isCommunityRecipient
+        val isCommunity = thread.isCommunityRecipient
         // Base menu (options that should always be present)
         inflater.inflate(R.menu.menu_conversation, menu)
         // Expiring messages
-        if (!isOpenGroup && (thread.hasApprovedMe() || thread.isClosedGroupRecipient || thread.isLocalNumber)) {
+        if (!isCommunity && (thread.hasApprovedMe() || thread.isClosedGroupRecipient || thread.isLocalNumber)) {
             inflater.inflate(R.menu.menu_conversation_expiration, menu)
         }
         // One-on-one chat menu allows copying the account id
@@ -74,7 +82,7 @@ object ConversationMenuHelper {
             inflater.inflate(R.menu.menu_conversation_closed_group, menu)
         }
         // Open group menu
-        if (isOpenGroup) {
+        if (isCommunity) {
             inflater.inflate(R.menu.menu_conversation_open_group, menu)
         }
         // Muting
@@ -160,15 +168,30 @@ object ConversationMenuHelper {
 
     private fun call(context: Context, thread: Recipient) {
 
+        // if the user has not enabled voice/video calls
         if (!TextSecurePreferences.isCallNotificationsEnabled(context)) {
             context.showSessionDialog {
-                title(R.string.ConversationActivity_call_title)
-                text(R.string.ConversationActivity_call_prompt)
-                button(R.string.activity_settings_title, R.string.AccessibilityId_settings) {
+                title(R.string.callsPermissionsRequired)
+                text(R.string.callsPermissionsRequiredDescription)
+                button(R.string.sessionSettings, R.string.AccessibilityId_sessionSettings) {
                     Intent(context, PrivacySettingsActivity::class.java).let(context::startActivity)
                 }
                 cancelButton()
             }
+            return
+        }
+        // or if the user has not granted audio/microphone permissions
+        else if (!Permissions.hasAll(context, Manifest.permission.RECORD_AUDIO)) {
+            Log.d("Loki", "Attempted to make a call without audio permissions")
+
+            Permissions.with(context.findActivity())
+                .request(Manifest.permission.RECORD_AUDIO)
+                .withPermanentDenialDialog(
+                    context.getSubbedString(R.string.permissionsMicrophoneAccessRequired,
+                    APP_NAME_KEY to context.getString(R.string.app_name))
+                )
+                .execute()
+
             return
         }
 
@@ -178,7 +201,6 @@ object ConversationMenuHelper {
         Intent(context, WebRtcCallActivity::class.java)
             .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
             .let(context::startActivity)
-
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -215,7 +237,7 @@ object ConversationMenuHelper {
                     .setIntent(ShortcutLauncherActivity.createIntent(context, thread.address))
                     .build()
                 if (ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null)) {
-                    Toast.makeText(context, context.resources.getString(R.string.ConversationActivity_added_to_home_screen), Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.resources.getString(R.string.conversationsAddedToHome), Toast.LENGTH_LONG).show()
                 }
             }
         }.execute()
@@ -272,17 +294,26 @@ object ConversationMenuHelper {
         val accountID = TextSecurePreferences.getLocalNumber(context)
         val isCurrentUserAdmin = admins.any { it.toString() == accountID }
         val message = if (isCurrentUserAdmin) {
-            "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
+            Phrase.from(context, R.string.groupDeleteDescription)
+                .put(GROUP_NAME_KEY, group.title)
+                .format()
         } else {
-            context.resources.getString(R.string.ConversationActivity_are_you_sure_you_want_to_leave_this_group)
+            Phrase.from(context, R.string.groupLeaveDescription)
+                .put(GROUP_NAME_KEY, group.title)
+                .format()
         }
 
-        fun onLeaveFailed() = Toast.makeText(context, R.string.ConversationActivity_error_leaving_group, Toast.LENGTH_LONG).show()
+        fun onLeaveFailed() {
+            val txt = Phrase.from(context, R.string.groupLeaveErrorFailed)
+                .put(GROUP_NAME_KEY, group.title)
+                .format().toString()
+            Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
+        }
 
         context.showSessionDialog {
-            title(R.string.ConversationActivity_leave_group)
+            title(R.string.groupLeave)
             text(message)
-            button(R.string.yes) {
+            dangerButton(R.string.leave) {
                 try {
                     val groupPublicKey = doubleDecodeGroupID(thread.address.toString()).toHexString()
                     val isClosedGroup = DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(groupPublicKey)
@@ -293,7 +324,7 @@ object ConversationMenuHelper {
                     onLeaveFailed()
                 }
             }
-            button(R.string.no)
+            button(R.string.cancel)
         }
     }
 
@@ -309,7 +340,7 @@ object ConversationMenuHelper {
     }
 
     private fun mute(context: Context, thread: Recipient) {
-        showMuteDialog(ContextThemeWrapper(context, context.theme)) { until ->
+        showMuteDialog(ContextThemeWrapper(context, context.theme)) { until: Long ->
             DatabaseComponent.get(context).recipientDatabase().setMuted(thread, until)
         }
     }

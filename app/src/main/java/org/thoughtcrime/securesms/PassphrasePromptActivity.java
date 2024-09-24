@@ -16,6 +16,8 @@
  */
 package org.thoughtcrime.securesms;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.animation.Animator;
 import android.app.KeyguardManager;
 import android.content.ComponentName;
@@ -25,31 +27,24 @@ import android.content.ServiceConnection;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.TypefaceSpan;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
-
+import android.widget.TextView;
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 import androidx.core.os.CancellationSignal;
-
+import com.squareup.phrase.Phrase;
+import java.security.Signature;
+import network.loki.messenger.R;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.components.AnimatingToggle;
 import org.thoughtcrime.securesms.crypto.BiometricSecretProvider;
 import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.AnimationCompleteListener;
-
-import java.security.InvalidKeyException;
-import java.security.Signature;
-
-import network.loki.messenger.R;
 
 //TODO Rename to ScreenLockActivity and refactor to Kotlin.
 public class PassphrasePromptActivity extends BaseActionBarActivity {
@@ -158,16 +153,22 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
   }
 
   private void initializeResources() {
+
+    TextView statusTitle = findViewById(R.id.app_lock_status_title);
+    if (statusTitle != null) {
+      Context c = getApplicationContext();
+      String lockedTxt = Phrase.from(c, R.string.lockAppLocked)
+              .put(APP_NAME_KEY, c.getString(R.string.app_name))
+              .format().toString();
+      statusTitle.setText(lockedTxt);
+    }
+
     visibilityToggle              = findViewById(R.id.button_toggle);
     fingerprintPrompt             = findViewById(R.id.fingerprint_auth_container);
     lockScreenButton              = findViewById(R.id.lock_screen_auth_container);
     fingerprintManager            = FingerprintManagerCompat.from(this);
     fingerprintCancellationSignal = new CancellationSignal();
     fingerprintListener           = new FingerprintListener();
-
-    SpannableString hint = new SpannableString("  " + getString(R.string.PassphrasePromptActivity_enter_passphrase));
-    hint.setSpan(new RelativeSizeSpan(0.9f), 0, hint.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    hint.setSpan(new TypefaceSpan("sans-serif"), 0, hint.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
     fingerprintPrompt.setImageResource(R.drawable.ic_fingerprint_white_48dp);
     fingerprintPrompt.getBackground().setColorFilter(getResources().getColor(R.color.signal_primary), PorterDuff.Mode.SRC_IN);

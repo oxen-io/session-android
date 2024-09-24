@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/medium_font_size"
             android:textColor="?android:textColorPrimary"
-            android:text="@string/activity_create_closed_group_empty_state_message" />
+            android:text="@string/conversationsNone" />
 
     </LinearLayout>
 

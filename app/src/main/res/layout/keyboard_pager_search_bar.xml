@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="false"
-            android:contentDescription="@string/KeyboardPagerfragment_back_to_emoji"
+            android:contentDescription="@string/AccessibilityId_emojiSearch"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_search_24"
             app:tint="?searchIconColor" />
@@ -55,7 +55,7 @@
             android:layout_height="match_parent"
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="false"
-            android:contentDescription="@string/KeyboardPagerfragment_clear_search_entry"
+            android:contentDescription="@string/AccessibilityId_emojiSearchClear"
             android:scaleType="centerInside"
             app:tint="@color/signal_icon_tint_tab_selected"
             tools:srcCompat="@drawable/ic_x" />
@@ -78,7 +78,7 @@
         app:layout_constraintEnd_toStartOf="@id/emoji_search_clear"
         app:layout_constraintStart_toEndOf="@id/emoji_search_nav"
         app:layout_constraintTop_toTopOf="parent"
-        tools:hint="@string/KeyboardPagerFragment_search_emoji" />
+        tools:hint="@string/search" />
 
     <FrameLayout
         android:id="@+id/keyboard_search_click_only"

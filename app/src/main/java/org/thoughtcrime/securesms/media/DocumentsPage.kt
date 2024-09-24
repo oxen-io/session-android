@@ -44,7 +44,7 @@ fun DocumentsPage(
         content.isEmpty() -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = stringResource(R.string.media_overview_documents_fragment__no_documents_found),
+                    text = stringResource(R.string.attachmentsFilesEmpty),
                     style = LocalType.current.base,
                     color = LocalColors.current.text
                 )

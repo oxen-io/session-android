@@ -100,8 +100,7 @@ fun SessionOutlinedTextField(
             )
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(vertical = 28.dp)
-                .padding(horizontal = 21.dp)
+                .padding(LocalDimensions.current.spacing)
         ) {
             if (text.isEmpty()) {
                 Text(
@@ -134,7 +133,7 @@ fun SessionOutlinedTextField(
             Text(
                 it,
                 modifier = Modifier.fillMaxWidth()
-                    .contentDescription(R.string.AccessibilityId_error_message),
+                    .contentDescription(R.string.AccessibilityId_theError),
                 textAlign = TextAlign.Center,
                 style = LocalType.current.base.bold(),
                 color = LocalColors.current.danger

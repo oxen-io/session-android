@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.debugmenu
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
@@ -45,7 +48,7 @@ fun DebugMenu(
     sendCommand: (DebugMenuViewModel.Commands) -> Unit,
     modifier: Modifier = Modifier,
     onClose: () -> Unit
-){
+) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -56,7 +59,7 @@ fun DebugMenu(
     ) { contentPadding ->
         // display a snackbar when required
         LaunchedEffect(uiState.snackMessage) {
-            if(!uiState.snackMessage.isNullOrEmpty()){
+            if (!uiState.snackMessage.isNullOrEmpty()) {
                 snackbarHostState.showSnackbar(uiState.snackMessage)
             }
         }
@@ -102,13 +105,22 @@ fun DebugMenu(
                     .verticalScroll(rememberScrollState())
             ) {
                 // Info pane
-                DebugCell("App Info") {
+                val clipboardManager = LocalClipboardManager.current
+                val appVersion = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - ${
+                    BuildConfig.GIT_HASH.take(
+                        6
+                    )
+                })"
+
+                DebugCell(
+                    modifier = Modifier.clickable {
+                        // clicking the cell copies the version number to the clipboard
+                        clipboardManager.setText(AnnotatedString(appVersion))
+                    },
+                    title = "App Info"
+                ) {
                     Text(
-                        text = "Version: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - ${
-                            BuildConfig.GIT_HASH.take(
-                                6
-                            )
-                        })",
+                        text = "Version: $appVersion",
                         style = LocalType.current.base
                     )
                 }
@@ -137,9 +149,11 @@ fun ColumnScope.DebugCell(
 ) {
     Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
 
-    Cell {
+    Cell(
+        modifier = modifier
+    ) {
         Column(
-            modifier = modifier.padding(LocalDimensions.current.spacing)
+            modifier = Modifier.padding(LocalDimensions.current.spacing)
         ) {
             Text(
                 text = title,
@@ -155,7 +169,7 @@ fun ColumnScope.DebugCell(
 
 @Preview
 @Composable
-fun PreviewDebugMenu(){
+fun PreviewDebugMenu() {
     PreviewTheme {
         DebugMenu(
             uiState = DebugMenuViewModel.UIState(

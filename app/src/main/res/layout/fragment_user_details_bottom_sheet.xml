@@ -58,7 +58,7 @@
                 android:id="@+id/nameEditIcon"
                 android:layout_width="20dp"
                 android:layout_height="22dp"
-                android:contentDescription="@string/AccessibilityId_edit_user_nickname"
+                android:contentDescription="@string/AccessibilityId_displayNameNew"
                 android:paddingTop="2dp"
                 android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_baseline_edit_24" />
@@ -87,14 +87,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:contentDescription="@string/AccessibilityId_username"
+                android:contentDescription="@string/AccessibilityId_displayName"
                 android:textAlignment="center"
                 android:paddingVertical="12dp"
                 android:inputType="text"
                 android:maxLines="1"
                 android:imeOptions="actionDone"
                 android:textColorHint="?android:textColorSecondary"
-                android:hint="@string/fragment_user_details_bottom_sheet_edit_text_hint" />
+                android:hint="@string/nicknameEnter" />
 
             <ImageView
                 android:id="@+id/saveNicknameButton"
@@ -114,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_spacing"
-        android:contentDescription="@string/AccessibilityId_account_id"
+        android:contentDescription="@string/AccessibilityId_shareAccountId"
         android:textSize="@dimen/medium_font_size"
         android:textIsSelectable="true"
         tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />
@@ -125,8 +125,8 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginTop="@dimen/medium_spacing"
-        android:contentDescription="@string/AccessibilityId_message_user"
+        android:contentDescription="@string/AccessibilityId_messageUser"
         android:paddingHorizontal="@dimen/large_spacing"
-        android:text="@string/ConversationActivity_message" />
+        android:text="@string/message" />
 
 </LinearLayout>

@@ -19,7 +19,7 @@
             android:paddingVertical="@dimen/small_spacing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/activity_appearance_themes_category"/>
+            android:text="@string/appearanceThemes"/>
 
         <androidx.cardview.widget.CardView
             app:cardElevation="0dp"
@@ -50,7 +50,7 @@
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                         android:lines="1"
                         android:textSize="16sp"
-                        android:text="@string/classic_dark_theme_name"
+                        android:text="@string/appearanceThemesClassicDark"
                         android:padding="@dimen/medium_spacing"
                         android:layout_gravity="center"
                         android:layout_width="0dp"
@@ -88,7 +88,7 @@
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                         android:textSize="16sp"
                         android:lines="1"
-                        android:text="@string/classic_light_theme_name"
+                        android:text="@string/appearanceThemesClassicLight"
                         android:padding="@dimen/medium_spacing"
                         android:layout_gravity="center"
                         android:layout_width="0dp"
@@ -127,7 +127,7 @@
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                         android:textSize="16sp"
                         android:lines="1"
-                        android:text="@string/ocean_dark_theme_name"
+                        android:text="@string/appearanceThemesOceanDark"
                         android:padding="@dimen/medium_spacing"
                         android:layout_gravity="center"
                         android:layout_width="0dp"
@@ -166,7 +166,7 @@
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                         android:textSize="16sp"
                         android:lines="1"
-                        android:text="@string/ocean_light_theme_name"
+                        android:text="@string/appearanceThemesOceanLight"
                         android:padding="@dimen/medium_spacing"
                         android:layout_gravity="center"
                         android:layout_width="0dp"
@@ -192,7 +192,7 @@
             android:paddingVertical="@dimen/small_spacing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/activity_appearance_primary_color_category"/>
+            android:text="@string/appearancePrimaryColor"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -209,23 +209,50 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
-                    android:textSize="12sp"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?message_received_text_color"
-                    android:text="How are you?"
-                    android:gravity="center"
-                    android:drawablePadding="12dp"
-                    app:drawableLeftCompat="@drawable/quote_accent_line"
-                    tools:ignore="HardcodedText" />
+                    android:layout_height="wrap_content" >
+                    <View
+                        android:id="@+id/quote_line"
+                        android:layout_width="3dp"
+                        android:layout_height="0dp"
+                        android:background="?colorAccent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                    <TextView
+                        android:id="@+id/quote_sender"
+                        android:textSize="12sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?message_received_text_color"
+                        android:text="@string/you"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_marginStart="@dimen/small_spacing"
+                        app:layout_constraintStart_toEndOf="@+id/quote_line"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/quote_msg"/>
+                    <TextView
+                        android:id="@+id/quote_msg"
+                        android:textSize="12sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?message_received_text_color"
+                        android:text="@string/appearancePreview1"
+                        android:gravity="center"
+                        android:layout_marginStart="@dimen/small_spacing"
+                        app:layout_constraintStart_toEndOf="@+id/quote_line"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/quote_sender"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                
                 <TextView
                     android:layout_marginTop="4dp"
-                    android:text="I'm good thanks, you?"
+                    android:text="@string/appearancePreview2"
                     android:textColor="?message_received_text_color"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:ignore="HardcodedText" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
@@ -238,11 +265,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-                    android:text="I'm doing great, thanks."
+                    android:text="@string/appearancePreview3"
                     android:textColor="?message_sent_text_color"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:ignore="HardcodedText" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
         </LinearLayout>
@@ -312,7 +338,7 @@
             android:paddingVertical="@dimen/small_spacing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/activity_appearance_follow_system_category"/>
+            android:text="@string/appearanceAutoDarkMode"/>
 
         <androidx.cardview.widget.CardView
             app:cardElevation="0dp"
@@ -336,7 +362,7 @@
                     android:textSize="@dimen/medium_font_size"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:paddingVertical="@dimen/small_spacing"
-                    android:text="@string/activity_appearance_follow_system_explanation"
+                    android:text="@string/followSystemSettings"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>

@@ -2,10 +2,9 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:title="@string/activity_conversation_menu_copy_account_id"
-        android:id="@+id/menu_copy_account_id"
-        android:icon="@drawable/ic_content_copy_white_24dp"
-        android:contentDescription="@string/AccessibilityId_copy_account_id"/>
-
+        <item
+            android:title="@string/accountIDCopy"
+            android:id="@+id/menu_copy_account_id"
+            android:icon="@drawable/ic_copy"
+            android:contentDescription="@string/AccessibilityId_accountIdCopy" />
 </menu>

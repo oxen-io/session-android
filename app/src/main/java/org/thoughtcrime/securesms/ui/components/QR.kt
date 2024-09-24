@@ -2,7 +2,9 @@ package org.thoughtcrime.securesms.ui.components
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.camera.core.CameraSelector
@@ -20,7 +22,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -30,8 +31,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,10 +47,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.ChecksumException
 import com.google.zxing.FormatException
@@ -55,13 +60,21 @@ import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.Result
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.qrcode.QRCodeReader
-import java.util.concurrent.Executors
+import com.squareup.phrase.Phrase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.ui.AlertDialog
+import org.thoughtcrime.securesms.ui.DialogButtonModel
+import org.thoughtcrime.securesms.ui.GetString
+import org.thoughtcrime.securesms.ui.findActivity
+import org.thoughtcrime.securesms.ui.getSubbedString
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
+import java.util.concurrent.Executors
 
 private const val TAG = "NewMessageFragment"
 
@@ -82,28 +95,14 @@ fun QRScannerScreen(
     ) {
         LocalSoftwareKeyboardController.current?.hide()
 
-        val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
+        val context = LocalContext.current
+        val permission = Manifest.permission.CAMERA
+        val cameraPermissionState = rememberPermissionState(permission)
+
+        var showCameraPermissionDialog by remember { mutableStateOf(false) }
 
         if (cameraPermissionState.status.isGranted) {
             ScanQrCode(errors, onScan)
-        } else if (cameraPermissionState.status.shouldShowRationale) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(horizontal = 60.dp)
-            ) {
-                Text(
-                    stringResource(R.string.activity_link_camera_permission_permanently_denied_configure_in_settings),
-                    style = LocalType.current.base,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.size(LocalDimensions.current.spacing))
-                OutlineButton(
-                    stringResource(R.string.sessionSettings),
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = onClickSettings
-                )
-            }
         } else {
             Column(
                 modifier = Modifier
@@ -112,16 +111,54 @@ fun QRScannerScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                Text(stringResource(R.string.fragment_scan_qr_code_camera_access_explanation),
-                    style = LocalType.current.xl, textAlign = TextAlign.Center)
+                Text(
+                    stringResource(R.string.cameraGrantAccessQr).let { txt ->
+                        val c = LocalContext.current
+                        Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString()
+                    },
+                    style = LocalType.current.xl,
+                    textAlign = TextAlign.Center
+                )
                 Spacer(modifier = Modifier.height(LocalDimensions.current.spacing))
                 PrimaryOutlineButton(
                     stringResource(R.string.cameraGrantAccess),
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { cameraPermissionState.run { launchPermissionRequest() } }
+                    onClick = {
+                        // NOTE: We used to use the Accompanist's way to handle permissions in compose
+                        // but it doesn't seem to offer a solution when a user manually changes a permission
+                        // to 'Ask every time' form the app's settings.
+                        // So we are using our custom implementation. ONE IMPORTANT THING with this approach
+                        // is that we need to make sure every activity where this composable is used NEED to
+                        // implement `onRequestPermissionsResult` (see LoadAccountActivity.kt for an example)
+                        Permissions.with(context.findActivity())
+                            .request(permission)
+                            .withPermanentDenialDialog(
+                                context.getSubbedString(R.string.permissionsCameraDenied,
+                                    APP_NAME_KEY to context.getString(R.string.app_name))
+                            ).execute()
+                    }
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
+        }
+
+        // camera permission denied permanently dialog
+        if(showCameraPermissionDialog){
+            AlertDialog(
+                onDismissRequest = { showCameraPermissionDialog = false },
+                title = stringResource(R.string.permissionsRequired),
+                text = context.getSubbedString(R.string.permissionsCameraDenied,
+                    APP_NAME_KEY to context.getString(R.string.app_name)),
+                buttons = listOf(
+                    DialogButtonModel(
+                        text = GetString(stringResource(id = R.string.sessionSettings)),
+                        onClick = onClickSettings
+                    ),
+                    DialogButtonModel(
+                        GetString(stringResource(R.string.cancel))
+                    )
+                )
+            )
         }
     }
 }

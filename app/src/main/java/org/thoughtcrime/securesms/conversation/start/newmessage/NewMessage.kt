@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
@@ -61,7 +62,7 @@ import org.thoughtcrime.securesms.ui.theme.SessionColorsParameterProvider
 import org.thoughtcrime.securesms.ui.theme.ThemeColors
 import kotlin.math.max
 
-private val TITLES = listOf(R.string.enter_account_id, R.string.qrScan)
+private val TITLES = listOf(R.string.accountIdEnter, R.string.qrScan)
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -79,8 +80,12 @@ internal fun NewMessage(
         LocalColors.current.backgroundSecondary,
         shape = MaterialTheme.shapes.small
     )) {
+        // `messageNew` is now a plurals string so get the singular version
+        val context = LocalContext.current
+        val newMessageTitleTxt:String = context.resources.getQuantityString(R.plurals.messageNew, 1, 1)
+
         BackAppBar(
-            title = stringResource(R.string.messageNew),
+            title = newMessageTitleTxt,
             backgroundColor = Color.Transparent, // transparent to show the rounded shape of the container
             onBack = onBack,
             actions = { AppBarCloseIcon(onClose = onClose) }
@@ -88,7 +93,7 @@ internal fun NewMessage(
         SessionTabRow(pagerState, TITLES)
         HorizontalPager(pagerState) {
             when (TITLES[it]) {
-                R.string.enter_account_id -> EnterAccountId(state, callbacks, onHelp)
+                R.string.accountIdEnter -> EnterAccountId(state, callbacks, onHelp)
                 R.string.qrScan -> QRScannerScreen(qrErrors, onScan = callbacks::onScanQrCode)
             }
         }
@@ -116,7 +121,7 @@ private fun EnterAccountId(
                 .verticalScroll(rememberScrollState())
 
             // There is a known issue with the ime padding on android versions below 30
-             /// So on these older versions we need to resort to some manual padding based on the visible height
+            // So on these older versions we need to resort to some manual padding based on the visible height
             // when the keyboard is up
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
                 val keyboardHeight by keyboardHeight()
@@ -149,9 +154,9 @@ private fun EnterAccountId(
                     Spacer(modifier = Modifier.height(LocalDimensions.current.xxxsSpacing))
 
                     BorderlessButtonWithIcon(
-                        text = stringResource(R.string.messageNewDescription),
+                        text = stringResource(R.string.messageNewDescriptionMobile),
                         modifier = Modifier
-                            .contentDescription(R.string.AccessibilityId_help_desk_link)
+                            .contentDescription(R.string.AccessibilityId_messageNewDescriptionMobile)
                             .padding(horizontal = LocalDimensions.current.mediumSpacing)
                             .fillMaxWidth(),
                         style = LocalType.current.small,

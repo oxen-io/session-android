@@ -1,9 +1,13 @@
 package org.thoughtcrime.securesms.conversation.v2.utilities
 
 import android.graphics.Rect
+import android.graphics.Typeface
 import android.text.Layout
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.StaticLayout
 import android.text.TextPaint
+import android.text.style.StyleSpan
 import android.view.MotionEvent
 import android.widget.TextView
 import androidx.core.text.getSpans

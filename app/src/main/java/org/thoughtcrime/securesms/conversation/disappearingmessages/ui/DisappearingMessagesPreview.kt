@@ -27,21 +27,18 @@ fun PreviewStates(
 }
 
 class StatePreviewParameterProvider : PreviewParameterProvider<State> {
-    override val values = newConfigValues.filter { it.expiryType != ExpiryType.LEGACY } + newConfigValues.map { it.copy(isNewConfigEnabled = false) }
+    override val values = newConfigValues + newConfigValues.map { it.copy(isNewConfigEnabled = false) }
 
     private val newConfigValues get() = sequenceOf(
         // new 1-1
         State(expiryMode = ExpiryMode.NONE),
-        State(expiryMode = ExpiryMode.Legacy(43200)),
         State(expiryMode = ExpiryMode.AfterRead(300)),
         State(expiryMode = ExpiryMode.AfterSend(43200)),
         // new group non-admin
         State(isGroup = true, isSelfAdmin = false),
-        State(isGroup = true, isSelfAdmin = false, expiryMode = ExpiryMode.Legacy(43200)),
         State(isGroup = true, isSelfAdmin = false, expiryMode = ExpiryMode.AfterSend(43200)),
         // new group admin
         State(isGroup = true),
-        State(isGroup = true, expiryMode = ExpiryMode.Legacy(43200)),
         State(isGroup = true, expiryMode = ExpiryMode.AfterSend(43200)),
         // new note-to-self
         State(isNoteToSelf = true),

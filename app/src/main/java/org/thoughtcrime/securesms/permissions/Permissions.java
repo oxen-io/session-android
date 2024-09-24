@@ -73,7 +73,7 @@ public class Permissions {
       return this;
     }
 
-    public PermissionsBuilder withRationaleDialog(@NonNull String message, @NonNull @DrawableRes int... headers) {
+    public PermissionsBuilder withRationaleDialog(@NonNull String message, @DrawableRes int... headers) {
       this.rationalDialogHeader   = headers;
       this.rationaleDialogMessage = message;
       return this;
@@ -143,7 +143,7 @@ public class Permissions {
 
       if (!isInTargetSDKRange || permissionObject.hasAll(requestedPermissions)) {
         executePreGrantedPermissionsRequest(request);
-      } else if (rationaleDialogMessage != null && rationalDialogHeader != null) {
+      } else if (rationaleDialogMessage != null) {
         executePermissionsRequestWithRationale(request);
       } else {
         executePermissionsRequest(request);

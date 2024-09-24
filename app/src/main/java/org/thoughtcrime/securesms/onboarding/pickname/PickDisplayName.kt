@@ -41,7 +41,7 @@ internal fun PickDisplayName(
 
     if (state.showDialog) OnboardingBackPressAlertDialog(
         dismissDialog,
-        R.string.you_cannot_go_back_further_cancel_account_creation,
+        R.string.onboardingBackAccountCreation,
         quit
     )
 
@@ -66,7 +66,7 @@ internal fun PickDisplayName(
             SessionOutlinedTextField(
                 text = state.displayName,
                 modifier = Modifier.fillMaxWidth(),
-                contentDescription = stringResource(R.string.AccessibilityId_enter_display_name),
+                contentDescription = stringResource(R.string.AccessibilityId_displayNameEnter),
                 placeholder = stringResource(R.string.displayNameEnter),
                 onChange = onChange,
                 onContinue = onContinue,

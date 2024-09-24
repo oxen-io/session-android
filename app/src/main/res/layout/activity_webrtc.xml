@@ -93,7 +93,7 @@
         app:layout_constraintTop_toBottomOf="@+id/remote_loading_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/WebRtcCallActivity_Reconnecting"
+        android:text="@string/callsReconnecting"
         android:id="@+id/reconnecting_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -102,7 +102,7 @@
         android:id="@+id/sessionCallText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/WebRtcCallActivity_Session_Call"
+        android:text="@string/callsSessionCall"
         android:textColor="?android:textColorPrimary"
         android:textSize="11sp"
         app:layout_constraintBottom_toTopOf="@+id/controlGroupBarrier"

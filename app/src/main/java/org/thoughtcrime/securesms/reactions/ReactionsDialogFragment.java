@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.session.libsession.utilities.ThemeUtil;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.util.LifecycleDisposable;
@@ -35,6 +36,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
   private static final String ARGS_MESSAGE_ID = "reactions.args.message.id";
   private static final String ARGS_IS_MMS     = "reactions.args.is.mms";
   private static final String ARGS_IS_MODERATOR = "reactions.args.is.moderator";
+  private static final String ARGS_EMOJI = "reactions.args.emoji";
 
   private ViewPager2                recipientPagerView;
   private ReactionViewPagerAdapter  recipientsAdapter;
@@ -42,13 +44,14 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
 
   private final LifecycleDisposable disposables = new LifecycleDisposable();
 
-  public static DialogFragment create(MessageId messageId, boolean isUserModerator) {
+  public static DialogFragment create(MessageId messageId, boolean isUserModerator, @Nullable String emoji) {
     Bundle         args     = new Bundle();
     DialogFragment fragment = new ReactionsDialogFragment();
 
     args.putLong(ARGS_MESSAGE_ID, messageId.getId());
     args.putBoolean(ARGS_IS_MMS, messageId.isMms());
     args.putBoolean(ARGS_IS_MODERATOR, isUserModerator);
+    args.putString(ARGS_EMOJI, emoji);
 
     fragment.setArguments(args);
 
@@ -68,7 +71,6 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
-//    setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_Session_BottomSheet);
     super.onCreate(savedInstanceState);
   }
 
@@ -101,8 +103,10 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
 
       ViewCompat.setOnApplyWindowInsetsListener(container, (v, insets) -> insets.consumeSystemWindowInsets());
 
-      TabLayoutMediator mediator = new TabLayoutMediator(emojiTabs, recipientPagerView, (tab, position) -> {
-        tab.setCustomView(R.layout.reactions_pill);
+      TabLayoutMediator mediator = new TabLayoutMediator(
+              emojiTabs, recipientPagerView, true, false,
+              (tab, position) -> {
+        tab.setCustomView(R.layout.reactions_pill_large);
 
         View           customView = Objects.requireNonNull(tab.getCustomView());
         EmojiImageView emoji      = customView.findViewById(R.id.reactions_pill_emoji);
@@ -118,17 +122,13 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
           View customView = tab.getCustomView();
-          TextView text = customView.findViewById(R.id.reactions_pill_count);
           customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_background_selected));
-          text.setTextColor(ThemeUtil.getThemedColor(requireContext(), R.attr.reactionsPillSelectedTextColor));
         }
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
           View customView = tab.getCustomView();
-          TextView text = customView.findViewById(R.id.reactions_pill_count);
           customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_dialog_background));
-          text.setTextColor(ThemeUtil.getThemedColor(requireContext(), R.attr.reactionsPillNormalTextColor));
         }
         @Override
         public void onTabReselected(TabLayout.Tab tab) {}
@@ -139,21 +139,6 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
 
   private void setUpRecipientsRecyclerView() {
     recipientsAdapter = new ReactionViewPagerAdapter(this);
-
-    recipientPagerView.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-      @Override
-      public void onPageSelected(int position) {
-        recipientPagerView.post(() -> recipientsAdapter.enableNestedScrollingForPosition(position));
-      }
-
-      @Override
-      public void onPageScrollStateChanged(int state) {
-        if (state == ViewPager2.SCROLL_STATE_IDLE) {
-          recipientPagerView.requestLayout();
-        }
-      }
-    });
-
     recipientPagerView.setAdapter(recipientsAdapter);
   }
 
@@ -169,6 +154,18 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
       }
 
       recipientsAdapter.submitList(emojiCounts);
+
+      // select the tab based on which emoji the user long pressed on
+      TabLayout emojiTabs = requireDialog().findViewById(R.id.emoji_tabs);
+      String emoji = requireArguments().getString(ARGS_EMOJI);
+      int tabIndex = 0;
+      for (int i = 0; i < emojiCounts.size(); i++) {
+        if(emojiCounts.get(i).getBaseEmoji().equals(emoji)){
+          tabIndex = i;
+          break;
+        }
+      }
+      emojiTabs.selectTab(emojiTabs.getTabAt(tabIndex));
     }));
   }
 

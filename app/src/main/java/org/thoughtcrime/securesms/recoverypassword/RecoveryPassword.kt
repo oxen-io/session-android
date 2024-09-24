@@ -51,7 +51,7 @@ internal fun RecoveryPasswordScreen(
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing),
         modifier = Modifier
-            .contentDescription(R.string.AccessibilityId_recovery_password)
+            .contentDescription(R.string.AccessibilityId_sessionRecoveryPassword)
             .verticalScroll(rememberScrollState())
             .padding(bottom = LocalDimensions.current.smallSpacing)
             .padding(horizontal = LocalDimensions.current.spacing)
@@ -103,7 +103,7 @@ private fun RecoveryPasswordCell(
                     seed,
                     modifier = Modifier
                         .padding(vertical = LocalDimensions.current.spacing)
-                        .contentDescription(R.string.AccessibilityId_qr_code),
+                        .contentDescription(R.string.AccessibilityId_qrCode),
                     contentPadding = 10.dp,
                     icon = R.drawable.session_shield
                 )
@@ -140,7 +140,7 @@ private fun RecoveryPassword(mnemonic: String) {
     Text(
         mnemonic,
         modifier = Modifier
-            .contentDescription(R.string.AccessibilityId_recovery_password_container)
+            .contentDescription(R.string.AccessibilityId_sessionRecoveryPasswordContainer)
             .padding(vertical = LocalDimensions.current.spacing)
             .border()
             .padding(LocalDimensions.current.spacing),
@@ -174,7 +174,7 @@ private fun HideRecoveryPasswordCell(onHide: () -> Unit = {}) {
                 modifier = Modifier
                     .wrapContentWidth()
                     .align(Alignment.CenterVertically)
-                    .contentDescription(R.string.AccessibilityId_hide_recovery_password_button),
+                    .contentDescription(R.string.AccessibilityId_recoveryPasswordHideRecoveryPassword),
                 color = LocalColors.current.danger,
                 onClick = onHide
             )

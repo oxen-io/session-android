@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.conversation.disappearingmessages.ui
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,21 +15,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.thoughtcrime.securesms.ui.Callbacks
-import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.NoOpCallbacks
 import org.thoughtcrime.securesms.ui.OptionsCard
 import org.thoughtcrime.securesms.ui.RadioOption
-import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.components.SlimOutlineButton
 import org.thoughtcrime.securesms.ui.contentDescription
 import org.thoughtcrime.securesms.ui.fadingEdges
+import org.thoughtcrime.securesms.ui.theme.LocalColors
+import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
 
-typealias ExpiryCallbacks = Callbacks<ExpiryMode>
+typealias ExpiryCallbacks   = Callbacks<ExpiryMode>
 typealias ExpiryRadioOption = RadioOption<ExpiryMode>
 
 @Composable
@@ -59,7 +58,9 @@ fun DisappearingMessages(
                 }
 
                 if (state.showGroupFooter) Text(
-                    text = stringResource(R.string.activity_disappearing_messages_group_footer),
+                    text = stringResource(R.string.disappearingMessagesDescription) +
+                                          "\n"                                      +
+                                          stringResource(R.string.disappearingMessagesOnlyAdmins),
                     style = LocalType.current.extraSmall,
                     fontWeight = FontWeight(400),
                     color = LocalColors.current.textSecondary,
@@ -71,13 +72,15 @@ fun DisappearingMessages(
             }
         }
 
-        if (state.showSetButton) SlimOutlineButton(
-            stringResource(R.string.disappearing_messages_set_button_title),
-            modifier = Modifier
-                .contentDescription(R.string.AccessibilityId_set_button)
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = LocalDimensions.current.spacing),
-            onClick = callbacks::onSetClick
-        )
+        if (state.showSetButton){
+            PrimaryOutlineButton(
+                stringResource(R.string.set),
+                modifier = Modifier
+                    .contentDescription(R.string.AccessibilityId_setButton)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = LocalDimensions.current.spacing),
+                onClick = callbacks::onSetClick
+            )
+        }
     }
 }

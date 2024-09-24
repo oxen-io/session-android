@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        app:drawableTint="?android:textColorPrimary"
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:gravity="start|center_vertical"
+        android:textSize="@dimen/very_small_font_size"
+        android:textColor="?android:textColorPrimary"
+        tools:text="Whatever subtitle-type string you want" />
+
+    <TextView
+        app:drawableStartCompat="@drawable/ic_baseline_arrow_drop_down_24"
+        app:drawableTint="?android:textColorPrimary"
+        android:id="@+id/drop_down_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:gravity="end|center_vertical"
+        android:textSize="@dimen/very_small_font_size"
+        android:textColor="?android:textColorPrimary"
+        tools:text="Preference Summary"/>
+
+</FrameLayout>

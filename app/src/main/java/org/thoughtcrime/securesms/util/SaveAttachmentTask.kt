@@ -8,22 +8,21 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import android.widget.Toast
-import network.loki.messenger.R
-import org.session.libsession.utilities.task.ProgressDialogAsyncTask
-import org.session.libsignal.utilities.ExternalStorageUtil
-import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.mms.PartAuthority
-import org.thoughtcrime.securesms.showSessionDialog
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.TimeUnit
+import network.loki.messenger.R
+import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.task.ProgressDialogAsyncTask
+import org.session.libsignal.utilities.ExternalStorageUtil
+import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.mms.PartAuthority
+import org.thoughtcrime.securesms.showSessionDialog
 
 /**
  * Saves attachment files to an external storage using [MediaStore] API.
@@ -32,8 +31,8 @@ import java.util.concurrent.TimeUnit
 class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int = 1) :
     ProgressDialogAsyncTask<SaveAttachmentTask.Attachment, Void, Pair<Int, String?>>(
         context,
-        context.resources.getQuantityString(R.plurals.ConversationFragment_saving_n_attachments, count, count),
-        context.resources.getQuantityString(R.plurals.ConversationFragment_saving_n_attachments_to_sd_card, count, count)
+        context.resources.getString(R.string.saving),
+        context.resources.getString(R.string.saving)
     ) {
 
     companion object {
@@ -45,16 +44,26 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
 
         @JvmStatic
         @JvmOverloads
-        fun showWarningDialog(context: Context, count: Int = 1, onAcceptListener: () -> Unit = {}) {
-            context.showSessionDialog {
-                title(R.string.ConversationFragment_save_to_sd_card)
-                iconAttribute(R.attr.dialog_alert_icon)
-                text(context.resources.getQuantityString(
-                    R.plurals.ConversationFragment_saving_n_media_to_storage_warning,
-                    count,
-                    count))
-                button(R.string.yes) { onAcceptListener() }
-                button(R.string.no)
+        fun showOneTimeWarningDialogOrSave(context: Context, count: Int = 1, onAcceptListener: () -> Unit = {}) {
+            // If we've already warned the user that saved attachments can be accessed by other apps
+            // then we'll just perform the save..
+            val haveWarned = TextSecurePreferences.getHaveWarnedUserAboutSavingAttachments(context)
+            if (haveWarned) {
+                onAcceptListener()
+            } else {
+                // .. otherwise we'll show a warning dialog and only save if the user accepts the
+                // potential risks of other apps accessing their saved attachments.
+                context.showSessionDialog {
+                    title(R.string.warning)
+                    iconAttribute(R.attr.dialog_alert_icon)
+                    text(context.getString(R.string.attachmentsWarning))
+                    dangerButton(R.string.save) {
+                        // Set our 'haveWarned' SharedPref and perform the save on accept
+                        TextSecurePreferences.setHaveWarnedUserAboutSavingAttachments(context)
+                        onAcceptListener()
+                    }
+                    button(R.string.cancel)
+                }
             }
         }
 
@@ -125,6 +134,11 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         }
 
         private fun createOutputUri(context: Context, outputUri: Uri, contentType: String, fileName: String): Uri? {
+
+            // TODO: This method may pass an empty string as the filename in Android API 28 and below. This requires
+            // TODO: follow-up investigation, but has temporarily been worked around, see:
+            // TODO: https://github.com/oxen-io/session-android/commit/afbb71351a74220c312a09c25cc1c79738453c12
+
             val fileParts: Array<String> = getFileNameParts(fileName)
             val base = fileParts[0]
             val extension = fileParts[1]
@@ -233,18 +247,12 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
 
         when (result.first) {
             RESULT_FAILURE -> {
-                val message = context.resources.getQuantityText(
-                        R.plurals.ConversationFragment_error_while_saving_attachments_to_sd_card,
-                        attachmentCount)
+                val message = context.resources.getString(R.string.attachmentsSaveError)
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
 
             RESULT_SUCCESS -> {
-                val message = if (!TextUtils.isEmpty(result.second)) {
-                    context.resources.getString(R.string.SaveAttachmentTask_saved_to, result.second)
-                } else {
-                    context.resources.getString(R.string.SaveAttachmentTask_saved)
-                }
+                val message = context.resources.getString(R.string.saved)
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
 

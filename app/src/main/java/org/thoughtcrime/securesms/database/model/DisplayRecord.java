@@ -17,15 +17,11 @@
 package org.thoughtcrime.securesms.database.model;
 
 import android.content.Context;
-import android.text.SpannableString;
 
 import androidx.annotation.NonNull;
 
 import org.session.libsession.utilities.recipients.Recipient;
-import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.database.MmsDatabase;
 import org.thoughtcrime.securesms.database.MmsSmsColumns;
-import org.thoughtcrime.securesms.database.MmsSmsDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase;
 
 /**
@@ -68,7 +64,7 @@ public abstract class DisplayRecord {
   public @NonNull String getBody() {
     return body == null ? "" : body;
   }
-  public abstract SpannableString getDisplayBody(@NonNull Context context);
+  public abstract CharSequence getDisplayBody(@NonNull Context context);
   public Recipient getRecipient() { return recipient; }
   public long getDateSent() { return dateSent; }
   public long getDateReceived() { return dateReceived; }

@@ -18,14 +18,14 @@
 
     <EditText
         android:id="@+id/communityUrlEditText"
-        android:contentDescription="@string/AccessibilityId_community_input_box"
+        android:contentDescription="@string/AccessibilityId_communityEnterUrl"
         style="@style/SmallSessionEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginHorizontal="@dimen/large_spacing"
         android:layout_marginTop="@dimen/large_spacing"
         android:gravity="center_vertical"
-        android:hint="@string/fragment_enter_community_url_edit_text_hint"
+        android:hint="@string/communityEnterUrl"
         android:inputType="textUri"
         android:maxLines="3"
         android:paddingTop="0dp"
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="16dp"
             android:paddingHorizontal="24dp"
-            android:text="@string/activity_join_public_chat_join_rooms"
+            android:text="@string/communityJoinOfficial"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -92,11 +92,11 @@
     <Button
         android:id="@+id/joinCommunityButton"
         style="@style/Widget.Session.Button.Common.ProminentOutline"
-        android:contentDescription="@string/AccessibilityId_join_community_button"
+        android:contentDescription="@string/AccessibilityId_communityJoin"
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginVertical="@dimen/large_spacing"
-        android:text="@string/fragment_enter_community_url_join_button_title"
+        android:text="@string/join"
         android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

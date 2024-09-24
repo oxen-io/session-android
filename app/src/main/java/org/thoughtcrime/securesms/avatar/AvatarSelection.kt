@@ -32,7 +32,7 @@ class AvatarSelection(
     private val bgColor by lazy { activity.getColorFromAttr(android.R.attr.colorPrimary) }
     private val txtColor by lazy { activity.getColorFromAttr(android.R.attr.textColorPrimary) }
     private val imageScrim by lazy { ContextCompat.getColor(activity, R.color.avatar_background) }
-    private val activityTitle by lazy { activity.getString(R.string.CropImageActivity_profile_avatar) }
+    private val activityTitle by lazy { activity.getString(R.string.image) }
 
     /**
      * Returns result on [.REQUEST_CODE_CROP_IMAGE]
@@ -74,8 +74,9 @@ class AvatarSelection(
      */
     fun startAvatarSelection(
         includeClear: Boolean,
-        attemptToIncludeCamera: Boolean
-    ): File? {
+        attemptToIncludeCamera: Boolean,
+        createTempFile: ()->File?
+    ) {
         var captureFile: File? = null
         val hasCameraPermission = ContextCompat
             .checkSelfPermission(
@@ -83,18 +84,11 @@ class AvatarSelection(
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         if (attemptToIncludeCamera && hasCameraPermission) {
-            try {
-                captureFile = File.createTempFile("avatar-capture", ".jpg", getImageDir(activity))
-            } catch (e: IOException) {
-                Log.e("Cannot reserve a temporary avatar capture file.", e)
-            } catch (e: NoExternalStorageException) {
-                Log.e("Cannot reserve a temporary avatar capture file.", e)
-            }
+            captureFile = createTempFile()
         }
 
         val chooserIntent = createAvatarSelectionIntent(activity, captureFile, includeClear)
         onPickImage.launch(chooserIntent)
-        return captureFile
     }
 
     private fun createAvatarSelectionIntent(
@@ -120,7 +114,7 @@ class AvatarSelection(
 
         val chooserIntent = Intent.createChooser(
             galleryIntent,
-            context.getString(R.string.CreateProfileActivity_profile_photo)
+            context.getString(R.string.image)
         )
 
         if (!extraIntents.isEmpty()) {

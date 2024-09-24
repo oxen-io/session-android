@@ -9,6 +9,7 @@ import android.os.Looper
 import android.provider.Telephony
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.StyleSpan
 import org.session.libsignal.utilities.Log

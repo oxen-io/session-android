@@ -73,6 +73,7 @@
     <attr name="emoji_category_symbol" format="reference"/>
     <attr name="emoji_category_flags" format="reference"/>
     <attr name="emoji_category_emoticons" format="reference"/>
+
     <attr name="emoji_variation_selector_background" format="reference|color" />
     <attr name="emoji_show_less_icon" format="reference|color" />
 
@@ -176,7 +177,6 @@
     <attr name="mention_candidates_view_background" format="color|reference"/>
     <attr name="scroll_to_bottom_button_background" format="color|reference"/>
     <attr name="scroll_to_bottom_button_border" format="color|reference"/>
-    <attr name="conversation_unread_count_indicator_background" format="color|reference"/>
 
     <attr name="verification_background" format="color"/>
 
@@ -196,10 +196,6 @@
     <attr name="sticker_view_missing_background" format="reference|color" />
 
     <attr name="tooltip_default_color" format="reference|color" />
-
-    <declare-styleable name="CustomDefaultPreference">
-        <attr name="custom_pref_toggle" format="string"/>
-    </declare-styleable>
 
     <declare-styleable name="AvatarImageView">
         <attr name="inverted" format="boolean" />

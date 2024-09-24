@@ -345,6 +345,8 @@ class DefaultConversationRepository @Inject constructor(
         MessageSender.send(message, Destination.from(recipient.address), isSyncMessage = recipient.isLocalNumber)
             .success {
                 threadDb.setHasSent(threadId, true)
+                // add a control message for our user
+                storage.insertMessageRequestResponseFromYou(threadId)
                 continuation.resume(Result.success(Unit))
             }.fail { error ->
                 continuation.resume(Result.failure(error))

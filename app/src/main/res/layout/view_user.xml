@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:background="@drawable/conversation_view_background"
+    android:background="?attr/selectableItemBackground"
     android:contentDescription="@string/AccessibilityId_contact"
     android:orientation="vertical">
 
@@ -38,7 +38,7 @@
 
         <ImageView
             android:id="@+id/actionIndicatorImageView"
-            android:contentDescription="@string/AccessibilityId_select_contact"
+            android:contentDescription="@string/AccessibilityId_selectContact"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="@dimen/medium_spacing"

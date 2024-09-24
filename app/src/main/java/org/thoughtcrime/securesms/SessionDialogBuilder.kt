@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -40,13 +42,15 @@ class SessionDialogBuilder(val context: Context) {
     private val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
 
     private var dialog: AlertDialog? = null
-    private fun dismiss() = dialog?.dismiss()
+    fun dismiss() = dialog?.dismiss()
 
     private val topView = LinearLayout(context)
         .apply { setPadding(0, dp20, 0, 0) }
         .apply { orientation = VERTICAL }
         .also(dialogBuilder::setCustomTitle)
+
     private val contentView = LinearLayout(context).apply { orientation = VERTICAL }
+
     private val buttonLayout = LinearLayout(context)
 
     private val root = LinearLayout(context).apply { orientation = VERTICAL }
@@ -56,14 +60,19 @@ class SessionDialogBuilder(val context: Context) {
             addView(buttonLayout)
         }
 
-    fun title(@StringRes id: Int) = title(context.getString(id))
-
-    fun title(text: CharSequence?) = title(text?.toString())
+    // Main title entry point
     fun title(text: String?) {
         text(text, R.style.TextAppearance_Session_Dialog_Title) { setPadding(dp20, 0, dp20, 0) }
     }
 
+    // Convenience assessor for title that takes a string resource
+    fun title(@StringRes id: Int) = title(context.getString(id))
+
+    // Convenience accessor for title that takes a CharSequence
+    fun title(text: CharSequence?) = title(text?.toString())
+
     fun text(@StringRes id: Int, style: Int? = null) = text(context.getString(id), style)
+
     fun text(text: CharSequence?, @StyleRes style: Int? = null) {
         text(text, style) {
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
@@ -142,7 +151,8 @@ class SessionDialogBuilder(val context: Context) {
     ) { listener() }
 
     fun okButton(listener: (() -> Unit) = {}) = button(android.R.string.ok) { listener() }
-    fun cancelButton(listener: (() -> Unit) = {}) = button(android.R.string.cancel, R.string.AccessibilityId_cancel_button) { listener() }
+
+    fun cancelButton(listener: (() -> Unit) = {}) = button(android.R.string.cancel, R.string.AccessibilityId_cancel) { listener() }
 
     fun button(
         @StringRes text: Int,
@@ -170,22 +180,18 @@ class SessionDialogBuilder(val context: Context) {
 
 fun Context.showSessionDialog(build: SessionDialogBuilder.() -> Unit): AlertDialog =
     SessionDialogBuilder(this).apply { build() }.show()
-fun Context.showOpenUrlDialog(build: SessionDialogBuilder.() -> Unit): AlertDialog =
-    SessionDialogBuilder(this).apply {
-        title(R.string.urlOpen)
-        text(R.string.urlOpenBrowser)
-        build()
-    }.show()
 
-fun Context.showOpenUrlDialog(url: String): AlertDialog =
-    showOpenUrlDialog {
-        okButton { openUrl(url) }
-        cancelButton()
-    }
+public fun Context.copyURLToClipboard(url: String) {
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText(url, url)
+    clipboard.setPrimaryClip(clip)
+}
 
+// Method to actually open a given URL via an Intent that will use the default browser
 fun Context.openUrl(url: String) = Intent(Intent.ACTION_VIEW, Uri.parse(url)).let(::startActivity)
 
 fun Fragment.showSessionDialog(build: SessionDialogBuilder.() -> Unit): AlertDialog =
     SessionDialogBuilder(requireContext()).apply { build() }.show()
+
 fun Fragment.createSessionDialog(build: SessionDialogBuilder.() -> Unit): AlertDialog =
     SessionDialogBuilder(requireContext()).apply { build() }.create()

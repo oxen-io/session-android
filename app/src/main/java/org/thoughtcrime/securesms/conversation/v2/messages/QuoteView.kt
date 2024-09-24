@@ -75,13 +75,13 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         val quoteIsLocalUser = localNumber != null && authorPublicKey == localNumber
 
         val authorDisplayName =
-            if (quoteIsLocalUser) context.getString(R.string.QuoteView_you)
+            if (quoteIsLocalUser) context.getString(R.string.you)
             else author?.displayName(Contact.contextForRecipient(thread)) ?: "${authorPublicKey.take(4)}...${authorPublicKey.takeLast(4)}"
         binding.quoteViewAuthorTextView.text = authorDisplayName
         binding.quoteViewAuthorTextView.setTextColor(getTextColor(isOutgoingMessage))
         // Body
         binding.quoteViewBodyTextView.text = if (isOpenGroupInvitation)
-            resources.getString(R.string.open_group_invitation_view__open_group_invitation)
+            resources.getString(R.string.communityInvitation)
         else MentionUtilities.highlightMentions(
             text = (body ?: "").toSpannable(),
             isOutgoingMessage = isOutgoingMessage,
@@ -106,7 +106,16 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 attachments.audioSlide != null -> {
                     binding.quoteViewAttachmentPreviewImageView.setImageResource(R.drawable.ic_microphone)
                     binding.quoteViewAttachmentPreviewImageView.isVisible = true
-                    binding.quoteViewBodyTextView.text = resources.getString(R.string.Slide_audio)
+                    // A missing file name is the legacy way to determine if an audio attachment is
+                    // a voice note vs. other arbitrary audio attachments.
+                    val attachment = attachments.asAttachments().firstOrNull()
+                    val isVoiceNote = attachment?.isVoiceNote == true ||
+                            attachment != null && attachment.fileName.isNullOrEmpty()
+                    binding.quoteViewBodyTextView.text = if (isVoiceNote) {
+                        resources.getString(R.string.messageVoice)
+                    } else {
+                        resources.getString(R.string.audio)
+                    }
                 }
                 attachments.documentSlide != null -> {
                     binding.quoteViewAttachmentPreviewImageView.setImageResource(R.drawable.ic_document_large_light)
@@ -120,7 +129,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                         .root.setRoundedCorners(toPx(4, resources))
                     binding.quoteViewAttachmentThumbnailImageView.root.setImageResource(glide, slide, false)
                     binding.quoteViewAttachmentThumbnailImageView.root.isVisible = true
-                    binding.quoteViewBodyTextView.text = if (MediaUtil.isVideo(slide.asAttachment())) resources.getString(R.string.Slide_video) else resources.getString(R.string.Slide_image)
+                    binding.quoteViewBodyTextView.text = if (MediaUtil.isVideo(slide.asAttachment())) resources.getString(R.string.video) else resources.getString(R.string.image)
                 }
             }
         }

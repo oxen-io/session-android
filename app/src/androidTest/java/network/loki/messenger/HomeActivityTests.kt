@@ -2,8 +2,6 @@ package network.loki.messenger
 
 import android.Manifest
 import android.app.Instrumentation
-import android.content.ClipboardManager
-import android.content.Context
 import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -16,8 +14,6 @@ import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withSubstring
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -25,6 +21,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import com.adevinta.android.barista.interaction.PermissionGranter
+import com.bumptech.glide.Glide
 import network.loki.messenger.util.InputBarButtonDrawableMatcher.Companion.inputButtonWithDrawable
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -36,11 +33,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
-import com.bumptech.glide.Glide
 
 /**
  * Currently not used as part of our CI/Deployment processes !!!!
@@ -62,7 +57,6 @@ class HomeActivityTests {
     @Before
     fun setUp() {
         InstrumentationRegistry.getInstrumentation().addMonitor(activityMonitor)
-
     }
 
     @After
@@ -96,10 +90,10 @@ class HomeActivityTests {
         device.pressKeyCode(67)
 
         // Continue with display name
-        objectFromDesc(R.string.continue_2).click()
+        objectFromDesc(R.string.theContinue).click()
 
         // Continue with default push notification setting
-        objectFromDesc(R.string.continue_2).click()
+        objectFromDesc(R.string.theContinue).click()
 
         // PN select
         if (hasViewedSeed) {
@@ -109,7 +103,6 @@ class HomeActivityTests {
         // allow notification permission
         PermissionGranter.allowPermissionsIfNeeded(Manifest.permission.POST_NOTIFICATIONS)
     }
-
 
 /*    private fun goToMyChat() {
         onView(withId(R.id.newConversationButton)).perform(ViewActions.click())
@@ -131,7 +124,7 @@ class HomeActivityTests {
     @Test
     fun testLaunches_dismiss_seedView() {
         setupLoggedInState()
-        objectFromDesc(R.string.continue_2).click()
+        objectFromDesc(R.string.theContinue).click()
         objectFromDesc(R.string.copy).click()
         pressBack()
         onView(withId(R.id.seedReminderView)).check(matches(not(isDisplayed())))
@@ -182,6 +175,7 @@ class HomeActivityTests {
         onView(withText(dialogPromptText)).check(matches(isDisplayed()))
     }*/
 
+
     /**
      * Perform action of waiting for a specific time.
      */
@@ -198,5 +192,4 @@ class HomeActivityTests {
             }
         }
     }
-
 }

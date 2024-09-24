@@ -11,21 +11,21 @@
 
     <TextView
         android:id="@+id/deleteForMeTextView"
-        android:contentDescription="@string/AccessibilityId_delete_just_for_me"
+        android:contentDescription="@string/AccessibilityId_deleteMessageDeviceOnly"
         style="@style/BottomSheetActionItem"
-        android:text="@string/delete_message_for_me"
-        android:textColor="?danger"/>
+        android:text="@string/clearMessagesForMe"
+        android:textColor="?danger" />
 
     <TextView
         android:id="@+id/deleteForEveryoneTextView"
-        android:contentDescription="@string/delete_message_for_everyone"
+        android:contentDescription="@string/AccessibilityId_deleteMessageEveryone"
         style="@style/BottomSheetActionItem"
-        android:text="@string/delete_message_for_everyone"
-        android:textColor="?danger"/>
+        android:text="@string/clearMessagesForEveryone"
+        android:textColor="?danger" />
 
     <TextView
         android:id="@+id/cancelTextView"
-        android:contentDescription="@string/AccessibilityId_cancel_deletion"
+        android:contentDescription="@string/AccessibilityId_deleteMessageCancel"
         style="@style/BottomSheetActionItem"
         android:text="@string/cancel" />
 

@@ -1,7 +1,10 @@
 package org.thoughtcrime.securesms.media
 
+import android.content.Context
 import androidx.annotation.StringRes
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.util.DateUtils
+import org.thoughtcrime.securesms.util.RelativeDay
 import java.time.ZonedDateTime
 import java.time.temporal.WeekFields
 import java.util.Locale
@@ -29,16 +32,15 @@ class FixedTimeBuckets(
     )
 
     /**
-     * Test the given time against the buckets and return the appropriate string resource the time
+     * Test the given time against the buckets and return the appropriate string the time
      * bucket. If no bucket is appropriate, it will return null.
      */
-    @StringRes
-    fun getBucketText(time: ZonedDateTime): Int? {
+    fun getBucketText(context: Context, time: ZonedDateTime): String? {
         return when {
-            time >= startOfToday -> R.string.BucketedThreadMedia_Today
-            time >= startOfYesterday -> R.string.BucketedThreadMedia_Yesterday
-            time >= startOfThisWeek -> R.string.BucketedThreadMedia_This_week
-            time >= startOfThisMonth -> R.string.BucketedThreadMedia_This_month
+            time >= startOfToday     -> DateUtils.getLocalisedRelativeDayString(RelativeDay.TODAY)
+            time >= startOfYesterday -> DateUtils.getLocalisedRelativeDayString(RelativeDay.YESTERDAY)
+            time >= startOfThisWeek  -> context.getString(R.string.attachmentsThisWeek)
+            time >= startOfThisMonth -> context.getString(R.string.attachmentsThisMonth)
             else -> null
         }
     }

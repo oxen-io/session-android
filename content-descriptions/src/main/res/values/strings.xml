@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- NOTE: Only non-translated Accessibility IDs for automated testing exist in this file. -->
+
+    <!-- Onboarding related -->
+    <string name="AccessibilityId_accountIdOrOnsEnter">Account id input box</string>
+    <string name="AccessibilityId_recoveryPasswordHidePermanentlyConfirm">Confirm button</string>
+    <string name="AccessibilityId_accountIdCopy">Copy Account ID</string>
+    <string name="AccessibilityId_copy">Copy button</string>
+    <string name="AccessibilityId_theError">Error message</string>
+    <string name="AccessibilityId_recoveryPasswordHideRecoveryPassword">Hide recovery password button</string>
+    <string name="AccessibilityId_qrCode">QR code</string>
+    <string name="AccessibilityId_sessionRecoveryPassword">Recovery password</string>
+    <string name="AccessibilityId_sessionRecoveryPasswordContainer">Recovery password container</string>
+    <string name="AccessibilityId_sessionRecoveryPasswordMenuItem">Recovery password menu item</string>
+    <string name="AccessibilityId_qrView">View QR code</string>
+    <string name="AccessibilityId_notificationsFastMode">Fast mode notifications button</string>
+    <string name="AccessibilityId_notificationsSlowMode">Slow mode notifications button</string>
+    <string name="AccessibilityId_loadAccountProgressMessage">Loading animation</string>
+    <string name="AccessibilityId_onboardingAccountCreate">Create account button</string>
+    <string name="AccessibilityId_onboardingAccountExists">Restore your session button</string>
+    <string name="AccessibilityId_urlOpenBrowser">Open URL</string>
+    <string name="AccessibilityId_onboardingTos">Terms of service button</string>
+    <string name="AccessibilityId_onboardingPrivacy">Privacy policy button</string>
+    <string name="AccessibilityId_recoveryPasswordEnter">Recovery phrase input</string>
+    <string name="AccessibilityId_recoveryPasswordBanner">Reveal recovery phrase button</string>
+    <string name="AccessibilityId_messageNewDescriptionMobile">Help desk link</string>
+    <string name="AccessibilityId_sessionInviteAFriendButton">Invite friend button</string>
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <string name="AccessibilityId_theContinue">Continue</string>
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <string name="AccessibilityId_displayNameEnter">Enter display name</string>
+    <!--Message Notifications Options-->
+    <string name="AccessibilityId_notificationsMessageContinue">Continue with settings</string>
+    <!--Recovery Phrase reminder-->
+    <string name="AccessibilityId_sessionRecoveryPasswordCopy">Copy Recovery Phrase</string>
+    <!--Home Page-->
+    <string name="AccessibilityId_conversationListItem">Conversation list item</string>
+    <string name="AccessibilityId_contactUserDetails">Details</string>
+    <string name="AccessibilityId_pin">Pin</string>
+    <string name="AccessibilityId_profilePicture">User settings</string>
+    <string name="AccessibilityId_avatarPicker">Image picker</string>
+    <string name="AccessibilityId_searchIcon">Search icon</string>
+    <!--Settings Page -->
+    <string name="AccessibilityId_conversationsBlockedContacts">Blocked contacts</string>
+    <string name="AccessibilityId_shareAccountId">Account ID</string>
+    <!--Message requests-->
+    <string name="AccessibilityId_clearAll">Clear all</string>
+    <string name="AccessibilityId_messageRequestsNonePending">No pending message requests</string>
+    <string name="AccessibilityId_messageRequestsNew">Message request</string>
+    <string name="AccessibilityId_sessionMessageRequestsBanner">Message requests banner</string>
+    <!--New conversation pop up-->
+    <string name="AccessibilityId_groupCreate">Create group</string>
+    <string name="AccessibilityId_communityJoin">Join community button</string>
+    <string name="AccessibilityId_conversationsNew">New conversation button</string>
+    <string name="AccessibilityId_messageNew">New direct message</string>
+    <!-- Join community pop up -->
+    <string name="AccessibilityId_communityEnterUrl">Community input</string>
+    <!-- Conversation options (three dots menu)-->
+    <string name="AccessibilityId_conversationsAddToHome">Add to home screen</string>
+    <string name="AccessibilityId_conversationsSettingsAllMedia">All media</string>
+    <string name="AccessibilityId_block">Block</string>
+    <string name="AccessibilityId_blockConfirm">Confirm block</string>
+    <string name="AccessibilityId_unblockConfirm">Confirm unblock</string>
+    <string name="AccessibilityId_delete">Delete</string>
+    <string name="AccessibilityId_leave">Leave</string>
+    <string name="AccessibilityId_clear">Clear</string>
+    <string name="AccessibilityId_disappearingMessages">Disappearing messages</string>
+    <string name="AccessibilityId_enable">Enable</string>
+    <string name="AccessibilityId_notificationsMute">Mute notifications</string>
+    <string name="AccessibilityId_sessionNotifications">Notification settings</string>
+    <string name="AccessibilityId_search">Search</string>
+    <!--  Conversation options for closed group-->
+    <string name="AccessibilityId_groupNameNew">Accept name change</string>
+    <string name="AccessibilityId_membersInvite">Invite Contacts</string>
+    <string name="AccessibilityId_set">Apply changes</string>
+    <string name="AccessibilityId_groupNameChangeCancel">Cancel name change</string>
+    <string name="AccessibilityId_contactMentions">Contact mentions</string>
+    <string name="AccessibilityId_done">Done</string>
+    <string name="AccessibilityId_groupEdit">Edit group</string>
+    <string name="AccessibilityId_groupName">Group name</string>
+    <string name="AccessibilityId_groupLeave">Leave group</string>
+    <string name="AccessibilityId_mentions_list">Mentions list</string>
+    <!--  Conversation icons -->
+    <string name="AccessibilityId_messageRequestsAccept">Accept message request</string>
+    <string name="AccessibilityId_messageRequestsBlock">Block message request</string>
+    <string name="AccessibilityId_call">Call button</string>
+    <string name="AccessibilityId_confirm">Confirm</string>
+    <string name="AccessibilityId_decline">Decline message request</string>
+    <string name="AccessibilityId_sessionSettings">Settings</string>
+    <!-- Configuration messages -->
+    <string name="AccessibilityId_blockedBanner">Blocked banner</string>
+    <string name="AccessibilityId_blockedBannerText">Blocked banner text</string>
+    <string name="AccessibilityId_control_message">Control message</string>
+    <string name="AccessibilityId_disappearingMessagesFollowSetting">Follow setting</string>
+    <!--New Session -->
+    <string name="AccessibilityId_next">Next</string>
+    <!--  New group -->
+    <string name="AccessibilityId_contact">Contact</string>
+    <string name="AccessibilityId_groupNameEnter">Group name input</string>
+    <string name="AccessibilityId_selectContact">Select contact</string>
+    <!--Conversation screen -->
+    <string name="AccessibilityId_attachmentsButton">Attachments button</string>
+    <string name="AccessibilityId_files">Documents folder</string>
+    <string name="AccessibilityId_download">Download media</string>
+    <string name="AccessibilityId_gif">GIF button</string>
+    <string name="AccessibilityId_image">Images folder</string>
+    <string name="AccessibilityId_inputBox">Message input box</string>
+    <string name="AccessibilityId_voiceMessageNew">New voice message</string>
+    <string name="AccessibilityId_camera">Select camera button</string>
+    <string name="AccessibilityId_send">Send message button</string>
+    <string name="AccessibilityId_attachmentsClickToDownload">Untrusted attachment message</string>
+    <string name="AccessibilityId_emojiSearch">Back to emoji</string>
+    <string name="AccessibilityId_emojiSearchClear">Clear search entry</string>
+    <!-- Conversation View-->
+    <string name="AccessibilityId_deleteMessage">Delete message</string>
+    <string name="AccessibilityId_deleteMessageDeleted">Deleted message</string>
+    <string name="AccessibilityId_document">Document</string>
+    <string name="AccessibilityId_message">Message body</string>
+    <string name="AccessibilityId_sent">Message sent status: Sent</string>
+    <string name="AccessibilityId_reply">Reply to message</string>
+    <string name="AccessibilityId_saveAttachment">Save attachment</string>
+    <string name="AccessibilityId_select">Select</string>
+    <string name="AccessibilityId_messageVoice">Voice message</string>
+    <string name="AccessibilityId_deliveryIndicator">Delivered</string>
+    <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
+    <!-- Delete message modal-->
+    <string name="AccessibilityId_deleteMessageCancel">Cancel deletion</string>
+    <string name="AccessibilityId_deleteMessageEveryone">Delete for everyone</string>   <!-- ACL: Perhaps should be "AccessibilityId_clearMessagesForEveryone"? -->
+    <string name="AccessibilityId_deleteMessageDeviceOnly">Delete just for me</string>  <!-- ACL: Perhaps should be "AccessibilityId_clearMessagesForMe"?       -->
+    <!--Settings Page-->
+    <string name="AccessibilityId_sessionAppearance">Appearance</string>
+    <string name="AccessibilityId_apply">Apply</string>
+    <string name="AccessibilityId_cancel">Cancel</string>
+    <string name="AccessibilityId_sessionClearData">Clear data</string>
+    <string name="AccessibilityId_conversationTitle">Conversation header name</string>
+    <string name="AccessibilityId_sessionConversations">Conversations</string>
+    <string name="AccessibilityId_disappearingMessagesOff">Disable disappearing messages</string>
+    <string name="AccessibilityId_disappearingMessagesDisappearAfterRead">Disappear after read option</string>
+    <string name="AccessibilityId_disappearingMessagesDisappearAfterSent">Disappear after send option</string>
+    <string name="AccessibilityId_disappearingMessagesDisappear">Disappearing messages type and time</string>
+    <string name="AccessibilityId_displayNameNew">Edit user nickname</string>
+    <string name="AccessibilityId_help">Help</string>
+    <string name="AccessibilityId_sessionInviteAFriend">Invite a friend</string>
+    <string name="AccessibilityId_sessionMessageRequests">Message requests</string>
+    <string name="AccessibilityId_messageUser">Message user</string>
+    <string name="AccessibilityId_notifications">Notifications</string>
+    <string name="AccessibilityId_sessionPrivacy">Privacy</string>
+    <string name="AccessibilityId_setButton">Set button</string>
+    <string name="AccessibilityId_displayName">Display name</string>
+
+    <!-- Misc. -->
+    <string name="AccessibilityId_navigateBack">Navigate Back</string>
+    <string name="AccessibilityId_close">Close Dialog</string>
+    <string name="AccessibilityId_expand">Expand</string>
+    <string name="AccessibilityId_mediaMessage">Media message</string>
+    <string name="AccessibilityId_save">Save</string>
+    <string name="AccessibilityId_remove">Remove</string>
+
+</resources>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -25,36 +26,46 @@ object RationaleDialog {
         onNegative: Runnable,
         @DrawableRes vararg drawables: Int
     ): AlertDialog {
-        val view = LayoutInflater.from(context).inflate(R.layout.permissions_rationale_dialog, null)
-            .apply { clipToOutline = true }
-        val header = view.findViewById<ViewGroup>(R.id.header_container)
-        view.findViewById<TextView>(R.id.message).text = message
+        var customView: View? = null
+        if (!drawables.isEmpty()) {
+            customView = LayoutInflater.from(context).inflate(R.layout.permissions_rationale_dialog, null)
+                .apply { clipToOutline = true }
+            val header = customView.findViewById<ViewGroup>(R.id.header_container)
 
-        fun addIcon(id: Int) {
-            ImageView(context).apply {
-                setImageDrawable(ResourcesCompat.getDrawable(context.resources, id, context.theme))
-                layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-            }.also(header::addView)
+            customView.findViewById<TextView>(R.id.message).text = message
+
+            fun addIcon(id: Int) {
+                ImageView(context).apply {
+                    setImageDrawable(ResourcesCompat.getDrawable(context.resources, id, context.theme))
+                    layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+                }.also(header::addView)
+            }
+
+            fun addPlus() {
+                TextView(context).apply {
+                    text = "+"
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP, 40f)
+                    setTextColor(Color.WHITE)
+                    layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
+                        ViewUtil.dpToPx(context, 20).let { setMargins(it, 0, it, 0) }
+                    }
+                }.also(header::addView)
+            }
+
+            drawables.firstOrNull()?.let(::addIcon)
+            drawables.drop(1).forEach { addPlus(); addIcon(it) }
         }
-
-        fun addPlus() {
-            TextView(context).apply {
-                text = "+"
-                setTextSize(TypedValue.COMPLEX_UNIT_SP, 40f)
-                setTextColor(Color.WHITE)
-                layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-                    ViewUtil.dpToPx(context, 20).let { setMargins(it, 0, it, 0) }
-                }
-            }.also(header::addView)
-        }
-
-        drawables.firstOrNull()?.let(::addIcon)
-        drawables.drop(1).forEach { addPlus(); addIcon(it) }
 
         return context.showSessionDialog {
-            view(view)
-            button(R.string.Permissions_continue) { onPositive.run() }
-            button(R.string.Permissions_not_now) { onNegative.run() }
+            // show the generic title when there are no icons
+            if(customView != null){
+                view(customView)
+            } else {
+                title(R.string.permissionsRequired)
+                text(message)
+            }
+            button(R.string.theContinue) { onPositive.run() }
+            button(R.string.cancel)    { onNegative.run() }
         }
     }
 }

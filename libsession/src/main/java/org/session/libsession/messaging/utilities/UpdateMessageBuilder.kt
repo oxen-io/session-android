@@ -1,7 +1,7 @@
 package org.session.libsession.messaging.utilities
 
 import android.content.Context
-import android.util.Log
+import com.squareup.phrase.Phrase
 import org.session.libsession.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.calls.CallMessageType
@@ -14,52 +14,161 @@ import org.session.libsession.messaging.sending_receiving.data_extraction.DataEx
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage.Kind.MEDIA_SAVED
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage.Kind.SCREENSHOT
 import org.session.libsession.utilities.ExpirationUtil
+import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.GROUP_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.OTHER_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
 import org.session.libsession.utilities.getExpirationTypeDisplayValue
 import org.session.libsession.utilities.truncateIdForDisplay
+import org.session.libsignal.utilities.Log
 
 object UpdateMessageBuilder {
+    const val TAG = "libsession"
+
     val storage = MessagingModuleConfiguration.shared.storage
 
     private fun getSenderName(senderId: String) = storage.getContactWithAccountID(senderId)
         ?.displayName(Contact.ContactContext.REGULAR)
         ?: truncateIdForDisplay(senderId)
 
-    fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false): String {
+    fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false): CharSequence {
         val updateData = updateMessageData.kind
         if (updateData == null || !isOutgoing && senderId == null) return ""
-        val senderName: String = if (isOutgoing) context.getString(R.string.MessageRecord_you)
-        else getSenderName(senderId!!)
 
         return when (updateData) {
+            // --- Group created or joined ---
             is UpdateMessageData.Kind.GroupCreation -> {
-                if (isOutgoing) context.getString(R.string.MessageRecord_you_created_a_new_group)
-                else context.getString(R.string.MessageRecord_s_added_you_to_the_group, senderName)
-            }
-            is UpdateMessageData.Kind.GroupNameChange -> {
-                if (isOutgoing) context.getString(R.string.MessageRecord_you_renamed_the_group_to_s, updateData.name)
-                else context.getString(R.string.MessageRecord_s_renamed_the_group_to_s, senderName, updateData.name)
-            }
-            is UpdateMessageData.Kind.GroupMemberAdded -> {
-                val members = updateData.updatedMembers.joinToString(", ", transform = ::getSenderName)
-                if (isOutgoing) context.getString(R.string.MessageRecord_you_added_s_to_the_group, members)
-                else context.getString(R.string.MessageRecord_s_added_s_to_the_group, senderName, members)
-            }
-            is UpdateMessageData.Kind.GroupMemberRemoved -> {
-                val userPublicKey = storage.getUserPublicKey()!!
-                // 1st case: you are part of the removed members
-                return if (userPublicKey in updateData.updatedMembers) {
-                    if (isOutgoing) context.getString(R.string.MessageRecord_left_group)
-                    else context.getString(R.string.MessageRecord_you_were_removed_from_the_group)
+                if (!isOutgoing) {
+                    context.getText(R.string.legacyGroupMemberYouNew)
                 } else {
-                    // 2nd case: you are not part of the removed members
-                    val members = updateData.updatedMembers.joinToString(", ", transform = ::getSenderName)
-                    if (isOutgoing) context.getString(R.string.MessageRecord_you_removed_s_from_the_group, members)
-                    else context.getString(R.string.MessageRecord_s_removed_s_from_the_group, senderName, members)
+                    "" // We no longer add a string like `disappearingMessagesNewGroup` ("You created a new group") and leave the group with its default empty state
                 }
             }
+
+            // --- Group name changed ---
+            is UpdateMessageData.Kind.GroupNameChange -> {
+                Phrase.from(context, R.string.groupNameNew)
+                    .put(GROUP_NAME_KEY, updateData.name)
+                    .format()
+            }
+
+            // --- Group member(s) were added ---
+            is UpdateMessageData.Kind.GroupMemberAdded -> {
+
+                val newMemberCount = updateData.updatedMembers.size
+
+                // Note: We previously differentiated between members added by us Vs. members added by someone
+                // else via checking against `isOutgoing` - but now we use the same strings regardless.
+                when (newMemberCount) {
+                    0 -> {
+                        Log.w(TAG, "Somehow asked to add zero new members to group - this should never happen.")
+                        return ""
+                    }
+                    1 -> {
+                        Phrase.from(context, R.string.legacyGroupMemberNew)
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                            .format()
+                    }
+                    2 -> {
+                        Phrase.from(context, R.string.legacyGroupMemberTwoNew)
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                            .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
+                            .format()
+                    }
+                    else -> {
+                        val newMemberCountMinusOne = newMemberCount - 1
+                        Phrase.from(context, R.string.legacyGroupMemberNewMultiple)
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                            .put(COUNT_KEY, newMemberCountMinusOne)
+                            .format()
+                    }
+                }
+            }
+
+            // --- Group member(s) removed ---
+            is UpdateMessageData.Kind.GroupMemberRemoved -> {
+                val userPublicKey = storage.getUserPublicKey()!!
+
+                // 1st case: you are part of the removed members
+                return if (userPublicKey in updateData.updatedMembers) {
+                    if (isOutgoing) context.getText(R.string.groupMemberYouLeft) // You chose to leave
+                    else Phrase.from(context, R.string.groupRemovedYou)            // You were forced to leave
+                            .put(GROUP_NAME_KEY, updateData.groupName)
+                            .format()
+                }
+                else // 2nd case: you are not part of the removed members
+                {
+                    // a.) You are the person doing the removing of one or more members
+                    if (isOutgoing) {
+                        when (updateData.updatedMembers.size) {
+                            0 -> {
+                                Log.w(TAG, "Somehow you asked to remove zero members.")
+                                "" // Return an empty string - we don't want to show the error in the conversation
+                                }
+                            1 -> Phrase.from(context, R.string.groupRemoved)
+                                .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                                .format()
+                            2 -> Phrase.from(context, R.string.groupRemovedTwo)
+                                .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                                .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
+                                .format()
+                            else -> Phrase.from(context, R.string.groupRemovedMultiple)
+                                    .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                                    .put(COUNT_KEY, updateData.updatedMembers.size - 1)
+                                    .format()
+                        }
+                    }
+                    else // b.) Someone else is the person doing the removing of one or more members
+                    {
+                        // Note: I don't think we're doing "Alice removed Bob from the group"-type
+                        // messages anymore - just "Bob was removed from the group" - so this block
+                        // is identical to the one above, but I'll leave it like this until I can
+                        // confirm that this is the case.
+                        when (updateData.updatedMembers.size) {
+                            0 -> {
+                                Log.w(TAG, "Somehow someone else asked to remove zero members.")
+                                "" // Return an empty string - we don't want to show the error in the conversation
+                            }
+                            1 -> Phrase.from(context, R.string.groupRemoved)
+                                .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                                .format()
+                            2 -> Phrase.from(context, R.string.groupRemovedTwo)
+                                .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                                .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
+                                .format()
+                            else -> Phrase.from(context, R.string.groupRemovedMultiple)
+                                .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                                .put(COUNT_KEY, updateData.updatedMembers.size - 1)
+                                .format()
+                        }
+                    }
+                }
+            }
+
+            // --- Group members left ---
             is UpdateMessageData.Kind.GroupMemberLeft -> {
-                if (isOutgoing) context.getString(R.string.MessageRecord_left_group)
-                else context.getString(R.string.ConversationItem_group_action_left, senderName)
+                if (isOutgoing) context.getText(R.string.groupMemberYouLeft)
+                else {
+                    when (updateData.updatedMembers.size) {
+                        0 -> {
+                            Log.w(TAG, "Somehow zero members left the group.")
+                            "" // Return an empty string - we don't want to show the error in the conversation
+                        }
+                        1 -> Phrase.from(context, R.string.groupMemberLeft)
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                            .format()
+                        2 -> Phrase.from(context, R.string.groupMemberLeftTwo)
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                            .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
+                            .format()
+                        else -> Phrase.from(context, R.string.groupMemberLeftMultiple)
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                            .put(COUNT_KEY, updateData.updatedMembers.size - 1)
+                            .format()
+                    }
+                }
             }
             else -> return ""
         }
@@ -68,44 +177,94 @@ object UpdateMessageBuilder {
     fun buildExpirationTimerMessage(
         context: Context,
         duration: Long,
-        isGroup: Boolean,
+        isGroup: Boolean, // Note: isGroup should cover both closed groups AND communities
         senderId: String? = null,
         isOutgoing: Boolean = false,
         timestamp: Long,
         expireStarted: Long
-    ): String {
-        if (!isOutgoing && senderId == null) return ""
-        val senderName = if (isOutgoing) context.getString(R.string.MessageRecord_you) else getSenderName(senderId!!)
-        return if (duration <= 0) {
-            if (isOutgoing) context.getString(if (isGroup) R.string.MessageRecord_you_turned_off_disappearing_messages else R.string.MessageRecord_you_turned_off_disappearing_messages_1_on_1)
-            else context.getString(if (isGroup) R.string.MessageRecord_s_turned_off_disappearing_messages else R.string.MessageRecord_s_turned_off_disappearing_messages_1_on_1, senderName)
-        } else {
-            val time = ExpirationUtil.getExpirationDisplayValue(context, duration.toInt())
-            val action = context.getExpirationTypeDisplayValue(timestamp >= expireStarted)
-            if (isOutgoing) context.getString(
-                if (isGroup) R.string.MessageRecord_you_set_messages_to_disappear_s_after_s else R.string.MessageRecord_you_set_messages_to_disappear_s_after_s_1_on_1,
-                time,
-                action
-            ) else context.getString(
-                if (isGroup) R.string.MessageRecord_s_set_messages_to_disappear_s_after_s else R.string.MessageRecord_s_set_messages_to_disappear_s_after_s_1_on_1,
-                senderName,
-                time,
-                action
-            )
+    ): CharSequence {
+        if (!isOutgoing && senderId == null) {
+            Log.w(TAG, "buildExpirationTimerMessage: Cannot build for outgoing message when senderId is null.")
+            return ""
+        }
+
+        val senderName = if (isOutgoing) context.getString(R.string.you) else getSenderName(senderId!!)
+
+        // Case 1.) Disappearing messages have been turned off..
+        if (duration <= 0) {
+            // ..by you..
+            return if (isOutgoing) {
+                // in a group
+                if(isGroup) context.getText(R.string.disappearingMessagesTurnedOffYouGroup)
+                // 1on1
+                else context.getText(R.string.disappearingMessagesTurnedOffYou)
+            }
+            else // ..or by someone else.
+            {
+                Phrase.from(context,
+                    // in a group
+                    if(isGroup) R.string.disappearingMessagesTurnedOffGroup
+                    // 1on1
+                    else R.string.disappearingMessagesTurnedOff
+                )
+                    .put(NAME_KEY, senderName)
+                    .format()
+            }
+        }
+
+        // Case 2.) Disappearing message settings have been changed but not turned off.
+        val time = ExpirationUtil.getExpirationDisplayValue(context, duration.toInt())
+        val action = context.getExpirationTypeDisplayValue(timestamp >= expireStarted)
+
+        //..by you..
+        if (isOutgoing) {
+            return if (isGroup) {
+                Phrase.from(context, R.string.disappearingMessagesSetYou)
+                    .put(TIME_KEY, time)
+                    .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
+                    .format()
+            } else {
+                // 1-on-1 conversation
+                Phrase.from(context, R.string.disappearingMessagesSetYou)
+                    .put(TIME_KEY, time)
+                    .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
+                    .format()
+            }
+        }
+        else // ..or by someone else.
+        {
+            return Phrase.from(context, R.string.disappearingMessagesSet)
+                .put(NAME_KEY, senderName)
+                .put(TIME_KEY, time)
+                .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
+                .format()
         }
     }
 
-    fun buildDataExtractionMessage(context: Context, kind: DataExtractionNotificationInfoMessage.Kind, senderId: String? = null) = when (kind) {
-        SCREENSHOT -> R.string.MessageRecord_s_took_a_screenshot
-        MEDIA_SAVED -> R.string.MessageRecord_media_saved_by_s
-    }.let { context.getString(it, getSenderName(senderId!!)) }
+    fun buildDataExtractionMessage(context: Context,
+                                   kind: DataExtractionNotificationInfoMessage.Kind,
+                                   senderId: String? = null): CharSequence {
 
-    fun buildCallMessage(context: Context, type: CallMessageType, sender: String): String =
-        when (type) {
-            CALL_INCOMING -> R.string.MessageRecord_s_called_you
-            CALL_OUTGOING -> R.string.MessageRecord_called_s
-            CALL_MISSED, CALL_FIRST_MISSED -> R.string.MessageRecord_missed_call_from
-        }.let {
-            context.getString(it, storage.getContactWithAccountID(sender)?.displayName(Contact.ContactContext.REGULAR) ?: sender)
+        val senderName = if (senderId != null) getSenderName(senderId) else context.getString(R.string.unknown)
+
+        return when (kind) {
+            SCREENSHOT  -> Phrase.from(context, R.string.screenshotTaken)
+                .put(NAME_KEY, senderName)
+                .format()
+
+            MEDIA_SAVED -> Phrase.from(context, R.string.attachmentsMediaSaved)
+                .put(NAME_KEY, senderName)
+                .format()
         }
+    }
+
+    fun buildCallMessage(context: Context, type: CallMessageType, senderId: String): String {
+        val senderName = storage.getContactWithAccountID(senderId)?.displayName(Contact.ContactContext.REGULAR) ?: senderId
+
+        return when (type) {
+            CALL_INCOMING -> Phrase.from(context, R.string.callsCalledYou).put(NAME_KEY, senderName).format().toString()
+            CALL_OUTGOING -> Phrase.from(context, R.string.callsYouCalled).put(NAME_KEY, senderName).format().toString()
+            CALL_MISSED, CALL_FIRST_MISSED -> Phrase.from(context, R.string.callsMissedCallFrom).put(NAME_KEY, senderName).format().toString()
+        }
+    }
 }

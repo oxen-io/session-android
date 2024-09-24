@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="@string/ConversationActivity_copy_open_group_url"
+        android:title="@string/communityUrlCopy"
         android:id="@+id/menu_copy_open_group_url" />
 
     <item
-        android:title="@string/ConversationActivity_invite_to_open_group"
+        android:title="@string/membersInvite"
         android:id="@+id/menu_invite_to_open_group" />
 
 </menu>

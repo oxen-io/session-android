@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_button_height"
         android:gravity="center_horizontal|center_vertical"
-        android:text="@string/dialog_join_community_title"
+        android:text="@string/communityJoin"
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/very_large_font_size"
         android:textStyle="bold"
@@ -31,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="@id/titleText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/titleText"
-        android:contentDescription="@string/new_conversation_dialog_back_button_content_description"
+        android:contentDescription="@string/AccessibilityId_navigateBack"
         app:tint="?android:textColorPrimary" />
 
     <ImageView
@@ -47,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="@id/titleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/titleText"
-        android:contentDescription="@string/new_conversation_dialog_close_button_content_description" />
+        android:contentDescription="@string/AccessibilityId_close" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

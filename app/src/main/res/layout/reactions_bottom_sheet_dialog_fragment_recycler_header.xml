@@ -6,21 +6,21 @@
     android:layout_height="wrap_content">
     <View
         android:layout_gravity="top"
-        android:alpha="0.3"
         android:layout_marginHorizontal="@dimen/small_spacing"
-        android:background="?android:textColorTertiary"
+        android:background="?colorDividerBackground"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
-    <LinearLayout android:layout_height="wrap_content"
+    <LinearLayout android:layout_height="43dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="@dimen/medium_spacing"
-        android:padding="@dimen/small_spacing">
+        android:gravity="center_vertical">
         <org.thoughtcrime.securesms.components.emoji.EmojiImageView
             android:id="@+id/header_view_emoji"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginEnd="4dp"
+            android:layout_gravity="center_vertical"
             android:gravity="center"
             android:textStyle="bold"
             app:emoji_forceCustom="true" />
@@ -28,13 +28,16 @@
             android:id="@+id/header_view_emoji_count"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="?android:textColorTertiary"/>
         <TextView
-            android:text="@string/message_requests_clear_all"
+            android:text="@string/clearAll"
             android:textColor="?danger"
             android:visibility="gone"
             android:id="@+id/header_view_clear_all"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
     </LinearLayout>
 </FrameLayout>

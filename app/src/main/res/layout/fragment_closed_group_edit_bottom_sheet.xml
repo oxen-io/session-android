@@ -12,6 +12,6 @@
         android:id="@+id/removeFromGroup"
         style="@style/BottomSheetActionItem"
         android:drawableStart="@drawable/ic_phonelink_erase_white_24dp"
-        android:text="@string/fragment_edit_group_bottom_sheet_remove"/>
+        android:text="@string/remove" />
 
 </LinearLayout>

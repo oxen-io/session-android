@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.content.Context
-import android.content.Intent
 import android.database.Cursor
 import android.util.SparseArray
 import android.util.SparseBooleanArray
@@ -12,12 +11,12 @@ import androidx.core.util.getOrDefault
 import androidx.core.util.set
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.RequestManager
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
@@ -26,9 +25,6 @@ import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDel
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import com.bumptech.glide.RequestManager
-import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
-import org.thoughtcrime.securesms.showSessionDialog
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.min
 
@@ -118,7 +114,11 @@ class ConversationAdapter(
                 val senderId = message.individualRecipient.address.serialize()
                 val senderIdHash = senderId.hashCode()
                 updateQueue.trySend(senderId)
-                if (contactCache[senderIdHash] == null && !contactLoadedCache.getOrDefault(senderIdHash, false)) {
+                if (contactCache[senderIdHash] == null && !contactLoadedCache.getOrDefault(
+                        senderIdHash,
+                        false
+                    )
+                ) {
                     getSenderInfo(senderId)?.let { contact ->
                         contactCache[senderIdHash] = contact
                     }
@@ -126,46 +126,41 @@ class ConversationAdapter(
                 val contact = contactCache[senderIdHash]
 
                 visibleMessageView.bind(
-                        message,
-                        messageBefore,
-                        getMessageAfter(position, cursor),
-                        glide,
-                        searchQuery,
-                        contact,
-                        senderId,
-                        lastSeen.get(),
-                        visibleMessageViewDelegate,
-                        onAttachmentNeedsDownload,
-                        lastSentMessageId
+                    message,
+                    messageBefore,
+                    getMessageAfter(position, cursor),
+                    glide,
+                    searchQuery,
+                    contact,
+                    senderId,
+                    lastSeen.get(),
+                    visibleMessageViewDelegate,
+                    onAttachmentNeedsDownload,
+                    lastSentMessageId
                 )
 
                 if (!message.isDeleted) {
-                    visibleMessageView.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, visibleMessageView, event) }
-                    visibleMessageView.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }
-                    visibleMessageView.onLongPress = { onItemLongPress(message, viewHolder.adapterPosition, visibleMessageView) }
+                    visibleMessageView.onPress = { event ->
+                        onItemPress(
+                            message,
+                            viewHolder.adapterPosition,
+                            visibleMessageView,
+                            event
+                        )
+                    }
+                    visibleMessageView.onSwipeToReply =
+                        { onItemSwipeToReply(message, viewHolder.adapterPosition) }
+                    visibleMessageView.onLongPress =
+                        { onItemLongPress(message, viewHolder.adapterPosition, visibleMessageView) }
                 } else {
                     visibleMessageView.onPress = null
                     visibleMessageView.onSwipeToReply = null
                     visibleMessageView.onLongPress = null
                 }
             }
+
             is ControlMessageViewHolder -> {
                 viewHolder.view.bind(message, messageBefore)
-                if (message.isCallLog && message.isFirstMissedCall) {
-                    viewHolder.view.setOnClickListener {
-                        context.showSessionDialog {
-                            title(R.string.CallNotificationBuilder_first_call_title)
-                            text(R.string.CallNotificationBuilder_first_call_message)
-                            button(R.string.activity_settings_title) {
-                                Intent(context, PrivacySettingsActivity::class.java)
-                                    .let(context::startActivity)
-                            }
-                            cancelButton()
-                        }
-                    }
-                } else {
-                    viewHolder.view.setOnClickListener(null)
-                }
             }
         }
     }
@@ -190,7 +185,7 @@ class ConversationAdapter(
     private fun getMessageBefore(position: Int, cursor: Cursor): MessageRecord? {
         // The message that's visually before the current one is actually after the current
         // one for the cursor because the layout is reversed
-        if (isReversed && !cursor.moveToPosition(position + 1)) { return null }
+        if (isReversed &&  !cursor.moveToPosition(position + 1)) { return null }
         if (!isReversed && !cursor.moveToPosition(position - 1)) { return null }
 
         return messageDB.readerFor(cursor).current

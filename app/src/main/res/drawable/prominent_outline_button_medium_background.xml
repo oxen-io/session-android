@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="?prominentButtonColor">
-    <item>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
         <shape android:shape="rectangle">
-            <solid android:color="?colorPrimary"/>
+            <solid android:color="@android:color/transparent"/>
             <corners android:radius="@dimen/medium_button_corner_radius" />
             <stroke
-                android:color="?prominentButtonColor"
+                android:color="?android:textColorTertiary"
                 android:width="@dimen/border_thickness" />
         </shape>
     </item>
-</ripple>
+    <item>
+        <ripple
+            android:color="?prominentButtonColor">
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent"/>
+                    <corners android:radius="@dimen/medium_button_corner_radius" />
+                    <stroke
+                        android:color="?prominentButtonColor"
+                        android:width="@dimen/border_thickness" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+</selector>
+

@@ -11,22 +11,23 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.isInvisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
-
+import com.squareup.phrase.Phrase
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.Objects
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
-
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsignal.utilities.ExternalStorageUtil
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.ApplicationContext
@@ -34,21 +35,18 @@ import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.util.FileProviderUtil
 import org.thoughtcrime.securesms.util.StreamUtil
 
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.util.Objects
-import java.util.concurrent.TimeUnit
-
-
 class ShareLogsDialog(private val updateCallback: (Boolean)->Unit): DialogFragment() {
 
     private val TAG = "ShareLogsDialog"
     private var shareJob: Job? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
-        title(R.string.dialog_share_logs_title)
-        text(R.string.dialog_share_logs_explanation)
+        title(R.string.helpReportABugExportLogs)
+        val appName = context.getString(R.string.app_name)
+        val txt = Phrase.from(context, R.string.helpReportABugDescription)
+            .put(APP_NAME_KEY, appName)
+            .format().toString()
+        text(txt)
         button(R.string.share, dismiss = false) { runShareLogsJob() }
         cancelButton { updateCallback(false) }
     }

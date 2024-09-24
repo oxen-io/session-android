@@ -4,24 +4,28 @@
     <item
         android:id="@+id/media_preview__forward"
         android:icon="?menu_forward_icon"
-        android:title="@string/media_preview__forward_title"
+        android:iconTint="?android:textColorPrimary"
+        android:title="@string/share"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/save"
         android:icon="?menu_save_icon"
-        android:title="@string/media_preview__save_title"
+        android:iconTint="?android:textColorPrimary"
+        android:title="@string/save"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/media_preview__overview"
         android:icon="?menu_photo_library_icon"
-        android:title="@string/media_preview__all_media_title"
+        android:iconTint="?android:textColorPrimary"
+        android:title="@string/conversationsSettingsAllMedia"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/delete"
         android:icon="?menu_delete_icon"
+        android:iconTint="?android:textColorPrimary"
         android:title="@string/delete"
         app:showAsAction="ifRoom" />
 </menu>

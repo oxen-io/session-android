@@ -679,8 +679,7 @@ object OpenGroupApi {
     }
 
     fun unban(publicKey: String, room: String, server: String): Promise<Unit, Exception> {
-        val request =
-            Request(verb = DELETE, room = room, server = server, endpoint = Endpoint.UserUnban(publicKey))
+        val request = Request(verb = DELETE, room = room, server = server, endpoint = Endpoint.UserUnban(publicKey))
         return send(request).map {
             Log.d("Loki", "Unbanned user: $publicKey from: $server.$room")
         }

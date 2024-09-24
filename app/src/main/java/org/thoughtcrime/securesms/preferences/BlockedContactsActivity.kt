@@ -18,11 +18,11 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
 
     val adapter: BlockedContactsAdapter by lazy { BlockedContactsAdapter(viewModel) }
 
-    fun unblock() {
+    private fun unblock() {
         showSessionDialog {
             title(viewModel.getTitle(this@BlockedContactsActivity))
-            text(viewModel.getMessage(this@BlockedContactsActivity))
-            button(R.string.continue_2) { viewModel.unblock() }
+            text(viewModel.getText(context, viewModel.state.selectedItems))
+            dangerButton(R.string.blockUnblock, R.string.AccessibilityId_unblockConfirm) { viewModel.unblock() }
             cancelButton()
         }
     }
@@ -43,6 +43,5 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
             }
 
         binding.unblockButton.setOnClickListener { unblock() }
-
     }
 }

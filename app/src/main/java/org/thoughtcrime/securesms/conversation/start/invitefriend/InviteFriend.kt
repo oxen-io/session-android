@@ -14,10 +14,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.ui.components.AppBarCloseIcon
 import org.thoughtcrime.securesms.ui.components.BackAppBar
 import org.thoughtcrime.securesms.ui.components.SlimOutlineButton
@@ -43,7 +46,7 @@ internal fun InviteFriend(
         shape = MaterialTheme.shapes.small
     )) {
         BackAppBar(
-            title = stringResource(R.string.invite_a_friend),
+            title = stringResource(R.string.sessionInviteAFriend),
             backgroundColor = Color.Transparent, // transparent to show the rounded shape of the container
             onBack = onBack,
             actions = { AppBarCloseIcon(onClose = onClose) }
@@ -55,7 +58,7 @@ internal fun InviteFriend(
             Text(
                 accountId,
                 modifier = Modifier
-                    .contentDescription(R.string.AccessibilityId_account_id)
+                    .contentDescription(R.string.AccessibilityId_shareAccountId)
                     .fillMaxWidth()
                     .border()
                     .padding(LocalDimensions.current.spacing),
@@ -66,7 +69,10 @@ internal fun InviteFriend(
             Spacer(modifier = Modifier.height(LocalDimensions.current.xsSpacing))
 
             Text(
-                stringResource(R.string.invite_your_friend_to_chat_with_you_on_session_by_sharing_your_account_id_with_them),
+                stringResource(R.string.shareAccountIdDescription).let { txt ->
+                    val c = LocalContext.current
+                    Phrase.from(txt).put(APP_NAME_KEY, c.getString(R.string.app_name)).format().toString()
+                },
                 textAlign = TextAlign.Center,
                 style = LocalType.current.small,
                 color = LocalColors.current.textSecondary,

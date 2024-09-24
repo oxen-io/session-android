@@ -1,24 +1,20 @@
 package org.thoughtcrime.securesms.reactions;
 
+import static org.session.libsession.utilities.IdUtilKt.truncateIdForDisplay;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.session.libsession.messaging.utilities.AccountId;
+import java.util.Collections;
+import java.util.List;
+import network.loki.messenger.R;
 import org.thoughtcrime.securesms.components.ProfilePictureView;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
-import com.bumptech.glide.Glide;
-
-import java.util.Collections;
-import java.util.List;
-
-import network.loki.messenger.R;
 
 final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecipientsAdapter.ViewHolder> {
 
@@ -129,7 +125,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
       EmojiImageView emojiView = itemView.findViewById(R.id.header_view_emoji);
       emojiView.setImageEmoji(emoji.getDisplayEmoji());
       TextView count = itemView.findViewById(R.id.header_view_emoji_count);
-      count.setText(String.format(" ·  %s", emoji.getCount()));
+      count.setText(String.format(" •  %s", emoji.getCount()));
     }
   }
 
@@ -157,12 +153,12 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
       this.avatar.update(reaction.getSender());
 
       if (reaction.getSender().isLocalNumber()) {
-        this.recipient.setText(R.string.ReactionsRecipientAdapter_you);
+        this.recipient.setText(R.string.you);
         this.remove.setVisibility(View.VISIBLE);
       } else {
         String name = reaction.getSender().getName();
-        if (name != null && new AccountId(name).getPrefix() != null) {
-          name = name.substring(0, 4) + "..." + name.substring(name.length() - 4);
+        if (name == null){
+          name = truncateIdForDisplay(reaction.getSender().getAddress().serialize());
         }
         this.recipient.setText(name);
         this.remove.setVisibility(View.GONE);
@@ -184,7 +180,12 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
     private void bind(@NonNull final EmojiCount emoji) {
       if (emoji.getCount() > 5) {
         TextView count = itemView.findViewById(R.id.footer_view_emoji_count);
-        count.setText(itemView.getContext().getResources().getQuantityString(R.plurals.ReactionsRecipientAdapter_other_reactors, emoji.getCount() - 5, emoji.getCount() - 5, emoji.getBaseEmoji()));
+
+        // We display the first 5 people to react w/ a given emoji so we'll subtract that to get the 'others' count
+        int othersCount = emoji.getCount() - 5;
+        String s = itemView.getResources().getQuantityString(R.plurals.emojiReactsCountOthers, othersCount, othersCount, emoji.getBaseEmoji());
+        count.setText(s);
+
         itemView.setVisibility(View.VISIBLE);
       } else {
         itemView.setVisibility(View.GONE);

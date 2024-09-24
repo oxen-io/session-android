@@ -13,7 +13,7 @@
         android:id="@+id/openURLTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_open_url_title"
+        android:text="@string/urlOpen"
         android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
         android:textSize="@dimen/large_font_size" />
@@ -22,11 +22,12 @@
         android:id="@+id/openURLExplanationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_open_url_explanation"
+        android:text="@string/urlOpenDescription"
         android:paddingHorizontal="@dimen/medium_spacing"
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/small_font_size"
         android:layout_margin="@dimen/large_spacing"
+        android:maxLines="5"
         android:textAlignment="center" />
 
     <TextView
@@ -34,16 +35,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/BottomSheetActionItem"
-        android:text="@string/open"
-        />
+        android:text="@string/open" />
 
     <TextView
         android:id="@+id/copyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/BottomSheetActionItem"
-        android:text="@string/copy_url"
-        />
+        android:text="@string/urlCopy" />
 
     <TextView
         android:textColor="?danger"
@@ -51,7 +50,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/BottomSheetActionItem"
-        android:text="@string/cancel"
-        />
+        android:text="@string/cancel" />
 
 </LinearLayout>

@@ -12,10 +12,14 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.SSKEnvironment.MessageExpirationManagerProtocol
+import org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.getExpirationTypeDisplayValue
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.getSubbedCharSequence
+import org.thoughtcrime.securesms.ui.getSubbedString
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -43,22 +47,18 @@ class DisappearingMessages @Inject constructor(
     }
 
     fun showFollowSettingDialog(context: Context, message: MessageRecord) = context.showSessionDialog {
-        title(R.string.dialog_disappearing_messages_follow_setting_title)
+        title(R.string.disappearingMessagesFollowSetting)
         text(if (message.expiresIn == 0L) {
-            context.getString(R.string.dialog_disappearing_messages_follow_setting_off_body)
+            context.getText(R.string.disappearingMessagesFollowSettingOff)
         } else {
-            context.getString(
-                    R.string.dialog_disappearing_messages_follow_setting_on_body,
-                    ExpirationUtil.getExpirationDisplayValue(
-                        context,
-                        message.expiresIn.milliseconds
-                    ),
-                    context.getExpirationTypeDisplayValue(message.isNotDisappearAfterRead)
-                )
+            context.getSubbedCharSequence(R.string.disappearingMessagesFollowSettingOn,
+                TIME_KEY to ExpirationUtil.getExpirationDisplayValue(context, message.expiresIn.milliseconds),
+                DISAPPEARING_MESSAGES_TYPE_KEY to context.getExpirationTypeDisplayValue(message.isNotDisappearAfterRead))
         })
+
         dangerButton(
-                text = if (message.expiresIn == 0L) R.string.dialog_disappearing_messages_follow_setting_confirm else R.string.dialog_disappearing_messages_follow_setting_set,
-                contentDescription = if (message.expiresIn == 0L) R.string.AccessibilityId_confirm else R.string.AccessibilityId_set_button
+                text = if (message.expiresIn == 0L) R.string.confirm else R.string.set,
+                contentDescription = if (message.expiresIn == 0L) R.string.AccessibilityId_confirm else R.string.AccessibilityId_setButton
         ) {
             set(message.threadId, message.recipient.address, message.expiryMode, message.recipient.isClosedGroupRecipient)
         }

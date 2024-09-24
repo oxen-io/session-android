@@ -19,7 +19,7 @@
                android:src="@drawable/ic_delivery_status_sent"
                android:paddingStart="2dp"
                android:visibility="gone"
-               android:contentDescription="@string/conversation_item_sent__delivered_description" />
+               android:contentDescription="@string/AccessibilityId_deliveryIndicator" />
 
     <ImageView android:id="@+id/delivered_indicator"
                android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
                android:src="@drawable/ic_delivery_status_delivered"
                android:paddingStart="2dp"
                android:visibility="gone"
-               android:contentDescription="@string/conversation_item_sent__delivered_description"
+               android:contentDescription="@string/AccessibilityId_deliveryIndicator"
                tools:visibility="gone"/>
 
     <ImageView android:id="@+id/read_indicator"
@@ -38,7 +38,7 @@
                android:src="@drawable/ic_delivery_status_read"
                android:paddingStart="2dp"
                android:visibility="gone"
-               android:contentDescription="@string/conversation_item_sent__message_read"
+               android:contentDescription="@string/read"
                app:tint="@color/core_blue"
                tools:visibility="visible"/>
 

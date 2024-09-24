@@ -115,7 +115,7 @@ public abstract class MessageRecord extends DisplayRecord {
   }
 
   @Override
-  public SpannableString getDisplayBody(@NonNull Context context) {
+  public CharSequence getDisplayBody(@NonNull Context context) {
     if (isGroupUpdateMessage()) {
       UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(getBody());
       return new SpannableString(UpdateMessageBuilder.INSTANCE.buildGroupUpdateMessage(context, updateMessageData, getIndividualRecipient().getAddress().serialize(), isOutgoing()));

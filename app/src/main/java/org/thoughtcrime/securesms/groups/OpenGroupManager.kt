@@ -1,18 +1,23 @@
 package org.thoughtcrime.securesms.groups
 
 import android.content.Context
+import android.widget.Toast
 import androidx.annotation.WorkerThread
-import okhttp3.HttpUrl
+import com.squareup.phrase.Phrase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import java.util.concurrent.Executors
+import network.loki.messenger.R
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
+import org.session.libsession.utilities.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import java.util.concurrent.Executors
 
 object OpenGroupManager {
     private val executorService = Executors.newScheduledThreadPool(4)
@@ -36,6 +41,9 @@ object OpenGroupManager {
             }
             return true
         }
+
+    // flow holding information on write access for our current communities
+    private val _communityWriteAccess: MutableStateFlow<Map<String, Boolean>> = MutableStateFlow(emptyMap())
 
     fun startPolling() {
         if (isPolling) { return }
@@ -63,6 +71,8 @@ object OpenGroupManager {
             isPolling = false
         }
     }
+
+    fun getCommunitiesWriteAccessFlow() = _communityWriteAccess.asStateFlow()
 
     @WorkerThread
     fun add(server: String, room: String, publicKey: String, context: Context): Pair<Long,OpenGroupApi.RoomInfo?> {
@@ -111,35 +121,43 @@ object OpenGroupManager {
 
     @WorkerThread
     fun delete(server: String, room: String, context: Context) {
-        val storage = MessagingModuleConfiguration.shared.storage
-        val configFactory = MessagingModuleConfiguration.shared.configFactory
-        val threadDB = DatabaseComponent.get(context).threadDatabase()
-        val openGroupID = "${server.removeSuffix("/")}.$room"
-        val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
-        val recipient = threadDB.getRecipientForThreadId(threadID) ?: return
-        threadDB.setThreadArchived(threadID)
-        val groupID = recipient.address.serialize()
-        // Stop the poller if needed
-        val openGroups = storage.getAllOpenGroups().filter { it.value.server == server }
-        if (openGroups.isNotEmpty()) {
-            synchronized(pollUpdaterLock) {
-                val poller = pollers[server]
-                poller?.stop()
-                pollers.remove(server)
+        try {
+            val storage = MessagingModuleConfiguration.shared.storage
+            val configFactory = MessagingModuleConfiguration.shared.configFactory
+            val threadDB = DatabaseComponent.get(context).threadDatabase()
+            val openGroupID = "${server.removeSuffix("/")}.$room"
+            val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
+            val recipient = threadDB.getRecipientForThreadId(threadID) ?: return
+            threadDB.setThreadArchived(threadID)
+            val groupID = recipient.address.serialize()
+            // Stop the poller if needed
+            val openGroups = storage.getAllOpenGroups().filter { it.value.server == server }
+            if (openGroups.isNotEmpty()) {
+                synchronized(pollUpdaterLock) {
+                    val poller = pollers[server]
+                    poller?.stop()
+                    pollers.remove(server)
+                }
             }
+            configFactory.userGroups?.eraseCommunity(server, room)
+            configFactory.convoVolatile?.eraseCommunity(server, room)
+            // Delete
+            storage.removeLastDeletionServerID(room, server)
+            storage.removeLastMessageServerID(room, server)
+            storage.removeLastInboxMessageId(server)
+            storage.removeLastOutboxMessageId(server)
+            val lokiThreadDB = DatabaseComponent.get(context).lokiThreadDatabase()
+            lokiThreadDB.removeOpenGroupChat(threadID)
+            storage.deleteConversation(threadID)       // Must be invoked on a background thread
+            GroupManager.deleteGroup(groupID, context) // Must be invoked on a background thread
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
         }
-        configFactory.userGroups?.eraseCommunity(server, room)
-        configFactory.convoVolatile?.eraseCommunity(server, room)
-        // Delete
-        storage.removeLastDeletionServerID(room, server)
-        storage.removeLastMessageServerID(room, server)
-        storage.removeLastInboxMessageId(server)
-        storage.removeLastOutboxMessageId(server)
-        val lokiThreadDB = DatabaseComponent.get(context).lokiThreadDatabase()
-        lokiThreadDB.removeOpenGroupChat(threadID)
-        storage.deleteConversation(threadID) // Must be invoked on a background thread
-        GroupManager.deleteGroup(groupID, context) // Must be invoked on a background thread
-        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        catch (e: Exception) {
+            Log.e("Loki", "Failed to leave (delete) community", e)
+            val serverAndRoom = "$server.$room"
+            val txt = Phrase.from(context, R.string.communityLeaveError).put(COMMUNITY_NAME_KEY, serverAndRoom).format().toString()
+            Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
+        }
     }
 
     @WorkerThread
@@ -154,9 +172,13 @@ object OpenGroupManager {
 
     fun updateOpenGroup(openGroup: OpenGroup, context: Context) {
         val threadDB = DatabaseComponent.get(context).lokiThreadDatabase()
-        val openGroupID = "${openGroup.server}.${openGroup.room}"
-        val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
+        val threadID = GroupManager.getOpenGroupThreadID(openGroup.groupId, context)
         threadDB.setOpenGroupChat(openGroup, threadID)
+
+        // update write access for this community
+        val writeAccesses = _communityWriteAccess.value.toMutableMap()
+        writeAccesses[openGroup.groupId] = openGroup.canWrite
+        _communityWriteAccess.value = writeAccesses
     }
 
     fun isUserModerator(context: Context, groupId: String, standardPublicKey: String, blindedPublicKey: String? = null): Boolean {

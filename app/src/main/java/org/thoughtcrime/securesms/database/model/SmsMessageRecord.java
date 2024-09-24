@@ -18,14 +18,13 @@
 package org.thoughtcrime.securesms.database.model;
 
 import android.content.Context;
-import android.text.SpannableString;
+
 import androidx.annotation.NonNull;
 import org.session.libsession.utilities.IdentityKeyMismatch;
 import org.session.libsession.utilities.recipients.Recipient;
-import org.thoughtcrime.securesms.database.SmsDatabase;
+
 import java.util.LinkedList;
 import java.util.List;
-import network.loki.messenger.R;
 
 /**
  * The message record model which represents standard SMS messages.
@@ -56,16 +55,8 @@ public class SmsMessageRecord extends MessageRecord {
   }
 
   @Override
-  public SpannableString getDisplayBody(@NonNull Context context) {
-    if (SmsDatabase.Types.isFailedDecryptType(type)) {
-      return emphasisAdded(context.getString(R.string.MessageDisplayHelper_bad_encrypted_message));
-    } else if (SmsDatabase.Types.isDuplicateMessageType(type)) {
-      return emphasisAdded(context.getString(R.string.SmsMessageRecord_duplicate_message));
-    } else if (SmsDatabase.Types.isNoRemoteSessionType(type)) {
-      return emphasisAdded(context.getString(R.string.MessageDisplayHelper_message_encrypted_for_non_existing_session));
-    } else {
-      return super.getDisplayBody(context);
-    }
+  public CharSequence getDisplayBody(@NonNull Context context) {
+    return super.getDisplayBody(context);
   }
 
   @Override

@@ -68,7 +68,7 @@ fun MediaOverviewScreen(
             } else {
                 Toast.makeText(
                     context,
-                    R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission,
+                    R.string.permissionsCameraDenied,
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -101,31 +101,18 @@ fun MediaOverviewScreen(
                     } catch (e: ActivityNotFoundException) {
                         Toast.makeText(
                             context,
-                            R.string.ConversationItem_unable_to_open_media,
+                            R.string.attachmentsErrorOpen,
                             Toast.LENGTH_LONG
                         ).show()
                     }
                 }
 
                 is MediaOverviewEvent.ShowSaveAttachmentError -> {
-                    val message = context.resources.getQuantityText(
-                        R.plurals.ConversationFragment_error_while_saving_attachments_to_sd_card,
-                        event.errorCount
-                    )
-                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, R.string.attachmentsSaveError, Toast.LENGTH_LONG).show()
                 }
 
                 is MediaOverviewEvent.ShowSaveAttachmentSuccess -> {
-                    val message = if (event.directory.isNotBlank()) {
-                        context.resources.getString(
-                            R.string.SaveAttachmentTask_saved_to,
-                            event.directory
-                        )
-                    } else {
-                        context.resources.getString(R.string.SaveAttachmentTask_saved)
-                    }
-
-                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -241,15 +228,11 @@ private fun SaveAttachmentWarningDialog(
     val context = LocalContext.current
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = context.getString(R.string.ConversationFragment_save_to_sd_card),
-        text = context.resources.getQuantityString(
-            R.plurals.ConversationFragment_saving_n_media_to_storage_warning,
-            numSelected,
-            numSelected
-        ),
+        title = context.getString(R.string.warning),
+        text = context.resources.getString(R.string.attachmentsWarning),
         buttons = listOf(
-            DialogButtonModel(GetString(R.string.save), onClick = onAccepted),
-            DialogButtonModel(GetString(android.R.string.cancel), dismissOnClick = true)
+            DialogButtonModel(GetString(R.string.save), GetString(R.string.AccessibilityId_saveAttachment), color = LocalColors.current.danger, onClick = onAccepted),
+            DialogButtonModel(GetString(android.R.string.cancel), GetString(R.string.AccessibilityId_cancel), dismissOnClick = true)
         )
     )
 }
@@ -264,12 +247,7 @@ private fun DeleteConfirmationDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = context.resources.getQuantityString(
-            R.plurals.ConversationFragment_delete_selected_messages, numSelected
-        ),
-        text = context.resources.getQuantityString(
-            R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages,
-            numSelected,
-            numSelected,
+            R.plurals.deleteMessage, numSelected
         ),
         buttons = listOf(
             DialogButtonModel(GetString(R.string.delete), color = LocalColors.current.danger, onClick = onAccepted),
@@ -305,7 +283,6 @@ private fun ActionProgressDialog(
 
 private val MediaOverviewTab.titleResId: Int
     get() = when (this) {
-        MediaOverviewTab.Media -> R.string.MediaOverviewActivity_Media
-        MediaOverviewTab.Documents -> R.string.MediaOverviewActivity_Documents
+        MediaOverviewTab.Media -> R.string.media
+        MediaOverviewTab.Documents -> R.string.files
     }
-

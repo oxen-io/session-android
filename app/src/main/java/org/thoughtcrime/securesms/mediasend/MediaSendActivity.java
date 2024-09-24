@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.mediasend;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.squareup.phrase.Phrase;
 
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.MediaTypes;
@@ -159,7 +163,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
       int maxSelection = viewModel.getMaxSelection();
 
       if (viewModel.getSelectedMedia().getValue() != null && viewModel.getSelectedMedia().getValue().size() >= maxSelection) {
-        Toast.makeText(this, getResources().getQuantityString(R.plurals.MediaSendActivity_cant_share_more_than_n_items, maxSelection, maxSelection), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.attachmentsErrorNumber), Toast.LENGTH_SHORT).show();
       } else {
         navigateToCamera();
       }
@@ -252,7 +256,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
 
   @Override
   public void onCameraError() {
-    Toast.makeText(this, R.string.MediaSendActivity_camera_unavailable, Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, R.string.cameraErrorUnavailable, Toast.LENGTH_SHORT).show();
     setResult(RESULT_CANCELED, new Intent());
     finish();
   }
@@ -328,11 +332,12 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
 
       switch (error) {
         case ITEM_TOO_LARGE:
-          Toast.makeText(this, R.string.MediaSendActivity_an_item_was_removed_because_it_exceeded_the_size_limit, Toast.LENGTH_LONG).show();
+          Toast.makeText(this, R.string.attachmentsErrorSize, Toast.LENGTH_LONG).show();
           break;
         case TOO_MANY_ITEMS:
-          int maxSelection = viewModel.getMaxSelection();
-          Toast.makeText(this, getResources().getQuantityString(R.plurals.MediaSendActivity_cant_share_more_than_n_items, maxSelection, maxSelection), Toast.LENGTH_SHORT).show();
+          // In modern session we'll say you can't sent more than 32 items, but if we ever want
+          // the exact count of how many items the user attempted to send it's: viewModel.getMaxSelection()
+          Toast.makeText(this, getString(R.string.attachmentsErrorNumber), Toast.LENGTH_SHORT).show();
           break;
       }
     });
@@ -355,10 +360,18 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
   }
 
   private void navigateToCamera() {
+
+    Context c = getApplicationContext();
+    String permanentDenialTxt = Phrase.from(c, R.string.permissionsCameraDenied)
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .format().toString();
+    String requireCameraPermissionsTxt = Phrase.from(c, R.string.cameraGrantAccessDescription)
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .format().toString();
+
     Permissions.with(this)
                .request(Manifest.permission.CAMERA)
-               .withRationaleDialog(getString(R.string.ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera), R.drawable.ic_baseline_photo_camera_48)
-               .withPermanentDenialDialog(getString(R.string.ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video))
+               .withPermanentDenialDialog(permanentDenialTxt)
                .onAllGranted(() -> {
                  Camera1Fragment fragment = getOrCreateCameraFragment();
                  getSupportFragmentManager().beginTransaction()
@@ -367,7 +380,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
                                             .addToBackStack(null)
                                             .commit();
                })
-               .onAnyDenied(() -> Toast.makeText(MediaSendActivity.this, R.string.ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video, Toast.LENGTH_LONG).show())
+               .onAnyDenied(() -> Toast.makeText(MediaSendActivity.this, requireCameraPermissionsTxt, Toast.LENGTH_LONG).show())
                .execute();
   }
 

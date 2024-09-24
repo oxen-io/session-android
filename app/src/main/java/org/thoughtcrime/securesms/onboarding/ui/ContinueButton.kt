@@ -13,9 +13,9 @@ import org.thoughtcrime.securesms.ui.contentDescription
 @Composable
 fun ContinuePrimaryOutlineButton(modifier: Modifier, onContinue: () -> Unit) {
     PrimaryOutlineButton(
-        stringResource(R.string.continue_2),
+        stringResource(R.string.theContinue),
         modifier = modifier
-            .contentDescription(R.string.AccessibilityId_continue)
+            .contentDescription(R.string.AccessibilityId_theContinue)
             .fillMaxWidth()
             .padding(horizontal = LocalDimensions.current.xlargeSpacing)
             .padding(bottom = LocalDimensions.current.smallSpacing),

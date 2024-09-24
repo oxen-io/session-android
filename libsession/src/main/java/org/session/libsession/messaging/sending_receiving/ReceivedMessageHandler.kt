@@ -1,7 +1,6 @@
 package org.session.libsession.messaging.sending_receiving
 
 import android.text.TextUtils
-import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -271,7 +270,7 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
 }
 
 fun handleMessageRequestResponse(message: MessageRequestResponse) {
-    MessagingModuleConfiguration.shared.storage.insertMessageRequestResponse(message)
+    MessagingModuleConfiguration.shared.storage.insertMessageRequestResponseFromContact(message)
 }
 //endregion
 
@@ -812,7 +811,7 @@ private fun MessageReceiver.handleClosedGroupMembersRemoved(message: ClosedGroup
     }
 
     // Notify the user
-    val type = if (senderLeft) SignalServiceGroup.Type.QUIT else SignalServiceGroup.Type.MEMBER_REMOVED
+    val type = if (senderLeft) SignalServiceGroup.Type.MEMBER_LEFT else SignalServiceGroup.Type.MEMBER_REMOVED
     // We don't display zombie members in the notification as users have already been notified when those members left
     val notificationMembers = removedMembers.minus(zombies)
     if (notificationMembers.isNotEmpty()) {
@@ -876,7 +875,7 @@ private fun MessageReceiver.handleClosedGroupMemberLeft(message: ClosedGroupCont
 
     // Notify the user
     if (!userLeft) {
-        storage.insertIncomingInfoMessage(context, senderPublicKey, groupID, SignalServiceGroup.Type.QUIT, name, members, admins, message.sentTimestamp!!)
+        storage.insertIncomingInfoMessage(context, senderPublicKey, groupID, SignalServiceGroup.Type.MEMBER_LEFT, name, listOf(senderPublicKey), admins, message.sentTimestamp!!)
     }
 }
 

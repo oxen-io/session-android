@@ -17,22 +17,12 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.content.Context
-import android.graphics.Typeface
 import android.net.Uri
-import android.text.Spannable
-import android.text.SpannableString
 import android.text.TextUtils
-import android.text.style.StyleSpan
 import android.view.View
 import com.annimon.stream.Stream
-import com.google.android.mms.pdu_alt.CharacterSets
-import com.google.android.mms.pdu_alt.EncodedStringValue
-import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.components.ComposeText
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.io.UnsupportedEncodingException
 import java.util.Collections
+import org.session.libsignal.utilities.Log
 
 object Util {
     private val TAG: String = Log.tag(Util::class.java)
@@ -92,22 +82,6 @@ object Util {
         return sb.toString()
     }
 
-    fun isEmpty(value: Array<EncodedStringValue?>?): Boolean {
-        return value == null || value.size == 0
-    }
-
-    fun isEmpty(value: ComposeText?): Boolean {
-        return value == null || value.text == null || TextUtils.isEmpty(value.textTrimmed)
-    }
-
-    fun isEmpty(collection: Collection<*>?): Boolean {
-        return collection == null || collection.isEmpty()
-    }
-
-    fun isEmpty(charSequence: CharSequence?): Boolean {
-        return charSequence == null || charSequence.length == 0
-    }
-
     fun wait(lock: Any, timeout: Long) {
         try {
             (lock as Object).wait(timeout)
@@ -123,8 +97,7 @@ object Util {
             return results
         }
 
-        val elements =
-            source.split(delimiter.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val elements = source.split(delimiter.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         Collections.addAll(results, *elements)
 
         return results
