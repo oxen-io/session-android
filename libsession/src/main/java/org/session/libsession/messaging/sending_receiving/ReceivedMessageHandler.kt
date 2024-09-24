@@ -2,6 +2,7 @@ package org.session.libsession.messaging.sending_receiving
 
 import android.text.TextUtils
 import network.loki.messenger.libsession_util.util.ExpiryMode
+import org.session.libsession.R
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
@@ -260,7 +261,7 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
     val deletedMessageId = messageDataProvider.markMessageAsDeleted(
             timestamp = timestamp,
             author = author,
-            displayedMessage = "[UPDATE THIS!] This message was deleted on this device" //todo DELETION update once we have strings
+            displayedMessage =  context.getString(R.string.deleteMessageDeletedLocally)
         )
     if (!messageDataProvider.isOutgoingMessage(timestamp)) {
         SSKEnvironment.shared.notificationManager.updateNotification(context)

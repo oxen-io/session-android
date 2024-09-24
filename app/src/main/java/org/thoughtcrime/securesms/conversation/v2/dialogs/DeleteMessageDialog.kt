@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.conversation.v2.dialogs
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.annotation.ColorInt
@@ -34,8 +35,8 @@ class DeleteMessageDialog(
         theme.resolveAttribute(R.attr.danger, typedValue, true)
         @ColorInt val deleteColor = typedValue.data
 
-        title("[UPDATE THIS!] Delete message") //todo DELETION update once we have strings
-        text("[UPDATE THIS!] This will delete this message") //todo DELETION update once we have strings
+        title(resources.getQuantityString(R.plurals.deleteMessage, messageCount, messageCount))
+        text(resources.getString(R.string.deleteMessageConfirm)) //todo DELETION we need the plural version of this here, which currently is not set up in strings
         singleChoiceItems(
             options = deleteOptions.map { it.label },
             currentSelected = if (defaultToEveryone) 1 else 0, // some cases require the second option, "delete for everyone", to be the default selected
@@ -58,18 +59,20 @@ class DeleteMessageDialog(
     }
 
     private val deleteOptions: List<DeleteOption> = listOf(
-        DeleteOption.DeleteDeviceOnly(), DeleteOption.DeleteForEveryone()
+        DeleteOption.DeleteDeviceOnly(requireContext()), DeleteOption.DeleteForEveryone(requireContext())
     )
 
     private sealed class DeleteOption(
         open val label: String
     ){
         data class DeleteDeviceOnly(
-            override val label: String = "[UPDATE THIS!] Delete device only", //todo DELETION update once we have strings
+            val context: Context,
+            override val label: String = context.getString(R.string.deleteMessageDeviceOnly),
         ): DeleteOption(label)
 
         data class DeleteForEveryone(
-            override val label: String = "[UPDATE THIS!] Delete for everyone", //todo DELETION update once we have strings
+            val context: Context,
+            override val label: String =  context.getString(R.string.deleteMessageEveryone),
         ): DeleteOption(label)
     }
 }

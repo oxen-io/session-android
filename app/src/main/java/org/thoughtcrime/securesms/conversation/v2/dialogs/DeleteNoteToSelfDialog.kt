@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.conversation.v2.dialogs
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.annotation.ColorInt
@@ -32,8 +33,8 @@ class DeleteNoteToSelfDialog(
         theme.resolveAttribute(R.attr.danger, typedValue, true)
         @ColorInt val deleteColor = typedValue.data
 
-        title("[UPDATE THIS!] Delete note to self") //todo DELETION update once we have strings
-        text("[UPDATE THIS!] This will delete this note") //todo DELETION update once we have strings
+        title(resources.getQuantityString(R.plurals.deleteMessage, messageCount, messageCount))
+        text(resources.getString(R.string.deleteMessageConfirm)) //todo DELETION we need the plural version of this here, which currently is not set up in strings
         singleChoiceItems(
             options = deleteOptions.map { it.label },
             currentSelected = 0,
@@ -56,18 +57,20 @@ class DeleteNoteToSelfDialog(
     }
 
     private val deleteOptions: List<DeleteOption> = listOf(
-        DeleteOption.DeleteDeviceOnly(), DeleteOption.DeleteOnAllMyDevices()
+        DeleteOption.DeleteDeviceOnly(requireContext()), DeleteOption.DeleteOnAllMyDevices(requireContext())
     )
 
     private sealed class DeleteOption(
         open val label: String
     ){
         data class DeleteDeviceOnly(
-            override val label: String = "[UPDATE THIS!] Delete device only", //todo DELETION update once we have strings
+            val context: Context,
+            override val label: String = context.getString(R.string.deleteMessageDeviceOnly),
         ): DeleteOption(label)
 
         data class DeleteOnAllMyDevices(
-            override val label: String = "[UPDATE THIS!] Delete all devices", //todo DELETION update once we have strings
+            val context: Context,
+            override val label: String = context.getString(R.string.deleteMessageDevicesAll),
         ): DeleteOption(label)
     }
 }

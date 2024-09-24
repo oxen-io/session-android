@@ -2132,7 +2132,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val deleteDeviceOnly = {
             viewModel.markAsDeletedLocally(
                 messages = messages,
-                displayedMessage = "[UPDATE THIS!] This message was deleted on this device" //todo DELETION update once we have strings
+                displayedMessage = resources.getString(R.string.deleteMessageDeletedLocally)
             )
             endActionMode()
             //todo DELETION show confirmation toast

@@ -27,14 +27,12 @@ class DeleteMessageDeviceOnlyDialog(
         theme.resolveAttribute(R.attr.danger, typedValue, true)
         @ColorInt val deleteColor = typedValue.data
 
-        title("[UPDATE THIS!] Delete message") //todo DELETION update once we have strings
-        text("[UPDATE THIS!] This will delete this message device only") //todo DELETION update once we have strings
+        title(resources.getQuantityString(R.plurals.deleteMessage, messageCount, messageCount))
+        text(resources.getString(R.string.deleteMessageDescriptionDevice)) //todo DELETION we need the plural version of this here, which currently is not set up in strings
         button(
             text = R.string.delete,
             textColor = deleteColor,
-            listener = {
-                onDeleteDeviceOnly()
-            }
+            listener = onDeleteDeviceOnly
         )
         cancelButton(onCancel)
     }
