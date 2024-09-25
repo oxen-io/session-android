@@ -206,9 +206,6 @@ class DefaultConversationRepository @Inject constructor(
                 displayedMessage = displayedMessage
             )
         }
-
-        //todo DELETION delete attachments and links
-        //todo DELETION delete notifications
     }
 
     override fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord) {

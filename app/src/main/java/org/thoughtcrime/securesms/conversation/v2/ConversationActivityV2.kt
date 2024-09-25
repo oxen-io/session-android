@@ -2083,7 +2083,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         //todo DELETION handle control messages deletion ( and make clickable )
 
-        //todo DELETION handle "marked as deleted" message deletion ( and make clickable )
+        //todo DELETION handle multi select scenarios
 
         //todo DELETION check that the unread status works as expected when deleting a message
 
@@ -2093,9 +2093,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         //todo DELETION check notifications deleted
 
-        //todo DELETION add padding to bubble long press menu. It touches the bottom of the screen
-
-        //todo DELETION check why I can't long press on certain messages at the bottom of some threads ( like with bruno )
+        //todo DELETION handle errors: Toasts for errors, or deleting messages not fully sent yet
 
 
 
@@ -2130,12 +2128,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         // creating a reusable callback
         val deleteDeviceOnly = {
+            // delete the message locally
             viewModel.markAsDeletedLocally(
                 messages = messages,
                 displayedMessage = resources.getString(R.string.deleteMessageDeletedLocally)
             )
             endActionMode()
-            //todo DELETION show confirmation toast
+
+            // show confirmation toast
+            Toast.makeText(
+                this,
+                resources.getQuantityString(R.plurals.deleteMessageDeleted, messages.count(), messages.count()),
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         // There are three types of dialogs for deletion:

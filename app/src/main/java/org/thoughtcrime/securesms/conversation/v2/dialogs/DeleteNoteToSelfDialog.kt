@@ -56,9 +56,11 @@ class DeleteNoteToSelfDialog(
         cancelButton(onCancel)
     }
 
-    private val deleteOptions: List<DeleteOption> = listOf(
-        DeleteOption.DeleteDeviceOnly(requireContext()), DeleteOption.DeleteOnAllMyDevices(requireContext())
-    )
+    private val deleteOptions: List<DeleteOption> by lazy {
+        listOf(
+            DeleteOption.DeleteDeviceOnly(requireContext()), DeleteOption.DeleteOnAllMyDevices(requireContext())
+        )
+    }
 
     private sealed class DeleteOption(
         open val label: String

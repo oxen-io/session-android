@@ -58,9 +58,11 @@ class DeleteMessageDialog(
         cancelButton(onCancel)
     }
 
-    private val deleteOptions: List<DeleteOption> = listOf(
-        DeleteOption.DeleteDeviceOnly(requireContext()), DeleteOption.DeleteForEveryone(requireContext())
-    )
+    private val deleteOptions: List<DeleteOption> by lazy {
+        listOf(
+            DeleteOption.DeleteDeviceOnly(requireContext()), DeleteOption.DeleteForEveryone(requireContext())
+        )
+    }
 
     private sealed class DeleteOption(
         open val label: String
