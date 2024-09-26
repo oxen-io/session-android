@@ -432,7 +432,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val recipient = viewModel.recipient
         val openGroup = recipient.let { viewModel.openGroup }
         if (recipient == null || (recipient.isCommunityRecipient && openGroup == null)) {
-            Toast.makeText(this, "This thread has been deleted.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.conversationsDeleted), Toast.LENGTH_LONG).show()
             return finish()
         }
 

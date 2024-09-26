@@ -247,7 +247,6 @@ class ConversationViewModel(
                 else -> false
             }
 
-
             // There are three types of dialogs for deletion:
             // 1- Delete on device only OR all devices - Used for Note to self
             // 2- Delete on device only OR for everyone - Used for 'admins' or a user's own messages, as long as the message have a server hash
@@ -347,27 +346,33 @@ class ConversationViewModel(
      * Instead they will appear as a special type of message
      * that says something like "This message was deleted"
      */
-    private fun markAsDeletedForEveryone(message: MessageRecord) = viewModelScope.launch {
+    private fun markAsDeletedForEveryone(messages: Set<MessageRecord>) = viewModelScope.launch {
         val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
-        stopMessageAudio(message)
 
-        repository.markAsDeletedForEveryone(threadId, recipient, message)
+        // make sure to stop audio messages, if any
+        messages.filterIsInstance<MmsMessageRecord>()
+            .mapNotNull { it.slideDeck.audioSlide }
+            .forEach(::stopMessageAudio)
+
+        /*repository.markAsDeletedForEveryone(threadId, recipient, messages)
             .onSuccess {
-                Log.d("Loki", "Deleted message ${message.id} ")
+                Log.d("Loki", "Deleted messages $messages ")
             }
             .onFailure {
-                Log.w("Loki", "FAILED TO delete message ${message.id} ")
-                showMessage("Couldn't delete message due to error: $it")
-            }
+                Log.w("Loki", "FAILED TO delete messages $messages ")
+                showMessage(
+                    application.resources.getQuantityString(R.plurals.deleteMessageFailed, messages.size, messages.size)
+                )
+            }*/
     }
 
     fun banUser(recipient: Recipient) = viewModelScope.launch {
         repository.banUser(threadId, recipient)
             .onSuccess {
-                showMessage("Successfully banned user")
+                showMessage(application.getString(R.string.banUserBanned))
             }
             .onFailure {
-                showMessage("Couldn't ban user due to error: $it")
+                showMessage(application.getString(R.string.banErrorFailed))
             }
     }
 
@@ -376,13 +381,13 @@ class ConversationViewModel(
         repository.banAndDeleteAll(threadId, messageRecord.individualRecipient)
             .onSuccess {
                 // At this point the server side messages have been successfully deleted..
-                showMessage("Successfully banned user and deleted all their messages")
+                showMessage(application.getString(R.string.banUserBanned))
 
                 // ..so we can now delete all their messages in this thread from local storage & remove the views.
                 repository.deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord)
             }
             .onFailure {
-                showMessage("Couldn't execute request due to error: $it")
+                showMessage(application.getString(R.string.banErrorFailed))
             }
     }
 
@@ -394,9 +399,7 @@ class ConversationViewModel(
                     it.copy(isMessageRequestAccepted = true)
                 }
             }
-            .onFailure {
-                showMessage("Couldn't accept message request due to error: $it")
-            }
+            .onFailure {}
     }
 
     fun declineMessageRequest() {
