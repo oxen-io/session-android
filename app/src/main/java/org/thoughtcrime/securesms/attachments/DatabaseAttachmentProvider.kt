@@ -241,7 +241,6 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
         else DatabaseComponent.get(context).mmsDatabase()
 
-        //todo DELETION can this be batched?
         messages.forEach { message ->
             messagingDatabase.markAsDeleted(message.messageId, message.isOutgoing, displayedMessage)
         }

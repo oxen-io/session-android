@@ -22,11 +22,13 @@ import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.snode.utilities.await
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.get
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.DraftDatabase
@@ -61,7 +63,12 @@ interface ConversationRepository {
     fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
 
-    suspend fun markAsDeletedForEveryone(threadId: Long, recipient: Recipient, message: MessageRecord): Result<Unit>
+    suspend fun deleteCommunityMessagesRemotely(threadId: Long, messages: Set<MessageRecord>)
+    suspend fun delete1on1MessagesRemotely(
+        threadId: Long,
+        recipient: Recipient,
+        messages: Set<MessageRecord>
+    )
     fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
     suspend fun banUser(threadId: Long, recipient: Recipient): Result<Unit>
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): Result<Unit>
@@ -221,7 +228,49 @@ class DefaultConversationRepository @Inject constructor(
         storage.setRecipientApproved(recipient, isApproved)
     }
 
-    override suspend fun markAsDeletedForEveryone(
+    override suspend fun deleteCommunityMessagesRemotely(
+        threadId: Long,
+        messages: Set<MessageRecord>
+    ) {
+        val community = lokiThreadDb.getOpenGroupChat(threadId) ?:
+            throw Error("Not a Community")
+
+        messages.forEach { message ->
+            lokiMessageDb.getServerID(message.id, !message.isMms)?.let { messageServerID ->
+                OpenGroupApi.deleteMessage(messageServerID, community.room, community.server).await()
+            }
+        }
+    }
+
+    override suspend fun delete1on1MessagesRemotely(
+        threadId: Long,
+        recipient: Recipient,
+        messages: Set<MessageRecord>
+    ) {
+        // delete the messages remotely
+        val publicKey = recipient.address.serialize()
+        val userAddress: Address? =  textSecurePreferences.getLocalNumber()?.let { Address.fromSerialized(it) }
+
+        messages.forEach { message ->
+            // delete from swarm
+            messageDataProvider.getServerHashForMessage(message.id, message.isMms)
+                ?.let { serverHash ->
+                    SnodeAPI.deleteMessage(publicKey, listOf(serverHash)).await()
+                }
+
+            // send an UnsendRequest to user's swarm
+            buildUnsendRequest(recipient, message)?.let { unsendRequest ->
+                userAddress?.let { MessageSender.send(unsendRequest, it) }
+            }
+
+            // send an UnsendRequest to recipient's swarm
+            buildUnsendRequest(recipient, message)?.let { unsendRequest ->
+                MessageSender.send(unsendRequest, recipient.address)
+            }
+        }
+    }
+
+   /* override suspend fun markAsDeletedForEveryone(
         threadId: Long,
         recipient: Recipient,
         message: MessageRecord
@@ -276,7 +325,7 @@ class DefaultConversationRepository @Inject constructor(
                     }
             }
         }
-    }
+    }*/
 
     override fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest? {
         if (recipient.isCommunityRecipient) return null

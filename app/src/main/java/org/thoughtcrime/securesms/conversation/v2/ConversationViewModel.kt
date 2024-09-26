@@ -199,17 +199,13 @@ class ConversationViewModel(
 
         // Refer to our figma document for info on message deletion [https://www.figma.com/design/kau6LggVcMMWmZRMibEo8F/Standardise-Message-Deletion?node-id=0-1&t=dEPcU0SZ9G2s4gh2-0]
 
-        //todo DELETION delete for everyone
-
-        //todo DELETION delete all my devices
-
         //todo DELETION handle control messages deletion ( and make clickable )
 
         //todo DELETION handle multi select scenarios
 
         //todo DELETION check that the unread status works as expected when deleting a message
 
-        //todo DELETION handle errors: Toasts for errors, or deleting messages not fully sent yet
+        //todo DELETION handle deleting messages not fully sent yet (failed or sending states)
 
         viewModelScope.launch(Dispatchers.IO) {
             val allSentByCurrentUser = messages.all { it.isOutgoing }
@@ -255,7 +251,12 @@ class ConversationViewModel(
                 // the conversation is a note to self
                 conversation.isLocalNumber -> {
                     _dialogsState.update {
-                        it.copy(deleteAllDevices = messages)
+                        it.copy(deleteAllDevices = DeleteForEveryoneDialogData(
+                            messages = messages,
+                            defaultToEveryone = false,
+                            messageType = DeleteForEveryoneMessageType.NoteToSelf
+                        )
+                        )
                     }
                 }
 
@@ -265,7 +266,14 @@ class ConversationViewModel(
                         it.copy(
                             deleteEveryone = DeleteForEveryoneDialogData(
                                 messages = messages,
-                                defaultToEveryone = isAdmin
+                                defaultToEveryone = isAdmin,
+                                messageType = when{
+                                    conversation.isLocalNumber -> DeleteForEveryoneMessageType.NoteToSelf
+                                    conversation.isCommunityRecipient -> DeleteForEveryoneMessageType.Community
+                                    conversation.isClosedGroupRecipient -> DeleteForEveryoneMessageType.LegacyGroup //todo GROUPS V2 this property will change for groups v2. Check for legacyGroup here
+                                    //conversation.isClosedGroup -> DeleteForEveryoneMessageType.GroupV2(isAdmin) //todo GROUPS V2 properly check for GroupV2 type here once available
+                                    else -> DeleteForEveryoneMessageType.OneOnOne
+                                }
                             )
                         )
                     }
@@ -281,11 +289,6 @@ class ConversationViewModel(
             }
         }
     }
-
-    private fun isUserCommunityManager() = openGroup?.let { openGroup ->
-        val userPublicKey = textSecurePreferences.getLocalNumber() ?: return@let false
-        OpenGroupManager.isUserModerator(application, openGroup.id, userPublicKey, blindedPublicKey)
-    } ?: false
 
     /**
      * This will delete these messages from the db
@@ -323,6 +326,229 @@ class ConversationViewModel(
     }
 
     /**
+     * This will mark the messages as deleted, for everyone.
+     * Attachments and other related data will be removed from the db,
+     * but the messages themselves won't be removed from the db.
+     * Instead they will appear as a special type of message
+     * that says something like "This message was deleted"
+     */
+    private fun markAsDeletedForEveryone(
+        data: DeleteForEveryoneDialogData
+    ) = viewModelScope.launch {
+        val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
+
+        // make sure to stop audio messages, if any
+        data.messages.filterIsInstance<MmsMessageRecord>()
+            .mapNotNull { it.slideDeck.audioSlide }
+            .forEach(::stopMessageAudio)
+
+        // the exact logic for this will depend on the messages type
+        when(data.messageType){
+            is DeleteForEveryoneMessageType.NoteToSelf -> markAsDeletedForEveryoneNoteToSelf(data)
+            is DeleteForEveryoneMessageType.OneOnOne -> markAsDeletedForEveryone1On1(data)
+            is DeleteForEveryoneMessageType.LegacyGroup -> markAsDeletedForEveryoneLegacyGroup(data.messages)
+            is DeleteForEveryoneMessageType.GroupV2 -> markAsDeletedForEveryoneGroupsV2(data)
+            is DeleteForEveryoneMessageType.Community -> markAsDeletedForEveryoneCommunity(data)
+        }
+    }
+
+    private fun markAsDeletedForEveryoneNoteToSelf(data: DeleteForEveryoneDialogData){
+        viewModelScope.launch(Dispatchers.IO) {
+            // show a loading indicator
+            _uiState.update { it.copy(showLoader = true) }
+
+            // delete remotely
+            try {
+                //todo DELETION need to delete remotely for note to self
+                repository.deleteCommunityMessagesRemotely(threadId, data.messages)
+
+                //todo DELETION send unsendRequest to own swarm
+
+                // When this is done we simply need to remove the message locally
+                repository.markAsDeletedLocally(
+                    messages = data.messages,
+                    displayedMessage = application.getString(R.string.deleteMessageDeletedGlobally)
+                )
+
+                // show confirmation toast
+                Toast.makeText(
+                    application,
+                    application.resources.getQuantityString(
+                        R.plurals.deleteMessageDeleted,
+                        data.messages.count(),
+                        data.messages.count()
+                    ),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } catch (e: Exception) {
+                Log.w("Loki", "FAILED TO delete messages ${data.messages} ")
+                // failed to delete - show a toast and get back on the modal
+                Toast.makeText(
+                    application,
+                    application.resources.getQuantityString(
+                        R.plurals.deleteMessageFailed,
+                        data.messages.size,
+                        data.messages.size
+                    ), Toast.LENGTH_SHORT
+                ).show()
+
+                _dialogsState.update { it.copy(deleteEveryone = data) }
+            }
+
+            // hide loading indicator
+            _uiState.update { it.copy(showLoader = false) }
+        }
+    }
+
+    private fun markAsDeletedForEveryone1On1(data: DeleteForEveryoneDialogData){
+        if(recipient == null) return showMessage(application.getString(R.string.errorUnknown))
+
+        viewModelScope.launch(Dispatchers.IO) {
+            // show a loading indicator
+            _uiState.update { it.copy(showLoader = true) }
+
+            // delete remotely
+            try {
+                repository.delete1on1MessagesRemotely(threadId, recipient!!, data.messages)
+
+                // When this is done we simply need to remove the message locally
+                repository.markAsDeletedLocally(
+                    messages = data.messages,
+                    displayedMessage = application.getString(R.string.deleteMessageDeletedGlobally)
+                )
+
+                // show confirmation toast
+                Toast.makeText(
+                    application,
+                    application.resources.getQuantityString(
+                        R.plurals.deleteMessageDeleted,
+                        data.messages.count(),
+                        data.messages.count()
+                    ),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } catch (e: Exception) {
+                Log.w("Loki", "FAILED TO delete messages ${data.messages} ")
+                // failed to delete - show a toast and get back on the modal
+                Toast.makeText(
+                    application,
+                    application.resources.getQuantityString(
+                        R.plurals.deleteMessageFailed,
+                        data.messages.size,
+                        data.messages.size
+                    ), Toast.LENGTH_SHORT
+                ).show()
+
+                _dialogsState.update { it.copy(deleteEveryone = data) }
+            }
+
+            // hide loading indicator
+            _uiState.update { it.copy(showLoader = false) }
+        }
+    }
+
+    private fun markAsDeletedForEveryoneLegacyGroup(messages: Set<MessageRecord>){
+
+    }
+
+
+    private fun markAsDeletedForEveryoneGroupsV2(data: DeleteForEveryoneDialogData){
+        viewModelScope.launch(Dispatchers.IO) {
+            // show a loading indicator
+            _uiState.update { it.copy(showLoader = true) }
+
+            //todo GROUPS V2 - uncomment below and use Fanchao's method to delete a group V2
+            try {
+                //repository.callMethodFromFanchao(threadId, recipient, data.messages)
+
+                // the repo will handle the internal logic (calling `/delete` on the swarm
+                // and sending 'GroupUpdateDeleteMemberContentMessage'
+                // When this is done we simply need to remove the message locally
+                repository.markAsDeletedLocally(
+                    messages = data.messages,
+                    displayedMessage = application.getString(R.string.deleteMessageDeletedGlobally)
+                )
+
+                // show confirmation toast
+                Toast.makeText(
+                    application,
+                    application.resources.getQuantityString(
+                        R.plurals.deleteMessageDeleted,
+                        data.messages.count(), data.messages.count()
+                    ),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } catch (e: Exception) {
+                Log.w("Loki", "FAILED TO delete messages ${data.messages} ")
+                // failed to delete - show a toast and get back on the modal
+                Toast.makeText(
+                    application,
+                    application.resources.getQuantityString(
+                        R.plurals.deleteMessageFailed,
+                        data.messages.size,
+                        data.messages.size
+                    ), Toast.LENGTH_SHORT
+                ).show()
+
+                _dialogsState.update { it.copy(deleteAllDevices = data) }
+            }
+
+            // hide loading indicator
+            _uiState.update { it.copy(showLoader = false) }
+        }
+    }
+
+    private fun markAsDeletedForEveryoneCommunity(data: DeleteForEveryoneDialogData){
+        viewModelScope.launch(Dispatchers.IO) {
+            // show a loading indicator
+            _uiState.update { it.copy(showLoader = true) }
+
+            // delete remotely
+            try {
+                repository.deleteCommunityMessagesRemotely(threadId, data.messages)
+
+                // When this is done we simply need to remove the message locally
+                repository.markAsDeletedLocally(
+                    messages = data.messages,
+                    displayedMessage = application.getString(R.string.deleteMessageDeletedGlobally)
+                )
+
+                // show confirmation toast
+                Toast.makeText(
+                    application,
+                    application.resources.getQuantityString(
+                        R.plurals.deleteMessageDeleted,
+                        data.messages.count(),
+                        data.messages.count()
+                    ),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } catch (e: Exception) {
+                Log.w("Loki", "FAILED TO delete messages ${data.messages} ")
+                // failed to delete - show a toast and get back on the modal
+                Toast.makeText(
+                    application,
+                    application.resources.getQuantityString(
+                        R.plurals.deleteMessageFailed,
+                        data.messages.size,
+                        data.messages.size
+                    ), Toast.LENGTH_SHORT
+                ).show()
+
+                _dialogsState.update { it.copy(deleteEveryone = data) }
+            }
+
+            // hide loading indicator
+            _uiState.update { it.copy(showLoader = false) }
+        }
+    }
+
+    private fun isUserCommunityManager() = openGroup?.let { openGroup ->
+        val userPublicKey = textSecurePreferences.getLocalNumber() ?: return@let false
+        OpenGroupManager.isUserModerator(application, openGroup.id, userPublicKey, blindedPublicKey)
+    } ?: false
+
+    /**
      * Stops audio player if its current playing is the one given in the message.
      */
     private fun stopMessageAudio(message: MessageRecord) {
@@ -337,33 +563,6 @@ class ConversationViewModel(
     fun setRecipientApproved() {
         val recipient = recipient ?: return Log.w("Loki", "Recipient was null for set approved action")
         repository.setApproved(recipient, true)
-    }
-
-    /**
-     * This will mark the messages as deleted, for everyone.
-     * Attachments and other related data will be removed from the db,
-     * but the messages themselves won't be removed from the db.
-     * Instead they will appear as a special type of message
-     * that says something like "This message was deleted"
-     */
-    private fun markAsDeletedForEveryone(messages: Set<MessageRecord>) = viewModelScope.launch {
-        val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
-
-        // make sure to stop audio messages, if any
-        messages.filterIsInstance<MmsMessageRecord>()
-            .mapNotNull { it.slideDeck.audioSlide }
-            .forEach(::stopMessageAudio)
-
-        /*repository.markAsDeletedForEveryone(threadId, recipient, messages)
-            .onSuccess {
-                Log.d("Loki", "Deleted messages $messages ")
-            }
-            .onFailure {
-                Log.w("Loki", "FAILED TO delete messages $messages ")
-                showMessage(
-                    application.resources.getQuantityString(R.plurals.deleteMessageFailed, messages.size, messages.size)
-                )
-            }*/
     }
 
     fun banUser(recipient: Recipient) = viewModelScope.launch {
@@ -483,8 +682,7 @@ class ConversationViewModel(
                 markAsDeletedLocally(command.messages)
             }
             is Commands.MarkAsDeletedForEveryone -> {
-                //todo DELETION mark as deleted for everyone here
-                //markAsDeletedForEveryone(command.messages)
+                markAsDeletedForEveryone(command.data)
             }
         }
     }
@@ -524,13 +722,22 @@ class ConversationViewModel(
         val openLinkDialogUrl: String? = null,
         val deleteDeviceOnly: Set<MessageRecord>? = null,
         val deleteEveryone: DeleteForEveryoneDialogData? = null,
-        val deleteAllDevices: Set<MessageRecord>? = null,
+        val deleteAllDevices: DeleteForEveryoneDialogData? = null,
     )
 
     data class DeleteForEveryoneDialogData(
         val messages: Set<MessageRecord>,
+        val messageType: DeleteForEveryoneMessageType,
         val defaultToEveryone: Boolean
     )
+
+    sealed class DeleteForEveryoneMessageType {
+        data object NoteToSelf: DeleteForEveryoneMessageType()
+        data object OneOnOne: DeleteForEveryoneMessageType()
+        data object LegacyGroup: DeleteForEveryoneMessageType()
+        data object GroupV2: DeleteForEveryoneMessageType()
+        data object Community: DeleteForEveryoneMessageType()
+    }
 
     sealed class Commands {
         data class ShowOpenUrlDialog(val url: String?) : Commands()
@@ -539,7 +746,7 @@ class ConversationViewModel(
         data object HideDeleteAllDevicesDialog : Commands()
 
         data class MarkAsDeletedLocally(val messages: Set<MessageRecord>): Commands()
-        data class MarkAsDeletedForEveryone(val messages: Set<MessageRecord>): Commands()
+        data class MarkAsDeletedForEveryone(val data: DeleteForEveryoneDialogData): Commands()
     }
 }
 
@@ -549,7 +756,8 @@ data class ConversationUiState(
     val uiMessages: List<UiMessage> = emptyList(),
     val isMessageRequestAccepted: Boolean? = null,
     val conversationExists: Boolean,
-    val hideInputBar: Boolean = false
+    val hideInputBar: Boolean = false,
+    val showLoader: Boolean = false
 )
 
 data class RetrieveOnce<T>(val retrieval: () -> T?) {

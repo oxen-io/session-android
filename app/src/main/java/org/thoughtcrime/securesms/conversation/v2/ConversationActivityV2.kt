@@ -845,7 +845,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     finish()
                 }
 
+                // show or hide the text input
                 binding.inputBar.isGone = uiState.hideInputBar
+
+                // show or hide loading indicator
+                binding.loader.isVisible = uiState.showLoader
             }
         }
     }

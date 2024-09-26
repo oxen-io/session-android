@@ -10,24 +10,24 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.squareup.phrase.Phrase
 import network.loki.messenger.R
-import network.loki.messenger.libsession_util.util.ExpiryMode
-import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
-import org.thoughtcrime.securesms.conversation.disappearingmessages.ExpiryType
-import org.thoughtcrime.securesms.ui.OpenURLAlertDialog
-import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
-import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.*
-import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.HideDeleteAllDevicesDialog
+import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.HideDeleteDeviceOnlyDialog
+import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.HideDeleteEveryoneDialog
+import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.MarkAsDeletedForEveryone
+import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.MarkAsDeletedLocally
+import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.ShowOpenUrlDialog
+import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.DeleteForEveryoneMessageType.NoteToSelf
 import org.thoughtcrime.securesms.ui.AlertDialog
 import org.thoughtcrime.securesms.ui.DialogButtonModel
 import org.thoughtcrime.securesms.ui.GetString
+import org.thoughtcrime.securesms.ui.OpenURLAlertDialog
 import org.thoughtcrime.securesms.ui.RadioOption
 import org.thoughtcrime.securesms.ui.components.TitledRadioButton
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
-import kotlin.time.Duration.Companion.days
+import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
 
 @Composable
 fun ConversationV2Dialogs(
@@ -125,7 +125,9 @@ fun ConversationV2Dialogs(
                         onClick = {
                             // delete messages based on chosen option
                             sendCommand(
-                                if(deleteForEveryone) MarkAsDeletedForEveryone(dialogsState.deleteEveryone.messages)
+                                if(deleteForEveryone) MarkAsDeletedForEveryone(
+                                    dialogsState.deleteEveryone.copy(defaultToEveryone = deleteForEveryone)
+                                )
                                 else MarkAsDeletedLocally(dialogsState.deleteEveryone.messages)
                             )
                         }
@@ -139,7 +141,7 @@ fun ConversationV2Dialogs(
 
         // delete message(s) for all my devices
         if(dialogsState.deleteAllDevices != null){
-            var deleteAllDevices by remember { mutableStateOf(false) }
+            var deleteAllDevices by remember { mutableStateOf(dialogsState.deleteAllDevices.defaultToEveryone) }
 
             AlertDialog(
                 onDismissRequest = {
@@ -148,8 +150,8 @@ fun ConversationV2Dialogs(
                 },
                 title = pluralStringResource(
                     R.plurals.deleteMessage,
-                    dialogsState.deleteAllDevices.size,
-                    dialogsState.deleteAllDevices.size
+                    dialogsState.deleteAllDevices.messages.size,
+                    dialogsState.deleteAllDevices.messages.size
                 ),
                 text = stringResource(R.string.deleteMessageConfirm), //todo DELETION we need the plural version of this here, which currently is not set up in strings
                 content = {
@@ -188,8 +190,10 @@ fun ConversationV2Dialogs(
                         onClick = {
                             // delete messages based on chosen option
                             sendCommand(
-                                if(deleteAllDevices) MarkAsDeletedForEveryone(dialogsState.deleteAllDevices)
-                                else MarkAsDeletedLocally(dialogsState.deleteAllDevices)
+                                if(deleteAllDevices) MarkAsDeletedForEveryone(
+                                    dialogsState.deleteAllDevices.copy(defaultToEveryone = deleteAllDevices)
+                                )
+                                else MarkAsDeletedLocally(dialogsState.deleteAllDevices.messages)
                             )
                         }
                     ),
