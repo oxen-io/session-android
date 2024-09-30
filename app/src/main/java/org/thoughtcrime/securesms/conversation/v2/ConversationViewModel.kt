@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.ExpirationConfiguration
@@ -371,26 +372,30 @@ class ConversationViewModel(
                 )
 
                 // show confirmation toast
-                Toast.makeText(
-                    application,
-                    application.resources.getQuantityString(
-                        R.plurals.deleteMessageDeleted,
-                        data.messages.count(),
-                        data.messages.count()
-                    ),
-                    Toast.LENGTH_SHORT
-                ).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        application,
+                        application.resources.getQuantityString(
+                            R.plurals.deleteMessageDeleted,
+                            data.messages.count(),
+                            data.messages.count()
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } catch (e: Exception) {
                 Log.w("Loki", "FAILED TO delete messages ${data.messages} ")
                 // failed to delete - show a toast and get back on the modal
-                Toast.makeText(
-                    application,
-                    application.resources.getQuantityString(
-                        R.plurals.deleteMessageFailed,
-                        data.messages.size,
-                        data.messages.size
-                    ), Toast.LENGTH_SHORT
-                ).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        application,
+                        application.resources.getQuantityString(
+                            R.plurals.deleteMessageFailed,
+                            data.messages.size,
+                            data.messages.size
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                }
 
                 _dialogsState.update { it.copy(deleteEveryone = data) }
             }
@@ -418,26 +423,30 @@ class ConversationViewModel(
                 )
 
                 // show confirmation toast
-                Toast.makeText(
-                    application,
-                    application.resources.getQuantityString(
-                        R.plurals.deleteMessageDeleted,
-                        data.messages.count(),
-                        data.messages.count()
-                    ),
-                    Toast.LENGTH_SHORT
-                ).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        application,
+                        application.resources.getQuantityString(
+                            R.plurals.deleteMessageDeleted,
+                            data.messages.count(),
+                            data.messages.count()
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } catch (e: Exception) {
                 Log.w("Loki", "FAILED TO delete messages ${data.messages} ")
                 // failed to delete - show a toast and get back on the modal
-                Toast.makeText(
-                    application,
-                    application.resources.getQuantityString(
-                        R.plurals.deleteMessageFailed,
-                        data.messages.size,
-                        data.messages.size
-                    ), Toast.LENGTH_SHORT
-                ).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        application,
+                        application.resources.getQuantityString(
+                            R.plurals.deleteMessageFailed,
+                            data.messages.size,
+                            data.messages.size
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                }
 
                 _dialogsState.update { it.copy(deleteEveryone = data) }
             }
@@ -470,25 +479,29 @@ class ConversationViewModel(
                 )
 
                 // show confirmation toast
-                Toast.makeText(
-                    application,
-                    application.resources.getQuantityString(
-                        R.plurals.deleteMessageDeleted,
-                        data.messages.count(), data.messages.count()
-                    ),
-                    Toast.LENGTH_SHORT
-                ).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        application,
+                        application.resources.getQuantityString(
+                            R.plurals.deleteMessageDeleted,
+                            data.messages.count(), data.messages.count()
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } catch (e: Exception) {
                 Log.w("Loki", "FAILED TO delete messages ${data.messages} ")
                 // failed to delete - show a toast and get back on the modal
-                Toast.makeText(
-                    application,
-                    application.resources.getQuantityString(
-                        R.plurals.deleteMessageFailed,
-                        data.messages.size,
-                        data.messages.size
-                    ), Toast.LENGTH_SHORT
-                ).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        application,
+                        application.resources.getQuantityString(
+                            R.plurals.deleteMessageFailed,
+                            data.messages.size,
+                            data.messages.size
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                }
 
                 _dialogsState.update { it.copy(deleteAllDevices = data) }
             }
@@ -514,26 +527,30 @@ class ConversationViewModel(
                 )
 
                 // show confirmation toast
-                Toast.makeText(
-                    application,
-                    application.resources.getQuantityString(
-                        R.plurals.deleteMessageDeleted,
-                        data.messages.count(),
-                        data.messages.count()
-                    ),
-                    Toast.LENGTH_SHORT
-                ).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        application,
+                        application.resources.getQuantityString(
+                            R.plurals.deleteMessageDeleted,
+                            data.messages.count(),
+                            data.messages.count()
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } catch (e: Exception) {
                 Log.w("Loki", "FAILED TO delete messages ${data.messages} ")
                 // failed to delete - show a toast and get back on the modal
-                Toast.makeText(
-                    application,
-                    application.resources.getQuantityString(
-                        R.plurals.deleteMessageFailed,
-                        data.messages.size,
-                        data.messages.size
-                    ), Toast.LENGTH_SHORT
-                ).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        application,
+                        application.resources.getQuantityString(
+                            R.plurals.deleteMessageFailed,
+                            data.messages.size,
+                            data.messages.size
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                }
 
                 _dialogsState.update { it.copy(deleteEveryone = data) }
             }

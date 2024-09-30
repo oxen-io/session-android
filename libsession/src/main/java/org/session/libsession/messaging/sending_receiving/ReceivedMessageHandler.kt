@@ -1,6 +1,9 @@
 package org.session.libsession.messaging.sending_receiving
 
 import android.text.TextUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.R
 import org.session.libsession.avatars.AvatarHelper
@@ -256,12 +259,16 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
     val author = message.author ?: return null
     val (messageIdToDelete, mms) = storage.getMessageIdInDatabase(timestamp, author) ?: return null
     messageDataProvider.getServerHashForMessage(messageIdToDelete, mms)?.let { serverHash ->
-        SnodeAPI.deleteMessage(author, listOf(serverHash))
+        GlobalScope.launch(Dispatchers.IO) { // using GlobalScope as we are slowly migrating to coroutines but we can't migrate everything at once
+            try {
+                SnodeAPI.deleteMessage(author, listOf(serverHash))
+            }catch (e: Exception){}
+        }
     }
     val deletedMessageId = messageDataProvider.markMessageAsDeleted(
             timestamp = timestamp,
             author = author,
-            displayedMessage =  context.getString(R.string.deleteMessageDeletedLocally)
+            displayedMessage =  context.getString(R.string.deleteMessageDeletedGlobally)
         )
     if (!messageDataProvider.isOutgoingMessage(timestamp)) {
         SSKEnvironment.shared.notificationManager.updateNotification(context)

@@ -233,7 +233,7 @@ class DefaultConversationRepository @Inject constructor(
         messages: Set<MessageRecord>
     ) {
         val community = lokiThreadDb.getOpenGroupChat(threadId) ?:
-            throw Error("Not a Community")
+            throw Exception("Not a Community")
 
         messages.forEach { message ->
             lokiMessageDb.getServerID(message.id, !message.isMms)?.let { messageServerID ->
@@ -255,7 +255,7 @@ class DefaultConversationRepository @Inject constructor(
             // delete from swarm
             messageDataProvider.getServerHashForMessage(message.id, message.isMms)
                 ?.let { serverHash ->
-                    SnodeAPI.deleteMessage(publicKey, listOf(serverHash)).await()
+                    SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
                 }
 
             // send an UnsendRequest to user's swarm
