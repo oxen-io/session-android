@@ -2056,48 +2056,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // Note: The messages in the provided set may be a single message, or multiple if there are a
     // group of selected messages.
     override fun deleteMessages(messages: Set<MessageRecord>) {
-        endActionMode()
-
         viewModel.handleMessagesDeletion(messages)
-
-/*
-        // If the recipient is a community OR a Note-to-Self then we delete the message for everyone
-        if (recipient.isCommunityRecipient || recipient.isLocalNumber) {
-            showSessionDialog {
-                title(resources.getQuantityString(R.plurals.deleteMessage, messages.count(), messages.count()))
-                text(resources.getString(R.string.deleteMessageDescriptionEveryone))
-                dangerButton(R.string.delete) { messages.forEach(viewModel::deleteForEveryone); endActionMode() }
-                cancelButton { endActionMode() }
-            }
-        // Otherwise if this is a 1-on-1 conversation we may decided to delete just for ourselves or delete for everyone
-        } else if (allSentByCurrentUser && allHasHash) {
-            val bottomSheet = DeleteOptionsBottomSheet()
-            bottomSheet.recipient = recipient
-            bottomSheet.onDeleteForMeTapped = {
-                messages.forEach(viewModel::deleteLocally)
-                bottomSheet.dismiss()
-                endActionMode()
-            }
-            bottomSheet.onDeleteForEveryoneTapped = {
-                messages.forEach(viewModel::deleteForEveryone)
-                bottomSheet.dismiss()
-                endActionMode()
-            }
-            bottomSheet.onCancelTapped = {
-                bottomSheet.dismiss()
-                endActionMode()
-            }
-            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
-        }
-        else // Finally, if this is a closed group and you are deleting someone else's message(s) then we can only delete locally.
-        {
-            showSessionDialog {
-                title(resources.getQuantityString(R.plurals.deleteMessage, messages.count(), messages.count()))
-                text(resources.getString(R.string.deleteMessageDescriptionDevice))
-                dangerButton(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
-                cancelButton(::endActionMode)
-            }
-        }*/
+        endActionMode()
     }
 
     override fun banUser(messages: Set<MessageRecord>) {

@@ -10,6 +10,7 @@ import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.v2.ConversationAdapter
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -92,7 +93,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-        val selectedItems = adapter.selectedItems
+        val selectedItems = adapter.selectedItems.toSet()
         when (item.itemId) {
             R.id.menu_context_delete_message -> delegate?.deleteMessages(selectedItems)
             R.id.menu_context_ban_user -> delegate?.banUser(selectedItems)

@@ -257,10 +257,10 @@ class ConversationViewModel(
                 conversationType == MessageType.NOTE_TO_SELF -> {
                     _dialogsState.update {
                         it.copy(deleteAllDevices = DeleteForEveryoneDialogData(
-                            messages = messages,
-                            defaultToEveryone = false,
-                            messageType = DeleteForEveryoneMessageType.NoteToSelf
-                        )
+                                    messages = messages,
+                                    defaultToEveryone = false,
+                                    messageType = DeleteForEveryoneMessageType.NoteToSelf
+                                )
                         )
                     }
                 }
