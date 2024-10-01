@@ -649,6 +649,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 recyclerScrollState = newState
             }
         })
+
+        lifecycleScope.launch {
+            viewModel.isAdmin.collect{
+                adapter.isAdmin = it
+            }
+        }
     }
 
     private fun scrollToMostRecentMessageIfWeShould() {

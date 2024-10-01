@@ -44,6 +44,7 @@ class ConversationAdapter(
     private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
     private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
     var selectedItems = mutableSetOf<MessageRecord>()
+    var isAdmin: Boolean = false
     private var searchQuery: String? = null
     var visibleMessageViewDelegate: VisibleMessageViewDelegate? = null
 

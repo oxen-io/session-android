@@ -44,6 +44,9 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
 
         // Embedded function
         fun userCanDeleteSelectedItems(): Boolean {
+            // admin can delete all combinations
+            if(adapter.isAdmin) return true
+
             val allSentByCurrentUser = selectedItems.all { it.isOutgoing }
             val allReceivedByCurrentUser = selectedItems.all { !it.isOutgoing }
             if (openGroup == null) { return allSentByCurrentUser || allReceivedByCurrentUser }

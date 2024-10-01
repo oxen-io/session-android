@@ -65,8 +65,41 @@ class ConversationViewModel(
     private val _dialogsState = MutableStateFlow(DialogsState())
     val dialogsState: StateFlow<DialogsState> = _dialogsState
 
+    private val _isAdmin = MutableStateFlow(false)
+    val isAdmin: StateFlow<Boolean> = _isAdmin
+
     private var _recipient: RetrieveOnce<Recipient> = RetrieveOnce {
-        repository.maybeGetRecipientForThreadId(threadId)
+        val conversation = repository.maybeGetRecipientForThreadId(threadId)
+
+        // set admin from current conversation
+        val conversationType = conversation?.getType()
+        // Determining is the current user is an admin will depend on the kind of conversation we are in
+        _isAdmin.value = when(conversationType) {
+        // for Groups V2
+        MessageType.GROUPS_V2 -> {
+            //todo GROUPS V2 add logic where code is commented to determine if user is an admin
+            false // FANCHAO - properly set up admin for groups v2 here
+        }
+
+        // for legacy groups, check if the user created the group
+        MessageType.LEGACY_GROUP -> {
+            // for legacy groups, we check if the current user is the one who created the group
+            run {
+                val localUserAddress =
+                    textSecurePreferences.getLocalNumber() ?: return@run false
+                val group = storage.getGroup(conversation.address.toGroupString())
+                group?.admins?.contains(fromSerialized(localUserAddress)) ?: false
+            }
+        }
+
+        // for communities the the `isUserModerator` field
+        MessageType.COMMUNITY -> isUserCommunityManager()
+
+        // false in other cases
+        else -> false
+    }
+
+        conversation
     }
     val expirationConfiguration: ExpirationConfiguration?
         get() = storage.getExpirationConfiguration(threadId)
@@ -206,9 +239,7 @@ class ConversationViewModel(
 
         //todo DELETION handle multi select scenarios
 
-        //todo DELETION check that the unread status works as expected when deleting a message
-
-        //todo DELETION handle deleting messages not fully sent yet (failed or sending states)
+        //todo DELETION reactions are still visible on "marked as deleted" messages
 
         viewModelScope.launch(Dispatchers.IO) {
             val allSentByCurrentUser = messages.all { it.isOutgoing }
@@ -221,31 +252,6 @@ class ConversationViewModel(
                     it.id,
                     it.isMms
                 ) != null
-            }
-            // Determining is the current user is an admin will depend on the kind of conversation we are in
-            val isAdmin = when(conversationType) {
-                // for Groups V2
-                MessageType.GROUPS_V2 -> {
-                    //todo GROUPS V2 add logic where code is commented to determine if user is an admin
-                    false // FANCHAO - properly set up admin for groups v2 here
-                }
-
-                // for legacy groups, check if the user created the group
-                MessageType.LEGACY_GROUP -> {
-                    // for legacy groups, we check if the current user is the one who created the group
-                    run {
-                        val localUserAddress =
-                            textSecurePreferences.getLocalNumber() ?: return@run false
-                        val group = storage.getGroup(conversation.address.toGroupString())
-                        group?.admins?.contains(fromSerialized(localUserAddress)) ?: false
-                    }
-                }
-
-                // for communities the the `isUserModerator` field
-                MessageType.COMMUNITY -> isUserCommunityManager()
-
-                // false in other cases
-                else -> false
             }
 
             // There are three types of dialogs for deletion:
@@ -266,12 +272,12 @@ class ConversationViewModel(
                 }
 
                 // If the user is an admin or is interacting with their own message And are allowed to delete for everyone
-                (isAdmin || allSentByCurrentUser) && canDeleteForEveryone -> {
+                (isAdmin.value || allSentByCurrentUser) && canDeleteForEveryone -> {
                     _dialogsState.update {
                         it.copy(
                             deleteEveryone = DeleteForEveryoneDialogData(
                                 messages = messages,
-                                defaultToEveryone = isAdmin,
+                                defaultToEveryone = isAdmin.value,
                                 messageType = when{
                                     conversation.isLocalNumber -> DeleteForEveryoneMessageType.NoteToSelf
                                     conversation.isCommunityRecipient -> DeleteForEveryoneMessageType.Community
