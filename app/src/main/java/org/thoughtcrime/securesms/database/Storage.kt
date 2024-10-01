@@ -1732,6 +1732,12 @@ open class Storage(
         DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(MessageId(messageId, mms))
     }
 
+    override fun deleteReactions(messageIds: List<Long>, mms: Boolean) {
+        DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(
+            messageIds.map { MessageId(it, mms) }
+        )
+    }
+
     override fun setBlocked(recipients: Iterable<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean) {
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         recipientDb.setBlocked(recipients, isBlocked)

@@ -1,16 +1,13 @@
 package org.thoughtcrime.securesms.repository
 
-import network.loki.messenger.libsession_util.util.ExpiryMode
-
 import android.content.ContentResolver
 import android.content.Context
 import app.cash.copper.Query
 import app.cash.copper.flow.observeQuery
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.MarkAsDeletedMessage
@@ -27,9 +24,6 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.get
-import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.DraftDatabase
 import org.thoughtcrime.securesms.database.ExpirationConfigurationDatabase
@@ -47,6 +41,8 @@ import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 interface ConversationRepository {
     fun maybeGetRecipientForThreadId(threadId: Long): Recipient?
@@ -212,6 +208,9 @@ class DefaultConversationRepository @Inject constructor(
                 isSms = false,
                 displayedMessage = displayedMessage
             )
+
+            // delete reactions
+            storage.deleteReactions(messageIds = mms.map { it.id }, mms = true)
         }
 
         if(sms.isNotEmpty()){
@@ -222,6 +221,9 @@ class DefaultConversationRepository @Inject constructor(
                 isSms = true,
                 displayedMessage = displayedMessage
             )
+
+            // delete reactions
+            storage.deleteReactions(messageIds = sms.map { it.id }, mms = false)
         }
     }
 
@@ -318,34 +320,6 @@ class DefaultConversationRepository @Inject constructor(
             }
         }
     }
-
-   /* override suspend fun markAsDeletedForEveryone(
-        threadId: Long,
-        recipient: Recipient,
-        message: MessageRecord
-    ): Result<Unit> = suspendCoroutine { continuation ->
-        buildUnsendRequest(recipient, message)?.let { unsendRequest ->
-            MessageSender.send(unsendRequest, recipient.address)
-        }
-
-        else // If this thread is NOT in a Community
-        {
-            messageDataProvider.deleteMessage(message.id, !message.isMms)
-            messageDataProvider.getServerHashForMessage(message.id, message.isMms)?.let { serverHash ->
-                var publicKey = recipient.address.serialize()
-                if (recipient.isClosedGroupRecipient) {
-                    publicKey = GroupUtil.doubleDecodeGroupID(publicKey).toHexString()
-                }
-                SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
-                    .success {
-                        continuation.resume(Result.success(Unit))
-                    }.fail { error ->
-                        Log.w("ConversationRepository", "Call to SnodeAPI.deleteMessage failed - attempting to resume..")
-                        continuation.resume(Result.failure(error))
-                    }
-            }
-        }
-    }*/
 
     override fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest? {
         if (recipient.isCommunityRecipient) return null

@@ -227,6 +227,7 @@ interface StorageProtocol {
     fun removeReaction(emoji: String, messageTimestamp: Long, author: String, notifyUnread: Boolean)
     fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long)
     fun deleteReactions(messageId: Long, mms: Boolean)
+    fun deleteReactions(messageIds: List<Long>, mms: Boolean)
     fun setBlocked(recipients: Iterable<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean = false)
     fun setRecipientHash(recipient: Recipient, recipientHash: String?)
     fun blockedContacts(): List<Recipient>

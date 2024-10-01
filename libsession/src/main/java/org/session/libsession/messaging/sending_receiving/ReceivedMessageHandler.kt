@@ -276,7 +276,6 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
     val author = message.author ?: return null
     val (messageIdToDelete, mms) = storage.getMessageIdInDatabase(timestamp, author) ?: return null
     val messageType = storage.getMessageType(timestamp, author) ?: return null
-    Log.d("", "*** message type: $messageType")
 
     // send a /delete rquest for 1on1 messages
     if(messageType == MessageType.ONE_ON_ONE) {
@@ -300,6 +299,9 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
             author = author,
             displayedMessage = context.getString(R.string.deleteMessageDeletedGlobally)
         )
+        // delete reactions
+        storage.deleteReactions(messageId = messageIdToDelete, mms = mms)
+
     }
 
     if (!messageDataProvider.isOutgoingMessage(timestamp)) {

@@ -239,7 +239,7 @@ class ConversationViewModel(
 
         //todo DELETION handle multi select scenarios
 
-        //todo DELETION reactions are still visible on "marked as deleted" messages
+        //todo DELETION seems I can't "delete for everyone" when a message is sent by me on another phone
 
         viewModelScope.launch(Dispatchers.IO) {
             val allSentByCurrentUser = messages.all { it.isOutgoing }
