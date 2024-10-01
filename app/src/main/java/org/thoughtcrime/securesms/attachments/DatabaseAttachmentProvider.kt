@@ -199,7 +199,6 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     }
 
     override fun deleteMessages(messageIDs: List<Long>, threadId: Long, isSms: Boolean) {
-
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
 
@@ -216,10 +215,10 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         threadId?.let{ MessagingModuleConfiguration.shared.lastSentTimestampCache.delete(it, messages.map { it.timestamp }) }
     }
 
-    override fun markMessageAsDeleted(timestamp: Long, author: String, displayedMessage: String): Long? {
+    override fun markMessageAsDeleted(timestamp: Long, author: String, displayedMessage: String) {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val address = Address.fromSerialized(author)
-        val message = database.getMessageFor(timestamp, address) ?: return null
+        val message = database.getMessageFor(timestamp, address) ?: return
 
         markMessagesAsDeleted(
             messages = listOf(MarkAsDeletedMessage(
@@ -229,8 +228,6 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
             isSms = !message.isMms,
             displayedMessage = displayedMessage
         )
-
-        return message.id
     }
 
     override fun markMessagesAsDeleted(

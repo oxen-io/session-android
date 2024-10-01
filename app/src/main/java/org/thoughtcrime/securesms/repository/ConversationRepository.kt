@@ -69,6 +69,16 @@ interface ConversationRepository {
         recipient: Recipient,
         messages: Set<MessageRecord>
     )
+    suspend fun deleteNoteToSelfMessagesRemotely(
+        threadId: Long,
+        recipient: Recipient,
+        messages: Set<MessageRecord>
+    )
+    suspend fun deleteLegacyGroupMessagesRemotely(
+        recipient: Recipient,
+        messages: Set<MessageRecord>
+    )
+
     fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
     suspend fun banUser(threadId: Long, recipient: Recipient): Result<Unit>
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): Result<Unit>
@@ -270,6 +280,45 @@ class DefaultConversationRepository @Inject constructor(
         }
     }
 
+    override suspend fun deleteLegacyGroupMessagesRemotely(
+        recipient: Recipient,
+        messages: Set<MessageRecord>
+    ) {
+        if (recipient.isClosedGroupRecipient) {
+            val publicKey = recipient.address
+
+            messages.forEach { message ->
+                // send an UnsendRequest to group's swarm
+                buildUnsendRequest(recipient, message)?.let { unsendRequest ->
+                    MessageSender.send(unsendRequest, publicKey)
+                }
+            }
+        }
+    }
+
+    override suspend fun deleteNoteToSelfMessagesRemotely(
+        threadId: Long,
+        recipient: Recipient,
+        messages: Set<MessageRecord>
+    ) {
+        // delete the messages remotely
+        val publicKey = recipient.address.serialize()
+        val userAddress: Address? =  textSecurePreferences.getLocalNumber()?.let { Address.fromSerialized(it) }
+
+        messages.forEach { message ->
+            // delete from swarm
+            messageDataProvider.getServerHashForMessage(message.id, message.isMms)
+                ?.let { serverHash ->
+                    SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
+                }
+
+            // send an UnsendRequest to user's swarm
+            buildUnsendRequest(recipient, message)?.let { unsendRequest ->
+                userAddress?.let { MessageSender.send(unsendRequest, it) }
+            }
+        }
+    }
+
    /* override suspend fun markAsDeletedForEveryone(
         threadId: Long,
         recipient: Recipient,
@@ -279,35 +328,6 @@ class DefaultConversationRepository @Inject constructor(
             MessageSender.send(unsendRequest, recipient.address)
         }
 
-        val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
-        if (openGroup != null) {
-            val serverId = lokiMessageDb.getServerID(message.id, !message.isMms)?.let { messageServerID ->
-                OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
-                    .success {
-                        messageDataProvider.deleteMessage(message.id, !message.isMms)
-                        continuation.resume(Result.success(Unit))
-                    }.fail { error ->
-                        Log.w("TAG", "Call to OpenGroupApi.deleteForEveryone failed - attempting to resume..")
-                        continuation.resume(Result.failure(error))
-                    }
-            }
-
-            // If the server ID is null then this message is stuck in limbo (it has likely been
-            // deleted remotely but that deletion did not occur locally) - so we'll delete the
-            // message locally to clean up.
-            if (serverId == null) {
-                Log.w("ConversationRepository","Found community message without a server ID - deleting locally.")
-
-                // Caution: The bool returned from `deleteMessage` is NOT "Was the message
-                // successfully deleted?" - it is "Was the thread itself also deleted because
-                // removing that message resulted in an empty thread?".
-                if (message.isMms) {
-                    mmsDb.deleteMessage(message.id)
-                } else {
-                    smsDb.deleteMessage(message.id)
-                }
-            }
-        }
         else // If this thread is NOT in a Community
         {
             messageDataProvider.deleteMessage(message.id, !message.isMms)

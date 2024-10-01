@@ -45,6 +45,7 @@ import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsession.utilities.recipients.MessageType
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
@@ -249,32 +250,63 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
 }
 
 fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
-    //todo DELETION modify unsend request validation
     val userPublicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
-    if (message.sender != message.author && (message.sender != userPublicKey && userPublicKey != null)) { return null }
-    val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
+    val isLegacyGroupAdmin: Boolean = message.groupPublicKey?.let { key ->
+        var admin = false
+        val groupID = doubleEncodeGroupID(key)
+        val group = storage.getGroup(groupID)
+        if(group != null) {
+            admin = group.admins.map { it.toString() }.contains(message.sender)
+        }
+        admin
+    } ?: false
+
+    // First we need to determine the validity of the UnsendRequest
+    // It is valid if:
+    val requestIsValid = message.sender == message.author || //  the sender is the author of the message
+            message.author == userPublicKey || //  the sender is the current user
+            isLegacyGroupAdmin // sender is an admin of legacy group
+
+    if (!requestIsValid) { return null }
+
+    val context = MessagingModuleConfiguration.shared.context
     val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
     val timestamp = message.timestamp ?: return null
     val author = message.author ?: return null
     val (messageIdToDelete, mms) = storage.getMessageIdInDatabase(timestamp, author) ?: return null
-    messageDataProvider.getServerHashForMessage(messageIdToDelete, mms)?.let { serverHash ->
-        GlobalScope.launch(Dispatchers.IO) { // using GlobalScope as we are slowly migrating to coroutines but we can't migrate everything at once
-            try {
-                SnodeAPI.deleteMessage(author, listOf(serverHash))
-            }catch (e: Exception){}
+    val messageType = storage.getMessageType(timestamp, author) ?: return null
+    Log.d("", "*** message type: $messageType")
+
+    // send a /delete rquest for 1on1 messages
+    if(messageType == MessageType.ONE_ON_ONE) {
+        messageDataProvider.getServerHashForMessage(messageIdToDelete, mms)?.let { serverHash ->
+            GlobalScope.launch(Dispatchers.IO) { // using GlobalScope as we are slowly migrating to coroutines but we can't migrate everything at once
+                try {
+                    SnodeAPI.deleteMessage(author, listOf(serverHash))
+                } catch (e: Exception) {
+                }
+            }
         }
     }
-    val deletedMessageId = messageDataProvider.markMessageAsDeleted(
+
+    // the message is marked as deleted locally
+    // except for 'note to self' where the message is completely deleted
+    if(messageType == MessageType.NOTE_TO_SELF){
+        messageDataProvider.deleteMessage(messageIdToDelete, !mms)
+    } else {
+        messageDataProvider.markMessageAsDeleted(
             timestamp = timestamp,
             author = author,
-            displayedMessage =  context.getString(R.string.deleteMessageDeletedGlobally)
+            displayedMessage = context.getString(R.string.deleteMessageDeletedGlobally)
         )
+    }
+
     if (!messageDataProvider.isOutgoingMessage(timestamp)) {
         SSKEnvironment.shared.notificationManager.updateNotification(context)
     }
 
-    return deletedMessageId
+    return messageIdToDelete
 }
 
 fun handleMessageRequestResponse(message: MessageRequestResponse) {

@@ -31,6 +31,8 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsession.utilities.recipients.MessageType
+import org.session.libsession.utilities.recipients.getType
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.audio.AudioSlidePlayer
@@ -210,24 +212,26 @@ class ConversationViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             val allSentByCurrentUser = messages.all { it.isOutgoing }
+
+            val conversationType = conversation.getType()
+
             // hashes are required if wanting to delete messages from the 'storage server' - they are not required for communities
-            val canDeleteForEveryone = conversation.isCommunityRecipient || messages.all {
+            val canDeleteForEveryone = conversationType == MessageType.COMMUNITY || messages.all {
                 lokiMessageDb.getMessageServerHash(
                     it.id,
                     it.isMms
                 ) != null
             }
             // Determining is the current user is an admin will depend on the kind of conversation we are in
-            val isAdmin = when {
-                //todo GROUPS V2 add logic where code is commented to determine if user is an admin - CAREFUL in the current old code:
-                // isClosedGroup refers to the existing legacy groups.
-                // With the groupsV2 changes, isClosedGroup refers to groupsV2 and isLegacyClosedGroup is a new property to refer to old groups
-
+            val isAdmin = when(conversationType) {
                 // for Groups V2
-                // conversation: check if it is a GroupsV2 conversation - then check if user is an admin
+                MessageType.GROUPS_V2 -> {
+                    //todo GROUPS V2 add logic where code is commented to determine if user is an admin
+                    false // FANCHAO - properly set up admin for groups v2 here
+                }
 
                 // for legacy groups, check if the user created the group
-                conversation.isClosedGroupRecipient -> { //todo GROUPS V2 this property will change for groups v2. Check for legacyGroup here
+                MessageType.LEGACY_GROUP -> {
                     // for legacy groups, we check if the current user is the one who created the group
                     run {
                         val localUserAddress =
@@ -238,7 +242,7 @@ class ConversationViewModel(
                 }
 
                 // for communities the the `isUserModerator` field
-                conversation.isCommunityRecipient -> isUserCommunityManager()
+                MessageType.COMMUNITY -> isUserCommunityManager()
 
                 // false in other cases
                 else -> false
@@ -250,7 +254,7 @@ class ConversationViewModel(
             // 3- Delete on device only - Used otherwise
             when {
                 // the conversation is a note to self
-                conversation.isLocalNumber -> {
+                conversationType == MessageType.NOTE_TO_SELF -> {
                     _dialogsState.update {
                         it.copy(deleteAllDevices = DeleteForEveryoneDialogData(
                             messages = messages,
@@ -292,21 +296,13 @@ class ConversationViewModel(
     }
 
     /**
-     * This will delete these messages from the db
-     * Not to be confused with 'marking messages as deleted'
-     */
-    fun deleteMessages(messages: Set<MessageRecord>, threadId: Long) {
-        repository.deleteMessages(messages, threadId)
-    }
-
-    /**
      * This will mark the messages as deleted, locally only.
      * Attachments and other related data will be removed from the db,
      * but the messages themselves won't be removed from the db.
      * Instead they will appear as a special type of message
      * that says something like "This message was deleted"
      */
-    private fun markAsDeletedLocally(messages: Set<MessageRecord>) {
+    fun markAsDeletedLocally(messages: Set<MessageRecord>) {
         // make sure to stop audio messages, if any
         messages.filterIsInstance<MmsMessageRecord>()
             .mapNotNull { it.slideDeck.audioSlide }
@@ -354,22 +350,18 @@ class ConversationViewModel(
     }
 
     private fun markAsDeletedForEveryoneNoteToSelf(data: DeleteForEveryoneDialogData){
+        if(recipient == null) return showMessage(application.getString(R.string.errorUnknown))
+
         viewModelScope.launch(Dispatchers.IO) {
             // show a loading indicator
             _uiState.update { it.copy(showLoader = true) }
 
             // delete remotely
             try {
-                //todo DELETION need to delete remotely for note to self
-                repository.deleteCommunityMessagesRemotely(threadId, data.messages)
+                repository.deleteNoteToSelfMessagesRemotely(threadId, recipient!!, data.messages)
 
-                //todo DELETION send unsendRequest to own swarm
-
-                // When this is done we simply need to remove the message locally
-                repository.markAsDeletedLocally(
-                    messages = data.messages,
-                    displayedMessage = application.getString(R.string.deleteMessageDeletedGlobally)
-                )
+                // When this is done we simply need to remove the message locally (leave nothing behind)
+                repository.deleteMessages(messages = data.messages, threadId = threadId)
 
                 // show confirmation toast
                 withContext(Dispatchers.Main) {
@@ -457,9 +449,47 @@ class ConversationViewModel(
     }
 
     private fun markAsDeletedForEveryoneLegacyGroup(messages: Set<MessageRecord>){
+        if(recipient == null) return showMessage(application.getString(R.string.errorUnknown))
 
+        viewModelScope.launch(Dispatchers.IO) {
+            // delete remotely
+            try {
+                repository.deleteLegacyGroupMessagesRemotely(recipient!!, messages)
+
+                // When this is done we simply need to remove the message locally
+                repository.markAsDeletedLocally(
+                    messages = messages,
+                    displayedMessage = application.getString(R.string.deleteMessageDeletedGlobally)
+                )
+
+                // show confirmation toast
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        application,
+                        application.resources.getQuantityString(
+                            R.plurals.deleteMessageDeleted,
+                            messages.count(),
+                            messages.count()
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: Exception) {
+                Log.w("Loki", "FAILED TO delete messages ${messages} ")
+                // failed to delete - show a toast and get back on the modal
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        application,
+                        application.resources.getQuantityString(
+                            R.plurals.deleteMessageFailed,
+                            messages.size,
+                            messages.size
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
-
 
     private fun markAsDeletedForEveryoneGroupsV2(data: DeleteForEveryoneDialogData){
         viewModelScope.launch(Dispatchers.IO) {

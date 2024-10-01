@@ -34,7 +34,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private lateinit var messageRecord: MessageRecord
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, edKeyPair, repository, storage, mock())
+        ConversationViewModel(threadId, edKeyPair,  mock(), repository, storage, mock(), mock(), mock())
     }
 
     @Before
@@ -84,28 +84,6 @@ class ConversationViewModelTest: BaseViewModelTest() {
         viewModel.unblock()
 
         verify(repository).setBlocked(recipient, false)
-    }
-
-    @Test
-    fun `should delete locally`() {
-        val messages = mock<Set<MessageRecord>>()
-
-        viewModel.deleteMessages(messages, threadId)
-
-        verify(repository).deleteMessages(messages, threadId)
-    }
-
-    @Test
-    fun `should emit error message on failure to delete a message for everyone`() = runBlockingTest {
-        val message = mock<MessageRecord>()
-        val error = Throwable()
-
-        whenever(repository.markAsDeletedForEveryone(anyLong(), any(), any()))
-            .thenReturn(Result.failure(error))
-
-        viewModel.markAsDeletedForEveryone(message)
-
-        assertThat(viewModel.uiState.first().uiMessages.first().message, endsWith("$error"))
     }
 
     @Test

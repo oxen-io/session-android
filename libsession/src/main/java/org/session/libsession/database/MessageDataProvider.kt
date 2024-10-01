@@ -24,7 +24,7 @@ interface MessageDataProvider {
     fun getMessageIDs(serverIDs: List<Long>, threadID: Long): Pair<List<Long>, List<Long>>
     fun deleteMessage(messageID: Long, isSms: Boolean)
     fun deleteMessages(messageIDs: List<Long>, threadId: Long, isSms: Boolean)
-    fun markMessageAsDeleted(timestamp: Long, author: String, displayedMessage: String): Long?
+    fun markMessageAsDeleted(timestamp: Long, author: String, displayedMessage: String)
     fun markMessagesAsDeleted(messages: List<MarkAsDeletedMessage>, isSms: Boolean, displayedMessage: String)
     fun getServerHashForMessage(messageID: Long, mms: Boolean): String?
     fun getDatabaseAttachment(attachmentId: Long): DatabaseAttachment?
