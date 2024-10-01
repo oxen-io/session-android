@@ -299,11 +299,12 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
             author = author,
             displayedMessage = context.getString(R.string.deleteMessageDeletedGlobally)
         )
-        // delete reactions
-        storage.deleteReactions(messageId = messageIdToDelete, mms = mms)
-
     }
 
+    // delete reactions
+    storage.deleteReactions(messageId = messageIdToDelete, mms = mms)
+
+    // update notification
     if (!messageDataProvider.isOutgoingMessage(timestamp)) {
         SSKEnvironment.shared.notificationManager.updateNotification(context)
     }
