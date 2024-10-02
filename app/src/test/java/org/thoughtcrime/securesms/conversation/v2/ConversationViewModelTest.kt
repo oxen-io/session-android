@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2
 
+import android.app.Application
 import com.goterl.lazysodium.utils.KeyPair
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -27,6 +28,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     private val repository = mock<ConversationRepository>()
     private val storage = mock<Storage>()
+    private val application = mock<Application>()
 
     private val threadId = 123L
     private val edKeyPair = mock<KeyPair>()
@@ -34,7 +36,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private lateinit var messageRecord: MessageRecord
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, edKeyPair,  mock(), repository, storage, mock(), mock(), mock())
+        ConversationViewModel(threadId, edKeyPair,  application, repository, storage, mock(), mock(), mock())
     }
 
     @Before
@@ -90,21 +92,23 @@ class ConversationViewModelTest: BaseViewModelTest() {
     fun `should emit error message on ban user failure`() = runBlockingTest {
         val error = Throwable()
         whenever(repository.banUser(anyLong(), any())).thenReturn(Result.failure(error))
+        whenever(application.getString(any())).thenReturn("Ban failed")
 
         viewModel.banUser(recipient)
 
-        assertThat(viewModel.uiState.first().uiMessages.first().message, endsWith("$error"))
+        assertThat(viewModel.uiState.first().uiMessages.first().message, equalTo("Ban failed"))
     }
 
     @Test
     fun `should emit a message on ban user success`() = runBlockingTest {
         whenever(repository.banUser(anyLong(), any())).thenReturn(Result.success(Unit))
+        whenever(application.getString(any())).thenReturn("User banned")
 
         viewModel.banUser(recipient)
 
         assertThat(
             viewModel.uiState.first().uiMessages.first().message,
-            equalTo("Successfully banned user")
+            equalTo("User banned")
         )
     }
 
@@ -112,21 +116,23 @@ class ConversationViewModelTest: BaseViewModelTest() {
     fun `should emit error message on ban user and delete all failure`() = runBlockingTest {
         val error = Throwable()
         whenever(repository.banAndDeleteAll(anyLong(), any())).thenReturn(Result.failure(error))
+        whenever(application.getString(any())).thenReturn("Ban failed")
 
         viewModel.banAndDeleteAll(messageRecord)
 
-        assertThat(viewModel.uiState.first().uiMessages.first().message, endsWith("$error"))
+        assertThat(viewModel.uiState.first().uiMessages.first().message, equalTo("Ban failed"))
     }
 
     @Test
     fun `should emit a message on ban user and delete all success`() = runBlockingTest {
         whenever(repository.banAndDeleteAll(anyLong(), any())).thenReturn(Result.success(Unit))
+        whenever(application.getString(any())).thenReturn("User banned")
 
         viewModel.banAndDeleteAll(messageRecord)
 
         assertThat(
             viewModel.uiState.first().uiMessages.first().message,
-            equalTo("Successfully banned user and deleted all their messages")
+            equalTo("User banned")
         )
     }
 
@@ -148,6 +154,8 @@ class ConversationViewModelTest: BaseViewModelTest() {
     fun `should remove shown message`() = runBlockingTest {
         // Given that a message is generated
         whenever(repository.banUser(anyLong(), any())).thenReturn(Result.success(Unit))
+        whenever(application.getString(any())).thenReturn("User banned")
+
         viewModel.banUser(recipient)
         assertThat(viewModel.uiState.value.uiMessages.size, equalTo(1))
         // When the message is shown
