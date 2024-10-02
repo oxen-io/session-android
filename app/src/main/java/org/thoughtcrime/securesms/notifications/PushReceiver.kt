@@ -1,6 +1,9 @@
 package org.thoughtcrime.securesms.notifications
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getString
@@ -30,27 +33,47 @@ private const val TAG = "PushHandler"
 class PushReceiver @Inject constructor(@ApplicationContext val context: Context) {
     private val json = Json { ignoreUnknownKeys = true }
 
-    fun onPush(dataMap: Map<String, String>?) {
-        onPush(dataMap?.asByteArray())
+    fun onPushDataReceived(dataMap: Map<String, String>?) {
+        addMessageReceiveJob(dataMap?.asPushData())
     }
 
-    fun onPush(data: ByteArray?) {
-        if (data == null) {
-            onPush()
+    fun onPushDataReceived(data: ByteArray?) {
+//todo DELETION currently Huawei sends data to this. We need to check what it actually sends, as it  might actually be a map like the above firebase one - then we need to hook the huawei push service appropriately to work with this updated class
+    }
+
+    private fun addMessageReceiveJob(pushData: PushData?){
+        // send a generic notification if we have no data
+        if (pushData?.data == null) {
+            sendGenericNotification()
             return
         }
 
         try {
-            val envelopeAsData = MessageWrapper.unwrap(data).toByteArray()
-            val job = BatchMessageReceiveJob(listOf(MessageReceiveParameters(envelopeAsData)), null)
+            val envelopeAsData = MessageWrapper.unwrap(pushData.data).toByteArray()
+            val job = BatchMessageReceiveJob(listOf(
+                MessageReceiveParameters(
+                    data = envelopeAsData,
+                    serverHash = pushData.metadata?.msg_hash
+                )
+            ), null)
             JobQueue.shared.add(job)
         } catch (e: Exception) {
             Log.d(TAG, "Failed to unwrap data for message due to error.", e)
         }
     }
 
-    private fun onPush() {
+    private fun sendGenericNotification() {
         Log.d(TAG, "Failed to decode data for message.")
+
+        // no need to do anything if notification permissions are not granted
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
         val builder = NotificationCompat.Builder(context, NotificationChannels.OTHER)
             .setSmallIcon(R.drawable.ic_notification)
             .setColor(context.getColor(R.color.textsecure_primary))
@@ -61,10 +84,11 @@ class PushReceiver @Inject constructor(@ApplicationContext val context: Context)
 
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
+
         NotificationManagerCompat.from(context).notify(11111, builder.build())
     }
 
-    private fun Map<String, String>.asByteArray() =
+    private fun Map<String, String>.asPushData(): PushData =
         when {
             // this is a v2 push notification
             containsKey("spns") -> {
@@ -72,14 +96,14 @@ class PushReceiver @Inject constructor(@ApplicationContext val context: Context)
                     decrypt(Base64.decode(this["enc_payload"]))
                 } catch (e: Exception) {
                     Log.e(TAG, "Invalid push notification", e)
-                    null
+                    PushData(null, null)
                 }
             }
             // old v1 push notification; we still need this for receiving legacy closed group notifications
-            else -> this["ENCRYPTED_DATA"]?.let(Base64::decode)
+            else -> PushData(this["ENCRYPTED_DATA"]?.let(Base64::decode), null)
         }
 
-    private fun decrypt(encPayload: ByteArray): ByteArray? {
+    private fun decrypt(encPayload: ByteArray): PushData {
         Log.d(TAG, "decrypt() called")
 
         val encKey = getOrCreateNotificationKey()
@@ -95,9 +119,12 @@ class PushReceiver @Inject constructor(@ApplicationContext val context: Context)
         val metadataJson = (expectedList[0] as? BencodeString)?.value ?: error("no metadata")
         val metadata: PushNotificationMetadata = json.decodeFromString(String(metadataJson))
 
-        return (expectedList.getOrNull(1) as? BencodeString)?.value.also {
-            // null content is valid only if we got a "data_too_long" flag
-            it?.let { check(metadata.data_len == it.size) { "wrong message data size" } }
+        return PushData(
+            data = (expectedList.getOrNull(1) as? BencodeString)?.value,
+            metadata = metadata
+        ).also { pushData ->
+            // null data content is valid only if we got a "data_too_long" flag
+            pushData.data?.let { check(metadata.data_len == it.size) { "wrong message data size" } }
                 ?: check(metadata.data_too_long) { "missing message data, but no too-long flag" }
         }
     }
@@ -115,4 +142,9 @@ class PushReceiver @Inject constructor(@ApplicationContext val context: Context)
             )
         )
     }
+
+    data class PushData(
+        val data: ByteArray?,
+        val metadata: PushNotificationMetadata?
+    )
 }

@@ -21,7 +21,7 @@ class HuaweiPushService: HmsMessageService() {
     override fun onMessageReceived(message: RemoteMessage?) {
         Log.d(TAG, "onMessageReceived")
         message?.dataOfMap?.takeIf { it.isNotEmpty() }?.let(pushReceiver::onPush) ?:
-        pushReceiver.onPush(message?.data?.let(Base64::decode))
+        pushReceiver.onPushDataReceived(message?.data?.let(Base64::decode))
     }
 
     override fun onNewToken(token: String?) {
