@@ -143,6 +143,7 @@
     <string name="callsInProgress">Bangê Bejeziyene</string>
     <string name="callsIncoming">Gerîna hatî ji {name}</string>
     <string name="callsIncomingUnknown">Gerîna habe</string>
+    <string name="callsMicrophonePermissionsRequired">Te ji telefona ji <b>{name}</b> hatî ma, ji ber ku te destûra <b>gihîna mîkrofonê</b> nedaye.</string>
     <string name="callsMissed">Gerîna negerîl</string>
     <string name="callsMissedCallFrom">Gerîna nececawdayî ji {name}</string>
     <string name="callsNotificationsRequired">Lêgerînên Dengî û Vîdeoyî div têgehin Navigationda dê system tê bikeviya nizanaran divê Troll karibe binšiyan</string>
@@ -278,7 +279,7 @@
     <string name="deleteAfterLegacyGroupsGroupUpdateErrorTitle">Bi ser neket ku komê biguherînin</string>
     <string name="deleteAfterMessageDeletionStandardisationMessageDeletionForbidden">Îzna te tine ye ku mesajên kesên din jê bibî</string>
     <plurals name="deleteMessage">
-        <item quantity="one">Peyama Jê Bibe</item>
+        <item quantity="one">Peyamê Jê Bibe</item>
         <item quantity="other">Peyaman Jê Bibe</item>
     </plurals>
     <string name="deleteMessageConfirm">Tu piştrast î ku tu dixwazî vê peyamê jê bibî?</string>
@@ -295,7 +296,7 @@
     <string name="deleteMessageEveryone">Ji bo tevan jê bibe</string>
     <plurals name="deleteMessageFailed">
         <item quantity="one">Bi ser neket ku peyama jê derbike.</item>
-        <item quantity="other">Bi ser neket ku peyam nebe derbike.</item>
+        <item quantity="other">Bi ser neket ku peyaman jê bibe.</item>
     </plurals>
     <string name="deleteMessagesConfirm">Tu piştrast î ku tu dixwazî peyamên van jê bibî?</string>
     <string name="deleteMessagesDescriptionDevice">Tu piştrast î ku tu dixwazî vê peyaman tenê li ser cîhaza vê peyaman jê bibî?</string>
@@ -520,7 +521,7 @@
         <item quantity="other">%1$d endam</item>
     </plurals>
     <plurals name="membersActive">
-        <item quantity="one">%1$d endamê aktîf</item>
+        <item quantity="one">%1$d endamê aktîv</item>
         <item quantity="other">%1$d endamên aktîf</item>
     </plurals>
     <string name="membersAddAccountIdOrOns">Add Account ID or ONS</string>
@@ -551,7 +552,7 @@
     <string name="messageNewDescriptionDesktop">Bi navê hesabê hevalê xwe Account ID an ONS-ê têlepeqîne.</string>
     <string name="messageNewDescriptionMobile">Bi navê hesabê hevalê xwe Account ID, ONS an scanê QR code-yê têlepeqîne.</string>
     <plurals name="messageNewYouveGot">
-        <item quantity="one">Tu peyama nûyeke hatî gotandî hiştî.</item>
+        <item quantity="one">Peyameke te yê nû heye.</item>
         <item quantity="other">%1$d peyama nû hîn tuneyê.</item>
     </plurals>
     <string name="messageReplyingTo">Cewab didî</string>
@@ -763,7 +764,7 @@
     <string name="searchConversation">Li söylek bigerrin</string>
     <string name="searchEnter">Kerem bike tu li ser Giphy ne girêdane - ne têketina gêrê, usbikirina tambûra têkeve</string>
     <plurals name="searchMatches">
-        <item quantity="one">%1$d ji %2$d lihevhatû</item>
+        <item quantity="one">%1$d ji %2$d li hev tê</item>
         <item quantity="other">%1$d li li %2$d yên din</item>
     </plurals>
     <string name="searchMatchesNone">Encam peyda nebû</string>

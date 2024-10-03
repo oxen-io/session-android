@@ -143,6 +143,7 @@
     <string name="callsInProgress">Chiamata in corso</string>
     <string name="callsIncoming">Chiamata in arrivo da {name}</string>
     <string name="callsIncomingUnknown">Chiamata in arrivo</string>
+    <string name="callsMicrophonePermissionsRequired">Hai perso una chiamata da <b>{name}</b> perché non hai concesso l\'accesso al <b>microfono</b>.</string>
     <string name="callsMissed">Chiamata persa</string>
     <string name="callsMissedCallFrom">Chiamata persa da {name}</string>
     <string name="callsNotificationsRequired">Le chiamate vocali e video richiedono che le notifiche siano abilitate nelle impostazioni di sistema del dispositivo.</string>
@@ -202,6 +203,7 @@
     <string name="communityInvitation">Invito a una Comunità</string>
     <string name="communityJoin">Unisciti alla Comunità</string>
     <string name="communityJoinDescription">Sei sicuro di voler unirti a {community_name}?</string>
+    <string name="communityJoinError">Impossibile unirsi alla community</string>
     <string name="communityJoinOfficial">Oppure unisciti a uno di questi...</string>
     <string name="communityJoined">Sei entrato nella Comunità</string>
     <string name="communityJoinedAlready">Fai già parte di questa Comunità.</string>
@@ -407,6 +409,7 @@
     <string name="groupInviteSending">Invio invito</string>
     <string name="groupInviteSent">Invito inviato</string>
     <string name="groupInviteSuccessful">Invito al gruppo riuscito</string>
+    <string name="groupInviteVersion">Gli utenti devono disporre della versione più recente per ricevere gli inviti</string>
     <string name="groupInviteYou"><b>Sei stata invitato</b> a unirti al gruppo.</string>
     <string name="groupInviteYouAndMoreNew"><b>Tu</b> e <b>{count} altri</b> vi siete uniti al gruppo.</string>
     <string name="groupInviteYouAndOtherNew"><b>Tu</b> e <b>{other_name}</b> fate ora parte del gruppo.</string>

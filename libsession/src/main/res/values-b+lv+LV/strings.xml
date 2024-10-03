@@ -397,6 +397,9 @@
     <string name="groupMemberLeftMultiple"><b>{name}</b> un <b>{count} citi</b> atstāja grupu.</string>
     <string name="groupMemberLeftTwo"><b>{name}</b> un <b>{other_name}</b> atstāja grupu.</string>
     <string name="groupMemberNew">Grupai pievienojās <b>{name}</b>.</string>
+    <string name="groupMemberNewHistory"><b>{name}</b> uzaicināts pievienoties grupai un sarakstes vēsture tam pieejama.</string>
+    <string name="groupMemberNewMultiple"><b>{name}</b> un <b>{count} others</b> uzaicināti pievienoties grupai.</string>
+    <string name="groupMemberNewTwo"><b>{name}</b> un <b>{other_name}</b> uzaicināti pievienoties grupai.</string>
     <string name="groupMemberYouLeft"><b>Tu</b> atstāji grupu.</string>
     <string name="groupMembers">Grupas dalībnieki</string>
     <string name="groupMembersNone">Šajā grupā nav citu dalībnieku.</string>
@@ -494,6 +497,11 @@
     <string name="messageInfo">Ziņas informācija</string>
     <string name="messageMarkRead">Atzīmēt kā izlasītu</string>
     <string name="messageMarkUnread">Atzīmēt kā nelasītu</string>
+    <plurals name="messageNew">
+        <item quantity="zero">Jauna ziņa</item>
+        <item quantity="one">Jauna ziņa</item>
+        <item quantity="other">Jauna ziņa</item>
+    </plurals>
     <string name="messageNewDescriptionDesktop">Sāc jaunu sarunu, ievadot drauga Konta ID vai ONS.</string>
     <string name="messageNewDescriptionMobile">Sāc jaunu sarunu, ievadot drauga Konta ID, ONS vai skenējot viņu QR kodu.</string>
     <plurals name="messageNewYouveGot">

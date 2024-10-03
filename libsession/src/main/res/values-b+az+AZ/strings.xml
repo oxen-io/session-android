@@ -143,6 +143,7 @@
     <string name="callsInProgress">Zəng davam edir</string>
     <string name="callsIncoming">{name} sizə zəng edir</string>
     <string name="callsIncomingUnknown">Gələn zəng</string>
+    <string name="callsMicrophonePermissionsRequired"><b>Mikrofon müraciətinə</b> icazə vermədiyiniz üçün <b>{name}</b> edən zəngi buraxdınız.</string>
     <string name="callsMissed">Buraxılmış zəng</string>
     <string name="callsMissedCallFrom">{name} kontaktından buraxılmış zəng</string>
     <string name="callsNotificationsRequired">Səsli və görüntülü zənglər, cihazınızın sistem ayarlarında bildirişlərin fəallaşdırılmasını tələb edir.</string>
@@ -202,6 +203,7 @@
     <string name="communityInvitation">İcma dəvəti</string>
     <string name="communityJoin">İcmaya qoşul</string>
     <string name="communityJoinDescription">{community_name} icmasına qoşulmaq istədiyinizə əminsiniz?</string>
+    <string name="communityJoinError">İcmaya qoşulma uğursuz oldu</string>
     <string name="communityJoinOfficial">Ya da bunlardan birinə qoşulun...</string>
     <string name="communityJoined">İcmaya qoşuldu</string>
     <string name="communityJoinedAlready">Artıq bu icmanın üzvüsünüz.</string>
@@ -310,6 +312,7 @@
     <string name="disappearingMessagesDeleteType">Silmə növü</string>
     <string name="disappearingMessagesDescription">Bu ayar, bu danışıqda hər kəsə aiddir.</string>
     <string name="disappearingMessagesDescription1">Bu ayar, bu danışıqda göndərdiyiniz mesajlara aiddir.</string>
+    <string name="disappearingMessagesDescriptionGroup">Bu ayar, bu danışıqdakı hər kəsə tətbiq olunur.\nYalnız qrup adminləri bu ayarı dəyişdirə bilər.</string>
     <string name="disappearingMessagesDisappear">{disappearing_messages_type} olduqdan {time} sonra yox olur</string>
     <string name="disappearingMessagesDisappearAfterRead">Oxunduqdan sonra yox olur</string>
     <string name="disappearingMessagesDisappearAfterReadDescription">Mesajlar oxunduqdan sonra silinir.</string>
@@ -406,6 +409,7 @@
     <string name="groupInviteSending">Dəvət göndərilir</string>
     <string name="groupInviteSent">Dəvət göndərildi</string>
     <string name="groupInviteSuccessful">Qrup dəvəti uğurludur</string>
+    <string name="groupInviteVersion">İstifadəçilər dəvətləri qəbul etmək üçün ən son versiyaya sahib olmalıdırlar</string>
     <string name="groupInviteYou"><b>Siz</b> qrupa qoşulmağa dəvət edildiniz.</string>
     <string name="groupInviteYouAndMoreNew"><b>Siz</b> və <b> digər {count} nəfər</b> qrupa qoşulmaq üçün dəvət edildiniz.</string>
     <string name="groupInviteYouAndOtherNew"><b>Siz</b> və <b>{other_name}</b> qrupa qoşulmaq üçün dəvət edildiniz.</string>
@@ -673,9 +677,11 @@
     <string name="passwordSet">Parol təyin et</string>
     <string name="passwordSetDescription">Parolunuz təyin edildi. Lütfən, onu güvəndə saxlayın.</string>
     <string name="paste">Yapışdır</string>
+    <string name="permissionMusicAudioDenied">Fayl, musiqi və səs göndərə bilməyiniz üçün {app_name} musiqi və səslərə müraciət etməlidir, ancaq bu icazəyə birdəfəlik rədd cavabı verilib. Ayarlar → \"İcazələr\"ə toxunun və \"Musiqi və səs\"i işə salın.</string>
     <string name="permissionsAppleMusic">{app_name} media qoşmalarını oxutmaq üçün Apple Music-i istifadə etməlidir.</string>
     <string name="permissionsAutoUpdate">Avto-güncəlləmə</string>
     <string name="permissionsAutoUpdateDescription">Açılışda güncəlləmələri avto-yoxla</string>
+    <string name="permissionsCameraDenied">Foto və video göndərə bilməyiniz üçün {app_name} kameraya müraciət etməlidir, ancaq bu icazəyə birdəfəlik rədd cavabı verilib. Ayarlar → \"İcazələr\"ə toxunun və \"Kamera\"nı işə salın.</string>
     <string name="permissionsFaceId">{app_name} tətbiqinin ekran kilidi özəlliyi Face ID istifadə edir.</string>
     <string name="permissionsKeepInSystemTray">Sistem çubuğunda tut</string>
     <string name="permissionsKeepInSystemTrayDescription">Pəncərəni bağladıqda {app_name} arxaplanda işləməyə davam edir</string>
@@ -685,7 +691,9 @@
     <string name="permissionsMicrophoneAccessRequiredDesktop">{app_name} gizlilik ayarlarında mikrofona müraciəti fəallaşdıra bilərsiniz</string>
     <string name="permissionsMicrophoneAccessRequiredIos">{app_name} zəng etmək və səsli mesajlar yazmaq üçün mikrofona müraciət etməlidir.</string>
     <string name="permissionsMicrophoneDescription">Mikrofona müraciətə icazə verin.</string>
+    <string name="permissionsMusicAudio">Fayl, musiqi və səs göndərə bilməyiniz üçün {app_name} musiqi və səslərə müraciət etməlidir.</string>
     <string name="permissionsRequired">İcazə tələb edilir</string>
+    <string name="permissionsStorageDenied">Foto və video göndərə bilməyiniz üçün {app_name} foto kitabxanasına müraciət etməlidir, ancaq bu icazəyə birdəfəlik rədd cavabı verilib. Ayarlar → \"İcazələr\"ə toxunun və \"Foto və videolar\"ı işə salın.</string>
     <string name="permissionsStorageDeniedLegacy">{app_name}, qoşmaları göndərə və saxlaya bilməyiniz üçün anbara müraciət etməlidir. Ayarlar → İcazələr bölməsinə gedin və \"Anbar\"ı işə salın.</string>
     <string name="permissionsStorageSave">{app_name} qoşmaları və medianı saxlamaq üçün anbara müraciət etməlidir.</string>
     <string name="permissionsStorageSaveDenied">{app_name} foto və videoları saxlamaq üçün anbara müraciət etməlidir, ancaq bu icazəyə həmişəlik rədd cavabı verilib. Lütfən tətbiq ayarlarına gedin, \"İcazələr\"i seçin və \"Anbar\" icazəsini fəallaşdırın.</string>

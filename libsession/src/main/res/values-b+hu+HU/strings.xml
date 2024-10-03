@@ -60,7 +60,7 @@
     <string name="attachment">Melléklet</string>
     <string name="attachmentsAdd">Melléklet hozzáadása</string>
     <string name="attachmentsAlbumUnnamed">Névtelen album</string>
-    <string name="attachmentsAutoDownload">Csatolmányok automatikus letöltése</string>
+    <string name="attachmentsAutoDownload">Mellékletek automatikus letöltése</string>
     <string name="attachmentsAutoDownloadDescription">Média és fájlok automatikus letötltése ebből a beszélgetésből.</string>
     <string name="attachmentsAutoDownloadModalDescription">Szeretnéd automatikusan letölteni az összes fájlt a <b>{conversation_name}</b> beszélgetésből?</string>
     <string name="attachmentsAutoDownloadModalTitle">Automatikus letöltés</string>
@@ -563,7 +563,7 @@
     <string name="messageRequestYouHaveAccepted">Elfogadtad <b>{name}</b> üzenetkérését.</string>
     <string name="messageRequestsAcceptDescription">Ha üzenetet küld ennek a felhasználónak, akkor automatikusan elfogadja az üzenetkérelmét és a Felhasználó ID megosztásra kerül.</string>
     <string name="messageRequestsAccepted">Az üzenetkérelmedet elfogadták.</string>
-    <string name="messageRequestsClearAllExplanation">Biztos, hogy törölni akarja az összes üzenetkérelmet és csoportmeghívót?</string>
+    <string name="messageRequestsClearAllExplanation">Biztos, hogy törölni szeretnéd az összes üzenetkérelmet és csoportmeghívót?</string>
     <string name="messageRequestsCommunities">Közösségi üzenetkérelmek</string>
     <string name="messageRequestsCommunitiesDescription">A közösségi beszélgetésekből származó üzenetek engedélyezése.</string>
     <string name="messageRequestsDelete">Biztos, hogy törölni szeretnéd ezt az üzenetkérelmet?</string>

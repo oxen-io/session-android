@@ -463,9 +463,9 @@
     <string name="helpReportABugExportLogs">导出日志</string>
     <string name="helpReportABugExportLogsDescription">导出您的日志，然后通过{app_name}的帮助服务台上传日志。</string>
     <string name="helpReportABugExportLogsSaveToDesktop">保存到桌面</string>
-    <string name="helpReportABugExportLogsSaveToDesktopDescription">将此文件保存到您的桌面，然后与{app_name}开发者分享。</string>
+    <string name="helpReportABugExportLogsSaveToDesktopDescription">将此文件保存到您的桌面，然后与{app_name}开发者分享</string>
     <string name="helpSupport">支持</string>
-    <string name="helpWedLoveYourFeedback">感谢您的反馈。</string>
+    <string name="helpWedLoveYourFeedback">感谢您的反馈</string>
     <string name="hide">隐藏</string>
     <string name="hideMenuBarDescription">切换系统菜单栏可见性</string>
     <string name="hideOthers">隐藏其它</string>

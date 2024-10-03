@@ -143,6 +143,7 @@
     <string name="callsInProgress">Prebiehajúci hovor</string>
     <string name="callsIncoming">Prichádzajúci hovor od {name}</string>
     <string name="callsIncomingUnknown">Prichádzajúci hovor</string>
+    <string name="callsMicrophonePermissionsRequired">Zmeškali ste hovor od <b>{name}</b>, pretože ste neudelili <b>prístup k mikrofónu</b>.</string>
     <string name="callsMissed">Zmeškaný hovor</string>
     <string name="callsMissedCallFrom">Zmeškaný hovor od {name}</string>
     <string name="callsNotificationsRequired">Hlasové a video hovory vyžadujú povolenie upozornení v systémových nastaveniach vášho zariadenia.</string>

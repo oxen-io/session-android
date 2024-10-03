@@ -653,7 +653,7 @@
     <string name="notificationsSystem">{message_count} nových zpráv v {conversation_count} konverzacích</string>
     <string name="notificationsVibrate">Vibrace</string>
     <string name="off">Vypnuto</string>
-    <string name="okay">Okay</string>
+    <string name="okay">OK</string>
     <string name="on">Zap.</string>
     <string name="onboardingAccountCreate">Vytvořit účet</string>
     <string name="onboardingAccountCreated">Účet vytvořen</string>
@@ -806,7 +806,7 @@
     <string name="sessionClearData">Vyčistit data</string>
     <string name="sessionConversations">Konverzace</string>
     <string name="sessionHelp">Nápověda</string>
-    <string name="sessionInviteAFriend">Pozvat přítele</string>
+    <string name="sessionInviteAFriend">Pozvat přátele</string>
     <string name="sessionMessageRequests">Žádosti o komunikaci</string>
     <string name="sessionNotifications">Upozornění</string>
     <string name="sessionPermissions">Oprávnění</string>
@@ -816,7 +816,7 @@
     <string name="set">Nastavit</string>
     <string name="settingsRestartDescription">Pro použití nových nastavení musíte restartovat {app_name}.</string>
     <string name="share">Sdílet</string>
-    <string name="shareAccountIdDescription">Pozvěte svého přítele nebo přítelkyni ke komunikaci pomocí {app_name} sdílením svého ID účtu.</string>
+    <string name="shareAccountIdDescription">Pozvěte své přátele ke komunikaci pomocí {app_name} sdílením svého ID účtu.</string>
     <string name="shareAccountIdDescriptionCopied">Sdílejte se svými přáteli tam, kde s nimi obvykle mluvíte — a pak konverzaci přesuňte sem.</string>
     <string name="shareExtensionDatabaseError">Při otevírání databáze se vyskytl problém. Prosím, restartujte aplikaci a zkuste to znovu.</string>
     <string name="shareToSession">Sdílet do {app_name}</string>
