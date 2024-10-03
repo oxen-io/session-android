@@ -15,7 +15,6 @@ data class Dimensions(
     val mediumSpacing: Dp = 36.dp,
     val xlargeSpacing: Dp = 64.dp,
 
-    val dividerIndent: Dp = 60.dp,
     val appBarHeight: Dp = 64.dp,
     val minItemButtonHeight: Dp = 50.dp,
     val minLargeItemButtonHeight: Dp = 60.dp,

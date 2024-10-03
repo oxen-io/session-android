@@ -149,9 +149,11 @@ fun ColumnScope.DebugCell(
 ) {
     Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
 
-    Cell {
+    Cell(
+        modifier = modifier
+    ) {
         Column(
-            modifier = modifier.padding(LocalDimensions.current.spacing)
+            modifier = Modifier.padding(LocalDimensions.current.spacing)
         ) {
             Text(
                 text = title,

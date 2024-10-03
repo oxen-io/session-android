@@ -755,7 +755,7 @@
     <string name="recoveryPasswordErrorMessageIncorrect">Некаторыя з слоў у вашым Recovery password няправільныя. Калі ласка, праверце і паспрабуйце яшчэ раз.</string>
     <string name="recoveryPasswordErrorMessageShort">The Recovery Password you entered is not long enough. Please check and try again.</string>
     <string name="recoveryPasswordErrorTitle">Няправільны Recovery Password</string>
-    <string name="recoveryPasswordExplanation">Для загрузкі вашага акаўнта ўвядзіце ваш Recovery Password.</string>
+    <string name="recoveryPasswordExplanation">Для загрузкі вашага ўліковага запісу ўвядзіце Recovery Password.</string>
     <string name="recoveryPasswordHidePermanently">Схаваць Recovery Password назусім</string>
     <string name="recoveryPasswordHidePermanentlyDescription1">Без вашага Recovery password вы не зможаце загрузіць свой уліковы запіс на новыя прылады. \n\nМы настойліва рэкамендуем захаваць ваш Recovery password у надзейным і бяспечным месцы перад прадаўжэннем.</string>
     <string name="recoveryPasswordHidePermanentlyDescription2">Вы ўпэўненыя, што жадаеце пастаянна схаваць ваш канчатковы пароль аднаўлення на гэтай прыладзе? Гэта немагчыма адмяніць.</string>

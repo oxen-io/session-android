@@ -531,7 +531,7 @@
     <string name="max">Максимальный</string>
     <string name="media">Медиа</string>
     <plurals name="members">
-        <item quantity="one">%1$d участник</item>
+        <item quantity="one">%1$d Участник</item>
         <item quantity="few">%1$d участника</item>
         <item quantity="many">%1$d участников</item>
         <item quantity="other">%1$d участников</item>
