@@ -245,12 +245,11 @@ class ConversationViewModel(
             val conversationType = conversation.getType()
 
             // hashes are required if wanting to delete messages from the 'storage server' - they are not required for communities
-            val canDeleteForEveryone = conversationType == MessageType.COMMUNITY || messages.all {
-                lokiMessageDb.getMessageServerHash(
-                    it.id,
-                    it.isMms
-                ) != null
-            }
+            // also we can only delete deleted messages (marked as deleted) locally
+            val canDeleteForEveryone = messages.all{ !it.isDeleted } && (
+                    conversationType == MessageType.COMMUNITY ||
+                            messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null
+            })
 
             // There are three types of dialogs for deletion:
             // 1- Delete on device only OR all devices - Used for Note to self
@@ -290,7 +289,6 @@ class ConversationViewModel(
 
                 // for non admins, users interacting with someone else's message, or control messages
                 else -> {
-                    //todo DELETION this should also happen for ControlMessages
                     _dialogsState.update {
                         it.copy(deleteDeviceOnly = messages)
                     }
@@ -300,23 +298,29 @@ class ConversationViewModel(
     }
 
     /**
-     * This will mark the messages as deleted, locally only.
-     * Attachments and other related data will be removed from the db,
-     * but the messages themselves won't be removed from the db.
-     * Instead they will appear as a special type of message
+     * This delete the message locally only.
+     * Attachments and other related data will be removed from the db.
+     * If the messages were already marked as deleted they will be removed fully from the db,
+     * otherwise they will appear as a special type of message
      * that says something like "This message was deleted"
      */
-    fun markAsDeletedLocally(messages: Set<MessageRecord>) {
+    fun deletedLocally(messages: Set<MessageRecord>) {
         // make sure to stop audio messages, if any
         messages.filterIsInstance<MmsMessageRecord>()
             .mapNotNull { it.slideDeck.audioSlide }
             .forEach(::stopMessageAudio)
 
-
-        repository.markAsDeletedLocally(
-            messages = messages,
-            displayedMessage = application.getString(R.string.deleteMessageDeletedLocally)
-        )
+        // if the message was already marked as deleted, remove it from the db instead
+        if(messages.all { it.isDeleted }){
+            // Remove the message locally (leave nothing behind)
+            repository.deleteMessages(messages = messages, threadId = threadId)
+        } else {
+            // only mark as deleted (message remains behind with "This message was deleted on this device" )
+            repository.markAsDeletedLocally(
+                messages = messages,
+                displayedMessage = application.getString(R.string.deleteMessageDeletedLocally)
+            )
+        }
 
         // show confirmation toast
         Toast.makeText(
@@ -730,7 +734,7 @@ class ConversationViewModel(
                     it.copy(deleteDeviceOnly = null)
                 }
 
-                markAsDeletedLocally(command.messages)
+                deletedLocally(command.messages)
             }
             is Commands.MarkAsDeletedForEveryone -> {
                 markAsDeletedForEveryone(command.data)

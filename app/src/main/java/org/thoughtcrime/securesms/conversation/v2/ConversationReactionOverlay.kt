@@ -21,6 +21,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
+import androidx.core.view.isVisible
 import androidx.vectordrawable.graphics.drawable.AnimatorInflaterCompat
 import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
@@ -527,18 +528,25 @@ class ConversationReactionOverlay : FrameLayout {
                 ?: return emptyList()
         val userPublicKey = getLocalNumber(context)!!
         // Select message
-        items += ActionItem(R.attr.menu_select_icon, R.string.select, { handleActionItemClicked(Action.SELECT) }, R.string.AccessibilityId_select)
+        if(!message.isDeleted) {
+            items += ActionItem(
+                R.attr.menu_select_icon,
+                R.string.select,
+                { handleActionItemClicked(Action.SELECT) },
+                R.string.AccessibilityId_select
+            )
+        }
         // Reply
         val canWrite = openGroup == null || openGroup.canWrite
-        if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation) {
+        if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation && !message.isDeleted) {
             items += ActionItem(R.attr.menu_reply_icon, R.string.reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply)
         }
         // Copy message text
-        if (!containsControlMessage && hasText) {
+        if (!containsControlMessage && hasText && !message.isDeleted) {
             items += ActionItem(R.attr.menu_copy_icon, R.string.copy, { handleActionItemClicked(Action.COPY_MESSAGE) })
         }
         // Copy Account ID
-        if (!recipient.isCommunityRecipient && message.isIncoming) {
+        if (!recipient.isCommunityRecipient && message.isIncoming && !message.isDeleted) {
             items += ActionItem(R.attr.menu_copy_icon, R.string.accountIDCopy, { handleActionItemClicked(Action.COPY_ACCOUNT_ID) })
         }
         // Delete message
@@ -547,15 +555,20 @@ class ConversationReactionOverlay : FrameLayout {
                 R.string.AccessibilityId_deleteMessage, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
         }
         // Ban user
-        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
+        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey) && !message.isDeleted) {
             items += ActionItem(R.attr.menu_block_icon, R.string.banUser, { handleActionItemClicked(Action.BAN_USER) })
         }
         // Ban and delete all
-        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
+        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey) && !message.isDeleted) {
             items += ActionItem(R.attr.menu_trash_icon, R.string.banDeleteAll, { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
         }
         // Message detail
-        items += ActionItem(R.attr.menu_info_icon, R.string.messageInfo, { handleActionItemClicked(Action.VIEW_INFO) })
+        if(!message.isDeleted) {
+            items += ActionItem(
+                R.attr.menu_info_icon,
+                R.string.messageInfo,
+                { handleActionItemClicked(Action.VIEW_INFO) })
+        }
         // Resend
         if (message.isFailed) {
             items += ActionItem(R.attr.menu_reply_icon, R.string.resend, { handleActionItemClicked(Action.RESEND) })
@@ -565,7 +578,7 @@ class ConversationReactionOverlay : FrameLayout {
             items += ActionItem(R.attr.menu_reply_icon, R.string.resync, { handleActionItemClicked(Action.RESYNC) })
         }
         // Save media..
-        if (message.isMms) {
+        if (message.isMms  && !message.isDeleted) {
             // ..but only provide the save option if the there is a media attachment which has finished downloading.
             val mmsMessage = message as MediaMmsMessageRecord
             if (mmsMessage.containsMediaSlide() && !mmsMessage.isMediaPending) {
@@ -576,8 +589,10 @@ class ConversationReactionOverlay : FrameLayout {
                 )
             }
         }
-        backgroundView.visibility = VISIBLE
-        foregroundView.visibility = VISIBLE
+
+        // deleted messages have  no emoji reactions
+        backgroundView.isVisible = !message.isDeleted
+        foregroundView.isVisible = !message.isDeleted
         return items
     }
 

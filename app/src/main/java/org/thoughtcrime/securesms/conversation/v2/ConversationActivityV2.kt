@@ -345,7 +345,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 ) {
                     showConversationReaction(message, view)
                 } else {
-                    handleLongPress(message, position)
+                    selectMessage(message, position)
                 }
             },
             onDeselect = { message, position ->
@@ -1290,7 +1290,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     // `position` is the adapter position; not the visual position
-    private fun handleLongPress(message: MessageRecord, position: Int) {
+    private fun selectMessage(message: MessageRecord, position: Int) {
         val actionMode = this.actionMode
         val actionModeCallback = ConversationActionModeCallback(adapter, viewModel.threadId, this)
         actionModeCallback.delegate = this
@@ -1308,15 +1308,20 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    private fun showConversationReaction(message: MessageRecord, visibleMessageView: VisibleMessageView) {
+    private fun showConversationReaction(message: MessageRecord, messageView: View) {
+        val messageContentView = when(messageView){
+            is VisibleMessageView -> messageView.messageContentView
+            else -> messageView
+        }
+
         val messageContentBitmap = try {
-            visibleMessageView.messageContentView.drawToBitmap()
+            messageContentView.drawToBitmap()
         } catch (e: Exception) {
             Log.e("Loki", "Failed to show emoji picker", e)
             return
         }
         emojiPickerVisible = true
-        ViewUtil.hideKeyboard(this, visibleMessageView)
+        ViewUtil.hideKeyboard(this, messageView)
         binding.reactionsShade.isVisible = true
         binding.scrollToBottomButton.isVisible = false
         binding.conversationRecyclerView.suppressLayout(true)
@@ -1338,14 +1343,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
 
         })
-        val topLeft = intArrayOf(0, 0).also { visibleMessageView.messageContentView.getLocationInWindow(it) }
+        val topLeft = intArrayOf(0, 0).also { messageContentView.getLocationInWindow(it) }
         val selectedConversationModel = SelectedConversationModel(
             messageContentBitmap,
             topLeft[0].toFloat(),
             topLeft[1].toFloat(),
-            visibleMessageView.messageContentView.width,
+            messageContentView.width,
             message.isOutgoing,
-            visibleMessageView.messageContentView
+            messageContentView
         )
         reactionDelegate.show(this, message, selectedConversationModel, viewModel.blindedPublicKey)
     }
@@ -2056,7 +2061,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun selectMessages(messages: Set<MessageRecord>) {
-        handleLongPress(messages.first(), 0) //TODO: begin selection mode
+        selectMessage(messages.first(), 0) //TODO: begin selection mode
     }
 
     // Note: The messages in the provided set may be a single message, or multiple if there are a

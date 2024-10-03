@@ -58,7 +58,7 @@ class ControlMessageView : LinearLayout {
         layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
     }
 
-    fun bind(message: MessageRecord, previous: MessageRecord?) {
+    fun bind(message: MessageRecord, previous: MessageRecord?, longPress: (() -> Unit)? = null) {
         binding.dateBreakTextView.showDateBreak(message, previous)
         binding.iconImageView.isGone = true
         binding.expirationTimerView.isGone = true
@@ -199,6 +199,17 @@ class ControlMessageView : LinearLayout {
 
         binding.textView.isGone = message.isCallLog
         binding.callView.isVisible = message.isCallLog
+
+        // handle long clicked if it was passed on
+        //todo DELETION currently control messages lose their ability to be clickable due to the long click, like the "mised phone call" CM
+        Log.d("", "*** Has long click? $longPress")
+        longPress?.let {
+            binding.root.setOnLongClickListener {
+                Log.d("", "*** Long clicking")
+                longPress.invoke()
+                true
+            }
+        }
     }
 
     fun showInfo(){
