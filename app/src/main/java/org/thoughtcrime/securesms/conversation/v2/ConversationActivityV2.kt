@@ -130,6 +130,7 @@ import org.thoughtcrime.securesms.conversation.v2.mention.MentionViewModel
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallback
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallbackDelegate
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuHelper
+import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.search.SearchBottomBar
@@ -1311,8 +1312,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun showConversationReaction(message: MessageRecord, messageView: View) {
         val messageContentView = when(messageView){
             is VisibleMessageView -> messageView.messageContentView
-            else -> messageView
-        }
+            is ControlMessageView -> messageView.controlContentView
+            else -> null
+        } ?: return
 
         val messageContentBitmap = try {
             messageContentView.drawToBitmap()

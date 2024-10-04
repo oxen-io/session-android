@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
@@ -54,6 +55,8 @@ class ControlMessageView : LinearLayout {
 
     @Inject lateinit var disappearingMessages: DisappearingMessages
 
+    val controlContentView: View get() = binding.controlContentView
+
     init {
         layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
     }
@@ -84,7 +87,7 @@ class ControlMessageView : LinearLayout {
                         && message.expiryMode != (MessagingModuleConfiguration.shared.storage.getExpirationConfiguration(message.threadId)?.expiryMode ?: ExpiryMode.NONE)
                         && threadRecipient?.isGroupRecipient != true
 
-                    followSetting.setOnClickListener { disappearingMessages.showFollowSettingDialog(context, message) }
+                    binding.controlContentView.setOnClickListener { disappearingMessages.showFollowSettingDialog(context, message) }
                 }
             }
             message.isMediaSavedNotification -> {
@@ -128,7 +131,7 @@ class ControlMessageView : LinearLayout {
                 }
 
                 // remove clicks by default
-                setOnClickListener(null)
+                binding.controlContentView.setOnClickListener(null)
                 hideInfo()
 
                 // handle click behaviour depending on criteria
@@ -138,7 +141,7 @@ class ControlMessageView : LinearLayout {
                         // show a dedicated privacy dialog
                         !TextSecurePreferences.isCallNotificationsEnabled(context) -> {
                             showInfo()
-                            setOnClickListener {
+                            binding.controlContentView.setOnClickListener {
                                 context.showSessionDialog {
                                     val titleTxt = context.getSubbedString(
                                         R.string.callsMissedCallFrom,
@@ -165,7 +168,7 @@ class ControlMessageView : LinearLayout {
                         // show a dedicated permission dialog
                         !Permissions.hasAll(context, Manifest.permission.RECORD_AUDIO) -> {
                             showInfo()
-                            setOnClickListener {
+                            binding.controlContentView.setOnClickListener {
                                 context.showSessionDialog {
                                     val titleTxt = context.getSubbedString(
                                         R.string.callsMissedCallFrom,
@@ -201,11 +204,8 @@ class ControlMessageView : LinearLayout {
         binding.callView.isVisible = message.isCallLog
 
         // handle long clicked if it was passed on
-        //todo DELETION currently control messages lose their ability to be clickable due to the long click, like the "mised phone call" CM
-        Log.d("", "*** Has long click? $longPress")
         longPress?.let {
-            binding.root.setOnLongClickListener {
-                Log.d("", "*** Long clicking")
+            binding.controlContentView.setOnLongClickListener {
                 longPress.invoke()
                 true
             }

@@ -235,8 +235,6 @@ class ConversationViewModel(
 
         // Refer to our figma document for info on message deletion [https://www.figma.com/design/kau6LggVcMMWmZRMibEo8F/Standardise-Message-Deletion?node-id=0-1&t=dEPcU0SZ9G2s4gh2-0]
 
-        //todo DELETION handle control messages deletion ( and make clickable )
-
         //todo DELETION handle multi select scenarios
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -304,7 +302,7 @@ class ConversationViewModel(
      * otherwise they will appear as a special type of message
      * that says something like "This message was deleted"
      */
-    fun deletedLocally(messages: Set<MessageRecord>) {
+    fun deleteLocally(messages: Set<MessageRecord>) {
         // make sure to stop audio messages, if any
         messages.filterIsInstance<MmsMessageRecord>()
             .mapNotNull { it.slideDeck.audioSlide }
@@ -734,7 +732,7 @@ class ConversationViewModel(
                     it.copy(deleteDeviceOnly = null)
                 }
 
-                deletedLocally(command.messages)
+                deleteLocally(command.messages)
             }
             is Commands.MarkAsDeletedForEveryone -> {
                 markAsDeletedForEveryone(command.data)

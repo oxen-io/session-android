@@ -223,7 +223,6 @@ class ConversationReactionOverlay : FrameLayout {
                 endScale = spaceAvailableForItem / conversationItemSnapshot.height
                 endX += Util.halfOffsetFromScale(conversationItemSnapshot.width, endScale) * if (isMessageOnLeft) -1 else 1
                 endY = spaceForReactionBar - Util.halfOffsetFromScale(conversationItemSnapshot.height, endScale)
-                val contextMenuTop = endY + conversationItemSnapshot.height * endScale
                 reactionBarBackgroundY = reactionBarTopPadding //getReactionBarOffsetForTouch(selectedConversationModel.getBubbleY(), contextMenuTop + Util.halfOffsetFromScale(conversationItemSnapshot.getHeight(), endScale), menuPadding, reactionBarOffset, reactionBarHeight, reactionBarTopPadding, endY);
                 endApparentTop = endY + Util.halfOffsetFromScale(conversationItemSnapshot.height, endScale)
             } else {
@@ -272,11 +271,17 @@ class ConversationReactionOverlay : FrameLayout {
         revealAnimatorSet.start()
         if (isWideLayout) {
             val scrubberRight = scrubberX + scrubberWidth
-            val offsetX = if (isMessageOnLeft) scrubberRight + menuPadding else scrubberX - contextMenu.getMaxWidth() - menuPadding
+            val offsetX = when {
+                isMessageOnLeft -> scrubberRight + menuPadding
+                else -> scrubberX - contextMenu.getMaxWidth() - menuPadding
+            }
             contextMenu.show(offsetX.toInt(), Math.min(backgroundView.y, (overlayHeight - contextMenu.getMaxHeight()).toFloat()).toInt())
         } else {
             val contentX = if (isMessageOnLeft) scrubberHorizontalMargin.toFloat() else selectedConversationModel.bubbleX
-            val offsetX = if (isMessageOnLeft) contentX else -contextMenu.getMaxWidth() + contentX + bubbleWidth
+            val offsetX = when {
+                isMessageOnLeft -> contentX
+                else -> -contextMenu.getMaxWidth() + contentX + bubbleWidth
+            }
             val menuTop = endApparentTop + conversationItemSnapshot.height * endScale
             contextMenu.show(offsetX.toInt(), (menuTop + menuPadding).toInt())
         }
@@ -527,8 +532,12 @@ class ConversationReactionOverlay : FrameLayout {
         val recipient = get(context).threadDatabase().getRecipientForThreadId(message.threadId)
                 ?: return emptyList()
         val userPublicKey = getLocalNumber(context)!!
+
+        // control messages and "marked as deleted" messages can only delete
+        val isDeleteOnly = message.isDeleted || message.isControlMessage
+
         // Select message
-        if(!message.isDeleted) {
+        if(!isDeleteOnly) {
             items += ActionItem(
                 R.attr.menu_select_icon,
                 R.string.select,
@@ -538,15 +547,15 @@ class ConversationReactionOverlay : FrameLayout {
         }
         // Reply
         val canWrite = openGroup == null || openGroup.canWrite
-        if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation && !message.isDeleted) {
+        if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_reply_icon, R.string.reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply)
         }
         // Copy message text
-        if (!containsControlMessage && hasText && !message.isDeleted) {
+        if (!containsControlMessage && hasText && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_copy_icon, R.string.copy, { handleActionItemClicked(Action.COPY_MESSAGE) })
         }
         // Copy Account ID
-        if (!recipient.isCommunityRecipient && message.isIncoming && !message.isDeleted) {
+        if (!recipient.isCommunityRecipient && message.isIncoming && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_copy_icon, R.string.accountIDCopy, { handleActionItemClicked(Action.COPY_ACCOUNT_ID) })
         }
         // Delete message
@@ -555,15 +564,15 @@ class ConversationReactionOverlay : FrameLayout {
                 R.string.AccessibilityId_deleteMessage, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
         }
         // Ban user
-        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey) && !message.isDeleted) {
+        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey) && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_block_icon, R.string.banUser, { handleActionItemClicked(Action.BAN_USER) })
         }
         // Ban and delete all
-        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey) && !message.isDeleted) {
+        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey) && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_trash_icon, R.string.banDeleteAll, { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
         }
         // Message detail
-        if(!message.isDeleted) {
+        if(!isDeleteOnly) {
             items += ActionItem(
                 R.attr.menu_info_icon,
                 R.string.messageInfo,
@@ -578,7 +587,7 @@ class ConversationReactionOverlay : FrameLayout {
             items += ActionItem(R.attr.menu_reply_icon, R.string.resync, { handleActionItemClicked(Action.RESYNC) })
         }
         // Save media..
-        if (message.isMms  && !message.isDeleted) {
+        if (message.isMms  && !isDeleteOnly) {
             // ..but only provide the save option if the there is a media attachment which has finished downloading.
             val mmsMessage = message as MediaMmsMessageRecord
             if (mmsMessage.containsMediaSlide() && !mmsMessage.isMediaPending) {
@@ -591,8 +600,8 @@ class ConversationReactionOverlay : FrameLayout {
         }
 
         // deleted messages have  no emoji reactions
-        backgroundView.isVisible = !message.isDeleted
-        foregroundView.isVisible = !message.isDeleted
+        backgroundView.isVisible = !isDeleteOnly
+        foregroundView.isVisible = !isDeleteOnly
         return items
     }
 
