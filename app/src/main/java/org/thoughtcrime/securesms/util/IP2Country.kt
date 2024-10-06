@@ -12,34 +12,33 @@ import org.session.libsignal.utilities.ThreadUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileReader
-import java.util.SortedMap
 import java.util.TreeMap
+
+private fun ipv4Int(ip: String): Int {
+    var result = 0L
+    var currentValue = 0L
+    var octetIndex = 0
+
+    for (char in ip) {
+        if (char == '.' || char == '/') {
+            result = result or (currentValue shl (8 * (3 - octetIndex)))
+            currentValue = 0
+            octetIndex++
+            if (char == '/') break
+        } else {
+            currentValue = currentValue * 10 + (char - '0')
+        }
+    }
+
+    // Handle the last octet
+    result = result or (currentValue shl (8 * (3 - octetIndex)))
+
+    return result.toInt()
+}
 
 class IP2Country private constructor(private val context: Context) {
     private val pathsBuiltEventReceiver: BroadcastReceiver
     val countryNamesCache = mutableMapOf<String, String>()
-
-    private fun Ipv4Int(ip: String): Int {
-        var result = 0L
-        var currentValue = 0L
-        var octetIndex = 0
-
-        for (char in ip) {
-            if (char == '.' || char == '/') {
-                result = result or (currentValue shl (8 * (3 - octetIndex)))
-                currentValue = 0
-                octetIndex++
-                if (char == '/') break
-            } else {
-                currentValue = currentValue * 10 + (char - '0')
-            }
-        }
-
-        // Handle the last octet
-        result = result or (currentValue shl (8 * (3 - octetIndex)))
-
-        return result.toInt()
-    }
 
     private val ipv4ToCountry: TreeMap<Int, Int?> by lazy {
         val file = loadFile("geolite2_country_blocks_ipv4.csv")
@@ -47,7 +46,7 @@ class IP2Country private constructor(private val context: Context) {
             csv.skip(1)
 
             csv.asSequence().associateTo(TreeMap()) { cols ->
-                Ipv4Int(cols[0]).toInt() to cols[1].toIntOrNull()
+                ipv4Int(cols[0]).toInt() to cols[1].toIntOrNull()
             }
         }
     }
@@ -114,7 +113,7 @@ class IP2Country private constructor(private val context: Context) {
         // return early if cached
         countryNamesCache[ip]?.let { return it }
 
-        val ipInt = Ipv4Int(ip)
+        val ipInt = ipv4Int(ip)
         val bestMatchCountry = ipv4ToCountry.floorEntry(ipInt)?.let { (_, code) ->
             if (code != null) {
                 countryToNames[code]
