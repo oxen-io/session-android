@@ -94,7 +94,7 @@ class IP2Country private constructor(private val context: Context) {
     private fun loadFile(fileName: String): File {
         val directory = File(context.applicationInfo.dataDir)
         val file = File(directory, fileName)
-        if (directory.list().contains(fileName)) { return file }
+        if (directory.list()?.contains(fileName) == true) { return file }
         val inputStream = context.assets.open("csv/$fileName")
         val outputStream = FileOutputStream(file)
         val buffer = ByteArray(1024)
