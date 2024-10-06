@@ -45,8 +45,8 @@ class IP2Country private constructor(private val context: Context) {
         CSVReader(FileReader(file.absoluteFile)).use { csv ->
             csv.skip(1)
 
-            csv.asSequence().associateTo(TreeMap()) { cols ->
-                ipv4Int(cols[0]).toInt() to cols[1].toIntOrNull()
+            csv.associateTo(TreeMap()) { cols ->
+                ipv4Int(cols[0]) to cols[1].toIntOrNull()
             }
         }
     }
