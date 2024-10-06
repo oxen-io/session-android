@@ -9,9 +9,8 @@ import com.opencsv.CSVReader
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
-import java.io.File
-import java.io.FileOutputStream
-import java.io.FileReader
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.util.TreeMap
 
 private fun ipv4Int(ip: String): Int {
@@ -36,24 +35,27 @@ private fun ipv4Int(ip: String): Int {
     return result.toInt()
 }
 
-class IP2Country private constructor(private val context: Context) {
-    private val pathsBuiltEventReceiver: BroadcastReceiver
+class IP2Country internal constructor(
+    private val context: Context,
+    private val openStream: (String) -> InputStream = context.assets::open
+) {
     val countryNamesCache = mutableMapOf<String, String>()
 
     private val ipv4ToCountry: TreeMap<Int, Int?> by lazy {
-        val file = loadFile("geolite2_country_blocks_ipv4.csv")
-        CSVReader(FileReader(file.absoluteFile)).use { csv ->
-            csv.skip(1)
+        openStream("csv/geolite2_country_blocks_ipv4.csv")
+            .let(::InputStreamReader)
+            .let(::CSVReader)
+            .use { csv ->
+                csv.skip(1)
 
-            csv.associateTo(TreeMap()) { cols ->
-                ipv4Int(cols[0]) to cols[1].toIntOrNull()
+                csv.associateTo(TreeMap()) { cols ->
+                    ipv4Int(cols[0]) to cols[1].toIntOrNull()
+                }
             }
-        }
     }
 
     private val countryToNames: Map<Int, String> by lazy {
-        val file = loadFile("geolite2_country_locations_english.csv")
-        CSVReader(FileReader(file.absoluteFile)).use { csv ->
+        CSVReader(InputStreamReader(openStream("csv/geolite2_country_locations_english.csv"))).use { csv ->
             csv.skip(1)
 
             csv.asSequence()
@@ -74,43 +76,25 @@ class IP2Country private constructor(private val context: Context) {
         public fun configureIfNeeded(context: Context) {
             if (isInitialized) { return; }
             shared = IP2Country(context.applicationContext)
+
+            val pathsBuiltEventReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    shared.populateCacheIfNeeded()
+                }
+            }
+            LocalBroadcastManager.getInstance(context).registerReceiver(pathsBuiltEventReceiver, IntentFilter("pathsBuilt"))
         }
     }
 
     init {
         populateCacheIfNeeded()
-        pathsBuiltEventReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                populateCacheIfNeeded()
-            }
-        }
-        LocalBroadcastManager.getInstance(context).registerReceiver(pathsBuiltEventReceiver, IntentFilter("pathsBuilt"))
     }
 
     // TODO: Deinit?
     // endregion
 
     // region Implementation
-    private fun loadFile(fileName: String): File {
-        val directory = File(context.applicationInfo.dataDir)
-        val file = File(directory, fileName)
-        if (directory.list()?.contains(fileName) == true) { return file }
-        val inputStream = context.assets.open("csv/$fileName")
-        val outputStream = FileOutputStream(file)
-        inputStream.use {
-            outputStream.use {
-                val buffer = ByteArray(1024)
-                while (true) {
-                    val count = inputStream.read(buffer)
-                    if (count < 0) { break }
-                    outputStream.write(buffer, 0, count)
-                }
-            }
-        }
-        return file
-    }
-
-    private fun cacheCountryForIP(ip: String): String? {
+    internal fun cacheCountryForIP(ip: String): String? {
         // return early if cached
         countryNamesCache[ip]?.let { return it }
 
@@ -136,4 +120,3 @@ class IP2Country private constructor(private val context: Context) {
     }
     // endregion
 }
-
