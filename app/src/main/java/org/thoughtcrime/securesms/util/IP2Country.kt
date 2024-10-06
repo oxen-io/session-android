@@ -111,26 +111,16 @@ class IP2Country private constructor(private val context: Context) {
     }
 
     private fun cacheCountryForIP(ip: String): String? {
-
         // return early if cached
         countryNamesCache[ip]?.let { return it }
 
         val ipInt = ipv4Int(ip)
-        val bestMatchCountry = ipv4ToCountry.floorEntry(ipInt)?.let { (_, code) ->
-            if (code != null) {
-                countryToNames[code]
-            } else {
-                null
-            }
-        }
+        val bestMatchCountry = ipv4ToCountry.floorEntry(ipInt)?.value?.let { countryToNames[it] }
 
-        if (bestMatchCountry != null) {
-            countryNamesCache[ip] = bestMatchCountry
-            return bestMatchCountry
-        } else {
-            Log.d("Loki","Country name for $ip couldn't be found")
-        }
-        return null
+        if (bestMatchCountry != null) countryNamesCache[ip] = bestMatchCountry
+        else Log.d("Loki","Country name for $ip couldn't be found")
+
+        return bestMatchCountry
     }
 
     private fun populateCacheIfNeeded() {
