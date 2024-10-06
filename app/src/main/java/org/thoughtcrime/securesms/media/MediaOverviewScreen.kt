@@ -247,12 +247,7 @@ private fun DeleteConfirmationDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = context.resources.getQuantityString(
-            R.plurals.ConversationFragment_delete_selected_messages, numSelected
-        ),
-        text = context.resources.getQuantityString(
-            R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages,
-            numSelected,
-            numSelected,
+            R.plurals.deleteMessage, numSelected
         ),
         buttons = listOf(
             DialogButtonModel(GetString(R.string.delete), color = LocalColors.current.danger, onClick = onAccepted),

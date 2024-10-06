@@ -35,14 +35,12 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
 import org.conscrypt.Conscrypt;
-import org.session.libsession.avatars.AvatarHelper;
 import org.session.libsession.database.MessageDataProvider;
 import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2;
 import org.session.libsession.messaging.sending_receiving.pollers.Poller;
 import org.session.libsession.snode.SnodeModule;
-import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.ConfigFactoryUpdateListener;
 import org.session.libsession.utilities.Device;
 import org.session.libsession.utilities.Environment;
@@ -51,8 +49,6 @@ import org.session.libsession.utilities.SSKEnvironment;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.WindowDebouncer;
-import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
-import org.session.libsession.utilities.dynamiclanguage.LocaleParser;
 import org.session.libsignal.utilities.HTTP;
 import org.session.libsignal.utilities.JsonUtil;
 import org.session.libsignal.utilities.Log;
@@ -91,17 +87,14 @@ import org.thoughtcrime.securesms.sskenvironment.ReadReceiptManager;
 import org.thoughtcrime.securesms.sskenvironment.TypingStatusRepository;
 import org.thoughtcrime.securesms.util.Broadcaster;
 import org.thoughtcrime.securesms.util.VersionDataFetcher;
-import org.thoughtcrime.securesms.util.dynamiclanguage.LocaleParseHelper;
 import org.thoughtcrime.securesms.webrtc.CallMessageProcessor;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PeerConnectionFactory.InitializationOptions;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Security;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.Executors;
@@ -110,7 +103,6 @@ import javax.inject.Inject;
 
 import dagger.hilt.EntryPoints;
 import dagger.hilt.android.HiltAndroidApp;
-import kotlin.Unit;
 import network.loki.messenger.BuildConfig;
 import network.loki.messenger.R;
 import network.loki.messenger.libsession_util.ConfigBase;
@@ -320,10 +312,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         super.onTerminate();
     }
 
-    public void initializeLocaleParser() {
-        LocaleParser.Companion.configure(new LocaleParseHelper());
-    }
-
     public ExpiringMessageManager getExpiringMessageManager() {
         return expiringMessageManager;
     }
@@ -422,12 +410,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         AsyncTask.THREAD_POOL_EXECUTOR.execute(() -> {
             BlobProvider.getInstance().onSessionStart(this);
         });
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        initializeLocaleParser();
-        super.attachBaseContext(DynamicLanguageContextWrapper.updateContext(base, TextSecurePreferences.getLanguage(base)));
     }
 
     private static class ProviderInitializationException extends RuntimeException { }

@@ -7,9 +7,6 @@
             android:title="@string/helpReportABug"
             android:summary="@string/helpReportABugExportLogsDescription"
             android:widgetLayout="@layout/export_logs_widget" />
-
-        <!-- Note: Having this as `android:layout` rather than `android:layoutWidget` allows it to fit the screen width -->
-        <Preference android:layout="@layout/preference_widget_progress" />
     </PreferenceCategory>
 
     <PreferenceCategory>

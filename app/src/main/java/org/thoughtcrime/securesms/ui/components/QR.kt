@@ -49,6 +49,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.ChecksumException
 import com.google.zxing.FormatException
@@ -75,6 +78,7 @@ import java.util.concurrent.Executors
 
 private const val TAG = "NewMessageFragment"
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun QRScannerScreen(
         errors: Flow<String>,
@@ -93,11 +97,11 @@ fun QRScannerScreen(
 
         val context = LocalContext.current
         val permission = Manifest.permission.CAMERA
+        val cameraPermissionState = rememberPermissionState(permission)
 
         var showCameraPermissionDialog by remember { mutableStateOf(false) }
 
-        if (ContextCompat.checkSelfPermission(context, permission)
-            == PackageManager.PERMISSION_GRANTED) {
+        if (cameraPermissionState.status.isGranted) {
             ScanQrCode(errors, onScan)
         } else {
             Column(

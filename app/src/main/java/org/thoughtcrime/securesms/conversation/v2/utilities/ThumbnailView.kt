@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewOutlineProvider
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -27,7 +28,10 @@ import org.thoughtcrime.securesms.components.GlideDrawableListeningTarget
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader.DecryptableUri
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.mms.Slide
+import org.thoughtcrime.securesms.ui.afterMeasured
+import java.lang.Float.min
 
 open class ThumbnailView @JvmOverloads constructor(
     context: Context,
@@ -114,8 +118,23 @@ open class ThumbnailView @JvmOverloads constructor(
         isPreview: Boolean, naturalWidth: Int,
         naturalHeight: Int
     ): ListenableFuture<Boolean> {
-        binding.playOverlay.isVisible = (slide.thumbnailUri != null && slide.hasPlayOverlay() &&
-            (slide.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_DONE || isPreview))
+        val showPlayOverlay = (slide.thumbnailUri != null && slide.hasPlayOverlay() &&
+                (slide.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_DONE || isPreview))
+        if(showPlayOverlay) {
+            binding.playOverlay.isVisible = true
+            // The views are poorly constructed at the moment and there is no good way to know
+            // if this is used in the main conversation or in the tiny quote window of a reply...
+            // But when the view is too small the 'play' icon does not scale,
+            // so we can do it based on measured sizes here
+            binding.playOverlay.afterMeasured {
+                // max size if 60% of the width
+                val ratio = min((binding.root.width * 0.6f) / binding.playOverlay.width, 1f)
+                binding.playOverlay.scaleX = ratio
+                binding.playOverlay.scaleY = ratio
+            }
+        } else {
+            binding.playOverlay.isVisible = false
+        }
 
         if (equals(this.slide, slide)) {
             // don't re-load slide

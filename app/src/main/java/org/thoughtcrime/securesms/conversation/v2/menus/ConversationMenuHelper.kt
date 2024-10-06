@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.AsyncTask
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,7 +18,6 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import com.squareup.phrase.Phrase
-import java.io.IOException
 import network.loki.messenger.R
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.leave
@@ -31,8 +29,6 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
-import org.thoughtcrime.securesms.MissingMicrophonePermissionDialog
-import org.thoughtcrime.securesms.media.MediaOverviewActivity
 import org.thoughtcrime.securesms.ShortcutLauncherActivity
 import org.thoughtcrime.securesms.calls.WebRtcCallActivity
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity
@@ -41,12 +37,16 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity.Companion.groupIDKey
+import org.thoughtcrime.securesms.media.MediaOverviewActivity
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.findActivity
+import org.thoughtcrime.securesms.ui.getSubbedString
 import org.thoughtcrime.securesms.util.BitmapUtil
+import java.io.IOException
 
 object ConversationMenuHelper {
     
@@ -183,7 +183,15 @@ object ConversationMenuHelper {
         // or if the user has not granted audio/microphone permissions
         else if (!Permissions.hasAll(context, Manifest.permission.RECORD_AUDIO)) {
             Log.d("Loki", "Attempted to make a call without audio permissions")
-            MissingMicrophonePermissionDialog.show(context)
+
+            Permissions.with(context.findActivity())
+                .request(Manifest.permission.RECORD_AUDIO)
+                .withPermanentDenialDialog(
+                    context.getSubbedString(R.string.permissionsMicrophoneAccessRequired,
+                    APP_NAME_KEY to context.getString(R.string.app_name))
+                )
+                .execute()
+
             return
         }
 

@@ -97,8 +97,7 @@ internal class NewMessageViewModel @Inject constructor(
 
     private fun Exception.toMessage() = when (this) {
         is SnodeAPI.Error.Generic -> application.getString(R.string.onsErrorNotRecognized)
-        is TimeoutException -> application.getString(R.string.onsErrorUnableToSearch)
-        else -> application.getString(R.string.accountIdErrorInvalid)
+        else -> application.getString(R.string.onsErrorUnableToSearch)
     }
 }
 

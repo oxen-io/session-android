@@ -3,8 +3,15 @@ package org.thoughtcrime.securesms.ui
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.fragment.app.Fragment
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
@@ -58,3 +65,26 @@ fun Context.findActivity(): Activity {
     }
     throw IllegalStateException("Permissions should be called in the context of an Activity")
 }
+
+inline fun <T : View> T.afterMeasured(crossinline block: T.() -> Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            if (measuredWidth > 0 && measuredHeight > 0) {
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+                block()
+            }
+        }
+    })
+}
+
+/**
+ * This is used to set the test tag that the QA team can use to retrieve an element in appium
+ * In order to do so we need to set the testTagsAsResourceId to true, which ideally should be done only once
+ * in the root composable, but our app is currently made up of  multiple isolated composables
+ * set up in the old activity/fragment view system
+ * As such we need to repeat it for every component that wants to use testTag, until such
+ * a time as we have one root composable
+ */
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun Modifier.qaTag(tag: String) = semantics { testTagsAsResourceId = true }.testTag(tag)

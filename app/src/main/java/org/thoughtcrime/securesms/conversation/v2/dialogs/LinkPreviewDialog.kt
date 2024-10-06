@@ -18,7 +18,7 @@ class LinkPreviewDialog(private val onEnabled: () -> Unit) : DialogFragment() {
         title(R.string.linkPreviewsEnable)
         val txt = context.getSubbedCharSequence(R.string.linkPreviewsFirstDescription, APP_NAME_KEY to APP_NAME)
         text(txt)
-        button(R.string.enable) { enable()  }
+        dangerButton(R.string.enable) { enable()  }
         cancelButton     { dismiss() }
     }
 

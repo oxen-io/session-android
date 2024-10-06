@@ -52,9 +52,6 @@ object DateUtils : android.text.format.DateUtils() {
         return isToday(`when` + TimeUnit.DAYS.toMillis(1))
     }
 
-    private fun convertDelta(millis: Long, to: TimeUnit): Int {
-        return to.convert(System.currentTimeMillis() - millis, TimeUnit.MILLISECONDS).toInt()
-    }
 
     // Method to get the String for a relative day in a locale-aware fashion
     public fun getLocalisedRelativeDayString(relativeDay: RelativeDay): String {
@@ -76,10 +73,12 @@ object DateUtils : android.text.format.DateUtils() {
             set(Calendar.MILLISECOND, 0)
         }
 
-        return getRelativeTimeSpanString(comparisonTime.timeInMillis,
+        val temp = getRelativeTimeSpanString(
+            comparisonTime.timeInMillis,
             now.timeInMillis,
             DAY_IN_MILLIS,
             FORMAT_SHOW_DATE).toString()
+        return temp
     }
 
     fun getFormattedDateTime(time: Long, template: String, locale: Locale): String {
@@ -141,31 +140,5 @@ object DateUtils : android.text.format.DateUtils() {
 
     private fun getLocalizedPattern(template: String, locale: Locale): String {
         return DateFormat.getBestDateTimePattern(locale, template)
-    }
-
-    /**
-     * e.g. 2020-09-04T19:17:51Z
-     * https://www.iso.org/iso-8601-date-and-time-format.html
-     *
-     * @return The timestamp if able to be parsed, otherwise -1.
-     */
-    @SuppressLint("ObsoleteSdkInt")
-    @JvmStatic
-    public fun parseIso8601(date: String?): Long {
-
-        if (date.isNullOrEmpty()) { return -1 }
-
-        val format = if (Build.VERSION.SDK_INT >= 24) {
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.getDefault())
-        } else {
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault())
-        }
-
-        try {
-            return format.parse(date).time
-        } catch (e: ParseException) {
-            Log.w(TAG, "Failed to parse date.", e)
-            return -1
-        }
     }
 }

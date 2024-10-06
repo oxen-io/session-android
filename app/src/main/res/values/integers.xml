@@ -7,4 +7,5 @@
 
     <integer name="max_user_nickname_length_chars">35</integer>
     <integer name="max_group_and_community_name_length_chars">35</integer>
+    <integer name="max_input_chars">2000</integer>
 </resources>

@@ -144,9 +144,10 @@
     <string name="callsInProgress">Call in progress</string>
     <string name="callsIncoming">Incoming call from {name}</string>
     <string name="callsIncomingUnknown">Incoming call</string>
+    <string name="callsMicrophonePermissionsRequired">You missed a call from <b>{name}</b> because you haven\'t granted <b>microphone access</b>.</string>
     <string name="callsMissed">Missed Call</string>
     <string name="callsMissedCallFrom">Missed call from {name}</string>
-    <string name="callsNotificationsRequired">Voice and Video Calls require notifications to be enabled in your device system settings. </string>
+    <string name="callsNotificationsRequired">Voice and Video Calls require notifications to be enabled in your device system settings.</string>
     <string name="callsPermissionsRequired">Call Permissions Required</string>
     <string name="callsPermissionsRequiredDescription">You can enable the \"Voice and Video Calls\" permission in Privacy Settings.</string>
     <string name="callsReconnecting">Reconnecting…</string>
@@ -436,7 +437,7 @@
     <string name="groupNameEnter">Enter a group name</string>
     <string name="groupNameEnterPlease">Please enter a group name.</string>
     <string name="groupNameEnterShorter">Please enter a shorter group name.</string>
-    <string name="groupNameNew">Group name is now {group_name}. </string>
+    <string name="groupNameNew">Group name is now {group_name}.</string>
     <string name="groupNameUpdated">Group name updated.</string>
     <string name="groupNoMessages">You have no messages from <b>{group_name}</b>. Send a message to start the conversation!</string>
     <string name="groupOnlyAdmin">You are the only admin in <b>{group_name}</b>.\n\nGroup members and settings cannot be changed without an admin.</string>
@@ -451,7 +452,7 @@
         <item quantity="other">Remove users and their messages</item>
     </plurals>
     <plurals name="groupRemoveUserOnly">
-        <item quantity="one">Remove user </item>
+        <item quantity="one">Remove user</item>
         <item quantity="other">Remove users</item>
     </plurals>
     <string name="groupRemoved"><b>{name}</b> was removed from the group.</string>
@@ -677,24 +678,24 @@
     <string name="passwordSet">Set Password</string>
     <string name="passwordSetDescription">Your password has been set. Please keep it safe.</string>
     <string name="paste">Paste</string>
-    <string name="permissionMusicAudioDenied">{app_name} needs music and audio access in order to send files, music and audio, but it has been permanently denied. Tap Settings -&gt; Permissions, and turn \"Music and audio\" on.</string>
+    <string name="permissionMusicAudioDenied">{app_name} needs music and audio access in order to send files, music and audio, but it has been permanently denied. Tap Settings → Permissions, and turn \"Music and audio\" on.</string>
     <string name="permissionsAppleMusic">{app_name} needs to use Apple Music to play media attachments.</string>
     <string name="permissionsAutoUpdate">Auto Update</string>
     <string name="permissionsAutoUpdateDescription">Automatically check for updates on startup.</string>
-    <string name="permissionsCameraDenied">{app_name} needs camera access to take photos and videos, but it has been permanently denied. Tap Settings -&gt; Permissions, and turn \"Camera\" on.</string>
+    <string name="permissionsCameraDenied">{app_name} needs camera access to take photos and videos, but it has been permanently denied. Tap Settings → Permissions, and turn \"Camera\" on.</string>
     <string name="permissionsFaceId">The screen lock feature on {app_name} uses Face ID.</string>
     <string name="permissionsKeepInSystemTray">Keep in System Tray</string>
     <string name="permissionsKeepInSystemTrayDescription">{app_name} continues running in the background when you close the window</string>
     <string name="permissionsLibrary">{app_name} needs photo library access to continue. You can enable access in the iOS settings.</string>
     <string name="permissionsMicrophone">Microphone</string>
-    <string name="permissionsMicrophoneAccessRequired">{app_name} needs microphone access to make calls and send audio messages, but it has been permanently denied. Tap settings -&gt; Permissions, and turn \"Microphone\" on.</string>
+    <string name="permissionsMicrophoneAccessRequired">{app_name} needs microphone access to make calls and send audio messages, but it has been permanently denied. Tap settings → Permissions, and turn \"Microphone\" on.</string>
     <string name="permissionsMicrophoneAccessRequiredDesktop">You can enable microphone access in {app_name}\'s privacy settings</string>
     <string name="permissionsMicrophoneAccessRequiredIos">{app_name} needs microphone access to make calls and record audio messages.</string>
     <string name="permissionsMicrophoneDescription">Allow access to microphone.</string>
     <string name="permissionsMusicAudio">{app_name} needs music and audio access in order to send files, music and audio.</string>
-    <string name="permissionsRequired">Permission required</string>
-    <string name="permissionsStorageDenied">{app_name} needs photo library access so you can send photos and videos, but it has been permanently denied. Tap Settings -&gt; Permissions, and turn \"Photos and videos\" on.</string>
-    <string name="permissionsStorageDeniedLegacy">{app_name} needs storage access so you can send and save attachments. Tap Settings -&gt; Permissions, and turn \"Storage\" on.</string>
+    <string name="permissionsRequired">Permission Required</string>
+    <string name="permissionsStorageDenied">{app_name} needs photo library access so you can send photos and videos, but it has been permanently denied. Tap Settings → Permissions, and turn \"Photos and videos\" on.</string>
+    <string name="permissionsStorageDeniedLegacy">{app_name} needs storage access so you can send and save attachments. Tap Settings → Permissions, and turn \"Storage\" on.</string>
     <string name="permissionsStorageSave">{app_name} needs storage access to save attachments and media.</string>
     <string name="permissionsStorageSaveDenied">{app_name} needs storage access to save photos and videos, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".</string>
     <string name="permissionsStorageSend">{app_name} needs storage access to send photos and videos.</string>
@@ -814,7 +815,7 @@
     <string name="updateError">Cannot Update</string>
     <string name="updateErrorDescription">{app_name} failed to update. Please go to {session_download_url} and install the new version manually, then contact our Help Center to let us know about this problem.</string>
     <string name="updateNewVersion">A new version of {app_name} is available, tap to update</string>
-    <string name="updateNewVersionDescription">A new version of {app_name} is available. </string>
+    <string name="updateNewVersionDescription">A new version of {app_name} is available.</string>
     <string name="updateReleaseNotes">Go to Release Notes</string>
     <string name="updateSession">{app_name} Update</string>
     <string name="updateVersion">Version {version}</string>

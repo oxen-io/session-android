@@ -1583,6 +1583,7 @@ open class Storage(
         if (recipient.isLocalNumber || !recipient.isContactRecipient) return
         configFactory.contacts?.upsertContact(recipient.address.serialize()) {
             this.approved = approved
+            this.priority = PRIORITY_VISIBLE
         }
     }
 

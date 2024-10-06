@@ -10,7 +10,7 @@ class DeleteMediaDialog {
             iconAttribute(R.attr.dialog_alert_icon)
             title(context.resources.getQuantityString(R.plurals.deleteMessage, recordCount, recordCount))
             text(context.resources.getString(R.string.deleteMessageDescriptionEveryone))
-            button(R.string.delete) { doDelete.run() }
+            dangerButton(R.string.delete) { doDelete.run() }
             cancelButton()
         }
     }

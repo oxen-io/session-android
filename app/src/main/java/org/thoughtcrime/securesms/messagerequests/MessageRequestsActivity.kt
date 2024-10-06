@@ -108,7 +108,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         showSessionDialog {
             title(R.string.delete)
             text(resources.getString(R.string.messageRequestsDelete))
-            button(R.string.delete) { doDecline() }
+            dangerButton(R.string.delete) { doDecline() }
             button(R.string.cancel)
         }
     }
@@ -129,9 +129,10 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         }
 
         showSessionDialog {
+            title(resources.getString(R.string.clearAll))
             text(resources.getString(R.string.messageRequestsClearAllExplanation))
-            button(R.string.yes) { doDeleteAllAndBlock() }
-            button(R.string.no)
+            dangerButton(R.string.clear) { doDeleteAllAndBlock() }
+            button(R.string.cancel)
         }
     }
 }

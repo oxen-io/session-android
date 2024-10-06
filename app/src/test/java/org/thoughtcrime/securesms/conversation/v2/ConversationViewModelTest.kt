@@ -203,7 +203,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     @Test
     fun `local recipient should have input and no blinded recipient`() {
         whenever(recipient.isLocalNumber).thenReturn(true)
-        assertThat(viewModel.hidesInputBar(), equalTo(false))
+        assertThat(viewModel.shouldHideInputBar(), equalTo(false))
         assertThat(viewModel.blindedRecipient, nullValue())
     }
 
@@ -215,7 +215,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
         }
         whenever(repository.maybeGetBlindedRecipient(recipient)).thenReturn(blinded)
         assertThat(viewModel.blindedRecipient, notNullValue())
-        assertThat(viewModel.hidesInputBar(), equalTo(true))
+        assertThat(viewModel.shouldHideInputBar(), equalTo(true))
     }
 
 }

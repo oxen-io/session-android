@@ -18,10 +18,10 @@ import network.loki.messenger.databinding.ViewControlMessageBinding
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.ExpirationConfiguration
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.getColorFromAttr
-import org.thoughtcrime.securesms.MissingMicrophonePermissionDialog
 import org.thoughtcrime.securesms.conversation.disappearingmessages.DisappearingMessages
 import org.thoughtcrime.securesms.conversation.disappearingmessages.expiryMode
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -29,6 +29,7 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.findActivity
 import org.thoughtcrime.securesms.ui.getSubbedCharSequence
 import org.thoughtcrime.securesms.ui.getSubbedString
 import javax.inject.Inject
@@ -133,15 +134,6 @@ class ControlMessageView : LinearLayout {
                 // handle click behaviour depending on criteria
                 if (message.isMissedCall || message.isFirstMissedCall) {
                     when {
-                        // if we're currently missing the audio/microphone permission,
-                        // show a dedicated permission dialog
-                        !Permissions.hasAll(context, Manifest.permission.RECORD_AUDIO) -> {
-                            showInfo()
-                            setOnClickListener {
-                                MissingMicrophonePermissionDialog.show(context)
-                            }
-                        }
-
                         // when the call toggle is disabled in the privacy screen,
                         // show a dedicated privacy dialog
                         !TextSecurePreferences.isCallNotificationsEnabled(context) -> {
@@ -163,6 +155,38 @@ class ControlMessageView : LinearLayout {
                                     button(R.string.sessionSettings) {
                                         Intent(context, PrivacySettingsActivity::class.java)
                                             .let(context::startActivity)
+                                    }
+                                    cancelButton()
+                                }
+                            }
+                        }
+
+                        // if we're currently missing the audio/microphone permission,
+                        // show a dedicated permission dialog
+                        !Permissions.hasAll(context, Manifest.permission.RECORD_AUDIO) -> {
+                            showInfo()
+                            setOnClickListener {
+                                context.showSessionDialog {
+                                    val titleTxt = context.getSubbedString(
+                                        R.string.callsMissedCallFrom,
+                                        NAME_KEY to message.individualRecipient.name!!
+                                    )
+                                    title(titleTxt)
+
+                                    val bodyTxt = context.getSubbedCharSequence(
+                                        R.string.callsMicrophonePermissionsRequired,
+                                        NAME_KEY to message.individualRecipient.name!!
+                                    )
+                                    text(bodyTxt)
+
+                                    button(R.string.theContinue) {
+                                        Permissions.with(context.findActivity())
+                                            .request(Manifest.permission.RECORD_AUDIO)
+                                            .withPermanentDenialDialog(
+                                                context.getSubbedString(R.string.permissionsMicrophoneAccessRequired,
+                                                    APP_NAME_KEY to context.getString(R.string.app_name))
+                                            )
+                                            .execute()
                                     }
                                     cancelButton()
                                 }

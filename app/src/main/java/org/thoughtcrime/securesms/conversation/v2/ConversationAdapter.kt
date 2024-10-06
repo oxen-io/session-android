@@ -1,10 +1,7 @@
 package org.thoughtcrime.securesms.conversation.v2
 
-import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.database.Cursor
-import android.net.Uri
 import android.util.SparseArray
 import android.util.SparseBooleanArray
 import android.view.MotionEvent
@@ -14,33 +11,22 @@ import androidx.core.util.getOrDefault
 import androidx.core.util.set
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import java.util.concurrent.atomic.AtomicLong
-import kotlin.math.min
+import com.bumptech.glide.RequestManager
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
-import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import com.bumptech.glide.RequestManager
-import com.squareup.phrase.Phrase
-import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
-import org.session.libsession.utilities.TextSecurePreferences
-import org.thoughtcrime.securesms.MissingMicrophonePermissionDialog
-import org.thoughtcrime.securesms.permissions.Permissions
-import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
-import org.thoughtcrime.securesms.showSessionDialog
-import org.thoughtcrime.securesms.ui.getSubbedCharSequence
-import org.thoughtcrime.securesms.ui.getSubbedString
+import java.util.concurrent.atomic.AtomicLong
+import kotlin.math.min
 
 class ConversationAdapter(
     context: Context,

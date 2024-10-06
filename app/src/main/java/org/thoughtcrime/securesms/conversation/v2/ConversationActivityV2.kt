@@ -710,7 +710,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // called from onCreate
     private fun setUpInputBar() {
-        binding.inputBar.isGone = viewModel.hidesInputBar()
         binding.inputBar.delegate = this
         binding.inputBarRecordingView.delegate = this
         // GIF button
@@ -854,6 +853,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     // Conversation should be deleted now, just go back
                     finish()
                 }
+
+                binding.inputBar.isGone = uiState.hideInputBar
             }
         }
     }
@@ -948,11 +949,20 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             block(deleteThread = true)
         }
         binding.declineMessageRequestButton.setOnClickListener {
-            viewModel.declineMessageRequest()
-            lifecycleScope.launch(Dispatchers.IO) {
-                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
+            fun doDecline() {
+                viewModel.declineMessageRequest()
+                lifecycleScope.launch(Dispatchers.IO) {
+                    ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
+                }
+                finish()
             }
-            finish()
+
+            showSessionDialog {
+                title(R.string.delete)
+                text(resources.getString(R.string.messageRequestsDelete))
+                dangerButton(R.string.delete) { doDecline() }
+                button(R.string.cancel)
+            }
         }
     }
 
@@ -1775,10 +1785,21 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         attachmentManager.clear()
         // Reset attachments button if needed
         if (isShowingAttachmentOptions) { toggleAttachmentOptions() }
-        // Put the message in the database
-        message.id = mmsDb.insertMessageOutbox(outgoingTextMessage, viewModel.threadId, false, null, runThreadUpdate = true)
-        // Send it
-        MessageSender.send(message, recipient.address, attachments, quote, linkPreview)
+
+        // do the heavy work in the bg
+        lifecycleScope.launch(Dispatchers.IO) {
+            // Put the message in the database
+            message.id = mmsDb.insertMessageOutbox(
+                outgoingTextMessage,
+                viewModel.threadId,
+                false,
+                null,
+                runThreadUpdate = true
+            )
+            // Send it
+            MessageSender.send(message, recipient.address, attachments, quote, linkPreview)
+        }
+
         // Send a typing stopped message
         ApplicationContext.getInstance(this).typingStatusSender.onTypingStopped(viewModel.threadId)
         return Pair(recipient.address, sentTimestamp)
@@ -2084,7 +2105,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             showSessionDialog {
                 title(resources.getQuantityString(R.plurals.deleteMessage, messages.count(), messages.count()))
                 text(resources.getString(R.string.deleteMessageDescriptionEveryone))
-                button(R.string.delete) { messages.forEach(viewModel::deleteForEveryone); endActionMode() }
+                dangerButton(R.string.delete) { messages.forEach(viewModel::deleteForEveryone); endActionMode() }
                 cancelButton { endActionMode() }
             }
         // Otherwise if this is a 1-on-1 conversation we may decided to delete just for ourselves or delete for everyone
@@ -2122,16 +2143,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         showSessionDialog {
             title(R.string.banUser)
             text(R.string.communityBanDescription)
-            button(R.string.banUser) { viewModel.banUser(messages.first().individualRecipient); endActionMode() }
+            dangerButton(R.string.theContinue) { viewModel.banUser(messages.first().individualRecipient); endActionMode() }
             cancelButton(::endActionMode)
         }
     }
 
     override fun banAndDeleteAll(messages: Set<MessageRecord>) {
         showSessionDialog {
-            title(R.string.banUser)
+            title(R.string.banDeleteAll)
             text(R.string.communityBanDeleteDescription)
-            button(R.string.banUser) { viewModel.banAndDeleteAll(messages.first()); endActionMode() }
+            dangerButton(R.string.theContinue) { viewModel.banAndDeleteAll(messages.first()); endActionMode() }
             cancelButton(::endActionMode)
         }
     }
@@ -2450,7 +2471,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 // Note: The adapter itemCount is zero based - so calling this with the itemCount in
                 // a non-zero based manner scrolls us to the bottom of the last message (including
                 // to the bottom of long messages as required by Jira SES-789 / GitHub 1364).
-                recyclerView.scrollToPosition(adapter.itemCount)
+                recyclerView.smoothScrollToPosition(adapter.itemCount)
             }
         }
     }

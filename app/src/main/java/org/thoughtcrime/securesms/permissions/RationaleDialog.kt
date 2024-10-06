@@ -65,7 +65,7 @@ object RationaleDialog {
                 text(message)
             }
             button(R.string.theContinue) { onPositive.run() }
-            button(R.string.notNow)    { onNegative.run() }
+            button(R.string.cancel)    { onNegative.run() }
         }
     }
 }

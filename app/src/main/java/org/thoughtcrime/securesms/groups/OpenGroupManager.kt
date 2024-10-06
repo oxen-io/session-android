@@ -4,6 +4,9 @@ import android.content.Context
 import android.widget.Toast
 import androidx.annotation.WorkerThread
 import com.squareup.phrase.Phrase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.concurrent.Executors
 import network.loki.messenger.R
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -39,6 +42,9 @@ object OpenGroupManager {
             return true
         }
 
+    // flow holding information on write access for our current communities
+    private val _communityWriteAccess: MutableStateFlow<Map<String, Boolean>> = MutableStateFlow(emptyMap())
+
     fun startPolling() {
         if (isPolling) { return }
         isPolling = true
@@ -65,6 +71,8 @@ object OpenGroupManager {
             isPolling = false
         }
     }
+
+    fun getCommunitiesWriteAccessFlow() = _communityWriteAccess.asStateFlow()
 
     @WorkerThread
     fun add(server: String, room: String, publicKey: String, context: Context): Pair<Long,OpenGroupApi.RoomInfo?> {
@@ -164,9 +172,13 @@ object OpenGroupManager {
 
     fun updateOpenGroup(openGroup: OpenGroup, context: Context) {
         val threadDB = DatabaseComponent.get(context).lokiThreadDatabase()
-        val openGroupID = "${openGroup.server}.${openGroup.room}"
-        val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
+        val threadID = GroupManager.getOpenGroupThreadID(openGroup.groupId, context)
         threadDB.setOpenGroupChat(openGroup, threadID)
+
+        // update write access for this community
+        val writeAccesses = _communityWriteAccess.value.toMutableMap()
+        writeAccesses[openGroup.groupId] = openGroup.canWrite
+        _communityWriteAccess.value = writeAccesses
     }
 
     fun isUserModerator(context: Context, groupId: String, standardPublicKey: String, blindedPublicKey: String? = null): Boolean {

@@ -3,11 +3,14 @@ package org.thoughtcrime.securesms.preferences
 import android.Manifest
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.TextSecurePreferences.Companion.setBooleanPreference
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.getSubbedString
 
 internal class CallToggleListener(
     private val context: Fragment,
@@ -39,6 +42,10 @@ internal class CallToggleListener(
                 )
                 setCallback(true)
             }
+            .withPermanentDenialDialog(
+                context.requireContext().getSubbedString(R.string.permissionsMicrophoneAccessRequired,
+                APP_NAME_KEY to context.requireContext().getString(R.string.app_name)
+                ))
             .onAnyDenied { setCallback(false) }
             .execute()
     }

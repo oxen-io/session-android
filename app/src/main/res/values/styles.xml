@@ -33,7 +33,7 @@
     </style>
 
     <style name="ThemeOverlay.Session.AlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
-        <item name="android:windowBackground">@drawable/default_dialog_background</item>
+        <item name="android:windowBackground">@drawable/default_dialog_background_inset</item>
         <item name="android:colorBackground">?backgroundSecondary</item>
         <item name="android:colorBackgroundFloating">?colorPrimary</item>
         <item name="backgroundTint">?colorPrimary</item>

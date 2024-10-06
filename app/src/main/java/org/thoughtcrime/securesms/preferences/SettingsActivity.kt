@@ -45,7 +45,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,11 +57,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.canhub.cropper.CropImageContract
 import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -80,7 +77,9 @@ import org.thoughtcrime.securesms.debugmenu.DebugActivity
 import org.thoughtcrime.securesms.home.PathActivity
 import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
 import org.thoughtcrime.securesms.permissions.Permissions
-import org.thoughtcrime.securesms.preferences.SettingsViewModel.AvatarDialogState.*
+import org.thoughtcrime.securesms.preferences.SettingsViewModel.AvatarDialogState.NoAvatar
+import org.thoughtcrime.securesms.preferences.SettingsViewModel.AvatarDialogState.TempAvatar
+import org.thoughtcrime.securesms.preferences.SettingsViewModel.AvatarDialogState.UserAvatar
 import org.thoughtcrime.securesms.preferences.appearance.AppearanceSettingsActivity
 import org.thoughtcrime.securesms.recoverypassword.RecoveryPasswordActivity
 import org.thoughtcrime.securesms.ui.AlertDialog
@@ -91,10 +90,10 @@ import org.thoughtcrime.securesms.ui.Divider
 import org.thoughtcrime.securesms.ui.GetString
 import org.thoughtcrime.securesms.ui.LargeItemButton
 import org.thoughtcrime.securesms.ui.LargeItemButtonWithDrawable
-import org.thoughtcrime.securesms.ui.components.CircularProgressIndicator
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineCopyButton
 import org.thoughtcrime.securesms.ui.contentDescription
+import org.thoughtcrime.securesms.ui.qaTag
 import org.thoughtcrime.securesms.ui.setThemedContent
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
@@ -518,7 +517,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                         ) {
                             startAvatarSelection()
                         }
-                        .testTag(stringResource(R.string.AccessibilityId_avatarPicker))
+                        .qaTag(stringResource(R.string.AccessibilityId_avatarPicker))
                         .background(
                             shape = CircleShape,
                             color = LocalColors.current.backgroundBubbleReceived,
@@ -581,6 +580,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 DialogButtonModel(
                     text = GetString(R.string.remove),
                     contentDescription = GetString(R.string.AccessibilityId_remove),
+                    color = LocalColors.current.danger,
                     enabled = state is UserAvatar || // can remove is the user has an avatar set
                             (state is TempAvatar && state.hasAvatar),
                     onClick = removeAvatar

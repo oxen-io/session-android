@@ -38,6 +38,7 @@ local ci_dep_mirror(want_mirror) = (if want_mirror then ' -DLOCAL_MIRROR=https:/
         pull: 'always',
         environment: { ANDROID_HOME: '/usr/lib/android-sdk' },
         commands: [
+          'apt-get update',
           'apt-get install -y ninja-build openjdk-17-jdk',
           'update-java-alternatives -s java-1.17.0-openjdk-amd64',
           './gradlew testPlayDebugUnitTestCoverageReport'
@@ -79,6 +80,7 @@ local ci_dep_mirror(want_mirror) = (if want_mirror then ' -DLOCAL_MIRROR=https:/
         pull: 'always',
         environment: { SSH_KEY: { from_secret: 'SSH_KEY' }, ANDROID_HOME: '/usr/lib/android-sdk' },
         commands: [
+          'apt-get update',
           'apt-get install -y ninja-build openjdk-17-jdk',
           'update-java-alternatives -s java-1.17.0-openjdk-amd64',
           './gradlew assemblePlayDebug',

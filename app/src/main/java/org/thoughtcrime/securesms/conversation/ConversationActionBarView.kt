@@ -11,26 +11,21 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
-import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationActionBarBinding
 import network.loki.messenger.databinding.ViewConversationSettingBinding
 import network.loki.messenger.libsession_util.util.ExpiryMode.AfterRead
-import org.session.libsession.LocalisedTimeUtil
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.utilities.ExpirationUtil
-import org.session.libsession.utilities.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.TIME_KEY
-import org.session.libsession.utilities.StringSubstitutionConstants.TIME_LARGE_KEY
 import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.ui.getSubbedString
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ConversationActionBarView @JvmOverloads constructor(
@@ -125,7 +120,7 @@ class ConversationActionBarView @JvmOverloads constructor(
             settings += ConversationSetting(
                 recipient.mutedUntil.takeUnless { it == Long.MAX_VALUE }
                     ?.let {
-                        context.getString(R.string.notificationsHeaderMute)
+                        context.getString(R.string.notificationsMuted)
                     }
                     ?: context.getString(R.string.notificationsMuted),
                 ConversationSettingType.NOTIFICATION,
