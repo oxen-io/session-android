@@ -97,14 +97,16 @@ class IP2Country private constructor(private val context: Context) {
         if (directory.list()?.contains(fileName) == true) { return file }
         val inputStream = context.assets.open("csv/$fileName")
         val outputStream = FileOutputStream(file)
-        val buffer = ByteArray(1024)
-        while (true) {
-            val count = inputStream.read(buffer)
-            if (count < 0) { break }
-            outputStream.write(buffer, 0, count)
+        inputStream.use {
+            outputStream.use {
+                val buffer = ByteArray(1024)
+                while (true) {
+                    val count = inputStream.read(buffer)
+                    if (count < 0) { break }
+                    outputStream.write(buffer, 0, count)
+                }
+            }
         }
-        inputStream.close()
-        outputStream.close()
         return file
     }
 
