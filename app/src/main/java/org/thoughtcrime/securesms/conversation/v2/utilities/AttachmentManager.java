@@ -16,7 +16,6 @@
  */
 package org.thoughtcrime.securesms.conversation.v2.utilities;
 
-import static com.google.android.gms.common.util.CollectionUtils.listOf;
 import static org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.Manifest;

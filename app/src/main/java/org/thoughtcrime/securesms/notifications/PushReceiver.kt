@@ -38,7 +38,8 @@ class PushReceiver @Inject constructor(@ApplicationContext val context: Context)
     }
 
     fun onPushDataReceived(data: ByteArray?) {
-//todo DELETION currently Huawei sends data to this. We need to check what it actually sends, as it  might actually be a map like the above firebase one - then we need to hook the huawei push service appropriately to work with this updated class
+        addMessageReceiveJob(PushData(data = data, metadata = null))
+        //todo DELETION verify this once I can get notifications on debug huawei builds
     }
 
     private fun addMessageReceiveJob(pushData: PushData?){
