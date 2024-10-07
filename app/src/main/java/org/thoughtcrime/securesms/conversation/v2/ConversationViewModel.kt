@@ -233,16 +233,16 @@ class ConversationViewModel(
             return
         }
 
-        //todo DELETION handle multi select scenarios
-
         viewModelScope.launch(Dispatchers.IO) {
             val allSentByCurrentUser = messages.all { it.isOutgoing }
 
             val conversationType = conversation.getType()
 
-            // hashes are required if wanting to delete messages from the 'storage server' - they are not required for communities
+            // hashes are required if wanting to delete messages from the 'storage server'
+            // They are not required for communities OR if all messages are outgoing
             // also we can only delete deleted messages (marked as deleted) locally
             val canDeleteForEveryone = messages.all{ !it.isDeleted } && (
+                    messages.all { it.isOutgoing } ||
                     conversationType == MessageType.COMMUNITY ||
                             messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null
             })
