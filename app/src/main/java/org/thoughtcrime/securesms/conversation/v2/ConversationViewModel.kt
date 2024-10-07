@@ -233,8 +233,6 @@ class ConversationViewModel(
             return
         }
 
-        // Refer to our figma document for info on message deletion [https://www.figma.com/design/kau6LggVcMMWmZRMibEo8F/Standardise-Message-Deletion?node-id=0-1&t=dEPcU0SZ9G2s4gh2-0]
-
         //todo DELETION handle multi select scenarios
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -258,10 +256,11 @@ class ConversationViewModel(
                 conversationType == MessageType.NOTE_TO_SELF -> {
                     _dialogsState.update {
                         it.copy(deleteAllDevices = DeleteForEveryoneDialogData(
-                                    messages = messages,
-                                    defaultToEveryone = false,
-                                    messageType = DeleteForEveryoneMessageType.NoteToSelf
-                                )
+                                messages = messages,
+                                defaultToEveryone = false,
+                                everyoneEnabled = true,
+                                messageType = conversationType
+                            )
                         )
                     }
                 }
@@ -273,13 +272,8 @@ class ConversationViewModel(
                             deleteEveryone = DeleteForEveryoneDialogData(
                                 messages = messages,
                                 defaultToEveryone = isAdmin.value,
-                                messageType = when{
-                                    conversation.isLocalNumber -> DeleteForEveryoneMessageType.NoteToSelf
-                                    conversation.isCommunityRecipient -> DeleteForEveryoneMessageType.Community
-                                    conversation.isClosedGroupRecipient -> DeleteForEveryoneMessageType.LegacyGroup //todo GROUPS V2 this property will change for groups v2. Check for legacyGroup here
-                                    //conversation.isClosedGroup -> DeleteForEveryoneMessageType.GroupV2(isAdmin) //todo GROUPS V2 properly check for GroupV2 type here once available
-                                    else -> DeleteForEveryoneMessageType.OneOnOne
-                                }
+                                everyoneEnabled = true,
+                                messageType = conversationType
                             )
                         )
                     }
@@ -288,7 +282,15 @@ class ConversationViewModel(
                 // for non admins, users interacting with someone else's message, or control messages
                 else -> {
                     _dialogsState.update {
-                        it.copy(deleteDeviceOnly = messages)
+                        it.copy(
+                            deleteEveryone = DeleteForEveryoneDialogData(
+                                messages = messages,
+                                defaultToEveryone = false,
+                                everyoneEnabled = false, // disable 'delete for everyone' - can only delete locally in this case
+                                messageType = conversationType,
+                                warning = "Some of the messages you have selected cannot be deleted for everyone" //todo DELETION get real string from res once available
+                            )
+                        )
                     }
                 }
             }
@@ -347,11 +349,11 @@ class ConversationViewModel(
 
         // the exact logic for this will depend on the messages type
         when(data.messageType){
-            is DeleteForEveryoneMessageType.NoteToSelf -> markAsDeletedForEveryoneNoteToSelf(data)
-            is DeleteForEveryoneMessageType.OneOnOne -> markAsDeletedForEveryone1On1(data)
-            is DeleteForEveryoneMessageType.LegacyGroup -> markAsDeletedForEveryoneLegacyGroup(data.messages)
-            is DeleteForEveryoneMessageType.GroupV2 -> markAsDeletedForEveryoneGroupsV2(data)
-            is DeleteForEveryoneMessageType.Community -> markAsDeletedForEveryoneCommunity(data)
+            MessageType.NOTE_TO_SELF -> markAsDeletedForEveryoneNoteToSelf(data)
+            MessageType.ONE_ON_ONE -> markAsDeletedForEveryone1On1(data)
+            MessageType.LEGACY_GROUP -> markAsDeletedForEveryoneLegacyGroup(data.messages)
+            MessageType.GROUPS_V2 -> markAsDeletedForEveryoneGroupsV2(data)
+            MessageType.COMMUNITY -> markAsDeletedForEveryoneCommunity(data)
         }
     }
 
@@ -708,12 +710,6 @@ class ConversationViewModel(
                 }
             }
 
-            is Commands.HideDeleteDeviceOnlyDialog -> {
-                _dialogsState.update {
-                    it.copy(deleteDeviceOnly = null)
-                }
-            }
-
             is Commands.HideDeleteEveryoneDialog -> {
                 _dialogsState.update {
                     it.copy(deleteEveryone = null)
@@ -729,7 +725,7 @@ class ConversationViewModel(
             is Commands.MarkAsDeletedLocally -> {
                 // hide dialog first
                 _dialogsState.update {
-                    it.copy(deleteDeviceOnly = null)
+                    it.copy(deleteEveryone = null)
                 }
 
                 deleteLocally(command.messages)
@@ -773,28 +769,20 @@ class ConversationViewModel(
 
     data class DialogsState(
         val openLinkDialogUrl: String? = null,
-        val deleteDeviceOnly: Set<MessageRecord>? = null,
         val deleteEveryone: DeleteForEveryoneDialogData? = null,
         val deleteAllDevices: DeleteForEveryoneDialogData? = null,
     )
 
     data class DeleteForEveryoneDialogData(
         val messages: Set<MessageRecord>,
-        val messageType: DeleteForEveryoneMessageType,
-        val defaultToEveryone: Boolean
+        val messageType: MessageType,
+        val defaultToEveryone: Boolean,
+        val everyoneEnabled: Boolean,
+        val warning: String? = null
     )
-
-    sealed class DeleteForEveryoneMessageType {
-        data object NoteToSelf: DeleteForEveryoneMessageType()
-        data object OneOnOne: DeleteForEveryoneMessageType()
-        data object LegacyGroup: DeleteForEveryoneMessageType()
-        data object GroupV2: DeleteForEveryoneMessageType()
-        data object Community: DeleteForEveryoneMessageType()
-    }
 
     sealed class Commands {
         data class ShowOpenUrlDialog(val url: String?) : Commands()
-        data object HideDeleteDeviceOnlyDialog : Commands()
         data object HideDeleteEveryoneDialog : Commands()
         data object HideDeleteAllDevicesDialog : Commands()
 

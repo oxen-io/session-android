@@ -1,23 +1,25 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.HideDeleteAllDevicesDialog
-import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.HideDeleteDeviceOnlyDialog
 import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.HideDeleteEveryoneDialog
 import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.MarkAsDeletedForEveryone
 import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.MarkAsDeletedLocally
 import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.ShowOpenUrlDialog
-import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.DeleteForEveryoneMessageType.NoteToSelf
 import org.thoughtcrime.securesms.ui.AlertDialog
 import org.thoughtcrime.securesms.ui.DialogButtonModel
 import org.thoughtcrime.securesms.ui.GetString
@@ -26,6 +28,7 @@ import org.thoughtcrime.securesms.ui.RadioOption
 import org.thoughtcrime.securesms.ui.components.TitledRadioButton
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
+import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 import org.thoughtcrime.securesms.ui.theme.SessionMaterialTheme
 
@@ -46,34 +49,6 @@ fun ConversationV2Dialogs(
             )
         }
 
-        // delete message(s) on device only
-        if(dialogsState.deleteDeviceOnly != null){
-            AlertDialog(
-                onDismissRequest = {
-                    // hide dialog
-                    sendCommand(HideDeleteDeviceOnlyDialog)
-                },
-                title = pluralStringResource(
-                    R.plurals.deleteMessage,
-                    dialogsState.deleteDeviceOnly.size,
-                    dialogsState.deleteDeviceOnly.size
-                ),
-                text = stringResource(R.string.deleteMessageDescriptionDevice), //todo DELETION we need the plural version of this here, which currently is not set up in strings
-                buttons = listOf(
-                    DialogButtonModel(
-                        text = GetString(stringResource(id = R.string.delete)),
-                        color = LocalColors.current.danger,
-                        onClick = {
-                            sendCommand(MarkAsDeletedLocally(dialogsState.deleteDeviceOnly))
-                        }
-                    ),
-                    DialogButtonModel(
-                        GetString(stringResource(R.string.cancel))
-                    )
-                )
-            )
-        }
-
         // delete message(s) for everyone
         if(dialogsState.deleteEveryone != null){
             var deleteForEveryone by remember { mutableStateOf(dialogsState.deleteEveryone.defaultToEveryone)}
@@ -90,6 +65,21 @@ fun ConversationV2Dialogs(
                 ),
                 text = stringResource(R.string.deleteMessageConfirm), //todo DELETION we need the plural version of this here, which currently is not set up in strings
                 content = {
+                    // add warning text, if any
+                    dialogsState.deleteEveryone.warning?.let {
+                        //todo DELETION confirm styling once finalised
+                        Text(
+                            text = it,
+                            textAlign = TextAlign.Center,
+                            style = LocalType.current.small,
+                            color = LocalColors.current.warning,
+                            modifier = Modifier.padding(
+                                top = LocalDimensions.current.xxxsSpacing,
+                                bottom = LocalDimensions.current.xxsSpacing
+                            )
+                        )
+                    }
+
                     TitledRadioButton(
                         contentPadding = PaddingValues(
                             horizontal = LocalDimensions.current.xxsSpacing,
@@ -112,7 +102,8 @@ fun ConversationV2Dialogs(
                         option = RadioOption(
                             value = Unit,
                             title = GetString(stringResource(R.string.deleteMessageEveryone)),
-                            selected = deleteForEveryone
+                            selected = deleteForEveryone,
+                            enabled = dialogsState.deleteEveryone.everyoneEnabled
                         )
                     ) {
                         deleteForEveryone = true
