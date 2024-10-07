@@ -105,6 +105,12 @@ android {
         String sharedTestDir = 'src/sharedTest/java'
         test.java.srcDirs += sharedTestDir
         androidTest.java.srcDirs += sharedTestDir
+        main {
+            assets.srcDirs += "$buildDir/generated/binary"
+        }
+        test {
+            resources.srcDirs += "$buildDir/generated/binary"
+        }
     }
 
     buildTypes {
@@ -218,6 +224,24 @@ android {
         baseline file('lint-baseline.xml')
     }
 }
+
+task ipToCode {
+    def inputFile = file("${projectDir}/src/main/assets/csv/geolite2_country_blocks_ipv4.csv")
+
+    def outputDir = "${buildDir}/generated/binary"
+    def outputFile = new File(outputDir, "geolite2_country_blocks_ipv4.bin")
+
+    outputs.file outputFile
+
+    doLast {
+        exec {
+            commandLine "kotlin", "ipToCode.kts", inputFile.absolutePath, outputFile.absolutePath
+            println "Generated binary file at: ${outputFile.absolutePath}"
+        }
+    }
+}
+
+preBuild.dependsOn ipToCode
 
 dependencies {
     implementation project(':content-descriptions')

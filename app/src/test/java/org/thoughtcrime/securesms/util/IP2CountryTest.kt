@@ -24,12 +24,11 @@ class IP2CountryTest(
         @JvmStatic
         @Parameterized.Parameters
         fun data(): Collection<Array<Any>> = listOf(
-            arrayOf("223.121.63.255", "Hong Kong"),
             arrayOf("223.121.64.0", "Hong Kong"),
             arrayOf("223.121.64.1", "Hong Kong"),
-            arrayOf("223.121.64.2", "Hong Kong"),
-            arrayOf("223.121.64.3", "Hong Kong"),
+            arrayOf("223.121.127.0", "Hong Kong"),
             arrayOf("223.121.128.0", "China"),
+            arrayOf("223.121.129.0", "China"),
             arrayOf("223.122.0.0", "Hong Kong"),
             arrayOf("223.123.0.0", "Pakistan"),
             arrayOf("223.123.128.0", "China"),

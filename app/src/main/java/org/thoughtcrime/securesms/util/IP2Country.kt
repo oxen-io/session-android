@@ -9,11 +9,12 @@ import com.opencsv.CSVReader
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
+import java.io.DataInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.TreeMap
 
-private fun ipv4Int(ip: String): Int {
+private fun ipv4Int(ip: String): UInt {
     var result = 0L
     var currentValue = 0L
     var octetIndex = 0
@@ -32,7 +33,7 @@ private fun ipv4Int(ip: String): Int {
     // Handle the last octet
     result = result or (currentValue shl (8 * (3 - octetIndex)))
 
-    return result.toInt()
+    return result.toUInt()
 }
 
 class IP2Country internal constructor(
@@ -41,15 +42,16 @@ class IP2Country internal constructor(
 ) {
     val countryNamesCache = mutableMapOf<String, String>()
 
-    private val ipv4ToCountry: TreeMap<Int, Int?> by lazy {
-        openStream("csv/geolite2_country_blocks_ipv4.csv")
-            .let(::InputStreamReader)
-            .let(::CSVReader)
-            .use { csv ->
-                csv.skip(1)
-
-                csv.associateTo(TreeMap()) { cols ->
-                    ipv4Int(cols[0]) to cols[1].toIntOrNull()
+    private val ipv4ToCountry by lazy {
+        openStream("geolite2_country_blocks_ipv4.bin")
+            .let(::DataInputStream)
+            .use {
+                TreeMap<UInt, Int>().apply {
+                    while (it.available() > 0) {
+                        val ip = it.readInt().toUInt()
+                        val code = it.readInt()
+                        put(ip, code)
+                    }
                 }
             }
     }
@@ -115,7 +117,6 @@ class IP2Country internal constructor(
                 }
             }
             Broadcaster(context).broadcast("onionRequestPathCountriesLoaded")
-            Log.d("Loki", "Finished preloading onion request path countries.")
         }
     }
     // endregion
