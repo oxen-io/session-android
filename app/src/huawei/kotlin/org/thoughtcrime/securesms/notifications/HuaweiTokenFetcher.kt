@@ -25,8 +25,7 @@ class HuaweiTokenFetcher @Inject constructor(
         // https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/push-basic-capability#h2-1576218800370
         // getToken may return an empty string, if so HuaweiPushService#onNewToken will be called.
         withContext(Dispatchers.IO) {
-            val test = getToken(APP_ID, TOKEN_SCOPE)
-            test
+            getToken(APP_ID, TOKEN_SCOPE)
         }
     }
 }
