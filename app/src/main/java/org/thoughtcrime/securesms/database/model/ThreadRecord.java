@@ -144,14 +144,17 @@ public class ThreadRecord extends DisplayRecord {
                     .format().toString();
 
         } else if (MmsSmsColumns.Types.isMessageRequestResponse(type)) {
-            if (lastMessage.getRecipient().getAddress().serialize().equals(
-                    TextSecurePreferences.getLocalNumber(context))) {
-                return UtilKt.getSubbedCharSequence(
-                        context,
-                        R.string.messageRequestYouHaveAccepted,
-                        new Pair<>(NAME_KEY, getName())
-                );
+            try {
+                if (lastMessage.getRecipient().getAddress().serialize().equals(
+                        TextSecurePreferences.getLocalNumber(context))) {
+                    return UtilKt.getSubbedCharSequence(
+                            context,
+                            R.string.messageRequestYouHaveAccepted,
+                            new Pair<>(NAME_KEY, getName())
+                    );
+                }
             }
+            catch (Exception e){} // the above can throw a null exception
 
             return context.getString(R.string.messageRequestsAccepted);
         } else if (getCount() == 0) {

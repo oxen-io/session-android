@@ -202,13 +202,17 @@ class MentionViewModel(
         val sb = StringBuilder()
         var offset = 0
         for ((span, range) in spansWithRanges) {
-            // Add content before the mention span
-            sb.append(editable, offset, range.first)
+            // Add content before the mention span. There's a possibility of overlapping spans so we need to
+            // safe guard the start offset here to not go over our span's start.
+            val thisMentionStart = range.first
+            val lastMentionEnd = offset.coerceAtMost(thisMentionStart)
+            sb.append(editable, lastMentionEnd, thisMentionStart)
 
             // Replace the mention span with "@public key"
             sb.append('@').append(span.member.publicKey).append(' ')
 
-            offset = range.last + 1
+            // Safe guard offset to not go over the end of the editable.
+            offset = (range.last + 1).coerceAtMost(editable.length)
         }
 
         // Add the remaining content

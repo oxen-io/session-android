@@ -284,7 +284,7 @@
     </plurals>
     <string name="deleteMessageConfirm">¿Estás seguro de que deseas eliminar este mensaje?</string>
     <plurals name="deleteMessageDeleted">
-        <item quantity="one">Mensajes eliminados</item>
+        <item quantity="one">Mensaje eliminado</item>
         <item quantity="other">Mensajes eliminados</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">Este mensaje ha sido eliminado</string>
@@ -546,8 +546,8 @@
     <string name="messageMarkRead">Marcar como leído</string>
     <string name="messageMarkUnread">Marcar como no leído</string>
     <plurals name="messageNew">
-        <item quantity="one">Mensaje Nuevo</item>
-        <item quantity="other">Mensaje Nuevo</item>
+        <item quantity="one">Nuevo Mensaje</item>
+        <item quantity="other">Nuevos Mensajes</item>
     </plurals>
     <string name="messageNewDescriptionDesktop">Comenzar una nueva conversación ingresando el Account ID o ONS de tu amigo.</string>
     <string name="messageNewDescriptionMobile">Comenzar una nueva conversación ingresando el Account ID, ONS o escaneando el código QR de tu amigo.</string>
@@ -647,7 +647,7 @@
     <string name="onboardingTos">Términos de Servicio</string>
     <string name="onboardingTosPrivacy">Al utilizar este servicio, aceptas nuestros <b>Términos de Servicio</b> y <b>Política de Privacidad</b></string>
     <string name="onionRoutingPath">Ruta</string>
-    <string name="onionRoutingPathDescription">{app_name} oculta tu IP haciendo rebotar tus mensajes a través de múltiples Service Nodes en {app_name}\'s red descentralizada. Esta es tu trayectoria actual:</string>
+    <string name="onionRoutingPathDescription">{app_name} oculta tu dirección IP al enrutar tus mensajes a través de varios nodos de servicio en la red descentralizada de {app_name}. Esta es tu ruta actual:</string>
     <string name="onionRoutingPathDestination">Destino</string>
     <string name="onionRoutingPathEntryNode">Nodo de Entrada</string>
     <string name="onionRoutingPathServiceNode">Service Node</string>

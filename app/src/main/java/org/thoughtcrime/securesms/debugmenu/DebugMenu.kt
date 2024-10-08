@@ -74,12 +74,10 @@ fun DebugMenu(
                 buttons = listOf(
                     DialogButtonModel(
                         text = GetString(R.string.cancel),
-                        contentDescription = GetString(R.string.cancel),
                         onClick = { sendCommand(HideEnvironmentWarningDialog) }
                     ),
                     DialogButtonModel(
                         text = GetString(R.string.ok),
-                        contentDescription = GetString(R.string.ok),
                         onClick = { sendCommand(ChangeEnvironment) }
                     )
                 )

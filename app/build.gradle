@@ -13,8 +13,8 @@ configurations.forEach {
     it.exclude module: "commons-logging"
 }
 
-def canonicalVersionCode = 382
-def canonicalVersionName = "1.20.0"
+def canonicalVersionCode = 383
+def canonicalVersionName = "1.20.1"
 
 def postFixSize = 10
 def abiPostFix = ['armeabi-v7a' : 1,
@@ -56,7 +56,7 @@ android {
 
     splits {
         abi {
-            enable true
+            enable !project.hasProperty('huawei') // huawei builds do not need the split variants
             reset()
             include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             universalApk true
@@ -118,6 +118,25 @@ android {
         }
     }
 
+    signingConfigs {
+        play {
+            if (project.hasProperty('SESSION_STORE_FILE')) {
+                storeFile file(SESSION_STORE_FILE)
+                storePassword SESSION_STORE_PASSWORD
+                keyAlias SESSION_KEY_ALIAS
+                keyPassword SESSION_KEY_PASSWORD
+            }
+        }
+        huawei {
+            if (project.hasProperty('SESSION_HUAWEI_STORE_FILE')) {
+                storeFile file(SESSION_HUAWEI_STORE_FILE)
+                storePassword SESSION_HUAWEI_STORE_PASSWORD
+                keyAlias SESSION_HUAWEI_KEY_ALIAS
+                keyPassword SESSION_HUAWEI_KEY_PASSWORD
+            }
+        }
+    }
+
     flavorDimensions "distribution"
     productFlavors {
         play {
@@ -129,6 +148,7 @@ android {
             buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.ANDROID"
             buildConfigField "String", "NOPLAY_UPDATE_URL", "$ext.websiteUpdateUrl"
             buildConfigField 'String', 'PUSH_KEY_SUFFIX', '\"\"'
+            signingConfig signingConfigs.play
         }
 
         huawei {
@@ -138,6 +158,7 @@ android {
             buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.HUAWEI"
             buildConfigField "String", "NOPLAY_UPDATE_URL", "$ext.websiteUpdateUrl"
             buildConfigField 'String', 'PUSH_KEY_SUFFIX', '\"_HUAWEI\"'
+            signingConfig signingConfigs.huawei
         }
 
         website {
@@ -150,13 +171,15 @@ android {
         }
     }
 
-    applicationVariants.forEach { variant ->
+    applicationVariants.configureEach { variant ->
         variant.outputs.each { output ->
             def abiName = output.getFilter("ABI") ?: 'universal'
             def postFix = abiPostFix.get(abiName, 0)
 
+            def flavour = (variant.flavorName == 'huawei') ? "-huawei" : ""
+
             if (postFix >= postFixSize) throw new AssertionError("postFix is too large")
-            output.outputFileName = output.outputFileName = "session-${variant.versionName}-${abiName}.apk"
+            output.outputFileName = output.outputFileName = "session-${variant.versionName}-${abiName}${flavour}.apk"
             output.versionCodeOverride = canonicalVersionCode * postFixSize + postFix
         }
     }

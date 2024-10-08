@@ -24,33 +24,12 @@ class RecoveryPasswordActivity : BaseActionBarActivity() {
             RecoveryPasswordScreen(
                 mnemonic = mnemonic,
                 seed = seed,
-                copyMnemonic = viewModel::copyMnemonic,
-                onHide = ::onHide
+                confirmHideRecovery = {
+                    viewModel.permanentlyHidePassword()
+                    finish()
+                },
+                copyMnemonic = viewModel::copyMnemonic
             )
-        }
-    }
-
-    private fun onHide() {
-        showSessionDialog {
-            title(R.string.recoveryPasswordHidePermanently)
-            text(R.string.recoveryPasswordHidePermanentlyDescription1)
-            dangerButton(R.string.theContinue, R.string.AccessibilityId_theContinue) { onHideConfirm() }
-            cancelButton()
-        }
-    }
-
-    private fun onHideConfirm() {
-        showSessionDialog {
-            title(R.string.recoveryPasswordHidePermanently)
-            text(R.string.recoveryPasswordHidePermanentlyDescription2)
-            cancelButton()
-            dangerButton(
-                R.string.yes,
-                contentDescription = R.string.AccessibilityId_recoveryPasswordHidePermanentlyConfirm
-            ) {
-                viewModel.permanentlyHidePassword()
-                finish()
-            }
         }
     }
 }

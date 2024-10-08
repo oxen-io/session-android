@@ -26,7 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.ui.AlertDialog
 import org.thoughtcrime.securesms.ui.Cell
+import org.thoughtcrime.securesms.ui.DialogButtonModel
+import org.thoughtcrime.securesms.ui.GetString
 import org.thoughtcrime.securesms.ui.SessionShieldIcon
 import org.thoughtcrime.securesms.ui.components.QrImage
 import org.thoughtcrime.securesms.ui.components.SlimOutlineButton
@@ -45,8 +48,8 @@ import org.thoughtcrime.securesms.ui.theme.monospace
 internal fun RecoveryPasswordScreen(
     mnemonic: String,
     seed: String? = null,
-    copyMnemonic:() -> Unit = {},
-    onHide:() -> Unit = {}
+    confirmHideRecovery: () -> Unit,
+    copyMnemonic:() -> Unit = {}
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.smallSpacing),
@@ -57,7 +60,7 @@ internal fun RecoveryPasswordScreen(
             .padding(horizontal = LocalDimensions.current.spacing)
     ) {
         RecoveryPasswordCell(mnemonic, seed, copyMnemonic)
-        HideRecoveryPasswordCell(onHide)
+        HideRecoveryPasswordCell(confirmHideRecovery = confirmHideRecovery)
     }
 }
 
@@ -151,7 +154,12 @@ private fun RecoveryPassword(mnemonic: String) {
 }
 
 @Composable
-private fun HideRecoveryPasswordCell(onHide: () -> Unit = {}) {
+private fun HideRecoveryPasswordCell(
+    confirmHideRecovery:() -> Unit
+) {
+    var showHideRecoveryDialog by remember { mutableStateOf(false) }
+    var showHideRecoveryConfirmationDialog by remember { mutableStateOf(false) }
+
     Cell {
         Row(
             modifier = Modifier.padding(LocalDimensions.current.smallSpacing)
@@ -176,9 +184,43 @@ private fun HideRecoveryPasswordCell(onHide: () -> Unit = {}) {
                     .align(Alignment.CenterVertically)
                     .contentDescription(R.string.AccessibilityId_recoveryPasswordHideRecoveryPassword),
                 color = LocalColors.current.danger,
-                onClick = onHide
+                onClick = { showHideRecoveryDialog = true }
             )
         }
+    }
+
+    // recovery hide dialog
+    if(showHideRecoveryDialog) {
+        AlertDialog(
+            onDismissRequest = { showHideRecoveryDialog = false },
+            title = stringResource(R.string.recoveryPasswordHidePermanently),
+            text = stringResource(R.string.recoveryPasswordHidePermanentlyDescription1),
+            buttons = listOf(
+                DialogButtonModel(
+                    GetString(R.string.theContinue),
+                    color = LocalColors.current.danger,
+                    onClick = { showHideRecoveryConfirmationDialog = true }
+                ),
+                DialogButtonModel(GetString(android.R.string.cancel))
+            )
+        )
+    }
+
+    // recovery hide confirmation dialog
+    if(showHideRecoveryConfirmationDialog) {
+        AlertDialog(
+            onDismissRequest = { showHideRecoveryConfirmationDialog = false },
+            title = stringResource(R.string.recoveryPasswordHidePermanently),
+            text = stringResource(R.string.recoveryPasswordHidePermanentlyDescription2),
+            buttons = listOf(
+                DialogButtonModel(
+                    GetString(R.string.yes),
+                    color = LocalColors.current.danger,
+                    onClick = confirmHideRecovery
+                ),
+                DialogButtonModel(GetString(android.R.string.cancel))
+            )
+        )
     }
 }
 
@@ -188,6 +230,9 @@ private fun PreviewRecoveryPasswordScreen(
     @PreviewParameter(SessionColorsParameterProvider::class) colors: ThemeColors
 ) {
     PreviewTheme(colors) {
-        RecoveryPasswordScreen(mnemonic = "voyage  urban  toyed  maverick peculiar tuxedo penguin tree grass building listen speak withdraw terminal plane")
+        RecoveryPasswordScreen(
+            mnemonic = "voyage  urban  toyed  maverick peculiar tuxedo penguin tree grass building listen speak withdraw terminal plane",
+            confirmHideRecovery = {}
+        )
     }
 }

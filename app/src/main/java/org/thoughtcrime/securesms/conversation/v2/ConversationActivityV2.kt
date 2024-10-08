@@ -57,6 +57,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -732,9 +733,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun restoreDraftIfNeeded() {
         val mediaURI = intent.data
         val mediaType = AttachmentManager.MediaType.from(intent.type)
+        val mimeType =  MediaUtil.getMimeType(this, mediaURI)
         if (mediaURI != null && mediaType != null) {
-            if (AttachmentManager.MediaType.IMAGE == mediaType || AttachmentManager.MediaType.GIF == mediaType || AttachmentManager.MediaType.VIDEO == mediaType) {
-                val media = Media(mediaURI, MediaUtil.getMimeType(this, mediaURI)!!, 0, 0, 0, 0, Optional.absent(), Optional.absent())
+            if (mimeType != null && (AttachmentManager.MediaType.IMAGE == mediaType || AttachmentManager.MediaType.GIF == mediaType || AttachmentManager.MediaType.VIDEO == mediaType)) {
+                val media = Media(mediaURI, mimeType, 0, 0, 0, 0, Optional.absent(), Optional.absent())
                 startActivityForResult(MediaSendActivity.buildEditorIntent(this, listOf( media ), viewModel.recipient!!, ""), PICK_FROM_LIBRARY)
                 return
             } else {
@@ -811,7 +813,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (shouldShowLegacy) {
 
             val txt = Phrase.from(applicationContext, R.string.disappearingMessagesLegacy)
-                .put(NAME_KEY, legacyRecipient!!.name)
+                .put(NAME_KEY, legacyRecipient!!.toShortString())
                 .format()
             binding?.outdatedBannerTextView?.text = txt
         }
@@ -1193,14 +1195,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             title(R.string.block)
             text(
                 Phrase.from(context, R.string.blockDescription)
-                .put(NAME_KEY, recipient.name)
+                .put(NAME_KEY, recipient.toShortString())
                 .format()
             )
             dangerButton(R.string.block, R.string.AccessibilityId_blockConfirm) {
                 viewModel.block()
 
                 // Block confirmation toast added as per SS-64
-                val txt = Phrase.from(context, R.string.blockBlockedUser).put(NAME_KEY, recipient.name).format().toString()
+                val txt = Phrase.from(context, R.string.blockBlockedUser).put(NAME_KEY, recipient.toShortString()).format().toString()
                 Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
 
                 if (deleteThread) {
@@ -1251,7 +1253,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             title(R.string.blockUnblock)
             text(
                 Phrase.from(context, R.string.blockUnblockName)
-                    .put(NAME_KEY, recipient.name)
+                    .put(NAME_KEY, recipient.toShortString())
                     .format()
             )
             dangerButton(R.string.blockUnblock, R.string.AccessibilityId_unblockConfirm) { viewModel.unblock() }
@@ -1745,10 +1747,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding.inputBar.text = ""
         binding.inputBar.cancelQuoteDraft()
         binding.inputBar.cancelLinkPreviewDraft()
-        // Put the message in the database
-        message.id = smsDb.insertMessageOutbox(viewModel.threadId, outgoingTextMessage, false, message.sentTimestamp!!, null, true)
-        // Send it
-        MessageSender.send(message, recipient.address)
+        lifecycleScope.launch(Dispatchers.Default) {
+            // Put the message in the database
+            message.id = smsDb.insertMessageOutbox(
+                viewModel.threadId,
+                outgoingTextMessage,
+                false,
+                message.sentTimestamp!!,
+                null,
+                true
+            )
+            // Send it
+            MessageSender.send(message, recipient.address)
+        }
         // Send a typing stopped message
         ApplicationContext.getInstance(this).typingStatusSender.onTypingStopped(viewModel.threadId)
         return Pair(recipient.address, sentTimestamp)
@@ -2405,7 +2416,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 // Note: The adapter itemCount is zero based - so calling this with the itemCount in
                 // a non-zero based manner scrolls us to the bottom of the last message (including
                 // to the bottom of long messages as required by Jira SES-789 / GitHub 1364).
-                recyclerView.scrollToPosition(adapter.itemCount)
+                recyclerView.smoothScrollToPosition(adapter.itemCount)
             }
         }
     }

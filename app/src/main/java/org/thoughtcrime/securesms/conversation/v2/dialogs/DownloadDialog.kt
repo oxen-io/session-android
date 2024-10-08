@@ -35,7 +35,7 @@ class DownloadDialog(private val recipient: Recipient) : DialogFragment() {
         title(getString(R.string.attachmentsAutoDownloadModalTitle))
 
         val explanation = Phrase.from(context, R.string.attachmentsAutoDownloadModalDescription)
-            .put(CONVERSATION_NAME_KEY, recipient.name)
+            .put(CONVERSATION_NAME_KEY, recipient.toShortString())
             .format()
         val spannable = SpannableStringBuilder(explanation)
 

@@ -19,7 +19,7 @@ chmod 600 ssh_key
 
 # Define the output paths
 build_dir="app/build/outputs/apk/play/debug"
-target_path="${build_dir}/$(ls ${build_dir} | grep -o 'app-[^[:space:]]*-universal-debug.apk')"
+target_path="${build_dir}/$(ls ${build_dir} | grep -o 'session-[^[:space:]]*-universal.apk')"
 
 # Validate the paths exist
 if [ ! -d $build_path ]; then
