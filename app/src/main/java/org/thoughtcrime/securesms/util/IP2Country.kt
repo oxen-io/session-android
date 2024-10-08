@@ -12,28 +12,37 @@ import org.session.libsignal.utilities.ThreadUtils
 import java.io.DataInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.util.TreeMap
 
 private fun ipv4Int(ip: String): UInt =
     ip.split(".", "/", ",").take(4).fold(0U) { acc, s -> acc shl 8 or s.toUInt() }
 
+@OptIn(ExperimentalUnsignedTypes::class)
 class IP2Country internal constructor(
     private val context: Context,
     private val openStream: (String) -> InputStream = context.assets::open
 ) {
     val countryNamesCache = mutableMapOf<String, String>()
 
-    private val ipv4ToCountry by lazy {
+    private val ips: UIntArray by lazy { ipv4ToCountry.first }
+    private val codes: IntArray by lazy { ipv4ToCountry.second }
+
+    private val ipv4ToCountry: Pair<UIntArray, IntArray> by lazy {
         openStream("geolite2_country_blocks_ipv4.bin")
             .let(::DataInputStream)
             .use {
-                TreeMap<UInt, Int>().apply {
-                    while (it.available() > 0) {
-                        val ip = it.readInt().toUInt()
-                        val code = it.readInt()
-                        put(ip, code)
-                    }
+                val size = it.available() / 8
+
+                val ips = UIntArray(size)
+                val codes = IntArray(size)
+                var i = 0
+
+                while (it.available() > 0) {
+                    ips[i] = it.readInt().toUInt()
+                    codes[i] = it.readInt()
+                    i++
                 }
+
+                ips to codes
             }
     }
 
@@ -82,7 +91,9 @@ class IP2Country internal constructor(
         countryNamesCache[ip]?.let { return it }
 
         val ipInt = ipv4Int(ip)
-        val bestMatchCountry = ipv4ToCountry.floorEntry(ipInt)?.value?.let { countryToNames[it] }
+        val index = ips.fuzzyBinarySearch(ipInt)
+        val code = index?.let { codes[it] }
+        val bestMatchCountry = countryToNames[code]
 
         if (bestMatchCountry != null) countryNamesCache[ip] = bestMatchCountry
         else Log.d("Loki","Country name for $ip couldn't be found")
@@ -92,13 +103,37 @@ class IP2Country internal constructor(
 
     private fun populateCacheIfNeeded() {
         ThreadUtils.queue {
+            val start = System.currentTimeMillis()
             OnionRequestAPI.paths.iterator().forEach { path ->
                 path.iterator().forEach { snode ->
                     cacheCountryForIP(snode.ip) // Preload if needed
                 }
             }
+            Log.d("Loki","Cache populated in ${System.currentTimeMillis() - start}ms")
             Broadcaster(context).broadcast("onionRequestPathCountriesLoaded")
         }
     }
     // endregion
+}
+
+@OptIn(ExperimentalUnsignedTypes::class)
+private fun UIntArray.fuzzyBinarySearch(target: UInt): Int? {
+    if (isEmpty()) return null
+
+    var low = 0
+    var high = size - 1
+
+    while (low <= high) {
+        val mid = (low + high) / 2
+        val midValue = this[mid]
+
+        when {
+            midValue == target -> return mid // Exact match found
+            midValue < target -> low = mid + 1 // Search in the right half
+            else -> high = mid - 1 // Search in the left half
+        }
+    }
+
+    // If no exact match, return the largest index with value <= target
+    return if (high >= 0) high else null
 }
