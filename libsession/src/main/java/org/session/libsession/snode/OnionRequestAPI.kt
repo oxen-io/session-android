@@ -44,7 +44,8 @@ object OnionRequestAPI {
 
     var guardSnodes = setOf<Snode>()
     var _paths: AtomicReference<List<Path>?> = AtomicReference(null)
-    var paths: List<Path> // Not a set to ensure we consistently show the same path to the user
+    var paths: List<Path> // Not a Set to ensure we consistently show the same path to the user
+        @Synchronized
         get() {
             val paths = _paths.get()
 
@@ -57,6 +58,7 @@ object OnionRequestAPI {
             _paths.set(result)
             return result
         }
+        @Synchronized
         set(newValue) {
             if (newValue.isEmpty()) {
                 database.clearOnionRequestPaths()
