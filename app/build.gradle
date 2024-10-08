@@ -110,6 +110,7 @@ android {
         }
         test {
             resources.srcDirs += "$buildDir/generated/binary"
+            resources.srcDirs += "$projectDir/src/main/assets"
         }
     }
 
