@@ -304,7 +304,7 @@
             android:paddingHorizontal="@dimen/massive_spacing"
             android:paddingVertical="@dimen/small_spacing"
             android:textSize="@dimen/text_size"
-            android:text="@string/block"/>
+            android:text="@string/deleteAfterGroupPR1BlockUser"/>
 
         <TextView
             android:id="@+id/sendAcceptsTextView"
@@ -340,7 +340,7 @@
                 android:layout_height="@dimen/medium_button_height"
                 android:layout_marginStart="@dimen/medium_spacing"
                 android:layout_weight="1"
-                android:text="@string/decline" />
+                android:text="@string/delete" />
 
         </LinearLayout>
 
