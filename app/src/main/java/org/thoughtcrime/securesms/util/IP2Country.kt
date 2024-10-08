@@ -52,11 +52,11 @@ class IP2Country internal constructor(
     // region Initialization
     companion object {
 
-        public lateinit var shared: IP2Country
+        lateinit var shared: IP2Country
 
-        public val isInitialized: Boolean get() = Companion::shared.isInitialized
+        val isInitialized: Boolean get() = Companion::shared.isInitialized
 
-        public fun configureIfNeeded(context: Context) {
+        fun configureIfNeeded(context: Context) {
             if (isInitialized) { return; }
             shared = IP2Country(context.applicationContext)
 
