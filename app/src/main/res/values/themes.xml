@@ -60,6 +60,8 @@
 
        <item name="conversation_icon_attach_audio">@drawable/ic_audio_dark</item>
        <item name="conversation_icon_attach_video">@drawable/ic_video_dark</item>
+
+       <item name="android:actionMenuTextAppearance">@style/MenuTextAppearance</item>
    </style>
 
     <!-- This should be the default theme for the application. -->
