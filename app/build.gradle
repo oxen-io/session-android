@@ -226,7 +226,7 @@ android {
 }
 
 task ipToCode {
-    def inputFile = file("${projectDir}/src/main/assets/csv/geolite2_country_blocks_ipv4.csv")
+    def inputFile = file("${projectDir}/geolite2_country_blocks_ipv4.csv")
 
     def outputDir = "${buildDir}/generated/binary"
     def outputFile = new File(outputDir, "geolite2_country_blocks_ipv4.bin")
