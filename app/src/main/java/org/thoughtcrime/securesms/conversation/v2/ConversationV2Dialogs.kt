@@ -14,12 +14,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.HideDeleteAllDevicesDialog
-import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.HideDeleteEveryoneDialog
-import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.MarkAsDeletedForEveryone
-import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.MarkAsDeletedLocally
-import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.ShowOpenUrlDialog
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
+import org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY
+import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.*
 import org.thoughtcrime.securesms.ui.AlertDialog
 import org.thoughtcrime.securesms.ui.DialogButtonModel
 import org.thoughtcrime.securesms.ui.GetString
@@ -195,6 +194,33 @@ fun ConversationV2Dialogs(
             )
         }
 
+        // Clear emoji
+        if(dialogsState.clearAllEmoji != null){
+            AlertDialog(
+                onDismissRequest = {
+                    // hide dialog
+                    sendCommand(HideClearEmoji)
+                },
+                text = stringResource(R.string.emojiReactsClearAll).let { txt ->
+                    Phrase.from(txt).put(EMOJI_KEY, dialogsState.clearAllEmoji.emoji).format().toString()
+                },
+                buttons = listOf(
+                    DialogButtonModel(
+                        text = GetString(stringResource(id = R.string.clear)),
+                        color = LocalColors.current.danger,
+                        onClick = {
+                            // delete emoji
+                            sendCommand(
+                                ClearEmoji(dialogsState.clearAllEmoji.emoji, dialogsState.clearAllEmoji.messageId)
+                            )
+                        }
+                    ),
+                    DialogButtonModel(
+                        GetString(stringResource(R.string.cancel))
+                    )
+                )
+            )
+        }
     }
 }
 

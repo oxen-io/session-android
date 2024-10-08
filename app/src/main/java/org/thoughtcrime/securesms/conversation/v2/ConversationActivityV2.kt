@@ -1536,14 +1536,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         sendEmojiRemoval(emoji, message)
     }
 
+    /**
+     * Called when the user is attempting to clear all instance of a specific emoji.
+     */
     override fun onClearAll(emoji: String, messageId: MessageId) {
-        reactionDb.deleteEmojiReactions(emoji, messageId)
-        viewModel.openGroup?.let { openGroup ->
-            lokiMessageDb.getServerID(messageId.id, !messageId.mms)?.let { serverId ->
-                OpenGroupApi.deleteAllReactions(openGroup.room, openGroup.server, serverId, emoji)
-            }
-        }
-        threadDb.notifyThreadUpdated(viewModel.threadId)
+        viewModel.onEmojiClear(emoji, messageId)
     }
 
     override fun onMicrophoneButtonMove(event: MotionEvent) {
