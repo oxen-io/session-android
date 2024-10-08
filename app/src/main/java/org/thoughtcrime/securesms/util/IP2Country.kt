@@ -14,27 +14,8 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.TreeMap
 
-private fun ipv4Int(ip: String): UInt {
-    var result = 0L
-    var currentValue = 0L
-    var octetIndex = 0
-
-    for (char in ip) {
-        if (char == '.' || char == '/') {
-            result = result or (currentValue shl (8 * (3 - octetIndex)))
-            currentValue = 0
-            octetIndex++
-            if (char == '/') break
-        } else {
-            currentValue = currentValue * 10 + (char - '0')
-        }
-    }
-
-    // Handle the last octet
-    result = result or (currentValue shl (8 * (3 - octetIndex)))
-
-    return result.toUInt()
-}
+private fun ipv4Int(ip: String): UInt =
+    ip.split(".", "/", ",").take(4).fold(0U) { acc, s -> acc shl 8 or s.toUInt() }
 
 class IP2Country internal constructor(
     private val context: Context,
