@@ -310,6 +310,26 @@ interface TextSecurePreferences {
         // for the lifetime of the Session installation.
         const val HAVE_WARNED_USER_ABOUT_SAVING_ATTACHMENTS = "libsession.HAVE_WARNED_USER_ABOUT_SAVING_ATTACHMENTS"
 
+        // Key name for the user's preferred date format as an Int. See ticket SES-360 for further details & Figma design.
+        // Values for various formats are as follows:
+        //      0 - Follow system settings (default)
+        //      1 - M/D/YY         - example: 1/2/24     (which is 2nd Jan 2024),  or 12/25/24   (which is 25th Dec 2024)
+        //      2 - D/M/YY         - example: 2/1/24     (which is 2nd Jan 2024),  or 25/12/24   (which is 25th Dec 2024)
+        //      3 - DD/MM/YYYY     - example: 02/01/2024 (which is 2nd Jan 2024),  or 25/12/2024 (which is 25th Dec 2024)
+        //      4 - DD.MM.YYYY     - example: 02.01.2024 (which is 2nd Jan 2024),  or 25.12.2024 (which is 25th Dec 2024)
+        //      5 - DD-MM-YYYY     - example: 02-01-2024 (which is 2nd Jan 2024),  or 25-12-2024 (which is 25th Dec 2024)
+        //      6 - YYYY/M/D       - example: 2024/1/2   (which is 2nd Jan 2024),  or 2024/12/25 (which is 25th Dec 2024)
+        //      7 - YYYY.M.D       - example: 2024.1.2   (which is 2nd Jan 2024),  or 2024.12.25 (which is 25th Dec 2024)
+        //      8 - YYYY-M-D       - example: 2024-1-2   (which is 2nd Jan 2024),  or 2024-12-25 (which is 25th Dec 2024)
+        const val DATE_FORMAT_PREF = "libsession.DATE_FORMAT_PREF"
+
+        // Key name for the user's preferred time format as an Int
+        // Values for various formats are as follows:
+        //      0 - Follow system settings (default)
+        //      1 - 12h - example: 3:45 PM
+        //      2 - 24h - example: 15:45
+        const val TIME_FORMAT_PREF = "libsession.TIME_FORMAT_PREF"
+
         @JvmStatic
         fun getLastConfigurationSyncTime(context: Context): Long {
             return getLongPreference(context, LAST_CONFIGURATION_SYNC_TIME, 0)
@@ -990,8 +1010,14 @@ interface TextSecurePreferences {
             setBooleanPreference(context, FINGERPRINT_KEY_GENERATED, true)
         }
 
+        @JvmStatic
+        fun clearAll(context: Context) {
+            getDefaultSharedPreferences(context).edit().clear().commit()
+        }
+
 
         // ----- Get / set methods for if we have already warned the user that saving attachments will allow other apps to access them -----
+        // Note: We only ever show the warning dialog about this ONCE - when the user accepts this fact we write true to the flag & never show again.
         @JvmStatic
         fun getHaveWarnedUserAboutSavingAttachments(context: Context): Boolean {
             return getBooleanPreference(context, HAVE_WARNED_USER_ABOUT_SAVING_ATTACHMENTS, false)
@@ -1001,12 +1027,26 @@ interface TextSecurePreferences {
         fun setHaveWarnedUserAboutSavingAttachments(context: Context) {
             setBooleanPreference(context, HAVE_WARNED_USER_ABOUT_SAVING_ATTACHMENTS, true)
         }
-        // ---------------------------------------------------------------------------------------------------------------------------------
+
+        // ----- Get / set methods for the user's date format preference -----
+        @JvmStatic
+        fun getDateFormatPref(context: Context): Int {
+            // Note: 0 means "follow system setting" (default) - go to the declaration of DATE_FORMAT_PREF for further details.
+            return getIntegerPreference(context, DATE_FORMAT_PREF, -1)
+        }
 
         @JvmStatic
-        fun clearAll(context: Context) {
-            getDefaultSharedPreferences(context).edit().clear().commit()
+        fun setDateFormatPref(context: Context, value: Int) { setIntegerPreference(context, DATE_FORMAT_PREF, value) }
+
+        // ----- Get / set methods for the user's time format preference -----
+        @JvmStatic
+        fun getTimeFormatPref(context: Context): Int {
+            // Note: 0 means "follow system setting" (default) - go to the declaration of TIME_FORMAT_PREF for further details.
+            return getIntegerPreference(context, TIME_FORMAT_PREF, -1)
         }
+
+        @JvmStatic
+        fun setTimeFormatPref(context: Context, value: Int) { setIntegerPreference(context, TIME_FORMAT_PREF, value) }
     }
 }
 

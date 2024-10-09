@@ -39,7 +39,7 @@
             android:key="pref_typing_indicators"
             android:title="@string/typingIndicators"
             android:summary="@string/typingIndicatorsDescription" />
-        <!-- TODO ACL: Need to show a live typing indicator here & remove the "(...)" from the above string (if it's there - it might have been removed now) -->
+        <!-- TODO ACL: Need to show a live typing indicator here! -->
 
     </PreferenceCategory>
 
