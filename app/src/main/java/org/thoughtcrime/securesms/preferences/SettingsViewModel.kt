@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
@@ -64,6 +65,10 @@ class SettingsViewModel @Inject constructor(
     private val _showLoader: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val showLoader: StateFlow<Boolean>
         get() = _showLoader
+
+    private val _recoveryHidden: MutableStateFlow<Boolean> = MutableStateFlow(prefs.getHidePassword())
+    val recoveryHidden: StateFlow<Boolean>
+        get() = _recoveryHidden
 
     /**
      * Refreshes the avatar on the main settings page
@@ -228,6 +233,12 @@ class SettingsViewModel @Inject constructor(
             // And remove the loader animation after we've waited for the attempt to succeed or fail
             _showLoader.value = false
         }
+    }
+
+    fun permanentlyHidePassword() {
+        //todo we can simplify this once we expose all our sharedPrefs as flows
+        prefs.setHidePassword(true)
+        _recoveryHidden.update { true }
     }
 
     sealed class AvatarDialogState() {

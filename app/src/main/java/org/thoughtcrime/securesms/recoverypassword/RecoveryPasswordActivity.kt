@@ -1,15 +1,20 @@
 package org.thoughtcrime.securesms.recoverypassword
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.BaseActionBarActivity
-import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.ui.setComposeContent
 
+
 class RecoveryPasswordActivity : BaseActionBarActivity() {
+
+    companion object {
+        const val RESULT_RECOVERY_HIDDEN = "recovery_hidden"
+    }
 
     private val viewModel: RecoveryPasswordViewModel by viewModels()
 
@@ -25,7 +30,9 @@ class RecoveryPasswordActivity : BaseActionBarActivity() {
                 mnemonic = mnemonic,
                 seed = seed,
                 confirmHideRecovery = {
-                    viewModel.permanentlyHidePassword()
+                    val returnIntent = Intent()
+                    returnIntent.putExtra(RESULT_RECOVERY_HIDDEN, true)
+                    setResult(RESULT_OK, returnIntent)
                     finish()
                 },
                 copyMnemonic = viewModel::copyMnemonic
