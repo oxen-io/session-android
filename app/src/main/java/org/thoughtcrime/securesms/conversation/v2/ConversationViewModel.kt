@@ -653,7 +653,9 @@ class ConversationViewModel(
                     it.copy(isMessageRequestAccepted = true)
                 }
             }
-            .onFailure {}
+            .onFailure {
+                Log.w("", "Failed to accept message request: $it")
+            }
     }
 
     fun declineMessageRequest() {

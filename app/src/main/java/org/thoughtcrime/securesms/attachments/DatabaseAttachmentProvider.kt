@@ -218,7 +218,7 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     override fun markMessageAsDeleted(timestamp: Long, author: String, displayedMessage: String) {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val address = Address.fromSerialized(author)
-        val message = database.getMessageFor(timestamp, address) ?: return
+        val message = database.getMessageFor(timestamp, address) ?: return Log.w("", "Failed to find message to mark as deleted")
 
         markMessagesAsDeleted(
             messages = listOf(MarkAsDeletedMessage(

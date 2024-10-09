@@ -1316,7 +1316,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             is VisibleMessageView -> messageView.messageContentView
             is ControlMessageView -> messageView.controlContentView
             else -> null
-        } ?: return
+        } ?: return Log.w(TAG, "Failed to show reaction because the messageRecord is not of a known type: $messageView")
 
         val messageContentBitmap = try {
             messageContentView.drawToBitmap()
