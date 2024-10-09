@@ -33,13 +33,20 @@ private const val TAG = "PushHandler"
 class PushReceiver @Inject constructor(@ApplicationContext val context: Context) {
     private val json = Json { ignoreUnknownKeys = true }
 
+    /**
+     * Both push services should hit this method once they receive notification data
+     * As long as it is properly formatted
+     */
     fun onPushDataReceived(dataMap: Map<String, String>?) {
         addMessageReceiveJob(dataMap?.asPushData())
     }
 
+    /**
+     * This is a fallback method in case the Huawei data is malformated,
+     * but it shouldn't happen. Old code used to send different data so this is kept as a safety
+     */
     fun onPushDataReceived(data: ByteArray?) {
         addMessageReceiveJob(PushData(data = data, metadata = null))
-        //todo DELETION verify this once I can get notifications on debug huawei builds
     }
 
     private fun addMessageReceiveJob(pushData: PushData?){
