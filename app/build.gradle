@@ -105,6 +105,13 @@ android {
         String sharedTestDir = 'src/sharedTest/java'
         test.java.srcDirs += sharedTestDir
         androidTest.java.srcDirs += sharedTestDir
+        main {
+            assets.srcDirs += "$buildDir/generated/binary"
+        }
+        test {
+            resources.srcDirs += "$buildDir/generated/binary"
+            resources.srcDirs += "$projectDir/src/main/assets"
+        }
     }
 
     buildTypes {
@@ -241,6 +248,12 @@ android {
         baseline file('lint-baseline.xml')
     }
 }
+
+apply {
+    from("ipToCode.gradle.kts")
+}
+
+preBuild.dependsOn ipToCode
 
 dependencies {
     implementation project(':content-descriptions')
