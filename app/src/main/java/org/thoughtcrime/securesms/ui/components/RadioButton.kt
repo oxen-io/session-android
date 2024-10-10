@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.thoughtcrime.securesms.conversation.disappearingmessages.ExpiryType
@@ -116,16 +117,20 @@ private fun RadioButtonIndicator(
 @Composable
 fun <T> TitledRadioButton(
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(
+        horizontal = LocalDimensions.current.spacing,
+        vertical = LocalDimensions.current.smallSpacing
+    ),
     option: RadioOption<T>,
     onClick: () -> Unit
 ) {
     RadioButton(
-        modifier = modifier.heightIn(min = 60.dp)
+        modifier = modifier
             .contentDescription(option.contentDescription),
         onClick = onClick,
         selected = option.selected,
         enabled = option.enabled,
-        contentPadding = PaddingValues(horizontal = LocalDimensions.current.spacing),
+        contentPadding = contentPadding,
         content = {
             Column(
                 modifier = Modifier
