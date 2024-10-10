@@ -1589,8 +1589,11 @@ open class Storage(
         DatabaseComponent.get(context).recipientDatabase().setApproved(recipient, approved)
         if (recipient.isLocalNumber || !recipient.isContactRecipient) return
         configFactory.contacts?.upsertContact(recipient.address.serialize()) {
+            // if the contact wasn't approved before but is approved now, make sure it's visible
+            if(approved && !this.approved) this.priority = PRIORITY_VISIBLE
+
+            // update approval
             this.approved = approved
-            this.priority = PRIORITY_VISIBLE
         }
     }
 
