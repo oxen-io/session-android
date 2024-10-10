@@ -134,6 +134,16 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         cropImage(inputFile, outputFile)
     }
 
+    private val hideRecoveryLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+
+        if(result.data?.getBooleanExtra(RecoveryPasswordActivity.RESULT_RECOVERY_HIDDEN, false) == true){
+            viewModel.permanentlyHidePassword()
+        }
+    }
+
     private val avatarSelection = AvatarSelection(this, onAvatarCropped, onPickImage)
 
     private var showAvatarDialog: Boolean by mutableStateOf(false)
@@ -183,7 +193,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         }
 
         binding.composeView.setThemedContent {
-            Buttons()
+            val recoveryHidden by viewModel.recoveryHidden.collectAsState()
+            Buttons(recoveryHidden = recoveryHidden)
         }
 
         lifecycleScope.launch {
@@ -390,7 +401,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     }
 
     @Composable
-    fun Buttons() {
+    fun Buttons(
+        recoveryHidden: Boolean
+    ) {
         Column(
             modifier = Modifier
                 .padding(horizontal = LocalDimensions.current.spacing)
@@ -452,12 +465,15 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                     Divider()
 
                     // Only show the recovery password option if the user has not chosen to permanently hide it
-                    if (!prefs.getHidePassword()) {
+                    if (!recoveryHidden) {
                         LargeItemButton(
                             R.string.sessionRecoveryPassword,
                             R.drawable.ic_shield_outline,
                             Modifier.contentDescription(R.string.AccessibilityId_sessionRecoveryPasswordMenuItem)
-                        ) { push<RecoveryPasswordActivity>() }
+                        ) {
+                            hideRecoveryLauncher.launch(Intent(baseContext, RecoveryPasswordActivity::class.java))
+                            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+                        }
                         Divider()
                     }
 

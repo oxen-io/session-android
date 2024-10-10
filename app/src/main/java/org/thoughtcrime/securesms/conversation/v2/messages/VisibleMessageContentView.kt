@@ -71,7 +71,6 @@ class VisibleMessageContentView : ConstraintLayout {
         binding.contentParent.mainColor = color
         binding.contentParent.cornerRadius = resources.getDimension(R.dimen.message_corner_radius)
 
-        val onlyBodyMessage = message is SmsMessageRecord
         val mediaThumbnailMessage = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.thumbnailSlide != null
 
         // reset visibilities / containers
@@ -80,6 +79,7 @@ class VisibleMessageContentView : ConstraintLayout {
         onContentDoubleTap = null
 
         if (message.isDeleted) {
+            binding.contentParent.isVisible = true
             binding.deletedMessageView.root.isVisible = true
             binding.deletedMessageView.root.bind(message, getTextColor(context, message))
             binding.bodyTextView.isVisible = false

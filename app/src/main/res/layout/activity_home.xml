@@ -173,7 +173,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/new_conversation_button_bottom_offset"
             app:rippleColor="@color/button_primary_ripple"
-            android:src="@drawable/ic_plus" />
+            android:src="@drawable/ic_plus"
+            android:tint="?message_sent_text_color"/>
 
     </RelativeLayout>
 
