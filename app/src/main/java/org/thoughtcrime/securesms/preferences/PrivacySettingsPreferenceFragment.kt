@@ -38,31 +38,32 @@ class PrivacySettingsPreferenceFragment : CorrectedPreferenceFragment() {
         findPreference<Preference>(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED)!!
             .onPreferenceChangeListener = CallToggleListener(this) { setCall(it) }
         findPreference<PreferenceCategory>(getString(R.string.sessionMessageRequests))?.let { category ->
-            when (val user = configFactory.user) {
-                null -> category.isVisible = false
-                else -> SwitchPreferenceCompat(requireContext()).apply {
-                    key = TextSecurePreferences.ALLOW_MESSAGE_REQUESTS
-                    preferenceDataStore = object : PreferenceDataStore() {
+            SwitchPreferenceCompat(requireContext()).apply {
+                key = TextSecurePreferences.ALLOW_MESSAGE_REQUESTS
+                preferenceDataStore = object : PreferenceDataStore() {
 
-                        override fun getBoolean(key: String?, defValue: Boolean): Boolean {
-                            if (key == TextSecurePreferences.ALLOW_MESSAGE_REQUESTS) {
-                                return user.getCommunityMessageRequests()
+                    override fun getBoolean(key: String?, defValue: Boolean): Boolean {
+                        if (key == TextSecurePreferences.ALLOW_MESSAGE_REQUESTS) {
+                            return configFactory.withMutableUserConfigs {
+                                it.userProfile.getCommunityMessageRequests()
                             }
-                            return super.getBoolean(key, defValue)
                         }
-
-                        override fun putBoolean(key: String?, value: Boolean) {
-                            if (key == TextSecurePreferences.ALLOW_MESSAGE_REQUESTS) {
-                                user.setCommunityMessageRequests(value)
-                                return
-                            }
-                            super.putBoolean(key, value)
-                        }
+                        return super.getBoolean(key, defValue)
                     }
-                    title = getString(R.string.messageRequestsCommunities)
-                    summary = getString(R.string.messageRequestsCommunitiesDescription)
-                }.let(category::addPreference)
-            }
+
+                    override fun putBoolean(key: String?, value: Boolean) {
+                        if (key == TextSecurePreferences.ALLOW_MESSAGE_REQUESTS) {
+                            configFactory.withMutableUserConfigs {
+                                it.userProfile.setCommunityMessageRequests(value)
+                            }
+                            return
+                        }
+                        super.putBoolean(key, value)
+                    }
+                }
+                title = getString(R.string.messageRequestsCommunities)
+                summary = getString(R.string.messageRequestsCommunitiesDescription)
+            }.let(category::addPreference)
         }
         initializeVisibility()
     }

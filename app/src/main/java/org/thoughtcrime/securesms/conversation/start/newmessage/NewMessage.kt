@@ -37,6 +37,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
@@ -142,8 +144,10 @@ private fun EnterAccountId(
                     SessionOutlinedTextField(
                         text = state.newMessageIdOrOns,
                         modifier = Modifier
-                            .padding(horizontal = LocalDimensions.current.spacing),
-                        contentDescription = "Session id input box",
+                            .padding(horizontal = LocalDimensions.current.spacing)
+                            .semantics {
+                                contentDescription = "Session id input box"
+                            },
                         placeholder = stringResource(R.string.accountIdOrOnsEnter),
                         onChange = callbacks::onChange,
                         onContinue = callbacks::onContinue,

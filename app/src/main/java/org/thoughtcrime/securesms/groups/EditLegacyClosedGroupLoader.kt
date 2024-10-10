@@ -4,13 +4,13 @@ import android.content.Context
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.AsyncLoader
 
-class EditClosedGroupLoader(context: Context, val groupID: String) : AsyncLoader<EditClosedGroupActivity.GroupMembers>(context) {
+class EditLegacyClosedGroupLoader(context: Context, val groupID: String) : AsyncLoader<EditLegacyGroupActivity.GroupMembers>(context) {
 
-    override fun loadInBackground(): EditClosedGroupActivity.GroupMembers {
+    override fun loadInBackground(): EditLegacyGroupActivity.GroupMembers {
         val groupDatabase = DatabaseComponent.get(context).groupDatabase()
         val members = groupDatabase.getGroupMembers(groupID, true)
         val zombieMembers = groupDatabase.getGroupZombieMembers(groupID)
-        return EditClosedGroupActivity.GroupMembers(
+        return EditLegacyGroupActivity.GroupMembers(
                 members.map {
                     it.address.toString()
                 },

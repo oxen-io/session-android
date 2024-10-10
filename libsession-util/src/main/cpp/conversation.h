@@ -2,6 +2,7 @@
 #define SESSION_ANDROID_CONVERSATION_H
 
 #include <jni.h>
+#include <android/log.h>
 #include "util.h"
 #include "session/config/convo_info_volatile.hpp"
 
@@ -42,6 +43,15 @@ inline jobject serialize_legacy_group(JNIEnv *env, session::config::convo::legac
     return serialized;
 }
 
+inline jobject serialize_closed_group(JNIEnv* env, session::config::convo::group group) {
+    jclass clazz = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$ClosedGroup");
+    jmethodID constructor = env->GetMethodID(clazz, "<init>", "(Ljava/lang/String;JZ)V");
+    auto session_id = env->NewStringUTF(group.id.data());
+    auto last_read = group.last_read;
+    auto unread = group.unread;
+    return env->NewObject(clazz, constructor, session_id, last_read, unread);
+}
+
 inline jobject serialize_any(JNIEnv *env, session::config::convo::any any) {
     if (auto* dm = std::get_if<session::config::convo::one_to_one>(&any)) {
         return serialize_one_to_one(env, *dm);
@@ -49,6 +59,8 @@ inline jobject serialize_any(JNIEnv *env, session::config::convo::any any) {
         return serialize_open_group(env, *og);
     } else if (auto* lgc = std::get_if<session::config::convo::legacy_group>(&any)) {
         return serialize_legacy_group(env, *lgc);
+    } else if (auto* gc = std::get_if<session::config::convo::group>(&any)) {
+        return serialize_closed_group(env, *gc);
     }
     return nullptr;
 }
@@ -104,10 +116,30 @@ inline session::config::convo::legacy_group deserialize_legacy_closed_group(JNIE
     return deserialized;
 }
 
+inline session::config::convo::group deserialize_closed_group(JNIEnv* env, jobject info, session::config::ConvoInfoVolatile* conf) {
+    auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$ClosedGroup");
+    auto id_getter = env->GetFieldID(clazz, "accountId", "Ljava/lang/String;");
+    auto last_read_getter = env->GetFieldID(clazz, "lastRead", "J");
+    auto unread_getter = env->GetFieldID(clazz, "unread", "Z");
+    auto session_id = (jstring)env->GetObjectField(info, id_getter);
+    auto session_id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    auto last_read = env->GetLongField(info, last_read_getter);
+    auto unread = env->GetBooleanField(info, unread_getter);
+
+    auto group = conf->get_or_construct_group(session_id_bytes);
+    group.last_read = last_read;
+    group.unread = unread;
+
+    env->ReleaseStringUTFChars(session_id, session_id_bytes);
+    return group;
+}
+
 inline std::optional<session::config::convo::any> deserialize_any(JNIEnv *env, jobject convo, session::config::ConvoInfoVolatile *conf) {
     auto oto_class = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$OneToOne");
     auto og_class = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$Community");
     auto lgc_class = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$LegacyGroup");
+    auto gc_class = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$ClosedGroup");
+
     auto object_class = env->GetObjectClass(convo);
     if (env->IsSameObject(object_class, oto_class)) {
         return session::config::convo::any{deserialize_one_to_one(env, convo, conf)};
@@ -115,6 +147,8 @@ inline std::optional<session::config::convo::any> deserialize_any(JNIEnv *env, j
         return session::config::convo::any{deserialize_community(env, convo, conf)};
     } else if (env->IsSameObject(object_class, lgc_class)) {
         return session::config::convo::any{deserialize_legacy_closed_group(env, convo, conf)};
+    } else if (env->IsSameObject(object_class, gc_class)) {
+        return session::config::convo::any{deserialize_closed_group(env, convo, conf)};
     }
     return std::nullopt;
 }

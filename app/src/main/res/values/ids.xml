@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Create closed groups -->
+    <item type="id" name="create_group_name_text_field"/>
+    <item type="id" name="create_group_create_button"/>
 </resources>

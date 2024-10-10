@@ -1,8 +1,11 @@
 package org.session.libsession.utilities
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.session.libsession.messaging.file_server.FileServerApi
+import org.session.libsession.snode.utilities.await
 import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.Log
 import java.io.File
@@ -14,8 +17,7 @@ object DownloadUtilities {
     /**
      * Blocks the calling thread.
      */
-    @JvmStatic
-    fun downloadFile(destination: File, url: String) {
+    suspend fun downloadFile(destination: File, url: String) {
         val outputStream = FileOutputStream(destination) // Throws
         var remainingAttempts = 2
         var exception: Exception? = null
@@ -35,13 +37,13 @@ object DownloadUtilities {
     /**
      * Blocks the calling thread.
      */
-    @JvmStatic
-    fun downloadFile(outputStream: OutputStream, urlAsString: String) {
+    suspend fun downloadFile(outputStream: OutputStream, urlAsString: String) {
         val url = urlAsString.toHttpUrlOrNull()!!
         val fileID = url.pathSegments.last()
         try {
-            FileServerApi.download(fileID).get().let {
-                outputStream.write(it)
+            val data = FileServerApi.download(fileID).await()
+            withContext(Dispatchers.IO) {
+                outputStream.write(data)
             }
         } catch (e: Exception) {
             when (e) {

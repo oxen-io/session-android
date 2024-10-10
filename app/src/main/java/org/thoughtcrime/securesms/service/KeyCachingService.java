@@ -127,7 +127,7 @@ public class KeyCachingService extends Service {
         @Override
         protected Void doInBackground(Void... params) {
           if (!DatabaseUpgradeActivity.isUpdate(KeyCachingService.this)) {
-            ApplicationContext.getInstance(KeyCachingService.this).messageNotifier.updateNotification(KeyCachingService.this);
+            ApplicationContext.getInstance(KeyCachingService.this).getMessageNotifier().updateNotification(KeyCachingService.this);
           }
           return null;
         }
@@ -193,7 +193,7 @@ public class KeyCachingService extends Service {
     new AsyncTask<Void, Void, Void>() {
       @Override
       protected Void doInBackground(Void... params) {
-        ApplicationContext.getInstance(KeyCachingService.this).messageNotifier.updateNotification(KeyCachingService.this);
+        ApplicationContext.getInstance(KeyCachingService.this).getMessageNotifier().updateNotification(KeyCachingService.this);
         return null;
       }
     }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

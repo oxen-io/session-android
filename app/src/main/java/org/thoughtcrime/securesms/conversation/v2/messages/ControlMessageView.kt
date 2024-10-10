@@ -18,6 +18,7 @@ import network.loki.messenger.databinding.ViewControlMessageBinding
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.ExpirationConfiguration
+import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
 import org.session.libsession.utilities.TextSecurePreferences
@@ -64,6 +65,7 @@ class ControlMessageView : LinearLayout {
         binding.expirationTimerView.isGone = true
         binding.followSetting.isGone = true
         var messageBody: CharSequence = message.getDisplayBody(context)
+
         binding.root.contentDescription = null
         binding.textView.text = messageBody
         when {
@@ -73,7 +75,7 @@ class ControlMessageView : LinearLayout {
 
                     val threadRecipient = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(message.threadId)
 
-                    if (threadRecipient?.isClosedGroupRecipient == true) {
+                    if (threadRecipient?.isClosedGroupV2Recipient == true) {
                         expirationTimerView.setTimerIcon()
                     } else {
                         expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
@@ -193,6 +195,12 @@ class ControlMessageView : LinearLayout {
                             }
                         }
                     }
+                }
+            }
+            message.isGroupUpdateMessage -> {
+                val updateMessageData: UpdateMessageData? = UpdateMessageData.fromJSON(message.body)
+                if (updateMessageData?.isGroupErrorQuitKind() == true) {
+                    binding.textView.setTextColor(context.getColorFromAttr(R.attr.danger))
                 }
             }
         }

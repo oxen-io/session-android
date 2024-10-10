@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import net.zetetic.database.sqlcipher.SQLiteDatabase.CONFLICT_REPLACE
+import org.session.libsession.database.ServerHashToMessageId
 import org.session.libsignal.database.LokiMessageDatabaseProtocol
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
@@ -16,6 +17,10 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         private val messageHashTable = "loki_message_hash_database"
         private val smsHashTable = "loki_sms_hash_database"
         private val mmsHashTable = "loki_mms_hash_database"
+        const val groupInviteTable = "loki_group_invites"
+
+        private val groupInviteDeleteTrigger = "group_invite_delete_trigger"
+
         private val messageID = "message_id"
         private val serverID = "server_id"
         private val friendRequestStatus = "friend_request_status"
@@ -23,6 +28,8 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         private val errorMessage = "error_message"
         private val messageType = "message_type"
         private val serverHash = "server_hash"
+        const val invitingSessionId = "inviting_session_id"
+
         @JvmStatic
         val createMessageIDTableCommand = "CREATE TABLE $messageIDTable ($messageID INTEGER PRIMARY KEY, $serverID INTEGER DEFAULT 0, $friendRequestStatus INTEGER DEFAULT 0);"
         @JvmStatic
@@ -39,6 +46,10 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         val createMmsHashTableCommand = "CREATE TABLE IF NOT EXISTS $mmsHashTable ($messageID INTEGER PRIMARY KEY, $serverHash STRING);"
         @JvmStatic
         val createSmsHashTableCommand = "CREATE TABLE IF NOT EXISTS $smsHashTable ($messageID INTEGER PRIMARY KEY, $serverHash STRING);"
+        @JvmStatic
+        val createGroupInviteTableCommand = "CREATE TABLE IF NOT EXISTS $groupInviteTable ($threadID INTEGER PRIMARY KEY, $invitingSessionId STRING);"
+        @JvmStatic
+        val createThreadDeleteTrigger = "CREATE TRIGGER IF NOT EXISTS $groupInviteDeleteTrigger AFTER DELETE ON ${ThreadDatabase.TABLE_NAME} BEGIN DELETE FROM $groupInviteTable WHERE $threadID = OLD.${ThreadDatabase.ID}; END;"
 
         const val SMS_TYPE = 0
         const val MMS_TYPE = 1
@@ -224,6 +235,49 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         }
     }
 
+    fun getSendersForHashes(threadId: Long, hashes: Set<String>): List<ServerHashToMessageId> {
+        val smsQuery = "SELECT ${SmsDatabase.TABLE_NAME}.${MmsSmsColumns.ADDRESS}, $smsHashTable.$serverHash, " +
+                "${SmsDatabase.TABLE_NAME}.${MmsSmsColumns.ID} FROM $smsHashTable LEFT OUTER JOIN ${SmsDatabase.TABLE_NAME} " +
+                "ON ${SmsDatabase.TABLE_NAME}.${MmsSmsColumns.ID} = $smsHashTable.$messageID WHERE ${SmsDatabase.TABLE_NAME}.${MmsSmsColumns.THREAD_ID} = ?;"
+        val mmsQuery = "SELECT ${MmsDatabase.TABLE_NAME}.${MmsSmsColumns.ADDRESS}, $mmsHashTable.$serverHash, " +
+                "${MmsDatabase.TABLE_NAME}.${MmsSmsColumns.ID} FROM $mmsHashTable LEFT OUTER JOIN ${MmsDatabase.TABLE_NAME} " +
+                "ON ${MmsDatabase.TABLE_NAME}.${MmsSmsColumns.ID} = $mmsHashTable.$messageID WHERE ${MmsDatabase.TABLE_NAME}.${MmsSmsColumns.THREAD_ID} = ?;"
+        val smsCursor = databaseHelper.readableDatabase.query(smsQuery, arrayOf(threadId))
+        val mmsCursor = databaseHelper.readableDatabase.query(mmsQuery, arrayOf(threadId))
+
+        val serverHashToMessageIds = mutableListOf<ServerHashToMessageId>()
+
+        smsCursor.use { cursor ->
+            while (cursor.moveToNext()) {
+                val hash = cursor.getString(1)
+                if (hash in hashes) {
+                    serverHashToMessageIds += ServerHashToMessageId(
+                        serverHash = hash,
+                        isSms = true,
+                        sender = cursor.getString(0),
+                        messageId = cursor.getLong(2)
+                    )
+                }
+            }
+        }
+
+        mmsCursor.use { cursor ->
+            while (cursor.moveToNext()) {
+                val hash = cursor.getString(1)
+                if (hash in hashes) {
+                    serverHashToMessageIds += ServerHashToMessageId(
+                        serverHash = hash,
+                        isSms = false,
+                        sender = cursor.getString(0),
+                        messageId = cursor.getLong(2)
+                    )
+                }
+            }
+        }
+
+        return serverHashToMessageIds
+    }
+
     fun getMessageServerHash(messageID: Long, mms: Boolean): String? = getMessageTables(mms).firstNotNullOfOrNull {
         databaseHelper.readableDatabase.get(it, "${Companion.messageID} = ?", arrayOf(messageID.toString())) { cursor ->
             cursor.getString(serverHash)
@@ -255,6 +309,27 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         )
     }
 
+    fun addGroupInviteReferrer(groupThreadId: Long, referrerSessionId: String) {
+        val contentValues = ContentValues(2).apply {
+            put(threadID, groupThreadId)
+            put(invitingSessionId, referrerSessionId)
+        }
+        databaseHelper.writableDatabase.insertOrUpdate(
+            groupInviteTable, contentValues, "$threadID = ?", arrayOf(groupThreadId.toString())
+        )
+    }
+
+    fun groupInviteReferrer(groupThreadId: Long): String? {
+        return databaseHelper.readableDatabase.get(groupInviteTable, "$threadID = ?", arrayOf(groupThreadId.toString())) {cursor ->
+            cursor.getString(invitingSessionId)
+        }
+    }
+
+    fun deleteGroupInviteReferrer(groupThreadId: Long) {
+        databaseHelper.writableDatabase.delete(
+            groupInviteTable, "$threadID = ?", arrayOf(groupThreadId.toString())
+        )
+    }
     private fun getMessageTables(mms: Boolean) = sequenceOf(
         getMessageTable(mms),
         messageHashTable

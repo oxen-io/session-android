@@ -13,7 +13,7 @@ inline session::config::Contacts *ptrToContacts(JNIEnv *env, jobject obj) {
 
 inline jobject serialize_contact(JNIEnv *env, session::config::contact_info info) {
     jclass contactClass = env->FindClass("network/loki/messenger/libsession_util/util/Contact");
-    jmethodID constructor = env->GetMethodID(contactClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZLnetwork/loki/messenger/libsession_util/util/UserPic;ILnetwork/loki/messenger/libsession_util/util/ExpiryMode;)V");
+    jmethodID constructor = env->GetMethodID(contactClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZLnetwork/loki/messenger/libsession_util/util/UserPic;JLnetwork/loki/messenger/libsession_util/util/ExpiryMode;)V");
     jstring id = env->NewStringUTF(info.session_id.data());
     jstring name = env->NewStringUTF(info.name.data());
     jstring nickname = env->NewStringUTF(info.nickname.data());
@@ -24,7 +24,7 @@ inline jobject serialize_contact(JNIEnv *env, session::config::contact_info info
     auto created = info.created;
     jobject profilePic = util::serialize_user_pic(env, info.profile_picture);
     jobject returnObj = env->NewObject(contactClass, constructor, id, name, nickname, approved,
-                                       approvedMe, blocked, profilePic, info.priority,
+                                       approvedMe, blocked, profilePic, (jlong)info.priority,
                                        util::serialize_expiry(env, info.exp_mode, info.exp_timer));
     return returnObj;
 }
@@ -41,14 +41,14 @@ inline session::config::contact_info deserialize_contact(JNIEnv *env, jobject in
     getBlocked = env->GetFieldID(contactClass, "blocked", "Z");
     getUserPic = env->GetFieldID(contactClass, "profilePicture",
                                  "Lnetwork/loki/messenger/libsession_util/util/UserPic;");
-    getPriority = env->GetFieldID(contactClass, "priority", "I");
+    getPriority = env->GetFieldID(contactClass, "priority", "J");
     getExpiry = env->GetFieldID(contactClass, "expiryMode", "Lnetwork/loki/messenger/libsession_util/util/ExpiryMode;");
     jstring name, nickname, account_id;
     account_id = static_cast<jstring>(env->GetObjectField(info, getId));
     name = static_cast<jstring>(env->GetObjectField(info, getName));
     nickname = static_cast<jstring>(env->GetObjectField(info, getNick));
     bool approved, approvedMe, blocked, hidden;
-    int priority = env->GetIntField(info, getPriority);
+    int priority = env->GetLongField(info, getPriority);
     approved = env->GetBooleanField(info, getApproved);
     approvedMe = env->GetBooleanField(info, getApprovedMe);
     blocked = env->GetBooleanField(info, getBlocked);

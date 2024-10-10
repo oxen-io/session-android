@@ -37,7 +37,9 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 
 import java.io.Closeable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import kotlin.Pair;
@@ -259,6 +261,23 @@ public class MmsSmsDatabase extends Database {
       cursor.moveToFirst();
       return cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.ID));
     }
+  }
+
+  public List<MessageRecord> getUserMessages(long threadId, String sender) {
+
+    List<MessageRecord> idList = new ArrayList<>();
+
+    try (Cursor cursor = getConversation(threadId, false)) {
+      Reader reader = readerFor(cursor);
+      while (reader.getNext() != null) {
+        MessageRecord record = reader.getCurrent();
+        if (record.getIndividualRecipient().getAddress().serialize().equals(sender)) {
+          idList.add(record);
+        }
+      }
+    }
+
+    return idList;
   }
 
   // Builds up and returns a list of all all the messages sent by this user in the given thread.

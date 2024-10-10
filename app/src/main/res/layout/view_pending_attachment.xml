@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.thoughtcrime.securesms.conversation.v2.messages.PendingAttachmentView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="@dimen/small_spacing"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/pendingDownloadIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_media"
+        app:tint="?android:textColorPrimary" />
+
+    <TextView
+        android:id="@+id/pendingDownloadSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textSize="@dimen/very_small_font_size"
+        android:textColor="?android:textColorPrimary"
+        android:maxLines="1"
+        tools:text="1.23MB"
+        />
+
+    <ImageView
+        android:layout_width="2dp"
+        android:layout_height="2dp"
+        android:src="@drawable/circle_tintable"
+        android:layout_marginHorizontal="6dp"
+        app:tint="?android:textColorPrimary" />
+
+    <TextView
+        android:id="@+id/pendingDownloadTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/very_small_font_size"
+        android:textColor="?android:textColorPrimary"
+        tools:text="I'm a very long document title. Did you know that?"
+        android:maxLines="2"
+        android:ellipsize="end" />
+
+</org.thoughtcrime.securesms.conversation.v2.messages.PendingAttachmentView>

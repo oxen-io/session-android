@@ -110,4 +110,11 @@
         android:drawableStart="?attr/menu_trash_icon"
         android:text="@string/delete" />
 
+    <TextView
+        android:id="@+id/leaveTextView"
+        style="@style/BottomSheetActionItem"
+        android:paddingStart="20dp"
+        android:drawableStart="@drawable/ic_baseline_logout_24"
+        android:text="@string/leave" />
+
 </LinearLayout>

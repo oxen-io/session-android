@@ -230,7 +230,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:background="?danger"
         android:visibility="gone"
-        tools:visibility="visible">
+        >
 
         <TextView
             android:id="@+id/blockedBannerTextView"
@@ -247,16 +247,17 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/outdatedBanner"
+        android:id="@+id/outdatedDisappearingBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/blockedBanner"
         android:background="@color/outdated_client_banner_background_color"
+        android:contentDescription="@string/AccessibilityId_outdated_group_banner"
         android:visibility="gone"
         tools:visibility="visible">
 
         <TextView
-            android:id="@+id/outdatedBannerTextView"
+            android:id="@+id/outdatedDisappearingBannerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -269,6 +270,39 @@
 
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/outdatedGroupBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/blockedBanner"
+        android:background="@color/outdated_client_banner_background_color"
+        android:paddingHorizontal="2dp"
+        android:contentDescription="@string/AccessibilityId_outdated_group_banner"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/outdatedBannerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="@dimen/very_small_spacing"
+            android:gravity="center_horizontal"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="@dimen/large_spacing"
+            android:textSize="@dimen/tiny_font_size"
+            android:text="@string/groupLegacyBanner"
+            />
+
+        <ImageView
+            android:layout_gravity="end|center_vertical"
+            android:layout_margin="@dimen/small_spacing"
+            android:layout_width="@dimen/medium_spacing"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_link_out"/>
+
+    </FrameLayout>
+
+
     <TextView
         android:padding="@dimen/medium_spacing"
         android:textSize="@dimen/small_font_size"
@@ -277,7 +311,7 @@
         android:id="@+id/placeholderText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/outdatedBanner"
+        app:layout_constraintTop_toBottomOf="@+id/outdatedDisappearingBanner"
         android:elevation="8dp"
         android:contentDescription="@string/AccessibilityId_control_message"
         tools:text="Some Control Message Text"
@@ -295,6 +329,7 @@
         tools:visibility="gone">
 
         <TextView
+            tools:visibility="invisible"
             android:id="@+id/messageRequestBlock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -340,7 +375,7 @@
                 android:layout_height="@dimen/medium_button_height"
                 android:layout_marginStart="@dimen/medium_spacing"
                 android:layout_weight="1"
-                android:text="@string/decline" />
+                android:text="d" />
 
         </LinearLayout>
 

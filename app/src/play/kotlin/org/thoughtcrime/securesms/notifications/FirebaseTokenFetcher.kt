@@ -1,19 +1,25 @@
 package org.thoughtcrime.securesms.notifications
 
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
+import org.session.libsession.messaging.notifications.TokenFetcher
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FirebaseTokenFetcher @Inject constructor(): TokenFetcher {
-    val TAG = "FirebaseTF"
+    override val token = MutableStateFlow<String?>(null)
 
-    override suspend fun fetch() = withContext(Dispatchers.IO) {
-        FirebaseMessaging.getInstance().token.await().takeIf { isActive } ?: throw Exception("Firebase token is null")
+    init {
+        FirebaseMessaging.getInstance()
+            .token
+            .addOnSuccessListener(this::onNewToken)
+    }
+
+    override fun onNewToken(token: String) {
+        this.token.value = token
     }
 }

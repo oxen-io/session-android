@@ -7,20 +7,24 @@ import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import kotlinx.coroutines.GlobalScope
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.functional.bind
+import org.session.libsession.database.userAuth
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
-import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
+import org.session.libsession.messaging.sending_receiving.pollers.LegacyClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
 import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.snode.utilities.asyncPromise
+import org.session.libsession.snode.utilities.await
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.recover
@@ -108,20 +112,23 @@ class BackgroundPollWorker(val context: Context, params: WorkerParameters) : Wor
             var dmsPromise: Promise<Unit, Exception> = Promise.ofSuccess(Unit)
 
             if (requestTargets.contains(Targets.DMS)) {
-                val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
-                dmsPromise = SnodeAPI.getMessages(userPublicKey).bind { envelopes ->
+                val userAuth = requireNotNull(MessagingModuleConfiguration.shared.storage.userAuth)
+                dmsPromise = SnodeAPI.getMessages(userAuth).bind { envelopes ->
                     val params = envelopes.map { (envelope, serverHash) ->
                         // FIXME: Using a job here seems like a bad idea...
                         MessageReceiveParameters(envelope.toByteArray(), serverHash, null)
                     }
-                    BatchMessageReceiveJob(params).executeAsync("background")
+
+                    GlobalScope.asyncPromise {
+                        BatchMessageReceiveJob(params).executeAsync("background")
+                    }
                 }
                 promises.add(dmsPromise)
             }
 
             // Closed groups
             if (requestTargets.contains(Targets.CLOSED_GROUPS)) {
-                val closedGroupPoller = ClosedGroupPollerV2() // Intentionally don't use shared
+                val closedGroupPoller = LegacyClosedGroupPollerV2() // Intentionally don't use shared
                 val storage = MessagingModuleConfiguration.shared.storage
                 val allGroupPublicKeys = storage.getAllClosedGroupPublicKeys()
                 allGroupPublicKeys.iterator().forEach { closedGroupPoller.poll(it) }

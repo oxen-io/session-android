@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -27,6 +28,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
@@ -45,7 +48,9 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
@@ -511,4 +516,55 @@ fun LoadingArcOr(loading: Boolean, content: @Composable () -> Unit) {
     AnimatedVisibility(!loading) {
         content()
     }
+}
+
+
+@Composable
+fun SearchBar(
+    query: String,
+    onValueChanged: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    placeholder: String? = null,
+    enabled: Boolean = true,
+    backgroundColor: Color = LocalColors.current.background
+) {
+    BasicTextField(
+        singleLine = true,
+        value = query,
+        onValueChange = onValueChanged,
+        enabled = enabled,
+        decorationBox = { innerTextField ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(backgroundColor, RoundedCornerShape(100))
+            ) {
+                Image(
+                    painterResource(id = R.drawable.ic_search_24),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(
+                        LocalColors.current.text
+                    ),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .size(24.dp)
+                )
+
+                Box(modifier = Modifier.weight(1f)) {
+                    innerTextField()
+                    if (query.isEmpty() && placeholder != null) {
+                        Text(
+                            text = placeholder,
+                            color = LocalColors.current.textSecondary,
+                            style = LocalType.current.base
+                        )
+                    }
+                }
+            }
+        },
+        textStyle = LocalType.current.base.copy(color = LocalColors.current.text),
+        modifier = modifier,
+        cursorBrush = SolidColor(LocalColors.current.text)
+    )
 }

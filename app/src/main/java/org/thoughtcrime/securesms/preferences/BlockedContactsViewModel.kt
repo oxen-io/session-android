@@ -21,6 +21,7 @@ import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import org.session.libsession.utilities.StringSubstitutionConstants.COUNT_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.NAME_KEY
+import org.session.libsession.database.StorageProtocol
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.Storage
@@ -28,7 +29,7 @@ import org.thoughtcrime.securesms.util.adapter.SelectableItem
 import javax.inject.Inject
 
 @HiltViewModel
-class BlockedContactsViewModel @Inject constructor(private val storage: Storage): ViewModel() {
+class BlockedContactsViewModel @Inject constructor(private val storage: StorageProtocol): ViewModel() {
 
     private val executor = viewModelScope + SupervisorJob()
 

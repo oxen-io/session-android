@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
+    <color name="warning">#FCB159</color>
+    <color name="unimportant">#D8D8D8</color>
     <color name="profile_picture_background">#353535</color>
     <color name="action_bar_background">#161616</color>
     <color name="separator">#36383C</color>
