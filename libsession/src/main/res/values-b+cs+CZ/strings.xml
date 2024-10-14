@@ -286,7 +286,6 @@
         <item quantity="many">Smazat zprávy</item>
         <item quantity="other">Smazat zprávy</item>
     </plurals>
-    <string name="deleteMessageConfirm">Opravdu chcete smazat tuto zprávu?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Zpráva smazána</item>
         <item quantity="few">Zprávy smazány</item>
@@ -306,7 +305,6 @@
         <item quantity="many">Nepodařilo se smazat zprávy</item>
         <item quantity="other">Nepodařilo se smazat zprávy</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Opravdu chcete smazat tyto zprávy?</string>
     <string name="deleteMessagesDescriptionDevice">Jste si jisti, že chcete smazat tyto zprávy pouze z tohoto zařízení?</string>
     <string name="deleteMessagesDescriptionEveryone">Jste si jisti, že chcete smazat tyto zprávy pro všechny?</string>
     <string name="deleting">Mazání</string>

@@ -284,7 +284,6 @@
         <item quantity="few">Șterge mesajele</item>
         <item quantity="other">Șterge mesajele</item>
     </plurals>
-    <string name="deleteMessageConfirm">Ești sigur/ă că dorești să ștergi acest mesaj?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Mesaj șters</item>
         <item quantity="few">Mesaje șterse</item>
@@ -302,7 +301,6 @@
         <item quantity="few">Eroare la ștergerea mesajelor</item>
         <item quantity="other">Eroare la ștergerea mesajelor</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Ești sigur/ă că dorești să ștergi aceste mesaje?</string>
     <string name="deleteMessagesDescriptionDevice">Ești sigur că vrei să ștergi aceste mesaje doar de pe acest dispozitiv?</string>
     <string name="deleteMessagesDescriptionEveryone">Ești sigur că vrei să ștergi aceste mesaje pentru toată lumea?</string>
     <string name="deleting">Se șterge</string>

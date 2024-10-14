@@ -282,7 +282,6 @@
         <item quantity="one">Poista viesti</item>
         <item quantity="other">Poista viestit</item>
     </plurals>
-    <string name="deleteMessageConfirm">Haluatko varmasti poistaa tämän viestin?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Viesti poistettu</item>
         <item quantity="other">Viestit poistettu</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Viestin poisto epäonnistui</item>
         <item quantity="other">Viestien poisto epäonnistui</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Haluatko varmasti poistaa nämä viestit?</string>
     <string name="deleteMessagesDescriptionDevice">Haluatko varmasti poistaa nämä viestit vain tästä laitteesta?</string>
     <string name="deleteMessagesDescriptionEveryone">Haluatko varmasti poistaa nämä viestit kaikilta?</string>
     <string name="deleting">Poistetaan</string>

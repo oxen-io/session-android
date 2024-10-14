@@ -281,7 +281,6 @@
         <item quantity="one">Burahin ang Mensahe</item>
         <item quantity="other">Burahin ang mga Mensahe</item>
     </plurals>
-    <string name="deleteMessageConfirm">Sigurado ka bang gusto mong burahin ang mensaheng ito?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Mensahe nabura</item>
         <item quantity="other">Mga mensahe nabura</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Nabigong tanggalin ang mensahe</item>
         <item quantity="other">Nabigong tanggalin ang mga mensahe</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Sigurado ka bang gusto mong burahin ang mga mensaheng ito?</string>
     <string name="deleteMessagesDescriptionDevice">Sigurado ka bang gusto mong tanggalin ang mga mensaheng ito mula sa device na ito lamang?</string>
     <string name="deleteMessagesDescriptionEveryone">Sigurado ka bang gusto mong tanggalin ang mga mensaheng ito para sa lahat?</string>
     <string name="deleting">Binubura</string>

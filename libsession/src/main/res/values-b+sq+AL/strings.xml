@@ -281,7 +281,6 @@
         <item quantity="one">Fshije Mesazhin</item>
         <item quantity="other">Fshini mesazhe</item>
     </plurals>
-    <string name="deleteMessageConfirm">A jeni të sigurt që doni ta fshini këtë mesazh?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Mesazhi u fshi</item>
     </plurals>
@@ -296,7 +295,6 @@
         <item quantity="one">Dështoi të fshihej mesazhi</item>
         <item quantity="other">Dështoi të fshihen mesazhet</item>
     </plurals>
-    <string name="deleteMessagesConfirm">A jeni të sigurt që doni të fshini këto mesazhe?</string>
     <string name="deleteMessagesDescriptionDevice">A jeni të sigurt që doni t\'i fshini këto mesazhe vetëm nga kjo pajisje?</string>
     <string name="deleteMessagesDescriptionEveryone">A jeni të sigurt që doni t\'i fshini këto mesazhe për të gjithë?</string>
     <string name="deleting">Po fshihet</string>

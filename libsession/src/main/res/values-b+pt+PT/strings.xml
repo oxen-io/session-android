@@ -282,7 +282,6 @@
         <item quantity="one">Eliminar Mensagem</item>
         <item quantity="other">Eliminar Mensagens</item>
     </plurals>
-    <string name="deleteMessageConfirm">Tem certeza de que deseja apagar esta mensagem?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Mensagem eliminada</item>
         <item quantity="other">Mensagens eliminadas</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Falha ao eliminar mensagem</item>
         <item quantity="other">Falha ao eliminar mensagens</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Tem certeza de que deseja apagar essas mensagens?</string>
     <string name="deleteMessagesDescriptionDevice">Tem a certeza que pretende eliminar estas mensagens apenas deste dispositivo?</string>
     <string name="deleteMessagesDescriptionEveryone">Tem a certeza que pretende eliminar estas mensagens para todos?</string>
     <string name="deleting">A eliminar</string>

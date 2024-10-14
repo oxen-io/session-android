@@ -282,7 +282,6 @@
         <item quantity="one">Radera meddelande</item>
         <item quantity="other">Radera meddelanden</item>
     </plurals>
-    <string name="deleteMessageConfirm">Är du säker på att du vill radera detta meddelande?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Meddelande raderat</item>
         <item quantity="other">Meddelanden raderade</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Misslyckades med att radera meddelandet</item>
         <item quantity="other">Misslyckades med att radera meddelanden</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Är du säker på att du vill radera dessa meddelanden?</string>
     <string name="deleteMessagesDescriptionDevice">Är du säker på att du vill radera dessa meddelanden endast från denna enhet?</string>
     <string name="deleteMessagesDescriptionEveryone">Är du säker på att du vill radera dessa meddelanden för alla?</string>
     <string name="deleting">Raderar</string>

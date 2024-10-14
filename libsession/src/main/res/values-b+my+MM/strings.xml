@@ -279,7 +279,6 @@
     <plurals name="deleteMessage">
         <item quantity="other">မက်ဆေ့ချ် ဖျက်မည်</item>
     </plurals>
-    <string name="deleteMessageConfirm">ဤမက်ဆေ့ချ်ကို ဖျက်လိုသည်မှာ သေချာပါသလား။</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">မက်ဆေ့ချ်များ ဖျက်ထားသည်</item>
     </plurals>
@@ -293,7 +292,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">မက်ဆေ့ခ်ျဖျက်ရန် မအောင်မြင်ပါ</item>
     </plurals>
-    <string name="deleteMessagesConfirm">ဤမက်ဆေ့ချ်များကို ဖျက်လိုသည်မှာ သေချာပါသလား။</string>
     <string name="deleteMessagesDescriptionDevice">ဤစက်ကိရိယာ မှသာ မက်ဆေ့ချ်များဖျက်လိုပါသလား။</string>
     <string name="deleteMessagesDescriptionEveryone">မက်ဆေ့ဂျ်တွေ အားလုံး ကိုဖျက်လိုပါသလား?</string>
     <string name="deleting">ဖျက်နေသည်</string>

@@ -285,7 +285,6 @@
         <item quantity="many">Usuń wiadomości</item>
         <item quantity="other">Usuń wiadomości</item>
     </plurals>
-    <string name="deleteMessageConfirm">Czy na pewno chcesz usunąć tę wiadomość?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Wiadomość usunięta</item>
         <item quantity="few">Usunięto wiadomości</item>
@@ -305,7 +304,6 @@
         <item quantity="many">Nie udało się usunąć wiadomości</item>
         <item quantity="other">Nie udało się usunąć wiadomości</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Czy na pewno chcesz usunąć te wiadomości?</string>
     <string name="deleteMessagesDescriptionDevice">Czy na pewno chcesz usunąć te wiadomości tylko z tego urządzenia?</string>
     <string name="deleteMessagesDescriptionEveryone">Czy na pewno chcesz usunąć te wiadomości u wszystkich?</string>
     <string name="deleting">Usuwanie</string>

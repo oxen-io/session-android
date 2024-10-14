@@ -281,7 +281,6 @@
         <item quantity="one">Изтрий съобщението</item>
         <item quantity="other">Изтрий съобщенията</item>
     </plurals>
-    <string name="deleteMessageConfirm">Сигурен ли си, че желаеш да изтриеш това съобщение?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Съобщението е изтрито</item>
         <item quantity="other">Съобщенията са изтрити</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Неуспешно изтриване на съобщение</item>
         <item quantity="other">Неуспешно изтриване на съобщения</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Сигурен ли си, че искаш да изтриеш тези съобщения?</string>
     <string name="deleteMessagesDescriptionDevice">Сигурен ли/ли сте, че искате да изтриете тези съобщения само от това устройство?</string>
     <string name="deleteMessagesDescriptionEveryone">Сигурен ли/ли сте, че искате да изтриете тези съобщения за всички?</string>
     <string name="deleting">Изтриване</string>

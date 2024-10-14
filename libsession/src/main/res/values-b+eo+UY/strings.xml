@@ -281,7 +281,6 @@
         <item quantity="one">Forigi mesaĝon</item>
         <item quantity="other">Forigi mesaĝojn</item>
     </plurals>
-    <string name="deleteMessageConfirm">Ĉu vi certas, ke vi volas forigi ĉi tiun mesaĝon?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Mesaĝo forigita</item>
         <item quantity="other">Mesaĝoj forigitaj</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Malsukcesis forigi mesaĝon</item>
         <item quantity="other">Malsukcesis forigi mesaĝojn</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Ĉu vi certas forigi tiujn mesaĝojn?</string>
     <string name="deleteMessagesDescriptionDevice">Ĉu vi certas, ke vi volas forigi ĉi tiujn mesaĝojn nur el ĉi tiu aparato?</string>
     <string name="deleteMessagesDescriptionEveryone">Ĉu vi certas, ke vi volas forigi ĉi tiujn mesaĝojn por ĉiuj?</string>
     <string name="deleting">Forviŝante</string>

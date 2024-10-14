@@ -281,7 +281,6 @@
         <item quantity="one">বার্তা মুছুন</item>
         <item quantity="other">বার্তাগুলি মুছুন</item>
     </plurals>
-    <string name="deleteMessageConfirm">আপনি কি এই বার্তাটি মুছে দিতে নিশ্চিত?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">বার্তা মুছে ফেলা হয়েছে</item>
         <item quantity="other">বার্তাগুলি মুছে ফেলা হয়েছে</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Failed to delete message</item>
         <item quantity="other">Failed to delete messages</item>
     </plurals>
-    <string name="deleteMessagesConfirm">আপনি কি এই বার্তাগুলি মুছে ফেলতে চান?</string>
     <string name="deleteMessagesDescriptionDevice">আপনি কি নিশ্চিত যে আপনি এই বার্তাগুলি শুধুমাত্র এই ডিভাইস থেকে মুছে ফেলতে চান?</string>
     <string name="deleteMessagesDescriptionEveryone">আপনি কি নিশ্চিত যে আপনি এইবার্তাগুলো সবাইকে জন্য মুছে ফেলতে চান?</string>
     <string name="deleting">মুছে ফেলা হচ্ছে</string>

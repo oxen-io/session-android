@@ -281,7 +281,6 @@
         <item quantity="one">Suprimeix el missatge</item>
         <item quantity="other">Suprimeix els missatges</item>
     </plurals>
-    <string name="deleteMessageConfirm">Esteu segur que voleu suprimir aquest missatge?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Missatge suprimit</item>
         <item quantity="other">Missatges suprimits</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Error en eliminar el missatge</item>
         <item quantity="other">Error en eliminar els missatges</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Esteu segur que voleu suprimir aquests missatges?</string>
     <string name="deleteMessagesDescriptionDevice">Esteu segur que voleu esborrar aquests missatges només d\'aquest dispositiu?</string>
     <string name="deleteMessagesDescriptionEveryone">Esteu segur que voleu suprimir aquests missatges per a tothom?</string>
     <string name="deleting">Suprimint</string>

@@ -281,7 +281,6 @@
         <item quantity="one">سڕینەوەی پەیام</item>
         <item quantity="other">سڕینەوەی پەیامەکان</item>
     </plurals>
-    <string name="deleteMessageConfirm">دڵنیایت دەتەوێت ئەم پەیامە بسڕیتەوە؟</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">نامە سڕا</item>
         <item quantity="other">نامەکان بسڕانەوە</item>
@@ -297,7 +296,6 @@
         <item quantity="one">شکستی هەندەڵکردنی پەیام</item>
         <item quantity="other">شکستی هەندەڵکردنی پەیامەکان</item>
     </plurals>
-    <string name="deleteMessagesConfirm">دڵنیایت دەتەوێت ئەم پەیامانە بسڕیتەوە؟</string>
     <string name="deleteMessagesDescriptionDevice">دڵنیایت بۆ سڕینەوەی هەموو پەیام دەتێنا زاتیە؟</string>
     <string name="deleteMessagesDescriptionEveryone">دڵنیایت بۆ سڕینەوەی ئەم پەیامەکان بۆ هەموو ؟</string>
     <string name="deleting">سڕینەوە</string>

@@ -282,7 +282,6 @@
         <item quantity="one">Peyamê Jê Bibe</item>
         <item quantity="other">Peyaman Jê Bibe</item>
     </plurals>
-    <string name="deleteMessageConfirm">Tu piştrast î ku tu dixwazî vê peyamê jê bibî?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Peyam hate rakirin</item>
         <item quantity="other">Peyamên hate rakirin</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Bi ser neket ku peyama jê derbike.</item>
         <item quantity="other">Bi ser neket ku peyaman jê bibe.</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Tu piştrast î ku tu dixwazî peyamên van jê bibî?</string>
     <string name="deleteMessagesDescriptionDevice">Tu piştrast î ku tu dixwazî vê peyaman tenê li ser cîhaza vê peyaman jê bibî?</string>
     <string name="deleteMessagesDescriptionEveryone">Tu piştrast î ku tu dixwazî vê peyaman ji kuran jê bike?</string>
     <string name="deleting">Jêbibin</string>

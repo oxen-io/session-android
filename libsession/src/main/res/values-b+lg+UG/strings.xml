@@ -281,7 +281,6 @@
         <item quantity="one">Jjamu Olukome ngaleerake</item>
         <item quantity="other">Jjamu Ente</item>
     </plurals>
-    <string name="deleteMessageConfirm">Oli mukakafu nti oyagala okusazaamu obubaka buno?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Obubaka bukyusiddwako</item>
         <item quantity="other">Obubaka obwokutorera obukyusiddwako</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Kusazaamu obubaka kugaanye</item>
         <item quantity="other">Kusazaamu obubaka kugaanye</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Oli mukakafu nti oyagala okusazaamu obubaka buno?</string>
     <string name="deleteMessagesDescriptionDevice">Oli mbanankubye kusula ebubaka bino ku kyuma kino kyokka?</string>
     <string name="deleteMessagesDescriptionEveryone">Oli mbanankubye kusula ebubaka bino byonna ku buli omu?</string>
     <string name="deleting">Okuggya</string>

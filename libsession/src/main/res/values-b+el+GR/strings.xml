@@ -282,7 +282,6 @@
         <item quantity="one">Διαγραφή Μηνύματος</item>
         <item quantity="other">Διαγραφή Μηνυμάτων</item>
     </plurals>
-    <string name="deleteMessageConfirm">Σίγουρα θέλετε να διαγράψετε αυτό το μήνυμα;</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Το μήνυμα διαγράφηκε</item>
         <item quantity="other">Τα μηνύματα διαγράφηκαν</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Αποτυχία διαγραφής μηνύματος</item>
         <item quantity="other">Αποτυχία διαγραφής μηνύματος</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Σίγουρα θέλετε να διαγράψετε αυτά τα μηνύματα;</string>
     <string name="deleteMessagesDescriptionDevice">Σίγουρα θέλετε να διαγράψετε αυτά τα μηνύματα μόνο από αυτή τη συσκευή;</string>
     <string name="deleteMessagesDescriptionEveryone">Σίγουρα θέλετε να διαγράψετε αυτά τα μηνύματα για όλους;</string>
     <string name="deleting">Γίνεται διαγραφή</string>

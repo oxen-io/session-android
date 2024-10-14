@@ -281,7 +281,6 @@
         <item quantity="one">Mezua Ezabatu</item>
         <item quantity="other">Mezuak Ezabatu</item>
     </plurals>
-    <string name="deleteMessageConfirm">Ziur zaude mezu hau ezabatu nahi duzula?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Mezua ezabatuta</item>
         <item quantity="other">Mezuak ezabatuta</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Ezin izan da mezua ezabatu</item>
         <item quantity="other">Ezin izan dira mezuak ezabatu</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Ziur zaude mezu hauek ezabatu nahi dituzula?</string>
     <string name="deleteMessagesDescriptionDevice">Ziur zaude mezu hauek gailu honetatik soilik ezabatu nahi dituzula?</string>
     <string name="deleteMessagesDescriptionEveryone">Ziur zaude mezu hauek denentzat ezabatu nahi dituzula?</string>
     <string name="deleting">Ezabatzen</string>

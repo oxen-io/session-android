@@ -266,7 +266,6 @@
     <string name="deleteAfterLegacyDisappearingMessagesLegacy">Mantojums</string>
     <string name="deleteAfterLegacyDisappearingMessagesOriginal">Gaistošo ziņojumu oriģinālā versija.</string>
     <string name="deleteAfterLegacyDisappearingMessagesTheyChangedTimer"><b>{name}</b> iestatīja pazūdošo ziņu taimeri uz <b>{time}</b></string>
-    <string name="deleteMessageConfirm">Vai jūs esat pārliecināti ka vēlaties dzēst šo ziņu?</string>
     <string name="deleteMessageDeletedGlobally">Šis ziņojums tika izdzēsts</string>
     <string name="deleteMessageDeletedLocally">Šis ziņojums tika izdzēsts šajā ierīcē</string>
     <string name="deleteMessageDescriptionDevice">Vai jūs esat pārliecināti ka vēlaties dzēst šo ziņu tikai no šīs ierīces?</string>
@@ -279,7 +278,6 @@
         <item quantity="one">Neizdevās dzēst ziņu</item>
         <item quantity="other">Neizdevās dzēst ziņas</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Vai jūs esat pārliecināti, ka vēlaties dzēst šos ziņojumus?</string>
     <string name="deleteMessagesDescriptionDevice">Vai esat pārliecināts, ka vēlaties dzēst šos ziņojumus tikai no šīs ierīces?</string>
     <string name="deleteMessagesDescriptionEveryone">Vai esat pārliecināts, ka vēlaties dzēst šos ziņojumus visiem?</string>
     <string name="deleting">Dzēšana</string>

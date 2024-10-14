@@ -288,7 +288,9 @@ class ConversationViewModel(
                                 defaultToEveryone = false,
                                 everyoneEnabled = false, // disable 'delete for everyone' - can only delete locally in this case
                                 messageType = conversationType,
-                                warning = "Some of the messages you have selected cannot be deleted for everyone" //todo DELETION get real string from res once available
+                                warning = application.resources.getQuantityString(
+                                    R.plurals.deleteMessageWarning, messages.count(), messages.count()
+                                )
                             )
                         )
                     }

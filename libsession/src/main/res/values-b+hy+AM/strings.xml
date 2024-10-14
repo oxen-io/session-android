@@ -281,7 +281,6 @@
         <item quantity="one">Ջնջել հաղորդագրությունը</item>
         <item quantity="other">Ջնջել հաղորդագրությունները</item>
     </plurals>
-    <string name="deleteMessageConfirm">Վստա՞հ եք, որ ուզում եք ջնջել այս հաղորդագրությունը:</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Հաղորդագրությունը ջնջված է</item>
         <item quantity="other">Հաղորդագրությունները ջնջված են</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Չհաջողվեց ջնջել հաղորդագրությունը</item>
         <item quantity="other">Չհաջողվեց ջնջել հաղորդագրությունները</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Վստա՞հ եք, որ ուզում եք ջնջել այս հաղորդագրություններն:</string>
     <string name="deleteMessagesDescriptionDevice">Իսկապե՞ս ուզում եք ջնջել այս հաղորդագրությունները միայն այս սարքից:</string>
     <string name="deleteMessagesDescriptionEveryone">Իսկապե՞ս ուզում եք ջնջել այս հաղորդագրությունները բոլորի համար:</string>
     <string name="deleting">Ջնջվում է</string>

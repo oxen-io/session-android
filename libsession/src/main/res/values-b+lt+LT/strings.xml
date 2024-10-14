@@ -285,7 +285,6 @@
         <item quantity="many">Ištrinti žinutes</item>
         <item quantity="other">Ištrinti žinutes</item>
     </plurals>
-    <string name="deleteMessageConfirm">Ar tikrai norite ištrinti šią žinutę?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Žinutė ištrinta</item>
         <item quantity="few">Žinutės ištrintos</item>
@@ -305,7 +304,6 @@
         <item quantity="many">Nepavyko ištrinti žinučių</item>
         <item quantity="other">Nepavyko ištrinti žinučių</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Ar tikrai norite ištrinti šias žinutes?</string>
     <string name="deleteMessagesDescriptionDevice">Ar tikrai norite ištrinti šias žinutes tik iš šio įrenginio?</string>
     <string name="deleteMessagesDescriptionEveryone">Ar tikrai norite ištrinti šias žinutes visiems?</string>
     <string name="deleting">Ištrinama</string>

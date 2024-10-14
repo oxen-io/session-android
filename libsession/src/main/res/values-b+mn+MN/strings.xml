@@ -282,7 +282,6 @@
         <item quantity="one">Мессеж устгах</item>
         <item quantity="other">Мессежүүдийг устгах</item>
     </plurals>
-    <string name="deleteMessageConfirm">Та энэ зурвасыг устгахдаа итгэлтэй байна уу?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Мессеж устгагдсан</item>
         <item quantity="other">Мессежүүд устгагдсан</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Мессеж устгах амжилтгүй боллоо</item>
         <item quantity="other">Мессежүүд устгах амжилтгүй боллоо</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Та эдгээр зурвасуудыг устгахдаа итгэлтэй байна уу?</string>
     <string name="deleteMessagesDescriptionDevice">Та эдгээр мессежүүдийг зөвхөн энэ төхөөрөмжөөс л устгахыг хүсэж байна уу?</string>
     <string name="deleteMessagesDescriptionEveryone">Та эдгээр мессежүүдийг бүгдэд зориулж устгахыг хүсэж байна уу?</string>
     <string name="deleting">Устгаж байна</string>

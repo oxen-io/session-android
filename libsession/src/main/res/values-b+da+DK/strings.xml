@@ -281,7 +281,6 @@
         <item quantity="one">Slet besked</item>
         <item quantity="other">Slet beskeder</item>
     </plurals>
-    <string name="deleteMessageConfirm">Er du sikker på, at du vil slette denne besked?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Besked slettet</item>
         <item quantity="other">Beskeder slettet</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Kunne ikke slette besked</item>
         <item quantity="other">Kunne ikke slette beskeder</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Er du sikker på, at du vil slette disse beskeder?</string>
     <string name="deleteMessagesDescriptionDevice">Er du sikker på, at du vil slette disse beskeder kun fra denne enhed?</string>
     <string name="deleteMessagesDescriptionEveryone">Er du sikker på, at du vil slette disse beskeder for alle?</string>
     <string name="deleting">Sletter</string>

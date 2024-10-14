@@ -282,7 +282,6 @@
         <item quantity="one">Nachricht löschen</item>
         <item quantity="other">Nachrichten löschen</item>
     </plurals>
-    <string name="deleteMessageConfirm">Möchtest du diese Nachricht wirklich löschen?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Nachricht gelöscht</item>
         <item quantity="other">Nachrichten gelöscht</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Die Nachricht konnte nicht gelöscht werden</item>
         <item quantity="other">Die Nachrichten konnten nicht gelöscht werden</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Möchtest du diese Nachrichten wirklich löschen?</string>
     <string name="deleteMessagesDescriptionDevice">Möchtest du diese Nachrichten wirklich nur von diesem Gerät löschen?</string>
     <string name="deleteMessagesDescriptionEveryone">Möchtest du diese Nachrichten wirklich für alle löschen?</string>
     <string name="deleting">Wird gelöscht</string>

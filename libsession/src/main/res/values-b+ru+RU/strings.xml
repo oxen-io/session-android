@@ -286,7 +286,6 @@
         <item quantity="many">Удалить сообщения</item>
         <item quantity="other">Удалить сообщения</item>
     </plurals>
-    <string name="deleteMessageConfirm">Вы уверены, что хотите удалить это сообщение?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Сообщение удалено</item>
         <item quantity="few">Сообщения удалены</item>
@@ -306,7 +305,6 @@
         <item quantity="many">Не удалось удалить сообщения</item>
         <item quantity="other">Не удалось удалить сообщения</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Вы уверены, что хотите удалить эти сообщения?</string>
     <string name="deleteMessagesDescriptionDevice">Вы уверены, что хотите удалить эти сообщения (они будут удалены только с этого устройства)?</string>
     <string name="deleteMessagesDescriptionEveryone">Вы уверены, что хотите удалить эти сообщения для всех?</string>
     <string name="deleting">Удаление</string>

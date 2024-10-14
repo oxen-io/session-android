@@ -281,7 +281,6 @@
         <item quantity="one">Chotsani Uthenga</item>
         <item quantity="other">Chotsani Mauthenga</item>
     </plurals>
-    <string name="deleteMessageConfirm">Mukutsimikizika kuti mukufuna kufufuta uthenga umenewu?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Uthenga wachotsedwa</item>
         <item quantity="other">Mauthenga omwe achotsedwa</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Zalephera kuchotsa uthenga</item>
         <item quantity="other">Zalephera kuchotsa mauthenga</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Mukutsimikizika kuti mukufuna kufufuta uthenga umenewu?</string>
     <string name="deleteMessagesDescriptionDevice">Mukutsimikiza kuti mukufuna kufufuta mauthenga awa kuchokera pa chipangizochi chokha?</string>
     <string name="deleteMessagesDescriptionEveryone">Mukutsimikiza kuti mukufuna kufufuta mauthenga awa kwa aliyense?</string>
     <string name="deleting">Kuchotsa</string>

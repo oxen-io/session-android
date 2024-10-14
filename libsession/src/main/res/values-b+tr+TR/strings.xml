@@ -282,7 +282,6 @@
         <item quantity="one">Mesajı Sil</item>
         <item quantity="other">Mesajları Sil</item>
     </plurals>
-    <string name="deleteMessageConfirm">Bu mesajı silmek istediğinizden emin misiniz?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Mesaj silindi</item>
         <item quantity="other">Mesajlar silindi</item>
@@ -298,7 +297,6 @@
         <item quantity="one">İleti teslim edilemedi</item>
         <item quantity="other">İleti teslim edilemedi</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Bu iletileri silmek istediğinizden emin misiniz?</string>
     <string name="deleteMessagesDescriptionDevice">Mesajları sadece bu cihazdan silmek istediğinizden emin misiniz?</string>
     <string name="deleteMessagesDescriptionEveryone">Mesajları herkes için silmek istediğinizden emin misiniz?</string>
     <string name="deleting">Siliniyor</string>

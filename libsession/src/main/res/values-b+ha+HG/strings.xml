@@ -281,7 +281,6 @@
         <item quantity="one">Goge Saƙo</item>
         <item quantity="other">Goge Saƙonni</item>
     </plurals>
-    <string name="deleteMessageConfirm">Ka tabbata kana so ka goge wannan saƙon?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">An goge saƙo</item>
         <item quantity="other">An goge Saƙonni</item>
@@ -297,7 +296,6 @@
         <item quantity="one">An kasa share saƙo</item>
         <item quantity="other">An kasa share saƙonni</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Ka tabbata kana so ka goge waɗannan saƙonnin?</string>
     <string name="deleteMessagesDescriptionDevice">Kana tabbata kana so ka share waɗannan saƙonnin daga wannan na\'urar kawai?</string>
     <string name="deleteMessagesDescriptionEveryone">Kana tabbata kana so ka share waɗannan saƙonnin don kowa?</string>
     <string name="deleting">Ana gogewa</string>

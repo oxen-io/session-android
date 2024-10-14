@@ -281,7 +281,6 @@
         <item quantity="one">ਸੁਨੇਹਾ ਮਿਟਾਓ</item>
         <item quantity="other">ਸੁਨੇਹੇ ਮਿਟਾਓ</item>
     </plurals>
-    <string name="deleteMessageConfirm">ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਹ ਸੁਨੇਹਾ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">ਸੁਨੇਹਾ ਹਟਾਇਆ ਗਿਆ</item>
         <item quantity="other">ਸੁਨੇਹੇ ਹਟਾਏ ਗਏ</item>
@@ -297,7 +296,6 @@
         <item quantity="one">ਸੁਨੇਹਾ ਮਿਟਾਉਣ ਵਿੱਚ ਅਸਫਲ</item>
         <item quantity="other">ਸੁਨੇਹੇ ਮਿਟਾਉਣ ਵਿੱਚ ਅਸਫਲ</item>
     </plurals>
-    <string name="deleteMessagesConfirm">ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਹਨਾਂ ਸੁਨੇਹਿਆਂ ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="deleteMessagesDescriptionDevice">ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਹ ਸੁਨੇਹੇ ਸਿਰਫ਼ ਇਸ ਸੰਦ ਤੋਂ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="deleteMessagesDescriptionEveryone">ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਹ ਸੁਨੇਹੇ ਸਾਰੇ ਲਈ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="deleting">ਹਟਾਇਆ ਜਾ ਰਿਹਾ ਹੈ</string>

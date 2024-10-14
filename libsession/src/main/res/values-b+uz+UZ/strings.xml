@@ -282,7 +282,6 @@
         <item quantity="one">Xabarni o\'chirish</item>
         <item quantity="other">Xabarlarni o\'chirish</item>
     </plurals>
-    <string name="deleteMessageConfirm">Haqiqatan ham bu xabarni o\'chirmoqchimisiz?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Xabar o\'chirildi</item>
         <item quantity="other">Xabarlar oʻchirildi</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Xabarni o\'chirishda muammo chiqdi</item>
         <item quantity="other">Xabarlarni o\'chirishda muammo chiqdi</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Haqiqatan ham bu xabarlarni o\'chirmoqchimisiz?</string>
     <string name="deleteMessagesDescriptionDevice">Haqiqatan ham bu xabarlarni faqat ushbu qurilma o\'chirishmoqchimisiz?</string>
     <string name="deleteMessagesDescriptionEveryone">Haqiqatan ham bu xabarlarni hammadan o\'chirmoqchimisiz?</string>
     <string name="deleting">O\'chirilmoqda</string>

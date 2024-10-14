@@ -63,11 +63,14 @@ fun ConversationV2Dialogs(
                     dialogsState.deleteEveryone.messages.size,
                     dialogsState.deleteEveryone.messages.size
                 ),
-                text = stringResource(R.string.deleteMessageConfirm), //todo DELETION we need the plural version of this here, which currently is not set up in strings
+                text = pluralStringResource(
+                    R.plurals.deleteMessageConfirm,
+                    dialogsState.deleteEveryone.messages.size,
+                    dialogsState.deleteEveryone.messages.size
+                ),
                 content = {
                     // add warning text, if any
                     dialogsState.deleteEveryone.warning?.let {
-                        //todo DELETION confirm styling once finalised
                         Text(
                             text = it,
                             textAlign = TextAlign.Center,
@@ -144,7 +147,11 @@ fun ConversationV2Dialogs(
                     dialogsState.deleteAllDevices.messages.size,
                     dialogsState.deleteAllDevices.messages.size
                 ),
-                text = stringResource(R.string.deleteMessageConfirm), //todo DELETION we need the plural version of this here, which currently is not set up in strings
+                text = pluralStringResource(
+                    R.plurals.deleteMessageConfirm,
+                    dialogsState.deleteAllDevices.messages.size,
+                    dialogsState.deleteAllDevices.messages.size
+                ),
                 content = {
                     TitledRadioButton(
                         contentPadding = PaddingValues(

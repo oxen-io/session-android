@@ -280,7 +280,6 @@
     <plurals name="deleteMessage">
         <item quantity="other">Xóa tin nhắn</item>
     </plurals>
-    <string name="deleteMessageConfirm">Bạn có chắc chắn rằng bạn muốn xoá tin nhắn này không?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">Các tin nhắn đã bị xoá</item>
     </plurals>
@@ -294,7 +293,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">Không thể xóa tin nhắn</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Bạn có chắc chắn rằng bạn muốn xoá các tin nhắn này không?</string>
     <string name="deleteMessagesDescriptionDevice">Bạn có chắc rằng bạn muốn xoá những tin nhắn này chỉ từ thiết bị này?</string>
     <string name="deleteMessagesDescriptionEveryone">Bạn có chắc rằng bạn muốn xoá những tin nhắn này cho tất cả mọi người?</string>
     <string name="deleting">Đang xóa</string>

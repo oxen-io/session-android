@@ -281,7 +281,6 @@
         <item quantity="one">پیغام ړنګول</item>
         <item quantity="other">پیغامونه ړنګول</item>
     </plurals>
-    <string name="deleteMessageConfirm">آیا تاسو ډاډه یاست چې غواړئ دا پیغام حذف کړئ؟</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">پیغام حذف شوی</item>
         <item quantity="other">پیغامونه حذف شوي</item>
@@ -297,7 +296,6 @@
         <item quantity="one">پیغام حذف ناکام شو</item>
         <item quantity="other">پیغامونه حذف ناکام شول</item>
     </plurals>
-    <string name="deleteMessagesConfirm">آیا تاسو ډاډه یاست چې غواړئ دا پیغامونه حذف کړئ؟</string>
     <string name="deleteMessagesDescriptionDevice">ته ډاډه يې چې دا پیغامونه یوازې له دې وسیلې څخه حذفول غواړې؟</string>
     <string name="deleteMessagesDescriptionEveryone">ته ډاډه يې چې دا پیغامونه د ټولو لپاره حذفول غواړې؟</string>
     <string name="deleting">ښکته کول</string>

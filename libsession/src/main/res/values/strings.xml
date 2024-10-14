@@ -283,7 +283,10 @@
         <item quantity="one">Delete Message</item>
         <item quantity="other">Delete Messages</item>
     </plurals>
-    <string name="deleteMessageConfirm">Are you sure you want to delete this message?</string>
+    <plurals name="deleteMessageConfirm">
+        <item quantity="one">Are you sure you want to delete this message?</item>
+        <item quantity="other">Are you sure you want to delete these messages?</item>
+    </plurals>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Message deleted</item>
         <item quantity="other">Messages deleted</item>
@@ -299,7 +302,14 @@
         <item quantity="one">Failed to delete message</item>
         <item quantity="other">Failed to delete messages</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Are you sure you want to delete these messages?</string>
+    <plurals name="deleteMessageNoteToSelfWarning">
+        <item quantity="one">This message cannot be deleted from all your devices</item>
+        <item quantity="other">Some of the messages you have selected cannot be deleted from all your devices</item>
+    </plurals>
+    <plurals name="deleteMessageWarning">
+        <item quantity="one">This message cannot be deleted for everyone</item>
+        <item quantity="other">Some of the messages you have selected cannot be deleted for everyone</item>
+    </plurals>
     <string name="deleteMessagesDescriptionDevice">Are you sure you want to delete these messages from this device only?</string>
     <string name="deleteMessagesDescriptionEveryone">Are you sure you want to delete these messages for everyone?</string>
     <string name="deleting">Deleting</string>
@@ -347,6 +357,7 @@
     <string name="displayNameNew">Pick a new display name</string>
     <string name="displayNamePick">Pick your display name</string>
     <string name="displayNameSet">Set Display Name</string>
+    <string name="displayNameVisible">Your Display Name is visible to users, groups and communities you interact with.</string>
     <string name="document">Document</string>
     <string name="done">Done</string>
     <string name="download">Download</string>
@@ -407,6 +418,8 @@
     <string name="groupInviteFailedMultiple">Failed to invite {name} and {count} others to {group_name}</string>
     <string name="groupInviteFailedTwo">Failed to invite {name} and {other_name} to {group_name}</string>
     <string name="groupInviteFailedUser">Failed to invite {name} to {group_name}</string>
+    <string name="groupInviteReinvite"><b>{name}</b> invited you to rejoin <b>{group_name}</b>, where you are an Admin.</string>
+    <string name="groupInviteReinviteYou">You were invited to rejoin <b>{group_name}</b>, where you are an Admin.</string>
     <string name="groupInviteSending">Sending invite</string>
     <string name="groupInviteSent">Invite sent</string>
     <string name="groupInviteSuccessful">Group invite successful</string>
@@ -414,6 +427,7 @@
     <string name="groupInviteYou"><b>You</b> were invited to join the group.</string>
     <string name="groupInviteYouAndMoreNew"><b>You</b> and <b>{count} others</b> were invited to join the group.</string>
     <string name="groupInviteYouAndOtherNew"><b>You</b> and <b>{other_name}</b> were invited to join the group.</string>
+    <string name="groupInviteYouHistory"><b>You</b> were invited to join the group. Chat history was shared.</string>
     <string name="groupLeave">Leave Group</string>
     <string name="groupLeaveDescription">Are you sure you want to leave <b>{group_name}</b>?</string>
     <string name="groupLeaveDescriptionAdmin">Are you sure you want to leave <b>{group_name}</b>?\n\nThis will remove all members and delete all group content.</string>
@@ -439,6 +453,7 @@
     <string name="groupNameEnterShorter">Please enter a shorter group name.</string>
     <string name="groupNameNew">Group name is now {group_name}.</string>
     <string name="groupNameUpdated">Group name updated.</string>
+    <string name="groupNameVisible">Group name is visible to all group members.</string>
     <string name="groupNoMessages">You have no messages from <b>{group_name}</b>. Send a message to start the conversation!</string>
     <string name="groupOnlyAdmin">You are the only admin in <b>{group_name}</b>.\n\nGroup members and settings cannot be changed without an admin.</string>
     <string name="groupPromotedYou"><b>You</b> were promoted to Admin.</string>
@@ -459,6 +474,7 @@
     <string name="groupRemovedMultiple"><b>{name}</b> and <b>{count} others</b> were removed from the group.</string>
     <string name="groupRemovedTwo"><b>{name}</b> and <b>{other_name}</b> were removed from the group.</string>
     <string name="groupRemovedYou">You were removed from <b>{group_name}</b>.</string>
+    <string name="groupRemovedYouGeneral">You were removed from the group.</string>
     <string name="groupRemovedYouMultiple"><b>You</b> and <b>{count} others</b> were removed from the group.</string>
     <string name="groupRemovedYouTwo"><b>You</b> and <b>{other_name}</b> were removed from the group.</string>
     <string name="groupSetDisplayPicture">Set Group Display Picture</string>
@@ -587,6 +603,7 @@
     <string name="next">Next</string>
     <string name="nicknameDescription">Choose a nickname for <b>{name}</b>. This will appear to you in your one-to-one and group conversations.</string>
     <string name="nicknameEnter">Enter nickname</string>
+    <string name="nicknameErrorShorter">Please enter a shorter nickname</string>
     <string name="nicknameRemove">Remove Nickname</string>
     <string name="nicknameSet">Set Nickname</string>
     <string name="no">No</string>

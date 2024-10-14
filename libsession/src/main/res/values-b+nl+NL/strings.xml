@@ -282,7 +282,6 @@
         <item quantity="one">Verwijder bericht</item>
         <item quantity="other">Verwijder berichten</item>
     </plurals>
-    <string name="deleteMessageConfirm">Weet u zeker dat u dit bericht wilt verwijderen?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Bericht verwijderd</item>
         <item quantity="other">Berichten verwijderd</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Bericht verwijderen mislukt</item>
         <item quantity="other">Berichten verwijderen mislukt</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Weet u zeker dat u deze berichten wilt verwijderen?</string>
     <string name="deleteMessagesDescriptionDevice">Weet u zeker dat u deze berichten alleen van dit apparaat wilt wissen?</string>
     <string name="deleteMessagesDescriptionEveryone">Weet u zeker dat u deze berichten voor iedereen wilt wissen?</string>
     <string name="deleting">Aan het verwijderen</string>

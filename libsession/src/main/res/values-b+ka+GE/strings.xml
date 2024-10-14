@@ -281,7 +281,6 @@
         <item quantity="one">შეტყობინების წაშლა</item>
         <item quantity="other">შეტყობინებების წაშლა</item>
     </plurals>
-    <string name="deleteMessageConfirm">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინების წაშლა?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">შეტყობინება წაშლილია</item>
         <item quantity="other">შეტყობინებები წაშლილია</item>
@@ -297,7 +296,6 @@
         <item quantity="one">შეტყობინების წაშლა ვერ მოხერხდა</item>
         <item quantity="other">შეტყობინებების წაშლა ვერ მოხერხდა</item>
     </plurals>
-    <string name="deleteMessagesConfirm">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინებების წაშლა?</string>
     <string name="deleteMessagesDescriptionDevice">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინებების წაშლა მხოლოდ ამ მოწყობილობიდან?</string>
     <string name="deleteMessagesDescriptionEveryone">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინებების წაშლა ყველასთვის?</string>
     <string name="deleting">წაშლა მიმდინარეობს</string>
