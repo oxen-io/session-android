@@ -8,6 +8,7 @@ class SnodeModule(
 ) {
 
     companion object {
+        @Deprecated("Use properly DI components instead")
         lateinit var shared: SnodeModule
 
         val isInitialized: Boolean get() = Companion::shared.isInitialized

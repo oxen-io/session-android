@@ -104,7 +104,7 @@ class RecipientProvider {
   }
 
   private @NonNull RecipientDetails getRecipientDetailsSync(Context context, @NonNull Address address, Optional<RecipientSettings> settings, Optional<GroupRecord> groupRecord, boolean nestedAsynchronous) {
-    if (address.isGroup()) return getGroupRecipientDetails(context, address, groupRecord, settings, nestedAsynchronous);
+    if (address.isGroup() && !address.isClosedGroupV2()) return getGroupRecipientDetails(context, address, groupRecord, settings, nestedAsynchronous);
     else                   return getIndividualRecipientDetails(context, address, settings);
   }
 
@@ -161,6 +161,7 @@ class RecipientProvider {
               final long                   mutedUntil;
               final int                    notifyType;
     @Nullable final DisappearingState      disappearingState;
+              final boolean                autoDownloadAttachments;
     @Nullable final VibrateState           messageVibrateState;
     @Nullable final VibrateState           callVibrateState;
               final boolean                blocked;
@@ -195,6 +196,7 @@ class RecipientProvider {
       this.callRingtone                    = settings     != null ? settings.getCallRingtone() : null;
       this.mutedUntil                      = settings     != null ? settings.getMuteUntil() : 0;
       this.notifyType                      = settings     != null ? settings.getNotifyType() : 0;
+      this.autoDownloadAttachments         = settings     != null && settings.getAutoDownloadAttachments();
       this.disappearingState               = settings     != null ? settings.getDisappearingState() : null;
       this.messageVibrateState             = settings     != null ? settings.getMessageVibrateState() : null;
       this.callVibrateState                = settings     != null ? settings.getCallVibrateState() : null;

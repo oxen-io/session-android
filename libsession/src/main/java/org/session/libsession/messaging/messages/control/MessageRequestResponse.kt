@@ -10,6 +10,8 @@ class MessageRequestResponse(val isApproved: Boolean, var profile: Profile? = nu
 
     override val isSelfSendValid: Boolean = true
 
+    override fun shouldDiscardIfBlocked(): Boolean = true
+
     override fun toProto(): SignalServiceProtos.Content? {
         val profileProto = SignalServiceProtos.DataMessage.LokiProfile.newBuilder()
         profile?.displayName?.let { profileProto.displayName = it }

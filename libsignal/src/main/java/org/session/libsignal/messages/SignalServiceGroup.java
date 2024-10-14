@@ -35,12 +35,15 @@ public class SignalServiceGroup {
     UNKNOWN,
     UPDATE,
     DELIVER,
-    MEMBER_LEFT,
+    QUIT,
     REQUEST_INFO,
     CREATION,
     NAME_CHANGE,
     MEMBER_ADDED,
-    MEMBER_REMOVED
+    MEMBER_REMOVED,
+    LEAVING,
+    ERROR_QUIT,
+    KICKED,
   }
 
   private final byte[]                            groupId;
@@ -84,6 +87,10 @@ public class SignalServiceGroup {
 
   public byte[] getGroupId() {
     return groupId;
+  }
+
+  public boolean isNewClosedGroup() {
+    return groupId.length == 33 && groupId[0] == 0x03;
   }
 
   public GroupType getGroupType() { return  groupType; }

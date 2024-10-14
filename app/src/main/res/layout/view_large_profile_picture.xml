@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.thoughtcrime.securesms.components.ProfilePictureView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/doubleModeImageViewContainer"
+        android:layout_centerInParent="true"
+        android:layout_width="@dimen/extra_large_profile_picture_size"
+        android:layout_height="@dimen/extra_large_profile_picture_size">
+
+        <ImageView
+            android:layout_margin="@dimen/small_spacing"
+            android:id="@+id/doubleModeImageView1"
+            android:layout_width="@dimen/large_profile_picture_size"
+            android:layout_height="@dimen/large_profile_picture_size"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/profile_picture_view_large_background" />
+
+        <ImageView
+            android:layout_margin="@dimen/small_spacing"
+            android:id="@+id/doubleModeImageView2"
+            android:layout_width="@dimen/large_profile_picture_size"
+            android:layout_height="@dimen/large_profile_picture_size"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/profile_picture_view_large_background" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_centerInParent="true"
+        android:id="@+id/singleModeImageView"
+        android:layout_width="@dimen/large_profile_picture_size"
+        android:layout_height="@dimen/large_profile_picture_size"
+        android:background="@drawable/profile_picture_view_large_background" />
+
+    <ImageView
+        android:layout_centerInParent="true"
+        android:id="@+id/largeSingleModeImageView"
+        android:layout_width="@dimen/extra_large_profile_picture_size"
+        android:layout_height="@dimen/extra_large_profile_picture_size"
+        android:background="@drawable/profile_picture_view_large_background" />
+
+</org.thoughtcrime.securesms.components.ProfilePictureView>

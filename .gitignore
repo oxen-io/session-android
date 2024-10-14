@@ -2,6 +2,7 @@
 project.properties
 .project
 .settings
+.kotlin
 bin/
 gen/
 .idea/

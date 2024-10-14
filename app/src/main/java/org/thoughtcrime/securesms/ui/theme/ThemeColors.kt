@@ -18,6 +18,8 @@ interface ThemeColors {
     // properties to override for each theme
     val isLight: Boolean
     val primary: Color
+    val warning: Color
+    val textAlert: Color
     val danger: Color
     val disabled: Color
     val background: Color
@@ -100,6 +102,7 @@ fun dangerButtonColors() = ButtonDefaults.buttonColors(
 data class ClassicDark(override val primary: Color = primaryGreen) : ThemeColors {
     override val isLight = false
     override val danger = dangerDark
+    override val warning = warningUniversal
     override val disabled = disabledDark
     override val background = classicDark0
     override val backgroundSecondary = classicDark1
@@ -113,11 +116,13 @@ data class ClassicDark(override val primary: Color = primaryGreen) : ThemeColors
     override val qrCodeBackground = text
     override val primaryButtonFill = primary
     override val primaryButtonFillText = Color.Black
+    override val textAlert: Color = classicDark6
 }
 
 data class ClassicLight(override val primary: Color = primaryGreen) : ThemeColors {
     override val isLight = true
     override val danger = dangerLight
+    override val warning = warningUniversal
     override val disabled = disabledLight
     override val background = classicLight6
     override val backgroundSecondary = classicLight5
@@ -131,11 +136,13 @@ data class ClassicLight(override val primary: Color = primaryGreen) : ThemeColor
     override val qrCodeBackground = backgroundSecondary
     override val primaryButtonFill = text
     override val primaryButtonFillText = Color.White
+    override val textAlert: Color = classicLight0
 }
 
 data class OceanDark(override val primary: Color = primaryBlue) : ThemeColors {
     override val isLight = false
     override val danger = dangerDark
+    override val warning = warningUniversal
     override val disabled = disabledDark
     override val background = oceanDark2
     override val backgroundSecondary = oceanDark1
@@ -149,11 +156,13 @@ data class OceanDark(override val primary: Color = primaryBlue) : ThemeColors {
     override val qrCodeBackground = text
     override val primaryButtonFill = primary
     override val primaryButtonFillText = Color.Black
+    override val textAlert: Color = oceanDark7
 }
 
 data class OceanLight(override val primary: Color = primaryBlue) : ThemeColors {
     override val isLight = true
     override val danger = dangerLight
+    override val warning = warningUniversal
     override val disabled = disabledLight
     override val background = oceanLight7
     override val backgroundSecondary = oceanLight6
@@ -167,6 +176,7 @@ data class OceanLight(override val primary: Color = primaryBlue) : ThemeColors {
     override val qrCodeBackground = backgroundSecondary
     override val primaryButtonFill = text
     override val primaryButtonFillText = Color.White
+    override val textAlert: Color = oceanLight0
 }
 
 @Preview

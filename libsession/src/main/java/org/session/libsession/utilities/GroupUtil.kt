@@ -1,13 +1,14 @@
 package org.session.libsession.utilities
 
 import org.session.libsession.messaging.open_groups.OpenGroup
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsignal.messages.SignalServiceGroup
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.IdPrefix
 import java.io.IOException
 
 object GroupUtil {
-    const val CLOSED_GROUP_PREFIX = "__textsecure_group__!"
+    const val LEGACY_CLOSED_GROUP_PREFIX = "__textsecure_group__!"
     const val COMMUNITY_PREFIX = "__loki_public_chat_group__!"
     const val COMMUNITY_INBOX_PREFIX = "__open_group_inbox__!"
 
@@ -30,7 +31,9 @@ object GroupUtil {
 
     @JvmStatic
     fun getEncodedClosedGroupID(groupID: ByteArray): String {
-        return CLOSED_GROUP_PREFIX + Hex.toStringCondensed(groupID)
+        val hex = Hex.toStringCondensed(groupID)
+        if (hex.startsWith(IdPrefix.GROUP.value)) throw IllegalArgumentException("Trying to encode a new closed group")
+        return LEGACY_CLOSED_GROUP_PREFIX + hex
     }
 
     @JvmStatic
@@ -69,7 +72,7 @@ object GroupUtil {
     }
 
     fun isEncodedGroup(groupId: String): Boolean {
-        return groupId.startsWith(CLOSED_GROUP_PREFIX) || groupId.startsWith(COMMUNITY_PREFIX)
+        return groupId.startsWith(LEGACY_CLOSED_GROUP_PREFIX) || groupId.startsWith(COMMUNITY_PREFIX)
     }
 
     @JvmStatic
@@ -83,8 +86,8 @@ object GroupUtil {
     }
 
     @JvmStatic
-    fun isClosedGroup(groupId: String): Boolean {
-        return groupId.startsWith(CLOSED_GROUP_PREFIX)
+    fun isLegacyClosedGroup(groupId: String): Boolean {
+        return groupId.startsWith(LEGACY_CLOSED_GROUP_PREFIX)
     }
 
     // NOTE: Signal group ID handling is weird. The ID is double encoded in the database, but not in a `GroupContext`.
@@ -92,6 +95,7 @@ object GroupUtil {
     @JvmStatic
     @Throws(IOException::class)
     fun doubleEncodeGroupID(groupPublicKey: String): String {
+        if (groupPublicKey.startsWith(IdPrefix.GROUP.value)) throw IllegalArgumentException("Trying to double encode a new closed group")
         return getEncodedClosedGroupID(getEncodedClosedGroupID(Hex.fromStringCondensed(groupPublicKey)).toByteArray())
     }
 

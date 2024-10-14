@@ -9,12 +9,12 @@ import com.bumptech.glide.RequestManager
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.TextSecurePreferences
 
-class EditClosedGroupMembersAdapter(
+class EditLegacyGroupMembersAdapter(
     private val context: Context,
     private val glide: RequestManager,
     private val admin: Boolean,
     private val memberClickListener: ((String) -> Unit)? = null
-) : RecyclerView.Adapter<EditClosedGroupMembersAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<EditLegacyGroupMembersAdapter.ViewHolder>() {
 
     private val members = ArrayList<String>()
     private val zombieMembers = ArrayList<String>()

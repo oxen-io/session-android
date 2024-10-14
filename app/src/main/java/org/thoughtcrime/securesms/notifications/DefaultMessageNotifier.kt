@@ -43,11 +43,9 @@ import kotlin.concurrent.Volatile
 import me.leolin.shortcutbadger.ShortcutBadger
 import network.loki.messenger.R
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities.blindedKeyPair
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.ServiceUtil
-import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getLocalNumber
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getNotificationPrivacy
@@ -56,6 +54,7 @@ import org.session.libsession.utilities.TextSecurePreferences.Companion.hasHidde
 import org.session.libsession.utilities.TextSecurePreferences.Companion.isNotificationsEnabled
 import org.session.libsession.utilities.TextSecurePreferences.Companion.removeHasHiddenMessageRequests
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Util

@@ -3,5 +3,8 @@
     <application>
         <uses-library android:name="android.test.runner"
             android:required="false" />
+
+        <activity android:name="androidx.activity.ComponentActivity"/>
+
     </application>
 </manifest>

@@ -51,19 +51,19 @@ class ProfilePictureView @JvmOverloads constructor(
     }
 
     fun update(recipient: Recipient) {
-        recipient.run { update(address, isClosedGroupRecipient, isOpenGroupInboxRecipient) }
+        recipient.run { update(address, isLegacyClosedGroupRecipient, isOpenGroupInboxRecipient) }
     }
 
     fun update(
         address: Address,
-        isClosedGroupRecipient: Boolean = false,
+        isLegacyClosedGroupRecipient: Boolean = false,
         isOpenGroupInboxRecipient: Boolean = false
     ) {
         fun getUserDisplayName(publicKey: String): String = prefs.takeIf { userPublicKey == publicKey }?.getProfileName()
             ?: DatabaseComponent.get(context).sessionContactDatabase().getContactWithAccountID(publicKey)?.displayName(Contact.ContactContext.REGULAR)
             ?: publicKey
 
-        if (isClosedGroupRecipient) {
+        if (isLegacyClosedGroupRecipient) {
             val members = DatabaseComponent.get(context).groupDatabase()
                 .getGroupMemberAddresses(address.toGroupString(), true)
                 .sorted()

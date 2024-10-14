@@ -261,7 +261,6 @@ class VisibleMessageView : FrameLayout {
             glide,
             thread,
             searchQuery,
-            message.isOutgoing || isGroupThread || (contact?.isTrusted ?: false),
             onAttachmentNeedsDownload
         )
         binding.messageContentView.root.delegate = delegate

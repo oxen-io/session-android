@@ -3,32 +3,35 @@ package org.thoughtcrime.securesms.components;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 
 import org.session.libsession.messaging.messages.control.TypingIndicator;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.database.ThreadDatabase;
-import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 @SuppressLint("UseSparseArrays")
+@Singleton
 public class TypingStatusSender {
 
   private static final long REFRESH_TYPING_TIMEOUT = TimeUnit.SECONDS.toMillis(10);
   private static final long PAUSE_TYPING_TIMEOUT   = TimeUnit.SECONDS.toMillis(3);
 
-  private final Context              context;
   private final Map<Long, TimerPair> selfTypingTimers;
+  private final ThreadDatabase       threadDatabase;
 
-  public TypingStatusSender(@NonNull Context context) {
-    this.context          = context;
-    this.selfTypingTimers = new HashMap<>();
+  @Inject
+  public TypingStatusSender(ThreadDatabase threadDatabase) {
+      this.threadDatabase = threadDatabase;
+      this.selfTypingTimers = new HashMap<>();
   }
 
   public synchronized void onTypingStarted(long threadId) {
@@ -77,7 +80,6 @@ public class TypingStatusSender {
   }
 
   private void sendTyping(long threadId, boolean typingStarted) {
-    ThreadDatabase threadDatabase = DatabaseComponent.get(context).threadDatabase();
     Recipient recipient = threadDatabase.getRecipientForThreadId(threadId);
     if (recipient == null) { return; }
     if (!SessionMetaProtocol.shouldSendTypingIndicator(recipient)) { return; }

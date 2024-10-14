@@ -1,9 +1,12 @@
 package org.session.libsignal.utilities
 
+import kotlinx.coroutines.delay
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import java.util.*
+import kotlin.coroutines.cancellation.CancellationException
 
+@Deprecated("Use retrySuspendAsPromise instead")
 fun <V, T : Promise<V, Exception>> retryIfNeeded(maxRetryCount: Int, retryInterval: Long = 1000L, body: () -> T): Promise<V, Exception> {
     var retryCount = 0
     val deferred = deferred<V, Exception>()
@@ -27,4 +30,22 @@ fun <V, T : Promise<V, Exception>> retryIfNeeded(maxRetryCount: Int, retryInterv
     }
     retryIfNeeded()
     return deferred.promise
+}
+
+suspend fun <T> retryWithUniformInterval(maxRetryCount: Int = 3, retryIntervalMills: Long = 1000L, body: suspend () -> T): T {
+    var retryCount = 0
+    while (true) {
+        try {
+            return body()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            if (retryCount == maxRetryCount) {
+                throw e
+            } else {
+                retryCount += 1
+                delay(retryIntervalMills)
+            }
+        }
+    }
 }

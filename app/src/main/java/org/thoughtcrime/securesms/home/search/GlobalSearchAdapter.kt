@@ -11,7 +11,7 @@ import network.loki.messenger.databinding.ViewGlobalSearchHeaderBinding
 import network.loki.messenger.databinding.ViewGlobalSearchResultBinding
 import network.loki.messenger.databinding.ViewGlobalSearchSubheaderBinding
 import org.session.libsession.utilities.GroupRecord
-import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.AccountId
 import org.thoughtcrime.securesms.search.model.MessageResult
 import org.thoughtcrime.securesms.ui.GetString
 import java.security.InvalidParameterException
@@ -116,7 +116,7 @@ class GlobalSearchAdapter(private val modelCallback: (Model)->Unit): RecyclerVie
         fun bind(query: String, model: Model) {
             binding.searchResultProfilePicture.recycle()
             when (model) {
-                is Model.GroupConversation -> bindModel(query, model)
+                is Model.LegacyGroupConversation -> bindModel(query, model)
                 is Model.Contact -> bindModel(query, model)
                 is Model.Message -> bindModel(query, model)
                 is Model.SavedMessages -> bindModel(model)
@@ -136,8 +136,9 @@ class GlobalSearchAdapter(private val modelCallback: (Model)->Unit): RecyclerVie
             constructor(title: String): this(GetString(title))
         }
         data class SavedMessages(val currentUserPublicKey: String): Model()
-        data class Contact(val contact: ContactModel, val name: String?, val isSelf: Boolean): Model()
-        data class GroupConversation(val groupRecord: GroupRecord): Model()
-        data class Message(val messageResult: MessageResult, val unread: Int, val isSelf: Boolean): Model()
+        data class Contact(val contact: ContactModel, val name: String?, val isSelf: Boolean) : Model()
+        data class LegacyGroupConversation(val groupRecord: GroupRecord) : Model()
+        data class ClosedGroupConversation(val sessionId: AccountId)
+        data class Message(val messageResult: MessageResult, val unread: Int, val isSelf: Boolean) : Model()
     }
 }

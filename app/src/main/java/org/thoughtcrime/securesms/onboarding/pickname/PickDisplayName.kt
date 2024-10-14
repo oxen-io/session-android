@@ -20,6 +20,7 @@ import org.thoughtcrime.securesms.onboarding.ui.ContinuePrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
+import org.thoughtcrime.securesms.ui.contentDescription
 import org.thoughtcrime.securesms.ui.theme.LocalType
 
 @Preview
@@ -63,10 +64,10 @@ internal fun PickDisplayName(
                 style = LocalType.current.base,
                 modifier = Modifier.padding(bottom = LocalDimensions.current.xsSpacing))
             Spacer(Modifier.height(LocalDimensions.current.spacing))
+
             SessionOutlinedTextField(
                 text = state.displayName,
-                modifier = Modifier.fillMaxWidth(),
-                contentDescription = stringResource(R.string.AccessibilityId_displayNameEnter),
+                modifier = Modifier.fillMaxWidth().contentDescription(R.string.AccessibilityId_displayNameEnter),
                 placeholder = stringResource(R.string.displayNameEnter),
                 onChange = onChange,
                 onContinue = onContinue,

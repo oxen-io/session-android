@@ -1,41 +1,6 @@
 #include <jni.h>
 #include "conversation.h"
 
-#pragma clang diagnostic push
-
-extern "C"
-#pragma ide diagnostic ignored "bugprone-reserved-identifier"
-JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_00024Companion_newInstance___3B(
-        JNIEnv *env, jobject thiz, jbyteArray ed25519_secret_key) {
-    std::lock_guard lock{util::util_mutex_};
-    auto secret_key = util::ustring_from_bytes(env, ed25519_secret_key);
-    auto* convo_info_volatile = new session::config::ConvoInfoVolatile(secret_key, std::nullopt);
-
-    jclass convoClass = env->FindClass("network/loki/messenger/libsession_util/ConversationVolatileConfig");
-    jmethodID constructor = env->GetMethodID(convoClass, "<init>", "(J)V");
-    jobject newConfig = env->NewObject(convoClass, constructor, reinterpret_cast<jlong>(convo_info_volatile));
-
-    return newConfig;
-}
-extern "C"
-#pragma ide diagnostic ignored "bugprone-reserved-identifier"
-JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_00024Companion_newInstance___3B_3B(
-        JNIEnv *env, jobject thiz, jbyteArray ed25519_secret_key, jbyteArray initial_dump) {
-    std::lock_guard lock{util::util_mutex_};
-    auto secret_key = util::ustring_from_bytes(env, ed25519_secret_key);
-    auto initial = util::ustring_from_bytes(env, initial_dump);
-    auto* convo_info_volatile = new session::config::ConvoInfoVolatile(secret_key, initial);
-
-    jclass convoClass = env->FindClass("network/loki/messenger/libsession_util/ConversationVolatileConfig");
-    jmethodID constructor = env->GetMethodID(convoClass, "<init>", "(J)V");
-    jobject newConfig = env->NewObject(convoClass, constructor, reinterpret_cast<jlong>(convo_info_volatile));
-
-    return newConfig;
-}
-
-
 
 extern "C"
 JNIEXPORT jint JNICALL
@@ -46,7 +11,6 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_sizeOneT
     return conversations->size_1to1();
 }
 
-#pragma clang diagnostic pop
 extern "C"
 JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseAll(JNIEnv *env,
@@ -109,6 +73,7 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_set(JNIE
     jclass one_to_one = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$OneToOne");
     jclass open_group = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$Community");
     jclass legacy_closed_group = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$LegacyGroup");
+    jclass closed_group = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$ClosedGroup");
 
     jclass to_store_class = env->GetObjectClass(to_store);
     if (env->IsSameObject(to_store_class, one_to_one)) {
@@ -120,6 +85,9 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_set(JNIE
     } else if (env->IsSameObject(to_store_class,legacy_closed_group)) {
         // store as legacy_closed_group
         convos->set(deserialize_legacy_closed_group(env, to_store, convos));
+    } else if (env->IsSameObject(to_store_class, closed_group)) {
+        // store as new closed group
+        convos->set(deserialize_closed_group(env, to_store, convos));
     }
 }
 extern "C"
@@ -349,4 +317,57 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allLegac
     for (auto contact = convos->begin_legacy_groups(); contact != convos->end(); ++contact)
         env->CallObjectMethod(our_stack, push, serialize_legacy_group(env, *contact));
     return our_stack;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allClosedGroups(JNIEnv *env,
+                                                                                        jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
+    auto convos = ptrToConvoInfo(env, thiz);
+    jclass stack = env->FindClass("java/util/Stack");
+    jmethodID init = env->GetMethodID(stack, "<init>", "()V");
+    jobject our_stack = env->NewObject(stack, init);
+    jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
+    for (auto contact = convos->begin_groups(); contact != convos->end(); ++contact)
+        env->CallObjectMethod(our_stack, push, serialize_closed_group(env, *contact));
+    return our_stack;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getClosedGroup(JNIEnv *env,
+                                                                                       jobject thiz,
+                                                                                       jstring session_id) {
+    auto config = ptrToConvoInfo(env, thiz);
+    auto session_id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    auto group = config->get_group(session_id_bytes);
+    env->ReleaseStringUTFChars(session_id, session_id_bytes);
+    if (group) {
+        auto serialized = serialize_closed_group(env, *group);
+        return serialized;
+    }
+    return nullptr;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructClosedGroup(
+        JNIEnv *env, jobject thiz, jstring session_id) {
+    auto config = ptrToConvoInfo(env, thiz);
+    auto session_id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    auto group = config->get_or_construct_group(session_id_bytes);
+    env->ReleaseStringUTFChars(session_id, session_id_bytes);
+    return serialize_closed_group(env, group);
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseClosedGroup(
+        JNIEnv *env, jobject thiz, jstring session_id) {
+    auto config = ptrToConvoInfo(env, thiz);
+    auto session_id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    auto erased = config->erase_group(session_id_bytes);
+    env->ReleaseStringUTFChars(session_id, session_id_bytes);
+    return erased;
 }

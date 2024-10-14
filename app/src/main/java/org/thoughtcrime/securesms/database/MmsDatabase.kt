@@ -158,7 +158,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                         )
                         get(context).groupReceiptDatabase()
                             .update(ourAddress, id, status, timestamp)
-                        get(context).threadDatabase().update(threadId, false, true)
+                        get(context).threadDatabase().update(threadId, false)
                         notifyConversationListeners(threadId)
                     }
                 }
@@ -175,6 +175,22 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             }
         } finally {
             cursor?.close()
+        }
+    }
+
+    fun updateInfoMessage(messageId: Long, body: String?, runThreadUpdate: Boolean = true) {
+        val threadId = getThreadIdForMessage(messageId)
+        val db = databaseHelper.writableDatabase
+        db.execSQL(
+            "UPDATE $TABLE_NAME SET $BODY = ? WHERE $ID = ?",
+            arrayOf(body, messageId.toString())
+        )
+        with (get(context).threadDatabase()) {
+            setLastSeen(threadId)
+            setHasSent(threadId, true)
+            if (runThreadUpdate) {
+                update(threadId, true)
+            }
         }
     }
 
@@ -257,7 +273,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     " WHERE " + ID + " = ?", arrayOf(id.toString() + "")
         )
         if (threadId.isPresent) {
-            get(context).threadDatabase().update(threadId.get(), false, true)
+            get(context).threadDatabase().update(threadId.get(), false)
         }
     }
 
@@ -304,7 +320,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         db.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(messageId.toString()))
     }
 
-    override fun markAsDeleted(messageId: Long, read: Boolean, hasMention: Boolean) {
+    override fun markAsDeleted(messageId: Long) {
         val database = databaseHelper.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(READ, 1)
@@ -312,7 +328,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         contentValues.put(HAS_MENTION, 0)
         database.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(messageId.toString()))
         val attachmentDatabase = get(context).attachmentDatabase()
-        queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })
+        queue { attachmentDatabase.deleteAttachmentsForMessage(messageId) }
         val threadId = getThreadIdForMessage(messageId)
 
         markAs(messageId, MmsSmsColumns.Types.BASE_DELETED_TYPE, threadId)
@@ -626,7 +642,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         )
         if (!MmsSmsColumns.Types.isExpirationTimerUpdate(mailbox)) {
             if (runThreadUpdate) {
-                get(context).threadDatabase().update(threadId, true, true)
+                get(context).threadDatabase().update(threadId, true)
             }
         }
         notifyConversationListeners(threadId)
@@ -771,7 +787,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             }
             setHasSent(threadId, true)
             if (runThreadUpdate) {
-                update(threadId, true, true)
+                update(threadId, true)
             }
         }
         return messageId
@@ -851,23 +867,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
     }
 
-    private fun deleteQuotedFromMessages(toDeleteRecords: List<MessageRecord>) {
-        if (toDeleteRecords.isEmpty()) return
-        val queryBuilder = StringBuilder()
-        for (i in toDeleteRecords.indices) {
-            queryBuilder.append("$QUOTE_ID = ").append(toDeleteRecords[i].getId())
-            if (i + 1 < toDeleteRecords.size) {
-                queryBuilder.append(" OR ")
-            }
-        }
-        val query = queryBuilder.toString()
-        val db = databaseHelper.writableDatabase
-        val values = ContentValues(2)
-        values.put(QUOTE_MISSING, 1)
-        values.put(QUOTE_AUTHOR, "")
-        db!!.update(TABLE_NAME, values, query, null)
-    }
-
     /**
      * Delete all the messages in single queries where possible
      * @param messageIds a String array representation of regularly Long types representing message IDs
@@ -890,7 +889,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
         val idsAsString = queryBuilder.toString()
         val attachmentDatabase = get(context).attachmentDatabase()
-        queue(Runnable { attachmentDatabase.deleteAttachmentsForMessages(messageIds) })
+        queue { attachmentDatabase.deleteAttachmentsForMessages(messageIds) }
         val groupReceiptDatabase = get(context).groupReceiptDatabase()
         groupReceiptDatabase.deleteRowsForMessages(messageIds)
         val database = databaseHelper.writableDatabase
@@ -900,17 +899,19 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         notifyStickerPackListeners()
     }
 
+    override fun getTypeColumn(): String = MESSAGE_BOX
+
     // Caution: The bool returned from `deleteMessage` is NOT "Was the message successfully deleted?"
     // - it is "Was the thread deleted because removing that message resulted in an empty thread"!
     override fun deleteMessage(messageId: Long): Boolean {
         val threadId = getThreadIdForMessage(messageId)
         val attachmentDatabase = get(context).attachmentDatabase()
-        queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })
+        queue { attachmentDatabase.deleteAttachmentsForMessage(messageId) }
         val groupReceiptDatabase = get(context).groupReceiptDatabase()
         groupReceiptDatabase.deleteRowsForMessage(messageId)
         val database = databaseHelper.writableDatabase
-        database!!.delete(TABLE_NAME, ID_WHERE, arrayOf(messageId.toString()))
-        val threadDeleted = get(context).threadDatabase().update(threadId, false, true)
+        database.delete(TABLE_NAME, ID_WHERE, arrayOf(messageId.toString()))
+        val threadDeleted = get(context).threadDatabase().update(threadId, false)
         notifyConversationListeners(threadId)
         notifyStickerListeners()
         notifyStickerPackListeners()
@@ -921,6 +922,12 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         val argsArray = messageIds.map { "?" }
         val argValues = messageIds.map { it.toString() }.toTypedArray()
 
+        val attachmentDatabase = get(context).attachmentDatabase()
+        val groupReceiptDatabase = get(context).groupReceiptDatabase()
+
+        queue { attachmentDatabase.deleteAttachmentsForMessages(messageIds) }
+        groupReceiptDatabase.deleteRowsForMessages(messageIds)
+
         val db = databaseHelper.writableDatabase
         db.delete(
             TABLE_NAME,
@@ -928,7 +935,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             argValues
         )
 
-        val threadDeleted = get(context).threadDatabase().update(threadId, false, true)
+        val threadDeleted = get(context).threadDatabase().update(threadId, false)
         notifyConversationListeners(threadId)
         notifyStickerListeners()
         notifyStickerPackListeners()
@@ -954,6 +961,62 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
 
     fun deleteThread(threadId: Long) {
         deleteThreads(setOf(threadId))
+    }
+
+    fun deleteMediaFor(threadId: Long, fromUser: String? = null) {
+        val db = databaseHelper.writableDatabase
+        val whereString =
+            if (fromUser == null) "$THREAD_ID = ? AND $LINK_PREVIEWS IS NULL"
+            else "$THREAD_ID = ? AND $ADDRESS = ? AND $LINK_PREVIEWS IS NULL"
+        val whereArgs = if (fromUser == null) arrayOf(threadId.toString()) else arrayOf(threadId.toString(), fromUser)
+        var cursor: Cursor? = null
+        try {
+            cursor = db.query(TABLE_NAME, arrayOf(ID), whereString, whereArgs, null, null, null, null)
+            val toDeleteStringMessageIds = mutableListOf<String>()
+            while (cursor.moveToNext()) {
+                toDeleteStringMessageIds += cursor.getLong(0).toString() // get the ID as a string
+            }
+            // TODO: this can probably be optimized out,
+            //  currently attachmentDB uses MmsID not threadID which makes it difficult to delete
+            //  and clean up on threadID alone
+            toDeleteStringMessageIds.toList().chunked(50).forEach { sublist ->
+                deleteMessages(sublist.toTypedArray())
+            }
+        } finally {
+            cursor?.close()
+        }
+        val threadDb = get(context).threadDatabase()
+        threadDb.update(threadId, false)
+        notifyConversationListeners(threadId)
+        notifyStickerListeners()
+        notifyStickerPackListeners()
+    }
+
+    fun deleteMessagesFrom(threadId: Long, fromUser: String) { // copied from deleteThreads implementation
+        val db = databaseHelper.writableDatabase
+        var cursor: Cursor? = null
+        val whereString = "$THREAD_ID = ? AND $ADDRESS = ?"
+        try {
+            cursor =
+                db!!.query(TABLE_NAME, arrayOf<String?>(ID), whereString, arrayOf(threadId.toString(), fromUser), null, null, null)
+            val toDeleteStringMessageIds = mutableListOf<String>()
+            while (cursor.moveToNext()) {
+                toDeleteStringMessageIds += cursor.getLong(0).toString() // get the ID as a string
+            }
+            // TODO: this can probably be optimized out,
+            //  currently attachmentDB uses MmsID not threadID which makes it difficult to delete
+            //  and clean up on threadID alone
+            toDeleteStringMessageIds.toList().chunked(50).forEach { sublist ->
+                deleteMessages(sublist.toTypedArray())
+            }
+        } finally {
+            cursor?.close()
+        }
+        val threadDb = get(context).threadDatabase()
+        threadDb.update(threadId, false)
+        notifyConversationListeners(threadId)
+        notifyStickerListeners()
+        notifyStickerPackListeners()
     }
 
     private fun getSerializedSharedContacts(
@@ -1099,7 +1162,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         return false
     }
 
-    /*package*/
     private fun deleteThreads(threadIds: Set<Long>) {
         val db = databaseHelper.writableDatabase
         val where = StringBuilder()
@@ -1125,7 +1187,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
         val threadDb = get(context).threadDatabase()
         for (threadId in threadIds) {
-            val threadDeleted = threadDb.update(threadId, false, true)
+            val threadDeleted = threadDb.update(threadId, false)
             notifyConversationListeners(threadId)
         }
         notifyStickerListeners()
@@ -1133,17 +1195,13 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     /*package*/
-    fun deleteMessagesInThreadBeforeDate(threadId: Long, date: Long) {
+    fun deleteMessagesInThreadBeforeDate(threadId: Long, date: Long, onlyMedia: Boolean) {
         var cursor: Cursor? = null
         try {
             val db = databaseHelper.readableDatabase
-            var where =
-                THREAD_ID + " = ? AND (CASE (" + MESSAGE_BOX + " & " + MmsSmsColumns.Types.BASE_TYPE_MASK + ") "
-            for (outgoingType in MmsSmsColumns.Types.OUTGOING_MESSAGE_TYPES) {
-                where += " WHEN $outgoingType THEN $DATE_SENT < $date"
-            }
-            where += " ELSE $DATE_RECEIVED < $date END)"
-            cursor = db!!.query(
+            var where = "$THREAD_ID = ? AND $DATE_SENT < $date"
+            if (onlyMedia) where += " AND $PART_COUNT >= 1"
+            cursor = db.query(
                 TABLE_NAME,
                 arrayOf<String?>(ID),
                 where,

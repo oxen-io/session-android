@@ -151,11 +151,11 @@ class SessionDialogBuilder(val context: Context) {
 
     fun dangerButton(
         @StringRes text: Int,
-        @StringRes contentDescription: Int = text,
+        @StringRes contentDescriptionRes: Int = text,
         listener: () -> Unit = {}
     ) = button(
         text,
-        contentDescription,
+        contentDescriptionRes,
         R.style.Widget_Session_Button_Dialog_DangerText,
     ) { listener() }
 

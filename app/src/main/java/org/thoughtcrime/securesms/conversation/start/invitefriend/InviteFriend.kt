@@ -23,6 +23,7 @@ import network.loki.messenger.R
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.ui.components.AppBarCloseIcon
 import org.thoughtcrime.securesms.ui.components.BackAppBar
+import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.ui.components.SlimOutlineButton
 import org.thoughtcrime.securesms.ui.components.SlimOutlineCopyButton
 import org.thoughtcrime.securesms.ui.components.border

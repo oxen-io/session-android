@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -16,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationBinding
 import org.session.libsession.utilities.ThemeUtil
+import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.highlightMentions
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_ALL
@@ -50,6 +50,16 @@ class ConversationView : LinearLayout {
 
     // region Updating
     fun bind(thread: ThreadRecord, isTyping: Boolean) {
+        if (thread.isLeavingGroup) {
+            binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorSecondary))
+            binding.snippetTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorSecondary))
+        } else if (thread.isErrorLeavingGroup) {
+            binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
+            binding.snippetTextView.setTextColor(context.getColorFromAttr(R.attr.danger))
+        } else {
+            binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
+            binding.snippetTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
+        }
         this.thread = thread
         if (thread.isPinned) {
             binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -87,7 +97,7 @@ class ConversationView : LinearLayout {
         val textSize = if (unreadCount < 1000) 12.0f else 10.0f
         binding.unreadCountTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
         binding.unreadCountIndicator.isVisible = (unreadCount != 0 && !thread.isRead)
-                || (configFactory.convoVolatile?.getConversationUnread(thread) == true)
+                || (configFactory.withUserConfigs { it.convoInfoVolatile.getConversationUnread(thread) })
         binding.unreadMentionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
         binding.unreadMentionIndicator.isVisible = (thread.unreadMentionCount != 0 && thread.recipient.address.isGroup)
         val senderDisplayName = getTitle(thread.recipient)
