@@ -44,10 +44,14 @@ class ConfigDatabase(context: Context, helper: SQLCipherOpenHelper): Database(co
     }
 
     fun retrieveConfigLastUpdateTimestamp(variant: String, publicKey: String): Long {
-        val db = readableDatabase
-        val cursor = db.query(TABLE_NAME, arrayOf(TIMESTAMP), VARIANT_AND_PUBKEY_WHERE, arrayOf(variant, publicKey),null, null, null)
-        if (cursor == null) return 0
-        if (!cursor.moveToFirst()) return 0
-        return (cursor.getLongOrNull(cursor.getColumnIndex(TIMESTAMP)) ?: 0)
+        return readableDatabase
+            .query(TABLE_NAME, arrayOf(TIMESTAMP), VARIANT_AND_PUBKEY_WHERE, arrayOf(variant, publicKey), null, null, null)
+            ?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    cursor.getLongOrNull(cursor.getColumnIndex(TIMESTAMP))
+                } else {
+                    null
+                }
+            } ?: 0L
     }
 }
