@@ -33,12 +33,13 @@ abstract class Message {
 
     companion object {
         fun getThreadId(message: Message, openGroupID: String?, storage: StorageProtocol, shouldCreateThread: Boolean): Long? {
-            val senderOrSync = when (message) {
-                is VisibleMessage -> message.syncTarget ?: message.sender!!
-                is ExpirationTimerUpdate -> message.syncTarget ?: message.sender!!
-                else -> message.sender!!
-            }
-            return storage.getThreadIdFor(senderOrSync, message.groupPublicKey, openGroupID, createThread = shouldCreateThread)
+            return storage.getThreadIdFor(message.senderOrSync, message.groupPublicKey, openGroupID, createThread = shouldCreateThread)
+        }
+
+        val Message.senderOrSync get() = when(this)  {
+            is VisibleMessage -> syncTarget ?: sender!!
+            is ExpirationTimerUpdate -> syncTarget ?: sender!!
+            else -> sender!!
         }
     }
 
