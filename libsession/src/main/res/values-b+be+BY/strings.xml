@@ -285,7 +285,6 @@
         <item quantity="many">Выдаліць паведамленні</item>
         <item quantity="other">Выдаліць паведамленні</item>
     </plurals>
-    <string name="deleteMessageConfirm">Вы ўпэўненыя, што жадаеце выдаліць гэтае паведамленне?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Паведамленне выдалена</item>
         <item quantity="few">Паведамленні выдалены</item>
@@ -305,7 +304,6 @@
         <item quantity="many">Не атрымалася выдаліць паведамленні</item>
         <item quantity="other">Не атрымалася выдаліць паведамленні</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Вы ўпэўненыя, што жадаеце выдаліць гэтыя паведамленні?</string>
     <string name="deleteMessagesDescriptionDevice">Вы ўпэўнены, што жадаеце выдаліць гэтыя паведамленні толькі з гэтай прылады?</string>
     <string name="deleteMessagesDescriptionEveryone">Вы ўпэўнены, што жадаеце выдаліць гэтыя паведамленні для ўсіх?</string>
     <string name="deleting">Выдаленне</string>

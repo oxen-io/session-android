@@ -279,7 +279,6 @@
     <plurals name="deleteMessage">
         <item quantity="other">Hapus Pesan</item>
     </plurals>
-    <string name="deleteMessageConfirm">Apakah Anda yakin ingin menghapus pesan ini?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">Pesan dihapus</item>
     </plurals>
@@ -293,7 +292,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">Gagal menghapus pesan</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Apakah Anda yakin ingin menghapus pesan-pesan ini?</string>
     <string name="deleteMessagesDescriptionDevice">Anda yakin ingin menghapus pesan ini hanya dari perangkat ini?</string>
     <string name="deleteMessagesDescriptionEveryone">Anda yakin ingin menghapus pesan-pesan ini untuk semua orang?</string>
     <string name="deleting">Menghapus</string>

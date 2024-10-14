@@ -280,7 +280,6 @@
     <plurals name="deleteMessage">
         <item quantity="other">Padam Mesej</item>
     </plurals>
-    <string name="deleteMessageConfirm">Adakah anda yakin anda mahu memadamkan mesej ini?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">Mesej dipadam</item>
     </plurals>
@@ -294,7 +293,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">Gagal untuk memadam mesej</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Adakah anda yakin anda mahu memadamkan mesej-mesej ini?</string>
     <string name="deleteMessagesDescriptionDevice">Adakah anda pasti mahu memadamkan mesej ini daripada peranti ini sahaja?</string>
     <string name="deleteMessagesDescriptionEveryone">Adakah anda pasti mahu memadamkan mesej ini untuk semua orang?</string>
     <string name="deleting">Memadam</string>

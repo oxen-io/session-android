@@ -282,7 +282,6 @@
         <item quantity="one">Futa Ujumbe</item>
         <item quantity="other">Futa Jumbe</item>
     </plurals>
-    <string name="deleteMessageConfirm">Je, una uhakika unataka kufuta ujumbe huu?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Ujumbe umefutwa</item>
         <item quantity="other">Jumbe zimefutwa</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Imeshindikana kufuta ujumbe</item>
         <item quantity="other">Imeshindikana kufuta jumbe</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Je, una uhakika unataka kufuta jumbe hizi?</string>
     <string name="deleteMessagesDescriptionDevice">Una uhakika unataka kufuta jumbe hizi kwenye kifaa hiki pekee?</string>
     <string name="deleteMessagesDescriptionEveryone">Una uhakika unataka kufuta jumbe hizi kwa kila mtu?</string>
     <string name="deleting">Kufuta</string>

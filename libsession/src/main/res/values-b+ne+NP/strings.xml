@@ -281,7 +281,6 @@
         <item quantity="one">सन्देशहरू मेट्नुहोस्</item>
         <item quantity="other">सन्देशहरू मेट्नुहोस्</item>
     </plurals>
-    <string name="deleteMessageConfirm">तपाईं यो सन्देश मेटाउन निश्चित हुनुहुन्छ?</string>
     <string name="deleteMessageDeletedGlobally">यो सन्देश मेटिएको थियो।</string>
     <string name="deleteMessageDeletedLocally">यो सन्देश यस उपकरणमा मेटिएको थियो।</string>
     <string name="deleteMessageDescriptionDevice">तपाईं यो सन्देश यो उपकरणबाट मात्र मेटाउन निश्चित हुनुहुन्छ?</string>
@@ -293,7 +292,6 @@
         <item quantity="one">सन्देश मेट्न असफल भयो।</item>
         <item quantity="other">सन्देशहरू मेट्न असफल भयो।</item>
     </plurals>
-    <string name="deleteMessagesConfirm">तपाईं यी सन्देशहरू मेटाउन निश्चित हुनुहुन्छ?</string>
     <string name="deleteMessagesDescriptionDevice">के तपाई पक्का हुनुहुन्छ कि तपाई यी सन्देशहरू यो उपकरणबाट मात्र मेटाउन चाहनुहुन्छ?</string>
     <string name="deleteMessagesDescriptionEveryone">के तपाई पक्का हुनुहुन्छ कि तपाई यी सन्देशहरू सबैको लागि मेटाउन चाहनुहुन्छ?</string>
     <string name="deleting">मेटाइएको बेला</string>

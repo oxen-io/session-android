@@ -282,7 +282,6 @@
         <item quantity="one">Supprimer le message</item>
         <item quantity="other">Supprimer les messages</item>
     </plurals>
-    <string name="deleteMessageConfirm">Êtes-vous sûr de vouloir supprimer ce message ?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Message supprimé</item>
         <item quantity="other">Messages supprimés</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Échec de suppression du message</item>
         <item quantity="other">Échec de suppression des messages</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Êtes-vous sûr de vouloir supprimer ces messages ?</string>
     <string name="deleteMessagesDescriptionDevice">Êtes-vous certain·e de vouloir supprimer ces messages seulement sur cet appareil?</string>
     <string name="deleteMessagesDescriptionEveryone">Êtes-vous certain·e de vouloir supprimer ces messages pour tout le monde?</string>
     <string name="deleting">Suppression</string>

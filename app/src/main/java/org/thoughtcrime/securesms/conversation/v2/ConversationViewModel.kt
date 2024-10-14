@@ -293,7 +293,9 @@ class ConversationViewModel(
                                 defaultToEveryone = false,
                                 everyoneEnabled = false, // disable 'delete for everyone' - can only delete locally in this case
                                 messageType = conversationType,
-                                warning = "Some of the messages you have selected cannot be deleted for everyone" //todo DELETION get real string from res once available
+                                warning = application.resources.getQuantityString(
+                                    R.plurals.deleteMessageWarning, messages.count(), messages.count()
+                                )
                             )
                         )
                     }
@@ -658,7 +660,9 @@ class ConversationViewModel(
                     it.copy(isMessageRequestAccepted = true)
                 }
             }
-            .onFailure {}
+            .onFailure {
+                Log.w("", "Failed to accept message request: $it")
+            }
     }
 
     fun declineMessageRequest() {
@@ -744,6 +748,7 @@ class ConversationViewModel(
             is Commands.MarkAsDeletedForEveryone -> {
                 markAsDeletedForEveryone(command.data)
             }
+
 
             is Commands.ClearEmoji -> {
                 clearEmoji(command.emoji, command.messageId)

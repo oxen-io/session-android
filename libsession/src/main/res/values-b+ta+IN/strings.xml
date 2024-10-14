@@ -282,7 +282,6 @@
         <item quantity="one">தகவலை நீக்கு</item>
         <item quantity="other">தகவலைகளை நீக்கு</item>
     </plurals>
-    <string name="deleteMessageConfirm">இந்த செய்தியை நீக்க விரும்புகிறீர்களா?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">செய்தி நீக்கப்பட்டது</item>
         <item quantity="other">செய்திகள் அகற்றப்பட்டது</item>
@@ -298,7 +297,6 @@
         <item quantity="one">செய்தியை நீக்க முடியவில்லை</item>
         <item quantity="other">செய்திகளை நீக்க முடியவில்லை</item>
     </plurals>
-    <string name="deleteMessagesConfirm">இந்த செய்திகளை நீக்க விரும்புகிறீர்களா?</string>
     <string name="deleteMessagesDescriptionDevice">நீங்கள் நிச்சயமாக இந்த தகவல்களை இந்த கருவியிலிருந்து மட்டுமே நீக்க விரும்புகிறீர்களா?</string>
     <string name="deleteMessagesDescriptionEveryone">நீங்கள் நிச்சயமாக இந்த தகவல்களை அனைவருக்கும் நீக்க விரும்புகிறீர்களா?</string>
     <string name="deleting">நீக்குகிறது</string>

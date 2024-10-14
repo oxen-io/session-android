@@ -281,7 +281,6 @@
         <item quantity="one">ಸಂದೇಶವನ್ನು ಅಳಿಸಿ</item>
         <item quantity="other">ಸಂದೇಶಗಳನ್ನು ಅಳಿಸಿ</item>
     </plurals>
-    <string name="deleteMessageConfirm">ನೀವು ಈ ಸಂದೇಶವನ್ನು ಅಳಿಸಲು ಖಚಿತವಾಗಿದ್ದೀರಾ?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">ಸಂದೇಶವನ್ನು ಅಳಿಸಲಾಗಿದೆ</item>
         <item quantity="other">ಸಂದೇಶಗಳನ್ನು ಅಳಿಸಲಾಗಿದೆ</item>
@@ -297,7 +296,6 @@
         <item quantity="one">ಸಂದೇಶವನ್ನು ಅಳಿಸಲು ವಿಫಲವಾಯಿತು</item>
         <item quantity="other">ಸಂದೇಶಗಳನ್ನು ಅಳಿಸಲು ವಿಫಲವಾಯಿತು</item>
     </plurals>
-    <string name="deleteMessagesConfirm">ನೀವು ಈ ಸಂದೇಶಗಳನ್ನು ಅಳಿಸಲು ಖಚಿತವಾಗಿದ್ದೀರಾ?</string>
     <string name="deleteMessagesDescriptionDevice">ನೀವು ಈ ಸಂದೇಶಗಳನ್ನು ಈ ಸಾಧನದಿಂದ ಮಾತ್ರ ಅಳಿಸಲು ಖಚಿತವಾಗಿದ್ದೀರಾ?</string>
     <string name="deleteMessagesDescriptionEveryone">ನೀವು ಈ ಸಂದೇಶಗಳನ್ನು ಎಲ್ಲರಿಗಾಗಿ ಅಳಿಸಲು ಖಚಿತವಾಗಿದ್ದೀರಾ?</string>
     <string name="deleting">ಅಳಿಸಲಾಗುತ್ತಿದೆ</string>

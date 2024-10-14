@@ -281,7 +281,6 @@
         <item quantity="one">Избриши порака</item>
         <item quantity="other">Избриши пораки</item>
     </plurals>
-    <string name="deleteMessageConfirm">Дали сте сигурни дека сакате да ја избришете оваа порака?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Пораката е избришана</item>
         <item quantity="other">Пораките се избришани</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Не успеа да ја избришете пораката</item>
         <item quantity="other">Не успеа да ги избришете пораките</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Дали сте сигурни дека сакате да ги избришете овие пораки?</string>
     <string name="deleteMessagesDescriptionDevice">Дали сте сигурни дека сакате да ги избришете овие пораки само од овој уред?</string>
     <string name="deleteMessagesDescriptionEveryone">Дали сте сигурни дека сакате да ги избришете овие пораки за сите?</string>
     <string name="deleting">Бришење...</string>

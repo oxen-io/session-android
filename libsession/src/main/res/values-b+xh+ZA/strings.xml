@@ -282,7 +282,6 @@
         <item quantity="one">Sangula Umphumela</item>
         <item quantity="other">Sangula Imiphumela</item>
     </plurals>
-    <string name="deleteMessageConfirm">Uqinisekile ukuba ufuna ukususa lo myalezo?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Umyalezo ucinyiwe</item>
         <item quantity="other">Imiyalezo icinyiwe</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Biganye okusindika obubaka</item>
         <item quantity="other">Biganye okusindika obubaka</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Uqinisekile ukuba ufuna ukususa le miyalezo?</string>
     <string name="deleteMessagesDescriptionDevice">Uqinisekile ukuba ufuna ukucima le miyalezo kweli sixhobo kuphela?</string>
     <string name="deleteMessagesDescriptionEveryone">Uqinisekile ukuba ufuna ukucima le miyalezo kubo bonke?</string>
     <string name="deleting">Kisangulwa</string>

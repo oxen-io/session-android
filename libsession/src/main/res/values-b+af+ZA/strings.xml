@@ -281,7 +281,6 @@
         <item quantity="one">Skrap Boodskap</item>
         <item quantity="other">Skrap Boodskappe</item>
     </plurals>
-    <string name="deleteMessageConfirm">Is jy seker jy wil hierdie boodskap skrap?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Boodskap verwyder</item>
         <item quantity="other">Boodskappe verwyder</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Kon nie boodskap uitvee nie</item>
         <item quantity="other">Kon nie boodskappe uitvee nie</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Is jy seker jy wil hierdie boodskappe skrap?</string>
     <string name="deleteMessagesDescriptionDevice">Is jy seker jy wil hierdie boodskappe net van hierdie toestel verwyder?</string>
     <string name="deleteMessagesDescriptionEveryone">Is jy seker jy wil hierdie boodskappe vir almal verwyder?</string>
     <string name="deleting">Skrap...</string>

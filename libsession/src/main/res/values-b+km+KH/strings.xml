@@ -279,7 +279,6 @@
     <plurals name="deleteMessage">
         <item quantity="other">លុបសារ</item>
     </plurals>
-    <string name="deleteMessageConfirm">តើអ្នកប្រាកដទេថាចង់លុបសារនេះ?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">សារត្រូវបានលុបហើយ</item>
     </plurals>
@@ -293,7 +292,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">បរាជ័យក្នុងការលុបសារ</item>
     </plurals>
-    <string name="deleteMessagesConfirm">តើអ្នកប្រាកដទេថាចង់លុបសារទាំងនេះ?</string>
     <string name="deleteMessagesDescriptionDevice">តើអ្នកប្រាកដទេថាអ្នកចង់លុបសារទាំងនេះពីឧបករណ៍នេះតែប៉ុណ្ណោះ?</string>
     <string name="deleteMessagesDescriptionEveryone">តើអ្នកប្រាកដទេថាអ្នកចង់លុបសារទាំងនេះសម្រាប់ចោល?</string>
     <string name="deleting">កំពុងលុប</string>

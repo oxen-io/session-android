@@ -10,7 +10,7 @@
     <string name="accountIdOrOnsEnter">Введіть Account ID або ONS</string>
     <string name="accountIdOrOnsInvite">Запросити Account ID або ONS</string>
     <string name="accountIdShare">Привіт, я використовую {app_name} задля повністю приватного та безпечного спілкування. Долучайтесь! Мій Account ID \n\n{account_id}\n\nЗавантажуйте на {session_download_url}</string>
-    <string name="accountIdYours">Ваш ідентифікатор облікового запису</string>
+    <string name="accountIdYours">Ідентифікатор вашого облікового запису</string>
     <string name="accountIdYoursDescription">Це ваш Account ID. Інші користувачі можуть просканувати його, щоб почати розмову з вами.</string>
     <string name="actualSize">Актуальний розмір</string>
     <string name="add">Додати</string>
@@ -133,7 +133,7 @@
     <string name="blockUnblockNameTwo">Ви впевнені, що бажаєте розблокувати <b>{name}</b> і ще одного?</string>
     <string name="blockUnblockedUser">{name} розблоковано</string>
     <string name="call">Дзвінок</string>
-    <string name="callsCalledYou">{name} телефонував(-ла)/дзвонив вам</string>
+    <string name="callsCalledYou">{name} дзвонив вам</string>
     <string name="callsCannotStart">Не можна розпочати новий дзвінок. Спочатку закінчіть поточний дзвінок.</string>
     <string name="callsConnecting">Підключення...</string>
     <string name="callsEnd">Завершити дзвінок</string>
@@ -286,7 +286,6 @@
         <item quantity="many">Видалити повідомлення</item>
         <item quantity="other">Видалити повідомлення</item>
     </plurals>
-    <string name="deleteMessageConfirm">Ви дійсно хочете видалити це повідомлення?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Повідомлення видалено</item>
         <item quantity="few">Повідомлення видалені</item>
@@ -306,7 +305,6 @@
         <item quantity="many">Не вдалося видалити повідомлення</item>
         <item quantity="other">Не вдалося видалити повідомлення</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Ви дійсно хочете видалити ці повідомлення?</string>
     <string name="deleteMessagesDescriptionDevice">Ви впевнені, що хочете видалити ці повідомлення лише з цього пристрою?</string>
     <string name="deleteMessagesDescriptionEveryone">Ви впевнені, що хочете видалити ці повідомлення для всіх?</string>
     <string name="deleting">Видалення</string>
@@ -585,7 +583,7 @@
     <string name="messageRequestPending">Ваш запит на повідомлення зараз очікує на розгляд.</string>
     <string name="messageRequestPendingDescription">Ви зможете надсилати голосові повідомлення і вкладення, після того як одержувач схвалить цей запит на повідомлення.</string>
     <string name="messageRequestYouHaveAccepted">Ви прийняли запит на повідомлення від <b>{name}</b>.</string>
-    <string name="messageRequestsAcceptDescription">Надсилання повідомлення цьому користувачеві автоматично прийме його запит на повідомлення та розкриє ваш ідентифікатор сеансу.</string>
+    <string name="messageRequestsAcceptDescription">Надсилання повідомлення цьому користувачеві автоматично прийме його запит на повідомлення та розкриє ідентифікатор вашого облікового запису.</string>
     <string name="messageRequestsAccepted">Ваш запит на повідомлення прийнято.</string>
     <string name="messageRequestsClearAllExplanation">Ви впевнені, що бажаєте очистити всі запити на повідомлення та запрошення до груп?</string>
     <string name="messageRequestsCommunities">Запити на повідомлення зі спільнот</string>

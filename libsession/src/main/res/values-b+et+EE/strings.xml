@@ -281,7 +281,6 @@
         <item quantity="one">Kustuta sõnum</item>
         <item quantity="other">Kustuta sõnumid</item>
     </plurals>
-    <string name="deleteMessageConfirm">Kas soovite selle sõnumi kustutada?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Sõnum kustutatud</item>
         <item quantity="other">Sõnumid kustutatud</item>
@@ -297,7 +296,6 @@
         <item quantity="one">Sõnumi kustutamine ebaõnnestus</item>
         <item quantity="other">Sõnumite kustutamine ebaõnnestus</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Kas soovite need sõnumid kustutada?</string>
     <string name="deleteMessagesDescriptionDevice">Kas olete kindel, et soovite need sõnumid kustutada ainult sellest seadmest?</string>
     <string name="deleteMessagesDescriptionEveryone">Kas olete kindel, et soovite need sõnumid kõigi jaoks kustutada?</string>
     <string name="deleting">Kustutan</string>

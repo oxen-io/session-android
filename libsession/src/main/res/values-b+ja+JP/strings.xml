@@ -280,7 +280,6 @@
     <plurals name="deleteMessage">
         <item quantity="other">メッセージを削除</item>
     </plurals>
-    <string name="deleteMessageConfirm">本当にこのメッセージを削除しますか？</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">メッセージが削除されました</item>
     </plurals>
@@ -294,7 +293,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">メッセージの削除に失敗しました</item>
     </plurals>
-    <string name="deleteMessagesConfirm">本当にこれらのメッセージを削除しますか？</string>
     <string name="deleteMessagesDescriptionDevice">このデバイスからのみメッセージを削除してもよろしいですか？</string>
     <string name="deleteMessagesDescriptionEveryone">すべてのユーザーのメッセージを削除してもよろしいですか？</string>
     <string name="deleting">削除中</string>

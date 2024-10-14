@@ -290,7 +290,6 @@
         <item quantity="many">Dileu Negeseuon</item>
         <item quantity="other">Dileu Negeseuon</item>
     </plurals>
-    <string name="deleteMessageConfirm">Ydych chi\'n siŵr eich bod am ddileu\'r neges hon?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="zero">Negeseuon wedi\'u dileu</item>
         <item quantity="one">Neges wedi\'i dileu</item>
@@ -314,7 +313,6 @@
         <item quantity="many">Methwyd dileu negeseuon</item>
         <item quantity="other">Methu dileu negeseuon</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Ydych chi\'n siŵr eich bod am ddileu\'r neges(au) hyn?</string>
     <string name="deleteMessagesDescriptionDevice">Ydych chi\'n siŵr eich bod am ddileu\'r negeseuon hyn o\'r ddyfais hon yn unig?</string>
     <string name="deleteMessagesDescriptionEveryone">Ydych chi\'n siŵr eich bod am ddileu\'r negeseuon hyn i bawb?</string>
     <string name="deleting">Wrthi\'n dileu</string>

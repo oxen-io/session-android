@@ -282,7 +282,6 @@
         <item quantity="one">Üzenet törlése</item>
         <item quantity="other">Üzenetek törlése</item>
     </plurals>
-    <string name="deleteMessageConfirm">Biztos, hogy törölni szeretnéd ezt az üzenetet?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Üzenet törölve</item>
         <item quantity="other">Üzenetek törölve</item>
@@ -298,7 +297,6 @@
         <item quantity="one">Nem sikerült az üzenet törlése</item>
         <item quantity="other">Nem sikerült az üzenetek törlése</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Biztos, hogy törölni szeretnéd ezeket az üzeneteket?</string>
     <string name="deleteMessagesDescriptionDevice">Biztos, hogy törölni szeretnéd ezeket az üzeneteket csak ebből az eszközről?</string>
     <string name="deleteMessagesDescriptionEveryone">Biztos, hogy törölni szeretnéd ezeket az üzeneteket mindenki számára?</string>
     <string name="deleting">Törlés</string>

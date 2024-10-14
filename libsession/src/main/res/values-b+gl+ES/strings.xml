@@ -260,7 +260,6 @@
     <string name="deleteAfterLegacyDisappearingMessagesLegacy">Ancestral</string>
     <string name="deleteAfterLegacyDisappearingMessagesOriginal">Versión orixinal das mensaxes que desaparecen.</string>
     <string name="deleteAfterLegacyDisappearingMessagesTheyChangedTimer"><b>{name}</b> estableceu o temporizador de desaparición das mensaxes a <b>{time}</b></string>
-    <string name="deleteMessageConfirm">Tes a certeza de querer borrar esta mensaxe?</string>
     <string name="deleteMessageDeletedGlobally">Esta mensaxe foi eliminada</string>
     <string name="deleteMessageDeletedLocally">Esta mensaxe foi eliminada neste dispositivo</string>
     <string name="deleteMessageDescriptionDevice">Tes a certeza de querer borrar esta mensaxe só deste dispositivo?</string>
@@ -272,7 +271,6 @@
         <item quantity="one">Erro ao borrar a mensaxe</item>
         <item quantity="other">Erro ao borrar as mensaxes</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Tes a certeza de querer borrar estas mensaxes?</string>
     <string name="deleteMessagesDescriptionDevice">Tes a certeza de querer eliminar estas mensaxes só deste dispositivo?</string>
     <string name="deleteMessagesDescriptionEveryone">Tes a certeza de querer eliminar estas mensaxes para todos?</string>
     <string name="deleting">Borrando</string>

@@ -244,8 +244,7 @@ class DefaultConversationRepository @Inject constructor(
         threadId: Long,
         messages: Set<MessageRecord>
     ) {
-        val community = lokiThreadDb.getOpenGroupChat(threadId) ?:
-            throw Exception("Not a Community")
+        val community = checkNotNull(lokiThreadDb.getOpenGroupChat(threadId)) { "Not a community" }
 
         messages.forEach { message ->
             lokiMessageDb.getServerID(message.id, !message.isMms)?.let { messageServerID ->

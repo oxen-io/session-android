@@ -243,7 +243,7 @@
     <string name="conversationsEnterNewLine">SHIFT + ENTER odošle správu, ENTER začne nový riadok</string>
     <string name="conversationsEnterSends">ENTER odosiela správu, SHIFT + ENTER začína nový riadok</string>
     <string name="conversationsGroups">Skupiny</string>
-    <string name="conversationsMessageTrimming">Premazávanie správ</string>
+    <string name="conversationsMessageTrimming">Prečistenie správ</string>
     <string name="conversationsMessageTrimmingTrimCommunities">Prečistiť komunity</string>
     <string name="conversationsMessageTrimmingTrimCommunitiesDescription">Vymazať správy z Community konverzácií starších ako 6 mesiacov, a kde je viac ako 2,000 správ.</string>
     <string name="conversationsNew">Nová konverzácia</string>
@@ -286,7 +286,6 @@
         <item quantity="many">Vymazať správy</item>
         <item quantity="other">Vymazať správy</item>
     </plurals>
-    <string name="deleteMessageConfirm">Naozaj chcete vymazať túto správu?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Správa vymazaná</item>
         <item quantity="few">Správy vymazané</item>
@@ -306,7 +305,6 @@
         <item quantity="many">Správy sa nepodarilo vymazať</item>
         <item quantity="other">Správy sa nepodarilo vymazať</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Naozaj chcete vymazať tieto správy?</string>
     <string name="deleteMessagesDescriptionDevice">Naozaj chcete odstrániť tieto správy iba z tohto zariadenia?</string>
     <string name="deleteMessagesDescriptionEveryone">Naozaj chcete odstrániť tieto správy pre všetkých?</string>
     <string name="deleting">Mazanie</string>

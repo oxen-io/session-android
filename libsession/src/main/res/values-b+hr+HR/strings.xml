@@ -283,7 +283,6 @@
         <item quantity="few">Izbriši poruku</item>
         <item quantity="other">Izbriši poruku</item>
     </plurals>
-    <string name="deleteMessageConfirm">Jeste li sigurni da želite izbrisati ovu poruku?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Poruka izbrisana</item>
         <item quantity="few">Poruke obrisane</item>
@@ -301,7 +300,6 @@
         <item quantity="few">Neuspješno brisanje poruka</item>
         <item quantity="other">Neuspješno brisanje poruka</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Jeste li sigurni da želite izbrisati ove poruke?</string>
     <string name="deleteMessagesDescriptionDevice">Jeste li sigurni da želite izbrisati ove poruke samo s ovog uređaja?</string>
     <string name="deleteMessagesDescriptionEveryone">Jeste li sigurni da želite izbrisati ove poruke za sve?</string>
     <string name="deleting">Brisanje</string>

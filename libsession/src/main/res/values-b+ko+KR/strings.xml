@@ -280,7 +280,6 @@
     <plurals name="deleteMessage">
         <item quantity="other">메시지 삭제</item>
     </plurals>
-    <string name="deleteMessageConfirm">정말 이 메시지를 삭제하시겠습니까?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">메시지가 삭제되었습니다.</item>
     </plurals>
@@ -294,7 +293,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">메시지를 삭제하지 못했습니다</item>
     </plurals>
-    <string name="deleteMessagesConfirm">정말 이 메시지를 삭제하시겠습니까?</string>
     <string name="deleteMessagesDescriptionDevice">Are you sure you want to delete these messages from this device only?</string>
     <string name="deleteMessagesDescriptionEveryone">Are you sure you want to delete these messages for everyone?</string>
     <string name="deleting">삭제 중…</string>

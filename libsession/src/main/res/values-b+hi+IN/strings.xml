@@ -282,7 +282,6 @@
         <item quantity="one">संदेश मिटाएं</item>
         <item quantity="other">संदेश मिटाएं</item>
     </plurals>
-    <string name="deleteMessageConfirm">क्या आप वाकई इस संदेश को हटाना चाहते हैं?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">संदेश मिटाया गया</item>
         <item quantity="other">संदेश मिटाये गए</item>
@@ -298,7 +297,6 @@
         <item quantity="one">संदेश हटाने में विफल</item>
         <item quantity="other">संदेशों को हटाने में विफल रहा</item>
     </plurals>
-    <string name="deleteMessagesConfirm">क्या आप वाकई इन संदेशों को मिटाना चाहते हैं?</string>
     <string name="deleteMessagesDescriptionDevice">क्या आप वाकई केवल इस डिवाइस से इन संदेशों को हटाना चाहते हैं?</string>
     <string name="deleteMessagesDescriptionEveryone">क्या आप वाकई सभी के लिए इन संदेशों को हटाना चाहते हैं?</string>
     <string name="deleting">हटाया जा रहा है</string>

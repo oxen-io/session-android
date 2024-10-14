@@ -54,8 +54,8 @@
 			"channel_id":""
 		},
 		"edukit":{
-			"edu_url":"edukit.edu.cloud.huawei.com.cn",
-			"dh_url":"edukit.edu.cloud.huawei.com.cn"
+			"edu_url":"edukit.cloud.huawei.com.cn",
+			"dh_url":"edukit.cloud.huawei.com.cn"
 		},
 		"search":{
 			"url":"https://search-dre.cloud.huawei.com"

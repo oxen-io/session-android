@@ -280,7 +280,6 @@
     <plurals name="deleteMessage">
         <item quantity="other">刪除訊息</item>
     </plurals>
-    <string name="deleteMessageConfirm">您確定要刪除此訊息嗎？</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">訊息已刪除</item>
     </plurals>
@@ -294,7 +293,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">無法刪除訊息</item>
     </plurals>
-    <string name="deleteMessagesConfirm">您確定要刪除這些訊息嗎？</string>
     <string name="deleteMessagesDescriptionDevice">您確定只從此設備上刪除這些訊息嗎？</string>
     <string name="deleteMessagesDescriptionEveryone">您確定要為所有人刪除這些訊息嗎？</string>
     <string name="deleting">刪除中</string>
