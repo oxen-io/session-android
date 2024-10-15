@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> el lett távolítva mint adminisztrátor.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> és <b>{count} másik személy</b> el lettek távolítva adminisztrátorként.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> és <b>{other_name}</b> el lettek távolítva adminisztrátorként.</string>
-    <string name="adminSendingPromotion">Adminisztrátori előléptetés küldése</string>
     <string name="adminSettings">Adminisztrátor beállítások</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> és <b>{other_name}</b> adminisztrátorrá lettek előléptetve.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ez az üzenet törölve lett</string>
     <string name="deleteMessageDeletedLocally">Ez az üzenet törölve lett ezen az eszközön</string>
-    <string name="deleteMessageDescriptionDevice">Biztos, hogy törölni szeretnéd ezt az üzenetet csak erről az eszközről?</string>
     <string name="deleteMessageDescriptionEveryone">Biztos, hogy törölni szeretnéd ezt az üzenetet mindenki számára?</string>
     <string name="deleteMessageDeviceOnly">Törlés csak ezen az eszközön</string>
     <string name="deleteMessageDevicesAll">Törlés minden eszközömön</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Nem sikerült az üzenet törlése</item>
         <item quantity="other">Nem sikerült az üzenetek törlése</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Biztos, hogy törölni szeretnéd ezeket az üzeneteket csak ebből az eszközről?</string>
     <string name="deleteMessagesDescriptionEveryone">Biztos, hogy törölni szeretnéd ezeket az üzeneteket mindenki számára?</string>
     <string name="deleting">Törlés</string>
     <string name="developerToolsToggle">Fejlesztői eszközök be-/kikapcsolása</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Nem sikerült meghívni {name}-t és {count} másik személyt a {group_name} csoportba</string>
     <string name="groupInviteFailedTwo">Nem sikerült meghívni {name}-t és {other_name}-t a {group_name} csoportba</string>
     <string name="groupInviteFailedUser">Nem sikerült meghívni {name}-t a {group_name} csoportba</string>
-    <string name="groupInviteSending">Meghívás küldése</string>
     <string name="groupInviteSent">Meghívás elküldve</string>
     <string name="groupInviteSuccessful">A meghívás sikeres volt.</string>
     <string name="groupInviteVersion">A felhasználóknak a legújabb verzióval kell rendelkezniük, hogy meghívásokat kaphassanak</string>

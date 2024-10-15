@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> ameondolewa kama Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> na <b>{count} wengine</b> wameondolewa kama Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> na <b>{other_name}</b> wameondolewa kama Admin.</string>
-    <string name="adminSendingPromotion">Inatuma msimamizi kutumwa</string>
     <string name="adminSettings">Mipangilio ya Msimamizi</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> na <b>{other_name}</b> wamepandishwa cheo kuwa Admin.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ujumbe huu umefutwa</string>
     <string name="deleteMessageDeletedLocally">Ujumbe huu umefutwa kwenye kifaa hiki</string>
-    <string name="deleteMessageDescriptionDevice">Je, una uhakika unataka kufuta ujumbe huu kutoka kifaa hiki pekee?</string>
     <string name="deleteMessageDescriptionEveryone">Je, una uhakika unataka kufuta ujumbe huu kwa kila mtu?</string>
     <string name="deleteMessageDeviceOnly">Futa kwenye kifaa hiki pekee</string>
     <string name="deleteMessageDevicesAll">Futa kwenye vifaa vyangu vyote</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Imeshindikana kufuta ujumbe</item>
         <item quantity="other">Imeshindikana kufuta jumbe</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Una uhakika unataka kufuta jumbe hizi kwenye kifaa hiki pekee?</string>
     <string name="deleteMessagesDescriptionEveryone">Una uhakika unataka kufuta jumbe hizi kwa kila mtu?</string>
     <string name="deleting">Kufuta</string>
     <string name="developerToolsToggle">Geuza Zana za Usanidi</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Imeshindikana kualika {name} na wengine {count} kwa {group_name}</string>
     <string name="groupInviteFailedTwo">Imeshindikana kualika {name} na {other_name} kwa {group_name}</string>
     <string name="groupInviteFailedUser">Imeshindikana kualika {name} kwa {group_name}</string>
-    <string name="groupInviteSending">Inatuma mwaliko</string>
     <string name="groupInviteSent">Kualika kumewekwa</string>
     <string name="groupInviteSuccessful">Mwaliko wa kikundi umefanikiwa</string>
     <string name="groupInviteVersion">Watumiaji lazima wawe na toleo jipya zaidi kupokea mialiko</string>

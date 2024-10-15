@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> estis deprenita kiel Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> kaj <b>{count} aliaj</b> estis forigitaj kiel Admoj.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> kaj <b>{other_name}</b> estis forigitaj kiel Admoj.</string>
-    <string name="adminSendingPromotion">Sendante administran promocion</string>
     <string name="adminSettings">Administraj Agordoj</string>
     <string name="adminTwoPromotedToAdmin"><b>{name} </b> kaj <b>{other_name} </b> estis promociitaj al Admin.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ĉi tiu mesaĝo forigitis</string>
     <string name="deleteMessageDeletedLocally">Ĉi tiu mesaĝo estis forigita sur ĉi tiu aparato</string>
-    <string name="deleteMessageDescriptionDevice">Ĉu vi certas, ke vi volas forigi ĉi tiun mesaĝon nur de ĉi tiu aparato?</string>
     <string name="deleteMessageDescriptionEveryone">Ĉu vi certas, ke vi volas forigi ĉi tiun mesaĝon por ĉiuj?</string>
     <string name="deleteMessageDeviceOnly">Forigi sole sur ĉi tiu aparato</string>
     <string name="deleteMessageDevicesAll">Forigi sur ĉiuj miaj aparatoj</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Malsukcesis forigi mesaĝon</item>
         <item quantity="other">Malsukcesis forigi mesaĝojn</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Ĉu vi certas, ke vi volas forigi ĉi tiujn mesaĝojn nur el ĉi tiu aparato?</string>
     <string name="deleteMessagesDescriptionEveryone">Ĉu vi certas, ke vi volas forigi ĉi tiujn mesaĝojn por ĉiuj?</string>
     <string name="deleting">Forviŝante</string>
     <string name="developerToolsToggle">Baskuligi programistajn ilojn</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Malsukcesis inviti {name} kaj {count} aliajn al {group_name}</string>
     <string name="groupInviteFailedTwo">Malsukcesis inviti {name} kaj {other_name} al {group_name}</string>
     <string name="groupInviteFailedUser">Malsukcesis inviti {name} al {group_name}</string>
-    <string name="groupInviteSending">Sendante invito</string>
     <string name="groupInviteSent">Invito sendita</string>
     <string name="groupInviteSuccessful">Invito de grupo sukcesis</string>
     <string name="groupInviteVersion">Uzantoj devas havi la plej novan version por ricevi invitojn</string>

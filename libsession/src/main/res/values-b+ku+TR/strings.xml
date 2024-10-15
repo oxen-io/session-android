@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> لە بەڕێوەبەری لابرا.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> و <b>{count} کەس دیکە</b> وەرگیندران وەک بەڕێوەبەر.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> و <b>{other_name}</b> وەرگیندران وەک بەڕێوەبەر.</string>
-    <string name="adminSendingPromotion">ناردنی تەبنی بەڕێوەبەری</string>
     <string name="adminSettings">ڕێکخستنەکانی بەڕێوەبەر</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> و <b>{other_name}</b> بە بەڕێوەبەر هەڵبژێردران.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">ئەم پەیامە سڕاوە</string>
     <string name="deleteMessageDeletedLocally">ئەم پەیامە سڕاوە لەسەر ئەم ئامێرەیە</string>
-    <string name="deleteMessageDescriptionDevice">دڵنیایت دەتەوێت ئەم پەیامە بسڕیتەوە تەنها لەسەر ئەم ئاگاداریە؟</string>
     <string name="deleteMessageDescriptionEveryone">دڵنیایت دەتەوێت ئەم پەیامە بسڕیتەوە بۆ هەموو کەسان؟</string>
     <string name="deleteMessageDeviceOnly">تەنها لەسەر ئەم ئامێرەدا سڕینەوە</string>
     <string name="deleteMessageDevicesAll">سڕینەوە لە هەموو ئاڵاتەکانم</string>
@@ -296,7 +294,6 @@
         <item quantity="one">شکستی هەندەڵکردنی پەیام</item>
         <item quantity="other">شکستی هەندەڵکردنی پەیامەکان</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">دڵنیایت بۆ سڕینەوەی هەموو پەیام دەتێنا زاتیە؟</string>
     <string name="deleteMessagesDescriptionEveryone">دڵنیایت بۆ سڕینەوەی ئەم پەیامەکان بۆ هەموو ؟</string>
     <string name="deleting">سڕینەوە</string>
     <string name="developerToolsToggle">گۆڕینی ئامرازە پەرەساکان</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">{name} و {count} هاڕاوەکانت و هاووپەیوانەت بۆ {group_name} بانگخستند شکستی هێنا</string>
     <string name="groupInviteFailedTwo">{name} و {other_name} بۆ {group_name} بانگخستند شکستی هێنا</string>
     <string name="groupInviteFailedUser">{name} بۆ {group_name} بانگخستند شکستی هێنا</string>
-    <string name="groupInviteSending">بانگکردن دەکرێت</string>
     <string name="groupInviteSent">بانێ ناردکراوە</string>
     <string name="groupInviteSuccessful">دعوتنامەی گروپ سەرکەوتوو بوو</string>
     <string name="groupInviteVersion">بەکارهێنەران پێویستە نوێترین وەشانی بەکار بیهنە بۆ وەرگرتنی بانگەشەکان</string>

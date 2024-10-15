@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> ikhutshelwe ngaphandle kwindawo ye-Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> kunye <b>{count} abanye abantu</b> basusiwe kubu-Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> kunye <b>{other_name}</b> basusiwe kubu-Admin.</string>
-    <string name="adminSendingPromotion">Ukuthumela ukuqina komlawuli</string>
     <string name="adminSettings">Izilungiselelo zabaAdmin</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> kunye <b>{other_name}</b> banyuselwe kubu-Admin.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Lo myalezo ususiwe</string>
     <string name="deleteMessageDeletedLocally">Lo myalezo ususiwe kweli sixhobo</string>
-    <string name="deleteMessageDescriptionDevice">Uqinisekile ukuba ufuna ukususa lo myalezo kule sixhobo kuphela?</string>
     <string name="deleteMessageDescriptionEveryone">Uqinisekile ukuba ufuna ukususa lo myalezo kubo bonke?</string>
     <string name="deleteMessageDeviceOnly">Sangula kwisixhobo esi kuphela</string>
     <string name="deleteMessageDevicesAll">Sangula kuzo zonke izixhobo zam</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Biganye okusindika obubaka</item>
         <item quantity="other">Biganye okusindika obubaka</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Uqinisekile ukuba ufuna ukucima le miyalezo kweli sixhobo kuphela?</string>
     <string name="deleteMessagesDescriptionEveryone">Uqinisekile ukuba ufuna ukucima le miyalezo kubo bonke?</string>
     <string name="deleting">Kisangulwa</string>
     <string name="developerToolsToggle">Guqula izixhobo zoMphuhlisi</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Koyekile ukumema {name} kunye {count} nabanye {group_name}</string>
     <string name="groupInviteFailedTwo">Koyekile ukumema {name} kunye {other_name} ku {group_name}</string>
     <string name="groupInviteFailedUser">Koyekile ukumema {name} ku {group_name}</string>
-    <string name="groupInviteSending">Ukuthumela isimemo</string>
     <string name="groupInviteSent">Umemi uthunyelwe</string>
     <string name="groupInviteSuccessful">Isimemo seqela siphumelele</string>
     <string name="groupInviteVersion">Abasebenzisi kufuneka babe ngohlelo lwamva ukufumana izimemo</string>

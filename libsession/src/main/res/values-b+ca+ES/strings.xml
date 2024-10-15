@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> ha estat eliminat com a Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> i <b>{count} altres</b> han estat eliminats com a administradors.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> i <b>{other_name}</b> han estat eliminats com a administradors.</string>
-    <string name="adminSendingPromotion">Enviant promoció d\'administrador</string>
     <string name="adminSettings">Configuració d\'Admins</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> i <b>{other_name}</b> han estat ascendits a Admin.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Aquest missatge s\'ha suprimit</string>
     <string name="deleteMessageDeletedLocally">Aquest missatge s\'ha suprimit en aquest dispositiu</string>
-    <string name="deleteMessageDescriptionDevice">Esteu segur que voleu suprimir aquest missatge només d\'aquest dispositiu?</string>
     <string name="deleteMessageDescriptionEveryone">Esteu segur que voleu suprimir aquest missatge per a tothom?</string>
     <string name="deleteMessageDeviceOnly">Suprimeix només en aquest dispositiu</string>
     <string name="deleteMessageDevicesAll">Suprimeix als meus dispositius</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Error en eliminar el missatge</item>
         <item quantity="other">Error en eliminar els missatges</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Esteu segur que voleu esborrar aquests missatges només d\'aquest dispositiu?</string>
     <string name="deleteMessagesDescriptionEveryone">Esteu segur que voleu suprimir aquests missatges per a tothom?</string>
     <string name="deleting">Suprimint</string>
     <string name="developerToolsToggle">Activa o desactiva les eines de desenvolupament</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Error al convidar {name} i {count} altres a {group_name}</string>
     <string name="groupInviteFailedTwo">Error al convidar {name} i {other_name} a {group_name}</string>
     <string name="groupInviteFailedUser">Error al convidar {name} a {group_name}</string>
-    <string name="groupInviteSending">Enviant invitació</string>
     <string name="groupInviteSent">Invitació enviada</string>
     <string name="groupInviteSuccessful">Invitació al grup amb èxit</string>
     <string name="groupInviteVersion">Els usuaris han de tenir la versió més recent per rebre invitacions</string>

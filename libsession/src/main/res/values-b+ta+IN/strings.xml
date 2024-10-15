@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> நிர்வாகி பதவியில் இருந்து நீக்கப்பட்டார்.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> மற்றும் <b>{count} பிறர்</b> நிர்வாகியிலிருந்து நீக்கப்பட்டனர்.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> மற்றும் <b>{other_name}</b> நிர்வாகியிலிருந்து நீக்கப்பட்டனர்.</string>
-    <string name="adminSendingPromotion">நிர்வாக முன்னேற்றம் அனுப்புகிறது</string>
     <string name="adminSettings">நிர்வாகி அமைப்புகள்</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> மற்றும் <b>{other_name}</b> நிர்வாகியாக உயர்த்தப்பட்டனர்.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">இந்த செய்தி நீக்கப்பட்டுள்ளது</string>
     <string name="deleteMessageDeletedLocally">இந்த செய்தி இந்த சாதனத்தில் நீக்கப்பட்டது</string>
-    <string name="deleteMessageDescriptionDevice">இந்த செய்தியை இந்த சாதனத்தில் மட்டும் நீக்க விரும்புகிறீர்களா?</string>
     <string name="deleteMessageDescriptionEveryone">இந்த செய்தியை எல்லோருக்கும் நீக்க விரும்புகிறீர்களா?</string>
     <string name="deleteMessageDeviceOnly">இந்த சாதனத்தில் மட்டுமே நீக்கு</string>
     <string name="deleteMessageDevicesAll">எனது அனைத்து சாதனங்களிலும் நீக்கு</string>
@@ -297,7 +295,6 @@
         <item quantity="one">செய்தியை நீக்க முடியவில்லை</item>
         <item quantity="other">செய்திகளை நீக்க முடியவில்லை</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">நீங்கள் நிச்சயமாக இந்த தகவல்களை இந்த கருவியிலிருந்து மட்டுமே நீக்க விரும்புகிறீர்களா?</string>
     <string name="deleteMessagesDescriptionEveryone">நீங்கள் நிச்சயமாக இந்த தகவல்களை அனைவருக்கும் நீக்க விரும்புகிறீர்களா?</string>
     <string name="deleting">நீக்குகிறது</string>
     <string name="developerToolsToggle">டெவலப்பர் கருவிகளாக மாற்றவும்</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">{group_name} க்கு {name} மற்றும் {count} பிறரை அழைக்க தவறிவிட்டது</string>
     <string name="groupInviteFailedTwo">{group_name} க்கு {name} மற்றும் {other_name} அழைக்க தவறிவிட்டது</string>
     <string name="groupInviteFailedUser">{group_name} க்கு {name} அழைக்க தவறிவிட்டது</string>
-    <string name="groupInviteSending">அழைப்பை அனுப்புகிறது</string>
     <string name="groupInviteSent">அழைப்பு அனுப்பப்பட்டது</string>
     <string name="groupInviteSuccessful">குழு அழைப்பு வெற்றி</string>
     <string name="groupInviteVersion">பயனர்கள் பரிந்துரை பெறவேண்டுமெனில் சமீபத்திய பதிப்பைக் கட்டாயம் மேற்கொள்ள வேண்டும்</string>

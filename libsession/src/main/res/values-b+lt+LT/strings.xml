@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> buvo pašalintas kaip adminas.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> ir <b>dar {count}</b> buvo pašalinti iš administratorių.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> ir <b>{other_name}</b> buvo pašalinti iš administratorių.</string>
-    <string name="adminSendingPromotion">Siunčiama administratoriams</string>
     <string name="adminSettings">Administratoriaus nustatymai</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> ir <b>{other_name}</b> buvo paskirti adminais.</string>
     <string name="andMore">+{count}</string>
@@ -293,7 +292,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ši žinutė ištrinta</string>
     <string name="deleteMessageDeletedLocally">Ši žinutė ištrinta šiame įrenginyje</string>
-    <string name="deleteMessageDescriptionDevice">Ar tikrai norite ištrinti šią žinutę tik iš šio įrenginio?</string>
     <string name="deleteMessageDescriptionEveryone">Ar tikrai norite ištrinti šią žinutę visiems?</string>
     <string name="deleteMessageDeviceOnly">Ištrinti tik šiame įrenginyje</string>
     <string name="deleteMessageDevicesAll">Ištrinti visuose mano įrenginiuose</string>
@@ -304,7 +302,6 @@
         <item quantity="many">Nepavyko ištrinti žinučių</item>
         <item quantity="other">Nepavyko ištrinti žinučių</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Ar tikrai norite ištrinti šias žinutes tik iš šio įrenginio?</string>
     <string name="deleteMessagesDescriptionEveryone">Ar tikrai norite ištrinti šias žinutes visiems?</string>
     <string name="deleting">Ištrinama</string>
     <string name="developerToolsToggle">Perjungti kūrėjo įrankius</string>
@@ -413,7 +410,6 @@
     <string name="groupInviteFailedMultiple">Nepavyko pakviesti {name} ir {count} kitų į {group_name}</string>
     <string name="groupInviteFailedTwo">Nepavyko pakviesti {name} ir {other_name} į {group_name}</string>
     <string name="groupInviteFailedUser">Nepavyko pakviesti {name} į {group_name}</string>
-    <string name="groupInviteSending">Siunčiamas kvietimas</string>
     <string name="groupInviteSent">Pakvietimas išsiųstas</string>
     <string name="groupInviteSuccessful">Grupės kvietimas sėkmingas</string>
     <string name="groupInviteVersion">Norint gauti kvietimus, vartotojai privalo turėti naujausią versiją</string>

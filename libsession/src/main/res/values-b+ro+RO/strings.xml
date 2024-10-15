@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> a fost eliminat ca administrator.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> și <b>alți {count}</b> au fost eliminați ca administratori.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> și <b>{other_name}</b> au fost eliminați ca administratori.</string>
-    <string name="adminSendingPromotion">Se trimite promovarea la nivel de administrator</string>
     <string name="adminSettings">Setări administrator</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> și <b>{other_name}</b> au fost promovați la nivel de administrator.</string>
     <string name="andMore">+{count}</string>
@@ -291,7 +290,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Acest mesaj a fost șters.</string>
     <string name="deleteMessageDeletedLocally">Acest mesaj a fost șters pe acest dispozitiv.</string>
-    <string name="deleteMessageDescriptionDevice">Ești sigur/ă că dorești să ștergi acest mesaj doar de pe acest dispozitiv?</string>
     <string name="deleteMessageDescriptionEveryone">Ești sigur/ă că dorești să ștergi acest mesaj pentru toată lumea?</string>
     <string name="deleteMessageDeviceOnly">Șterge doar pe acest dispozitiv</string>
     <string name="deleteMessageDevicesAll">Șterge pe toate dispozitivele mele</string>
@@ -301,7 +299,6 @@
         <item quantity="few">Eroare la ștergerea mesajelor</item>
         <item quantity="other">Eroare la ștergerea mesajelor</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Ești sigur că vrei să ștergi aceste mesaje doar de pe acest dispozitiv?</string>
     <string name="deleteMessagesDescriptionEveryone">Ești sigur că vrei să ștergi aceste mesaje pentru toată lumea?</string>
     <string name="deleting">Se șterge</string>
     <string name="developerToolsToggle">Comutare unelte dezvoltator</string>
@@ -409,7 +406,6 @@
     <string name="groupInviteFailedMultiple">Nu s-a putut invita {name} și {count} alții la {group_name}</string>
     <string name="groupInviteFailedTwo">Nu s-a putut invita {name} și {other_name} la {group_name}</string>
     <string name="groupInviteFailedUser">Nu s-a putut invita {name} la {group_name}</string>
-    <string name="groupInviteSending">Trimitere invitație</string>
     <string name="groupInviteSent">Invitația a fost trimisă</string>
     <string name="groupInviteSuccessful">Invitație grup reușită</string>
     <string name="groupInviteVersion">Utilizatorii trebuie să aibă versiunea cea mai recentă pentru a primi invitații</string>

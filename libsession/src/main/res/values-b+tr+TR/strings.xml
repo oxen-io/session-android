@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> yönetici olarak kaldırıldı.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> ve <b>{count} üye</b> Yönetici seviyesinden düşürüldü.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> ve <b>{other_name}</b> Yönetici seviyesinden düşürüldü.</string>
-    <string name="adminSendingPromotion">Yönetici terfisi gönderiliyor</string>
     <string name="adminSettings">Yönetici Ayarları</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> ve <b>{other_name}</b> yönetici olarak terfi etti.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Bu mesaj silindi</string>
     <string name="deleteMessageDeletedLocally">Bu mesaj bu cihazda silinmiş</string>
-    <string name="deleteMessageDescriptionDevice">Bu mesajı sadece bu cihazdan silmek istediğinizden emin misiniz?</string>
     <string name="deleteMessageDescriptionEveryone">Bu mesajı herkes için silmek istediğinizden emin misiniz?</string>
     <string name="deleteMessageDeviceOnly">Yalnızca bu cihazda sil</string>
     <string name="deleteMessageDevicesAll">Tüm cihazlarımda sil</string>
@@ -297,7 +295,6 @@
         <item quantity="one">İleti teslim edilemedi</item>
         <item quantity="other">İleti teslim edilemedi</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Mesajları sadece bu cihazdan silmek istediğinizden emin misiniz?</string>
     <string name="deleteMessagesDescriptionEveryone">Mesajları herkes için silmek istediğinizden emin misiniz?</string>
     <string name="deleting">Siliniyor</string>
     <string name="developerToolsToggle">Geliştirici Araçlarını Aç/Kapat</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">{name} ve {count} diğerleri {group_name} davet edilemedi</string>
     <string name="groupInviteFailedTwo">{name} ve {other_name} {group_name} davet edilemedi</string>
     <string name="groupInviteFailedUser">{name} {group_name} davet edilemedi</string>
-    <string name="groupInviteSending">Davet gönderiliyor</string>
     <string name="groupInviteSent">Davet gönderildi</string>
     <string name="groupInviteSuccessful">Grup daveti başarılı</string>
     <string name="groupInviteVersion">Kullanıcıların davetleri alabilmesi için en son sürüme sahip olmaları gerekiyor</string>

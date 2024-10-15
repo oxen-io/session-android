@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> ay tinanggal bilang Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> at <b>{count} iba pa</b> ay tinanggal bilang Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> at <b>{other_name}</b> ay tinanggal bilang Admin.</string>
-    <string name="adminSendingPromotion">Sining-promote na admin</string>
     <string name="adminSettings">Admin Settings</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> at <b>{other_name}</b> ay na-promote na Admin.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ang mensaheng ito ay na-delete na</string>
     <string name="deleteMessageDeletedLocally">Ang mensaheng ito ay na-delete sa device na ito</string>
-    <string name="deleteMessageDescriptionDevice">Sigurado ka bang gusto mong i-delete ang mensaheng ito mula sa aparatong ito lamang?</string>
     <string name="deleteMessageDescriptionEveryone">Sigurado ka bang gusto mong i-delete ang mensaheng ito para sa lahat?</string>
     <string name="deleteMessageDeviceOnly">Alisin lamang sa device na ito</string>
     <string name="deleteMessageDevicesAll">Alisin sa lahat ng mga device ko</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Nabigong i-delete ang mensahe</item>
         <item quantity="other">Nabigong i-delete ang mga mensahe</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Sigurado ka bang gusto mong burahin ang mga mensaheng ito mula sa device na ito lamang?</string>
     <string name="deleteMessagesDescriptionEveryone">Sigurado ka bang gusto mong burahin ang mga mensaheng ito para sa lahat?</string>
     <string name="deleting">Ina-aalis</string>
     <string name="developerToolsToggle">I-toggle ang Mga Tool ng Developer</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Nabigong imbitahan si {name} at {count} (na) iba pa sa {group_name}</string>
     <string name="groupInviteFailedTwo">Nabigong imbitahan si {name} at si {other_name} sa {group_name}</string>
     <string name="groupInviteFailedUser">Nabigong imbitahan si {name} sa {group_name}</string>
-    <string name="groupInviteSending">Sini-send ang imbitasyon</string>
     <string name="groupInviteSent">Naipadala ang imbitasyon</string>
     <string name="groupInviteSuccessful">Matagumpay ang imbitasyon sa grupo</string>
     <string name="groupInviteVersion">Dapat ay may pinakabagong release ang mga user upang makatanggap ng mga paanyaya</string>

@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> Admin izateko kendu dute.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> eta <b>{count} beste</b> Admin moduan kendu dituzte.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> eta <b>{other_name}</b> Admin moduan kendu dituzte.</string>
-    <string name="adminSendingPromotion">Admin promozioa bidaltzen</string>
     <string name="adminSettings">Administratzailearen Ezarpenak</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> eta <b>{other_name}</b> Admin izendatu dira.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Mezu hau ezabatu da.</string>
     <string name="deleteMessageDeletedLocally">Mezu hau tokian tokiko gailu honetan ezabatu da.</string>
-    <string name="deleteMessageDescriptionDevice">Ziur zaude mezu hau gailu honetatik bakarrik ezabatu nahi duzula?</string>
     <string name="deleteMessageDescriptionEveryone">Ziur zaude mezu hau guztiontzat ezabatu nahi duzula?</string>
     <string name="deleteMessageDeviceOnly">Gailu honetan bakarrik ezabatu</string>
     <string name="deleteMessageDevicesAll">Nire gailu guztietan ezabatu</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Ezin izan da mezua ezabatu</item>
         <item quantity="other">Ezin izan dira mezuak ezabatu</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Ziur zaude mezu hauek gailu honetatik soilik ezabatu nahi dituzula?</string>
     <string name="deleteMessagesDescriptionEveryone">Ziur zaude mezu hauek denentzat ezabatu nahi dituzula?</string>
     <string name="deleting">Ezabatzen</string>
     <string name="developerToolsToggle">Garatu Tresna Aldaketa</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Hutsa izan da {name} eta {count} beste batzuk {group_name} Gonbidatzeko</string>
     <string name="groupInviteFailedTwo">Hutsa izan da {name} eta {other_name} {group_name} Gonbidatzeko</string>
     <string name="groupInviteFailedUser">Hutsa izan da {name} {group_name} Gonbidatzeko</string>
-    <string name="groupInviteSending">Gonbidapena bidaltzen</string>
     <string name="groupInviteSent">Gonbidapena bidalita</string>
     <string name="groupInviteSuccessful">Talde gonbidapena arrakastatsua</string>
     <string name="groupInviteVersion">Erabiltzaileek azken bertsioa izan behar dute gonbidapenak jasotzeko</string>

@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> был(а) снят(а) с должности администратора.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> и <b>{count} других пользователей</b> были удалены админом.</string>
     <string name="adminRemovedUserOther">Пользователи <b>{name}</b> и <b>{other_name}</b> были удалены админом.</string>
-    <string name="adminSendingPromotion">Изменение статуса до уровня администратора</string>
     <string name="adminSettings">Настройки администратора</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> и <b>{other_name}</b> назначены администраторами.</string>
     <string name="andMore">+{count}</string>
@@ -294,7 +293,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Это сообщение было удалено</string>
     <string name="deleteMessageDeletedLocally">Это сообщение было удалено на этом устройстве</string>
-    <string name="deleteMessageDescriptionDevice">Вы уверены, что хотите удалить это сообщение (оно будет удалено только с этого устройства)?</string>
     <string name="deleteMessageDescriptionEveryone">Вы уверены, что хотите удалить это сообщение для всех?</string>
     <string name="deleteMessageDeviceOnly">Удалить только на этом устройстве</string>
     <string name="deleteMessageDevicesAll">Удалить на всех моих устройствах</string>
@@ -305,7 +303,6 @@
         <item quantity="many">Не удалось удалить сообщения</item>
         <item quantity="other">Не удалось удалить сообщения</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Вы уверены, что хотите удалить эти сообщения (они будут удалены только с этого устройства)?</string>
     <string name="deleteMessagesDescriptionEveryone">Вы уверены, что хотите удалить эти сообщения для всех?</string>
     <string name="deleting">Удаление</string>
     <string name="developerToolsToggle">Включить инструменты разработчика</string>
@@ -414,7 +411,6 @@
     <string name="groupInviteFailedMultiple">Не удалось пригласить {name} и {count} других в {group_name}</string>
     <string name="groupInviteFailedTwo">Не удалось пригласить {name} и {other_name} в {group_name}</string>
     <string name="groupInviteFailedUser">Не удалось пригласить {name} в {group_name}</string>
-    <string name="groupInviteSending">Отправка приглашения</string>
     <string name="groupInviteSent">Приглашение отправлено</string>
     <string name="groupInviteSuccessful">Приглашение в группу успешно</string>
     <string name="groupInviteVersion">Пользователи должны иметь последнюю версию приложения для получения приглашений</string>

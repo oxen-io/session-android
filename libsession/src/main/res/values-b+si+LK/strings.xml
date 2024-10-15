@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> පරිපාලක ආධිකාරීත්වයෙන් ඉවත් කරන ලදී.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> සහ <b>{count} වෙනත් අය</b> පරිපාලක තනතුරින් ඉවත් කරන ලදී.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> සහ <b>{other_name}</b> පරිපාලක තනතුරින් ඉවත් කරන ලදී.</string>
-    <string name="adminSendingPromotion">පරිපාලක උසස්වීම යවන ලදී</string>
     <string name="adminSettings">පරිපාලන සැකසුම්</string>
     <string name="adminTwoPromotedToAdmin"><b>{name} </b>සහ <b>{other_name} </b>පරිපාලක (Admin) තනතුරට උසස් කරන ලදී.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">මෙම පණිවිඩය මකා ඇත</string>
     <string name="deleteMessageDeletedLocally">මෙම පණිවිඩය මෙම උපකරණයේ මකා ඇත</string>
-    <string name="deleteMessageDescriptionDevice">ඔබට මෙය පරිගණකයෙන් පමණක්ම මැකීමට අවශ්‍ය බව විශ්වාසද?</string>
     <string name="deleteMessageDescriptionEveryone">ඔබට මෙම පණිවිඩය සියලු දෙනා සඳහා මකීමට අවශ්‍ය බව විශ්වාසද?</string>
     <string name="deleteMessageDeviceOnly">මෙම උපාංගයේ පමණක් මකන්න</string>
     <string name="deleteMessageDevicesAll">මගේ සියලුම උපාංගවල පණිවිඩ මකන්න</string>
@@ -296,7 +294,6 @@
         <item quantity="one">පණිවිඩය මකා දැමීමට අසමත් විය</item>
         <item quantity="other">පණිවිඩ මකා දැමීමට අසමත් විය</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">ඔබට මෙම පණිවිඩ මේ උපකරණයෙන් පමණක් මැකීමට අවශ්‍ය බව විශ්වාසද?</string>
     <string name="deleteMessagesDescriptionEveryone">ඔබට මේ පණිවුඩ සියලු දෙනා වෙනුවෙන් මැකීමට අවශ්‍ය බව විශ්වාසද?</string>
     <string name="deleting">මකා දැමීම</string>
     <string name="developerToolsToggle">සංවර්ධක මෙවලම් ටොගල් කරන්න</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">{name} සහ {count} තවත් අය {group_name} වෙත ආරාධනා කිරීමට අසමත් විය</string>
     <string name="groupInviteFailedTwo">{name} සහ {other_name} {group_name} වෙත ආරාධනා කිරීමට අසමත් විය</string>
     <string name="groupInviteFailedUser">{name} {group_name} වෙත ආරාධනා කිරීමට අසමත් විය</string>
-    <string name="groupInviteSending">ආරාධනාව යවමින්</string>
     <string name="groupInviteSent">ආරාධනය යවා ඇත</string>
     <string name="groupInviteSuccessful">සමූහය ආරාධනා සාර්ථකයි</string>
     <string name="groupInviteVersion">ආරාධනාවන් ලැබීමට භාවිතාකරුවන්ට නවතම අනුවාදය තිබිය යුතුයි</string>
