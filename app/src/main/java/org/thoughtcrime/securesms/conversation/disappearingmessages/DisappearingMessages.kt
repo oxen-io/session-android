@@ -19,7 +19,6 @@ import org.session.libsession.utilities.getExpirationTypeDisplayValue
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.ui.getSubbedCharSequence
-import org.thoughtcrime.securesms.ui.getSubbedString
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds

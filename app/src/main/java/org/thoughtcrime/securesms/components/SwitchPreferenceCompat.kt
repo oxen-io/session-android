@@ -3,11 +3,9 @@ package org.thoughtcrime.securesms.components
 import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.CheckBoxPreference
-import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.ui.getSubbedCharSequence
-import org.thoughtcrime.securesms.ui.getSubbedString
 
 class SwitchPreferenceCompat : CheckBoxPreference {
     private var listener: OnPreferenceClickListener? = null
