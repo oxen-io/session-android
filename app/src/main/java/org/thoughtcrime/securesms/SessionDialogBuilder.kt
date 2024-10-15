@@ -62,7 +62,10 @@ class SessionDialogBuilder(val context: Context) {
 
     // Main title entry point
     fun title(text: String?) {
-        text(text, R.style.TextAppearance_Session_Dialog_Title) { setPadding(dp20, 0, dp20, 0) }
+        text(
+            text = text,
+            qaTag = context.getString(R.string.AccessibilityId_modalTitle),
+            style = R.style.TextAppearance_Session_Dialog_Title) { setPadding(dp20, 0, dp20, 0) }
     }
 
     // Convenience assessor for title that takes a string resource
@@ -74,18 +77,24 @@ class SessionDialogBuilder(val context: Context) {
     fun text(@StringRes id: Int, style: Int? = null) = text(context.getString(id), style)
 
     fun text(text: CharSequence?, @StyleRes style: Int? = null) {
-        text(text, style) {
+        text(text = text, style = style) {
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
                 .apply { updateMargins(dp40, 0, dp40, 0) }
         }
     }
 
-    private fun text(text: CharSequence?, @StyleRes style: Int? = null, modify: TextView.() -> Unit) {
+    private fun text(
+        text: CharSequence?,
+        qaTag: String = context.getString(R.string.AccessibilityId_modalMessage),
+        @StyleRes style: Int? = null,
+        modify: TextView.() -> Unit
+    ) {
         text ?: return
         TextView(context, null, 0, style ?: R.style.TextAppearance_Session_Dialog_Message)
             .apply {
                 setText(text)
                 textAlignment = View.TEXT_ALIGNMENT_CENTER
+                contentDescription = qaTag
                 modify()
             }.let(topView::addView)
 
@@ -166,7 +175,7 @@ class SessionDialogBuilder(val context: Context) {
             textColor?.let{
                 setTextColor(it)
             }
-            contentDescription = resources.getString(contentDescriptionRes)
+            contentDescription = resources.getString(text) // QA now wants the qa tag to mtch the button's text
             layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, dp60, 1f)
             setOnClickListener {
                 listener.invoke()

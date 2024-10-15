@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.database
 
 import android.content.Context
 import android.net.Uri
-import network.loki.messenger.R
 import java.security.MessageDigest
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_HIDDEN
@@ -74,6 +73,8 @@ import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol.Co
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.Recipient.DisappearingState
+import org.session.libsession.utilities.recipients.MessageType
+import org.session.libsession.utilities.recipients.getType
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
@@ -756,6 +757,12 @@ open class Storage(
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val address = fromSerialized(author)
         return database.getMessageFor(timestamp, address)?.run { getId() to isMms }
+    }
+
+    override fun getMessageType(timestamp: Long, author: String): MessageType? {
+        val database = DatabaseComponent.get(context).mmsSmsDatabase()
+        val address = fromSerialized(author)
+        return database.getMessageFor(timestamp, address)?.individualRecipient?.getType()
     }
 
     override fun updateSentTimestamp(
@@ -1582,6 +1589,10 @@ open class Storage(
         DatabaseComponent.get(context).recipientDatabase().setApproved(recipient, approved)
         if (recipient.isLocalNumber || !recipient.isContactRecipient) return
         configFactory.contacts?.upsertContact(recipient.address.serialize()) {
+            // if the contact wasn't approved before but is approved now, make sure it's visible
+            if(approved && !this.approved) this.priority = PRIORITY_VISIBLE
+
+            // update approval
             this.approved = approved
         }
     }
@@ -1722,6 +1733,12 @@ open class Storage(
 
     override fun deleteReactions(messageId: Long, mms: Boolean) {
         DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(MessageId(messageId, mms))
+    }
+
+    override fun deleteReactions(messageIds: List<Long>, mms: Boolean) {
+        DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(
+            messageIds.map { MessageId(it, mms) }
+        )
     }
 
     override fun setBlocked(recipients: Iterable<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean) {

@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> byl/a odebrán/a jako správce.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> a <b>{count} dalším</b> bylo odebráno správcovství.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> a <b>{other_name}</b> bylo odebráno správcovství.</string>
-    <string name="adminSendingPromotion">Odesílání povýšení na správce</string>
     <string name="adminSettings">Nastavení správce</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> a <b>{other_name}</b> byli povýšeni na správce.</string>
     <string name="andMore">+{count}</string>
@@ -286,7 +285,6 @@
         <item quantity="many">Smazat zprávy</item>
         <item quantity="other">Smazat zprávy</item>
     </plurals>
-    <string name="deleteMessageConfirm">Opravdu chcete smazat tuto zprávu?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Zpráva smazána</item>
         <item quantity="few">Zprávy smazány</item>
@@ -295,7 +293,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Tato zpráva byla odstraněna.</string>
     <string name="deleteMessageDeletedLocally">Tato zpráva byla odstraněna na tomto zařízení.</string>
-    <string name="deleteMessageDescriptionDevice">Jste si jisti, že chcete smazat tuto zprávu pouze z tohoto zařízení?</string>
     <string name="deleteMessageDescriptionEveryone">Jste si jisti, že chcete smazat tuto zprávu pro všechny?</string>
     <string name="deleteMessageDeviceOnly">Smazat pouze na tomto zařízení</string>
     <string name="deleteMessageDevicesAll">Smazat ze všech mých zařízení</string>
@@ -306,8 +303,6 @@
         <item quantity="many">Nepodařilo se smazat zprávy</item>
         <item quantity="other">Nepodařilo se smazat zprávy</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Opravdu chcete smazat tyto zprávy?</string>
-    <string name="deleteMessagesDescriptionDevice">Jste si jisti, že chcete smazat tyto zprávy pouze z tohoto zařízení?</string>
     <string name="deleteMessagesDescriptionEveryone">Jste si jisti, že chcete smazat tyto zprávy pro všechny?</string>
     <string name="deleting">Mazání</string>
     <string name="developerToolsToggle">Přepnout nástroje vývojáře</string>
@@ -416,7 +411,6 @@
     <string name="groupInviteFailedMultiple">Nepodařilo se pozvat {name} a {count} další do {group_name}</string>
     <string name="groupInviteFailedTwo">Nepodařilo se pozvat {name} a {other_name} do {group_name}</string>
     <string name="groupInviteFailedUser">Nepodařilo se pozvat {name} do {group_name}</string>
-    <string name="groupInviteSending">Odesílání pozvánky</string>
     <string name="groupInviteSent">Pozvánka odeslána</string>
     <string name="groupInviteSuccessful">Pozvánka do skupiny byla úspěšná</string>
     <string name="groupInviteVersion">Uživatelé musí používat nejnovější verzi, aby mohli přijímat pozvánky</string>
@@ -653,7 +647,7 @@
     <string name="notificationsSystem">{message_count} nových zpráv v {conversation_count} konverzacích</string>
     <string name="notificationsVibrate">Vibrace</string>
     <string name="off">Vypnuto</string>
-    <string name="okay">Okay</string>
+    <string name="okay">OK</string>
     <string name="on">Zap.</string>
     <string name="onboardingAccountCreate">Vytvořit účet</string>
     <string name="onboardingAccountCreated">Účet vytvořen</string>
@@ -806,7 +800,7 @@
     <string name="sessionClearData">Vyčistit data</string>
     <string name="sessionConversations">Konverzace</string>
     <string name="sessionHelp">Nápověda</string>
-    <string name="sessionInviteAFriend">Pozvat přítele</string>
+    <string name="sessionInviteAFriend">Pozvat přátele</string>
     <string name="sessionMessageRequests">Žádosti o komunikaci</string>
     <string name="sessionNotifications">Upozornění</string>
     <string name="sessionPermissions">Oprávnění</string>
@@ -816,7 +810,7 @@
     <string name="set">Nastavit</string>
     <string name="settingsRestartDescription">Pro použití nových nastavení musíte restartovat {app_name}.</string>
     <string name="share">Sdílet</string>
-    <string name="shareAccountIdDescription">Pozvěte svého přítele nebo přítelkyni ke komunikaci pomocí {app_name} sdílením svého ID účtu.</string>
+    <string name="shareAccountIdDescription">Pozvěte své přátele ke komunikaci pomocí {app_name} sdílením svého ID účtu.</string>
     <string name="shareAccountIdDescriptionCopied">Sdílejte se svými přáteli tam, kde s nimi obvykle mluvíte — a pak konverzaci přesuňte sem.</string>
     <string name="shareExtensionDatabaseError">Při otevírání databáze se vyskytl problém. Prosím, restartujte aplikaci a zkuste to znovu.</string>
     <string name="shareToSession">Sdílet do {app_name}</string>

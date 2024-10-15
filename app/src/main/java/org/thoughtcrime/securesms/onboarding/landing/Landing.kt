@@ -85,12 +85,10 @@ internal fun LandingScreen(
             buttons = listOf(
                 DialogButtonModel(
                     text = GetString(R.string.onboardingTos),
-                    contentDescription = GetString(R.string.AccessibilityId_onboardingTos),
                     onClick = openTerms
                 ),
                 DialogButtonModel(
                     text = GetString(R.string.onboardingPrivacy),
-                    contentDescription = GetString(R.string.AccessibilityId_onboardingPrivacy),
                     onClick = openPrivacyPolicy
                 )
             )
