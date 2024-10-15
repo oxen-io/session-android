@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> bol/a odstránený/á ako správca.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> a <b>{count} ďalší</b> boli odstránení ako správcovia.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> a <b>{other_name}</b> boli odstránení ako správcovia.</string>
-    <string name="adminSendingPromotion">Odosiela sa povýšenie správcu</string>
     <string name="adminSettings">Nastavenia správcu</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> a <b>{other_name}</b> boli povýšení na správcov.</string>
     <string name="andMore">+{count}</string>
@@ -294,7 +293,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Táto správa bola vymazaná</string>
     <string name="deleteMessageDeletedLocally">Táto správa bola vymazaná na tomto zariadení</string>
-    <string name="deleteMessageDescriptionDevice">Naozaj chcete vymazať túto správu len z tohto zariadenia?</string>
     <string name="deleteMessageDescriptionEveryone">Naozaj chcete túto správu vymazať u všetkých?</string>
     <string name="deleteMessageDeviceOnly">Vymazať iba na tomto zariadení</string>
     <string name="deleteMessageDevicesAll">Vymazať na všetkých mojich zariadeniach</string>
@@ -305,7 +303,6 @@
         <item quantity="many">Správy sa nepodarilo vymazať</item>
         <item quantity="other">Správy sa nepodarilo vymazať</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Naozaj chcete odstrániť tieto správy iba z tohto zariadenia?</string>
     <string name="deleteMessagesDescriptionEveryone">Naozaj chcete odstrániť tieto správy pre všetkých?</string>
     <string name="deleting">Mazanie</string>
     <string name="developerToolsToggle">Nástroje pre vývojárov</string>
@@ -414,7 +411,6 @@
     <string name="groupInviteFailedMultiple">Nepodarilo sa pozvať používateľa {name} a {count} ďalších do {group_name}</string>
     <string name="groupInviteFailedTwo">Nepodarilo sa pozvať používateľa {name} a {other_name} do {group_name}</string>
     <string name="groupInviteFailedUser">Zlyhalo pozvanie používateľa {name} do {group_name}</string>
-    <string name="groupInviteSending">Odosiela sa pozvánka</string>
     <string name="groupInviteSent">Pozvánka bola odoslaná</string>
     <string name="groupInviteSuccessful">Pozvanie do skupiny úspešné</string>
     <string name="groupInviteVersion">Používatelia musia mať najnovšiu verziu na prijatie pozvánok</string>

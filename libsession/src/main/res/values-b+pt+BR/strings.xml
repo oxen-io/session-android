@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> foi removido como Administrador.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> e <b>{count} outros</b> foram removidos como Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> e <b>{other_name}</b> foram removidos como Admin.</string>
-    <string name="adminSendingPromotion">Enviando promoção do administrador</string>
     <string name="adminSettings">Configurações do Administrador</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> e <b>{other_name}</b> foram promovidos a Administrador.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Essa mensagem foi deletada</string>
     <string name="deleteMessageDeletedLocally">Esta mensagem foi deletada neste dispositivo</string>
-    <string name="deleteMessageDescriptionDevice">Você tem certeza que deseja excluir esta mensagem apenas deste dispositivo?</string>
     <string name="deleteMessageDescriptionEveryone">Você tem certeza que deseja excluir esta mensagem para todos?</string>
     <string name="deleteMessageDeviceOnly">Excluir apenas neste dispositivo</string>
     <string name="deleteMessageDevicesAll">Excluir em todos os meus dispositivos</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Falha ao deletar mensagem</item>
         <item quantity="other">Falha ao deletar mensagens</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Tem certeza de que deseja excluir essas mensagens apenas deste dispositivo?</string>
     <string name="deleteMessagesDescriptionEveryone">Tem certeza de que deseja excluir essas mensagens para todos?</string>
     <string name="deleting">Deletando</string>
     <string name="developerToolsToggle">Ferramentas de desenvolvimento</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Falha ao convidar {name} e {count} outros para {group_name}</string>
     <string name="groupInviteFailedTwo">Falha ao convidar {name} e {other_name} para {group_name}</string>
     <string name="groupInviteFailedUser">Falha ao convidar {name} para {group_name}</string>
-    <string name="groupInviteSending">Enviando convite</string>
     <string name="groupInviteSent">Convite enviado</string>
     <string name="groupInviteSuccessful">Convite para grupo bem-sucedido</string>
     <string name="groupInviteVersion">Usuários devem ter a versão mais recente para receber convites</string>

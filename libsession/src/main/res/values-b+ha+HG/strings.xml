@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> an cire shi a matsayin Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> da <b>{count} wasu</b> an cire su daga zama Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> da <b>{other_name}</b> an cire su daga zama Admin.</string>
-    <string name="adminSendingPromotion">Ana aika ƙara wa girma</string>
     <string name="adminSettings">Saitunan Admin</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> da <b>{other_name}</b> an tayar musu zuwa Admin.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">An goge wannan saƙo</string>
     <string name="deleteMessageDeletedLocally">An share wannan saƙo a wannan na\'ura</string>
-    <string name="deleteMessageDescriptionDevice">Ka tabbata kana so ka goge wannan saƙon daga wannan na\'urar kawai?</string>
     <string name="deleteMessageDescriptionEveryone">Ka tabbata kana so ka goge wannan saƙon ga kowa?</string>
     <string name="deleteMessageDeviceOnly">Goge a wannan na\'ura kawai</string>
     <string name="deleteMessageDevicesAll">Goge akan dukkan na\'urorina</string>
@@ -296,7 +294,6 @@
         <item quantity="one">An kasa share saƙo</item>
         <item quantity="other">An kasa share saƙonni</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Kana tabbata kana so ka share waɗannan saƙonnin daga wannan na\'urar kawai?</string>
     <string name="deleteMessagesDescriptionEveryone">Kana tabbata kana so ka share waɗannan saƙonnin don kowa?</string>
     <string name="deleting">Ana gogewa</string>
     <string name="developerToolsToggle">Sauya Kayan Koya na Developer</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">An kasa gayyatar {name} da {count} wasu zuwa {group_name}</string>
     <string name="groupInviteFailedTwo">An kasa gayyatar {name} da {other_name} zuwa {group_name}</string>
     <string name="groupInviteFailedUser">An kasa gayyatar {name} zuwa {group_name}</string>
-    <string name="groupInviteSending">Ana aika da gayyata</string>
     <string name="groupInviteSent">Gayyatar an aika</string>
     <string name="groupInviteSuccessful">Gayyatar rukuni ta yi nasara</string>
     <string name="groupInviteVersion">Masu amfani dole su kasance da sigar na karshe don su sami gayyata</string>

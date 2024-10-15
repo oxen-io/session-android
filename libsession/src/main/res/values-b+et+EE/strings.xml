@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> eemaldati administraatorina.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> ja <b>{count} teist</b> eemaldati Administraatori kohalt.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> ja <b>{other_name}</b> eemaldati Administraatori kohalt.</string>
-    <string name="adminSendingPromotion">Administraatori edutamine</string>
     <string name="adminSettings">Admini seaded</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> ja <b>{other_name}</b> määrati adminiks.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">See sõnum on kustutatud</string>
     <string name="deleteMessageDeletedLocally">See sõnum on sellest seadmest kustutatud</string>
-    <string name="deleteMessageDescriptionDevice">Kas soovite selle sõnumi ainult sellest seadmest kustutada?</string>
     <string name="deleteMessageDescriptionEveryone">Kas soovite selle sõnumi kõigi jaoks kustutada?</string>
     <string name="deleteMessageDeviceOnly">Kustuta ainult sellest seadmest</string>
     <string name="deleteMessageDevicesAll">Kustuta kõigis minu seadmetes</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Sõnumi kustutamine ebaõnnestus</item>
         <item quantity="other">Sõnumite kustutamine ebaõnnestus</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Kas olete kindel, et soovite need sõnumid kustutada ainult sellest seadmest?</string>
     <string name="deleteMessagesDescriptionEveryone">Kas olete kindel, et soovite need sõnumid kõigi jaoks kustutada?</string>
     <string name="deleting">Kustutan</string>
     <string name="developerToolsToggle">Lülita arendusvahendid sisse/välja</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Ebaõnnestus kutsuda {name} ja {count} teisi kasutajaid gruppi {group_name}</string>
     <string name="groupInviteFailedTwo">Ebaõnnestus kutsuda {name} ja {other_name} gruppi {group_name}</string>
     <string name="groupInviteFailedUser">Ebaõnnestus kutsuda {name} gruppi {group_name}</string>
-    <string name="groupInviteSending">Kutsekirja saatmine</string>
     <string name="groupInviteSent">Kutse saadetud</string>
     <string name="groupInviteSuccessful">Grupi kutse oli edukas</string>
     <string name="groupInviteVersion">Kasutajatel peab olema uusim versioon kutsete saamiseks</string>

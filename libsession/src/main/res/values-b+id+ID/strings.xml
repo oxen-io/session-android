@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> dihapus sebagai Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> dan <b>{count} lainnya</b> telah dihapus sebagai Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> dan <b>{other_name}</b> telah dihapus sebagai Admin.</string>
-    <string name="adminSendingPromotion">Mengirim promosi admin</string>
     <string name="adminSettings">Pengaturan Admin</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> dan <b>{other_name}</b> dipromosikan menjadi Admin.</string>
     <string name="andMore">+{count}</string>
@@ -284,7 +283,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Pesan ini telah dihapus</string>
     <string name="deleteMessageDeletedLocally">Pesan ini dihapus pada perangkat ini</string>
-    <string name="deleteMessageDescriptionDevice">Apakah Anda yakin ingin menghapus pesan ini hanya dari perangkat ini?</string>
     <string name="deleteMessageDescriptionEveryone">Apakah Anda yakin ingin menghapus pesan ini untuk semua orang?</string>
     <string name="deleteMessageDeviceOnly">Hapus hanya di perangkat ini</string>
     <string name="deleteMessageDevicesAll">Hapus di semua perangkat saya</string>
@@ -292,7 +290,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">Gagal menghapus pesan</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Anda yakin ingin menghapus pesan ini hanya dari perangkat ini?</string>
     <string name="deleteMessagesDescriptionEveryone">Anda yakin ingin menghapus pesan-pesan ini untuk semua orang?</string>
     <string name="deleting">Menghapus</string>
     <string name="developerToolsToggle">Toggle perangkat pengembangan</string>
@@ -398,7 +395,6 @@
     <string name="groupInviteFailedMultiple">Gagal mengundang {name} dan {count} lainnya ke {group_name}</string>
     <string name="groupInviteFailedTwo">Gagal mengundang {name} dan {other_name} ke {group_name}</string>
     <string name="groupInviteFailedUser">Gagal mengundang {name} ke {group_name}</string>
-    <string name="groupInviteSending">Mengirim undangan</string>
     <string name="groupInviteSent">Undangan terkirim</string>
     <string name="groupInviteSuccessful">Undangan grup berhasil</string>
     <string name="groupInviteVersion">Pengguna harus memiliki rilis terbaru untuk menerima undangan</string>

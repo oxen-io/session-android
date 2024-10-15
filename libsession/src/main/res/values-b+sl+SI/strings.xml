@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name} </b> ni več administrator.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> in <b>{count} drugi</b> so bili odstranjeni kot administratorji.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> in <b>{other_name}</b> sta bila odstranjena kot administratorja.</string>
-    <string name="adminSendingPromotion">Pošiljanje promocije skrbnika</string>
     <string name="adminSettings">Nastavitve skrbnika</string>
     <string name="adminTwoPromotedToAdmin"><b>{name} </b> in <b>{other_name} </b> sta bila promovirana v administratorja.</string>
     <string name="andMore">+{count}</string>
@@ -293,7 +292,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">To sporočilo je bilo izbrisano</string>
     <string name="deleteMessageDeletedLocally">To sporočilo je bilo izbrisano na tej napravi</string>
-    <string name="deleteMessageDescriptionDevice">Ali ste prepričani, da želite izbrisati to sporočilo samo s te naprave?</string>
     <string name="deleteMessageDescriptionEveryone">Ali ste prepričani, da želite izbrisati to sporočilo za vse?</string>
     <string name="deleteMessageDeviceOnly">Izbriši samo na tej napravi</string>
     <string name="deleteMessageDevicesAll">Izbriši na vseh mojih napravah</string>
@@ -304,7 +302,6 @@
         <item quantity="few">Neuspešna odstranitev sporočil</item>
         <item quantity="other">Neuspešna odstranitev sporočil</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Ali ste prepričani, da želite ta sporočila izbrisati samo iz te naprave?</string>
     <string name="deleteMessagesDescriptionEveryone">Ali ste prepričani, da želite izbrisati ta sporočila za vse?</string>
     <string name="deleting">Brisanje</string>
     <string name="developerToolsToggle">Preklopi orodja za razvijalce</string>
@@ -413,7 +410,6 @@
     <string name="groupInviteFailedMultiple">Ni uspelo povabiti {name} in {count} drugih v {group_name}</string>
     <string name="groupInviteFailedTwo">Ni uspelo povabiti {name} and {other_name} v {group_name}</string>
     <string name="groupInviteFailedUser">Ni uspelo povabiti {name} v {group_name}</string>
-    <string name="groupInviteSending">Pošiljanje povabila</string>
     <string name="groupInviteSent">Povabilo poslano</string>
     <string name="groupInviteSuccessful">Povabilo v skupino je bilo uspešno</string>
     <string name="groupInviteVersion">Uporabniki morajo imeti najnovejšo različico za prejemanje povabil</string>

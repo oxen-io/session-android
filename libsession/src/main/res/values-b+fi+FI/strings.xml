@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> poistettiin ylläpitäjänä.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> ja <b>{count} muuta</b> poistettiin ylläpitäjästä.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> ja <b>{other_name}</b> poistettiin ylläpitäjästä.</string>
-    <string name="adminSendingPromotion">Ylläpitoylennystä lähetetään</string>
     <string name="adminSettings">Admin-asetukset</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> ja <b>{other_name}</b> ylennettiin ylläpitäjiksi.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Tämä viesti on poistettu</string>
     <string name="deleteMessageDeletedLocally">Tämä viesti on poistettu tästä laitteesta</string>
-    <string name="deleteMessageDescriptionDevice">Oletko varma, että haluat poistaa tämän viestin ainoastaan tästä laitteesta?</string>
     <string name="deleteMessageDescriptionEveryone">Haluatko varmasti poistaa tämän viestin kaikilta?</string>
     <string name="deleteMessageDeviceOnly">Poista vain tältä laitteelta</string>
     <string name="deleteMessageDevicesAll">Poista kaikilta laitteiltani</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Viestin poisto epäonnistui</item>
         <item quantity="other">Viestien poisto epäonnistui</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Haluatko varmasti poistaa nämä viestit vain tästä laitteesta?</string>
     <string name="deleteMessagesDescriptionEveryone">Haluatko varmasti poistaa nämä viestit kaikilta?</string>
     <string name="deleting">Poistetaan</string>
     <string name="developerToolsToggle">Näytä/piilota kehittäjätyökalut</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Käyttäjien {name} ja {count} muun kutsuminen ryhmään {group_name} epäonnistui</string>
     <string name="groupInviteFailedTwo">Käyttäjien {name} ja {other_name} kutsuminen ryhmään {group_name} epäonnistui</string>
     <string name="groupInviteFailedUser">Käyttäjän {name} kutsuminen ryhmään {group_name} epäonnistui</string>
-    <string name="groupInviteSending">Kutsua lähetetään</string>
     <string name="groupInviteSent">Kutsu on lähetetty</string>
     <string name="groupInviteSuccessful">Ryhmän kutsu onnistui</string>
     <string name="groupInviteVersion">Käyttäjillä on oltava uusin versio vastaanottaakseen kutsuja</string>

@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> быў выдалены як Адміністратар.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> і яшчэ <b>{count} іншых</b> былі паніжаны на пасадзе адміністратара.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> і <b>{other_name}</b> былі паніжаны на пасадзе адміністратара.</string>
-    <string name="adminSendingPromotion">Адпраўка прасоўвання адміністратара</string>
     <string name="adminSettings">Налады адміністратара</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> і <b>{other_name}</b> былі павышаны да адміністратараў.</string>
     <string name="andMore">+{count}</string>
@@ -293,7 +292,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Гэта паведамленне было выдалена</string>
     <string name="deleteMessageDeletedLocally">Гэта паведамленне было выдалена на гэтай прыладзе</string>
-    <string name="deleteMessageDescriptionDevice">Вы ўпэўненыя, што жадаеце выдаліць гэтае паведамленне толькі з гэтай прылады?</string>
     <string name="deleteMessageDescriptionEveryone">Вы ўпэўненыя, што жадаеце выдаліць гэтае паведамленне для ўсіх?</string>
     <string name="deleteMessageDeviceOnly">Выдаліць толькі на гэтай прыладзе</string>
     <string name="deleteMessageDevicesAll">Выдаліць на ўсіх маіх прыладах</string>
@@ -304,7 +302,6 @@
         <item quantity="many">Не атрымалася выдаліць паведамленні</item>
         <item quantity="other">Не атрымалася выдаліць паведамленні</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Вы ўпэўнены, што жадаеце выдаліць гэтыя паведамленні толькі з гэтай прылады?</string>
     <string name="deleteMessagesDescriptionEveryone">Вы ўпэўнены, што жадаеце выдаліць гэтыя паведамленні для ўсіх?</string>
     <string name="deleting">Выдаленне</string>
     <string name="developerToolsToggle">Пераключыць інструменты распрацоўшчыка</string>
@@ -413,7 +410,6 @@
     <string name="groupInviteFailedMultiple">Не ўдалося запрасіць {name}, {count} і іншых у {group_name}</string>
     <string name="groupInviteFailedTwo">Не ўдалося запрасіць {name} і {other_name} у {group_name}</string>
     <string name="groupInviteFailedUser">Не ўдалося запрасіць {name} у {group_name}</string>
-    <string name="groupInviteSending">Адпраўка запрашэння</string>
     <string name="groupInviteSent">Запрашэнне адпраўлена</string>
     <string name="groupInviteSuccessful">Запрашэнне ў групу паспяхова</string>
     <string name="groupInviteVersion">Карыстальнікі павінны мець апошнюю версію для атрымання запрашэнняў</string>

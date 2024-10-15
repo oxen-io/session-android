@@ -31,7 +31,6 @@
     <string name="adminRemoveCommunityNone">Non hai Admins nesta Comunidade.</string>
     <string name="adminRemoveFailed">Non se puido eliminar a {name} como Admin.</string>
     <string name="adminRemovedUser"><b>{name}</b> foi eliminado como Admin.</string>
-    <string name="adminSendingPromotion">A enviar a promoción a administrador</string>
     <string name="adminSettings">Axustes de Admin</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> e <b>{other_name}</b> foron ascendidos a Admin.</string>
     <string name="andMore">+{count}</string>
@@ -262,7 +261,6 @@
     <string name="deleteAfterLegacyDisappearingMessagesTheyChangedTimer"><b>{name}</b> estableceu o temporizador de desaparición das mensaxes a <b>{time}</b></string>
     <string name="deleteMessageDeletedGlobally">Esta mensaxe foi eliminada</string>
     <string name="deleteMessageDeletedLocally">Esta mensaxe foi eliminada neste dispositivo</string>
-    <string name="deleteMessageDescriptionDevice">Tes a certeza de querer borrar esta mensaxe só deste dispositivo?</string>
     <string name="deleteMessageDescriptionEveryone">Tes a certeza de querer borrar esta mensaxe para todos?</string>
     <string name="deleteMessageDeviceOnly">Borrar só neste dispositivo</string>
     <string name="deleteMessageDevicesAll">Borrar en todos os meus dispositivos</string>
@@ -271,7 +269,6 @@
         <item quantity="one">Erro ao borrar a mensaxe</item>
         <item quantity="other">Erro ao borrar as mensaxes</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Tes a certeza de querer eliminar estas mensaxes só deste dispositivo?</string>
     <string name="deleteMessagesDescriptionEveryone">Tes a certeza de querer eliminar estas mensaxes para todos?</string>
     <string name="deleting">Borrando</string>
     <string name="developerToolsToggle">Alternar ferramentas de desenvolvedor</string>
@@ -368,7 +365,6 @@
     <string name="groupInviteFailedMultiple">Non se puido invitar a {name} e {count} máis a {group_name}</string>
     <string name="groupInviteFailedTwo">Non se puido invitar a {name} e {other_name} a {group_name}</string>
     <string name="groupInviteFailedUser">Non se puido invitar a {name} a {group_name}</string>
-    <string name="groupInviteSending">Enviando convite</string>
     <string name="groupInviteSent">Convite enviado</string>
     <string name="groupInviteSuccessful">Convite ao grupo enviado con éxito</string>
     <string name="groupInviteYou"><b>Ti</b> foste invitado a unirte ao grupo.</string>

@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> αφαιρέθηκε ως Διαχειριστής.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> και <b>{count} άλλοι</b> αφαιρέθηκαν ως Διαχειριστές.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> και <b>{other_name}</b> αφαιρέθηκαν ως Διαχειριστές.</string>
-    <string name="adminSendingPromotion">Γίνεται αποστολή προαγωγής διαχειριστή</string>
     <string name="adminSettings">Ρυθμίσεις Διαχειριστή</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> και <b>{other_name}</b> προωθήθηκαν στο Admin.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Αυτό το μήνυμα έχει διαγραφεί</string>
     <string name="deleteMessageDeletedLocally">Αυτό το μήνυμα έχει διαγραφεί σε αυτή τη συσκευή</string>
-    <string name="deleteMessageDescriptionDevice">Σίγουρα θέλετε να διαγράψετε αυτό το μήνυμα μόνο από αυτή τη συσκευή;</string>
     <string name="deleteMessageDescriptionEveryone">Σίγουρα θέλετε να διαγράψετε αυτό το μήνυμα για όλους;</string>
     <string name="deleteMessageDeviceOnly">Διαγραφή μόνο σε αυτή τη συσκευή</string>
     <string name="deleteMessageDevicesAll">Διαγραφή από όλες τις συσκευές μου</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Αποτυχία διαγραφής μηνύματος</item>
         <item quantity="other">Αποτυχία διαγραφής μηνύματος</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Σίγουρα θέλετε να διαγράψετε αυτά τα μηνύματα μόνο από αυτή τη συσκευή;</string>
     <string name="deleteMessagesDescriptionEveryone">Σίγουρα θέλετε να διαγράψετε αυτά τα μηνύματα για όλους;</string>
     <string name="deleting">Γίνεται διαγραφή</string>
     <string name="developerToolsToggle">Εναλλαγή Εργαλείων Προγραμματιστή</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Αποτυχία πρόσκλησης {name} και {count} άλλων στο {group_name}</string>
     <string name="groupInviteFailedTwo">Αποτυχία πρόσκλησης {name} και {other_name} στο {group_name}</string>
     <string name="groupInviteFailedUser">Αποτυχία πρόσκλησης {name} στο {group_name}</string>
-    <string name="groupInviteSending">Γίνεται αποστολή πρόσκλησης</string>
     <string name="groupInviteSent">Η πρόσκληση στάλθηκε</string>
     <string name="groupInviteSuccessful">Η πρόσκληση στην ομάδα ήταν επιτυχής</string>
     <string name="groupInviteVersion">Οι χρήστες πρέπει να έχουν την τελευταία έκδοση για να λάβουν προσκλήσεις</string>

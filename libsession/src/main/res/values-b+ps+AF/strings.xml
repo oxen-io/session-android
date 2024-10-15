@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> د اډمین په توګه لرې کړل شوی.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> او <b>{count} نور</b> د ایډمین څخه لرې کړل شوی دی.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> او <b>{other_name}</b> د ایډمین څخه لرې کړل شوی دی.</string>
-    <string name="adminSendingPromotion">د مدیر پرمختګ لیږل</string>
     <string name="adminSettings">د اډمین تنظیمات</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> او <b>{other_name}</b> مدیر ته وده ورکړه.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">دا پیغام پاک شو</string>
     <string name="deleteMessageDeletedLocally">دا پیغام په دې وسیله په دې ځای کې پاک شو</string>
-    <string name="deleteMessageDescriptionDevice">آیا تاسو ډاډه یاست چې غواړئ دا پیغام یوازې د دې وسیلې څخه حذف کړئ؟</string>
     <string name="deleteMessageDescriptionEveryone">آیا تاسو ډاډه یاست چې غواړئ دا پیغام د ټولو لپاره حذف کړئ؟</string>
     <string name="deleteMessageDeviceOnly">یوازې په دې وسیله ړنګ کړئ</string>
     <string name="deleteMessageDevicesAll">په ټولو زما وسایلو کې ړنګ کړئ</string>
@@ -296,7 +294,6 @@
         <item quantity="one">پیغام حذف ناکام شو</item>
         <item quantity="other">پیغامونه حذف ناکام شول</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">ته ډاډه يې چې دا پیغامونه یوازې له دې وسیلې څخه حذفول غواړې؟</string>
     <string name="deleteMessagesDescriptionEveryone">ته ډاډه يې چې دا پیغامونه د ټولو لپاره حذفول غواړې؟</string>
     <string name="deleting">ښکته کول</string>
     <string name="developerToolsToggle">ډېوېلپر وسیلې ټوګل کړئ</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">د {name} او نورو {count} بلنه ناکامه شوه چې {group_name} ته ګډون وکړي</string>
     <string name="groupInviteFailedTwo">د {name} او {other_name} بلنه ناکامه شوه چې {group_name} ته ګډون وکړي</string>
     <string name="groupInviteFailedUser">د {name} بلنه ناکامه شوه چې {group_name} ته ګډون وکړي</string>
-    <string name="groupInviteSending">بلنه لیږل</string>
     <string name="groupInviteSent">بلنه واستول شوه</string>
     <string name="groupInviteSuccessful">د ډلې بلنه بریالۍ</string>
     <string name="groupInviteVersion">کارنان باید وروستۍ نسخه ولري ترڅو بلنې ترلاسه کړي</string>
