@@ -11,12 +11,6 @@
             android:title="@string/lockApp"
             android:summary="@string/lockAppDescription" />
 
-        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
-            android:defaultValue="@bool/screen_security_default"
-            android:key="pref_screen_security"
-            android:title="@string/screenshotNotifications"
-            android:summary="@string/screenshotNotificationsDescription" />
-
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -127,11 +127,7 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
     if (!isResume) {
       getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     } else {
-      if (TextSecurePreferences.isScreenSecurityEnabled(this)) {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-      } else {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
-      }
+      getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
   }
 }
