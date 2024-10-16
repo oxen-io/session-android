@@ -19,6 +19,8 @@ import network.loki.messenger.R
 import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY
 import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.Commands.*
+import org.thoughtcrime.securesms.conversation.v2.ConversationViewModel.DeleteForEveryoneDialogData
+import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.ui.AlertDialog
 import org.thoughtcrime.securesms.ui.DialogButtonModel
 import org.thoughtcrime.securesms.ui.GetString
@@ -48,9 +50,10 @@ fun ConversationV2Dialogs(
             )
         }
 
-        // delete message(s) for everyone
+        // delete message(s)
         if(dialogsState.deleteEveryone != null){
-            var deleteForEveryone by remember { mutableStateOf(dialogsState.deleteEveryone.defaultToEveryone)}
+            val data = dialogsState.deleteEveryone
+            var deleteForEveryone by remember { mutableStateOf(data.defaultToEveryone)}
 
             AlertDialog(
                 onDismissRequest = {
@@ -59,17 +62,17 @@ fun ConversationV2Dialogs(
                 },
                 title = pluralStringResource(
                     R.plurals.deleteMessage,
-                    dialogsState.deleteEveryone.messages.size,
-                    dialogsState.deleteEveryone.messages.size
+                    data.messages.size,
+                    data.messages.size
                 ),
                 text = pluralStringResource(
                     R.plurals.deleteMessageConfirm,
-                    dialogsState.deleteEveryone.messages.size,
-                    dialogsState.deleteEveryone.messages.size
+                    data.messages.size,
+                    data.messages.size
                 ),
                 content = {
                     // add warning text, if any
-                    dialogsState.deleteEveryone.warning?.let {
+                    data.warning?.let {
                         Text(
                             text = it,
                             textAlign = TextAlign.Center,
@@ -103,9 +106,9 @@ fun ConversationV2Dialogs(
                         ),
                         option = RadioOption(
                             value = Unit,
-                            title = GetString(stringResource(R.string.deleteMessageEveryone)),
+                            title = GetString(data.deleteForEveryoneLabel),
                             selected = deleteForEveryone,
-                            enabled = dialogsState.deleteEveryone.everyoneEnabled
+                            enabled = data.everyoneEnabled
                         )
                     ) {
                         deleteForEveryone = true
@@ -119,9 +122,9 @@ fun ConversationV2Dialogs(
                             // delete messages based on chosen option
                             sendCommand(
                                 if(deleteForEveryone) MarkAsDeletedForEveryone(
-                                    dialogsState.deleteEveryone.copy(defaultToEveryone = deleteForEveryone)
+                                    data.copy(defaultToEveryone = deleteForEveryone)
                                 )
-                                else MarkAsDeletedLocally(dialogsState.deleteEveryone.messages)
+                                else MarkAsDeletedLocally(data.messages)
                             )
                         }
                     ),
@@ -131,76 +134,6 @@ fun ConversationV2Dialogs(
                 )
             )
         }
-
-        // delete message(s) for all my devices
-        if(dialogsState.deleteAllDevices != null){
-            var deleteAllDevices by remember { mutableStateOf(dialogsState.deleteAllDevices.defaultToEveryone) }
-
-            AlertDialog(
-                onDismissRequest = {
-                    // hide dialog
-                    sendCommand(HideDeleteAllDevicesDialog)
-                },
-                title = pluralStringResource(
-                    R.plurals.deleteMessage,
-                    dialogsState.deleteAllDevices.messages.size,
-                    dialogsState.deleteAllDevices.messages.size
-                ),
-                text = pluralStringResource(
-                    R.plurals.deleteMessageConfirm,
-                    dialogsState.deleteAllDevices.messages.size,
-                    dialogsState.deleteAllDevices.messages.size
-                ),
-                content = {
-                    TitledRadioButton(
-                        contentPadding = PaddingValues(
-                            horizontal = LocalDimensions.current.xxsSpacing,
-                            vertical = 0.dp
-                        ),
-                        option = RadioOption(
-                            value = Unit,
-                            title = GetString(stringResource(R.string.deleteMessageDeviceOnly)),
-                            selected = !deleteAllDevices
-                        )
-                    ) {
-                        deleteAllDevices = false
-                    }
-
-                    TitledRadioButton(
-                        contentPadding = PaddingValues(
-                            horizontal = LocalDimensions.current.xxsSpacing,
-                            vertical = 0.dp
-                        ),
-                        option = RadioOption(
-                            value = Unit,
-                            title = GetString(stringResource(R.string.deleteMessageDevicesAll)),
-                            selected = deleteAllDevices
-                        )
-                    ) {
-                        deleteAllDevices = true
-                    }
-                },
-                buttons = listOf(
-                    DialogButtonModel(
-                        text = GetString(stringResource(id = R.string.delete)),
-                        color = LocalColors.current.danger,
-                        onClick = {
-                            // delete messages based on chosen option
-                            sendCommand(
-                                if(deleteAllDevices) MarkAsDeletedForEveryone(
-                                    dialogsState.deleteAllDevices.copy(defaultToEveryone = deleteAllDevices)
-                                )
-                                else MarkAsDeletedLocally(dialogsState.deleteAllDevices.messages)
-                            )
-                        }
-                    ),
-                    DialogButtonModel(
-                        GetString(stringResource(R.string.cancel))
-                    )
-                )
-            )
-        }
-
 
         // Clear emoji
         if(dialogsState.clearAllEmoji != null){
