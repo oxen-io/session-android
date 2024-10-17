@@ -1686,17 +1686,12 @@ open class Storage(
         val timestamp = reaction.timestamp
         val localId = reaction.localId
         val isMms = reaction.isMms
-        val messageRecord = timestamp?.let{ DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(timestamp) }
-
-        // leave if this is about a deleted messsage
-        if (messageRecord?.isDeleted == true) return
-
         val messageId = if (localId != null && localId > 0 && isMms != null) {
             MessageId(localId, isMms)
-        } else if (messageRecord != null && timestamp > 0) {
+        } else if (timestamp != null && timestamp > 0) {
+            val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(timestamp) ?: return
             MessageId(messageRecord.id, messageRecord.isMms)
         } else return
-
         DatabaseComponent.get(context).reactionDatabase().addReaction(
             messageId,
             ReactionRecord(
