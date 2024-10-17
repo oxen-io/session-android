@@ -41,7 +41,6 @@ import org.thoughtcrime.securesms.components.emoji.EmojiImageView
 import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel
 import org.thoughtcrime.securesms.components.menu.ActionItem
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper.userCanBanSelectedUsers
-import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper.userCanDeleteSelectedItems
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -559,10 +558,8 @@ class ConversationReactionOverlay : FrameLayout {
             items += ActionItem(R.attr.menu_copy_icon, R.string.accountIDCopy, { handleActionItemClicked(Action.COPY_ACCOUNT_ID) })
         }
         // Delete message
-        if (userCanDeleteSelectedItems(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) },
-                R.string.AccessibilityId_deleteMessage, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
-        }
+        items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) },
+            R.string.AccessibilityId_deleteMessage, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
         // Ban user
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey) && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_block_icon, R.string.banUser, { handleActionItemClicked(Action.BAN_USER) })

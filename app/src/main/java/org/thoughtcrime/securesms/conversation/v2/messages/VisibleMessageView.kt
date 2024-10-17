@@ -234,7 +234,7 @@ class VisibleMessageView : FrameLayout {
         showStatusMessage(message)
 
         // Emoji Reactions
-        if (message.reactions.isNotEmpty()) {
+        if (!message.isDeleted && message.reactions.isNotEmpty()) {
             val capabilities = lokiThreadDb.getOpenGroupChat(threadID)?.server?.let { lokiApiDb.getServerCapabilities(it) }
             if (capabilities.isNullOrEmpty() || capabilities.contains(OpenGroupApi.Capability.REACTIONS.name.lowercase())) {
                 emojiReactionsBinding.value.root.let { root ->

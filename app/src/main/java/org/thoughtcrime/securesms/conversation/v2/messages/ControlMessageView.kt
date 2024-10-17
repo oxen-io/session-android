@@ -87,7 +87,11 @@ class ControlMessageView : LinearLayout {
                         && message.expiryMode != (MessagingModuleConfiguration.shared.storage.getExpirationConfiguration(message.threadId)?.expiryMode ?: ExpiryMode.NONE)
                         && threadRecipient?.isGroupRecipient != true
 
-                    binding.controlContentView.setOnClickListener { disappearingMessages.showFollowSettingDialog(context, message) }
+                    if (followSetting.isVisible) {
+                        binding.controlContentView.setOnClickListener { disappearingMessages.showFollowSettingDialog(context, message) }
+                    } else {
+                        binding.controlContentView.setOnClickListener(null)
+                    }
                 }
             }
             message.isMediaSavedNotification -> {
