@@ -572,11 +572,8 @@ class ConversationViewModel(
             try {
                 repository.deleteCommunityMessagesRemotely(threadId, data.messages)
 
-                // When this is done we simply need to remove the message locally
-                repository.markAsDeletedLocally(
-                    messages = data.messages,
-                    displayedMessage = application.getString(R.string.deleteMessageDeletedGlobally)
-                )
+                // When this is done we simply need to remove the message locally (leave nothing behind)
+                repository.deleteMessages(messages = data.messages, threadId = threadId)
 
                 // show confirmation toast
                 withContext(Dispatchers.Main) {
