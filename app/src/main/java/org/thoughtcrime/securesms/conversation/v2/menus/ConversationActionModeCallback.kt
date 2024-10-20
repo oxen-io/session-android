@@ -43,18 +43,6 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
             ?.let { AccountId(IdPrefix.BLINDED, it) }?.hexString
 
         // Embedded function
-        fun userCanDeleteSelectedItems(): Boolean {
-            // admin can delete all combinations
-            if(adapter.isAdmin) return true
-
-            val allSentByCurrentUser = selectedItems.all { it.isOutgoing }
-            val allReceivedByCurrentUser = selectedItems.all { !it.isOutgoing }
-            if (openGroup == null) { return allSentByCurrentUser || allReceivedByCurrentUser }
-            if (allSentByCurrentUser) { return true }
-            return OpenGroupManager.isUserModerator(context, openGroup.groupId, userPublicKey, blindedPublicKey)
-        }
-
-        // Embedded function
         fun userCanBanSelectedUsers(): Boolean {
             if (openGroup == null) { return false }
             val anySentByCurrentUser = selectedItems.any { it.isOutgoing }
@@ -67,7 +55,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
 
 
         // Delete message
-        menu.findItem(R.id.menu_context_delete_message).isVisible = userCanDeleteSelectedItems()
+        menu.findItem(R.id.menu_context_delete_message).isVisible = true // can always delete since delete logic will be handled by the VM
         // Ban user
         menu.findItem(R.id.menu_context_ban_user).isVisible = userCanBanSelectedUsers()
         // Ban and delete all
