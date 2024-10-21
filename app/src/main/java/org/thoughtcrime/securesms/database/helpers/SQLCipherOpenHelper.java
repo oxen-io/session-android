@@ -138,8 +138,6 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
     this.context        = context.getApplicationContext();
     this.databaseSecret = databaseSecret;
-
-    Log.d("", "*** DB PASSWORD: "+databaseSecret.asString());
   }
 
   private static void applySQLCipherPragmas(SQLiteConnection connection, boolean useSQLCipher4) {
