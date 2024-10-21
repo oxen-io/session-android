@@ -469,9 +469,15 @@ object MessageSender {
 
     fun handleFailedMessageSend(message: Message, error: Exception, isSyncMessage: Boolean = false) {
         val storage = MessagingModuleConfiguration.shared.storage
+        val timestamp = message.sentTimestamp!!
+
+        // no need to handle if message is marked as deleted
+        if(MessagingModuleConfiguration.shared.messageDataProvider.isDeletedMessage(message.sentTimestamp!!)){
+            return
+        }
+
         val userPublicKey = storage.getUserPublicKey()!!
 
-        val timestamp = message.sentTimestamp!!
         val author = message.sender ?: userPublicKey
 
         if (isSyncMessage) storage.markAsSyncFailed(timestamp, author, error)

@@ -106,6 +106,23 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 .any { MmsSmsColumns.Types.isOutgoingMessageType(it) }
         }
 
+    fun isDeletedMessage(timestamp: Long): Boolean =
+        databaseHelper.writableDatabase.query(
+            TABLE_NAME,
+            arrayOf(ID, THREAD_ID, MESSAGE_BOX, ADDRESS),
+            DATE_SENT + " = ?",
+            arrayOf(timestamp.toString()),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            cursor.asSequence()
+                .map { cursor.getColumnIndexOrThrow(MESSAGE_BOX) }
+                .map(cursor::getLong)
+                .any { MmsSmsColumns.Types.isDeletedMessage(it) }
+        }
+
     fun incrementReceiptCount(
         messageId: SyncMessageId,
         timestamp: Long,
