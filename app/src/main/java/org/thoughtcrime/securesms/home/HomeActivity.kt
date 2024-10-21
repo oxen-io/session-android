@@ -372,6 +372,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             binding.seedReminderView.isVisible = false
         }
 
+        // refresh search on resume, in case we a conversation was deleted
+        if (binding.globalSearchRecycler.isVisible){
+            globalSearchViewModel.refresh()
+        }
+
         updateLegacyConfigView()
 
         // Sync config changes if there are any

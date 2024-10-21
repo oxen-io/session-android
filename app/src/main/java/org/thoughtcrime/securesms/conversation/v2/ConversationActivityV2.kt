@@ -851,8 +851,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     binding.messageRequestBar.visibility = View.GONE
                 }
                 if (!uiState.conversationExists && !isFinishing) {
-                    // Conversation should be deleted now, go to homepage with a cleared stack
-                    baseContext.startHomeActivity(isFromOnboarding = false, isNewAccount = false)
+                    // Conversation should be deleted now
+                    finish()
                 }
 
                 // show or hide the text input
