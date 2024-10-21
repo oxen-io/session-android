@@ -17,6 +17,8 @@
  */
 package org.session.libsession.utilities.recipients;
 
+import static org.session.libsession.utilities.IdUtilKt.truncateIdForDisplay;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;

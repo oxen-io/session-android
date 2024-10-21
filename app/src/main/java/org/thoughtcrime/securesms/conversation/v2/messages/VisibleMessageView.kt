@@ -234,7 +234,7 @@ class VisibleMessageView : FrameLayout {
         showStatusMessage(message)
 
         // Emoji Reactions
-        if (message.reactions.isNotEmpty()) {
+        if (!message.isDeleted && message.reactions.isNotEmpty()) {
             val capabilities = lokiThreadDb.getOpenGroupChat(threadID)?.server?.let { lokiApiDb.getServerCapabilities(it) }
             if (capabilities.isNullOrEmpty() || capabilities.contains(OpenGroupApi.Capability.REACTIONS.name.lowercase())) {
                 emojiReactionsBinding.value.root.let { root ->
@@ -280,13 +280,12 @@ class VisibleMessageView : FrameLayout {
 
         // Get details regarding how we should display the message (it's delivery icon, icon tint colour, and
         // the resource string for what text to display (R.string.delivery_status_sent etc.).
-        val (iconID, iconColor, textId) = getMessageStatusInfo(message)
 
-        // If we get any nulls then a message isn't one with a state that we care about (i.e., control messages
+        // If we get a null messageStatus then the message isn't one with a state that we care about (i.e., control messages
         // etc.) - so bail. See: `DisplayRecord.is<WHATEVER>` for the full suite of message state methods.
         // Also: We set all delivery status elements visibility to false just to make sure we don't display any
         // stale data.
-        if (textId == null) return
+        val messageStatus = getMessageStatusInfo(message) ?: return
 
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
             gravity = if (message.isOutgoing) Gravity.END else Gravity.START
@@ -295,16 +294,17 @@ class VisibleMessageView : FrameLayout {
             horizontalBias = if (message.isOutgoing) 1f else 0f
         }
 
-        // If the message is incoming AND it is not scheduled to disappear then don't show any status or timer details
+        // If the message is incoming AND it is not scheduled to disappear
+        // OR it is a deleted message then don't show any status or timer details
         val scheduledToDisappear = message.expiresIn > 0
-        if (message.isIncoming && !scheduledToDisappear) return
+        if (message.isDeleted || message.isIncoming && !scheduledToDisappear) return
 
         // Set text & icons as appropriate for the message state. Note: Possible message states we care
         // about are: isFailed, isSyncFailed, isPending, isSyncing, isResyncing, isRead, and isSent.
-        textId.let(binding.messageStatusTextView::setText)
-        iconColor?.let(binding.messageStatusTextView::setTextColor)
-        iconID?.let { ContextCompat.getDrawable(context, it) }
-            ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
+        messageStatus.messageText?.let(binding.messageStatusTextView::setText)
+        messageStatus.iconTint?.let(binding.messageStatusTextView::setTextColor)
+        messageStatus.iconId?.let { ContextCompat.getDrawable(context, it) }
+            ?.run { messageStatus.iconTint?.let { mutate().apply { setTint(it) } } ?: this }
             ?.let(binding.messageStatusImageView::setImageDrawable)
 
         // Potential options at this point are that the message is:
@@ -381,7 +381,7 @@ class VisibleMessageView : FrameLayout {
                                  @ColorInt val iconTint: Int?,
                                  @StringRes val messageText: Int?)
 
-    private fun getMessageStatusInfo(message: MessageRecord): MessageStatusInfo = when {
+    private fun getMessageStatusInfo(message: MessageRecord): MessageStatusInfo? = when {
         message.isFailed ->
             MessageStatusInfo(R.drawable.ic_delivery_status_failed,
                 getThemedColor(context, R.attr.danger),
@@ -410,7 +410,7 @@ class VisibleMessageView : FrameLayout {
                 )
             }
         }
-        message.isSyncing || message.isResyncing ->
+        message.isResyncing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
                 context.getColorFromAttr(R.attr.message_status_color),
@@ -422,16 +422,21 @@ class VisibleMessageView : FrameLayout {
                 context.getColorFromAttr(R.attr.message_status_color),
                 R.string.read
             )
-        message.isSent ->
+        message.isSyncing || message.isSent -> // syncing should happen silently in the bg so we can mark it as sent
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sent,
                 context.getColorFromAttr(R.attr.message_status_color),
                 R.string.disappearingMessagesSent
             )
+
+        // deleted messages do not have a status but we care about styling them so they need to return something
+        message.isDeleted ->
+            MessageStatusInfo(null, null, null)
+
         else -> {
             // The message isn't one we care about for message statuses we display to the user (i.e.,
             // control messages etc. - see the  `DisplayRecord.is<WHATEVER>` suite of methods for options).
-            MessageStatusInfo(null, null, null)
+            null
         }
     }
 
@@ -480,10 +485,13 @@ class VisibleMessageView : FrameLayout {
     // region Interaction
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (onPress == null || onSwipeToReply == null || onLongPress == null) { return false }
+        if (onPress == null && onSwipeToReply == null && onLongPress == null) { return false }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> onDown(event)
-            MotionEvent.ACTION_MOVE -> onMove(event)
+            MotionEvent.ACTION_MOVE -> {
+                // only bother with movements if we have swipe to reply
+                onSwipeToReply?.let { onMove(event) }
+            }
             MotionEvent.ACTION_CANCEL -> onCancel(event)
             MotionEvent.ACTION_UP -> onUp(event)
         }

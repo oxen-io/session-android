@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.util.SparseArray
 import android.util.SparseBooleanArray
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.WorkerThread
 import androidx.core.util.getOrDefault
@@ -35,7 +36,7 @@ class ConversationAdapter(
     private val isReversed: Boolean,
     private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
-    private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
+    private val onItemLongPress: (MessageRecord, Int, View) -> Unit,
     private val onDeselect: (MessageRecord, Int) -> Unit,
     private val onAttachmentNeedsDownload: (DatabaseAttachment) -> Unit,
     private val glide: RequestManager,
@@ -44,6 +45,7 @@ class ConversationAdapter(
     private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
     private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
     var selectedItems = mutableSetOf<MessageRecord>()
+    var isAdmin: Boolean = false
     private var searchQuery: String? = null
     var visibleMessageViewDelegate: VisibleMessageViewDelegate? = null
 
@@ -155,12 +157,18 @@ class ConversationAdapter(
                 } else {
                     visibleMessageView.onPress = null
                     visibleMessageView.onSwipeToReply = null
-                    visibleMessageView.onLongPress = null
+                    // you can long press on "marked as deleted" messages
+                    visibleMessageView.onLongPress =
+                        { onItemLongPress(message, viewHolder.adapterPosition, visibleMessageView) }
                 }
             }
 
             is ControlMessageViewHolder -> {
-                viewHolder.view.bind(message, messageBefore)
+                viewHolder.view.bind(
+                    message = message,
+                    previous = messageBefore,
+                    longPress = { onItemLongPress(message, viewHolder.adapterPosition, viewHolder.view) }
+                )
             }
         }
     }

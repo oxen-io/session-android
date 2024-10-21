@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}‍</b> ត្រូវបានដកចេញពីការកាន់តំណែងជា Admin។</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> និង <b>{count} គេផ្សេងទៀត</b> ត្រូវបានដកចេញពីតួនាទី Admin។</string>
     <string name="adminRemovedUserOther"><b>{name}</b> និង <b>{other_name}</b> ត្រូវបានដកចេញពីតួនាទី Admin។</string>
-    <string name="adminSendingPromotion">កំពុងផ្ញើការផ្សព្វផ្សាយរបស់អ្នកគ្រប់គ្រង</string>
     <string name="adminSettings">ការកំណត់អ្នកគ្រប់គ្រង</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}‍</b> និង <b>{other_name}‍</b> ត្រូវណានបិស្មីជា Admin។</string>
     <string name="andMore">+{count}</string>
@@ -279,13 +278,11 @@
     <plurals name="deleteMessage">
         <item quantity="other">លុបសារ</item>
     </plurals>
-    <string name="deleteMessageConfirm">តើអ្នកប្រាកដទេថាចង់លុបសារនេះ?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">សារត្រូវបានលុបហើយ</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">This message was deleted</string>
     <string name="deleteMessageDeletedLocally">This message was deleted on this device</string>
-    <string name="deleteMessageDescriptionDevice">តើអ្នកប្រាកដទេថាចង់លុបសារនេះចេញពីឧបករណ៍នេះតែប៉ុណ្ណោះ?</string>
     <string name="deleteMessageDescriptionEveryone">តើអ្នកប្រាកដទេថាចង់លុបសារនេះចេញពីទាំងអស់គ្នា?</string>
     <string name="deleteMessageDeviceOnly">លុបតែឧបករណ៍នេះប៉ុណ្ណោះ</string>
     <string name="deleteMessageDevicesAll">លុបចេញពីឧបករណ៍របស់ខ្ញុំទាំងអស់</string>
@@ -293,8 +290,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">បរាជ័យក្នុងការលុបសារ</item>
     </plurals>
-    <string name="deleteMessagesConfirm">តើអ្នកប្រាកដទេថាចង់លុបសារទាំងនេះ?</string>
-    <string name="deleteMessagesDescriptionDevice">តើអ្នកប្រាកដទេថាអ្នកចង់លុបសារទាំងនេះពីឧបករណ៍នេះតែប៉ុណ្ណោះ?</string>
     <string name="deleteMessagesDescriptionEveryone">តើអ្នកប្រាកដទេថាអ្នកចង់លុបសារទាំងនេះសម្រាប់ចោល?</string>
     <string name="deleting">កំពុងលុប</string>
     <string name="developerToolsToggle">Toggle Developer Tools</string>
@@ -400,7 +395,6 @@
     <string name="groupInviteFailedMultiple">បរាជ័យក្នុងការអញ្ជើញ {name} និង {count} នាក់ផ្សេងទៀតចូល {group_name}</string>
     <string name="groupInviteFailedTwo">បរាជ័យក្នុងការអញ្ជើញ {name} និង {other_name} ទៅ {group_name}</string>
     <string name="groupInviteFailedUser">បរាជ័យក្នុងការអញ្ជើញ {name} ទៅ {group_name}</string>
-    <string name="groupInviteSending">ការផ្ញើការអញ្ជើញ</string>
     <string name="groupInviteSent">ការអញ្ជើញបានផ្ញើទៅហើយ</string>
     <string name="groupInviteSuccessful">ការអញ្ជើញក្រុមដោយជោគជ័យ</string>
     <string name="groupInviteVersion">អ្នកប្រើត្រូវមានកំណែចុងក្រោយដើម្បីទទួលបានការអញ្ជើញ</string>

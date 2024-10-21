@@ -21,6 +21,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
+import androidx.core.view.isVisible
 import androidx.vectordrawable.graphics.drawable.AnimatorInflaterCompat
 import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +41,6 @@ import org.thoughtcrime.securesms.components.emoji.EmojiImageView
 import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel
 import org.thoughtcrime.securesms.components.menu.ActionItem
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper.userCanBanSelectedUsers
-import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper.userCanDeleteSelectedItems
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -222,7 +222,6 @@ class ConversationReactionOverlay : FrameLayout {
                 endScale = spaceAvailableForItem / conversationItemSnapshot.height
                 endX += Util.halfOffsetFromScale(conversationItemSnapshot.width, endScale) * if (isMessageOnLeft) -1 else 1
                 endY = spaceForReactionBar - Util.halfOffsetFromScale(conversationItemSnapshot.height, endScale)
-                val contextMenuTop = endY + conversationItemSnapshot.height * endScale
                 reactionBarBackgroundY = reactionBarTopPadding //getReactionBarOffsetForTouch(selectedConversationModel.getBubbleY(), contextMenuTop + Util.halfOffsetFromScale(conversationItemSnapshot.getHeight(), endScale), menuPadding, reactionBarOffset, reactionBarHeight, reactionBarTopPadding, endY);
                 endApparentTop = endY + Util.halfOffsetFromScale(conversationItemSnapshot.height, endScale)
             } else {
@@ -271,11 +270,17 @@ class ConversationReactionOverlay : FrameLayout {
         revealAnimatorSet.start()
         if (isWideLayout) {
             val scrubberRight = scrubberX + scrubberWidth
-            val offsetX = if (isMessageOnLeft) scrubberRight + menuPadding else scrubberX - contextMenu.getMaxWidth() - menuPadding
+            val offsetX = when {
+                isMessageOnLeft -> scrubberRight + menuPadding
+                else -> scrubberX - contextMenu.getMaxWidth() - menuPadding
+            }
             contextMenu.show(offsetX.toInt(), Math.min(backgroundView.y, (overlayHeight - contextMenu.getMaxHeight()).toFloat()).toInt())
         } else {
             val contentX = if (isMessageOnLeft) scrubberHorizontalMargin.toFloat() else selectedConversationModel.bubbleX
-            val offsetX = if (isMessageOnLeft) contentX else -contextMenu.getMaxWidth() + contentX + bubbleWidth
+            val offsetX = when {
+                isMessageOnLeft -> contentX
+                else -> -contextMenu.getMaxWidth() + contentX + bubbleWidth
+            }
             val menuTop = endApparentTop + conversationItemSnapshot.height * endScale
             contextMenu.show(offsetX.toInt(), (menuTop + menuPadding).toInt())
         }
@@ -526,36 +531,50 @@ class ConversationReactionOverlay : FrameLayout {
         val recipient = get(context).threadDatabase().getRecipientForThreadId(message.threadId)
                 ?: return emptyList()
         val userPublicKey = getLocalNumber(context)!!
+
+        // control messages and "marked as deleted" messages can only delete
+        val isDeleteOnly = message.isDeleted || message.isControlMessage
+
         // Select message
-        items += ActionItem(R.attr.menu_select_icon, R.string.select, { handleActionItemClicked(Action.SELECT) }, R.string.AccessibilityId_select)
+        if(!isDeleteOnly) {
+            items += ActionItem(
+                R.attr.menu_select_icon,
+                R.string.select,
+                { handleActionItemClicked(Action.SELECT) },
+                R.string.AccessibilityId_select
+            )
+        }
         // Reply
         val canWrite = openGroup == null || openGroup.canWrite
-        if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation) {
+        if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_reply_icon, R.string.reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply)
         }
         // Copy message text
-        if (!containsControlMessage && hasText) {
+        if (!containsControlMessage && hasText && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_copy_icon, R.string.copy, { handleActionItemClicked(Action.COPY_MESSAGE) })
         }
         // Copy Account ID
-        if (!recipient.isCommunityRecipient && message.isIncoming) {
+        if (!recipient.isCommunityRecipient && message.isIncoming && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_copy_icon, R.string.accountIDCopy, { handleActionItemClicked(Action.COPY_ACCOUNT_ID) })
         }
         // Delete message
-        if (userCanDeleteSelectedItems(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) },
-                R.string.AccessibilityId_deleteMessage, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
-        }
+        items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) },
+            R.string.AccessibilityId_deleteMessage, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
         // Ban user
-        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
+        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey) && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_block_icon, R.string.banUser, { handleActionItemClicked(Action.BAN_USER) })
         }
         // Ban and delete all
-        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
+        if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey) && !isDeleteOnly) {
             items += ActionItem(R.attr.menu_trash_icon, R.string.banDeleteAll, { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
         }
         // Message detail
-        items += ActionItem(R.attr.menu_info_icon, R.string.messageInfo, { handleActionItemClicked(Action.VIEW_INFO) })
+        if(!isDeleteOnly) {
+            items += ActionItem(
+                R.attr.menu_info_icon,
+                R.string.messageInfo,
+                { handleActionItemClicked(Action.VIEW_INFO) })
+        }
         // Resend
         if (message.isFailed) {
             items += ActionItem(R.attr.menu_reply_icon, R.string.resend, { handleActionItemClicked(Action.RESEND) })
@@ -565,7 +584,7 @@ class ConversationReactionOverlay : FrameLayout {
             items += ActionItem(R.attr.menu_reply_icon, R.string.resync, { handleActionItemClicked(Action.RESYNC) })
         }
         // Save media..
-        if (message.isMms) {
+        if (message.isMms  && !isDeleteOnly) {
             // ..but only provide the save option if the there is a media attachment which has finished downloading.
             val mmsMessage = message as MediaMmsMessageRecord
             if (mmsMessage.containsMediaSlide() && !mmsMessage.isMediaPending) {
@@ -576,8 +595,10 @@ class ConversationReactionOverlay : FrameLayout {
                 )
             }
         }
-        backgroundView.visibility = VISIBLE
-        foregroundView.visibility = VISIBLE
+
+        // deleted messages have  no emoji reactions
+        backgroundView.isVisible = !isDeleteOnly
+        foregroundView.isVisible = !isDeleteOnly
         return items
     }
 

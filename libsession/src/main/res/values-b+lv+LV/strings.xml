@@ -32,7 +32,6 @@
     <string name="adminRemoveCommunityNone">Šajā Kopienā nav administratoru.</string>
     <string name="adminRemoveFailed">Neizdevās noņemt {name} kā administratoru.</string>
     <string name="adminRemovedUser"><b>{name}</b> tika noņemts no administrēšanas.</string>
-    <string name="adminSendingPromotion">Sūta administratora paaugstinājumu</string>
     <string name="adminSettings">Administratora iestatījumi</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> un <b>{other_name}</b> tika paaugstināti par administrētāju.</string>
     <string name="andMore">+{count}</string>
@@ -266,10 +265,8 @@
     <string name="deleteAfterLegacyDisappearingMessagesLegacy">Mantojums</string>
     <string name="deleteAfterLegacyDisappearingMessagesOriginal">Gaistošo ziņojumu oriģinālā versija.</string>
     <string name="deleteAfterLegacyDisappearingMessagesTheyChangedTimer"><b>{name}</b> iestatīja pazūdošo ziņu taimeri uz <b>{time}</b></string>
-    <string name="deleteMessageConfirm">Vai jūs esat pārliecināti ka vēlaties dzēst šo ziņu?</string>
     <string name="deleteMessageDeletedGlobally">Šis ziņojums tika izdzēsts</string>
     <string name="deleteMessageDeletedLocally">Šis ziņojums tika izdzēsts šajā ierīcē</string>
-    <string name="deleteMessageDescriptionDevice">Vai jūs esat pārliecināti ka vēlaties dzēst šo ziņu tikai no šīs ierīces?</string>
     <string name="deleteMessageDescriptionEveryone">Vai jūs esat pārliecināti ka vēlaties dzēst šo ziņu visiem?</string>
     <string name="deleteMessageDeviceOnly">Dzēst tikai šajā ierīcē</string>
     <string name="deleteMessageDevicesAll">Dzēst visās manās ierīcēs</string>
@@ -279,8 +276,6 @@
         <item quantity="one">Neizdevās dzēst ziņu</item>
         <item quantity="other">Neizdevās dzēst ziņas</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Vai jūs esat pārliecināti, ka vēlaties dzēst šos ziņojumus?</string>
-    <string name="deleteMessagesDescriptionDevice">Vai esat pārliecināts, ka vēlaties dzēst šos ziņojumus tikai no šīs ierīces?</string>
     <string name="deleteMessagesDescriptionEveryone">Vai esat pārliecināts, ka vēlaties dzēst šos ziņojumus visiem?</string>
     <string name="deleting">Dzēšana</string>
     <string name="developerToolsToggle">Pārslēgt izstrādātāja rīkus</string>
@@ -383,7 +378,6 @@
     <string name="groupInviteFailedMultiple">Neizdevās uzaicināt {name} un {count} citus uz {group_name}</string>
     <string name="groupInviteFailedTwo">Neizdevās uzaicināt {name} un {other_name} uz {group_name}</string>
     <string name="groupInviteFailedUser">Neizdevās uzaicināt {name} uz {group_name}</string>
-    <string name="groupInviteSending">Sūta ielūgumu</string>
     <string name="groupInviteSent">Uzaicinājums nosūtīts</string>
     <string name="groupInviteSuccessful">Grupas ielūgums ir veiksmīgs</string>
     <string name="groupInviteVersion">Lietotājiem jābūt jaunākajai izlaiduma versijai, lai saņemtu ielūgumus</string>
@@ -397,6 +391,9 @@
     <string name="groupMemberLeftMultiple"><b>{name}</b> un <b>{count} citi</b> atstāja grupu.</string>
     <string name="groupMemberLeftTwo"><b>{name}</b> un <b>{other_name}</b> atstāja grupu.</string>
     <string name="groupMemberNew">Grupai pievienojās <b>{name}</b>.</string>
+    <string name="groupMemberNewHistory"><b>{name}</b> uzaicināts pievienoties grupai un sarakstes vēsture tam pieejama.</string>
+    <string name="groupMemberNewMultiple"><b>{name}</b> un <b>{count} others</b> uzaicināti pievienoties grupai.</string>
+    <string name="groupMemberNewTwo"><b>{name}</b> un <b>{other_name}</b> uzaicināti pievienoties grupai.</string>
     <string name="groupMemberYouLeft"><b>Tu</b> atstāji grupu.</string>
     <string name="groupMembers">Grupas dalībnieki</string>
     <string name="groupMembersNone">Šajā grupā nav citu dalībnieku.</string>
@@ -494,6 +491,11 @@
     <string name="messageInfo">Ziņas informācija</string>
     <string name="messageMarkRead">Atzīmēt kā izlasītu</string>
     <string name="messageMarkUnread">Atzīmēt kā nelasītu</string>
+    <plurals name="messageNew">
+        <item quantity="zero">Jauna ziņa</item>
+        <item quantity="one">Jauna ziņa</item>
+        <item quantity="other">Jauna ziņa</item>
+    </plurals>
     <string name="messageNewDescriptionDesktop">Sāc jaunu sarunu, ievadot drauga Konta ID vai ONS.</string>
     <string name="messageNewDescriptionMobile">Sāc jaunu sarunu, ievadot drauga Konta ID, ONS vai skenējot viņu QR kodu.</string>
     <plurals name="messageNewYouveGot">

@@ -21,7 +21,6 @@
        <item name="android:backgroundDimEnabled">true</item>
        <item name="android:backgroundDimAmount">0.6</item>
        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
-       <item name="conversation_transport_sms_indicator">@drawable/ic_arrow_up_circle_24</item>
        <item name="android:alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
        <item name="conversationMenuSearchTintColor">?android:textColorPrimary</item>
@@ -61,6 +60,8 @@
 
        <item name="conversation_icon_attach_audio">@drawable/ic_audio_dark</item>
        <item name="conversation_icon_attach_video">@drawable/ic_video_dark</item>
+
+       <item name="android:actionMenuTextAppearance">@style/MenuTextAppearance</item>
    </style>
 
     <!-- This should be the default theme for the application. -->
@@ -173,8 +174,6 @@
         <item name="conversation_editor_background">#22ffffff</item>
         <item name="conversation_editor_text_color">#ffeeeeee</item>
         <item name="conversation_input_inline_attach_icon_tint">@color/core_grey_05</item>
-        <item name="conversation_transport_sms_indicator">@drawable/ic_arrow_up_circle_24</item>
-        <item name="conversation_transport_push_indicator">@drawable/ic_arrow_up_circle_24</item>
         <item name="conversation_transport_popup_background">@color/black</item>
         <item name="conversation_attach_camera">@drawable/ic_photo_camera_dark</item>
         <item name="conversation_attach_image">@drawable/ic_image_dark</item>

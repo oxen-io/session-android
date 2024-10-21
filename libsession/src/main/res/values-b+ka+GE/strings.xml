@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}ს</b> აღარ არის ადმინისტრატორი.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> და <b>{count} სხვა</b> წაიშალნენ ადმინისტრატორის როლიდან.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> და <b>{other_name}</b> წაიშალნენ ადმინისტრატორის როლიდან.</string>
-    <string name="adminSendingPromotion">ადმინად დაწინაურების გაგზავნა</string>
     <string name="adminSettings">ადმინის პარამეტრები</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}ს</b> და <b>{other_name}ს</b> მიენიჭათ ადმინისტრატორის როლი.</string>
     <string name="andMore">+{count}</string>
@@ -281,14 +280,12 @@
         <item quantity="one">შეტყობინების წაშლა</item>
         <item quantity="other">შეტყობინებების წაშლა</item>
     </plurals>
-    <string name="deleteMessageConfirm">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინების წაშლა?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">შეტყობინება წაშლილია</item>
         <item quantity="other">შეტყობინებები წაშლილია</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">ეს შეტყობინება წაშლილია</string>
     <string name="deleteMessageDeletedLocally">ეს შეტყობინება წაშლილია ამ მოწყობილობაზე</string>
-    <string name="deleteMessageDescriptionDevice">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინების წაშლა მხოლოდ ამ მოწყობილობიდან?</string>
     <string name="deleteMessageDescriptionEveryone">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინების წაშლა ყველასთვის?</string>
     <string name="deleteMessageDeviceOnly">მხოლოდ ამ მოწყობილობაზე წაშლა</string>
     <string name="deleteMessageDevicesAll">წაშლა ყველა ჩემს მოწყობილობაზე</string>
@@ -297,8 +294,6 @@
         <item quantity="one">შეტყობინების წაშლა ვერ მოხერხდა</item>
         <item quantity="other">შეტყობინებების წაშლა ვერ მოხერხდა</item>
     </plurals>
-    <string name="deleteMessagesConfirm">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინებების წაშლა?</string>
-    <string name="deleteMessagesDescriptionDevice">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინებების წაშლა მხოლოდ ამ მოწყობილობიდან?</string>
     <string name="deleteMessagesDescriptionEveryone">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინებების წაშლა ყველასთვის?</string>
     <string name="deleting">წაშლა მიმდინარეობს</string>
     <string name="developerToolsToggle">დეველოპერის ხელსაწყოების გადართვა</string>
@@ -405,7 +400,6 @@
     <string name="groupInviteFailedMultiple">ვერ შევძელიში {name} და {count} სხვა პირი ჯგუფში {group_name} მიიწვია</string>
     <string name="groupInviteFailedTwo">ვერ შევძელიში {name} და {other_name} ჯგუფში {group_name} მიიწვია</string>
     <string name="groupInviteFailedUser">ვერ შევძელიში {name} ჯგუფში {group_name} მიიწვია</string>
-    <string name="groupInviteSending">მოწვევის გაგზავნა</string>
     <string name="groupInviteSent">მოწვევა გაგზავნილია</string>
     <string name="groupInviteSuccessful">ჯგუფის მოწვევა წარმატებული იყო</string>
     <string name="groupInviteVersion">მომხმარებელმა უნდა ჰქონდეს უახლესი ვერსია მიწვევების მისაღებად</string>

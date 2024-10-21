@@ -46,7 +46,8 @@ object LocalisedTimeUtil {
             "${this.inWholeHours}h ${minutesRemaining}m"
         } else if (this.inWholeMinutes > 0) {
             val secondsRemaining = this.minus(1.minutes.times(this.inWholeMinutes.toInt())).inWholeSeconds
-            "${this.inWholeMinutes}m ${secondsRemaining}s"
+            if(secondsRemaining > 0) "${this.inWholeMinutes}m ${secondsRemaining}s"
+            else "${this.inWholeMinutes}m"
         } else {
             "0m ${this.inWholeSeconds}s"
         }
