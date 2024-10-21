@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> беше отстранет како Админ.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> и <b>{count} други</b> беа отстранети како Админ.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> и <b>{other_name}</b> беа отстранени како администратори.</string>
-    <string name="adminSendingPromotion">Се испраќа унапредување на администратор</string>
     <string name="adminSettings">Администраторски поставки</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> и <b>{other_name}</b> беа промовирани во Админ.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Оваа порака беше избришана</string>
     <string name="deleteMessageDeletedLocally">Оваа порака беше избришана на овој уред</string>
-    <string name="deleteMessageDescriptionDevice">Дали сте сигурни дека сакате да ја избришете оваа порака само од овој уред?</string>
     <string name="deleteMessageDescriptionEveryone">Дали сте сигурни дека сакате да ја избришете оваа порака за сите?</string>
     <string name="deleteMessageDeviceOnly">Избриши само на овој уред</string>
     <string name="deleteMessageDevicesAll">Избриши на сите мои уреди</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Не успеа да ја избришете пораката</item>
         <item quantity="other">Не успеа да ги избришете пораките</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Дали сте сигурни дека сакате да ги избришете овие пораки само од овој уред?</string>
     <string name="deleteMessagesDescriptionEveryone">Дали сте сигурни дека сакате да ги избришете овие пораки за сите?</string>
     <string name="deleting">Бришење...</string>
     <string name="developerToolsToggle">Префрли на алатки за развивачи</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Неуспешно поканување на {name} и {count} други лица во {group_name}</string>
     <string name="groupInviteFailedTwo">Неуспешно поканување на {name} и {other_name} во {group_name}</string>
     <string name="groupInviteFailedUser">Неуспешно поканување на {name} во {group_name}</string>
-    <string name="groupInviteSending">Испраќање на покана</string>
     <string name="groupInviteSent">Поканата е испратена</string>
     <string name="groupInviteSuccessful">Поканата за група е успешна</string>
     <string name="groupInviteVersion">Корисниците мора да имаат најнова верзија за да добијат покани</string>

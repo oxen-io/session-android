@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> dikeluarkan sebagai Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> dan <b>{count} lainnya</b> dikeluarkan sebagai Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> dan <b>{other_name}</b> dikeluarkan sebagai Admin.</string>
-    <string name="adminSendingPromotion">Menghantar promosi admin</string>
     <string name="adminSettings">Tetapan Pentadbir</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> dan <b>{other_name}</b> dinaikkan ke Admin.</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Mesej ini telah dipadam</string>
     <string name="deleteMessageDeletedLocally">Mesej ini telah dipadam pada peranti ini</string>
-    <string name="deleteMessageDescriptionDevice">Adakah anda yakin anda mahu memadamkan mesej ini hanya dari peranti ini?</string>
     <string name="deleteMessageDescriptionEveryone">Adakah anda yakin anda mahu memadamkan mesej ini untuk semua orang?</string>
     <string name="deleteMessageDeviceOnly">Padam pada peranti ini sahaja</string>
     <string name="deleteMessageDevicesAll">Padam pada semua peranti saya</string>
@@ -293,7 +291,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">Gagal untuk memadam mesej</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Adakah anda pasti mahu memadamkan mesej ini daripada peranti ini sahaja?</string>
     <string name="deleteMessagesDescriptionEveryone">Adakah anda pasti mahu memadamkan mesej ini untuk semua orang?</string>
     <string name="deleting">Memadam</string>
     <string name="developerToolsToggle">Togol Alat Pembangun</string>
@@ -399,7 +396,6 @@
     <string name="groupInviteFailedMultiple">Gagal menjemput {name} dan {count} lain ke {group_name}</string>
     <string name="groupInviteFailedTwo">Gagal menjemput {name} dan {other_name} ke {group_name}</string>
     <string name="groupInviteFailedUser">Gagal menjemput {name} ke {group_name}</string>
-    <string name="groupInviteSending">Menghantar jemputan</string>
     <string name="groupInviteSent">Jemputan dihantar</string>
     <string name="groupInviteSuccessful">Jemputan kumpulan berjaya</string>
     <string name="groupInviteVersion">Pengguna mesti mempunyai keluaran terkini untuk menerima jemputan</string>

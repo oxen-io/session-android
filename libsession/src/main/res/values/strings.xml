@@ -37,7 +37,10 @@
     <string name="adminRemovedUser"><b>{name}</b> was removed as Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> and <b>{count} others</b> were removed as Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> and <b>{other_name}</b> were removed as Admin.</string>
-    <string name="adminSendingPromotion">Sending admin promotion</string>
+    <plurals name="adminSendingPromotion">
+        <item quantity="one">Sending admin promotion</item>
+        <item quantity="other">Sending admin promotions</item>
+    </plurals>
     <string name="adminSettings">Admin Settings</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> and <b>{other_name}</b> were promoted to Admin.</string>
     <string name="andMore">+{count}</string>
@@ -293,7 +296,10 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">This message was deleted</string>
     <string name="deleteMessageDeletedLocally">This message was deleted on this device</string>
-    <string name="deleteMessageDescriptionDevice">Are you sure you want to delete this message from this device only?</string>
+    <plurals name="deleteMessageDescriptionDevice">
+        <item quantity="one">Are you sure you want to delete this message from this device only?</item>
+        <item quantity="other">Are you sure you want to delete these messages from this device only?</item>
+    </plurals>
     <string name="deleteMessageDescriptionEveryone">Are you sure you want to delete this message for everyone?</string>
     <string name="deleteMessageDeviceOnly">Delete on this device only</string>
     <string name="deleteMessageDevicesAll">Delete on all my devices</string>
@@ -310,7 +316,6 @@
         <item quantity="one">This message cannot be deleted for everyone</item>
         <item quantity="other">Some of the messages you have selected cannot be deleted for everyone</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Are you sure you want to delete these messages from this device only?</string>
     <string name="deleteMessagesDescriptionEveryone">Are you sure you want to delete these messages for everyone?</string>
     <string name="deleting">Deleting</string>
     <string name="developerToolsToggle">Toggle Developer Tools</string>
@@ -420,7 +425,10 @@
     <string name="groupInviteFailedUser">Failed to invite {name} to {group_name}</string>
     <string name="groupInviteReinvite"><b>{name}</b> invited you to rejoin <b>{group_name}</b>, where you are an Admin.</string>
     <string name="groupInviteReinviteYou">You were invited to rejoin <b>{group_name}</b>, where you are an Admin.</string>
-    <string name="groupInviteSending">Sending invite</string>
+    <plurals name="groupInviteSending">
+        <item quantity="one">Sending invite</item>
+        <item quantity="other">Sending invites</item>
+    </plurals>
     <string name="groupInviteSent">Invite sent</string>
     <string name="groupInviteSuccessful">Group invite successful</string>
     <string name="groupInviteVersion">Users must have the latest release to receive invitations</string>

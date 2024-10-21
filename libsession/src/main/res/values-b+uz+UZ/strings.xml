@@ -15,7 +15,7 @@
     <string name="actualSize">Hozirgi Hajmi</string>
     <string name="add">Qo\'shish</string>
     <string name="adminCannotBeRemoved">Administratorlarni olib tashlash mumkin emas.</string>
-    <string name="adminMorePromotedToAdmin"><b>{name}</b> va <b>{count} boshqa</b> Administrator sifatida ko\'tarildi.</string>
+    <string name="adminMorePromotedToAdmin"><b>{name}</b> va <b>{count} boshqalar</b> Administrator darajasiga ko\'tarildi.</string>
     <string name="adminPromote">Administratorlarni ko\'tarish</string>
     <string name="adminPromoteDescription">Haqiqatan ham <b>{name}</b> ni administrator sifatida ko\'tarish xohlaysizmi? Administratorlarni olib tashlash mumkin emas.</string>
     <string name="adminPromoteMoreDescription">Haqiqatan ham <b>{name}</b> va <b>{count} boshqa</b> ni administrator sifatida ko\'tarish xohlaysizmi? Administratorlarni olib tashlash mumkin emas.</string>
@@ -36,9 +36,8 @@
     <string name="adminRemovedUser"><b>{name}</b> Administrator sifatida olib tashlandi.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> va <b>{count} boshqalar</b> Administrator sifatida olib tashlandi.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> va <b>{other_name}</b> Administrator sifatida olib tashlandi.</string>
-    <string name="adminSendingPromotion">Admin lavozimiga yuborish</string>
     <string name="adminSettings">Administrator Sozlamalari</string>
-    <string name="adminTwoPromotedToAdmin"><b>{name}</b> va <b>{other_name}</b> Administrator sifatida ko\'tarildi.</string>
+    <string name="adminTwoPromotedToAdmin"><b>{name}</b> va <b>{other_name}</b> Administrator darajasiga ko\'tarildi.</string>
     <string name="andMore">+{count}</string>
     <string name="anonymous">Anonim</string>
     <string name="appearanceAutoDarkMode">Avtomatik qorong\'u rejim</string>
@@ -162,9 +161,9 @@
     <string name="cameraErrorNotFound">Kamera topilmadi</string>
     <string name="cameraErrorUnavailable">Kamera foydalanishga yaroqsiz.</string>
     <string name="cameraGrantAccess">Kamera tarnov acceso qilish</string>
-    <string name="cameraGrantAccessDenied">{app_name} fotosuratlar va videolarni olish uchun kamera kirishini talab qiladi, ammo bu abadiy rad etilgan. Iltimos, ilova sozlamalariga o\'ting, \"Ruxsatlar\" ni tanlang va \"Kamera\" ni yoqing.</string>
-    <string name="cameraGrantAccessDescription">{app_name} fotosuratlar va videolarni olish yoki QR kodlarni skanerlash uchun kamera kirishini talab qiladi.</string>
-    <string name="cameraGrantAccessQr">{app_name} QR kodlarini skanerlash uchun kamera kirishini talab qiladi</string>
+    <string name="cameraGrantAccessDenied">{app_name} fotosuratlar va videolarni olish uchun kameraga kirishga ruxsat talab qiladi, ammo bu abadiy rad etilgan. Iltimos, ilova sozlamalariga o\'ting, \"Ruxsatlar\" qismini tanlang va \"Kamera\" ni yoqing.</string>
+    <string name="cameraGrantAccessDescription">{app_name} fotosuratlar va videolarni olish yoki QR kodlarni skanerlash uchun kameraga kirishga ruxsat talab qiladi.</string>
+    <string name="cameraGrantAccessQr">{app_name} QR kodlarni skanerlash uchun kamera kirishga ruxsat talab qiladi</string>
     <string name="cancel">Bekor qilish</string>
     <string name="changePasswordFail">Parolni o\'zgartirishda xatolik</string>
     <string name="clear">Tozalamoq</string>
@@ -173,8 +172,8 @@
     <string name="clearDataAllDescription">Bu sizning xabarlaringiz va kontaktlaringizni doimiy o‘chirib tashlaydi. Faqat ushbu qurilmani tozalashni yoki tarmoqdagi ma\'lumotlaringizni ham o\'chirishni tanlaysizmi?</string>
     <string name="clearDataError">Ma\'lumotlar o\'chirib bo\'lmadi</string>
     <plurals name="clearDataErrorDescription">
-        <item quantity="one">Service Node tomonidan %1$d ta ma\'lumot o\'chirilmadi. Service Node ID: %2$s.</item>
-        <item quantity="other">Service Node tomonidan %1$d ta ma\'lumotlar o\'chirilmadi. Service Node ID: %2$s.</item>
+        <item quantity="one">Servis Nod tomonidan %1$d ta ma\'lumot o\'chirilmadi. Servis Nod ID\'si: %2$s.</item>
+        <item quantity="other">Servis Nod tomonidan %1$d ta ma\'lumotlar o\'chirilmadi. Servis Nod ID\'si: %2$s.</item>
     </plurals>
     <string name="clearDataErrorDescriptionGeneric">Noma\'lum xato yuz berdi va sizning ma\'lumotlaringiz o\'chirilmaydi. O\'z ma\'lumotlaringizni faqat bu qurilmadan o\'chirishni xohlaysizmi?</string>
     <string name="clearDevice">Qurilmani tozalash</string>
@@ -288,16 +287,14 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Bu xabar oʻchirilgan</string>
     <string name="deleteMessageDeletedLocally">Bu xabar ushbu qurilmada oʻchirilgan</string>
-    <string name="deleteMessageDescriptionDevice">Haqiqatan ham bu xabarni faqat ushbu qurilmadan o\'chirmoqchimisiz?</string>
     <string name="deleteMessageDescriptionEveryone">Haqiqatan ham bu xabarni hammadan o\'chirmoqchimisiz?</string>
     <string name="deleteMessageDeviceOnly">Faqat ushbu qurilmani o\'chirish</string>
     <string name="deleteMessageDevicesAll">Barcha qurilmalarda o\'chirish</string>
     <string name="deleteMessageEveryone">Hammadan oʻchirish</string>
     <plurals name="deleteMessageFailed">
-        <item quantity="one">Xabarni o\'chirishda muammo chiqdi</item>
-        <item quantity="other">Xabarlarni o\'chirishda muammo chiqdi</item>
+        <item quantity="one">Xabarni o\'chirishda xatolik yuz berdi</item>
+        <item quantity="other">Xabarlarni o\'chirishda xatolik yuz berdi</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Haqiqatan ham bu xabarlarni faqat ushbu qurilma o\'chirishmoqchimisiz?</string>
     <string name="deleteMessagesDescriptionEveryone">Haqiqatan ham bu xabarlarni hammadan o\'chirmoqchimisiz?</string>
     <string name="deleting">O\'chirilmoqda</string>
     <string name="developerToolsToggle">Dasturchi asboblari</string>
@@ -321,7 +318,7 @@
     <string name="disappearingMessagesFollowSetting">Sozlamalarga ergashing</string>
     <string name="disappearingMessagesFollowSettingOff">Yuborgan xabarlaringiz endi yo‘qolmaydi. Yo\'qoladigan xabarlarni <b>o‘chirib qo‘yishni</b> bas qilishga aminmisiz?</string>
     <string name="disappearingMessagesFollowSettingOn">Xabarlaringizni <b>{time}</b> dan keyin <b>{disappearing_messages_type}</b> qilib yo\'q qilishni belgilang?</string>
-    <string name="disappearingMessagesLegacy">{name} eskirgan mijozi ishlatmoqda. Yo\'qoladigan xabarlar kutilganidek ishlamasligi mumkin.</string>
+    <string name="disappearingMessagesLegacy">{name} eskirgan programma kliyentini ishlatmoqda. O\'chib ketadigan xabarlar kutilganidek ishlamasligi mumkin.</string>
     <string name="disappearingMessagesOnlyAdmins">Faqat guruh administratorlari ushbu sozlamani o\'zgartirishi mumkin.</string>
     <string name="disappearingMessagesSent">Jo\'natildi</string>
     <string name="disappearingMessagesSet"><b>{name}</b> yo\'qolgan xabarlar {time} da {disappearing_messages_type} qilib belgilanishini o\'rnatdi.</string>
@@ -333,7 +330,7 @@
     <string name="disappearingMessagesTurnedOffYouGroup"><b>Siz</b> yo\'qoladigan xabarlarni <b>oʻchirdingiz</b>.</string>
     <string name="disappearingMessagesTypeRead">o\'qilgan</string>
     <string name="disappearingMessagesTypeSent">jo\'natildi</string>
-    <string name="disappearingMessagesUpdated"><b>{admin_name}</b> yo\'qoladigan xabar sozlamalarini yangiladi.</string>
+    <string name="disappearingMessagesUpdated"><b>{admin_name}</b> o\'chib ketadigan xabar sozlamalarini yangiladi.</string>
     <string name="disappearingMessagesUpdatedYou"><b>Siz</b> yo\'qolgan xabar sozlamalarini yangiladingiz.</string>
     <string name="dismiss">Rad etish</string>
     <string name="displayNameDescription">Bu sizning haqiqiy ismingiz, taxallus yoki boshqasi bo\'lishi mumkin — va siz uni istalgan vaqtda o\'zgartirishingiz mumkin.</string>
@@ -366,9 +363,9 @@
         <item quantity="one">Va %1$d xabarga ushbu reaksiyani berdi: %2$s.</item>
         <item quantity="other">Va %1$d xabarga ushbu reaksiyani berdi: %2$s.</item>
     </plurals>
-    <string name="emojiReactsHoverNameDesktop">{name} {emoji_name} bilan reaksiyaga kirdi</string>
-    <string name="emojiReactsHoverNameTwoDesktop">{name} va {other_name} {emoji_name} bilan reaksiyaga kirdilar</string>
-    <string name="emojiReactsHoverTwoNameMultipleDesktop">{name} va <span>{count} boshqalar</span> {emoji_name} bilan reaksiyaga kirdilar</string>
+    <string name="emojiReactsHoverNameDesktop">{name} {emoji_name} bilan reaksiya qoldirdi</string>
+    <string name="emojiReactsHoverNameTwoDesktop">{name} va {other_name} {emoji_name} bilan reaksiya qoldirdilar</string>
+    <string name="emojiReactsHoverTwoNameMultipleDesktop">{name} va <span>{count} boshqalar</span> {emoji_name} bilan reaksiya qoldirdilar</string>
     <string name="emojiReactsHoverYouNameDesktop">{emoji_name} bilan reaksiyaga kirdi</string>
     <string name="emojiReactsHoverYouNameMultipleDesktop">Siz va <span>{count} boshqalar</span> {emoji_name} bilan reaksiyaga kirdilar</string>
     <string name="emojiReactsHoverYouNameTwoDesktop">Siz va {name} {emoji_name} bilan reaksiyaga kirdilar</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">{name} va {count} a\'zoni {group_name} ga taklif qilishda muammo chiqdi</string>
     <string name="groupInviteFailedTwo">{name} va {other_name}ni {group_name} ga taklif qilishda muammo chiqdi</string>
     <string name="groupInviteFailedUser">{name}ni {group_name} ga taklif qilishda muammo chiqdi</string>
-    <string name="groupInviteSending">Taklif yuborilmoqda</string>
     <string name="groupInviteSent">Taklif yuborildi</string>
     <string name="groupInviteSuccessful">Muvaffaqiyatli guruh tizimiga taklif qilingan</string>
     <string name="groupInviteVersion">A\'zolarga taklifnomalar olish uchun oxirgi versiyasini yangilangan bo\'lishi kerak</string>
@@ -417,7 +413,7 @@
     <string name="groupLeaveErrorFailed">{group_name} dan chiqish vaqtida muammo chiqdi</string>
     <string name="groupLegacyBanner">Guruhlar yangilandi, yangilanish uchun yangi guruh yarating. Eski guruh qobiliyatlari {date} dan pastga ketadi.</string>
     <string name="groupMemberLeft"><b>{name}</b> guruhni tark etdi.</string>
-    <string name="groupMemberLeftMultiple"><b>{name}</b> va <b>{count} boshqa</b> guruhni tark etishdi.</string>
+    <string name="groupMemberLeftMultiple"><b>{name}</b> va <b>{count} boshqalar</b> guruhni tark etishdi.</string>
     <string name="groupMemberLeftTwo"><b>{name}</b> va <b>{other_name}</b> guruhni tark etdi.</string>
     <string name="groupMemberNew"><b>{name}</b> guruhga qo\'shildi.</string>
     <string name="groupMemberNewHistory"><b>{name}</b> guruhga taklif qilindi. Suhbat tarixini ko\'rish imkoniyati berilgan.</string>
@@ -449,11 +445,11 @@
         <item quantity="other">Foydalanuvchilar va ularning xabarlarini olib tashlash</item>
     </plurals>
     <plurals name="groupRemoveUserOnly">
-        <item quantity="one">Foydalanuvchini olib tashlash</item>
-        <item quantity="other">Foydalanuvchilarni olib tashlash</item>
+        <item quantity="one">Foydalanuvchini chiqarib yuborish</item>
+        <item quantity="other">Foydalanuvchilarni chiqarib yuborish</item>
     </plurals>
     <string name="groupRemoved"><b>{name}</b> guruhdan chiqarib yuborildi.</string>
-    <string name="groupRemovedMultiple"><b>{name}</b> va <b>{count} boshqa</b> guruhdan chiqarib yuborildi.</string>
+    <string name="groupRemovedMultiple"><b>{name}</b> va <b>{count} boshqalar</b> guruhdan chiqarib yuborildi.</string>
     <string name="groupRemovedTwo"><b>{name}</b> va <b>{other_name}</b> guruhdan chiqarib yuborildi.</string>
     <string name="groupRemovedYou">Siz <b>{group_name}</b> dan chiqarib yuborildingiz.</string>
     <string name="groupRemovedYouMultiple"><b>Siz</b> va <b>{count} boshqalar</b> guruhdan chiqarib yuborildi.</string>
@@ -485,7 +481,7 @@
     <string name="leave">Chiqish</string>
     <string name="leaving">Chiqmoqda...</string>
     <string name="legacyGroupMemberNew"><b>{name}</b> guruhga qo\'shildi.</string>
-    <string name="legacyGroupMemberNewMultiple"><b>{name}</b> va <b>{count} boshqa</b> guruhga qo\'shildilar.</string>
+    <string name="legacyGroupMemberNewMultiple"><b>{name}</b> va <b>{count} boshqalar</b> guruhga qo\'shildilar.</string>
     <string name="legacyGroupMemberNewYouMultiple"><b>Siz</b> va <b>{count} boshqalar</b> guruhga qo\'shildilar.</string>
     <string name="legacyGroupMemberNewYouOther"><b>Siz</b> va <b>{other_name}</b> guruhga qo\'shildilar.</string>
     <string name="legacyGroupMemberTwoNew"><b>{name}</b> va <b>{other_name}</b> guruhga qo\'shildilar.</string>
@@ -511,16 +507,16 @@
     <string name="lockAppQuickResponse">Tez javob {app_name} qulflanganda mavjud emas!</string>
     <string name="lockAppStatus">Qulflanish holati</string>
     <string name="lockAppUnlock">Qulflashni ochish uchun bosing</string>
-    <string name="lockAppUnlocked">{app_name} qulfi ochiq</string>
+    <string name="lockAppUnlocked">{app_name} ning qulfi ochiq</string>
     <string name="max">Eng yuqori</string>
     <string name="media">Media</string>
     <plurals name="members">
-        <item quantity="one">%1$d ta aʼzo</item>
-        <item quantity="other">%1$d ta aʼzo</item>
+        <item quantity="one">%1$d aʼzo</item>
+        <item quantity="other">%1$d aʼzolar</item>
     </plurals>
     <plurals name="membersActive">
-        <item quantity="one">%1$d ta aʼzo</item>
-        <item quantity="other">%1$d aktiv aʼzo</item>
+        <item quantity="one">%1$d aktiv aʼzo</item>
+        <item quantity="other">%1$d aktiv aʼzolar</item>
     </plurals>
     <string name="membersAddAccountIdOrOns">Akkaunt ID yoki ONS qo\'shish</string>
     <string name="membersInvite">Kontaktlarni taklif qilish</string>
@@ -551,7 +547,7 @@
     <string name="messageNewDescriptionMobile">Do\'stingizning hisob ID, ONS ni kiriting yoki QR kodini skanerla va yangi suhbatni boshlang.</string>
     <plurals name="messageNewYouveGot">
         <item quantity="one">Sizga yangi xabar keldi.</item>
-        <item quantity="other">Sizga %1$d yangi xabar keldi.</item>
+        <item quantity="other">Sizga %1$d ta yangi xabarlar keldi.</item>
     </plurals>
     <string name="messageReplyingTo">Bunga javob</string>
     <string name="messageRequestGroupInvite"><b>{name}</b> sizni <b>{group_name}</b> ga qo\'shilishga taklif qildi.</string>
@@ -637,7 +633,7 @@
     <string name="onboardingBubbleCreatingAnAccountIsEasy">Hisob yaratish bir zumda, bepul va anonimdir {emoji}</string>
     <string name="onboardingBubbleNoPhoneNumber">Ro\'yxatdan o\'tish uchun sizga telefon raqami kerak emas.</string>
     <string name="onboardingBubblePrivacyInYourPocket">Xavfsizlik - sizning cho`ntagingizda.</string>
-    <string name="onboardingBubbleSessionIsEngineered">{app_name} sizning maxfiyligingizni himoya qilish uchun ishlab chiqilgan.</string>
+    <string name="onboardingBubbleSessionIsEngineered">{app_name} sizning maxfiyligingizni himoya qilish uchun ishlab chiqarilgan.</string>
     <string name="onboardingBubbleWelcomeToSession">{app_name} ga xush kelibsiz {emoji}</string>
     <string name="onboardingHitThePlusButton">Suhbatni boshlash, guruh yaratish yoki rasmiy Community ga qo\'shilish uchun plus tugmasini bosing!</string>
     <string name="onboardingMessageNotificationExplanation">{app_name} yangi xabarlar xaqida sizni ikki xil usulda xabardor qilishi mumkin.</string>
@@ -645,7 +641,7 @@
     <string name="onboardingTos">Foydalanish shartlari</string>
     <string name="onboardingTosPrivacy">Ushbu xizmatdan foydalanganingiz uchun, siz bizning <b>Foydalanish Shartlari</b> va <b>Maxfiylik Siyosati</b> ga rozilik bildirasiz</string>
     <string name="onionRoutingPath">Yo‘l</string>
-    <string name="onionRoutingPathDescription">{app_name} sizning IP-ingizni {app_name}ning markazlashmagan tarmog\'i orqali xabarlaringizni bir necha xizmat tugunlari orqali o\'tkazish orqali yashiradi. Bu sizning joriy yo\'lingiz:</string>
+    <string name="onionRoutingPathDescription">{app_name} sizning IP-ingizni {app_name}ning markazlashmagan tarmog\'i, xabarlaringizni bir necha xizmat tarmoqlaridan o\'tkazish orqali yashiradi. Bu sizning joriy yo\'lingiz:</string>
     <string name="onionRoutingPathDestination">Manzil</string>
     <string name="onionRoutingPathEntryNode">Kirish tugmasi</string>
     <string name="onionRoutingPathServiceNode">Service Node</string>
@@ -682,12 +678,12 @@
     <string name="permissionsCameraDenied">{app_name} fotosuratlar va videolarni olish uchun kamera kirishini talab qiladi, ammo bu abadiy rad etilgan. Sozlamalar → Ruxsatlar, va \"Kamera\"ni yoqing.</string>
     <string name="permissionsFaceId">{app_name} dagi ekran blokirovkasi funksiyasi Face ID dan foydalanadi.</string>
     <string name="permissionsKeepInSystemTray">Tizim trayidka saqlash</string>
-    <string name="permissionsKeepInSystemTrayDescription">{app_name} oynani yopinganda fon rejimida ishlashda davom etadi</string>
+    <string name="permissionsKeepInSystemTrayDescription">{app_name} oyna yopilganda ham fon rejimida ishlashda davom etadi</string>
     <string name="permissionsLibrary">{app_name} davom etish uchun foto kutubxonaga kirishni talab qiladi. Siz kirishni iOS sozlamalarida yoqishingiz mumkin.</string>
     <string name="permissionsMicrophone">Mikrofon</string>
-    <string name="permissionsMicrophoneAccessRequired">{app_name} qo\'ng\'iroq qilish va ovozli xabarlar yuborish uchun mikrofon kirishini talab qiladi, ammo bu abadiy rad etilgan. Sozlamalar → Ruxsatlar ni bosing va \"Mikrofon\" ni yoqing.</string>
+    <string name="permissionsMicrophoneAccessRequired">{app_name} qo\'ng\'iroq qilish va ovozli xabarlar yuborish uchun mikrofonga kirishga ruxsat talab qiladi, ammo bu abadiy rad etilgan. Sozlamalar → Ruxsatlar ni bosing va \"Mikrofon\" ni yoqing.</string>
     <string name="permissionsMicrophoneAccessRequiredDesktop">{app_name}ning maxfiylik sozlamalarida mikrofon kirish huquqini yoqishingiz mumkin</string>
-    <string name="permissionsMicrophoneAccessRequiredIos">{app_name} qo\'ng\'iroq qilish va audio xabarlarni yozish uchun mikrofon kirishini talab qiladi.</string>
+    <string name="permissionsMicrophoneAccessRequiredIos">{app_name} qo\'ng\'iroqlar va audio xabarlarni yozish uchun mikrofonga kirishga ruxsat talab qiladi.</string>
     <string name="permissionsMicrophoneDescription">Mikrofonga kirishga ruxsat bering.</string>
     <string name="permissionsMusicAudio">{app_name} fayllar, musiqa va audioni jo\'natish uchun musiqa va audio kirishiga ehtiyoj bor.</string>
     <string name="permissionsRequired">Ruxsat kerak</string>
@@ -810,7 +806,7 @@
     <string name="updateDownloaded">Yangilanish o‘rnatildi, qayta yuklash uchun bosing</string>
     <string name="updateDownloading">Yuklanmoqda: {percent_loader}%</string>
     <string name="updateError">Yangilanmadi</string>
-    <string name="updateErrorDescription">{app_name} yangilanmadi. Iltimos, {session_download_url} ga o\'ting va yangi versiyasini qo\'lda o\'rnating, keyin bu muammo haqida bizga xabar berish uchun yordam markazimizga murojaat qiling.</string>
+    <string name="updateErrorDescription">{app_name} yangilanishida xatolik yuz berdi. Iltimos, {session_download_url} ga o\'ting va yangi versiyasini qo\'lda o\'rnating, keyin bu muammo haqida bizga xabar berish uchun yordam markazimizga murojaat qiling.</string>
     <string name="updateNewVersion">{app_name} ning yangi versiyasi mavjud, yangilanish uchun bosing</string>
     <string name="updateNewVersionDescription">{app_name} ning yangi versiyasi mavjud.</string>
     <string name="updateReleaseNotes">Qaydlarni och</string>

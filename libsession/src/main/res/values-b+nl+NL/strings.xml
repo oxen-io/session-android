@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> is verwijderd als Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> en <b>{count} anderen</b> zijn verwijderd als beheerder.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> en <b>{other_name}</b> zijn verwijderd als beheerder.</string>
-    <string name="adminSendingPromotion">Beheerder promotie versturen</string>
     <string name="adminSettings">Admin instellingen</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> en <b>{other_name}</b> zijn gepromoveerd tot Admin.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Dit bericht is verwijderd</string>
     <string name="deleteMessageDeletedLocally">Dit bericht is op dit apparaat verwijderd</string>
-    <string name="deleteMessageDescriptionDevice">Weet u zeker dat u dit bericht alleen van dit apparaat wilt verwijderen?</string>
     <string name="deleteMessageDescriptionEveryone">Weet u zeker dat u dit bericht voor iedereen wilt verwijderen?</string>
     <string name="deleteMessageDeviceOnly">Alleen verwijderen op dit apparaat</string>
     <string name="deleteMessageDevicesAll">Verwijder op al mijn apparaten</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Bericht verwijderen mislukt</item>
         <item quantity="other">Berichten verwijderen mislukt</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Weet u zeker dat u deze berichten alleen van dit apparaat wilt wissen?</string>
     <string name="deleteMessagesDescriptionEveryone">Weet u zeker dat u deze berichten voor iedereen wilt wissen?</string>
     <string name="deleting">Aan het verwijderen</string>
     <string name="developerToolsToggle">Ontwikkelopties weergeven</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Het uitnodigen van {name} en {count} anderen naar {group_name} is mislukt</string>
     <string name="groupInviteFailedTwo">Het uitnodigen van {name} en {other_name} naar {group_name} is mislukt</string>
     <string name="groupInviteFailedUser">Het uitnodigen van {name} naar {group_name} is mislukt</string>
-    <string name="groupInviteSending">Uitnodiging versturen</string>
     <string name="groupInviteSent">Uitnodiging verzonden</string>
     <string name="groupInviteSuccessful">Groepsuitnodiging succesvol</string>
     <string name="groupInviteVersion">Gebruikers moeten de nieuwste versie hebben om uitnodigingen te ontvangen</string>

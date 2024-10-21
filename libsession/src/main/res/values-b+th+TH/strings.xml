@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> ถูกปลดออกจากผู้ดูแลระบบ</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> และ <b>{count} คนอื่นๆ</b> ถูกลบออกจากสถานะ Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> และ <b>{other_name}</b> ถูกลบออกจากสถานะ Admin.</string>
-    <string name="adminSendingPromotion">การส่งโปรโมชันผู้ดูแลระบบ</string>
     <string name="adminSettings">การตั้งค่าผู้ดูแล</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> และ <b>{other_name}</b> ได้รับการเลื่อนตำแหน่งเป็นผู้ดูแลระบบ</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">ข้อความนี้ถูกลบ</string>
     <string name="deleteMessageDeletedLocally">ข้อความนี้ถูกลบบนอุปกรณ์นี้</string>
-    <string name="deleteMessageDescriptionDevice">คุณแน่ใจหรือไม่ว่าต้องการลบข้อความนี้เฉพาะในอุปกรณ์นี้?</string>
     <string name="deleteMessageDescriptionEveryone">คุณแน่ใจหรือไม่ว่าต้องการลบข้อความนี้สำหรับทุกคน?</string>
     <string name="deleteMessageDeviceOnly">ลบเฉพาะบนอุปกรณ์นี้</string>
     <string name="deleteMessageDevicesAll">ลบบนอุปกรณ์ของฉันทั้งหมด</string>
@@ -293,7 +291,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">ลบข้อความล้มเหลว</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">คุณแน่ใจหรือไม่ว่าต้องการลบข้อความเหล่านี้จากอุปกรณ์นี้เท่านั้น?</string>
     <string name="deleteMessagesDescriptionEveryone">คุณแน่ใจหรือไม่ว่าต้องการลบข้อความเหล่านี้สำหรับทุกคน?</string>
     <string name="deleting">กำลังลบ</string>
     <string name="developerToolsToggle">สลับไปที่เครื่องมือสำหรับผู้พัฒนา</string>
@@ -399,7 +396,6 @@
     <string name="groupInviteFailedMultiple">ไม่สามารถเชิญ {name} และอีก {count} คนเข้าร่วม {group_name} ได้</string>
     <string name="groupInviteFailedTwo">ไม่สามารถเชิญ {name} และ {other_name} เข้าร่วม {group_name} ได้</string>
     <string name="groupInviteFailedUser">ไม่สามารถเชิญ {name} เข้าร่วม {group_name} ได้</string>
-    <string name="groupInviteSending">การส่งคำเชิญ</string>
     <string name="groupInviteSent">เชิญแล้ว</string>
     <string name="groupInviteSuccessful">เชิญเข้าร่วมกลุ่มสำเร็จ</string>
     <string name="groupInviteVersion">ผู้ใช้ต้องมีเวอร์ชันล่าสุดเพื่อรับคำเชิญ</string>

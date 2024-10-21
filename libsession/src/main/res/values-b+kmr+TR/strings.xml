@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> wekî admîn hate rakirin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> û <b>{count} yên din</b> wekî admîn hatine rakirin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> û <b>{other_name}</b> wekî admîn hatine rakirin.</string>
-    <string name="adminSendingPromotion">Şandina pêşkeftina admin</string>
     <string name="adminSettings">Mîhengên Admin</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> û <b>{other_name}</b> wekî admîn hatin xwepêşandin.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ev peyam hatiye jêbirin</string>
     <string name="deleteMessageDeletedLocally">Ev peyam di vî berdan dema tesfîr hatî jêbirin.</string>
-    <string name="deleteMessageDescriptionDevice">Tu piştrast î ku tu dixwazî tenê vê peyamê ji vê amacakê jê bibî?</string>
     <string name="deleteMessageDescriptionEveryone">Tu piştrast î ku tu dixwazî vê peyamê ji bo tevan jê bibî?</string>
     <string name="deleteMessageDeviceOnly">Peyama Tenê di vî cîhazê de jê bibe</string>
     <string name="deleteMessageDevicesAll">Peymaneyan di ser hemû amêrakên min de jê bibe</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Bi ser neket ku peyama jê derbike.</item>
         <item quantity="other">Bi ser neket ku peyaman jê bibe.</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Tu piştrast î ku tu dixwazî vê peyaman tenê li ser cîhaza vê peyaman jê bibî?</string>
     <string name="deleteMessagesDescriptionEveryone">Tu piştrast î ku tu dixwazî vê peyaman ji kuran jê bike?</string>
     <string name="deleting">Jêbibin</string>
     <string name="developerToolsToggle">Amûrên Pêşvebiran Veke/Bigire</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Bi ser neket ku {name} û {count} yên din feriq bikevînin {group_name}</string>
     <string name="groupInviteFailedTwo">Bi ser neket ku {name} û {other_name} feriq bikevînin {group_name}</string>
     <string name="groupInviteFailedUser">Bi ser neket ku {name} feriq bikeve {group_name}</string>
-    <string name="groupInviteSending">Daxwaza Komê bi şandin</string>
     <string name="groupInviteSent">Daxwazê şande</string>
     <string name="groupInviteSuccessful">Dawetkirina Grûpa Serkeftî</string>
     <string name="groupInviteVersion">Bikarhêner divê herî dawî versiyonê bikar bînin ku dawetên bigirin</string>

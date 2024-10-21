@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> ကို အုပ်ချုပ်ရေးမှူးအဖြစ်မှ ဖယ်ရှားခဲ့သည်။</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> နှင့် <b>{count} ဦး</b> အုပ်ချုပ်ရေးမှူးအဖြစ် တန်းမြင့်နေသည်။</string>
     <string name="adminRemovedUserOther"><b>{name}</b>နှင့် <b>{other_name}</b> အုပ်ချုပ်ရေးမှူးအဖြစ် တန်းမြင့်နေသည်။</string>
-    <string name="adminSendingPromotion">အုပ်ချုပ်ရေးမတက္ကသိုလ် သတင်းပေးမည်</string>
     <string name="adminSettings">Admin ဆက်တင်များ</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> နှင့် <b>{other_name}</b> အုပ်ချုပ်ရေးမှူး အဖြစ်တိုးတက်လာသည်။</string>
     <string name="andMore">+{count}</string>
@@ -284,7 +283,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">ဤမက်ဆေ့ခ်ျကို ဖျက်သိမ်းပြီးပါပြီ။</string>
     <string name="deleteMessageDeletedLocally">ဤမက်ဆေ့ခ်ျကို ဤကိရိယာတွင် ဖျက်သိမ်းပြီးပါပြီ။</string>
-    <string name="deleteMessageDescriptionDevice">ဤမက်ဆေ့ချ်ကို ဤစက်ကိရိယာမှသာ ဖျက်လိုသည်မှာ သေချာပါသလား။</string>
     <string name="deleteMessageDescriptionEveryone">ဤမက်ဆေ့ချ်ကို အားလုံးအတွက်ဖျက်လိုသည်မှာ သေချာပါသလား။</string>
     <string name="deleteMessageDeviceOnly">ဤ deviceတွင်သာ ဖျက်မည်</string>
     <string name="deleteMessageDevicesAll">ကျွန်ုပ်၏ devices များတွင်အားလုံးကို ဖျက်မည်</string>
@@ -292,7 +290,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">မက်ဆေ့ခ်ျဖျက်ရန် မအောင်မြင်ပါ</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">ဤစက်ကိရိယာ မှသာ မက်ဆေ့ချ်များဖျက်လိုပါသလား။</string>
     <string name="deleteMessagesDescriptionEveryone">မက်ဆေ့ဂျ်တွေ အားလုံး ကိုဖျက်လိုပါသလား?</string>
     <string name="deleting">ဖျက်နေသည်</string>
     <string name="developerToolsToggle">အဖွဲ့အတွက် ထုတ်ဖော် အခြေအနေ တွင် Developer Tools ကို ခလုတ်ဖွင့်ပါ။</string>
@@ -398,7 +395,6 @@
     <string name="groupInviteFailedMultiple">အဖွဲ့ {group_name} သို့ {name} နှင့် {count} ဦးကိုဖိတ်ချက်ပေးမည်သည် မအောင်မြင်ပါ</string>
     <string name="groupInviteFailedTwo">အဖွဲ့ {group_name} သို့ {name} နှင့် {other_name} ကိုဖိတ်ချက်ပေးမည်သည် မအောင်မြင်ပါ</string>
     <string name="groupInviteFailedUser">အဖွဲ့ {group_name} သို့ {name} ကိုဖိတ်ချက်ပေးမည်သည် မအောင်မြင်ပါ</string>
-    <string name="groupInviteSending">ဖိတ်ကြားချက် ပို့နေသည်</string>
     <string name="groupInviteSent">ဖိတ်ကြားမှု ပို့ထားပါသည်</string>
     <string name="groupInviteSuccessful">အုပ်စုဖိတ်ကြားမှုအောင်မြင်</string>
     <string name="groupInviteVersion">ဖိတ်ကြားပေးရန်အတွက် အသုံးပြုသူများသည် နောက်ဆုံးထွက်ရှိပါ</string>

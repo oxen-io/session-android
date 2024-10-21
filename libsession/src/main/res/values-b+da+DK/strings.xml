@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> blev fjernet som Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> og <b>{count} andre</b> blev fjernet som Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> og <b>{other_name}</b> blev fjernet som Admin.</string>
-    <string name="adminSendingPromotion">Sender admin forfremmelse</string>
     <string name="adminSettings">Admin indstillinger</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> og <b>{other_name}</b> blev forfremmet til Admin.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Denne besked er slettet</string>
     <string name="deleteMessageDeletedLocally">Denne besked blev slettet på denne enhed</string>
-    <string name="deleteMessageDescriptionDevice">Er du sikker på, at du vil slette denne besked kun fra denne enhed?</string>
     <string name="deleteMessageDescriptionEveryone">Er du sikker på, at du vil slette denne besked for alle?</string>
     <string name="deleteMessageDeviceOnly">Slet kun på denne enhed</string>
     <string name="deleteMessageDevicesAll">Slet på alle mine enheder</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Kunne ikke slette besked</item>
         <item quantity="other">Kunne ikke slette beskeder</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Er du sikker på, at du vil slette disse beskeder kun fra denne enhed?</string>
     <string name="deleteMessagesDescriptionEveryone">Er du sikker på, at du vil slette disse beskeder for alle?</string>
     <string name="deleting">Sletter</string>
     <string name="developerToolsToggle">Vis udviklerværktøjer</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Kunne ikke invitere {name} og {count} andre til {group_name}</string>
     <string name="groupInviteFailedTwo">Kunne ikke invitere {name} og {other_name} til {group_name}</string>
     <string name="groupInviteFailedUser">Kunne ikke invitere {name} til {group_name}</string>
-    <string name="groupInviteSending">Sender invitation</string>
     <string name="groupInviteSent">Invitation afsendt</string>
     <string name="groupInviteSuccessful">Gruppeinvite vellykket</string>
     <string name="groupInviteVersion">Brugerne skal have den nyeste version for at modtage invitationer</string>

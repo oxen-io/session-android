@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> 被撤下管理員的身份。</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> 和 <b>{count} 位其他成員</b> 被移除管理員身份。</string>
     <string name="adminRemovedUserOther"><b>{name}</b> 和 <b>{other_name}</b> 被移除管理員身份。</string>
-    <string name="adminSendingPromotion">晉升中</string>
     <string name="adminSettings">管理員設定</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> 和 <b>{other_name}</b> 被設置為管理員</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">這則訊息已經刪除</string>
     <string name="deleteMessageDeletedLocally">此段訊息已在本設備中刪除</string>
-    <string name="deleteMessageDescriptionDevice">您確定只從本設備上刪除此訊息嗎？</string>
     <string name="deleteMessageDescriptionEveryone">您確定要為所有人刪除此訊息嗎？</string>
     <string name="deleteMessageDeviceOnly">只在這個裝置上刪除</string>
     <string name="deleteMessageDevicesAll">在所有的裝置上刪除</string>
@@ -293,7 +291,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">無法刪除訊息</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">您確定只從此設備上刪除這些訊息嗎？</string>
     <string name="deleteMessagesDescriptionEveryone">您確定要為所有人刪除這些訊息嗎？</string>
     <string name="deleting">刪除中</string>
     <string name="developerToolsToggle">切換開發者工具</string>
@@ -399,7 +396,6 @@
     <string name="groupInviteFailedMultiple">無法邀請 {name} 和 {count} 位其他成員加入 {group_name}</string>
     <string name="groupInviteFailedTwo">無法邀請 {name} 和 {other_name} 加入 {group_name}</string>
     <string name="groupInviteFailedUser">無法邀請 {name} 加入 {group_name}</string>
-    <string name="groupInviteSending">傳送邀請</string>
     <string name="groupInviteSent">邀請已發送</string>
     <string name="groupInviteSuccessful">群組邀請成功</string>
     <string name="groupInviteVersion">用戶必須擁有最新版本才能接收邀請</string>

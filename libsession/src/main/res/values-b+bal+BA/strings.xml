@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> gōra Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> a <b>{count} drīg</b> gōra Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> a <b>{other_name}</b> gōra Admin.</string>
-    <string name="adminSendingPromotion">بھیج رہا ہے ایڈمن پروموشن</string>
     <string name="adminSettings">ایڈمن تنظیم</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> a <b>{other_name}</b> rīhīyā Admin šumār.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">یہ پیغام حذف کر دی گئی</string>
     <string name="deleteMessageDeletedLocally">یہ پیغام حذف کر دی گئی</string>
-    <string name="deleteMessageDescriptionDevice">دم کی لحاظ انت کہ ایی امیسج صرف ھملڑی ژ ایی ڈیوائیس ھذب بکنی؟</string>
     <string name="deleteMessageDescriptionEveryone">دم کی لحاظ انت کہ ایی امیسج ھذب بکنی؟؟</string>
     <string name="deleteMessageDeviceOnly">صرف اس آلے پر حذف کریں</string>
     <string name="deleteMessageDevicesAll">میرے تمام آلات پر حذف کریں</string>
@@ -296,7 +294,6 @@
         <item quantity="one">پیگام مٹ بوت ناکام بِئن</item>
         <item quantity="other">پیغامانی مٹ بوت ناکام بِئن</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">کیا آپ یقیناً یہ پیغامات صرف اس ڈیوائس سے حذف کرنا چاہتے ہیں؟</string>
     <string name="deleteMessagesDescriptionEveryone">کیا آپ یقیناً یہ پیغامات سب کے لیے حذف کرنا چاہتے ہیں؟</string>
     <string name="deleting">حذف کر رہا ہے</string>
     <string name="developerToolsToggle">ڈیولوپر ٹولز کو ٹوگل کر</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">{name} اور {count} دیگر افراد کو {group_name} میں مدعو کرنے میں ناکامی</string>
     <string name="groupInviteFailedTwo">{name} اور {other_name} کو {group_name} میں مدعو کرنے میں ناکامی</string>
     <string name="groupInviteFailedUser">{name} کو {group_name} میں مدعو کرنے میں ناکامی</string>
-    <string name="groupInviteSending">بھیج رہا ہے دعوت</string>
     <string name="groupInviteSent">دعوت بھیجی</string>
     <string name="groupInviteSuccessful">گروپ دعوت کامیاب</string>
     <string name="groupInviteVersion">صارفین کو دعوتیں وصول کرنے کیلئے نیا ورژن ہونا ضروری ہے</string>

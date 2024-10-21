@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> achotsedwa monga Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> ndi <b>{count} ena</b> adachotsedwa monga Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> ndi <b>{other_name}</b> adachotsedwa monga Admin.</string>
-    <string name="adminSendingPromotion">Sending admin promotion</string>
     <string name="adminSettings">Zokonda za Boma</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> ndi <b>{other_name}</b> akwezedwa kukhala Admin.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Uthengawu unachotsedwa</string>
     <string name="deleteMessageDeletedLocally">Uthengawu unachotsedwa pa chipangizochi</string>
-    <string name="deleteMessageDescriptionDevice">Mukutsimikizika kuti mukufuna kufufuta uthenga umenewu pa chipangizo ichi chokha?</string>
     <string name="deleteMessageDescriptionEveryone">Mukutsimikizika kuti mukufuna kufufuta uthenga umenewu kwa aliyense?</string>
     <string name="deleteMessageDeviceOnly">Chotsani pa chida ichi chokha</string>
     <string name="deleteMessageDevicesAll">Chotsani pa zida zanga zonse</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Zalephera kuchotsa uthenga</item>
         <item quantity="other">Zalephera kuchotsa mauthenga</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Mukutsimikiza kuti mukufuna kufufuta mauthenga awa kuchokera pa chipangizochi chokha?</string>
     <string name="deleteMessagesDescriptionEveryone">Mukutsimikiza kuti mukufuna kufufuta mauthenga awa kwa aliyense?</string>
     <string name="deleting">Kuchotsa</string>
     <string name="developerToolsToggle">Sinthanani Zida Zopanga</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Zalephera kuyitana {name} ndi {count} ena kupita ku {group_name}</string>
     <string name="groupInviteFailedTwo">Zalephera kuyitana {name} ndi {other_name} kupita ku {group_name}</string>
     <string name="groupInviteFailedUser">Zalephera kuyitana {name} kupita ku {group_name}</string>
-    <string name="groupInviteSending">Sending invite</string>
     <string name="groupInviteSent">Kayachina Yatumidwa</string>
     <string name="groupInviteSuccessful">Kuitana kwa gulu kwakwaniritsidwa</string>
     <string name="groupInviteVersion">Ogwiritsa asanalembe mtundu watsopano kuti alandire maitanidwe</string>
