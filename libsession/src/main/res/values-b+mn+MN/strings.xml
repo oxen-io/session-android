@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> Админ зургаас хасагдлаа.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> болон <b>{count} бусад</b> Админ эрхээс хасагдлаа.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> болон <b>{other_name}</b> Админ эрхээс хасагдлаа.</string>
-    <string name="adminSendingPromotion">Админ түвшний дахин томилгоо илгээж байна</string>
     <string name="adminSettings">Админы тохиргоо</string>
     <string name="adminTwoPromotedToAdmin"><b>{name} </b> болон <b>{other_name} </b> Админ боллоо.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Энэ мессеж устгагдсан</string>
     <string name="deleteMessageDeletedLocally">Энэ мессеж энэ төхөөрөмж дээр устгагдсан</string>
-    <string name="deleteMessageDescriptionDevice">Та энэ зурвасыг зөвхөн энэ төхөөрөмжөөс устгахдаа итгэлтэй байна уу?</string>
     <string name="deleteMessageDescriptionEveryone">Та энэ зурвасыг бүгдэд устгахдаа итгэлтэй байна уу?</string>
     <string name="deleteMessageDeviceOnly">Энэ төхөөрөмжөөс л устгах</string>
     <string name="deleteMessageDevicesAll">Миний бүх төхөөрөмжөөс устгах</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Мессеж устгах амжилтгүй боллоо</item>
         <item quantity="other">Мессежүүд устгах амжилтгүй боллоо</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Та эдгээр мессежүүдийг зөвхөн энэ төхөөрөмжөөс л устгахыг хүсэж байна уу?</string>
     <string name="deleteMessagesDescriptionEveryone">Та эдгээр мессежүүдийг бүгдэд зориулж устгахыг хүсэж байна уу?</string>
     <string name="deleting">Устгаж байна</string>
     <string name="developerToolsToggle">Хөгжүүлэгчний багаж хэрэгслийг соль</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">{name} болон {count} бусад хүмүүсийг {group_name} руу урьж авахад алдаа гарлаа</string>
     <string name="groupInviteFailedTwo">{name} болон {other_name} хүмүүсийг {group_name} руу урьж авахад алдаа гарлаа</string>
     <string name="groupInviteFailedUser">{name} хүнийг {group_name} руу урьж авахад алдаа гарлаа</string>
-    <string name="groupInviteSending">Урилга илгээж байна</string>
     <string name="groupInviteSent">Урилга илгээгдсэн</string>
     <string name="groupInviteSuccessful">Бүлгийн урилга амжилттай</string>
     <string name="groupInviteVersion">Хэрэглэгчид урилга хүлээн авахын тулд хамгийн сүүлийн хувилбар байх хэрэгтэй</string>

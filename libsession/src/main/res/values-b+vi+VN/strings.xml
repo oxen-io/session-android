@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> đã bị loại khỏi Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> và <b>{count} người khác</b> đã bị xoá khỏi vai trò Quản trị viên.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> và <b>{other_name}</b> đã bị xoá khỏi vai trò Quản trị viên.</string>
-    <string name="adminSendingPromotion">Đang gửi khuyến mại quản trị viên</string>
     <string name="adminSettings">Cài đặt quản trị viên</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> và <b>{other_name} </b> được thăng lên làm Admin.</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Tin nhắn này đã bị xóa</string>
     <string name="deleteMessageDeletedLocally">Tin nhắn sẽ chỉ được xoá trên thiết bị này</string>
-    <string name="deleteMessageDescriptionDevice">Bạn có chắc chắn rằng bạn muốn xoá tin nhắn này chỉ trên thiết bị này không?</string>
     <string name="deleteMessageDescriptionEveryone">Bạn có chắc chắn rằng bạn muốn xoá tin nhắn này cho mọi người không?</string>
     <string name="deleteMessageDeviceOnly">Chỉ xóa trên thiết bị này</string>
     <string name="deleteMessageDevicesAll">Xóa trên tất cả thiết bị của tôi</string>
@@ -293,7 +291,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">Không thể xóa tin nhắn</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Bạn có chắc rằng bạn muốn xoá những tin nhắn này chỉ từ thiết bị này?</string>
     <string name="deleteMessagesDescriptionEveryone">Bạn có chắc rằng bạn muốn xoá những tin nhắn này cho tất cả mọi người?</string>
     <string name="deleting">Đang xóa</string>
     <string name="developerToolsToggle">Bật/Tắt Công Cụ Nhà Phát Triển</string>
@@ -399,7 +396,6 @@
     <string name="groupInviteFailedMultiple">Mời {name} và {count} người khác vào nhóm {group_name} thất bại</string>
     <string name="groupInviteFailedTwo">Mời {name} và {other_name} vào nhóm {group_name} thất bại</string>
     <string name="groupInviteFailedUser">Mời {name} vào nhóm {group_name} thất bại</string>
-    <string name="groupInviteSending">Đang gửi lời mời</string>
     <string name="groupInviteSent">Đã gửi lời mời</string>
     <string name="groupInviteSuccessful">Mời tham gia nhóm thành công</string>
     <string name="groupInviteVersion">Người dùng phải có phiên bản mới nhất để nhận được lời mời</string>

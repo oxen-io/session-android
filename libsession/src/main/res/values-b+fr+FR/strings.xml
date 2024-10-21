@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> a été retiré en tant qu\'administrateur.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> et <b>{count} autres</b> ont été supprimé·e·s en tant qu\'administrateur.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> et <b>{other_name}</b>ont été supprimé·e·s en tant qu\'administrateur.</string>
-    <string name="adminSendingPromotion">Envoi de la promotion administrateur</string>
     <string name="adminSettings">Paramètres d’administrateur</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> et <b>{other_name}</b> ont été promus en tant qu\'administrateurs.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ce message a été supprimé</string>
     <string name="deleteMessageDeletedLocally">Ce message a été supprimé sur cet appareil</string>
-    <string name="deleteMessageDescriptionDevice">Êtes-vous sûr de vouloir supprimer ce message uniquement de cet appareil ?</string>
     <string name="deleteMessageDescriptionEveryone">Êtes-vous sûr de vouloir supprimer ce message pour tout le monde ?</string>
     <string name="deleteMessageDeviceOnly">Supprimer uniquement sur cet appareil</string>
     <string name="deleteMessageDevicesAll">Supprimer sur tous mes appareils</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Échec de suppression du message</item>
         <item quantity="other">Échec de suppression des messages</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Êtes-vous certain·e de vouloir supprimer ces messages seulement sur cet appareil?</string>
     <string name="deleteMessagesDescriptionEveryone">Êtes-vous certain·e de vouloir supprimer ces messages pour tout le monde?</string>
     <string name="deleting">Suppression</string>
     <string name="developerToolsToggle">Afficher/masquer les outils pour développeurs</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Échec d\'inviter {name} et {count} autres à {group_name}</string>
     <string name="groupInviteFailedTwo">Échec d\'inviter {name} et {other_name} à {group_name}</string>
     <string name="groupInviteFailedUser">Échec d\'inviter {name} à {group_name}</string>
-    <string name="groupInviteSending">Envoi de l\'invitation</string>
     <string name="groupInviteSent">Invitation envoyée</string>
     <string name="groupInviteSuccessful">Invitation de groupe réussie</string>
     <string name="groupInviteVersion">Les utilisateurs doivent avoir la dernière version pour recevoir des invitations</string>

@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> تم إزالته كمشرف.</string>
     <string name="adminRemovedUserMultiple">تمت إزالة <b>{name}</b> و<b>{count} آخرين</b> من منصبهم كمسؤولين.</string>
     <string name="adminRemovedUserOther">تمت إزالة <b>{name}</b> و<b>{other_name}</b> من منصبي المسؤول.</string>
-    <string name="adminSendingPromotion">إرسال ترقية المشرف</string>
     <string name="adminSettings">اعدادات المسؤول</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> و <b>{other_name}</b> تم ترقيتهم إلى مشرف.</string>
     <string name="andMore">+{count}</string>
@@ -291,12 +290,10 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">تم حذف هذه الرسالة</string>
     <string name="deleteMessageDeletedLocally">تم حذف هذه الرسالة على هذا الجهاز</string>
-    <string name="deleteMessageDescriptionDevice">هل أنت متأكد من أنك تريد حذف هذه الرسالة من هذا الجهاز فقط؟</string>
     <string name="deleteMessageDescriptionEveryone">هل أنت متأكد من أنك تريد حذف هذه الرسالة للجميع؟</string>
     <string name="deleteMessageDeviceOnly">حذف على هذا الجهاز فقط</string>
     <string name="deleteMessageDevicesAll">حذف على جميع أجهزتي</string>
     <string name="deleteMessageEveryone">حذف للجميع</string>
-    <string name="deleteMessagesDescriptionDevice">هل أنت متيقِّن من أنك تريد مسح هذه الرسائل من هذا الجهاز فقط؟</string>
     <string name="deleteMessagesDescriptionEveryone">هل أنت متيقِّن من أنك تريد مسح هذه الرسائل لدى الجميع؟</string>
     <string name="deleting">حذف</string>
     <string name="developerToolsToggle">تحويل أدوات المطور</string>
@@ -399,7 +396,6 @@
     <string name="groupInviteFailedMultiple">فشل دعوة {name} و {count} آخرين إلى {group_name}</string>
     <string name="groupInviteFailedTwo">فشل دعوة {name} و {other_name} إلى {group_name}</string>
     <string name="groupInviteFailedUser">فشل دعوة {name} إلى {group_name}</string>
-    <string name="groupInviteSending">إرسال دعوة</string>
     <string name="groupInviteSent">تم إرسال الدعوة</string>
     <string name="groupInviteSuccessful">الدعوة إلى المجموعة ناجحة</string>
     <string name="groupInviteVersion">يجب أن يمتلك المستخدمون الإصدار الأحدث لتلقي الدعوات</string>
@@ -567,6 +563,14 @@
     </plurals>
     <string name="messageNewDescriptionDesktop">ابدأ محادثة جديدة عن طريق إدخال معرف حساب صديقك أو ONS.</string>
     <string name="messageNewDescriptionMobile">ابدأ محادثة جديدة عن طريق إدخال معرف حساب صديقك، ONS أو مسح رمزه QR.</string>
+    <plurals name="messageNewYouveGot">
+        <item quantity="zero">لديك %1$d رسائل جديدة.</item>
+        <item quantity="one">لديك رسالة جديدة.</item>
+        <item quantity="two">لديك رسالتين %1$d جدد.</item>
+        <item quantity="few">لديك %1$d رسائل جديدة.</item>
+        <item quantity="many">لديك %1$d رسائل جديدة.</item>
+        <item quantity="other">لديك %1$d رسائل جديدة.</item>
+    </plurals>
     <string name="messageReplyingTo">الرد على</string>
     <string name="messageRequestGroupInvite"><b>{name}</b> دعاك للانضمام إلى <b>{group_name}</b>.</string>
     <string name="messageRequestGroupInviteDescription">إرسال رسالة إلى هذه المجموعة سوف يقبل تلقائيًا دعوة المجموعة.</string>

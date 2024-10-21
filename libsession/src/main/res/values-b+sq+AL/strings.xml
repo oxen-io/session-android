@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> u largua si Administrator.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> dhe <b>{count} të tjerë</b> u larguan nga roli i Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> dhe <b>{other_name}</b> u larguan nga roli i Admin.</string>
-    <string name="adminSendingPromotion">Dërgimi i promovimit të administratorit</string>
     <string name="adminSettings">Rregullimet e Administratorit</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> dhe <b>{other_name}</b> u promovuan në Administratorë.</string>
     <string name="andMore">+{count}</string>
@@ -286,7 +285,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ky mesazh u fshi</string>
     <string name="deleteMessageDeletedLocally">Ky mesazh u fshi në këtë pajisje</string>
-    <string name="deleteMessageDescriptionDevice">A jeni të sigurt që doni ta fshini këtë mesazh vetëm nga kjo pajisje?</string>
     <string name="deleteMessageDescriptionEveryone">A jeni të sigurt që doni ta fshini këtë mesazh për të gjithë?</string>
     <string name="deleteMessageDeviceOnly">Fshije vetëm në këtë pajisje</string>
     <string name="deleteMessageDevicesAll">Fshije në të gjitha pajisjet e mia</string>
@@ -295,7 +293,6 @@
         <item quantity="one">Dështoi të fshihej mesazhi</item>
         <item quantity="other">Dështoi të fshihen mesazhet</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">A jeni të sigurt që doni t\'i fshini këto mesazhe vetëm nga kjo pajisje?</string>
     <string name="deleteMessagesDescriptionEveryone">A jeni të sigurt që doni t\'i fshini këto mesazhe për të gjithë?</string>
     <string name="deleting">Po fshihet</string>
     <string name="developerToolsToggle">Shfaq/Fshih Mjete Zhvilluesi</string>
@@ -402,7 +399,6 @@
     <string name="groupInviteFailedMultiple">Dështoi ftesa e {name} dhe {count} të tjerëve në {group_name}</string>
     <string name="groupInviteFailedTwo">Dështoi ftesa e {name} dhe {other_name} në {group_name}</string>
     <string name="groupInviteFailedUser">Dështoi ftesa e {name} në {group_name}</string>
-    <string name="groupInviteSending">Dërgimi i ftesës</string>
     <string name="groupInviteSent">Ftesa dërguar</string>
     <string name="groupInviteSuccessful">Ftesa për grupin ishte e suksesshme</string>
     <string name="groupInviteVersion">Përdoruesit duhet të kenë versionin më të ri për të marrë ftesa</string>

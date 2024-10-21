@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}님</b>이 관리자에서 제거되었습니다.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b>님과 <b>{count} 명의 사람들</b>의 관리자 직책이 제거되었습니다</string>
     <string name="adminRemovedUserOther"><b>{name}</b>님과 <b>{other_name}</b>님의 관리자 직책이 제거되었습니다.</string>
-    <string name="adminSendingPromotion">관리자 권한 전송 중</string>
     <string name="adminSettings">Admin Settings</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}님</b>과 <b>{other_name}님</b>이 관리자(Admin)로 승격되었습니다.</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">이 메시지는 삭제되었습니다.</string>
     <string name="deleteMessageDeletedLocally">이 장치에서 이 메시지가 삭제되었습니다.</string>
-    <string name="deleteMessageDescriptionDevice">정말 이 메시지를 이 장치에서만 삭제하시겠습니까?</string>
     <string name="deleteMessageDescriptionEveryone">정말 이 메시지를 모두에게서 삭제하시겠습니까?</string>
     <string name="deleteMessageDeviceOnly">이 기기에서만 삭제</string>
     <string name="deleteMessageDevicesAll">모든 기기에서 삭제</string>
@@ -293,7 +291,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">메시지를 삭제하지 못했습니다</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Are you sure you want to delete these messages from this device only?</string>
     <string name="deleteMessagesDescriptionEveryone">Are you sure you want to delete these messages for everyone?</string>
     <string name="deleting">삭제 중…</string>
     <string name="developerToolsToggle">Toggle Developer Tools</string>
@@ -399,7 +396,6 @@
     <string name="groupInviteFailedMultiple">{name}님 및 {count}명의 다른 사람들을 {group_name}에 초대하지 못했습니다.</string>
     <string name="groupInviteFailedTwo">{name}님과 {other_name}님을 {group_name}에 초대하지 못했습니다.</string>
     <string name="groupInviteFailedUser">{name}님을 {group_name}에 초대하지 못했습니다.</string>
-    <string name="groupInviteSending">초대 전송 중</string>
     <string name="groupInviteSent">초대 전송됨</string>
     <string name="groupInviteSuccessful">그룹 초대 성공</string>
     <string name="groupInviteVersion">사용자는 초대를 받으려면 최신 버전을 보유하고 있어야 합니다</string>

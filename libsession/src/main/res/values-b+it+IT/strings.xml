@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> è stato rimosso come amministratore.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> e <b>altri {count}</b> sono stati rimossi come Amministratori.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> e <b>{other_name}</b> sono stati rimossi come amministratori.</string>
-    <string name="adminSendingPromotion">Invio promozione ad amministratore</string>
     <string name="adminSettings">Impostazioni amministratore</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> e <b>{other_name}</b> sono ora amministratori.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Questo messaggio è stato eliminato</string>
     <string name="deleteMessageDeletedLocally">Questo messaggio è stato eliminato su questo dispositivo</string>
-    <string name="deleteMessageDescriptionDevice">Sei sicuro di voler eliminare questo messaggio solo da questo dispositivo?</string>
     <string name="deleteMessageDescriptionEveryone">Sei sicuro di voler eliminare questo messaggio per tutti?</string>
     <string name="deleteMessageDeviceOnly">Elimina solo da questo dispositivo</string>
     <string name="deleteMessageDevicesAll">Elimina da tutti i miei dispositivi</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Impossibile eliminare il messaggio</item>
         <item quantity="other">Impossibile eliminare i messaggi</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Sei sicuro di voler eliminare questi messaggi solo da questo dispositivo?</string>
     <string name="deleteMessagesDescriptionEveryone">Sei sicuro di voler eliminare questi messaggi per tutti?</string>
     <string name="deleting">Eliminazione</string>
     <string name="developerToolsToggle">Apri gli strumenti di sviluppo</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Impossibile invitare {name} e altri {count} su {group_name}</string>
     <string name="groupInviteFailedTwo">Impossibile invitare {name} e {other_name} su {group_name}</string>
     <string name="groupInviteFailedUser">Impossibile invitare {name} su {group_name}</string>
-    <string name="groupInviteSending">Invio invito</string>
     <string name="groupInviteSent">Invito inviato</string>
     <string name="groupInviteSuccessful">Invito al gruppo riuscito</string>
     <string name="groupInviteVersion">Gli utenti devono disporre della versione più recente per ricevere gli inviti</string>

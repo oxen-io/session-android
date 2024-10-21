@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}֊ը</b> հեռացվել է ադմինից:</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b>֊ը և <b>{count} ուրիշներ</b> հեռացվել են որպես ադմին՝ Administrator:</string>
     <string name="adminRemovedUserOther"><b>{name}</b>֊ը և <b>{other_name}</b>֊ը հեռացվել են որպես ադմին՝ Administrator:</string>
-    <string name="adminSendingPromotion">Ուղարկվում է ադմինիստրատորի առաջխաղացումը</string>
     <string name="adminSettings">Admin Settings</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}֊ը</b> և <b>{other_name}</b> բարձրացվել են որպես ադմին:</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Այս հաղորդագրությունը ջնջվել է</string>
     <string name="deleteMessageDeletedLocally">Այս հաղորդագրությունը ջնջվել է այս սարքում</string>
-    <string name="deleteMessageDescriptionDevice">Վստա՞հ եք, որ ցանկանում եք ջնջել այս հաղորդագրությունը միայն այս սարքավորումից:</string>
     <string name="deleteMessageDescriptionEveryone">Վստա՞հ եք, որ ցանկանում եք ջնջել այս հաղորդագրությունը բոլորի համար:</string>
     <string name="deleteMessageDeviceOnly">Ջնջել այս սարքում միայն</string>
     <string name="deleteMessageDevicesAll">Ջնջել բոլոր իմ սարքերում</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Չհաջողվեց ջնջել հաղորդագրությունը</item>
         <item quantity="other">Չհաջողվեց ջնջել հաղորդագրությունները</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Իսկապե՞ս ուզում եք ջնջել այս հաղորդագրությունները միայն այս սարքից:</string>
     <string name="deleteMessagesDescriptionEveryone">Իսկապե՞ս ուզում եք ջնջել այս հաղորդագրությունները բոլորի համար:</string>
     <string name="deleting">Ջնջվում է</string>
     <string name="developerToolsToggle">Միացնել ծրագրավորողի գործիքները</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Չհաջողվեց հրավիրել {name} և ևս {count}-ին {group_name} խմբին</string>
     <string name="groupInviteFailedTwo">Չհաջողվեց հրավիրել {name} և {other_name}-ին {group_name} խմբին</string>
     <string name="groupInviteFailedUser">Չհաջողվեց հրավիրել {name}-ին {group_name} խմբին</string>
-    <string name="groupInviteSending">Ուղարկվում է հրավերը</string>
     <string name="groupInviteSent">Հրավիրումը ուղարկված է</string>
     <string name="groupInviteSuccessful">Խմբի հրավերը հաջողությամբ ուղարկված է</string>
     <string name="groupInviteVersion">Օգտատերերը պետք է ունենան վերջին տարբերակը՝ հրավերներ ստանալու համար</string>

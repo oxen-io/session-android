@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> је уклоњен као администратор.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> и <b>{count} осталих</b> су уклоњени као администратори.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> и <b>{other_name}</b> су уклоњени као администратори.</string>
-    <string name="adminSendingPromotion">Слање унапређења администратора</string>
     <string name="adminSettings">Админ подешавања</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> и <b>{other_name}</b> су унапређени у администраторе.</string>
     <string name="andMore">+{count}</string>
@@ -290,7 +289,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ова порука је обрисана</string>
     <string name="deleteMessageDeletedLocally">Ова порука је обрисана на овом уређају</string>
-    <string name="deleteMessageDescriptionDevice">Да ли сте сигурни да желите да обришете ову поруку само са овог уређаја?</string>
     <string name="deleteMessageDescriptionEveryone">Да ли сте сигурни да желите да обришете ову поруку за све?</string>
     <string name="deleteMessageDeviceOnly">Обриши само на овом уређају</string>
     <string name="deleteMessageDevicesAll">Обриши на свим мојим уређајима</string>
@@ -300,7 +298,6 @@
         <item quantity="few">Неуспешно брисање порука</item>
         <item quantity="other">Неуспешно брисање порука</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Да ли сте сигурни да желите да обришете ове поруке само са овог уређаја?</string>
     <string name="deleteMessagesDescriptionEveryone">Да ли сте сигурни да желите да обришете ове поруке за све?</string>
     <string name="deleting">Брисање</string>
     <string name="developerToolsToggle">Пребаците Developer Tools</string>
@@ -408,7 +405,6 @@
     <string name="groupInviteFailedMultiple">Позивање {name} и {count} других у {group_name} није успело</string>
     <string name="groupInviteFailedTwo">Позивање {name} и {other_name} у {group_name} није успело</string>
     <string name="groupInviteFailedUser">Позивање {name} у {group_name} није успело</string>
-    <string name="groupInviteSending">Слање позивнице</string>
     <string name="groupInviteSent">Позив је послат</string>
     <string name="groupInviteSuccessful">Позивање групе је успешно</string>
     <string name="groupInviteVersion">Корисници морају имати најновије издање да би примали позивнице</string>
