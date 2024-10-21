@@ -1265,6 +1265,16 @@ open class Storage(
             }
             setRecipientHash(recipient, contact.hashCode().toString())
         }
+
+        // if we have contacts locally but that are missing from the config, remove their corresponding thread
+        val  removedContacts = getAllContacts().filter { localContact ->
+            moreContacts.firstOrNull {
+                it.id == localContact.accountID
+            } == null
+        }
+        removedContacts.forEach {
+            getThreadId(fromSerialized(it.accountID))?.let(::deleteConversation)
+        }
     }
 
     override fun addContacts(contacts: List<ConfigurationMessage.Contact>) {
