@@ -173,11 +173,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         }
 
         binding.run {
-            profilePictureView.apply {
-                publicKey = viewModel.hexEncodedPublicKey
-                displayName = viewModel.getDisplayName()
-                update()
-            }
             profilePictureView.setOnClickListener {
                 binding.avatarDialog.isVisible = true
                 showAvatarDialog = true
@@ -207,6 +202,18 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             viewModel.refreshAvatar.collect {
                 binding.profilePictureView.recycle()
                 binding.profilePictureView.update()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.avatarData.collect {
+                if(it == null) return@collect
+
+                binding.profilePictureView.apply {
+                    publicKey = it.publicKey
+                    displayName = it.displayName
+                    update(it.recipient)
+                }
             }
         }
     }
