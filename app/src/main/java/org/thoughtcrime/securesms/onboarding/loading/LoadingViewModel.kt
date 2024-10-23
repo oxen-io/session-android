@@ -16,12 +16,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.timeout
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.session.libsession.utilities.ConfigFactoryProtocol
+import org.session.libsession.utilities.ConfigUpdateNotification
 import org.session.libsession.utilities.TextSecurePreferences
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -43,7 +48,8 @@ private val REFRESH_TIME = 50.milliseconds
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
 internal class LoadingViewModel @Inject constructor(
-    val prefs: TextSecurePreferences
+    val prefs: TextSecurePreferences,
+    val configFactory: ConfigFactoryProtocol,
 ): ViewModel() {
 
     private val state = MutableStateFlow(State.LOADING)
@@ -55,7 +61,7 @@ internal class LoadingViewModel @Inject constructor(
     val events = _events.asSharedFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             state.flatMapLatest {
                 when (it) {
                     State.LOADING -> progress(0f, 1f, TIMEOUT_TIME)
@@ -65,14 +71,19 @@ internal class LoadingViewModel @Inject constructor(
                 .collectLatest { _progress.value = it }
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
-                TextSecurePreferences.events
-                    .filter { it == TextSecurePreferences.CONFIGURATION_SYNCED }
-                    .onStart { emit(TextSecurePreferences.CONFIGURATION_SYNCED) }
-                    .filter { prefs.getConfigurationMessageSynced() }
+                configFactory.configUpdateNotifications
+                    .filterIsInstance<ConfigUpdateNotification.UserConfigsModified>()
+                    .onStart { emit(ConfigUpdateNotification.UserConfigsModified) }
+                    .filter {
+                        configFactory.withUserConfigs { configs ->
+                            !configs.userProfile.getName().isNullOrEmpty()
+                        }
+                    }
                     .timeout(TIMEOUT_TIME)
-                    .collectLatest { onSuccess() }
+                    .first()
+                onSuccess()
             } catch (e: Exception) {
                 onFail()
             }
@@ -80,19 +91,15 @@ internal class LoadingViewModel @Inject constructor(
     }
 
     private suspend fun onSuccess() {
-        withContext(Dispatchers.Main) {
-            state.value = State.SUCCESS
-            delay(IDLE_DONE_TIME)
-            _events.emit(Event.SUCCESS)
-        }
-    }
+        state.value = State.SUCCESS
+        delay(IDLE_DONE_TIME)
+        _events.emit(Event.SUCCESS)
+}
 
     private suspend fun onFail() {
-        withContext(Dispatchers.Main) {
-            state.value = State.FAIL
-            delay(IDLE_DONE_TIME)
-            _events.emit(Event.TIMEOUT)
-        }
+        state.value = State.FAIL
+        delay(IDLE_DONE_TIME)
+        _events.emit(Event.TIMEOUT)
     }
 }
 

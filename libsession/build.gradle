@@ -1,7 +1,8 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlinx-serialization'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'kotlin-parcelize'
     id 'com.google.devtools.ksp'
     id 'com.google.dagger.hilt.android'
 }
@@ -11,6 +12,8 @@ android {
 
     defaultConfig {
         minSdkVersion androidMinimumSdkVersion
+        // Build constant for which version should minimally support new groups
+        buildConfigField("String", "MINIMUM_GROUP_VERSION", '"1.19.0"')
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -27,6 +30,10 @@ android {
                 java.srcDirs = ['src/AndroidTest/java/org/session/libsession']
             }
         }
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     compileOptions {
@@ -51,7 +58,6 @@ dependencies {
     ksp("androidx.hilt:hilt-compiler:$jetpackHiltVersion")
 
     implementation "net.java.dev.jna:jna:5.12.1@aar"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "androidx.core:core-ktx:$coreVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
@@ -67,7 +73,6 @@ dependencies {
     implementation "com.github.oxen-io.session-android-curve-25519:curve25519-java:$curve25519Version"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "com.squareup.phrase:phrase:$phraseVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxJsonVersion"

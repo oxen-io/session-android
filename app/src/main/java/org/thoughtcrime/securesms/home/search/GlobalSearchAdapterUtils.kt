@@ -14,7 +14,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.truncateIdForDisplay
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.ContentView
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Contact as ContactModel
-import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.GroupConversation
+import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.LegacyGroupConversation
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Header
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Message
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.SavedMessages
@@ -66,7 +66,7 @@ fun ContentView.bindQuery(query: String, model: GlobalSearchAdapter.Model) {
             binding.searchResultSubtitle.isVisible = true
             binding.searchResultTitle.text = model.messageResult.conversationRecipient.getSearchName()
         }
-        is GroupConversation -> {
+        is LegacyGroupConversation -> {
             binding.searchResultTitle.text = getHighlight(
                 query,
                 model.groupRecord.title
@@ -87,9 +87,9 @@ private fun getHighlight(query: String?, toSearch: String): Spannable? {
     return SearchUtil.getHighlightedSpan(Locale.getDefault(), BoldStyleFactory, toSearch, query)
 }
 
-fun ContentView.bindModel(query: String?, model: GroupConversation) {
+fun ContentView.bindModel(query: String?, model: LegacyGroupConversation) {
     binding.searchResultProfilePicture.isVisible = true
-    binding.searchResultSubtitle.isVisible = model.groupRecord.isClosedGroup
+    binding.searchResultSubtitle.isVisible = model.groupRecord.isLegacyClosedGroup
     binding.searchResultTimestamp.isVisible = false
     val threadRecipient = Recipient.from(binding.root.context, Address.fromSerialized(model.groupRecord.encodedId), false)
     binding.searchResultProfilePicture.update(threadRecipient)
@@ -99,7 +99,7 @@ fun ContentView.bindModel(query: String?, model: GroupConversation) {
     val groupRecipients = model.groupRecord.members.map { Recipient.from(binding.root.context, it, false) }
 
     val membersString = groupRecipients.joinToString(transform = Recipient::getSearchName)
-    if (model.groupRecord.isClosedGroup) {
+    if (model.groupRecord.isLegacyClosedGroup) {
         binding.searchResultSubtitle.text = getHighlight(query, membersString)
     }
 }
@@ -127,13 +127,6 @@ fun ContentView.bindModel(model: SavedMessages) {
 fun ContentView.bindModel(query: String?, model: Message) = binding.apply {
     searchResultProfilePicture.isVisible = true
     searchResultTimestamp.isVisible = true
-
-//    val hasUnreads = model.unread > 0
-//    unreadCountIndicator.isVisible = hasUnreads
-//    if (hasUnreads) {
-//        unreadCountTextView.text = model.unread.toString()
-//    }
-
     searchResultTimestamp.text = DateUtils.getDisplayFormattedTimeSpanString(root.context, Locale.getDefault(), model.messageResult.sentTimestampMs)
     searchResultProfilePicture.update(model.messageResult.conversationRecipient)
     val textSpannable = SpannableStringBuilder()

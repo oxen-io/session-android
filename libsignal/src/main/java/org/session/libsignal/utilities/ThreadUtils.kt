@@ -14,16 +14,10 @@ object ThreadUtils {
 
     const val PRIORITY_IMPORTANT_BACKGROUND_THREAD = Process.THREAD_PRIORITY_DEFAULT + Process.THREAD_PRIORITY_LESS_FAVORABLE
 
-    // Note: To see how many threads are running in our app at any given time we can use:
-    // val threadCount = getAllStackTraces().size
-
+    @Deprecated("Use a proper coroutine context/dispatcher instead, so it's clearer what priority you want the work to be done")
     @JvmStatic
-    fun queue(target: Runnable) {
-        queue(target::run)
-    }
-
     fun queue(target: () -> Unit) {
-        Dispatchers.IO.dispatch(EmptyCoroutineContext) {
+        Dispatchers.Default.dispatch(EmptyCoroutineContext) {
             try {
                 target()
             } catch (e: Exception) {

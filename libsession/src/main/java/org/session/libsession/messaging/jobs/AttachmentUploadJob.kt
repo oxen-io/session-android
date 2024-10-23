@@ -12,6 +12,7 @@ import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.Data
+import org.session.libsession.snode.utilities.await
 import org.session.libsession.utilities.DecodedAudio
 import org.session.libsession.utilities.InputStreamMediaDataSource
 import org.session.libsession.utilities.UploadResult
@@ -76,7 +77,7 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
         }
     }
 
-    private fun upload(attachment: SignalServiceAttachmentStream, server: String, encrypt: Boolean, upload: (ByteArray) -> Promise<Long, Exception>): Pair<ByteArray, UploadResult> {
+    private suspend fun upload(attachment: SignalServiceAttachmentStream, server: String, encrypt: Boolean, upload: (ByteArray) -> Promise<Long, Exception>): Pair<ByteArray, UploadResult> {
         // Key
         val key = if (encrypt) Util.getSecretBytes(64) else ByteArray(0)
         // Length
@@ -102,7 +103,7 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
         drb.writeTo(b)
         val data = b.readByteArray()
         // Upload the data
-        val id = upload(data).get()
+        val id = upload(data).await()
         val digest = drb.transmittedDigest
         // Return
         return Pair(key, UploadResult(id, "${server}/file/$id", digest))

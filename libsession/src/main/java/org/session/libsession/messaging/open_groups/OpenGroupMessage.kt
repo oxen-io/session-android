@@ -50,7 +50,7 @@ data class OpenGroupMessage(
 
     fun sign(room: String, server: String, fallbackSigningType: IdPrefix): OpenGroupMessage? {
         if (base64EncodedData.isNullOrEmpty()) return null
-        val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
+        val userEdKeyPair = MessagingModuleConfiguration.shared.storage.getUserED25519KeyPair() ?: return null
         val openGroup = MessagingModuleConfiguration.shared.storage.getOpenGroup(room, server) ?: return null
         val serverCapabilities = MessagingModuleConfiguration.shared.storage.getServerCapabilities(server)
         val signature = when {

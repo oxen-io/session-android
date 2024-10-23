@@ -30,7 +30,9 @@ class Snode(val address: String, val port: Int, val publicKeySet: KeySet?, val v
         Batch("batch"),
         Sequence("sequence"),
         Expire("expire"),
-        GetExpiries("get_expiries")
+        GetExpiries("get_expiries"),
+        RevokeSubAccount("revoke_subaccount"),
+        UnrevokeSubAccount("unrevoke_subaccount"),
     }
 
     data class KeySet(val ed25519Key: String, val x25519Key: String)

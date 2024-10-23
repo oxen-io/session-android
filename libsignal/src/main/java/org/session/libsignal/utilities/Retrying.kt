@@ -7,6 +7,7 @@ import org.session.libsignal.exceptions.NonRetryableException
 import java.util.*
 import kotlin.coroutines.cancellation.CancellationException
 
+@Deprecated("Use retrySuspendAsPromise instead")
 fun <V, T : Promise<V, Exception>> retryIfNeeded(maxRetryCount: Int, retryInterval: Long = 1000L, body: () -> T): Promise<V, Exception> {
     var retryCount = 0
     val deferred = deferred<V, Exception>()

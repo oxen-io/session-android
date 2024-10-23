@@ -312,16 +312,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         } else {
             // if we have a network connection then attempt to update the display name
             TextSecurePreferences.setProfileName(this, displayName)
-            val user = viewModel.getUser()
-            if (user == null) {
-                Log.w(TAG, "Cannot update display name - missing user details from configFactory.")
-            } else {
-                user.setName(displayName)
-                // sync remote config
-                ConfigurationMessageUtilities.syncConfigurationIfNeeded(this)
-                binding.btnGroupNameDisplay.text = displayName
-                updateWasSuccessful = true
-            }
+            viewModel.updateName(displayName)
+            binding.btnGroupNameDisplay.text = displayName
+            updateWasSuccessful = true
         }
 
         // Inform the user if we failed to update the display name

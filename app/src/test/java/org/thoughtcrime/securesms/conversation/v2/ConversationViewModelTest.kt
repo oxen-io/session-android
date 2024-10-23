@@ -19,7 +19,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.BaseViewModelTest
-import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
@@ -36,8 +35,21 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private lateinit var messageRecord: MessageRecord
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, edKeyPair,  application, repository, storage,
-            mock(), mock(), mock(), mock(), mock())
+        ConversationViewModel(
+            threadId = threadId,
+            edKeyPair = edKeyPair,
+            repository = repository,
+            storage = storage,
+            messageDataProvider = mock(),
+            groupDb = mock(),
+            threadDb = mock(),
+            textSecurePreferences = mock(),
+            lokiMessageDb = mock(),
+            application = mock(),
+            reactionDb = mock(),
+            configFactory = mock(),
+            groupManagerV2 = mock()
+        )
     }
 
     @Before
@@ -86,7 +98,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
         viewModel.unblock()
 
-        verify(repository).setBlocked(recipient, false)
+        verify(repository).setBlocked(threadId, recipient, false)
     }
 
     @Test
@@ -135,20 +147,6 @@ class ConversationViewModelTest: BaseViewModelTest() {
             viewModel.uiState.first().uiMessages.first().message,
             equalTo("User banned")
         )
-    }
-
-    @Test
-    fun `should accept message request`() = runBlockingTest {
-        viewModel.acceptMessageRequest()
-
-        verify(repository).acceptMessageRequest(threadId, recipient)
-    }
-
-    @Test
-    fun `should decline message request`() {
-        viewModel.declineMessageRequest()
-
-        verify(repository).declineMessageRequest(threadId)
     }
 
     @Test

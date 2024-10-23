@@ -14,7 +14,6 @@ import org.session.libsession.utilities.IdentityKeyMismatchList;
 import org.session.libsignal.crypto.IdentityKey;
 import org.session.libsignal.utilities.JsonUtil;
 import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.conversation.disappearingmessages.ExpiryType;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.util.SqlUtil;
@@ -54,6 +53,8 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
   public abstract void updateThreadId(long fromId, long toId);
 
   public abstract MessageRecord getMessageRecord(long messageId) throws NoSuchMessageException;
+
+  public abstract String getTypeColumn();
 
   public void addMismatchedIdentity(long messageId, Address address, IdentityKey identityKey) {
     try {
@@ -206,6 +207,19 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
     contentValues.put(THREAD_ID, newThreadId);
     db.update(getTableName(), contentValues, where, args);
   }
+
+  public boolean isOutgoing(long messageId) {
+    SQLiteDatabase db = databaseHelper.getReadableDatabase();
+    try(Cursor cursor = db.query(getTableName(), new String[]{getTypeColumn()},
+            ID_WHERE, new String[]{String.valueOf(messageId)},
+            null, null, null)) {
+      if (cursor != null && cursor.moveToNext()) {
+        return MmsSmsColumns.Types.isOutgoingMessageType(cursor.getLong(0));
+      }
+    }
+    return false;
+  }
+
   public static class SyncMessageId {
 
     private final Address address;

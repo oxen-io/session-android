@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.opencsv.CSVReader
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
@@ -103,7 +105,7 @@ class IP2Country internal constructor(
     }
 
     private fun populateCacheIfNeeded() {
-        ThreadUtils.queue {
+        GlobalScope.launch {
             val start = System.currentTimeMillis()
             OnionRequestAPI.paths.iterator().forEach { path ->
                 path.iterator().forEach { snode ->

@@ -18,6 +18,54 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_left</item>
     </style>
 
+    <style name="TextAppearance.Session.ConversationSettings" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.Session.ConversationSettings.Title">
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">26sp</item>
+        <item name="fontWeight">700</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+    </style>
+
+    <style name="TextAppearance.Session.ConversationSettings.Subtitle">
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.Session.ConversationSettings.Option">
+        <item name="android:drawableTint">?android:textColorPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">@dimen/very_large_spacing</item>
+        <item name="android:paddingStart">@dimen/very_large_spacing</item>
+        <item name="android:paddingEnd">@dimen/very_large_spacing</item>
+    </style>
+
+    <style name="TextAppearance.Session.ConversationSettings.Option.Destructive">
+        <item name="android:drawableTint">@null</item>
+        <item name="android:textColor">?attr/danger</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">@dimen/very_large_spacing</item>
+        <item name="android:paddingStart">@dimen/very_large_spacing</item>
+        <item name="android:paddingEnd">@dimen/very_large_spacing</item>
+    </style>
+
+    <style name="TextAppearance.Session.ConversationSettings.OptionSummary">
+        <item name="android:drawableTint">?android:textColorPrimary</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">@dimen/very_large_spacing</item>
+        <item name="android:paddingStart">@dimen/very_large_spacing</item>
+        <item name="android:paddingEnd">@dimen/very_large_spacing</item>
+    </style>
+
     <style name="TextAppearance.Session.DarkActionBar.TitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textSize">@dimen/very_large_font_size</item>

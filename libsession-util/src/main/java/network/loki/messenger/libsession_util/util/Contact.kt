@@ -8,6 +8,9 @@ data class Contact(
     var approvedMe: Boolean = false,
     var blocked: Boolean = false,
     var profilePicture: UserPic = UserPic.DEFAULT,
-    var priority: Int = 0,
-    var expiryMode: ExpiryMode,
-)
+    var priority: Long = 0,
+    var expiryMode: ExpiryMode = ExpiryMode.NONE,
+) {
+    val displayName: String
+        get() = nickname.ifEmpty { name }
+}

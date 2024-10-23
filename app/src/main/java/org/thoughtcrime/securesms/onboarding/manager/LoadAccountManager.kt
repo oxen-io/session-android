@@ -19,7 +19,6 @@ import javax.inject.Singleton
 @Singleton
 class LoadAccountManager @Inject constructor(
     @dagger.hilt.android.qualifiers.ApplicationContext private val context: Context,
-    private val configFactory: ConfigFactory,
     private val prefs: TextSecurePreferences,
     private val versionDataFetcher: VersionDataFetcher
 ) {
@@ -44,7 +43,6 @@ class LoadAccountManager @Inject constructor(
             val keyPairGenerationResult = KeyPairUtilities.generate(seed)
             val x25519KeyPair = keyPairGenerationResult.x25519KeyPair
             KeyPairUtilities.store(context, seed, keyPairGenerationResult.ed25519KeyPair, x25519KeyPair)
-            configFactory.keyPairChanged()
             val userHexEncodedPublicKey = x25519KeyPair.hexEncodedPublicKey
             val registrationID = org.session.libsignal.utilities.KeyHelper.generateRegistrationId(false)
             prefs.apply {

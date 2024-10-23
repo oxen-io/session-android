@@ -31,11 +31,11 @@ import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage;
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage;
 import org.session.libsession.messaging.messages.visible.VisibleMessage;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
-import org.session.libsession.snode.SnodeAPI;
+import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
+import org.session.libsession.snode.SnodeClock;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.database.MarkedMessageInfo;
 import org.thoughtcrime.securesms.database.MmsDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase;
@@ -70,6 +70,10 @@ public class RemoteReplyReceiver extends BroadcastReceiver {
   SmsDatabase smsDatabase;
   @Inject
   Storage storage;
+  @Inject
+  MessageNotifier messageNotifier;
+  @Inject
+  SnodeClock clock;
 
   @SuppressLint("StaticFieldLeak")
   @Override
@@ -94,7 +98,7 @@ public class RemoteReplyReceiver extends BroadcastReceiver {
           Recipient recipient = Recipient.from(context, address, false);
           long threadId = threadDatabase.getOrCreateThreadIdFor(recipient);
           VisibleMessage message = new VisibleMessage();
-          message.setSentTimestamp(SnodeAPI.getNowWithOffset());
+          message.setSentTimestamp(clock.currentTimeMills());
           message.setText(responseText.toString());
           ExpirationConfiguration config = storage.getExpirationConfiguration(threadId);
           ExpiryMode expiryMode = config == null ? null : config.getExpiryMode();
@@ -124,7 +128,7 @@ public class RemoteReplyReceiver extends BroadcastReceiver {
 
           List<MarkedMessageInfo> messageIds = threadDatabase.setRead(threadId, true);
 
-          ApplicationContext.getInstance(context).messageNotifier.updateNotification(context);
+          messageNotifier.updateNotification(context);
           MarkReadReceiver.process(context, messageIds);
 
           return null;

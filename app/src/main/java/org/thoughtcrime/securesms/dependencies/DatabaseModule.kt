@@ -7,14 +7,36 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.session.libsession.database.MessageDataProvider
-import org.session.libsession.utilities.SSKEnvironment
 import org.thoughtcrime.securesms.attachments.DatabaseAttachmentProvider
 import org.thoughtcrime.securesms.crypto.AttachmentSecret
 import org.thoughtcrime.securesms.crypto.AttachmentSecretProvider
 import org.thoughtcrime.securesms.crypto.DatabaseSecretProvider
-import org.thoughtcrime.securesms.database.*
+import org.thoughtcrime.securesms.database.AttachmentDatabase
+import org.thoughtcrime.securesms.database.BlindedIdMappingDatabase
+import org.thoughtcrime.securesms.database.ConfigDatabase
+import org.thoughtcrime.securesms.database.DraftDatabase
+import org.thoughtcrime.securesms.database.EmojiSearchDatabase
+import org.thoughtcrime.securesms.database.ExpirationConfigurationDatabase
+import org.thoughtcrime.securesms.database.GroupDatabase
+import org.thoughtcrime.securesms.database.GroupMemberDatabase
+import org.thoughtcrime.securesms.database.GroupReceiptDatabase
+import org.thoughtcrime.securesms.database.LokiAPIDatabase
+import org.thoughtcrime.securesms.database.LokiBackupFilesDatabase
+import org.thoughtcrime.securesms.database.LokiMessageDatabase
+import org.thoughtcrime.securesms.database.LokiThreadDatabase
+import org.thoughtcrime.securesms.database.LokiUserDatabase
+import org.thoughtcrime.securesms.database.MediaDatabase
+import org.thoughtcrime.securesms.database.MmsDatabase
+import org.thoughtcrime.securesms.database.MmsSmsDatabase
+import org.thoughtcrime.securesms.database.PushDatabase
+import org.thoughtcrime.securesms.database.ReactionDatabase
+import org.thoughtcrime.securesms.database.RecipientDatabase
+import org.thoughtcrime.securesms.database.SearchDatabase
+import org.thoughtcrime.securesms.database.SessionContactDatabase
+import org.thoughtcrime.securesms.database.SessionJobDatabase
+import org.thoughtcrime.securesms.database.SmsDatabase
+import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
-import org.thoughtcrime.securesms.service.ExpiringMessageManager
 import javax.inject.Singleton
 
 @Module
@@ -25,10 +47,6 @@ object DatabaseModule {
     fun init(context: Context) {
         System.loadLibrary("sqlcipher")
     }
-
-    @Provides
-    @Singleton
-    fun provideMessageExpirationManagerProtocol(@ApplicationContext context: Context): SSKEnvironment.MessageExpirationManagerProtocol = ExpiringMessageManager(context)
 
     @Provides
     @Singleton
@@ -138,14 +156,6 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideExpirationConfigurationDatabase(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper) = ExpirationConfigurationDatabase(context, openHelper)
-
-    @Provides
-    @Singleton
-    fun provideStorage(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper, configFactory: ConfigFactory, threadDatabase: ThreadDatabase): Storage {
-        val storage = Storage(context,openHelper, configFactory)
-        threadDatabase.setUpdateListener(storage)
-        return storage
-    }
 
     @Provides
     @Singleton
