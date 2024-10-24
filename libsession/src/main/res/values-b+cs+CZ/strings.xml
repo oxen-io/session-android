@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> byl/a odebrán/a jako správce.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> a <b>{count} dalším</b> bylo odebráno správcovství.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> a <b>{other_name}</b> bylo odebráno správcovství.</string>
-    <string name="adminSendingPromotion">Odesílání povýšení na správce</string>
     <string name="adminSettings">Nastavení správce</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> a <b>{other_name}</b> byli povýšeni na správce.</string>
     <string name="andMore">+{count}</string>
@@ -294,7 +293,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Tato zpráva byla odstraněna.</string>
     <string name="deleteMessageDeletedLocally">Tato zpráva byla odstraněna na tomto zařízení.</string>
-    <string name="deleteMessageDescriptionDevice">Jste si jisti, že chcete smazat tuto zprávu pouze z tohoto zařízení?</string>
     <string name="deleteMessageDescriptionEveryone">Jste si jisti, že chcete smazat tuto zprávu pro všechny?</string>
     <string name="deleteMessageDeviceOnly">Smazat pouze na tomto zařízení</string>
     <string name="deleteMessageDevicesAll">Smazat ze všech mých zařízení</string>
@@ -305,7 +303,6 @@
         <item quantity="many">Nepodařilo se smazat zprávy</item>
         <item quantity="other">Nepodařilo se smazat zprávy</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Jste si jisti, že chcete smazat tyto zprávy pouze z tohoto zařízení?</string>
     <string name="deleteMessagesDescriptionEveryone">Jste si jisti, že chcete smazat tyto zprávy pro všechny?</string>
     <string name="deleting">Mazání</string>
     <string name="developerToolsToggle">Přepnout nástroje vývojáře</string>
@@ -414,7 +411,6 @@
     <string name="groupInviteFailedMultiple">Nepodařilo se pozvat {name} a {count} další do {group_name}</string>
     <string name="groupInviteFailedTwo">Nepodařilo se pozvat {name} a {other_name} do {group_name}</string>
     <string name="groupInviteFailedUser">Nepodařilo se pozvat {name} do {group_name}</string>
-    <string name="groupInviteSending">Odesílání pozvánky</string>
     <string name="groupInviteSent">Pozvánka odeslána</string>
     <string name="groupInviteSuccessful">Pozvánka do skupiny byla úspěšná</string>
     <string name="groupInviteVersion">Uživatelé musí používat nejnovější verzi, aby mohli přijímat pozvánky</string>

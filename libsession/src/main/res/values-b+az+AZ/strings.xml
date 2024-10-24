@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> artıq Admin deyil.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> və <b>digər {count} nəfər</b> Adminlikdən çıxarıldı.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> və <b>{other_name}</b> Adminlikdən çıxarıldı.</string>
-    <string name="adminSendingPromotion">Admin təyinatı göndərilir</string>
     <string name="adminSettings">Admin ayarları</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> və <b>{other_name}</b> Admin olaraq yüksəldildi.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Bu mesaj silindi</string>
     <string name="deleteMessageDeletedLocally">Bu mesaj bu cihazda silindi</string>
-    <string name="deleteMessageDescriptionDevice">Bu mesajı yalnız bu cihazdan silmək istədiyinizə əminsiniz?</string>
     <string name="deleteMessageDescriptionEveryone">Bu mesajı hamı üçün silmək istədiyinizə əminsiniz?</string>
     <string name="deleteMessageDeviceOnly">Yalnız bu cihazda sil</string>
     <string name="deleteMessageDevicesAll">Bütün cihazlarımda sil</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Mesajın silinməsi uğursuz oldu</item>
         <item quantity="other">Mesajların silinməsi uğursuz oldu</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Bu mesajları yalnız bu cihazdan silmək istədiyinizə əminsiniz?</string>
     <string name="deleteMessagesDescriptionEveryone">Bu mesajları hər kəs üçün silmək istədiyinizə əminsiniz?</string>
     <string name="deleting">Silinir</string>
     <string name="developerToolsToggle">Tərtibatçı Alətlərini aç/bağla</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">{name} və digər {count} nəfəri {group_name} qrupuna dəvət etmə uğursuz oldu</string>
     <string name="groupInviteFailedTwo">{name} və {other_name} istifadəçilərini {group_name} qrupuna dəvət etmə uğursuz oldu</string>
     <string name="groupInviteFailedUser">{name} istifadəçisini {group_name} qrupuna dəvət etmə uğursuz oldu</string>
-    <string name="groupInviteSending">Dəvət göndərilir</string>
     <string name="groupInviteSent">Dəvət göndərildi</string>
     <string name="groupInviteSuccessful">Qrup dəvəti uğurludur</string>
     <string name="groupInviteVersion">İstifadəçilər dəvətləri qəbul etmək üçün ən son versiyaya sahib olmalıdırlar</string>

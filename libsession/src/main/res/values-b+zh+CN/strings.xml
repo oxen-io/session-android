@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b>被移除了管理员身份。</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b>和其他<b>{count}人</b>的管理身份被移除。</string>
     <string name="adminRemovedUserOther"><b>{name}</b>和<b>{other_name}</b>的管理身份被移除。</string>
-    <string name="adminSendingPromotion">管理员授权中</string>
     <string name="adminSettings">管理员设置</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b>和<b>{other_name}</b>被设置为管理员。</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">此消息已被删除</string>
     <string name="deleteMessageDeletedLocally">此消息在此设备上已被删除</string>
-    <string name="deleteMessageDescriptionDevice">您确定只从此设备删除此消息吗？</string>
     <string name="deleteMessageDescriptionEveryone">您确定要为所有人删除此消息吗？</string>
     <string name="deleteMessageDeviceOnly">仅从此设备上删除</string>
     <string name="deleteMessageDevicesAll">从我的所有设备删除</string>
@@ -293,7 +291,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">未能删除消息。</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">您确定要只从此设备中删除这些消息吗？</string>
     <string name="deleteMessagesDescriptionEveryone">您确定要为所有人删除这些消息吗？</string>
     <string name="deleting">正在删除</string>
     <string name="developerToolsToggle">开发者工具</string>
@@ -399,7 +396,6 @@
     <string name="groupInviteFailedMultiple">邀请{name}和其他{count}位成员加入{group_name}失败</string>
     <string name="groupInviteFailedTwo">邀请{name}和{other_name}加入{group_name}失败</string>
     <string name="groupInviteFailedUser">邀请{name}加入{group_name}失败</string>
-    <string name="groupInviteSending">邀请发送中</string>
     <string name="groupInviteSent">邀请已发送</string>
     <string name="groupInviteSuccessful">群组邀请成功</string>
     <string name="groupInviteVersion">用户必须使用最新版本才能接受邀请</string>

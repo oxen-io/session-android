@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}﻿</b> yasasulwa okuva ku kifo kya Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> ne <b>{count} abalala</b> basasulwa nga Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> ne <b>{other_name}</b> basasulwa nga Admin.</string>
-    <string name="adminSendingPromotion">Okusindika okuwagira</string>
     <string name="adminSettings">Ebijjukizo bya Bannannyini Byebibuzibwako</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}﻿</b> ne <b>{other_name}﻿</b> baakyusibwa okufuuka Admin.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Obubaka buno buno bwasaziddwa.</string>
     <string name="deleteMessageDeletedLocally">Obubaka buno bwasaziddwajo ku kifaananyi kino.</string>
-    <string name="deleteMessageDescriptionDevice">Oli mukakafu nti oyagala okusazaamu obubaka buno okuva ku kidirisa kino kyokka?</string>
     <string name="deleteMessageDescriptionEveryone">Oli mukakafu nti oyagala okusazaamu obubaka buno ku bantu bonna?</string>
     <string name="deleteMessageDeviceOnly">Nsongera  ekubamu ekyange ekijja okulondebwa</string>
     <string name="deleteMessageDevicesAll">Jjamu era e biwedde Doubiti ze Zzinyi</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Kusazaamu obubaka kugaanye</item>
         <item quantity="other">Kusazaamu obubaka kugaanye</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Oli mbanankubye kusula ebubaka bino ku kyuma kino kyokka?</string>
     <string name="deleteMessagesDescriptionEveryone">Oli mbanankubye kusula ebubaka bino byonna ku buli omu?</string>
     <string name="deleting">Okuggya</string>
     <string name="developerToolsToggle">Guliko Developer Tools</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Ensobi okuzaako okuweereza {name} ne {count} abalala mu {group_name}</string>
     <string name="groupInviteFailedTwo">Ensobi okuzaako okuweereza {name} ne {other_name} mu {group_name}</string>
     <string name="groupInviteFailedUser">Ensobi okuzaako okuweereza {name} mu {group_name}</string>
-    <string name="groupInviteSending">Okusindika envitto</string>
     <string name="groupInviteSent">Kuyita kukisibwako</string>
     <string name="groupInviteSuccessful">Okuyita mu kibinja kkyalibukira</string>
     <string name="groupInviteVersion">Abakozesa balina okubeera n\'ekitundu ekipya okufuna obulambuzi.</string>

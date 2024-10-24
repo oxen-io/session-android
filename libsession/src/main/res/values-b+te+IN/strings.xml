@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> అడ్మిన్ గా తొలగించబడ్డారు.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> మరియు <b>{count} ఇతరులు</b> అడ్మిన్ స్థాయి నుండి తొలగించబడ్డారు.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> మరియు <b>{other_name}</b> అడ్మిన్ స్థాయి నుండి తొలగించబడ్డారు.</string>
-    <string name="adminSendingPromotion">అడ్మిన్ ప్రమోషన్‌ను పంపుతోంది</string>
     <string name="adminSettings">ప్రశాసక సెట్టింగ్‌లు</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> మరియు <b>{other_name}</b> అడ్మిన్ కీ ప్రమోట్ చేయబడ్డారు.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">ఈ సందేశం తొలగించబడింది</string>
     <string name="deleteMessageDeletedLocally">ఈ సందేశం ఈ పరికరంలో తొలగించబడింది</string>
-    <string name="deleteMessageDescriptionDevice">మీరు ఈ సందేశాన్ని కేవలం ఈ పరికరం నుండి తీసివేయాలనుకుంటున్నారా?</string>
     <string name="deleteMessageDescriptionEveryone">మీరు ఈ సందేశాన్ని అందరికీ తీసివేయాలనుకుంటున్నారా?</string>
     <string name="deleteMessageDeviceOnly">ఈ పరికరంలో మాత్రమే తొలగించు</string>
     <string name="deleteMessageDevicesAll">నా పరికరాలన్నింటిలో కూడా తొలగించండి</string>
@@ -297,7 +295,6 @@
         <item quantity="one">సందేశం తొలగించడం విఫలమైంది</item>
         <item quantity="other">సందేశాలు తొలగించడం విఫలమైంది</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">మీరు ఈ సందేశాలను కేవలం ఈ పరికరం నుండి మాత్రమే తొలగించాలనుకుంటున్నారా?</string>
     <string name="deleteMessagesDescriptionEveryone">మీరు ఈ సందేశాలను అందరికీ తొలగించాలనుకుంటున్నారా?</string>
     <string name="deleting">సందేశాలను తొలగిస్తోంది</string>
     <string name="developerToolsToggle">డెవలపర్ టూల్స్ ని మారుస్తుంది</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">{name} మరియు {count} ఇతరులను {group_name} ఆహ్వానించడంలో విఫలమైంది</string>
     <string name="groupInviteFailedTwo">{name} మరియు {other_name} {group_name}కు ఆహ్వానించడంలో విఫలమైంది</string>
     <string name="groupInviteFailedUser">{name} ను {group_name}కు ఆహ్వానించడంలో విఫలమైంది</string>
-    <string name="groupInviteSending">ఆహ్వానాన్ని పంపుతోంది</string>
     <string name="groupInviteSent">ఆహ్వానం పంపబడింది</string>
     <string name="groupInviteSuccessful">సమూహ ఆహ్వానం విజయవంతం అయ్యింది</string>
     <string name="groupInviteVersion">ఆహ్వానాలు అందుకోవడానికి వినియోగదారులు తాజా వెర్షన్ కలిగి ఉండాలి</string>

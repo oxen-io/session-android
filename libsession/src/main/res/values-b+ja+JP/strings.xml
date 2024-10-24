@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> はアドミンから削除されました</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> と <b>{count}名</b> がAdminから削除されました。</string>
     <string name="adminRemovedUserOther"><b>{name}</b> と <b>{other_name}</b> がAdminに昇格しました。</string>
-    <string name="adminSendingPromotion">アドミンへの昇進を送信中</string>
     <string name="adminSettings">アドミン設定</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> と <b>{other_name}</b> がアドミンに昇格しました</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">このメッセージは削除されました</string>
     <string name="deleteMessageDeletedLocally">このメッセージはこのデバイス上で削除されました</string>
-    <string name="deleteMessageDescriptionDevice">本当にこのメッセージをこのデバイスのみから削除しますか？</string>
     <string name="deleteMessageDescriptionEveryone">本当にこのメッセージを全員に対して削除しますか？</string>
     <string name="deleteMessageDeviceOnly">このデバイスのみを削除</string>
     <string name="deleteMessageDevicesAll">すべてのデバイスから削除</string>
@@ -293,7 +291,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">メッセージの削除に失敗しました</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">このデバイスからのみメッセージを削除してもよろしいですか？</string>
     <string name="deleteMessagesDescriptionEveryone">すべてのユーザーのメッセージを削除してもよろしいですか？</string>
     <string name="deleting">削除中</string>
     <string name="developerToolsToggle">開発者ツールを切り替える</string>
@@ -399,7 +396,6 @@
     <string name="groupInviteFailedMultiple">{name} と他 {count} 人を {group_name} に招待できませんでした</string>
     <string name="groupInviteFailedTwo">{name} と {other_name} を {group_name} に招待できませんでした</string>
     <string name="groupInviteFailedUser">{name} を {group_name} に招待できませんでした</string>
-    <string name="groupInviteSending">招待状を送信中</string>
     <string name="groupInviteSent">招待を送信しました</string>
     <string name="groupInviteSuccessful">グループの招待が成功しました</string>
     <string name="groupInviteVersion">ユーザーは最新のリリースを持っている必要があります</string>

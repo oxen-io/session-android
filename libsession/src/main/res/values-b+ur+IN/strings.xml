@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> کو ایڈمن کے عہدہ سے ہٹا دیا گیا۔</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> اور <b>{count} دیگر</b> کو ایڈمن کے طور پر ہٹا دیا گیا۔</string>
     <string name="adminRemovedUserOther"><b>{name}</b> اور <b>{other_name}</b> کو ایڈمن کے طور پر ہٹا دیا گیا۔</string>
-    <string name="adminSendingPromotion">ایڈمن کی پروموشن بھیجی جا رہی ہے</string>
     <string name="adminSettings">ایڈمن سیٹنگز</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> اور <b>{other_name}</b> کو ایڈمن مقرر کیا گیا۔</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">یہ پیغام حذف کردیا گیا</string>
     <string name="deleteMessageDeletedLocally">یہ پیغام اس ڈیوائس پر حذف کیا گیا</string>
-    <string name="deleteMessageDescriptionDevice">کیا آپ واقعی صرف اس ڈیوائس سے اس پیغام کو حذف کرنا چاہتے ہیں؟</string>
     <string name="deleteMessageDescriptionEveryone">کیا آپ واقعی اس پیغام کو سب کے لیے حذف کرنا چاہتے ہیں؟</string>
     <string name="deleteMessageDeviceOnly">صرف اس آلہ پر حذف کریں</string>
     <string name="deleteMessageDevicesAll">میرے تمام آلات پر حذف کریں</string>
@@ -294,7 +292,6 @@
         <item quantity="one">پیغام حذف کرنے میں ناکام</item>
         <item quantity="other">پیغامات حذف کرنے میں ناکام</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">کیا آپ واقعی یہ پیغامات صرف اس ڈیوائس سے حذف کرنا چاہتے ہیں؟</string>
     <string name="deleteMessagesDescriptionEveryone">کیا آپ واقعی یہ پیغامات سب کے لئے حذف کرنا چاہتے ہیں؟</string>
     <string name="deleting">حذف کرنے کا عمل جاری ہے</string>
     <string name="developerToolsToggle">ڈویلپر ٹولز ٹوگل کریں</string>
@@ -401,7 +398,6 @@
     <string name="groupInviteFailedMultiple">{name} اور مزید {count} اراکین کو {group_name} میں مدعو کرنے میں ناکام رہا</string>
     <string name="groupInviteFailedTwo">{name} اور {other_name} کو {group_name} میں مدعو کرنے میں ناکام رہا</string>
     <string name="groupInviteFailedUser">{name} کو {group_name} میں مدعو کرنے میں ناکام رہا</string>
-    <string name="groupInviteSending">دعوت نامہ بھیجا جا رہا ہے</string>
     <string name="groupInviteSent">دعوت بھیج دی گئی</string>
     <string name="groupInviteSuccessful">گروپ کی دعوت کامیاب رہی</string>
     <string name="groupInviteVersion">دعوت نامے وصول کرنے کے لیے صارفین کو تازہ ترین ریلیز رکھنی ہوگی</string>

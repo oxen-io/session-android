@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name} y</b> wedi cael ei dynnu fel admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name} y</b> a <b>{count} eraill</b> wedi cael eu symud o\'r grŵp.</string>
     <string name="adminRemovedUserOther"><b>{name} y</b> a <b>{other_name}</b> wedi cael eu symud o\'r grŵp fel Admin.</string>
-    <string name="adminSendingPromotion">Anfon dyrchafiad gweinyddol</string>
     <string name="adminSettings">Gosodiadau Gweinyddwr</string>
     <string name="adminTwoPromotedToAdmin"><b>{name} y</b> a <b>{other_name}</b> penodwyd i admin.</string>
     <string name="andMore">+{count}</string>
@@ -300,7 +299,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Dilewyd y neges hon</string>
     <string name="deleteMessageDeletedLocally">Dilewyd y neges hon ar y ddyfais hon</string>
-    <string name="deleteMessageDescriptionDevice">Ydych chi\'n siŵr eich bod am ddileu\'r neges hon oddi ar y ddyfais hon yn unig?</string>
     <string name="deleteMessageDescriptionEveryone">Ydych chi\'n siŵr eich bod am ddileu\'r neges hon i bawb?</string>
     <string name="deleteMessageDeviceOnly">Dileu ar y ddyfais hon yn unig</string>
     <string name="deleteMessageDevicesAll">Dileu ar fy holl ddyfeisiau</string>
@@ -313,7 +311,6 @@
         <item quantity="many">Methwyd dileu negeseuon</item>
         <item quantity="other">Methu dileu negeseuon</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Ydych chi\'n siŵr eich bod am ddileu\'r negeseuon hyn o\'r ddyfais hon yn unig?</string>
     <string name="deleteMessagesDescriptionEveryone">Ydych chi\'n siŵr eich bod am ddileu\'r negeseuon hyn i bawb?</string>
     <string name="deleting">Wrthi\'n dileu</string>
     <string name="developerToolsToggle">Toglo Offeryn Datblygwr</string>
@@ -424,7 +421,6 @@
     <string name="groupInviteFailedMultiple">Methu gwahodd {name} a {count} arall i {group_name}</string>
     <string name="groupInviteFailedTwo">Methu gwahodd {name} a {other_name} i {group_name}</string>
     <string name="groupInviteFailedUser">Methu gwahodd {name} i {group_name}</string>
-    <string name="groupInviteSending">Anfon gwahoddiad</string>
     <string name="groupInviteSent">Anfonwyd gwahoddiad</string>
     <string name="groupInviteSuccessful">Gwahoddiad grŵp llwyddiannus</string>
     <string name="groupInviteVersion">Rhaid i\'r defnyddwyr fod â\'r rhyddhad diweddaraf i dderbyn gwahoddiadau</string>

@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> vart fjerna som admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> og <b>{count} andre</b> vart fjerna som Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> og <b>{other_name}</b> vart fjerna som Admin.</string>
-    <string name="adminSendingPromotion">Sender admin promotering</string>
     <string name="adminSettings">Administratorinnstillingar</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> og <b>{other_name}</b> vart promoterte til admin.</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Denne meldingen har blitt slettet</string>
     <string name="deleteMessageDeletedLocally">Denne meldingen ble slettet på denne enheten</string>
-    <string name="deleteMessageDescriptionDevice">Er du sikker på at du ønskjer å slette denne meldinga frå berre denne eininga?</string>
     <string name="deleteMessageDescriptionEveryone">Er du sikker på at du ønskjer å slette denne meldinga for alle?</string>
     <string name="deleteMessageDeviceOnly">Slett berre på denne eininga</string>
     <string name="deleteMessageDevicesAll">Slett på alle einingane mine</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Klarte ikkje sletta meldinga</item>
         <item quantity="other">Klarte ikkje sletta meldingane</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Er du sikker på at du vil slette desse meldingane frå berre denne eininga?</string>
     <string name="deleteMessagesDescriptionEveryone">Er du sikker på at du vil slette desse meldingane for alle?</string>
     <string name="deleting">Slettar</string>
     <string name="developerToolsToggle">Skru av/på Utviklerverktøy</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Klarte ikkje invitera {name} og {count} andre til {group_name}</string>
     <string name="groupInviteFailedTwo">Klarte ikkje invitera {name} og {other_name} til {group_name}</string>
     <string name="groupInviteFailedUser">Klarte ikkje invitera {name} til {group_name}</string>
-    <string name="groupInviteSending">Sender invitasjon</string>
     <string name="groupInviteSent">Invitasjon sendt</string>
     <string name="groupInviteSuccessful">Gruppeinnbydelse var vellukka</string>
     <string name="groupInviteVersion">Brukarar må ha den nyaste versjonen for å ta imot invitasjonar</string>
