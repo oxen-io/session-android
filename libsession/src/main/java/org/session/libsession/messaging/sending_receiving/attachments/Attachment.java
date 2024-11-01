@@ -76,7 +76,8 @@ public abstract class Attachment {
 
   public boolean isInProgress() {
     return transferState != AttachmentTransferProgress.TRANSFER_PROGRESS_DONE &&
-           transferState != AttachmentTransferProgress.TRANSFER_PROGRESS_FAILED;
+           transferState != AttachmentTransferProgress.TRANSFER_PROGRESS_FAILED &&
+            transferState != AttachmentTransferProgress.TRANSFER_PROGRESS_PENDING;
   }
 
   public long getSize() {

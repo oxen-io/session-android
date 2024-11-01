@@ -22,4 +22,10 @@ sealed class Conversation {
         override var lastRead: Long,
         override var unread: Boolean
     ): Conversation()
+
+    data class ClosedGroup(
+        val accountId: String,
+        override var lastRead: Long,
+        override var unread: Boolean
+    ): Conversation()
 }

@@ -27,7 +27,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 @SuppressLint("UseSparseArrays")
+@Singleton
 public class TypingStatusRepository implements SSKEnvironment.TypingIndicatorsProtocol {
 
   private static final String TAG = TypingStatusRepository.class.getSimpleName();
@@ -38,17 +42,20 @@ public class TypingStatusRepository implements SSKEnvironment.TypingIndicatorsPr
   private final Map<Typist, Runnable>                   timers;
   private final Map<Long, MutableLiveData<TypingState>> notifiers;
   private final MutableLiveData<Set<Long>>              threadsNotifier;
+  private final TextSecurePreferences                   preferences;
 
-  public TypingStatusRepository() {
+  @Inject
+  public TypingStatusRepository(TextSecurePreferences preferences) {
     this.typistMap       = new HashMap<>();
     this.timers          = new HashMap<>();
     this.notifiers       = new HashMap<>();
     this.threadsNotifier = new MutableLiveData<>();
+    this.preferences     = preferences;
   }
 
   @Override
   public synchronized void didReceiveTypingStartedMessage(@NotNull Context context, long threadId, @NotNull Address author, int device) {
-    if (author.serialize().equals(TextSecurePreferences.getLocalNumber(context))) {
+    if (author.serialize().equals(preferences.getLocalNumber())) {
       return;
     }
 
@@ -77,7 +84,7 @@ public class TypingStatusRepository implements SSKEnvironment.TypingIndicatorsPr
 
   @Override
   public synchronized void didReceiveTypingStoppedMessage(@NotNull Context context, long threadId, @NotNull Address author, int device, boolean isReplacedByIncomingMessage) {
-    if (author.serialize().equals(TextSecurePreferences.getLocalNumber(context))) {
+    if (author.serialize().equals(preferences.getLocalNumber())) {
       return;
     }
 

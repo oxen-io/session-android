@@ -15,6 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import org.session.libsession.utilities.AppTextSecurePreferences
+import org.session.libsession.utilities.TextSecurePreferences
+import org.thoughtcrime.securesms.ApplicationContext
 
 // Globally accessible composition local objects
 val LocalColors = compositionLocalOf <ThemeColors> { ClassicDark() }
@@ -32,11 +34,10 @@ fun invalidateComposeThemeColors() {
  */
 @Composable
 fun SessionMaterialTheme(
+    preferences: TextSecurePreferences =
+        (LocalContext.current.applicationContext as ApplicationContext).textSecurePreferences,
     content: @Composable () -> Unit
 ) {
-    val context = LocalContext.current
-    val preferences = AppTextSecurePreferences(context)
-
     val cachedColors = cachedColorsProvider ?: preferences.getColorsProvider().also { cachedColorsProvider = it }
 
     SessionMaterialTheme(

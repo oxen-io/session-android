@@ -25,12 +25,12 @@ import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.messaging.sending_receiving.handle
 import org.session.libsession.messaging.sending_receiving.handleOpenGroupReactions
 import org.session.libsession.snode.OnionRequestAPI
+import org.session.libsession.snode.utilities.successBackground
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.successBackground
 import java.util.UUID
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -281,7 +281,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     mappingCache[it.recipient] = mapping
                 }
                 val threadId = Message.getThreadId(message, null, MessagingModuleConfiguration.shared.storage, false)
-                MessageReceiver.handle(message, proto, threadId ?: -1, null)
+                MessageReceiver.handle(message, proto, threadId ?: -1, null, null)
             } catch (e: Exception) {
                 Log.e("Loki", "Couldn't handle direct message", e)
             }

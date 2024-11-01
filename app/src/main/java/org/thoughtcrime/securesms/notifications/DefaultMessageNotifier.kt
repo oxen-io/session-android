@@ -28,8 +28,6 @@ import android.database.Cursor
 import android.os.AsyncTask
 import android.os.Build
 import android.text.TextUtils
-import android.widget.Toast
-import androidx.camera.core.impl.utils.ContextUtil.getApplicationContext
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -43,11 +41,9 @@ import kotlin.concurrent.Volatile
 import me.leolin.shortcutbadger.ShortcutBadger
 import network.loki.messenger.R
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities.blindedKeyPair
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.ServiceUtil
-import org.session.libsession.utilities.StringSubstitutionConstants.APP_NAME_KEY
 import org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getLocalNumber
 import org.session.libsession.utilities.TextSecurePreferences.Companion.getNotificationPrivacy
@@ -56,6 +52,7 @@ import org.session.libsession.utilities.TextSecurePreferences.Companion.hasHidde
 import org.session.libsession.utilities.TextSecurePreferences.Companion.isNotificationsEnabled
 import org.session.libsession.utilities.TextSecurePreferences.Companion.removeHasHiddenMessageRequests
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Util
@@ -70,8 +67,6 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
 import org.thoughtcrime.securesms.mms.SlideDeck
-import org.thoughtcrime.securesms.permissions.Permissions
-import org.thoughtcrime.securesms.preferences.ShareLogsDialog
 import org.thoughtcrime.securesms.service.KeyCachingService
 import org.thoughtcrime.securesms.util.SessionMetaProtocol.canUserReplyToNotification
 import org.thoughtcrime.securesms.util.SpanUtil
@@ -172,7 +167,7 @@ class DefaultMessageNotifier : MessageNotifier {
         val threads = get(context).threadDatabase()
         val recipient = threads.getRecipientForThreadId(threadId)
 
-        if (recipient != null && !recipient.isGroupRecipient && threads.getMessageCount(threadId) == 1 &&
+        if (recipient != null && !recipient.isGroupOrCommunityRecipient && threads.getMessageCount(threadId) == 1 &&
             !(recipient.isApproved || threads.getLastSeenAndHasSent(threadId).second())
         ) {
             removeHasHiddenMessageRequests(context)
@@ -486,7 +481,7 @@ class DefaultMessageNotifier : MessageNotifier {
 
             if (threadId != -1L) {
                 threadRecipients = threadDatabase.getRecipientForThreadId(threadId)
-                messageRequest = threadRecipients != null && !threadRecipients.isGroupRecipient &&
+                messageRequest = threadRecipients != null && !threadRecipients.isGroupOrCommunityRecipient &&
                         !threadRecipients.isApproved && !threadDatabase.getLastSeenAndHasSent(threadId).second()
                 if (messageRequest && (threadDatabase.getMessageCount(threadId) > 1 || !hasHiddenMessageRequests(context))) {
                     continue
@@ -559,7 +554,7 @@ class DefaultMessageNotifier : MessageNotifier {
                     .findLast()
 
                 if (lastReact.isPresent) {
-                    if (threadRecipients != null && !threadRecipients.isGroupRecipient) {
+                    if (threadRecipients != null && !threadRecipients.isGroupOrCommunityRecipient) {
                         val reaction = lastReact.get()
                         val reactor = Recipient.from(context, fromSerialized(reaction.author), false)
                         val emoji = Phrase.from(context, R.string.emojiReactsNotification).put(EMOJI_KEY, reaction.emoji).format().toString()

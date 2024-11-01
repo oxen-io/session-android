@@ -1,8 +1,53 @@
 package network.loki.messenger.libsession_util.util
 
+import org.session.libsignal.utilities.AccountId
+
 sealed class GroupInfo {
 
-    data class CommunityGroupInfo(val community: BaseCommunityInfo, val priority: Int) : GroupInfo()
+    data class CommunityGroupInfo(val community: BaseCommunityInfo, val priority: Long) : GroupInfo()
+
+    data class ClosedGroupInfo(
+        val groupAccountId: AccountId,
+        val adminKey: ByteArray?,
+        val authData: ByteArray?,
+        val priority: Long,
+        val invited: Boolean,
+        val name: String,
+    ): GroupInfo() {
+
+        init {
+            require(adminKey == null || adminKey.isNotEmpty()) {
+                "Admin key must be non-empty if present"
+            }
+
+            require(authData == null || authData.isNotEmpty()) {
+                "Auth data must be non-empty if present"
+            }
+        }
+
+        val kicked: Boolean
+            get() = adminKey == null && authData == null
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as ClosedGroupInfo
+
+            if (groupAccountId != other.groupAccountId) return false
+            if (!adminKey.contentEquals(other.adminKey)) return false
+            return authData.contentEquals(other.authData)
+        }
+
+        override fun hashCode(): Int {
+            var result = groupAccountId.hashCode()
+            result = 31 * result + adminKey.contentHashCode()
+            result = 31 * result + authData.contentHashCode()
+            return result
+        }
+
+        fun hasAdminKey() = adminKey != null
+    }
 
     data class LegacyGroupInfo(
         val accountId: String,
@@ -10,7 +55,7 @@ sealed class GroupInfo {
         val members: Map<String, Boolean>,
         val encPubKey: ByteArray,
         val encSecKey: ByteArray,
-        val priority: Int,
+        val priority: Long,
         val disappearingTimer: Long,
         val joinedAt: Long
     ): GroupInfo() {
@@ -43,11 +88,12 @@ sealed class GroupInfo {
             result = 31 * result + members.hashCode()
             result = 31 * result + encPubKey.contentHashCode()
             result = 31 * result + encSecKey.contentHashCode()
-            result = 31 * result + priority
+            result = 31 * result + priority.hashCode()
             result = 31 * result + disappearingTimer.hashCode()
             result = 31 * result + joinedAt.hashCode()
             return result
         }
+
     }
 
 }

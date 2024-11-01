@@ -1,10 +1,14 @@
 package org.session.libsignal.utilities
 
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.Response
 import org.session.libsignal.utilities.Util.SECURE_RANDOM
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -81,14 +85,14 @@ object HTTP {
     /**
      * Sync. Don't call from the main thread.
      */
-    fun execute(verb: Verb, url: String, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): ByteArray {
+    suspend fun execute(verb: Verb, url: String, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): ByteArray {
         return execute(verb = verb, url = url, body = null, timeout = timeout, useSeedNodeConnection = useSeedNodeConnection)
     }
 
     /**
      * Sync. Don't call from the main thread.
      */
-    fun execute(verb: Verb, url: String, parameters: Map<String, Any>?, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): ByteArray {
+    suspend fun execute(verb: Verb, url: String, parameters: Map<String, Any>?, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): ByteArray {
         return if (parameters != null) {
             val body = JsonUtil.toJson(parameters).toByteArray()
             execute(verb = verb, url = url, body = body, timeout = timeout, useSeedNodeConnection = useSeedNodeConnection)
@@ -100,7 +104,7 @@ object HTTP {
     /**
      * Sync. Don't call from the main thread.
      */
-    fun execute(verb: Verb, url: String, body: ByteArray?, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): ByteArray {
+    suspend fun execute(verb: Verb, url: String, body: ByteArray?, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): ByteArray {
         val request = Request.Builder().url(url)
             .removeHeader("User-Agent").addHeader("User-Agent", "WhatsApp") // Set a fake value
             .removeHeader("Accept-Language").addHeader("Accept-Language", "en-us") // Set a fake value
@@ -125,7 +129,7 @@ object HTTP {
                 }
                 useSeedNodeConnection -> seedNodeConnection
                 else -> defaultConnection
-            }.newCall(request.build()).execute().use { response ->
+            }.newCall(request.build()).await().use { response ->
                 when (val statusCode = response.code) {
                     200 -> response.body!!.bytes()
                     else -> {
@@ -141,6 +145,15 @@ object HTTP {
 
             // Override the actual error so that we can correctly catch failed requests in OnionRequestAPI
             throw HTTPRequestFailedException(0, null, "HTTP request failed due to: ${exception.message}")
+        }
+    }
+
+    @Suppress("OPT_IN_USAGE")
+    private val httpCallDispatcher = Dispatchers.IO.limitedParallelism(3)
+
+    private suspend fun Call.await(): Response {
+        return withContext(httpCallDispatcher) {
+            execute()
         }
     }
 }

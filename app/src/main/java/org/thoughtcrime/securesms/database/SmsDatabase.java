@@ -322,6 +322,11 @@ public class SmsDatabase extends MessagingDatabase {
     return isDeleted;
   }
 
+  @Override
+  public String getTypeColumn() {
+    return TYPE;
+  }
+
   public void incrementReceiptCount(SyncMessageId messageId, boolean deliveryReceipt, boolean readReceipt) {
     SQLiteDatabase database     = databaseHelper.getWritableDatabase();
     Cursor         cursor       = null;
@@ -723,15 +728,14 @@ public class SmsDatabase extends MessagingDatabase {
     }
   }
 
+  void deleteMessagesFrom(long threadId, String fromUser) {
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    db.delete(TABLE_NAME, THREAD_ID+" = ? AND "+ADDRESS+" = ?", new String[]{threadId+"", fromUser});
+  }
+
   void deleteMessagesInThreadBeforeDate(long threadId, long date) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
-    String where      = THREAD_ID + " = ? AND (CASE " + TYPE;
-
-    for (long outgoingType : Types.OUTGOING_MESSAGE_TYPES) {
-      where += " WHEN " + outgoingType + " THEN " + DATE_SENT + " < " + date;
-    }
-
-    where += (" ELSE " + DATE_RECEIVED + " < " + date + " END)");
+    String where      = THREAD_ID + " = ? AND " + DATE_SENT + " < " + date;
 
     db.delete(TABLE_NAME, where, new String[] {threadId + ""});
   }

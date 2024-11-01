@@ -8,11 +8,12 @@ import androidx.annotation.Nullable;
 import org.session.libsession.messaging.calls.CallMessageType;
 import org.session.libsession.messaging.messages.visible.OpenGroupInvitation;
 import org.session.libsession.messaging.messages.visible.VisibleMessage;
-import org.session.libsession.utilities.Address;
 import org.session.libsession.messaging.utilities.UpdateMessageData;
+import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.GroupUtil;
-import org.session.libsignal.utilities.guava.Optional;
 import org.session.libsignal.messages.SignalServiceGroup;
+import org.session.libsignal.utilities.Hex;
+import org.session.libsignal.utilities.guava.Optional;
 
 public class IncomingTextMessage implements Parcelable {
 
@@ -80,7 +81,14 @@ public class IncomingTextMessage implements Parcelable {
     this.hasMention           = hasMention;
 
     if (group.isPresent()) {
-      this.groupId = Address.fromSerialized(GroupUtil.getEncodedId(group.get()));
+      SignalServiceGroup groupObject = group.get();
+      if (groupObject.isGroupV2()) {
+        // new closed group 03..etc..
+        this.groupId = Address.fromSerialized(Hex.toStringCondensed(groupObject.getGroupId()));
+      } else {
+        // old closed group or open group
+        this.groupId = Address.fromSerialized(GroupUtil.getEncodedId(group.get()));
+      }
     } else {
       this.groupId = null;
     }

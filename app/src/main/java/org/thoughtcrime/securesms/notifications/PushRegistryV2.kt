@@ -1,117 +1,130 @@
 package org.thoughtcrime.securesms.notifications
 
-import com.goterl.lazysodium.LazySodiumAndroid
-import com.goterl.lazysodium.SodiumAndroid
-import com.goterl.lazysodium.interfaces.Sign
-import com.goterl.lazysodium.utils.KeyPair
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.decodeFromStream
-import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.functional.map
-import okhttp3.MediaType
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.jsonObject
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.session.libsession.messaging.sending_receiving.notifications.Response
 import org.session.libsession.messaging.sending_receiving.notifications.Server
 import org.session.libsession.messaging.sending_receiving.notifications.SubscriptionRequest
 import org.session.libsession.messaging.sending_receiving.notifications.SubscriptionResponse
 import org.session.libsession.messaging.sending_receiving.notifications.UnsubscribeResponse
 import org.session.libsession.messaging.sending_receiving.notifications.UnsubscriptionRequest
-import org.session.libsession.messaging.utilities.SodiumUtilities
-import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsession.snode.OnionRequestAPI
-import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.snode.SnodeClock
+import org.session.libsession.snode.SwarmAuth
 import org.session.libsession.snode.Version
+import org.session.libsession.snode.utilities.await
 import org.session.libsession.utilities.Device
-import org.session.libsignal.utilities.Base64
-import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.Namespace
-import org.session.libsignal.utilities.retryIfNeeded
+import org.session.libsignal.utilities.retryWithUniformInterval
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private val TAG = PushRegistryV2::class.java.name
 private const val maxRetryCount = 4
 
 @Singleton
-class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver) {
-    fun register(
-        device: Device,
+class PushRegistryV2 @Inject constructor(
+    private val pushReceiver: PushReceiver,
+    private val device: Device,
+    private val clock: SnodeClock,
+    ) {
+    suspend fun register(
         token: String,
-        publicKey: String,
-        userEd25519Key: KeyPair,
+        swarmAuth: SwarmAuth,
         namespaces: List<Int>
-    ): Promise<SubscriptionResponse, Exception> {
+    ) {
         val pnKey = pushReceiver.getOrCreateNotificationKey()
 
-        val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
-        // if we want to support passing namespace list, here is the place to do it
-        val sigData = "MONITOR${publicKey}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
-        val signature = ByteArray(Sign.BYTES)
-        sodium.cryptoSignDetached(signature, sigData, sigData.size.toLong(), userEd25519Key.secretKey.asBytes)
+        val timestamp = clock.currentTimeMills() / 1000 // get timestamp in ms -> s
+        val publicKey = swarmAuth.accountId.hexString
+        val signed = swarmAuth.sign(
+            "MONITOR${publicKey}${timestamp}1${namespaces.joinToString(separator = ",")}".encodeToByteArray()
+        )
         val requestParameters = SubscriptionRequest(
             pubkey = publicKey,
-            session_ed25519 = userEd25519Key.publicKey.asHexString,
-            namespaces = listOf(Namespace.DEFAULT),
+            session_ed25519 = swarmAuth.ed25519PublicKeyHex,
+            namespaces = namespaces,
             data = true, // only permit data subscription for now (?)
             service = device.service,
             sig_ts = timestamp,
-            signature = Base64.encodeBytes(signature),
             service_info = mapOf("token" to token),
             enc_key = pnKey.asHexString,
-        ).let(Json::encodeToString)
+        ).let(Json::encodeToJsonElement).jsonObject + signed
 
-        return retryResponseBody<SubscriptionResponse>("subscribe", requestParameters) success {
-            Log.d(TAG, "registerV2 success")
+        val response = retryResponseBody<SubscriptionResponse>(
+            "subscribe",
+            Json.encodeToString(requestParameters)
+        )
+
+        check(response.isSuccess()) {
+            "Error subscribing to push notifications: ${response.message}"
         }
     }
 
-    fun unregister(
-        device: Device,
+    suspend fun unregister(
         token: String,
-        userPublicKey: String,
-        userEdKey: KeyPair
-    ): Promise<UnsubscribeResponse, Exception> {
-        val timestamp = SnodeAPI.nowWithOffset / 1000 // get timestamp in ms -> s
+        swarmAuth: SwarmAuth
+    ) {
+        val publicKey = swarmAuth.accountId.hexString
+        val timestamp = clock.currentTimeMills() / 1000 // get timestamp in ms -> s
         // if we want to support passing namespace list, here is the place to do it
-        val sigData = "UNSUBSCRIBE${userPublicKey}${timestamp}".encodeToByteArray()
-        val signature = ByteArray(Sign.BYTES)
-        sodium.cryptoSignDetached(signature, sigData, sigData.size.toLong(), userEdKey.secretKey.asBytes)
+        val signature = swarmAuth.signForPushRegistry(
+            "UNSUBSCRIBE${publicKey}${timestamp}".encodeToByteArray()
+        )
 
         val requestParameters = UnsubscriptionRequest(
-            pubkey = userPublicKey,
-            session_ed25519 = userEdKey.publicKey.asHexString,
+            pubkey = publicKey,
+            session_ed25519 = swarmAuth.ed25519PublicKeyHex,
             service = device.service,
             sig_ts = timestamp,
-            signature = Base64.encodeBytes(signature),
             service_info = mapOf("token" to token),
-        ).let(Json::encodeToString)
+        ).let(Json::encodeToJsonElement).jsonObject + signature
 
-        return retryResponseBody<UnsubscribeResponse>("unsubscribe", requestParameters) success {
-            Log.d(TAG, "unregisterV2 success")
+        val response: UnsubscribeResponse = retryResponseBody("unsubscribe", Json.encodeToString(requestParameters))
+
+        check(response.isSuccess()) {
+            "Error unsubscribing to push notifications: ${response.message}"
         }
     }
 
-    private inline fun <reified T: Response> retryResponseBody(path: String, requestParameters: String): Promise<T, Exception> =
-        retryIfNeeded(maxRetryCount) { getResponseBody(path, requestParameters) }
+    private operator fun JsonObject.plus(additional: Map<String, String>): JsonObject {
+        return JsonObject(buildMap {
+            putAll(this@plus)
+            for ((key, value) in additional) {
+                put(key, JsonPrimitive(value))
+            }
+        })
+    }
 
-    private inline fun <reified T: Response> getResponseBody(path: String, requestParameters: String): Promise<T, Exception> {
+    private suspend inline fun <reified T: Response> retryResponseBody(path: String, requestParameters: String): T =
+        retryWithUniformInterval(maxRetryCount = maxRetryCount) { getResponseBody(path, requestParameters) }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    private suspend inline fun <reified T: Response> getResponseBody(path: String, requestParameters: String): T {
         val server = Server.LATEST
         val url = "${server.url}/$path"
-        val body = RequestBody.create("application/json".toMediaType(), requestParameters)
+        val body = requestParameters.toRequestBody("application/json".toMediaType())
         val request = Request.Builder().url(url).post(body).build()
+        val response = OnionRequestAPI.sendOnionRequest(
+            request = request,
+            server = server.url,
+            x25519PublicKey = server.publicKey,
+            version = Version.V4
+        ).await()
 
-        return OnionRequestAPI.sendOnionRequest(
-            request,
-            server.url,
-            server.publicKey,
-            Version.V4
-        ).map { response ->
-            response.body!!.inputStream()
-                .let { Json.decodeFromStream<T>(it) }
-                .also { if (it.isFailure()) throw Exception("error: ${it.message}.") }
+        return withContext(Dispatchers.IO) {
+            requireNotNull(response.body) { "Response doesn't have a body" }
+                .inputStream()
+                .use { Json.decodeFromStream<T>(it) }
         }
     }
 }

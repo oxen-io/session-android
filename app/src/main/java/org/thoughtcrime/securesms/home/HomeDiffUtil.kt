@@ -46,7 +46,7 @@ class HomeDiffUtil(
                 oldItem.isSent == newItem.isSent &&
                 oldItem.isPending == newItem.isPending &&
                 oldItem.lastSeen == newItem.lastSeen &&
-                configFactory.convoVolatile?.getConversationUnread(newItem) != true &&
+                !configFactory.withUserConfigs { it.convoInfoVolatile.getConversationUnread(newItem) } &&
                 old.typingThreadIDs.contains(oldItem.threadId) == new.typingThreadIDs.contains(newItem.threadId)
             )
         }

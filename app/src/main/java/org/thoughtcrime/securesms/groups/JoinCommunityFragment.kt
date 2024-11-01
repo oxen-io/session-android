@@ -116,9 +116,6 @@ class JoinCommunityFragment : Fragment() {
                             GroupManager.getOpenGroupThreadID(openGroupID, requireContext())
                         val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
 
-                        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(
-                            requireContext()
-                        )
                         withContext(Dispatchers.Main) {
                             val recipient = Recipient.from(
                                 requireContext(),

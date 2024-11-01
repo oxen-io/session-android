@@ -4,14 +4,15 @@ import org.session.libsession.messaging.messages.visible.VisibleMessage;
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
 import org.session.libsession.messaging.sending_receiving.attachments.PointerAttachment;
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage;
-import org.session.libsession.utilities.Contact;
-import org.session.libsession.utilities.Address;
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview;
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel;
+import org.session.libsession.utilities.Address;
+import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.GroupUtil;
-import org.session.libsignal.utilities.guava.Optional;
 import org.session.libsignal.messages.SignalServiceAttachment;
 import org.session.libsignal.messages.SignalServiceGroup;
+import org.session.libsignal.utilities.Hex;
+import org.session.libsignal.utilities.guava.Optional;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -70,8 +71,18 @@ public class IncomingMediaMessage {
     this.messageRequestResponse     = messageRequestResponse;
     this.hasMention                 = hasMention;
 
-    if (group.isPresent()) this.groupId = Address.fromSerialized(GroupUtil.INSTANCE.getEncodedId(group.get()));
-    else                   this.groupId = null;
+    if (group.isPresent()) {
+      SignalServiceGroup groupObject = group.get();
+      if (groupObject.isGroupV2()) {
+        // new groupv2 03..etc..
+        this.groupId = Address.fromSerialized(Hex.toStringCondensed(groupObject.getGroupId()));
+      } else {
+        // legacy group or community
+        this.groupId = Address.fromSerialized(GroupUtil.getEncodedId(group.get()));
+      }
+    } else {
+      this.groupId = null;
+    }
 
     this.attachments.addAll(PointerAttachment.forPointers(attachments));
     this.sharedContacts.addAll(sharedContacts.or(Collections.emptyList()));

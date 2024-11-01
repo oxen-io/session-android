@@ -5,6 +5,9 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
+import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.GroupUtil
+import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
@@ -28,6 +31,8 @@ data class VisibleMessage(
 ) : Message()  {
 
     override val isSelfSendValid: Boolean = true
+
+    override fun shouldDiscardIfBlocked(): Boolean = true
 
     // region Validation
     override fun isValid(): Boolean {
@@ -97,18 +102,9 @@ data class VisibleMessage(
         val pointers = attachments.mapNotNull { Attachment.createAttachmentPointer(it) }
         dataMessage.addAllAttachments(pointers)
         // TODO: Contact
-        // Expiration timer
+        // Expiration timer on the message
         proto.applyExpiryMode()
-        // Group context
-        val storage = MessagingModuleConfiguration.shared.storage
-        if (storage.isClosedGroup(recipient!!)) {
-            try {
-                dataMessage.setGroupContext()
-            } catch (e: Exception) {
-                Log.w(TAG, "Couldn't construct visible message proto from: $this")
-                return null
-            }
-        }
+
         // Community blocked message requests flag
         dataMessage.blocksCommunityMessageRequests = blocksMessageRequests
         // Sync target

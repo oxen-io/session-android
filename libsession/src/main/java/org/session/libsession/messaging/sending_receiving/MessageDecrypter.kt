@@ -1,15 +1,13 @@
 package org.session.libsession.messaging.sending_receiving
 
-import com.goterl.lazysodium.LazySodiumAndroid
-import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.Box
 import com.goterl.lazysodium.interfaces.Sign
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.MessageReceiver.Error
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsignal.crypto.ecc.ECKeyPair
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
@@ -69,7 +67,7 @@ object MessageDecrypter {
         serverPublicKey: String
     ): Pair<ByteArray, String> {
         if (message.size < Box.NONCEBYTES + 2) throw Error.DecryptionFailed
-        val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: throw Error.NoUserED25519KeyPair
+        val userEdKeyPair = MessagingModuleConfiguration.shared.storage.getUserED25519KeyPair() ?: throw Error.NoUserED25519KeyPair
         val blindedKeyPair = SodiumUtilities.blindedKeyPair(serverPublicKey, userEdKeyPair) ?: throw Error.DecryptionFailed
         // Calculate the shared encryption key, receiving from A to B
         val otherKeyBytes = Hex.fromStringCondensed(otherBlindedPublicKey.removingIdPrefixIfNeeded())

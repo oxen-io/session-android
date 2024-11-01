@@ -443,7 +443,8 @@ class DisappearingMessagesViewModelTest {
         mockStuff(mode)
 
         whenever(recipient.address).thenReturn(GROUP_ADDRESS)
-        whenever(recipient.isClosedGroupRecipient).thenReturn(true)
+        whenever(recipient.isGroupOrCommunityRecipient).thenReturn(true)
+        whenever(recipient.isLegacyGroupRecipient).thenReturn(true)
         whenever(groupDb.getGroup(any<String>())).thenReturn(Optional.of(groupRecord))
         whenever(groupRecord.admins).thenReturn(
             buildList {
@@ -469,7 +470,6 @@ class DisappearingMessagesViewModelTest {
         THREAD_ID,
         application,
         textSecurePreferences,
-        messageExpirationManager,
         disappearingMessages,
         threadDb,
         groupDb,

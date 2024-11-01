@@ -40,7 +40,9 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 
 import java.io.Closeable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import kotlin.Pair;
@@ -272,6 +274,23 @@ public class MmsSmsDatabase extends Database {
     }
   }
 
+  public List<MessageRecord> getUserMessages(long threadId, String sender) {
+
+    List<MessageRecord> idList = new ArrayList<>();
+
+    try (Cursor cursor = getConversation(threadId, false)) {
+      Reader reader = readerFor(cursor);
+      while (reader.getNext() != null) {
+        MessageRecord record = reader.getCurrent();
+        if (record.getIndividualRecipient().getAddress().serialize().equals(sender)) {
+          idList.add(record);
+        }
+      }
+    }
+
+    return idList;
+  }
+
   // Builds up and returns a list of all all the messages sent by this user in the given thread.
   // Used to do a pass through our local database to remove records when a user has "Ban & Delete"
   // called on them in a Community.
@@ -285,25 +304,6 @@ public class MmsSmsDatabase extends Database {
         MessageRecord messageRecord;
         while ((messageRecord = reader.getNext()) != null) {
           identifiedMessages.add(messageRecord);
-        }
-      }
-    }
-    return identifiedMessages;
-  }
-
-  // Version of the above `getAllMessageRecordsFromSenderInThread` method that returns the message
-  // Ids rather than the set of MessageRecords - currently unused by potentially useful in the future.
-  public Set<Long> getAllMessageIdsFromSenderInThread(long threadId, String serializedAuthor) {
-    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId + " AND " + MmsSmsColumns.ADDRESS + " = \"" + serializedAuthor + "\"";
-
-    Set<Long> identifiedMessages = new HashSet<Long>();
-
-    // Try everything with resources so that they auto-close on end of scope
-    try (Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
-      try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
-        MessageRecord messageRecord;
-        while ((messageRecord = reader.getNext()) != null) {
-          identifiedMessages.add(messageRecord.id);
         }
       }
     }

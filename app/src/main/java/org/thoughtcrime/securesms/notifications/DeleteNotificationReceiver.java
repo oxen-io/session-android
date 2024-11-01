@@ -17,7 +17,7 @@ public class DeleteNotificationReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(final Context context, Intent intent) {
     if (DELETE_NOTIFICATION_ACTION.equals(intent.getAction())) {
-      ApplicationContext.getInstance(context).messageNotifier.clearReminder(context);
+      ApplicationContext.getInstance(context).getMessageNotifier().clearReminder(context);
 
       final long[]    ids = intent.getLongArrayExtra(EXTRA_IDS);
       final boolean[] mms = intent.getBooleanArrayExtra(EXTRA_MMS);

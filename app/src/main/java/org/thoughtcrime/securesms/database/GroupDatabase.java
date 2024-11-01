@@ -32,6 +32,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @deprecated This database table management is only used for
+ * legacy group management. It is not used in groupv2. For group v2 data, you generally need
+ * to query config system directly. The Storage class may also be more up-to-date.
+ *
+ */
+@Deprecated
 public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProtocol {
 
   @SuppressWarnings("unused")

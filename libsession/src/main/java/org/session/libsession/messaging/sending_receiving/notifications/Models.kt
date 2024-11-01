@@ -16,17 +16,13 @@ data class SubscriptionRequest(
     /** the 33-byte account being subscribed to; typically an account ID */
     val pubkey: String,
     /** when the pubkey starts with 05 (i.e. an account ID) this is the ed25519 32-byte pubkey associated with the account ID */
-    val session_ed25519: String?,
-    /** 32-byte swarm authentication subkey; omitted (or null) when not using subkey auth (new closed groups) */
-    val subkey_tag: String? = null,
+    val session_ed25519: String? = null,
     /** array of integer namespaces to subscribe to, **must be sorted in ascending order** */
     val namespaces: List<Int>,
     /** if provided and true then notifications will include the body of the message (as long as it isn't too large) */
     val data: Boolean,
     /** the signature unix timestamp in seconds, not ms */
     val sig_ts: Long,
-    /** the 64-byte ed25519 signature */
-    val signature: String,
     /** the string identifying the notification service, "firebase" for android (currently) */
     val service: String,
     /** dict of service-specific data, currently just "token" field with device-specific token but different services might have other requirements */
@@ -41,13 +37,11 @@ data class UnsubscriptionRequest(
     /** the 33-byte account being subscribed to; typically a account ID */
     val pubkey: String,
     /** when the pubkey starts with 05 (i.e. an account ID) this is the ed25519 32-byte pubkey associated with the account ID */
-    val session_ed25519: String?,
+    val session_ed25519: String? = null,
     /** 32-byte swarm authentication subkey; omitted (or null) when not using subkey auth (new closed groups) */
     val subkey_tag: String? = null,
     /** the signature unix timestamp in seconds, not ms */
     val sig_ts: Long,
-    /** the 64-byte ed25519 signature */
-    val signature: String,
     /** the string identifying the notification service, "firebase" for android (currently) */
     val service: String,
     /** dict of service-specific data, currently just "token" field with device-specific token but different services might have other requirements */

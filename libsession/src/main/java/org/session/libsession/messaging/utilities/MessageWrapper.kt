@@ -1,10 +1,10 @@
 package org.session.libsession.messaging.utilities
 
 import com.google.protobuf.ByteString
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.protos.SignalServiceProtos.Envelope
 import org.session.libsignal.protos.WebSocketProtos.WebSocketMessage
 import org.session.libsignal.protos.WebSocketProtos.WebSocketRequestMessage
+import org.session.libsignal.utilities.Log
 import java.security.SecureRandom
 
 object MessageWrapper {
@@ -32,7 +32,7 @@ object MessageWrapper {
         }
     }
 
-    private fun createEnvelope(type: Envelope.Type, timestamp: Long, senderPublicKey: String, content: ByteArray): Envelope {
+    fun createEnvelope(type: Envelope.Type, timestamp: Long, senderPublicKey: String, content: ByteArray): Envelope {
         try {
             val builder = Envelope.newBuilder()
             builder.type = type
@@ -59,7 +59,7 @@ object MessageWrapper {
                 type = WebSocketMessage.Type.REQUEST
             }.build()
         } catch (e: Exception) {
-            Log.d("Loki", "Failed to wrap envelope in web socket message: ${e.message}.")
+            Log.d("MessageWrapper", "Failed to wrap envelope in web socket message: ${e.message}.")
             throw Error.FailedToWrapEnvelopeInWebSocketMessage
         }
     }
@@ -73,9 +73,9 @@ object MessageWrapper {
         try {
             val webSocketMessage = WebSocketMessage.parseFrom(data)
             val envelopeAsData = webSocketMessage.request.body
-            return Envelope.parseFrom(envelopeAsData);
+            return Envelope.parseFrom(envelopeAsData)
         } catch (e: Exception) {
-            Log.d("Loki", "Failed to unwrap data: ${e.message}.")
+            Log.d("MessageWrapper", "Failed to unwrap data", e)
             throw Error.FailedToUnwrapData
         }
     }

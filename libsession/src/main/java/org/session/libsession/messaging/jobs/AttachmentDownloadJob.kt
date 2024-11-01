@@ -63,15 +63,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                 return true
             }
 
-            // you can't be eligible without a sender
-            val sender = messageDataProvider.getIndividualRecipientForMms(databaseMessageID)?.address?.serialize()
-                ?: return false
-
-            // you can't be eligible without a contact entry
-            val contact = storage.getContactWithAccountID(sender) ?: return false
-
-            // we are eligible if we are receiving a group message or the contact is trusted
-            return threadRecipient.isGroupRecipient || contact.isTrusted
+            return storage.shouldAutoDownloadAttachments(threadRecipient)
         }
     }
 

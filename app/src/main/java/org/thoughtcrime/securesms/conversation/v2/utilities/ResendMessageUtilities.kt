@@ -34,7 +34,7 @@ object ResendMessageUtilities {
             message.text = messageRecord.body
         }
         message.sentTimestamp = messageRecord.timestamp
-        if (recipient.isGroupRecipient) {
+        if (recipient.isGroupOrCommunityRecipient) {
             message.groupPublicKey = recipient.address.toGroupString()
         } else {
             message.recipient = messageRecord.recipient.address.serialize()

@@ -40,7 +40,7 @@ class MultipleRecipientNotificationBuilder(context: Context, privacy: Notificati
 
     fun setMostRecentSender(recipient: Recipient, threadRecipient: Recipient) {
         var displayName = recipient.toShortString()
-        if (threadRecipient.isGroupRecipient) {
+        if (threadRecipient.isGroupOrCommunityRecipient) {
             displayName = getGroupDisplayName(recipient, threadRecipient.isCommunityRecipient)
         }
         if (privacy.isDisplayContact) {
@@ -69,7 +69,7 @@ class MultipleRecipientNotificationBuilder(context: Context, privacy: Notificati
 
     fun addMessageBody(sender: Recipient, threadRecipient: Recipient, body: CharSequence?) {
         var displayName = sender.toShortString()
-        if (threadRecipient.isGroupRecipient) {
+        if (threadRecipient.isGroupOrCommunityRecipient) {
             displayName = getGroupDisplayName(sender, threadRecipient.isCommunityRecipient)
         }
         if (privacy.isDisplayMessage) {

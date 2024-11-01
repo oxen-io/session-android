@@ -1,43 +1,5 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "bugprone-reserved-identifier"
 #include "user_groups.h"
-
-
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "bugprone-reserved-identifier"
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_UserGroupsConfig_00024Companion_newInstance___3B(
-        JNIEnv *env, jobject thiz, jbyteArray ed25519_secret_key) {
-    std::lock_guard lock{util::util_mutex_};
-    auto secret_key = util::ustring_from_bytes(env, ed25519_secret_key);
-
-    auto* user_groups = new session::config::UserGroups(secret_key, std::nullopt);
-
-    jclass contactsClass = env->FindClass("network/loki/messenger/libsession_util/UserGroupsConfig");
-    jmethodID constructor = env->GetMethodID(contactsClass, "<init>", "(J)V");
-    jobject newConfig = env->NewObject(contactsClass, constructor, reinterpret_cast<jlong>(user_groups));
-
-    return newConfig;
-}
-
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_UserGroupsConfig_00024Companion_newInstance___3B_3B(
-        JNIEnv *env, jobject thiz, jbyteArray ed25519_secret_key, jbyteArray initial_dump) {
-    std::lock_guard lock{util::util_mutex_};
-    auto secret_key = util::ustring_from_bytes(env, ed25519_secret_key);
-    auto initial = util::ustring_from_bytes(env, initial_dump);
-
-    auto* user_groups = new session::config::UserGroups(secret_key, initial);
-
-    jclass contactsClass = env->FindClass("network/loki/messenger/libsession_util/UserGroupsConfig");
-    jmethodID constructor = env->GetMethodID(contactsClass, "<init>", "(J)V");
-    jobject newConfig = env->NewObject(contactsClass, constructor, reinterpret_cast<jlong>(user_groups));
-
-    return newConfig;
-}
-#pragma clang diagnostic pop
+#include "oxenc/hex.h"
 
 extern "C"
 JNIEXPORT jint JNICALL
@@ -125,12 +87,17 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki
     auto conf = ptrToUserGroups(env, thiz);
     auto community_info = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$CommunityGroupInfo");
     auto legacy_info = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
+    auto closed_group_info = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$ClosedGroupInfo");
+
     auto object_class = env->GetObjectClass(group_info);
     if (env->IsSameObject(community_info, object_class)) {
         auto deserialized = deserialize_community_info(env, group_info, conf);
         conf->set(deserialized);
     } else if (env->IsSameObject(legacy_info, object_class)) {
         auto deserialized = deserialize_legacy_group_info(env, group_info, conf);
+        conf->set(deserialized);
+    } else if (env->IsSameObject(closed_group_info, object_class)) {
+        auto deserialized = deserialize_closed_group_info(env, group_info);
         conf->set(deserialized);
     }
 }
@@ -144,18 +111,22 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_erase__Lnetwork_lo
     auto conf = ptrToUserGroups(env, thiz);
     auto communityInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$CommunityGroupInfo");
     auto legacyInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
-    auto group_object = env->GetObjectClass(group_info);
-    if (env->IsSameObject(group_object, communityInfo)) {
+    auto closedGroupInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$ClosedGroupInfo");
+    auto object_class = env->GetObjectClass(group_info);
+    if (env->IsSameObject(communityInfo, object_class)) {
         auto deserialized = deserialize_community_info(env, group_info, conf);
         conf->erase(deserialized);
-    } else if (env->IsSameObject(group_object, legacyInfo)) {
+    } else if (env->IsSameObject(legacyInfo, object_class)) {
         auto deserialized = deserialize_legacy_group_info(env, group_info, conf);
+        conf->erase(deserialized);
+    } else if (env->IsSameObject(closedGroupInfo, object_class)) {
+        auto deserialized = deserialize_closed_group_info(env, group_info);
         conf->erase(deserialized);
     }
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jlong JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_sizeCommunityInfo(JNIEnv *env,
                                                                                 jobject thiz) {
     std::lock_guard lock{util::util_mutex_};
@@ -164,7 +135,7 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_sizeCommunityInfo(
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jlong JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_sizeLegacyGroupInfo(JNIEnv *env,
                                                                                   jobject thiz) {
     std::lock_guard lock{util::util_mutex_};
@@ -173,7 +144,7 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_sizeLegacyGroupInf
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jlong JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_size(JNIEnv *env, jobject thiz) {
     std::lock_guard lock{util::util_mutex_};
     auto conf = ptrToConvoInfo(env, thiz);
@@ -193,6 +164,8 @@ inline jobject iterator_as_java_stack(JNIEnv *env, const session::config::UserGr
             serialized = serialize_legacy_group_info(env, *lgc);
         } else if (auto* community = std::get_if<session::config::community_info>(&item)) {
             serialized = serialize_community_info(env, *community);
+        } else if (auto* closed = std::get_if<session::config::group_info>(&item)) {
+            serialized = serialize_closed_group_info(env, *closed);
         }
         if (serialized != nullptr) {
             env->CallObjectMethod(our_stack, push, serialized);
@@ -271,4 +244,83 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_eraseLegacyGroup(J
     bool return_bool = conf->erase_legacy_group(account_id_bytes);
     env->ReleaseStringUTFChars(account_id, account_id_bytes);
     return return_bool;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getClosedGroup(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jstring session_id) {
+    std::lock_guard guard{util::util_mutex_};
+    auto config = ptrToUserGroups(env, thiz);
+    auto session_id_bytes = env->GetStringUTFChars(session_id, nullptr);
+
+    auto group = config->get_group(session_id_bytes);
+
+    env->ReleaseStringUTFChars(session_id, session_id_bytes);
+
+    if (group) {
+        return serialize_closed_group_info(env, *group);
+    }
+    return nullptr;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getOrConstructClosedGroup(JNIEnv *env,
+                                                                                        jobject thiz,
+                                                                                        jstring session_id) {
+    std::lock_guard guard{util::util_mutex_};
+    auto config = ptrToUserGroups(env, thiz);
+    auto session_id_bytes = env->GetStringUTFChars(session_id, nullptr);
+
+    auto group = config->get_or_construct_group(session_id_bytes);
+
+    env->ReleaseStringUTFChars(session_id, session_id_bytes);
+
+    return serialize_closed_group_info(env, group);
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_allClosedGroupInfo(JNIEnv *env,
+                                                                                 jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
+    auto conf = ptrToUserGroups(env, thiz);
+    auto closed_group_stack = iterator_as_java_stack(env, conf->begin_groups(), conf->end());
+
+    return closed_group_stack;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_createGroup(JNIEnv *env,
+                                                                          jobject thiz) {
+    std::lock_guard guard{util::util_mutex_};
+    auto config = ptrToUserGroups(env, thiz);
+
+    auto group = config->create_group();
+    return serialize_closed_group_info(env, group);
+}
+
+extern "C"
+JNIEXPORT jlong JNICALL
+  Java_network_loki_messenger_libsession_1util_UserGroupsConfig_sizeClosedGroup(JNIEnv *env,
+                                                                              jobject thiz) {
+    std::lock_guard guard{util::util_mutex_};
+    auto config = ptrToUserGroups(env, thiz);
+    return config->size_groups();
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_eraseClosedGroup(JNIEnv *env,
+                                                                               jobject thiz,
+                                                                               jstring session_id) {
+    std::lock_guard guard{util::util_mutex_};
+    auto config = ptrToUserGroups(env, thiz);
+    auto session_id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    bool return_value = config->erase_group(session_id_bytes);
+    env->ReleaseStringUTFChars(session_id, session_id_bytes);
+    return return_value;
 }

@@ -11,10 +11,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradlePluginVersion"
         classpath files('libs/gradle-witness.jar')
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
         classpath "com.squareup:javapoet:1.13.0"
         if (project.hasProperty('huawei')) classpath 'com.huawei.agconnect:agcp:1.9.1.300'
@@ -24,7 +21,12 @@ buildscript {
 // List plugins AND their versions here, but don't apply. This allows you to use the plugin
 // in your module without specifying the version.
 plugins {
-    id 'com.google.devtools.ksp' version "$kotlinVersion-1.0.20" apply false
+    id 'com.android.application' version '8.5.1' apply false
+    id 'com.android.library' version '8.5.1' apply false
+    id 'org.jetbrains.kotlin.android' version "$kotlinVersion" apply false
+    id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlinVersion" apply false
+    id 'org.jetbrains.kotlin.plugin.compose' version "$kotlinVersion" apply false
+    id 'com.google.devtools.ksp' version "$kspVersion" apply false
     id 'com.google.dagger.hilt.android' version "$daggerHiltVersion" apply false
 }
 

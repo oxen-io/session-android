@@ -28,8 +28,6 @@ class LoadingActivity: BaseActionBarActivity() {
     private val viewModel: LoadingViewModel by viewModels()
 
     private fun register(loadFailed: Boolean) {
-        prefs.setLastConfigurationSyncTime(System.currentTimeMillis())
-
         when {
             loadFailed -> startPickDisplayNameActivity(loadFailed = true)
             else -> startHomeActivity(isNewAccount = false, isFromOnboarding = true)

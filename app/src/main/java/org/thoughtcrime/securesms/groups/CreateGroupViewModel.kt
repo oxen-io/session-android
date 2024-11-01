@@ -1,46 +1,109 @@
 package org.thoughtcrime.securesms.groups
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.database.ThreadDatabase
+import org.session.libsession.database.StorageProtocol
+import org.session.libsession.messaging.groups.GroupManagerV2
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import javax.inject.Inject
+
 
 @HiltViewModel
 class CreateGroupViewModel @Inject constructor(
-    private val threadDb: ThreadDatabase,
-    private val textSecurePreferences: TextSecurePreferences
-) : ViewModel() {
+    configFactory: ConfigFactory,
+    @ApplicationContext appContext: Context,
+    private val storage: StorageProtocol,
+    private val groupManagerV2: GroupManagerV2,
+): ViewModel() {
+    // Child view model to handle contact selection logic
+    val selectContactsViewModel = SelectContactsViewModel(
+        storage = storage,
+        configFactory = configFactory,
+        excludingAccountIDs = emptySet(),
+        scope = viewModelScope,
+        appContext = appContext,
+    )
 
-    private val _recipients = MutableLiveData<List<Recipient>>()
-    val recipients: LiveData<List<Recipient>> = _recipients
+    // Input: group name
+    private val mutableGroupName = MutableStateFlow("")
+    private val mutableGroupNameError = MutableStateFlow("")
 
-    init {
+    // Output: group name
+    val groupName: StateFlow<String> get() = mutableGroupName
+    val groupNameError: StateFlow<String> get() = mutableGroupNameError
+
+    // Output: loading state
+    private val mutableIsLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> get() = mutableIsLoading
+
+    // Events
+    private val mutableEvents = MutableSharedFlow<CreateGroupEvent>()
+    val events: SharedFlow<CreateGroupEvent> get() = mutableEvents
+
+    fun onCreateClicked() {
         viewModelScope.launch {
-            threadDb.approvedConversationList.use { openCursor ->
-                val reader = threadDb.readerFor(openCursor)
-                val recipients = mutableListOf<Recipient>()
-                while (true) {
-                    recipients += reader.next?.recipient ?: break
-                }
-                withContext(Dispatchers.Main) {
-                    _recipients.value = recipients
-                        .filter { !it.isGroupRecipient && it.hasApprovedMe() && it.address.serialize() != textSecurePreferences.getLocalNumber() }
+            val groupName = groupName.value.trim()
+            if (groupName.isBlank()) {
+                mutableGroupNameError.value = "Group name cannot be empty"
+                return@launch
+            }
+
+            val selected = selectContactsViewModel.currentSelected
+            if (selected.isEmpty()) {
+                mutableEvents.emit(CreateGroupEvent.Error("Please select at least one contact"))
+                return@launch
+            }
+
+            mutableIsLoading.value = true
+
+            val createResult = withContext(Dispatchers.Default) {
+                runCatching {
+                    groupManagerV2.createGroup(
+                        groupName = groupName,
+                        groupDescription = "",
+                        members = selected
+                    )
                 }
             }
+
+            when (val recipient = createResult.getOrNull()) {
+                null -> {
+                    mutableEvents.emit(CreateGroupEvent.Error("Failed to create group"))
+
+                }
+                else -> {
+                    val threadId = withContext(Dispatchers.Default) { storage.getOrCreateThreadIdFor(recipient.address) }
+                    mutableEvents.emit(CreateGroupEvent.NavigateToConversation(threadId))
+                }
+            }
+
+            mutableIsLoading.value = false
         }
     }
 
-    fun filter(query: String): List<Recipient> {
-        return _recipients.value?.filter {
-            it.address.serialize().contains(query, ignoreCase = true) || it.name?.contains(query, ignoreCase = true) == true
-        } ?: emptyList()
+    fun onGroupNameChanged(name: String) {
+        mutableGroupName.value = if (name.length > MAX_GROUP_NAME_LENGTH) {
+            name.substring(0, MAX_GROUP_NAME_LENGTH)
+        } else {
+            name
+        }
+
+        mutableGroupNameError.value = ""
     }
+}
+
+sealed interface CreateGroupEvent {
+    data class NavigateToConversation(val threadID: Long): CreateGroupEvent
+
+    data class Error(val message: String): CreateGroupEvent
 }

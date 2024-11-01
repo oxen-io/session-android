@@ -4,7 +4,6 @@ import android.app.Application
 import com.goterl.lazysodium.utils.KeyPair
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
-import org.hamcrest.CoreMatchers.endsWith
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.CoreMatchers.nullValue
@@ -19,7 +18,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.BaseViewModelTest
-import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
@@ -36,8 +34,21 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private lateinit var messageRecord: MessageRecord
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, edKeyPair,  application, repository, storage,
-            mock(), mock(), mock(), mock(), mock())
+        ConversationViewModel(
+            threadId = threadId,
+            edKeyPair = edKeyPair,
+            repository = repository,
+            storage = storage,
+            messageDataProvider = mock(),
+            groupDb = mock(),
+            threadDb = mock(),
+            textSecurePreferences = mock(),
+            lokiMessageDb = mock(),
+            application = mock(),
+            reactionDb = mock(),
+            configFactory = mock(),
+            groupManagerV2 = mock()
+        )
     }
 
     @Before
@@ -86,7 +97,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
         viewModel.unblock()
 
-        verify(repository).setBlocked(recipient, false)
+        verify(repository).setBlocked(threadId, recipient, false)
     }
 
     @Test
@@ -138,20 +149,6 @@ class ConversationViewModelTest: BaseViewModelTest() {
     }
 
     @Test
-    fun `should accept message request`() = runBlockingTest {
-        viewModel.acceptMessageRequest()
-
-        verify(repository).acceptMessageRequest(threadId, recipient)
-    }
-
-    @Test
-    fun `should decline message request`() {
-        viewModel.declineMessageRequest()
-
-        verify(repository).declineMessageRequest(threadId)
-    }
-
-    @Test
     fun `should remove shown message`() = runBlockingTest {
         // Given that a message is generated
         whenever(repository.banUser(anyLong(), any())).thenReturn(Result.success(Unit))
@@ -168,8 +165,8 @@ class ConversationViewModelTest: BaseViewModelTest() {
     @Test
     fun `open group recipient should have no blinded recipient`() {
         whenever(recipient.isCommunityRecipient).thenReturn(true)
-        whenever(recipient.isOpenGroupOutboxRecipient).thenReturn(false)
-        whenever(recipient.isOpenGroupInboxRecipient).thenReturn(false)
+        whenever(recipient.isCommunityOutboxRecipient).thenReturn(false)
+        whenever(recipient.isCommunityInboxRecipient).thenReturn(false)
         assertThat(viewModel.blindedRecipient, nullValue())
     }
 
@@ -182,7 +179,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     @Test
     fun `contact recipient should hide input bar if not accepting requests`() {
-        whenever(recipient.isOpenGroupInboxRecipient).thenReturn(true)
+        whenever(recipient.isCommunityInboxRecipient).thenReturn(true)
         val blinded = mock<Recipient> {
             whenever(it.blocksCommunityMessageRequests).thenReturn(true)
         }

@@ -11,7 +11,7 @@ public enum ReplyMethod {
   SecureMessage;
 
   public static @NonNull ReplyMethod forRecipient(Context context, Recipient recipient) {
-    if (recipient.isGroupRecipient()) {
+    if (recipient.isGroupOrCommunityRecipient()) {
       return ReplyMethod.GroupMessage;
     }
     return ReplyMethod.SecureMessage;

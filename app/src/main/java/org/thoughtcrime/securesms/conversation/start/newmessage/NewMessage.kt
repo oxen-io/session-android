@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.conversation.start.newmessage
 import android.graphics.Rect
 import android.os.Build
 import android.view.ViewTreeObserver
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -49,11 +48,12 @@ import org.thoughtcrime.securesms.ui.LoadingArcOr
 import org.thoughtcrime.securesms.ui.components.AppBarCloseIcon
 import org.thoughtcrime.securesms.ui.components.BackAppBar
 import org.thoughtcrime.securesms.ui.components.BorderlessButtonWithIcon
-import org.thoughtcrime.securesms.ui.components.QRScannerScreen
 import org.thoughtcrime.securesms.ui.components.PrimaryOutlineButton
+import org.thoughtcrime.securesms.ui.components.QRScannerScreen
 import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
 import org.thoughtcrime.securesms.ui.components.SessionTabRow
 import org.thoughtcrime.securesms.ui.contentDescription
+import org.thoughtcrime.securesms.ui.qaTag
 import org.thoughtcrime.securesms.ui.theme.LocalColors
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
@@ -64,7 +64,7 @@ import kotlin.math.max
 
 private val TITLES = listOf(R.string.accountIdEnter, R.string.qrScan)
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun NewMessage(
     state: State,
@@ -142,8 +142,8 @@ private fun EnterAccountId(
                     SessionOutlinedTextField(
                         text = state.newMessageIdOrOns,
                         modifier = Modifier
-                            .padding(horizontal = LocalDimensions.current.spacing),
-                        contentDescription = "Session id input box",
+                            .padding(horizontal = LocalDimensions.current.spacing)
+                            .qaTag(stringResource(R.string.AccessibilityId_sessionIdInput)),
                         placeholder = stringResource(R.string.accountIdOrOnsEnter),
                         onChange = callbacks::onChange,
                         onContinue = callbacks::onContinue,

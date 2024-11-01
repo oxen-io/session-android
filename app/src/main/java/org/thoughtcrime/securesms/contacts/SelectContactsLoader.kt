@@ -9,7 +9,7 @@ class SelectContactsLoader(context: Context, private val usersToExclude: Set<Str
     override fun loadInBackground(): List<String> {
         val contacts = ContactUtilities.getAllContacts(context)
         return contacts.filter {
-            !it.isGroupRecipient && !usersToExclude.contains(it.address.toString()) && it.hasApprovedMe()
+            !it.isGroupOrCommunityRecipient && !usersToExclude.contains(it.address.toString()) && it.hasApprovedMe()
         }.map {
             it.address.toString()
         }

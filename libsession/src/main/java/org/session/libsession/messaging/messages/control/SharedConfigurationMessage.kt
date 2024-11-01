@@ -8,6 +8,7 @@ class SharedConfigurationMessage(val kind: SharedConfigMessage.Kind, val data: B
 
     override val ttl: Long = 30 * 24 * 60 * 60 * 1000L
     override val isSelfSendValid: Boolean = true
+    override fun shouldDiscardIfBlocked(): Boolean = true // should only be called with our own user which shouldn't be blocked...
 
     companion object {
         fun fromProto(proto: SignalServiceProtos.Content): SharedConfigurationMessage? =

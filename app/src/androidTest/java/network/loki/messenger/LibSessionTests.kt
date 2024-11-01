@@ -11,6 +11,10 @@ import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.ExpiryMode
+import network.loki.messenger.util.applySpiedStorage
+import network.loki.messenger.util.maybeGetUserInfo
+import network.loki.messenger.util.randomSeedBytes
+import network.loki.messenger.util.randomSessionId
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.MatcherAssert.assertThat
@@ -31,31 +35,14 @@ import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
-import kotlin.random.Random
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
 class LibSessionTests {
 
-    private fun randomSeedBytes() = (0 until 16).map { Random.nextInt(UByte.MAX_VALUE.toInt()).toByte() }
-    private fun randomKeyPair() = KeyPairUtilities.generate(randomSeedBytes().toByteArray())
-    private fun randomAccountId() = randomKeyPair().x25519KeyPair.hexEncodedPublicKey
-
     private var fakeHashI = 0
     private val nextFakeHash: String
         get() = "fakehash${fakeHashI++}"
-
-    private fun maybeGetUserInfo(): Pair<ByteArray, String>? {
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
-        val prefs = appContext.prefs
-        val localUserPublicKey = prefs.getLocalNumber()
-        val secretKey = with(appContext) {
-            val edKey = KeyPairUtilities.getUserED25519KeyPair(this) ?: return null
-            edKey.secretKey.asBytes
-        }
-        return if (localUserPublicKey == null || secretKey == null) null
-        else secretKey to localUserPublicKey
-    }
 
     private fun buildContactMessage(contactList: List<Contact>): ByteArray {
         val (key,_) = maybeGetUserInfo()!!
@@ -98,11 +85,10 @@ class LibSessionTests {
 
     @Test
     fun migration_one_to_ones() {
-        val app = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
-        val storageSpy = spy(app.storage)
-        app.storage = storageSpy
+        val applicationContext = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as ApplicationContext
+        val storage = applicationContext.applySpiedStorage()
 
-        val newContactId = randomAccountId()
+        val newContactId = randomSessionId()
         val singleContact = Contact(
             id = newContactId,
             approved = true,
@@ -111,10 +97,10 @@ class LibSessionTests {
         val newContactMerge = buildContactMessage(listOf(singleContact))
         val contacts = MessagingModuleConfiguration.shared.configFactory.contacts!!
         fakePollNewConfig(contacts, newContactMerge)
-        verify(storageSpy).addLibSessionContacts(argThat {
+        verify(storage).addLibSessionContacts(argThat {
             first().let { it.id == newContactId && it.approved } && size == 1
         }, any())
-        verify(storageSpy).setRecipientApproved(argThat { address.serialize() == newContactId }, eq(true))
+        verify(storage).setRecipientApproved(argThat { address.serialize() == newContactId }, eq(true))
     }
 
     @Test
@@ -123,7 +109,7 @@ class LibSessionTests {
         val storageSpy = spy(app.storage)
         app.storage = storageSpy
 
-        val randomRecipient = randomAccountId()
+        val randomRecipient = randomSessionId()
         val newContact = Contact(
             id = randomRecipient,
             approved = true,
@@ -158,7 +144,7 @@ class LibSessionTests {
         app.storage = storageSpy
 
         // Initial state
-        val randomRecipient = randomAccountId()
+        val randomRecipient = randomSessionId()
         val currentContact = Contact(
             id = randomRecipient,
             approved = true,

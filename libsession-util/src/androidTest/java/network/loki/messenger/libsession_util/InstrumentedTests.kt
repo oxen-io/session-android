@@ -2,14 +2,32 @@ package network.loki.messenger.libsession_util
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import network.loki.messenger.libsession_util.util.*
+import network.loki.messenger.libsession_util.util.BaseCommunityInfo
+import network.loki.messenger.libsession_util.util.Contact
+import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.ExpiryMode
+import network.loki.messenger.libsession_util.util.GroupMember
+import network.loki.messenger.libsession_util.util.KeyPair
+import network.loki.messenger.libsession_util.util.Sodium
+import network.loki.messenger.libsession_util.util.UserPic
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert.*
+import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.AccountId
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -21,10 +39,17 @@ class InstrumentedTests {
 
     val seed =
         Hex.fromStringCondensed("0123456789abcdef0123456789abcdef00000000000000000000000000000000")
+    val groupSeed =
+        Hex.fromStringCondensed("0123456789abcdef0123456789abcdef11111111111111111111111111111111")
 
     private val keyPair: KeyPair
         get() {
             return Sodium.ed25519KeyPair(seed)
+        }
+
+    private val groupKeyPair: KeyPair
+        get() {
+            return Sodium.ed25519KeyPair(groupSeed)
         }
 
     @Test
@@ -62,6 +87,37 @@ class InstrumentedTests {
         contacts.set(contact.copy(name = "test2"))
         contacts.set(contact.copy(name = "test"))
         assertTrue(contacts.dirty())
+    }
+
+    @Test
+    fun test_multi_encrypt() {
+        val user = keyPair
+        val xUserKey = Sodium.ed25519PkToCurve25519(user.pubKey)
+        val groupKey = groupKeyPair
+        val xGroupKey = Sodium.ed25519PkToCurve25519(groupKey.pubKey)
+
+        val test = "test"
+
+        val encoded = Sodium.encryptForMultipleSimple(arrayOf(test.encodeToByteArray()), arrayOf(xUserKey), groupKey.secretKey, "test")!!
+        val decoded = Sodium.decryptForMultipleSimple(encoded, user.secretKey, xGroupKey, "test")
+        assertEquals(test, decoded?.decodeToString())
+    }
+
+    @Test
+    fun test_multi_encrypt_from_user_groups() {
+        val user = keyPair
+        val xUserKey = Sodium.ed25519PkToCurve25519(user.pubKey)
+        val groups = UserGroupsConfig.newInstance(user.secretKey)
+        val group = groups.createGroup()
+        val groupSk = group.adminKey!!
+        val groupPub = group.groupAccountId.pubKeyBytes
+        val groupXPub = Sodium.ed25519PkToCurve25519(groupPub)
+
+        val test = "test"
+
+        val encoded = Sodium.encryptForMultipleSimple(arrayOf(test.encodeToByteArray()), arrayOf(xUserKey), groupSk, "test")!!
+        val decoded = Sodium.decryptForMultipleSimple(encoded, user.secretKey, groupXPub, "test")
+        assertEquals(test, decoded?.decodeToString())
     }
 
     @Test
@@ -261,7 +317,8 @@ class InstrumentedTests {
         val newConf = UserProfile.newInstance(edSk)
 
         val accepted = newConf.merge("fakehash1" to newToPush)
-        assertEquals(1, accepted)
+        assertThat(accepted, hasItem("fakehash1"))
+        assertThat(accepted.size, equalTo(1))
 
         assertTrue(newConf.needsDump())
         assertFalse(newConf.needsPush())
@@ -551,6 +608,7 @@ class InstrumentedTests {
                     is Conversation.OneToOne -> seen.add("1-to-1: ${convo.accountId}")
                     is Conversation.Community -> seen.add("og: ${convo.baseCommunityInfo.baseUrl}/r/${convo.baseCommunityInfo.room}")
                     is Conversation.LegacyGroup -> seen.add("cl: ${convo.groupId}")
+                    is Conversation.ClosedGroup -> TODO()
                     null -> { /* ignore null cases */ }
                 }
             }
@@ -580,6 +638,181 @@ class InstrumentedTests {
         assertEquals("05cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
             convos.allLegacyClosedGroups().map(Conversation.LegacyGroup::groupId).first()
         )
+    }
+
+    @Test
+    fun testGroupInfo() {
+        val (groupPublic, groupSecret) = groupKeyPair
+        val (userPublic, userSecret) = keyPair
+        val userCurve = Sodium.ed25519PkToCurve25519(userPublic)
+        val infoConf = GroupInfoConfig.newInstance(groupPublic, groupSecret)
+        infoConf.setName("New Group")
+        assertEquals("New Group", infoConf.getName())
+        infoConf.setCreated(System.currentTimeMillis())
+        assertThat(infoConf.getCreated(), notNullValue())
+        val memberConf = GroupMembersConfig.newInstance(groupPublic, groupSecret)
+        memberConf.set(
+            GroupMember(
+                sessionId = "05"+Hex.toStringCondensed(userCurve),
+                name = "User",
+                admin = true
+            )
+        )
+        val keys = GroupKeysConfig.newInstance(
+            userSecretKey = userSecret,
+            groupPublicKey = groupPublic,
+            groupSecretKey = groupSecret,
+            info = infoConf,
+            members = memberConf
+        )
+        assertThat(keys.pendingKey(), notNullValue())
+
+    }
+
+    @Test
+    fun testGroupInfoOtherWay() {
+        val (userPublic, userSecret) = keyPair
+        val userCurve = Sodium.ed25519PkToCurve25519(userPublic)
+        val groupConfig = UserGroupsConfig.newInstance(userSecret)
+        val group = groupConfig.createGroup()
+        val groupSecret = checkNotNull(group.adminKey) {
+            "adminKey must exist for created group"
+        }
+        val groupPublic = Hex.fromStringCondensed(group.groupAccountId.publicKey)
+        groupConfig.set(group)
+        val setGroup = groupConfig.getClosedGroup(group.groupAccountId.hexString)
+        assertThat(setGroup, notNullValue())
+        assertTrue(setGroup?.adminKey?.isNotEmpty() == true)
+        val infoConf = GroupInfoConfig.newInstance(groupPublic, group.adminKey)
+        infoConf.setName("New Group")
+        assertEquals("New Group", infoConf.getName())
+        infoConf.setCreated(System.currentTimeMillis())
+        assertThat(infoConf.getCreated(), notNullValue())
+        val memberConf = GroupMembersConfig.newInstance(groupPublic, groupSecret)
+        memberConf.set(
+            GroupMember(
+                sessionId = "05"+Hex.toStringCondensed(userCurve),
+                name = "User",
+                admin = true
+            )
+        )
+        val keys = GroupKeysConfig.newInstance(
+            userSecretKey = userSecret,
+            groupPublicKey = groupPublic,
+            groupSecretKey = groupSecret,
+            info = infoConf,
+            members = memberConf
+        )
+        assertThat(keys.pendingKey(), notNullValue())
+    }
+
+    @Test
+    fun testGroupMembership() {
+        val (userPublic, userSecret) = keyPair
+        val userSessionId = AccountId(IdPrefix.STANDARD, Sodium.ed25519PkToCurve25519(userPublic))
+        val groupConfig = UserGroupsConfig.newInstance(userSecret)
+        val group = groupConfig.createGroup()
+        groupConfig.set(group)
+        val groupMembersConfig = GroupMembersConfig.newInstance(
+            group.groupAccountId.pubKeyBytes,
+            checkNotNull(group.adminKey) {
+                "signing key must exist for the group"
+            }
+        )
+        val toAdd = GroupMember(userSessionId.hexString, "user", admin = true)
+        groupMembersConfig.set(
+            toAdd
+        )
+        assertThat(groupMembersConfig.all().size, equalTo(1))
+        assertThat(groupMembersConfig.all(), hasItem(toAdd))
+    }
+
+    @Test
+    fun testNewGroupExists() {
+        val (_, userSecret) = keyPair
+        val groupConfig = UserGroupsConfig.newInstance(userSecret)
+        val group = groupConfig.createGroup()
+        groupConfig.set(group)
+        val allClosedGroups = groupConfig.all()
+        assertThat(allClosedGroups.size, equalTo(1))
+        assertTrue(groupConfig.needsPush())
+    }
+
+    @Test
+    fun testNewGroupInfo() {
+        val (_, userSecret) = keyPair
+        val groupConfig = UserGroupsConfig.newInstance(userSecret)
+        val group = groupConfig.createGroup()
+        groupConfig.set(group)
+        val groupInfo = GroupInfoConfig.newInstance(group.groupAccountId.pubKeyBytes, group.adminKey)
+        groupInfo.setName("Test Group")
+        groupInfo.setDescription("This is a test group")
+        assertThat(groupInfo.getName(), equalTo("Test Group"))
+        assertThat(groupInfo.getDescription(), equalTo("This is a test group"))
+    }
+
+    @Test
+    fun testGroupKeyConfig() {
+        val (userPubKey, userSecret) = keyPair
+        val groupConfig = UserGroupsConfig.newInstance(userSecret)
+        val group = groupConfig.createGroup()
+        groupConfig.set(group)
+        val groupInfo = GroupInfoConfig.newInstance(group.groupAccountId.pubKeyBytes, group.adminKey)
+        groupInfo.setName("test")
+        val groupMembers = GroupMembersConfig.newInstance(group.groupAccountId.pubKeyBytes, group.adminKey)
+        groupMembers.set(
+            GroupMember(
+                sessionId = AccountId(IdPrefix.STANDARD, Sodium.ed25519PkToCurve25519(userPubKey)).hexString,
+                name = "admin",
+                admin = true
+            )
+        )
+        val membersDump = groupMembers.dump()
+        val infoDump = groupInfo.dump()
+
+        val ourKeyConfig = GroupKeysConfig.newInstance(
+            userSecretKey = userSecret,
+            groupPublicKey = group.groupAccountId.pubKeyBytes,
+            groupSecretKey = group.adminKey,
+            info = groupInfo,
+            members = groupMembers
+        )
+
+        assertThat(ourKeyConfig.needsRekey(), equalTo(false))
+        val pushed = ourKeyConfig.pendingConfig()!!
+        val messageTimestamp = System.currentTimeMillis()
+        ourKeyConfig.loadKey(pushed, "testabc", messageTimestamp, groupInfo, groupMembers)
+        assertThat(ourKeyConfig.needsDump(), equalTo(true))
+        ourKeyConfig.dump()
+        assertThat(ourKeyConfig.needsRekey(), equalTo(false))
+        val mergeInfo = GroupInfoConfig.newInstance(group.groupAccountId.pubKeyBytes, group.adminKey, infoDump)
+        val mergeMembers = GroupMembersConfig.newInstance(group.groupAccountId.pubKeyBytes, group.adminKey, membersDump)
+        val mergeConfig = GroupKeysConfig.newInstance(userSecret, group.groupAccountId.pubKeyBytes, group.adminKey, info = mergeInfo, members = mergeMembers)
+        mergeConfig.loadKey(pushed, "testabc", messageTimestamp, mergeInfo, mergeMembers)
+        assertThat(mergeConfig.needsRekey(), equalTo(false))
+        assertThat(mergeConfig.keys().size, equalTo(1))
+        assertThat(ourKeyConfig.keys().size, equalTo(1))
+        assertThat(mergeConfig.keys().first(), equalTo(ourKeyConfig.keys().first()))
+        assertThat(ourKeyConfig.groupKeys().size, equalTo(1))
+        assertThat(mergeConfig.groupKeys().size, equalTo(1))
+        assertThat(ourKeyConfig.groupKeys().first(), equalTo(mergeConfig.groupKeys().first()))
+    }
+
+    @Test
+    fun testConvoVolatileSetAndGet() {
+        val (userPubKey, userSecret) = keyPair
+        val groupConfig = UserGroupsConfig.newInstance(userSecret)
+        val group = groupConfig.createGroup()
+        groupConfig.set(group)
+        val volatiles = ConversationVolatileConfig.newInstance(userSecret)
+        val conversation = Conversation.ClosedGroup(
+            group.groupAccountId.hexString,
+            System.currentTimeMillis(),
+            false
+        )
+        volatiles.set(conversation)
+        assertThat(volatiles.all().size, equalTo(1))
+        assertThat(volatiles.allClosedGroups().size, equalTo(1))
     }
 
 }

@@ -2,17 +2,18 @@ package org.session.libsession.database
 
 import android.content.Context
 import android.net.Uri
-import network.loki.messenger.libsession_util.ConfigBase
+import com.goterl.lazysodium.utils.KeyPair
+import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.MessageSendJob
-import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
+import org.session.libsession.messaging.messages.control.GroupUpdated
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.visible.Attachment
 import org.session.libsession.messaging.messages.visible.Profile
@@ -26,26 +27,30 @@ import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAt
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupRecord
+import org.session.libsession.utilities.recipients.MessageType
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.Recipient.RecipientSettings
-import org.session.libsession.utilities.recipients.MessageType
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
+import org.session.libsignal.utilities.AccountId
 import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
+import network.loki.messenger.libsession_util.util.GroupMember as LibSessionGroupMember
 
 interface StorageProtocol {
 
     // General
     fun getUserPublicKey(): String?
+    fun getUserED25519KeyPair(): KeyPair?
     fun getUserX25519KeyPair(): ECKeyPair
     fun getUserProfile(): Profile
     fun setProfilePicture(recipient: Recipient, newProfilePicture: String?, newProfileKey: ByteArray?)
     fun setBlocksCommunityMessageRequests(recipient: Recipient, blocksMessageRequests: Boolean)
     fun setUserProfilePicture(newProfilePicture: String?, newProfileKey: ByteArray?)
-    fun clearUserPic()
+    fun clearUserPic(clearConfig: Boolean = true)
     // Signal
     fun getOrGenerateRegistrationID(): Int
 
@@ -58,7 +63,6 @@ interface StorageProtocol {
     fun getMessageSendJob(messageSendJobID: String): MessageSendJob?
     fun getMessageReceiveJob(messageReceiveJobID: String): Job?
     fun getGroupAvatarDownloadJob(server: String, room: String, imageId: String?): Job?
-    fun getConfigSyncJob(destination: Destination): Job?
     fun resumeMessageSendJobIfNeeded(messageSendJobID: String)
     fun isJobCanceled(job: Job): Boolean
     fun cancelPendingMessageSendJobs(threadID: Long)
@@ -129,7 +133,7 @@ interface StorageProtocol {
     fun clearErrorMessage(messageID: Long)
     fun setMessageServerHash(messageID: Long, mms: Boolean, serverHash: String)
 
-    // Closed Groups
+    // Legacy Closed Groups
     fun getGroup(groupID: String): GroupRecord?
     fun createGroup(groupID: String, title: String?, members: List<Address>, avatar: SignalServiceAttachmentPointer?, relay: String?, admins: List<Address>, formationTimestamp: Long)
     fun createInitialConfigGroup(groupPublicKey: String, name: String, members: Map<String, Boolean>, formationTimestamp: Long, encryptionKeyPair: ECKeyPair, expirationTimer: Int)
@@ -146,15 +150,27 @@ interface StorageProtocol {
     fun removeClosedGroupPublicKey(groupPublicKey: String)
     fun addClosedGroupEncryptionKeyPair(encryptionKeyPair: ECKeyPair, groupPublicKey: String, timestamp: Long)
     fun removeAllClosedGroupEncryptionKeyPairs(groupPublicKey: String)
+    fun removeClosedGroupThread(threadID: Long)
     fun insertIncomingInfoMessage(context: Context, senderPublicKey: String, groupID: String, type: SignalServiceGroup.Type,
-        name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long)
+        name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long): Long?
+
+    fun updateInfoMessage(context: Context, messageId: Long, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>)
+
     fun insertOutgoingInfoMessage(context: Context, groupID: String, type: SignalServiceGroup.Type, name: String,
-        members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long)
-    fun isClosedGroup(publicKey: String): Boolean
+        members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long): Long?
+    fun isLegacyClosedGroup(publicKey: String): Boolean
     fun getClosedGroupEncryptionKeyPairs(groupPublicKey: String): MutableList<ECKeyPair>
     fun getLatestClosedGroupEncryptionKeyPair(groupPublicKey: String): ECKeyPair?
     fun updateFormationTimestamp(groupID: String, formationTimestamp: Long)
     fun updateTimestampUpdated(groupID: String, updatedTimestamp: Long)
+
+    // Closed Groups
+    fun getMembers(groupPublicKey: String): List<LibSessionGroupMember>
+    fun getClosedGroupDisplayInfo(groupAccountId: String): GroupDisplayInfo?
+    fun insertGroupInfoChange(message: GroupUpdated, closedGroup: AccountId): Long?
+    fun insertGroupInfoLeaving(closedGroup: AccountId): Long?
+    fun insertGroupInviteControlMessage(sentTimestamp: Long, senderPublicKey: String, closedGroup: AccountId, groupName: String): Long?
+    fun updateGroupInfoChange(messageId: Long, newType: UpdateMessageData.Kind)
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>
@@ -180,6 +196,8 @@ interface StorageProtocol {
     fun setThreadDate(threadId: Long, newDate: Long)
     fun getLastLegacyRecipient(threadRecipient: String): String?
     fun setLastLegacyRecipient(threadRecipient: String, senderRecipient: String?)
+    fun clearMessages(threadID: Long, fromUser: Address? = null): Boolean
+    fun clearMedia(threadID: Long, fromUser: Address? = null): Boolean
 
     // Contacts
     fun getContactWithAccountID(accountID: String): Contact?
@@ -188,7 +206,10 @@ interface StorageProtocol {
     fun getRecipientForThread(threadId: Long): Recipient?
     fun getRecipientSettings(address: Address): RecipientSettings?
     fun addLibSessionContacts(contacts: List<LibSessionContact>, timestamp: Long)
+    fun hasAutoDownloadFlagBeenSet(recipient: Recipient): Boolean
     fun addContacts(contacts: List<ConfigurationMessage.Contact>)
+    fun shouldAutoDownloadAttachments(recipient: Recipient): Boolean
+    fun setAutoDownloadAttachments(recipient: Recipient, shouldAutoDownloadAttachments: Boolean)
 
     // Attachments
     fun getAttachmentDataUri(attachmentId: AttachmentId): Uri
@@ -201,6 +222,7 @@ interface StorageProtocol {
     fun persist(message: VisibleMessage, quotes: QuoteModel?, linkPreview: List<LinkPreview?>, groupPublicKey: String?, openGroupID: String?, attachments: List<Attachment>, runThreadUpdate: Boolean): Long?
     fun markConversationAsRead(threadId: Long, lastSeenTime: Long, force: Boolean = false)
     fun getLastSeen(threadId: Long): Long
+    fun ensureMessageHashesAreSender(hashes: Set<String>, sender: String, closedGroupId: String): Boolean
     fun updateThread(threadId: Long, unarchive: Boolean)
     fun insertDataExtractionNotificationMessage(senderPublicKey: String, message: DataExtractionNotificationInfoMessage, sentTimestamp: Long)
     fun insertMessageRequestResponseFromContact(response: MessageRequestResponse)
@@ -210,6 +232,8 @@ interface StorageProtocol {
     fun setRecipientApprovedMe(recipient: Recipient, approvedMe: Boolean)
     fun insertCallMessage(senderPublicKey: String, callMessageType: CallMessageType, sentTimestamp: Long)
     fun conversationHasOutgoing(userPublicKey: String): Boolean
+    fun deleteMessagesByHash(threadId: Long, hashes: List<String>)
+    fun deleteMessagesByUser(threadId: Long, userSessionId: String)
 
     // Last Inbox Message Id
     fun getLastInboxMessageId(server: String): Long?
@@ -240,7 +264,6 @@ interface StorageProtocol {
     )
 
     // Shared configs
-    fun notifyConfigUpdates(forConfigObject: ConfigBase, messageTimestamp: Long)
     fun conversationInConfig(publicKey: String?, groupPublicKey: String?, openGroupId: String?, visibleOnly: Boolean): Boolean
     fun canPerformConfigChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean
     fun isCheckingCommunityRequests(): Boolean

@@ -13,13 +13,15 @@ import org.session.libsignal.utilities.Log
 data class ExpirationTimerUpdate(var syncTarget: String? = null, val isGroup: Boolean = false) : ControlMessage() {
     override val isSelfSendValid: Boolean = true
 
+    override fun shouldDiscardIfBlocked(): Boolean = true
+
     companion object {
         const val TAG = "ExpirationTimerUpdate"
         private val storage = MessagingModuleConfiguration.shared.storage
 
-        fun fromProto(proto: SignalServiceProtos.Content): ExpirationTimerUpdate? =
+        fun fromProto(proto: SignalServiceProtos.Content, isGroup: Boolean): ExpirationTimerUpdate? =
             proto.dataMessage?.takeIf { it.flags and EXPIRATION_TIMER_UPDATE_VALUE != 0 }?.run {
-                ExpirationTimerUpdate(takeIf { hasSyncTarget() }?.syncTarget, hasGroup()).copyExpiration(proto)
+                ExpirationTimerUpdate(takeIf { hasSyncTarget() }?.syncTarget, isGroup).copyExpiration(proto)
             }
     }
 
@@ -30,15 +32,6 @@ data class ExpirationTimerUpdate(var syncTarget: String? = null, val isGroup: Bo
         }
         // Sync target
         syncTarget?.let { dataMessageProto.syncTarget = it }
-        // Group context
-        if (storage.isClosedGroup(recipient!!)) {
-            try {
-                dataMessageProto.setGroupContext()
-            } catch(e: Exception) {
-                Log.w(TAG, "Couldn't construct visible message proto from: $this", e)
-                return null
-            }
-        }
         return try {
             SignalServiceProtos.Content.newBuilder()
                 .setDataMessage(dataMessageProto)

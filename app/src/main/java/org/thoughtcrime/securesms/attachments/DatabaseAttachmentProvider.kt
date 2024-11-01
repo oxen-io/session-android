@@ -7,7 +7,6 @@ import org.greenrobot.eventbus.EventBus
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.MarkAsDeletedMessage
-import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentState
@@ -247,6 +246,51 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         messages.forEach { message ->
             messagingDatabase.markAsDeleted(message.messageId, message.isOutgoing, displayedMessage)
         }
+    }
+
+    override fun markMessagesAsDeleted(
+        threadId: Long,
+        serverHashes: List<String>,
+        displayedMessage: String
+    ) {
+        val sendersForHashes = DatabaseComponent.get(context).lokiMessageDatabase()
+            .getSendersForHashes(threadId, serverHashes.toSet())
+
+        val smsMessages = sendersForHashes.asSequence()
+            .filter { it.isSms }
+            .map { msg -> MarkAsDeletedMessage(messageId = msg.messageId, isOutgoing = msg.isOutgoing) }
+            .toList()
+
+        val mmsMessages = sendersForHashes.asSequence()
+            .filter { !it.isSms }
+            .map { msg -> MarkAsDeletedMessage(messageId = msg.messageId, isOutgoing = msg.isOutgoing) }
+            .toList()
+
+        markMessagesAsDeleted(smsMessages, isSms = true, displayedMessage)
+        markMessagesAsDeleted(mmsMessages, isSms = false, displayedMessage)
+    }
+
+    override fun markUserMessagesAsDeleted(
+        threadId: Long,
+        until: Long,
+        sender: String,
+        displayedMessage: String
+    ) {
+        val mmsMessages = mutableListOf<MarkAsDeletedMessage>()
+        val smsMessages = mutableListOf<MarkAsDeletedMessage>()
+
+        DatabaseComponent.get(context).mmsSmsDatabase().getUserMessages(threadId, sender)
+            .filter { it.timestamp <= until }
+            .forEach { record ->
+                if (record.isMms) {
+                    mmsMessages.add(MarkAsDeletedMessage(record.id, record.isOutgoing))
+                } else {
+                    smsMessages.add(MarkAsDeletedMessage(record.id, record.isOutgoing))
+                }
+            }
+
+        markMessagesAsDeleted(smsMessages, isSms = true, displayedMessage)
+        markMessagesAsDeleted(mmsMessages, isSms = false, displayedMessage)
     }
 
     override fun getServerHashForMessage(messageID: Long, mms: Boolean): String? =

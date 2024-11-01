@@ -55,9 +55,8 @@ public class DatabaseAttachment extends Attachment {
 
   @Override
   public boolean equals(Object other) {
-    return other != null &&
-           other instanceof DatabaseAttachment &&
-           ((DatabaseAttachment) other).attachmentId.equals(this.attachmentId);
+    return other instanceof DatabaseAttachment &&
+            ((DatabaseAttachment) other).attachmentId.equals(this.attachmentId);
   }
 
   @Override

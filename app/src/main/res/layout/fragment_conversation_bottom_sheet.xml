@@ -13,66 +13,71 @@
         android:id="@+id/detailsTextView"
         style="@style/BottomSheetActionItem"
         android:contentDescription="@string/AccessibilityId_contactUserDetails"
-        android:drawableStart="@drawable/ic_info_outline_white_24dp"
-        android:drawableTint="?attr/colorControlNormal"
-        android:text="@string/contactUserDetails" />
+        android:text="@string/contactUserDetails"
+        app:drawableStartCompat="@drawable/ic_info_outline_white_24dp"
+        app:drawableTint="?attr/colorControlNormal" />
 
     <TextView
         android:id="@+id/copyConversationId"
         style="@style/BottomSheetActionItem"
-        android:drawableStart="@drawable/ic_copy"
-        android:drawableTint="?attr/colorControlNormal"
         android:visibility="visible"
-        android:text="@string/accountIDCopy" />
+        android:text="@string/accountIDCopy"
+        app:drawableStartCompat="@drawable/ic_copy"
+        app:drawableTint="?attr/colorControlNormal" />
 
     <TextView
         android:id="@+id/copyCommunityUrl"
         style="@style/BottomSheetActionItem"
-        android:drawableStart="@drawable/ic_copy"
-        android:drawableTint="?attr/colorControlNormal"
         android:visibility="gone"
-        android:text="@string/communityUrlCopy" />
+        android:text="@string/communityUrlCopy"
+        app:drawableStartCompat="@drawable/ic_copy"
+        app:drawableTint="?attr/colorControlNormal" />
 
     <TextView
         android:id="@+id/pinTextView"
         style="@style/BottomSheetActionItem"
         android:contentDescription="@string/AccessibilityId_pin"
-        android:drawableStart="?attr/menu_pin_icon"
         android:text="@string/pin"
         android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_outline_pin_24"
+        app:drawableTint="?attr/colorControlNormal"
         tools:visibility="visible" />
 
     <TextView
         android:id="@+id/unpinTextView"
         style="@style/BottomSheetActionItem"
-        android:drawableStart="?attr/menu_unpin_icon"
         android:text="@string/pinUnpin"
         android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_outline_pin_off_24"
+        app:drawableTint="?attr/colorControlNormal"
         tools:visibility="visible" />
 
     <TextView
         android:id="@+id/blockTextView"
         style="@style/BottomSheetActionItem"
         android:contentDescription="@string/AccessibilityId_block"
-        android:drawableStart="?attr/menu_block_icon"
         android:text="@string/block"
         android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_baseline_block_24"
+        app:drawableTint="?attr/colorControlNormal"
         tools:visibility="visible" />
 
     <TextView
         android:id="@+id/unblockTextView"
         style="@style/BottomSheetActionItem"
-        android:drawableStart="?attr/menu_accept_icon"
         android:text="@string/blockUnblock"
         android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_baseline_done_24"
+        app:drawableTint="?attr/colorControlNormal"
         tools:visibility="visible" />
 
     <TextView
         android:id="@+id/muteNotificationsTextView"
         style="@style/BottomSheetActionItem"
         android:contentDescription="@string/AccessibilityId_notificationsMute"
-        android:drawableStart="@drawable/ic_outline_notifications_off_24"
         android:text="@string/notificationsMute"
+        app:drawableStartCompat="@drawable/ic_outline_notifications_off_24"
+        app:drawableTint="?attr/colorControlNormal"
         tools:visibility="visible"
         android:visibility="gone"
         />
@@ -80,8 +85,9 @@
     <TextView
         android:id="@+id/unMuteNotificationsTextView"
         style="@style/BottomSheetActionItem"
-        android:drawableStart="@drawable/ic_outline_notifications_active_24"
         android:text="@string/notificationsMuteUnmute"
+        app:drawableStartCompat="@drawable/ic_outline_notifications_active_24"
+        app:drawableTint="?attr/colorControlNormal"
         tools:visibility="visible"
         android:visibility="gone"
         />
@@ -89,8 +95,9 @@
     <TextView
         android:id="@+id/notificationsTextView"
         style="@style/BottomSheetActionItem"
-        android:drawableStart="@drawable/ic_outline_notification_important_24"
         android:text="@string/sessionNotifications"
+        app:drawableTint="?attr/colorControlNormal"
+        app:drawableStartCompat="@drawable/ic_outline_notification_important_24"
         tools:visibility="visible"
         android:visibility="gone"
         />
@@ -98,16 +105,18 @@
     <TextView
         android:id="@+id/markAllAsReadTextView"
         style="@style/BottomSheetActionItem"
-        android:drawableStart="?attr/menu_mark_all_as_read"
         android:text="@string/messageMarkRead"
         android:visibility="gone"
-        />
+        tools:visibility="visible"
+        app:drawableTint="?attr/colorControlNormal"
+        app:drawableStartCompat="@drawable/ic_outline_mark_chat_read_24" />
 
     <TextView
         android:id="@+id/deleteTextView"
         style="@style/BottomSheetActionItem"
         android:contentDescription="@string/AccessibilityId_delete"
-        android:drawableStart="?attr/menu_trash_icon"
-        android:text="@string/delete" />
+        android:text="@string/delete"
+        app:drawableTint="?attr/colorControlNormal"
+        tools:drawableStartCompat="@drawable/ic_baseline_delete_24" />
 
 </LinearLayout>

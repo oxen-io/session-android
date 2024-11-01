@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,12 +13,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import network.loki.messenger.R
 import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.snode.utilities.await
 import org.session.libsignal.utilities.PublicKeyValidation
-import org.session.libsignal.utilities.timeout
 import org.thoughtcrime.securesms.ui.GetString
 
 @HiltViewModel
@@ -68,12 +67,14 @@ internal class NewMessageViewModel @Inject constructor(
         // This could be an ONS name
         _state.update { it.copy(isTextErrorColor = false, error = null, loading = true) }
 
-        loadOnsJob = viewModelScope.launch(Dispatchers.IO) {
+        loadOnsJob = viewModelScope.launch {
             try {
-                val publicKey = SnodeAPI.getAccountID(ons).timeout(30_000).get()
-                if (isActive) onPublicKey(publicKey)
+                val publicKey = withTimeout(30_000L, {
+                    SnodeAPI.getAccountID(ons).await()
+                })
+                onPublicKey(publicKey)
             } catch (e: Exception) {
-                if (isActive) onError(e)
+                onError(e)
             }
         }
     }

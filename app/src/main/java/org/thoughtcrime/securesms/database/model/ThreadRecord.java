@@ -32,6 +32,9 @@ import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import org.session.libsession.messaging.utilities.UpdateMessageBuilder;
+import org.session.libsession.messaging.utilities.UpdateMessageData;
 import com.squareup.phrase.Phrase;
 import org.session.libsession.utilities.ExpirationUtil;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -52,39 +55,41 @@ import network.loki.messenger.R;
  */
 public class ThreadRecord extends DisplayRecord {
 
-    private @Nullable final Uri     snippetUri;
-    public @Nullable  final MessageRecord lastMessage;
-    private           final long    count;
-    private           final int     unreadCount;
-    private           final int     unreadMentionCount;
-    private           final int     distributionType;
-    private           final boolean archived;
-    private           final long    expiresIn;
-    private           final long    lastSeen;
-    private           final boolean pinned;
-    private           final int     initialRecipientHash;
-    private           final long    dateSent;
+  private @Nullable final Uri     snippetUri;
+  public @Nullable  final MessageRecord lastMessage;
+  private           final long    count;
+  private           final int     unreadCount;
+  private           final int     unreadMentionCount;
+  private           final int     distributionType;
+  private           final boolean archived;
+  private           final long    expiresIn;
+  private           final long    lastSeen;
+  private           final boolean pinned;
+  private           final int initialRecipientHash;
+  private           final String invitingAdminId;
+  private           final long    dateSent;
 
-    public ThreadRecord(@NonNull String body, @Nullable Uri snippetUri,
-                        @Nullable MessageRecord lastMessage, @NonNull Recipient recipient, long date, long count, int unreadCount,
-                        int unreadMentionCount, long threadId, int deliveryReceiptCount, int status,
-                        long snippetType,  int distributionType, boolean archived, long expiresIn,
-                        long lastSeen, int readReceiptCount, boolean pinned)
-    {
-        super(body, recipient, date, date, threadId, status, deliveryReceiptCount, snippetType, readReceiptCount);
-        this.snippetUri           = snippetUri;
-        this.lastMessage          = lastMessage;
-        this.count                = count;
-        this.unreadCount          = unreadCount;
-        this.unreadMentionCount   = unreadMentionCount;
-        this.distributionType     = distributionType;
-        this.archived             = archived;
-        this.expiresIn            = expiresIn;
-        this.lastSeen             = lastSeen;
-        this.pinned               = pinned;
-        this.initialRecipientHash = recipient.hashCode();
-        this.dateSent             = date;
-    }
+  public ThreadRecord(@NonNull String body, @Nullable Uri snippetUri,
+                      @Nullable MessageRecord lastMessage, @NonNull Recipient recipient, long date, long count, int unreadCount,
+                      int unreadMentionCount, long threadId, int deliveryReceiptCount, int status,
+                      long snippetType,  int distributionType, boolean archived, long expiresIn,
+                      long lastSeen, int readReceiptCount, boolean pinned, String invitingAdminId)
+  {
+    super(body, recipient, date, date, threadId, status, deliveryReceiptCount, snippetType, readReceiptCount);
+    this.snippetUri         = snippetUri;
+    this.lastMessage        = lastMessage;
+    this.count              = count;
+    this.unreadCount        = unreadCount;
+    this.unreadMentionCount = unreadMentionCount;
+    this.distributionType   = distributionType;
+    this.archived           = archived;
+    this.expiresIn          = expiresIn;
+    this.lastSeen           = lastSeen;
+    this.pinned             = pinned;
+    this.initialRecipientHash = recipient.hashCode();
+    this.invitingAdminId    = invitingAdminId;
+    this.dateSent           = date;
+  }
 
     public @Nullable Uri getSnippetUri() {
         return snippetUri;
@@ -107,7 +112,7 @@ public class ThreadRecord extends DisplayRecord {
             return "";
         }
         else if (isGroupUpdateMessage()) {
-            return context.getString(R.string.groupUpdated);
+            return lastMessage.getDisplayBody(context).toString();
         } else if (isOpenGroupInvitation()) {
             return context.getString(R.string.communityInvitation);
         } else if (MmsSmsColumns.Types.isLegacyType(type)) {
@@ -225,4 +230,30 @@ public class ThreadRecord extends DisplayRecord {
     public boolean isPinned()            { return pinned; }
 
     public int getInitialRecipientHash() { return initialRecipientHash; }
+
+    public boolean isLeavingGroup() {
+        if (isGroupUpdateMessage()) {
+            String body = getBody();
+            if (!body.isEmpty()) {
+                UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
+                return updateMessageData.isGroupLeavingKind();
+            }
+        }
+        return false;
+    }
+
+    public boolean isErrorLeavingGroup() {
+        if (isGroupUpdateMessage()) {
+            String body = getBody();
+            if (!body.isEmpty()) {
+                UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
+                return updateMessageData.isGroupErrorQuitKind();
+            }
+        }
+        return false;
+    }
+
+    public String getInvitingAdminId() {
+        return invitingAdminId;
+    }
 }

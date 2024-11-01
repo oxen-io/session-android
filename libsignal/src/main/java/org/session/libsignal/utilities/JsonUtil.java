@@ -51,6 +51,10 @@ public class JsonUtil {
     return objectMapper.readValue(serialized, clazz);
   }
 
+  public static <T> T fromJson(JsonNode serialized, Class<T> clazz) throws IOException {
+    return objectMapper.treeToValue(serialized, clazz);
+  }
+
   public  static JsonNode fromJson(String serialized) throws IOException {
     return objectMapper.readTree(serialized);
   }

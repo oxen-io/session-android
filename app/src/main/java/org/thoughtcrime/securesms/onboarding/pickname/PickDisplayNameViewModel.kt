@@ -49,9 +49,9 @@ internal class PickDisplayNameViewModel(
                 viewModelScope.launch(Dispatchers.IO) {
                     if (loadFailed) {
                         prefs.setProfileName(displayName)
-                        // we'll rely on the config syncing in the homeActivity resume
-                        configFactory.user?.setName(displayName)
-
+                        configFactory.withMutableUserConfigs {
+                            it.userProfile.setName(displayName)
+                        }
                         _events.emit(Event.LoadAccountComplete)
                     } else _events.emit(Event.CreateAccount(displayName))
                 }

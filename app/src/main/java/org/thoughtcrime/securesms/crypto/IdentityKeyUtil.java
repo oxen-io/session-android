@@ -35,6 +35,12 @@ import org.session.libsignal.utilities.Base64;
 
 import java.io.IOException;
 
+import kotlin.Unit;
+import kotlinx.coroutines.channels.BufferOverflow;
+import kotlinx.coroutines.flow.MutableSharedFlow;
+import kotlinx.coroutines.flow.MutableStateFlow;
+import kotlinx.coroutines.flow.SharedFlowKt;
+
 /**
  * Utility class for working with identity keys.
  * 
@@ -55,6 +61,8 @@ public class IdentityKeyUtil {
   public static final String NOTIFICATION_KEY                            = "pref_notification_key";
   public static final String LOKI_SEED                                   = "loki_seed";
   public static final String HAS_MIGRATED_KEY                            = "has_migrated_keys";
+
+  public static final MutableSharedFlow<Unit> CHANGES = SharedFlowKt.MutableSharedFlow(0, 1, BufferOverflow.DROP_LATEST);
 
   private static SharedPreferences getSharedPreferences(Context context) {
     return context.getSharedPreferences(MASTER_SECRET_UTIL_PREFERENCES_NAME, 0);
@@ -158,9 +166,11 @@ public class IdentityKeyUtil {
     }
 
     if (!preferencesEditor.commit()) throw new AssertionError("failed to save identity key/value to shared preferences");
+    CHANGES.tryEmit(Unit.INSTANCE);
   }
 
   public static void delete(Context context, String key) {
     context.getSharedPreferences(MASTER_SECRET_UTIL_PREFERENCES_NAME, 0).edit().remove(key).commit();
+    CHANGES.tryEmit(Unit.INSTANCE);
   }
 }

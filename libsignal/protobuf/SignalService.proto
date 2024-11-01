@@ -129,15 +129,109 @@ message DataMessage {
     required string name = 3;
   }
 
+  // New closed group update messages
+  message GroupUpdateMessage {
+    optional GroupUpdateInviteMessage               inviteMessage          = 1;
+    optional GroupUpdateInfoChangeMessage           infoChangeMessage      = 2;
+    optional GroupUpdateMemberChangeMessage         memberChangeMessage    = 3;
+    optional GroupUpdatePromoteMessage              promoteMessage         = 4;
+    optional GroupUpdateMemberLeftMessage           memberLeftMessage      = 5;
+    optional GroupUpdateInviteResponseMessage       inviteResponse         = 6;
+    optional GroupUpdateDeleteMemberContentMessage  deleteMemberContent    = 7;
+    optional GroupUpdateMemberLeftNotificationMessage  memberLeftNotificationMessage = 8;
+  }
+
+  // New closed groups
+  message GroupUpdateInviteMessage {
+    // @required
+    required string         groupSessionId         = 1; // The `groupIdentityPublicKey` with a `03` prefix
+    // @required
+    required string         name                   = 2;
+    // @required
+    required bytes          memberAuthData         = 3;
+    // @required
+    required bytes          adminSignature         = 4;
+  }
+
+  message GroupUpdateDeleteMessage {
+    repeated string memberSessionIds = 1;
+    // @required
+    // signature of "DELETE" || timestamp || sessionId[0] || ... || sessionId[n]
+    required bytes          adminSignature          = 2;
+  }
+
+  message GroupUpdatePromoteMessage {
+    // @required
+    required bytes          groupIdentitySeed       = 1;
+    // @required
+    required string         name                    = 2;
+  }
+
+  message GroupUpdateInfoChangeMessage {
+    enum Type {
+      NAME                  = 1;
+      AVATAR                = 2;
+      DISAPPEARING_MESSAGES = 3;
+    }
+
+    // @required
+    required Type     type              = 1;
+    optional string   updatedName       = 2;
+    optional uint32   updatedExpiration = 3;
+    // @required
+    // "INFO_CHANGE" || type || timestamp
+    required bytes adminSignature = 4;
+  }
+
+  message GroupUpdateMemberChangeMessage {
+    enum Type {
+      ADDED    = 1;
+      REMOVED  = 2;
+      PROMOTED = 3;
+    }
+
+    // @required
+    required Type   type               = 1;
+    repeated string memberSessionIds   = 2;
+    optional bool historyShared        = 3;
+    // @required
+    // "MEMBER_CHANGE" || type || timestamp
+    required bytes adminSignature      = 4;
+  }
+
+  message GroupUpdateMemberLeftMessage {
+    // the pubkey of the member left is included as part of the closed group encryption logic (senderIdentity on desktop)
+  }
+
+  message GroupUpdateInviteResponseMessage {
+    // @required
+    required bool                      isApproved                = 1; // Whether the request was approved
+  }
+
+  message GroupUpdateDeleteMemberContentMessage {
+    repeated string memberSessionIds   = 1;
+    repeated string messageHashes = 2;
+    optional bytes  adminSignature = 3;
+  }
+
+  message GroupUpdateMemberLeftNotificationMessage {
+    // the pubkey of the member left is included as part of the closed group encryption logic (senderIdentity on desktop)
+  }
+
   message ClosedGroupControlMessage {
 
     enum Type {
-      NEW                         = 1; // publicKey, name, encryptionKeyPair, members, admins, expireTimer
-      ENCRYPTION_KEY_PAIR         = 3; // publicKey, wrappers
-      NAME_CHANGE                 = 4; // name
-      MEMBERS_ADDED               = 5; // members
-      MEMBERS_REMOVED             = 6; // members
+      NEW                         = 1;  // publicKey, name, encryptionKeyPair, members, admins, expireTimer
+      ENCRYPTION_KEY_PAIR         = 3;  // publicKey, wrappers
+      NAME_CHANGE                 = 4;  // name
+      MEMBERS_ADDED               = 5;  // members
+      MEMBERS_REMOVED             = 6;  // members
       MEMBER_LEFT                 = 7;
+      INVITE                      = 9;  // publicKey, name, memberPrivateKey
+      PROMOTE                     = 10; // publicKey, privateKey
+      DELETE_GROUP                = 11; // publicKey, members
+      DELETE_MESSAGES             = 12; // publicKey
+      DELETE_ATTACHMENTS          = 13; // publicKey
     }
 
     message KeyPairWrapper {
@@ -156,6 +250,8 @@ message DataMessage {
     repeated bytes          admins            = 6;
     repeated KeyPairWrapper wrappers          = 7;
     optional uint32         expirationTimer   = 8;
+    optional bytes          memberPrivateKey  = 9;
+    optional bytes          privateKey        = 10;
   }
 
   message Reaction {
@@ -174,7 +270,6 @@ message DataMessage {
 
   optional string                    body                           = 1;
   repeated AttachmentPointer         attachments                    = 2;
-  optional GroupContext              group                          = 3;
   optional uint32                    flags                          = 4;
   optional uint32                    expireTimer                    = 5;
   optional bytes                     profileKey                     = 6;
@@ -187,6 +282,34 @@ message DataMessage {
   optional ClosedGroupControlMessage closedGroupControlMessage      = 104;
   optional string                    syncTarget                     = 105;
   optional bool                      blocksCommunityMessageRequests = 106;
+  optional GroupUpdateMessage        groupUpdateMessage             = 120;
+}
+
+message GroupDeleteMessage {
+  // @required
+  required bytes          publicKey         = 1; // the identity public key of the group to be deleted
+  // @required
+  required bytes          lastEncryptionKey = 2; // used by members to make sure incoming admin action can be trusted
+}
+
+message GroupMemberLeftMessage {
+  // the pubkey of the member left is included as part of the closed group encryption logic (senderIdentity on desktop)
+}
+
+message GroupInviteMessage {
+  // @required
+  required bytes          publicKey         = 1; // this is the group public key
+  // @required
+  required string         name              = 2;
+  // @required
+  required bytes          memberPrivateKey  = 3;
+}
+
+message GroupPromoteMessage {
+  // @required
+  required bytes          publicKey           = 1; // this is the session id for the user that should be promoted
+  // @required
+  required bytes          encryptedPrivateKey = 2; // this is the group admins key
 }
 
 message CallMessage {
@@ -299,24 +422,4 @@ message AttachmentPointer {
   optional uint32  height      = 10;
   optional string  caption     = 11;
   optional string  url         = 101;
-}
-
-message GroupContext {
-
-  enum Type {
-    UNKNOWN      = 0;
-    UPDATE       = 1;
-    DELIVER      = 2;
-    QUIT         = 3;
-    REQUEST_INFO = 4;
-  }
-
-  // @required
-  optional bytes             id      = 1;
-  // @required
-  optional Type              type    = 2;
-  optional string            name    = 3;
-  repeated string            members = 4;
-  optional AttachmentPointer avatar  = 5;
-  repeated string            admins  = 6;
 }

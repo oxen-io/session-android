@@ -29,7 +29,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import org.session.libsession.avatars.ContactPhoto;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
-import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
@@ -119,7 +118,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
   {
     SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
 
-    if (privacy.isDisplayContact() && threadRecipient.isGroupRecipient()) {
+    if (privacy.isDisplayContact() && threadRecipient.isGroupOrCommunityRecipient()) {
       String displayName = getGroupDisplayName(individualRecipient, threadRecipient.isCommunityRecipient());
       stringBuilder.append(Util.getBoldedString(displayName + ": "));
     }
@@ -207,7 +206,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
   {
     SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
 
-    if (privacy.isDisplayContact() && threadRecipient.isGroupRecipient()) {
+    if (privacy.isDisplayContact() && threadRecipient.isGroupOrCommunityRecipient()) {
       String displayName = getGroupDisplayName(individualRecipient, threadRecipient.isCommunityRecipient());
       stringBuilder.append(Util.getBoldedString(displayName + ": "));
     }

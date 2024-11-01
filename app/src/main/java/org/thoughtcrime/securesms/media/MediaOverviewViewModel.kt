@@ -282,7 +282,7 @@ class MediaOverviewViewModel(
             // in groups/communities)
             if (selectedMedia.any { !it.mediaRecord.isOutgoing } &&
                 successCount > 0 &&
-                !address.isGroup) {
+                !address.isGroupOrCommunity) {
                 withContext(Dispatchers.Default) {
                     val timestamp = SnodeAPI.nowWithOffset
                     val kind = DataExtractionNotification.Kind.MediaSaved(timestamp)

@@ -1,14 +1,17 @@
 package org.session.libsession.messaging.jobs
 
 import com.google.protobuf.ByteString
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import network.loki.messenger.libsession_util.ConfigBase
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.Message.Companion.senderOrSync
 import org.session.libsession.messaging.messages.control.CallMessage
@@ -30,10 +33,11 @@ import org.session.libsession.messaging.sending_receiving.handleOpenGroupReactio
 import org.session.libsession.messaging.sending_receiving.handleUnsendRequest
 import org.session.libsession.messaging.sending_receiving.handleVisibleMessage
 import org.session.libsession.messaging.utilities.Data
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.SSKEnvironment
+import org.session.libsession.utilities.UserConfigType
 import org.session.libsignal.protos.UtilProtos
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import kotlin.math.max
@@ -42,7 +46,8 @@ data class MessageReceiveParameters(
     val data: ByteArray,
     val serverHash: String? = null,
     val openGroupMessageServerID: Long? = null,
-    val reactions: Map<String, OpenGroupApi.Reaction>? = null
+    val reactions: Map<String, OpenGroupApi.Reaction>? = null,
+    val closedGroup: Destination.ClosedGroup? = null
 )
 
 class BatchMessageReceiveJob(
@@ -72,6 +77,7 @@ class BatchMessageReceiveJob(
         private val SERVER_HASH_KEY = "serverHash"
         private val OPEN_GROUP_MESSAGE_SERVER_ID_KEY = "openGroupMessageServerID"
         private val OPEN_GROUP_ID_KEY = "open_group_id"
+        private val CLOSED_GROUP_DESTINATION_KEY = "closed_group_destination"
     }
 
     private fun shouldCreateThread(parsedMessage: ParsedMessage): Boolean {
@@ -95,173 +101,183 @@ class BatchMessageReceiveJob(
     }
 
     override suspend fun execute(dispatcherName: String) {
-        executeAsync(dispatcherName).get()
+        executeAsync(dispatcherName)
     }
 
-    private fun isHidden(message: Message): Boolean{
+    private fun isHidden(message: Message): Boolean {
         // if the contact is marked as hidden for 1on1 messages
         // and  the message's sentTimestamp is earlier than the sentTimestamp of the last config
-        val config = MessagingModuleConfiguration.shared.configFactory
+        val configFactory = MessagingModuleConfiguration.shared.configFactory
         val publicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
-        if(config.contacts == null || message.sentTimestamp == null || publicKey == null) return false
-        val contactConfigTimestamp = config.getConfigTimestamp(config.contacts!!, publicKey)
-        if(message.groupPublicKey == null && // not a group
-            message.openGroupServerMessageID == null && // not a community
-            // not marked as hidden
-            config.contacts?.get(message.senderOrSync)?.priority == ConfigBase.PRIORITY_HIDDEN &&
-            // the message's sentTimestamp is earlier than the sentTimestamp of the last config
-            message.sentTimestamp!! < contactConfigTimestamp
-        ) {
-            return true
-        }
+        if (message.sentTimestamp == null || publicKey == null) return false
 
-        return false
+        val contactConfigTimestamp = configFactory.getConfigTimestamp(UserConfigType.CONTACTS, publicKey)
+
+        return configFactory.withUserConfigs { configs ->
+            message.groupPublicKey == null && // not a group
+                    message.openGroupServerMessageID == null && // not a community
+                    // not marked as hidden
+                    configs.contacts.get(message.senderOrSync)?.priority == ConfigBase.PRIORITY_HIDDEN &&
+                    // the message's sentTimestamp is earlier than the sentTimestamp of the last config
+                    message.sentTimestamp!! < contactConfigTimestamp
+        }
     }
 
-    fun executeAsync(dispatcherName: String): Promise<Unit, Exception> {
-        return task {
-            val threadMap = mutableMapOf<Long, MutableList<ParsedMessage>>()
-            val storage = MessagingModuleConfiguration.shared.storage
-            val context = MessagingModuleConfiguration.shared.context
-            val localUserPublicKey = storage.getUserPublicKey()
-            val serverPublicKey = openGroupID?.let { storage.getOpenGroupPublicKey(it.split(".").dropLast(1).joinToString(".")) }
-            val currentClosedGroups = storage.getAllActiveClosedGroupPublicKeys()
+    suspend fun executeAsync(dispatcherName: String) {
+        val threadMap = mutableMapOf<Long, MutableList<ParsedMessage>>()
+        val storage = MessagingModuleConfiguration.shared.storage
+        val context = MessagingModuleConfiguration.shared.context
+        val localUserPublicKey = storage.getUserPublicKey()
+        val serverPublicKey = openGroupID?.let { storage.getOpenGroupPublicKey(it.split(".").dropLast(1).joinToString(".")) }
+        val currentClosedGroups = storage.getAllActiveClosedGroupPublicKeys()
 
-            // parse and collect IDs
-            messages.forEach { messageParameters ->
-                val (data, serverHash, openGroupMessageServerID) = messageParameters
-                try {
-                    val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey, currentClosedGroups = currentClosedGroups)
-                    message.serverHash = serverHash
-                    val parsedParams = ParsedMessage(messageParameters, message, proto)
+        // parse and collect IDs
+        messages.forEach { messageParameters ->
+            val (data, serverHash, openGroupMessageServerID) = messageParameters
+            try {
+                val (message, proto) = MessageReceiver.parse(
+                    data,
+                    openGroupMessageServerID,
+                    openGroupPublicKey = serverPublicKey,
+                    currentClosedGroups = currentClosedGroups,
+                    closedGroupSessionId = messageParameters.closedGroup?.publicKey
+                )
+                message.serverHash = serverHash
+                val parsedParams = ParsedMessage(messageParameters, message, proto)
 
-                    if(isHidden(message)) return@forEach
+                if(isHidden(message)) return@forEach
 
-                    val threadID = Message.getThreadId(message, openGroupID, storage, shouldCreateThread(parsedParams)) ?: NO_THREAD_MAPPING
-                    if (!threadMap.containsKey(threadID)) {
-                        threadMap[threadID] = mutableListOf(parsedParams)
-                    } else {
-                        threadMap[threadID]!! += parsedParams
+                val threadID = Message.getThreadId(
+                    message = message,
+                    openGroupID = openGroupID,
+                    storage = storage,
+                    shouldCreateThread = shouldCreateThread(parsedParams)
+                ) ?: NO_THREAD_MAPPING
+                threadMap.getOrPut(threadID) { mutableListOf() } += parsedParams
+            } catch (e: Exception) {
+                when (e) {
+                    is MessageReceiver.Error.DuplicateMessage, MessageReceiver.Error.SelfSend -> {
+                        Log.i(TAG, "Couldn't receive message, failed with error: ${e.message} (id: $id)")
                     }
-                } catch (e: Exception) {
-                    when (e) {
-                        is MessageReceiver.Error.DuplicateMessage, MessageReceiver.Error.SelfSend -> {
-                            Log.i(TAG, "Couldn't receive message, failed with error: ${e.message} (id: $id)")
+                    is MessageReceiver.Error -> {
+                        if (!e.isRetryable) {
+                            Log.e(TAG, "Couldn't receive message, failed permanently (id: $id)", e)
                         }
-                        is MessageReceiver.Error -> {
-                            if (!e.isRetryable) {
-                                Log.e(TAG, "Couldn't receive message, failed permanently (id: $id)", e)
-                            }
-                            else {
-                                Log.e(TAG, "Couldn't receive message, failed (id: $id)", e)
-                                failures += messageParameters
-                            }
-                        }
-                        else -> {
+                        else {
                             Log.e(TAG, "Couldn't receive message, failed (id: $id)", e)
                             failures += messageParameters
                         }
                     }
+                    else -> {
+                        Log.e(TAG, "Couldn't receive message, failed (id: $id)", e)
+                        failures += messageParameters
+                    }
                 }
             }
+        }
 
-            // iterate over threads and persist them (persistence is the longest constant in the batch process operation)
-            runBlocking(Dispatchers.IO) {
-
-                fun processMessages(threadId: Long, messages: List<ParsedMessage>) = async {
-                    // The LinkedHashMap should preserve insertion order
-                    val messageIds = linkedMapOf<Long, Pair<Boolean, Boolean>>()
-                    val myLastSeen = storage.getLastSeen(threadId)
-                    var newLastSeen = myLastSeen.takeUnless { it == -1L } ?: 0
-                    messages.forEach { (parameters, message, proto) ->
-                        try {
-                            when (message) {
-                                is VisibleMessage -> {
-                                    val isUserBlindedSender =
-                                        message.sender == serverPublicKey?.let {
-                                            SodiumUtilities.blindedKeyPair(
-                                                it,
-                                                MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
-                                            )
-                                        }?.let {
-                                            AccountId(
-                                                IdPrefix.BLINDED, it.publicKey.asBytes
-                                            ).hexString
-                                        }
-                                    if (message.sender == localUserPublicKey || isUserBlindedSender) {
-                                        // use sent timestamp here since that is technically the last one we have
-                                        newLastSeen = max(newLastSeen, message.sentTimestamp!!)
-                                    }
-                                    val messageId = MessageReceiver.handleVisibleMessage(message, proto, openGroupID,
-                                        threadId,
-                                        runThreadUpdate = false,
-                                        runProfileUpdate = true)
-
-                                    if (messageId != null && message.reaction == null) {
-                                        messageIds[messageId] = Pair(
-                                            (message.sender == localUserPublicKey || isUserBlindedSender),
-                                            message.hasMention
-                                        )
-                                    }
-                                    parameters.openGroupMessageServerID?.let {
-                                        MessageReceiver.handleOpenGroupReactions(
-                                            threadId,
-                                            it,
-                                            parameters.reactions
-                                        )
-                                    }
+        // iterate over threads and persist them (persistence is the longest constant in the batch process operation)
+        fun processMessages(threadId: Long, messages: List<ParsedMessage>) {
+            // The LinkedHashMap should preserve insertion order
+            val messageIds = linkedMapOf<Long, Pair<Boolean, Boolean>>()
+            val myLastSeen = storage.getLastSeen(threadId)
+            var newLastSeen = myLastSeen.takeUnless { it == -1L } ?: 0
+            messages.forEach { (parameters, message, proto) ->
+                try {
+                    when (message) {
+                        is VisibleMessage -> {
+                            val isUserBlindedSender =
+                                message.sender == serverPublicKey?.let {
+                                    SodiumUtilities.blindedKeyPair(
+                                        serverPublicKey = it,
+                                        edKeyPair = storage.getUserED25519KeyPair()!!
+                                    )
+                                }?.let {
+                                    AccountId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString
                                 }
-
-                                is UnsendRequest -> {
-                                    val deletedMessageId =
-                                        MessageReceiver.handleUnsendRequest(message)
-
-                                    // If we removed a message then ensure it isn't in the 'messageIds'
-                                    if (deletedMessageId != null) {
-                                        messageIds.remove(deletedMessageId)
-                                    }
-                                }
-
-                                else -> MessageReceiver.handle(message, proto, threadId, openGroupID)
+                            if (message.sender == localUserPublicKey || isUserBlindedSender) {
+                                // use sent timestamp here since that is technically the last one we have
+                                newLastSeen = max(newLastSeen, message.sentTimestamp!!)
                             }
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Couldn't process message (id: $id)", e)
-                            if (e is MessageReceiver.Error && !e.isRetryable) {
-                                Log.e(TAG, "Message failed permanently (id: $id)", e)
-                            } else {
-                                Log.e(TAG, "Message failed (id: $id)", e)
-                                failures += parameters
+                            val messageId = MessageReceiver.handleVisibleMessage(message, proto, openGroupID,
+                                threadId,
+                                runThreadUpdate = false,
+                                runProfileUpdate = true)
+
+                            if (messageId != null && message.reaction == null) {
+                                messageIds[messageId] = Pair(
+                                    (message.sender == localUserPublicKey || isUserBlindedSender),
+                                    message.hasMention
+                                )
+                            }
+                            parameters.openGroupMessageServerID?.let {
+                                MessageReceiver.handleOpenGroupReactions(
+                                    threadId,
+                                    it,
+                                    parameters.reactions
+                                )
                             }
                         }
-                    }
-                    // increment unreads, notify, and update thread
-                    // last seen will be the current last seen if not changed (re-computes the read counts for thread record)
-                    // might have been updated from a different thread at this point
-                    val currentLastSeen = storage.getLastSeen(threadId).let { if (it == -1L) 0 else it }
-                    newLastSeen = max(newLastSeen, currentLastSeen)
-                    if (newLastSeen > 0 || currentLastSeen == 0L) {
-                        storage.markConversationAsRead(threadId, newLastSeen, force = true)
-                    }
-                    storage.updateThread(threadId, true)
-                    SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
-                }
 
-                val withoutDefault = threadMap.entries.filter { it.key != NO_THREAD_MAPPING }
-                val noThreadMessages = threadMap[NO_THREAD_MAPPING] ?: listOf()
-                val deferredThreadMap = withoutDefault.map { (threadId, messages) ->
+                        is UnsendRequest -> {
+                            val deletedMessageId = MessageReceiver.handleUnsendRequest(message)
+
+                            // If we removed a message then ensure it isn't in the 'messageIds'
+                            if (deletedMessageId != null) {
+                                messageIds.remove(deletedMessageId)
+                            }
+                        }
+
+                        else -> MessageReceiver.handle(
+                            message = message,
+                            proto = proto,
+                            threadId = threadId,
+                            openGroupID = openGroupID,
+                            closedGroup = parameters.closedGroup?.publicKey?.let(::AccountId)
+                        )
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Couldn't process message (id: $id)", e)
+                    if (e is MessageReceiver.Error && !e.isRetryable) {
+                        Log.e(TAG, "Message failed permanently (id: $id)", e)
+                    } else {
+                        Log.e(TAG, "Message failed (id: $id)", e)
+                        failures += parameters
+                    }
+                }
+            }
+            // increment unreads, notify, and update thread
+            // last seen will be the current last seen if not changed (re-computes the read counts for thread record)
+            // might have been updated from a different thread at this point
+            val currentLastSeen = storage.getLastSeen(threadId).let { if (it == -1L) 0 else it }
+            newLastSeen = max(newLastSeen, currentLastSeen)
+            if (newLastSeen > 0 || currentLastSeen == 0L) {
+                storage.markConversationAsRead(threadId, newLastSeen, force = true)
+            }
+            storage.updateThread(threadId, true)
+            SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
+        }
+
+        coroutineScope {
+            val withoutDefault = threadMap.entries.filter { it.key != NO_THREAD_MAPPING }
+            val deferredThreadMap = withoutDefault.map { (threadId, messages) ->
+                async(Dispatchers.Default) {
                     processMessages(threadId, messages)
                 }
-                // await all thread processing
-                deferredThreadMap.awaitAll()
-                if (noThreadMessages.isNotEmpty()) {
-                    processMessages(NO_THREAD_MAPPING, noThreadMessages).await()
-                }
             }
-            if (failures.isEmpty()) {
-                handleSuccess(dispatcherName)
-            } else {
-                handleFailure(dispatcherName)
-            }
+            // await all thread processing
+            deferredThreadMap.awaitAll()
+        }
+
+        val noThreadMessages = threadMap[NO_THREAD_MAPPING] ?: listOf()
+        if (noThreadMessages.isNotEmpty()) {
+            processMessages(NO_THREAD_MAPPING, noThreadMessages)
+        }
+
+        if (failures.isEmpty()) {
+            handleSuccess(dispatcherName)
+        } else {
+            handleFailure(dispatcherName)
         }
     }
 
@@ -282,12 +298,14 @@ class BatchMessageReceiveJob(
             .build()
         val serverHashes = messages.map { it.serverHash.orEmpty() }
         val openGroupServerIds = messages.map { it.openGroupMessageServerID ?: -1L }
+        val closedGroups = messages.map { it.closedGroup?.publicKey.orEmpty() }
         return Data.Builder()
             .putInt(NUM_MESSAGES_KEY, arraySize)
             .putByteArray(DATA_KEY, dataArrays.toByteArray())
             .putString(OPEN_GROUP_ID_KEY, openGroupID)
             .putLongArray(OPEN_GROUP_MESSAGE_SERVER_ID_KEY, openGroupServerIds.toLongArray())
             .putStringArray(SERVER_HASH_KEY, serverHashes.toTypedArray())
+            .putStringArray(CLOSED_GROUP_DESTINATION_KEY, closedGroups.toTypedArray())
             .build()
     }
 
@@ -303,11 +321,22 @@ class BatchMessageReceiveJob(
                 if (data.hasStringArray(SERVER_HASH_KEY)) data.getStringArray(SERVER_HASH_KEY) else arrayOf()
             val openGroupMessageServerIDs = data.getLongArray(OPEN_GROUP_MESSAGE_SERVER_ID_KEY)
             val openGroupID = data.getStringOrDefault(OPEN_GROUP_ID_KEY, null)
+            val closedGroups =
+                if (data.hasStringArray(CLOSED_GROUP_DESTINATION_KEY)) data.getStringArray(CLOSED_GROUP_DESTINATION_KEY)
+                else arrayOf()
 
             val parameters = (0 until numMessages).map { index ->
                 val serverHash = serverHashes[index].let { if (it.isEmpty()) null else it }
                 val serverId = openGroupMessageServerIDs[index].let { if (it == -1L) null else it }
-                MessageReceiveParameters(contents[index], serverHash, serverId)
+                val closedGroup = closedGroups.getOrNull(index)?.let {
+                    if (it.isEmpty()) null else Destination.ClosedGroup(it)
+                }
+                MessageReceiveParameters(
+                    data = contents[index],
+                    serverHash = serverHash,
+                    openGroupMessageServerID = serverId,
+                    closedGroup = closedGroup
+                )
             }
 
             return BatchMessageReceiveJob(parameters, openGroupID)

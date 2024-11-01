@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/conversationRecyclerView"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0"
         android:theme="@style/Widget.Session.ActionBar.Flat"
         android:background="?colorPrimary"
         app:contentInsetStart="0dp">
@@ -39,7 +40,7 @@
         app:layout_constraintVertical_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/typingIndicatorViewContainer"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/outdatedGroupBanner" />
 
     <org.thoughtcrime.securesms.conversation.v2.components.TypingIndicatorViewContainer
         android:focusable="false"
@@ -230,7 +231,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:background="?danger"
         android:visibility="gone"
-        tools:visibility="visible">
+        >
 
         <TextView
             android:id="@+id/blockedBannerTextView"
@@ -247,16 +248,17 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/outdatedBanner"
+        android:id="@+id/outdatedDisappearingBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/blockedBanner"
         android:background="@color/outdated_client_banner_background_color"
+        android:contentDescription="@string/AccessibilityId_outdated_group_banner"
         android:visibility="gone"
         tools:visibility="visible">
 
         <TextView
-            android:id="@+id/outdatedBannerTextView"
+            android:id="@+id/outdatedDisappearingBannerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -270,6 +272,25 @@
     </FrameLayout>
 
     <TextView
+        android:id="@+id/outdatedGroupBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:drawableTint="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/outdatedDisappearingBanner"
+        android:background="@color/outdated_client_banner_background_color"
+        android:paddingVertical="@dimen/very_small_spacing"
+        android:gravity="center_horizontal"
+        android:textColor="@color/black"
+        android:paddingHorizontal="@dimen/medium_spacing"
+        android:contentDescription="@string/AccessibilityId_outdated_group_banner"
+        android:textSize="@dimen/tiny_font_size"
+        tools:text="@string/groupLegacyBanner"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:drawableEndCompat="@drawable/ic_external" />
+
+    <TextView
         android:padding="@dimen/medium_spacing"
         style="@style/Signal.Text.Preview"
         android:textColor="?android:textColorTertiary"
@@ -278,7 +299,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/large_spacing"
-        app:layout_constraintTop_toBottomOf="@+id/outdatedBanner"
+        app:layout_constraintTop_toBottomOf="@+id/outdatedGroupBanner"
         android:contentDescription="@string/AccessibilityId_control_message"
         tools:text="Some Control Message Text"
         />
@@ -295,6 +316,7 @@
         tools:visibility="gone">
 
         <TextView
+            tools:visibility="invisible"
             android:id="@+id/messageRequestBlock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -348,10 +370,11 @@
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/dialog_open_url"
+        tools:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/loader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -364,10 +387,10 @@
             style="@style/SpinKitView.Large.ThreeBounce"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:layout_marginTop="8dp"
             app:SpinKit_Color="@android:color/white" />
 
-    </RelativeLayout>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

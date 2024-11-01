@@ -5,6 +5,7 @@
 
     <!-- Onboarding related -->
     <string name="AccessibilityId_accountIdOrOnsEnter">Account id input box</string>
+    <string name="AccessibilityId_sessionIdInput">Session id input box</string>
     <string name="AccessibilityId_recoveryPasswordHidePermanentlyConfirm">Confirm button</string>
     <string name="AccessibilityId_accountIdCopy">Copy Account ID</string>
     <string name="AccessibilityId_copy">Copy button</string>
@@ -85,6 +86,8 @@
     <string name="AccessibilityId_groupName">Group name</string>
     <string name="AccessibilityId_groupLeave">Leave group</string>
     <string name="AccessibilityId_mentions_list">Mentions list</string>
+    <string name="AccessibilityId_outdated_group_banner">Legacy group banner</string>
+    <string name="AccessibilityId_empty_conversation">Empty conversation</string>
     <!--  Conversation icons -->
     <string name="AccessibilityId_messageRequestsAccept">Accept message request</string>
     <string name="AccessibilityId_messageRequestsBlock">Block message request</string>

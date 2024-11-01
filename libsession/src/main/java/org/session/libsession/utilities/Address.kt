@@ -18,29 +18,33 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
 
     constructor(`in`: Parcel) : this(`in`.readString()!!) {}
 
-    val isGroup: Boolean
-        get() = GroupUtil.isEncodedGroup(address)
-    val isClosedGroup: Boolean
-        get() = GroupUtil.isClosedGroup(address)
+    val isLegacyGroup: Boolean
+        get() = GroupUtil.isLegacyClosedGroup(address)
+    val isGroupV2: Boolean
+        get() = address.startsWith(IdPrefix.GROUP.value)
     val isCommunity: Boolean
         get() = GroupUtil.isCommunity(address)
     val isCommunityInbox: Boolean
         get() = GroupUtil.isCommunityInbox(address)
     val isCommunityOutbox: Boolean
         get() = address.startsWith(IdPrefix.BLINDED.value) || address.startsWith(IdPrefix.BLINDEDV2.value)
+    val isGroupOrCommunity: Boolean
+        get() = isGroup || isCommunity
+    val isGroup: Boolean
+        get() = isLegacyGroup || isGroupV2
     val isContact: Boolean
-        get() = !(isGroup || isCommunityInbox)
+        get() = !(isGroupOrCommunity || isCommunityInbox)
 
     fun contactIdentifier(): String {
         if (!isContact && !isCommunity) {
-            if (isGroup) throw AssertionError("Not e164, is group")
+            if (isGroupOrCommunity) throw AssertionError("Not e164, is group")
             throw AssertionError("Not e164, unknown")
         }
         return address
     }
 
     fun toGroupString(): String {
-        if (!isGroup) throw AssertionError("Not group")
+        if (!isGroupOrCommunity) throw AssertionError("Not group")
         return address
     }
 

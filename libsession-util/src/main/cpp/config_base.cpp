@@ -102,20 +102,6 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3Lkotlin_Pair_2(
     });
 }
 
-JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_ConfigBase_merge__Lkotlin_Pair_2(JNIEnv *env, jobject thiz,
-                                                                   jobject to_merge) {
-    return jni_utils::run_catching_cxx_exception_or_throws<jobject>(env, [=] {
-        std::lock_guard lock{util::util_mutex_};
-        auto conf = ptrToConfigBase(env, thiz);
-        std::vector<std::pair<std::string, session::ustring>> configs = {
-                extractHashAndData(env, to_merge)};
-        auto returned = conf->merge(configs);
-        auto string_stack = util::build_string_stack(env, returned);
-        return string_stack;
-    });
-}
-
 #pragma clang diagnostic pop
 }
 extern "C"

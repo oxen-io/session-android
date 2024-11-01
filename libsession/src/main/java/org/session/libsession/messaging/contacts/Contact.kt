@@ -1,38 +1,40 @@
 package org.session.libsession.messaging.contacts
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import org.session.libsession.utilities.recipients.Recipient
 
-class Contact(val accountID: String) {
+@Parcelize
+class Contact(
+    val accountID: String,
     /**
      * The URL from which to fetch the contact's profile picture.
      */
-    var profilePictureURL: String? = null
+    var profilePictureURL: String? = null,
     /**
      * The file name of the contact's profile picture on local storage.
      */
-    var profilePictureFileName: String? = null
+    var profilePictureFileName: String? = null,
     /**
      * The key with which the profile picture is encrypted.
      */
-    var profilePictureEncryptionKey: ByteArray? = null
+    var profilePictureEncryptionKey: ByteArray? = null,
     /**
      * The ID of the thread associated with this contact.
      */
-    var threadID: Long? = null
-    /**
-     * This flag is used to determine whether we should auto-download files sent by this contact.
-     */
-    var isTrusted = false
-
-    // region Name
+    var threadID: Long? = null,
     /**
      * The name of the contact. Use this whenever you need the "real", underlying name of a user (e.g. when sending a message).
      */
-    var name: String? = null
+    var name: String? = null,
     /**
      * The contact's nickname, if the user set one.
      */
-    var nickname: String? = null
+    var nickname: String? = null,
+): Parcelable {
+
+    constructor(id: String): this(accountID = id)
+
     /**
      * The name to display in the UI. For local use only.
      */

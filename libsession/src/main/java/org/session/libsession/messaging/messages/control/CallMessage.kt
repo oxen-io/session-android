@@ -3,9 +3,12 @@ package org.session.libsession.messaging.messages.control
 import org.session.libsession.messaging.messages.applyExpiryMode
 import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsignal.protos.SignalServiceProtos
-import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.*
+import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.ANSWER
+import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.END_CALL
+import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.OFFER
+import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.PRE_OFFER
 import org.session.libsignal.utilities.Log
-import java.util.*
+import java.util.UUID
 
 class CallMessage(): ControlMessage() {
     var type: SignalServiceProtos.CallMessage.Type? = null
@@ -13,6 +16,8 @@ class CallMessage(): ControlMessage() {
     var sdpMLineIndexes: List<Int> = listOf()
     var sdpMids: List<String> = listOf()
     var callId: UUID? = null
+
+    override fun shouldDiscardIfBlocked(): Boolean = true
 
     override val coerceDisappearAfterSendToRead = true
     override val isSelfSendValid: Boolean get() = type in arrayOf(ANSWER, END_CALL)

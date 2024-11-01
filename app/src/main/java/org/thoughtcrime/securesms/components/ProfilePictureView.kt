@@ -53,19 +53,19 @@ class ProfilePictureView @JvmOverloads constructor(
 
     fun update(recipient: Recipient) {
         this.recipient = recipient
-        recipient.run { update(address, isClosedGroupRecipient, isOpenGroupInboxRecipient) }
+        recipient.run { update(address, isLegacyGroupRecipient, isCommunityInboxRecipient) }
     }
 
     fun update(
         address: Address,
-        isClosedGroupRecipient: Boolean = false,
-        isOpenGroupInboxRecipient: Boolean = false
+        isLegacyGroupRecipient: Boolean = false,
+        isCommunityInboxRecipient: Boolean = false
     ) {
         fun getUserDisplayName(publicKey: String): String = prefs.takeIf { userPublicKey == publicKey }?.getProfileName()
             ?: DatabaseComponent.get(context).sessionContactDatabase().getContactWithAccountID(publicKey)?.displayName(Contact.ContactContext.REGULAR)
             ?: publicKey
 
-        if (isClosedGroupRecipient) {
+        if (isLegacyGroupRecipient) {
             val members = DatabaseComponent.get(context).groupDatabase()
                 .getGroupMemberAddresses(address.toGroupString(), true)
                 .sorted()
@@ -83,7 +83,7 @@ class ProfilePictureView @JvmOverloads constructor(
                 additionalPublicKey = apk
                 additionalDisplayName = getUserDisplayName(apk)
             }
-        } else if(isOpenGroupInboxRecipient) {
+        } else if(isCommunityInboxRecipient) {
             val publicKey = GroupUtil.getDecodedOpenGroupInboxAccountId(address.serialize())
             this.publicKey = publicKey
             displayName = getUserDisplayName(publicKey)

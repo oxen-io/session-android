@@ -17,14 +17,12 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.ApplicationContext
-import org.thoughtcrime.securesms.notifications.PushRegistry
 import org.thoughtcrime.securesms.onboarding.manager.CreateAccountManager
 
 internal class MessageNotificationsViewModel(
     private val state: State,
     private val application: Application,
     private val prefs: TextSecurePreferences,
-    private val pushRegistry: PushRegistry,
     private val createAccountManager: CreateAccountManager
 ): AndroidViewModel(application) {
     private val _uiStates = MutableStateFlow(UiState())
@@ -42,7 +40,6 @@ internal class MessageNotificationsViewModel(
             if (state is State.CreateAccount) createAccountManager.createAccount(state.displayName)
 
             prefs.setPushEnabled(uiStates.value.pushEnabled)
-            pushRegistry.refresh(true)
 
             _events.emit(
                 when (state) {
@@ -102,7 +99,6 @@ internal class MessageNotificationsViewModel(
         @Assisted private val profileName: String?,
         private val application: Application,
         private val prefs: TextSecurePreferences,
-        private val pushRegistry: PushRegistry,
         private val createAccountManager: CreateAccountManager,
     ) : ViewModelProvider.Factory {
 
@@ -111,7 +107,6 @@ internal class MessageNotificationsViewModel(
                 state = profileName?.let(State::CreateAccount) ?: State.LoadAccount,
                 application = application,
                 prefs = prefs,
-                pushRegistry = pushRegistry,
                 createAccountManager = createAccountManager
             ) as T
         }

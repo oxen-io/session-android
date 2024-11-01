@@ -27,13 +27,14 @@ import org.thoughtcrime.securesms.onboarding.ui.ContinuePrimaryOutlineButton
 import org.thoughtcrime.securesms.ui.components.QRScannerScreen
 import org.thoughtcrime.securesms.ui.components.SessionOutlinedTextField
 import org.thoughtcrime.securesms.ui.components.SessionTabRow
+import org.thoughtcrime.securesms.ui.contentDescription
+import org.thoughtcrime.securesms.ui.qaTag
 import org.thoughtcrime.securesms.ui.theme.LocalDimensions
 import org.thoughtcrime.securesms.ui.theme.LocalType
 import org.thoughtcrime.securesms.ui.theme.PreviewTheme
 
 private val TITLES = listOf(R.string.sessionRecoveryPassword, R.string.qrScan)
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun LoadAccountScreen(
     state: State,
@@ -97,10 +98,11 @@ private fun RecoveryPassword(state: State, onChange: (String) -> Unit = {}, onCo
                 style = LocalType.current.base
             )
             Spacer(Modifier.height(LocalDimensions.current.spacing))
+
             SessionOutlinedTextField(
                 text = state.recoveryPhrase,
-                modifier = Modifier.fillMaxWidth(),
-                contentDescription = stringResource(R.string.AccessibilityId_recoveryPasswordEnter),
+                modifier = Modifier.fillMaxWidth()
+                    .qaTag(stringResource(R.string.AccessibilityId_recoveryPasswordEnter)),
                 placeholder = stringResource(R.string.recoveryPasswordEnter),
                 onChange = onChange,
                 onContinue = onContinue,

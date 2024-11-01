@@ -18,6 +18,7 @@ interface ThemeColors {
     // properties to override for each theme
     val isLight: Boolean
     val primary: Color
+    val textAlert: Color
     val danger: Color
     val warning: Color
     val disabled: Color
@@ -115,6 +116,7 @@ data class ClassicDark(override val primary: Color = primaryGreen) : ThemeColors
     override val qrCodeBackground = text
     override val primaryButtonFill = primary
     override val primaryButtonFillText = Color.Black
+    override val textAlert: Color = classicDark0
 }
 
 data class ClassicLight(override val primary: Color = primaryGreen) : ThemeColors {
@@ -134,6 +136,7 @@ data class ClassicLight(override val primary: Color = primaryGreen) : ThemeColor
     override val qrCodeBackground = backgroundSecondary
     override val primaryButtonFill = text
     override val primaryButtonFillText = Color.White
+    override val textAlert: Color = classicLight0
 }
 
 data class OceanDark(override val primary: Color = primaryBlue) : ThemeColors {
@@ -153,6 +156,7 @@ data class OceanDark(override val primary: Color = primaryBlue) : ThemeColors {
     override val qrCodeBackground = text
     override val primaryButtonFill = primary
     override val primaryButtonFillText = Color.Black
+    override val textAlert: Color = oceanDark0
 }
 
 data class OceanLight(override val primary: Color = primaryBlue) : ThemeColors {
@@ -172,6 +176,7 @@ data class OceanLight(override val primary: Color = primaryBlue) : ThemeColors {
     override val qrCodeBackground = backgroundSecondary
     override val primaryButtonFill = text
     override val primaryButtonFillText = Color.White
+    override val textAlert: Color = oceanLight0
 }
 
 @Preview
@@ -205,6 +210,9 @@ private fun ThemeColors() {
         }
         Box(Modifier.background(LocalColors.current.borders)) {
             Text("border", style = LocalType.current.base)
+        }
+        Box(Modifier.background(LocalColors.current.warning)) {
+            Text("alertOnWarning", style = LocalType.current.base, color = LocalColors.current.textAlert)
         }
     }
 }

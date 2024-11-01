@@ -3,26 +3,36 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import net.zetetic.database.sqlcipher.SQLiteDatabase.CONFLICT_REPLACE
+import org.intellij.lang.annotations.Language
+import org.json.JSONArray
+import org.session.libsession.database.ServerHashToMessageId
 import org.session.libsignal.database.LokiMessageDatabaseProtocol
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
+import org.thoughtcrime.securesms.util.asSequence
 
 class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper), LokiMessageDatabaseProtocol {
 
     companion object {
-        private val messageIDTable = "loki_message_friend_request_database"
-        private val messageThreadMappingTable = "loki_message_thread_mapping_database"
-        private val errorMessageTable = "loki_error_message_database"
-        private val messageHashTable = "loki_message_hash_database"
-        private val smsHashTable = "loki_sms_hash_database"
-        private val mmsHashTable = "loki_mms_hash_database"
-        private val messageID = "message_id"
-        private val serverID = "server_id"
-        private val friendRequestStatus = "friend_request_status"
-        private val threadID = "thread_id"
-        private val errorMessage = "error_message"
-        private val messageType = "message_type"
-        private val serverHash = "server_hash"
+        private const val messageIDTable = "loki_message_friend_request_database"
+        private const val messageThreadMappingTable = "loki_message_thread_mapping_database"
+        private const val errorMessageTable = "loki_error_message_database"
+        private const val messageHashTable = "loki_message_hash_database"
+        private const val smsHashTable = "loki_sms_hash_database"
+        private const val mmsHashTable = "loki_mms_hash_database"
+        const val groupInviteTable = "loki_group_invites"
+
+        private const val groupInviteDeleteTrigger = "group_invite_delete_trigger"
+
+        private const val messageID = "message_id"
+        private const val serverID = "server_id"
+        private const val friendRequestStatus = "friend_request_status"
+        private const val threadID = "thread_id"
+        private const val errorMessage = "error_message"
+        private const val messageType = "message_type"
+        private const val serverHash = "server_hash"
+        const val invitingSessionId = "inviting_session_id"
+
         @JvmStatic
         val createMessageIDTableCommand = "CREATE TABLE $messageIDTable ($messageID INTEGER PRIMARY KEY, $serverID INTEGER DEFAULT 0, $friendRequestStatus INTEGER DEFAULT 0);"
         @JvmStatic
@@ -39,6 +49,10 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         val createMmsHashTableCommand = "CREATE TABLE IF NOT EXISTS $mmsHashTable ($messageID INTEGER PRIMARY KEY, $serverHash STRING);"
         @JvmStatic
         val createSmsHashTableCommand = "CREATE TABLE IF NOT EXISTS $smsHashTable ($messageID INTEGER PRIMARY KEY, $serverHash STRING);"
+        @JvmStatic
+        val createGroupInviteTableCommand = "CREATE TABLE IF NOT EXISTS $groupInviteTable ($threadID INTEGER PRIMARY KEY, $invitingSessionId STRING);"
+        @JvmStatic
+        val createThreadDeleteTrigger = "CREATE TRIGGER IF NOT EXISTS $groupInviteDeleteTrigger AFTER DELETE ON ${ThreadDatabase.TABLE_NAME} BEGIN DELETE FROM $groupInviteTable WHERE $threadID = OLD.${ThreadDatabase.ID}; END;"
 
         const val SMS_TYPE = 0
         const val MMS_TYPE = 1
@@ -224,6 +238,55 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         }
     }
 
+    fun getSendersForHashes(threadId: Long, hashes: Set<String>): List<ServerHashToMessageId> {
+        @Language("RoomSql")
+        val query = """
+             WITH 
+                 sender_hash_mapping AS (
+                    SELECT
+                         sms_hash_table.$serverHash AS hash, 
+                         sms.${MmsSmsColumns.ID} AS message_id,
+                         sms.${MmsSmsColumns.ADDRESS} AS sender,
+                         sms.${SmsDatabase.TYPE} AS type,
+                         true AS is_sms
+                    FROM $smsHashTable sms_hash_table
+                    LEFT OUTER JOIN ${SmsDatabase.TABLE_NAME} sms ON sms_hash_table.${messageID} = sms.${MmsSmsColumns.ID}
+                    WHERE sms.${MmsSmsColumns.THREAD_ID} = :threadId
+                     
+                    UNION ALL
+                     
+                    SELECT 
+                         mms_hash_table.$serverHash, 
+                         mms.${MmsSmsColumns.ID},
+                         mms.${MmsSmsColumns.ADDRESS},
+                         mms.${MmsDatabase.MESSAGE_TYPE},
+                         false
+                    FROM $mmsHashTable mms_hash_table
+                    LEFT OUTER JOIN ${MmsDatabase.TABLE_NAME} mms ON mms_hash_table.${messageID} = mms.${MmsSmsColumns.ID}
+                    WHERE mms.${MmsSmsColumns.THREAD_ID} = :threadId
+                 ) 
+             SELECT * FROM sender_hash_mapping
+             WHERE hash IN (SELECT value FROM json_each(:hashes))
+        """.trimIndent()
+
+        val result = databaseHelper.readableDatabase.query(query, arrayOf(threadId, JSONArray(hashes).toString()))
+            .use { cursor ->
+                cursor.asSequence()
+                    .map {
+                        ServerHashToMessageId(
+                            serverHash = cursor.getString(0),
+                            messageId = cursor.getLong(1),
+                            sender = cursor.getString(2),
+                            isSms = cursor.getInt(4) == 1,
+                            isOutgoing = MmsSmsColumns.Types.isOutgoingMessageType(cursor.getLong(3))
+                        )
+                    }
+                    .toList()
+            }
+
+        return result
+    }
+
     fun getMessageServerHash(messageID: Long, mms: Boolean): String? = getMessageTables(mms).firstNotNullOfOrNull {
         databaseHelper.readableDatabase.get(it, "${Companion.messageID} = ?", arrayOf(messageID.toString())) { cursor ->
             cursor.getString(serverHash)
@@ -255,6 +318,27 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         )
     }
 
+    fun addGroupInviteReferrer(groupThreadId: Long, referrerSessionId: String) {
+        val contentValues = ContentValues(2).apply {
+            put(threadID, groupThreadId)
+            put(invitingSessionId, referrerSessionId)
+        }
+        databaseHelper.writableDatabase.insertOrUpdate(
+            groupInviteTable, contentValues, "$threadID = ?", arrayOf(groupThreadId.toString())
+        )
+    }
+
+    fun groupInviteReferrer(groupThreadId: Long): String? {
+        return databaseHelper.readableDatabase.get(groupInviteTable, "$threadID = ?", arrayOf(groupThreadId.toString())) {cursor ->
+            cursor.getString(invitingSessionId)
+        }
+    }
+
+    fun deleteGroupInviteReferrer(groupThreadId: Long) {
+        databaseHelper.writableDatabase.delete(
+            groupInviteTable, "$threadID = ?", arrayOf(groupThreadId.toString())
+        )
+    }
     private fun getMessageTables(mms: Boolean) = sequenceOf(
         getMessageTable(mms),
         messageHashTable

@@ -16,6 +16,8 @@ import org.thoughtcrime.securesms.groups.OpenGroupManager;
 
 import java.util.concurrent.TimeUnit;
 
+import kotlin.Unit;
+
 public class OptimizedMessageNotifier implements MessageNotifier {
   private final MessageNotifier         wrapped;
   private final Debouncer               debouncer;
@@ -118,7 +120,10 @@ public class OptimizedMessageNotifier implements MessageNotifier {
 
   private void performOnBackgroundThreadIfNeeded(Runnable r) {
     if (Looper.myLooper() == Looper.getMainLooper()) {
-      ThreadUtils.queue(r);
+      ThreadUtils.queue(() -> {
+        r.run();
+        return Unit.INSTANCE;
+      });
     } else {
       r.run();
     }

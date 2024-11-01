@@ -8,7 +8,7 @@ fun Recipient.getType(): MessageType =
     when{
         isCommunityRecipient -> MessageType.COMMUNITY
         isLocalNumber -> MessageType.NOTE_TO_SELF
-        isClosedGroupRecipient -> MessageType.LEGACY_GROUP //todo GROUPS V2 this property will change for groups v2. Check for legacyGroup here
-        //isXXXXX -> RecipientType.GROUPS_V2 //todo GROUPS V2 this property will change for groups v2. Check for legacyGroup here
+        isLegacyGroupRecipient -> MessageType.LEGACY_GROUP
+        isGroupV2Recipient -> MessageType.GROUPS_V2
         else -> MessageType.ONE_ON_ONE
     }

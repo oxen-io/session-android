@@ -5,11 +5,12 @@ import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.AEAD
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.Hash
+import com.goterl.lazysodium.interfaces.Sign
 import com.goterl.lazysodium.utils.Key
 import com.goterl.lazysodium.utils.KeyPair
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.toHexString
 import org.whispersystems.curve25519.Curve25519
 import kotlin.experimental.xor
 
@@ -29,7 +30,13 @@ object SodiumUtilities {
         val serverPubKeyData = Hex.fromStringCondensed(serverPublicKey)
         if (serverPubKeyData.size != PUBLIC_KEY_LENGTH) return null
         val serverPubKeyHash = ByteArray(GenericHash.BLAKE2B_BYTES_MAX)
-        if (!sodium.cryptoGenericHash(serverPubKeyHash, serverPubKeyHash.size, serverPubKeyData, serverPubKeyData.size.toLong())) {
+        if (!sodium.cryptoGenericHash(
+                serverPubKeyHash,
+                serverPubKeyHash.size,
+                serverPubKeyData,
+                serverPubKeyData.size.toLong()
+            )
+        ) {
             return null
         }
         // Reduce the server public key into an ed25519 scalar (`k`)
@@ -37,7 +44,7 @@ object SodiumUtilities {
         sodium.cryptoCoreEd25519ScalarReduce(x25519PublicKey, serverPubKeyHash)
         return if (x25519PublicKey.any { it.toInt() != 0 }) {
             x25519PublicKey
-        } else  null
+        } else null
     }
 
     /*
@@ -56,7 +63,7 @@ object SodiumUtilities {
 
     /* Constructs a "blinded" key pair (`ka, kA`) based on an open group server `publicKey` and an ed25519 `keyPair` */
     @JvmStatic
-    fun blindedKeyPair(serverPublicKey: String, edKeyPair: KeyPair): KeyPair?  {
+    fun blindedKeyPair(serverPublicKey: String, edKeyPair: KeyPair): KeyPair? {
         if (edKeyPair.publicKey.asBytes.size != PUBLIC_KEY_LENGTH || edKeyPair.secretKey.asBytes.size != SECRET_KEY_LENGTH) return null
         val kBytes = generateBlindingFactor(serverPublicKey) ?: return null
         val aBytes = generatePrivateKeyScalar(edKeyPair.secretKey.asBytes) ?: return null
@@ -111,7 +118,7 @@ object SodiumUtilities {
         val sig_s = ByteArray(SCALAR_LENGTH)
         sodium.cryptoCoreEd25519ScalarMul(sig_sMul, hRam, blindedSecretKey)
         if (sig_sMul.any { it.toInt() != 0 }) {
-            sodium.cryptoCoreEd25519ScalarAdd(sig_s,  r, sig_sMul)
+            sodium.cryptoCoreEd25519ScalarAdd(sig_s, r, sig_sMul)
             if (sig_s.all { it.toInt() == 0 }) return null
         } else return null
 
@@ -154,7 +161,13 @@ object SodiumUtilities {
         val combinedKeyBytes = combineKeys(aBytes, otherBlindedPublicKey) ?: return null
         val outputHash = ByteArray(GenericHash.KEYBYTES)
         val inputBytes = combinedKeyBytes + kA + kB
-        return if (sodium.cryptoGenericHash(outputHash, outputHash.size, inputBytes, inputBytes.size.toLong())) {
+        return if (sodium.cryptoGenericHash(
+                outputHash,
+                outputHash.size,
+                inputBytes,
+                inputBytes.size.toLong()
+            )
+        ) {
             outputHash
         } else null
     }
@@ -165,6 +178,10 @@ object SodiumUtilities {
         blindedAccountId: String,
         serverPublicKey: String
     ): Boolean {
+        if (standardAccountId.isBlank() || blindedAccountId.isBlank() || serverPublicKey.isBlank()) {
+            return false
+        }
+
         // Only support generating blinded keys for standard account ids
         val accountId = AccountId(standardAccountId)
         if (accountId.prefix != IdPrefix.STANDARD) return false
@@ -174,7 +191,8 @@ object SodiumUtilities {
 
         // From the account id (ignoring 05 prefix) we have two possible ed25519 pubkeys;
         // the first is the positive (which is what Signal's XEd25519 conversion always uses)
-        val xEd25519Key = curve.convertToEd25519PublicKey(Key.fromHexString(accountId.publicKey).asBytes)
+        val xEd25519Key =
+            curve.convertToEd25519PublicKey(accountId.pubKeyBytes)
 
         // Blind the positive public key
         val pk1 = combineKeys(k, xEd25519Key) ?: return false
@@ -182,11 +200,16 @@ object SodiumUtilities {
         // For the negative, what we're going to get out of the above is simply the negative of pk1, so flip the sign bit to get pk2
         //     pk2 = pk1[0:31] + bytes([pk1[31] ^ 0b1000_0000])
         val pk2 = pk1.take(31).toByteArray() + listOf(pk1.last().xor(128.toByte())).toByteArray()
-        return AccountId(IdPrefix.BLINDED, pk1).publicKey == blindedId.publicKey ||
-                AccountId(IdPrefix.BLINDED, pk2).publicKey == blindedId.publicKey
+        return AccountId(IdPrefix.BLINDED, pk1).hexString == blindedId.hexString ||
+                AccountId(IdPrefix.BLINDED, pk2).hexString == blindedId.hexString
     }
 
-    fun encrypt(message: ByteArray, secretKey: ByteArray, nonce: ByteArray, additionalData: ByteArray? = null): ByteArray? {
+    fun encrypt(
+        message: ByteArray,
+        secretKey: ByteArray,
+        nonce: ByteArray,
+        additionalData: ByteArray? = null
+    ): ByteArray? {
         val authenticatedCipherText = ByteArray(message.size + AEAD.CHACHA20POLY1305_ABYTES)
         return if (sodium.cryptoAeadXChaCha20Poly1305IetfEncrypt(
                 authenticatedCipherText,
@@ -230,23 +253,29 @@ object SodiumUtilities {
         } else null
     }
 
-}
-
-class AccountId {
-    var prefix: IdPrefix?
-    var publicKey: String
-
-    constructor(id: String) {
-        prefix = IdPrefix.fromValue(id)
-        publicKey = id.drop(2)
+    /**
+     * Returns true only if the signature verified successfully
+     */
+    fun verifySignature(
+        signature: ByteArray,
+        publicKey: ByteArray,
+        messageToVerify: ByteArray
+    ): Boolean {
+        return sodium.cryptoSignVerifyDetached(
+            signature,
+            messageToVerify, messageToVerify.size, publicKey)
     }
 
-    constructor(prefix: IdPrefix, publicKey: ByteArray) {
-        this.prefix = prefix
-        this.publicKey = publicKey.toHexString()
-    }
+    /**
+     * For signing
+     */
+    fun sign(message: ByteArray, signingKey: ByteArray): ByteArray {
+        val signature = ByteArray(Sign.BYTES)
 
-    val hexString
-        get() = prefix?.value + publicKey
+        if (!sodium.cryptoSignDetached(signature, message, message.size.toLong(), signingKey)) {
+            throw SecurityException("Couldn't sign the message with the signing key")
+        }
+        return signature
+    }
 }
 

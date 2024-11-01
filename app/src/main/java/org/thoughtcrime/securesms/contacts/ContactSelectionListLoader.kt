@@ -33,7 +33,7 @@ class ContactSelectionListLoader(context: Context, val mode: Int, val filter: St
         }
         val list = mutableListOf<ContactSelectionListItem>()
         if (isFlagSet(DisplayMode.FLAG_CLOSED_GROUPS)) {
-            list.addAll(getClosedGroups(contacts))
+            list.addAll(getGroups(contacts))
         }
         if (isFlagSet(DisplayMode.FLAG_OPEN_GROUPS)) {
             list.addAll(getCommunities(contacts))
@@ -46,14 +46,12 @@ class ContactSelectionListLoader(context: Context, val mode: Int, val filter: St
 
     private fun getContacts(contacts: List<Recipient>): List<ContactSelectionListItem> {
         return getItems(contacts, context.getString(R.string.contactContacts)) {
-            !it.isGroupRecipient
+            !it.isGroupOrCommunityRecipient
         }
     }
 
-    private fun getClosedGroups(contacts: List<Recipient>): List<ContactSelectionListItem> {
-        return getItems(contacts, context.getString(R.string.conversationsGroups)) {
-            it.address.isClosedGroup
-        }
+    private fun getGroups(contacts: List<Recipient>): List<ContactSelectionListItem> {
+        return getItems(contacts, context.getString(R.string.conversationsGroups)) { it.address.isGroup }
     }
 
     private fun getCommunities(contacts: List<Recipient>): List<ContactSelectionListItem> {

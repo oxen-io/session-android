@@ -24,7 +24,7 @@ object MessageEncrypter {
      * @return the encrypted message.
      */
     internal fun encrypt(plaintext: ByteArray, recipientHexEncodedX25519PublicKey: String): ByteArray {
-        val userED25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: throw Error.NoUserED25519KeyPair
+        val userED25519KeyPair = MessagingModuleConfiguration.shared.storage.getUserED25519KeyPair() ?: throw Error.NoUserED25519KeyPair
         val recipientX25519PublicKey = Hex.fromStringCondensed(recipientHexEncodedX25519PublicKey.removingIdPrefixIfNeeded())
 
         val verificationData = plaintext + userED25519KeyPair.publicKey.asBytes + recipientX25519PublicKey
@@ -54,7 +54,7 @@ object MessageEncrypter {
     ): ByteArray {
         if (IdPrefix.fromValue(recipientBlindedId) != IdPrefix.BLINDED) throw Error.SigningFailed
         val userEdKeyPair =
-            MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: throw Error.NoUserED25519KeyPair
+            MessagingModuleConfiguration.shared.storage.getUserED25519KeyPair() ?: throw Error.NoUserED25519KeyPair
         val blindedKeyPair = SodiumUtilities.blindedKeyPair(serverPublicKey, userEdKeyPair) ?: throw Error.SigningFailed
         val recipientBlindedPublicKey = Hex.fromStringCondensed(recipientBlindedId.removingIdPrefixIfNeeded())
 

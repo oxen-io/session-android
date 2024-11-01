@@ -85,9 +85,12 @@ class MentionViewModel(
                 }
 
                 val memberIDs = when {
-                    recipient.isClosedGroupRecipient -> {
+                    recipient.isLegacyGroupRecipient -> {
                         groupDatabase.getGroupMemberAddresses(recipient.address.toGroupString(), false)
                             .map { it.serialize() }
+                    }
+                    recipient.isGroupV2Recipient -> {
+                        storage.getMembers(recipient.address.serialize()).map { it.sessionId }
                     }
 
                     recipient.isCommunityRecipient -> mmsDatabase.getRecentChatMemberIDs(threadID, 20)

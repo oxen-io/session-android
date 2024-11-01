@@ -10,11 +10,14 @@ sealed class Destination {
     data class Contact(var publicKey: String) : Destination() {
         internal constructor(): this("")
     }
-    data class ClosedGroup(var groupPublicKey: String) : Destination() {
+    data class LegacyClosedGroup(var groupPublicKey: String) : Destination() {
         internal constructor(): this("")
     }
     data class LegacyOpenGroup(var roomToken: String, var server: String) : Destination() {
         internal constructor(): this("", "")
+    }
+    data class ClosedGroup(var publicKey: String): Destination() {
+        internal constructor(): this("")
     }
 
     class OpenGroup(
@@ -38,10 +41,10 @@ sealed class Destination {
                 address.isContact -> {
                     Contact(address.contactIdentifier())
                 }
-                address.isClosedGroup -> {
+                address.isLegacyGroup -> {
                     val groupID = address.toGroupString()
                     val groupPublicKey = GroupUtil.doubleDecodeGroupID(groupID).toHexString()
-                    ClosedGroup(groupPublicKey)
+                    LegacyClosedGroup(groupPublicKey)
                 }
                 address.isCommunity -> {
                     val storage = MessagingModuleConfiguration.shared.storage
@@ -57,6 +60,9 @@ sealed class Destination {
                         groupInboxId.dropLast(1).last(),
                         groupInboxId.last()
                     )
+                }
+                address.isGroupV2 -> {
+                    ClosedGroup(address.serialize())
                 }
                 else -> {
                     throw Exception("TODO: Handle legacy closed groups.")

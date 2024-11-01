@@ -24,10 +24,15 @@ data class SnodeMessage(
 
     internal fun toJSON(): Map<String, String> {
         return mapOf(
-            "pubKey" to recipient,
+            "pubkey" to recipient,
             "data" to data,
             "ttl" to ttl.toString(),
             "timestamp" to timestamp.toString(),
         )
+    }
+
+    companion object {
+        const val CONFIG_TTL: Long = 30 * 24 * 60 * 60 * 1000L // 30 days
+        const val DEFAULT_TTL: Long = 14 * 24 * 60 * 60 * 1000L // 14 days
     }
 }

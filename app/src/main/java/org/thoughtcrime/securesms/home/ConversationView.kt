@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -87,9 +86,9 @@ class ConversationView : LinearLayout {
         val textSize = if (unreadCount < 1000) 12.0f else 10.0f
         binding.unreadCountTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
         binding.unreadCountIndicator.isVisible = (unreadCount != 0 && !thread.isRead)
-                || (configFactory.convoVolatile?.getConversationUnread(thread) == true)
+                || (configFactory.withUserConfigs { it.convoInfoVolatile.getConversationUnread(thread) })
         binding.unreadMentionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
-        binding.unreadMentionIndicator.isVisible = (thread.unreadMentionCount != 0 && thread.recipient.address.isGroup)
+        binding.unreadMentionIndicator.isVisible = (thread.unreadMentionCount != 0 && thread.recipient.address.isGroupOrCommunity)
         val senderDisplayName = getTitle(thread.recipient)
                 ?: thread.recipient.address.toString()
         binding.conversationViewDisplayNameTextView.text = senderDisplayName

@@ -2,39 +2,6 @@
 #include "util.h"
 
 extern "C" {
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "bugprone-reserved-identifier"
-JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_UserProfile_00024Companion_newInstance___3B_3B(
-        JNIEnv *env, jobject thiz, jbyteArray ed25519_secret_key, jbyteArray initial_dump) {
-    std::lock_guard lock{util::util_mutex_};
-    auto secret_key = util::ustring_from_bytes(env, ed25519_secret_key);
-    auto initial = util::ustring_from_bytes(env, initial_dump);
-    auto* profile = new session::config::UserProfile(secret_key, std::optional(initial));
-
-    jclass userClass = env->FindClass("network/loki/messenger/libsession_util/UserProfile");
-    jmethodID constructor = env->GetMethodID(userClass, "<init>", "(J)V");
-    jobject newConfig = env->NewObject(userClass, constructor, reinterpret_cast<jlong>(profile));
-
-    return newConfig;
-}
-
-JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_UserProfile_00024Companion_newInstance___3B(
-        JNIEnv* env,
-        jobject,
-        jbyteArray secretKey) {
-    std::lock_guard lock{util::util_mutex_};
-    auto* profile = new session::config::UserProfile(util::ustring_from_bytes(env, secretKey), std::nullopt);
-
-    jclass userClass = env->FindClass("network/loki/messenger/libsession_util/UserProfile");
-    jmethodID constructor = env->GetMethodID(userClass, "<init>", "(J)V");
-    jobject newConfig = env->NewObject(userClass, constructor, reinterpret_cast<jlong>(profile));
-
-    return newConfig;
-}
-#pragma clang diagnostic pop
-
 JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_setName(
         JNIEnv* env,
@@ -84,13 +51,13 @@ Java_network_loki_messenger_libsession_1util_UserProfile_setPic(JNIEnv *env, job
 extern "C"
 JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_setNtsPriority(JNIEnv *env, jobject thiz,
-                                                                        jint priority) {
+                                                                        jlong priority) {
     std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);
     profile->set_nts_priority(priority);
 }
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jlong JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_getNtsPriority(JNIEnv *env, jobject thiz) {
     std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);

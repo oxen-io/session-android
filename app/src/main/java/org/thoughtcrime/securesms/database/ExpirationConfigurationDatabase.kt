@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.ExpirationDatabaseMetadata
-import org.session.libsession.utilities.GroupUtil.CLOSED_GROUP_PREFIX
+import org.session.libsession.utilities.GroupUtil.LEGACY_CLOSED_GROUP_PREFIX
 import org.session.libsession.utilities.GroupUtil.COMMUNITY_INBOX_PREFIX
 import org.session.libsession.utilities.GroupUtil.COMMUNITY_PREFIX
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
@@ -29,7 +29,7 @@ class ExpirationConfigurationDatabase(context: Context, helper: SQLCipherOpenHel
         val MIGRATE_GROUP_CONVERSATION_EXPIRY_TYPE_COMMAND = """
             INSERT INTO $TABLE_NAME ($THREAD_ID) SELECT ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ID}
             FROM ${ThreadDatabase.TABLE_NAME}, ${RecipientDatabase.TABLE_NAME}
-            WHERE ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} LIKE '$CLOSED_GROUP_PREFIX%'
+            WHERE ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} LIKE '$LEGACY_CLOSED_GROUP_PREFIX%'
             AND EXISTS (SELECT ${RecipientDatabase.EXPIRE_MESSAGES} FROM ${RecipientDatabase.TABLE_NAME} WHERE ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} = ${RecipientDatabase.TABLE_NAME}.${RecipientDatabase.ADDRESS} AND ${RecipientDatabase.EXPIRE_MESSAGES} > 0)
         """.trimIndent()
 
@@ -37,7 +37,7 @@ class ExpirationConfigurationDatabase(context: Context, helper: SQLCipherOpenHel
         val MIGRATE_ONE_TO_ONE_CONVERSATION_EXPIRY_TYPE_COMMAND = """
             INSERT INTO $TABLE_NAME ($THREAD_ID) SELECT ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ID}
             FROM ${ThreadDatabase.TABLE_NAME}, ${RecipientDatabase.TABLE_NAME}
-            WHERE ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} NOT LIKE '$CLOSED_GROUP_PREFIX%'
+            WHERE ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} NOT LIKE '$LEGACY_CLOSED_GROUP_PREFIX%'
             AND ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} NOT LIKE '$COMMUNITY_PREFIX%'
             AND ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} NOT LIKE '$COMMUNITY_INBOX_PREFIX%'
             AND EXISTS (SELECT ${RecipientDatabase.EXPIRE_MESSAGES} FROM ${RecipientDatabase.TABLE_NAME} WHERE ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} = ${RecipientDatabase.TABLE_NAME}.${RecipientDatabase.ADDRESS} AND ${RecipientDatabase.EXPIRE_MESSAGES} > 0)

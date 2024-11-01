@@ -40,7 +40,7 @@ object SessionMetaProtocol {
 
     @JvmStatic
     fun shouldSendDeliveryReceipt(message: SignalServiceDataMessage, address: Address): Boolean {
-        if (address.isGroup) { return false }
+        if (address.isGroupOrCommunity) { return false }
         val hasBody = message.body.isPresent && message.body.get().isNotEmpty()
         val hasAttachment = message.attachments.isPresent && message.attachments.get().isNotEmpty()
         val hasLinkPreview = message.previews.isPresent && message.previews.get().isNotEmpty()
@@ -49,11 +49,11 @@ object SessionMetaProtocol {
 
     @JvmStatic
     fun shouldSendReadReceipt(recipient: Recipient): Boolean {
-        return !recipient.isGroupRecipient && recipient.isApproved && !recipient.isBlocked
+        return !recipient.isGroupOrCommunityRecipient && recipient.isApproved && !recipient.isBlocked
     }
 
     @JvmStatic
     fun shouldSendTypingIndicator(recipient: Recipient): Boolean {
-        return !recipient.isGroupRecipient && recipient.isApproved && !recipient.isBlocked
+        return !recipient.isGroupOrCommunityRecipient && recipient.isApproved && !recipient.isBlocked
     }
 }

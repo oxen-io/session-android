@@ -18,15 +18,12 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import javax.inject.Inject
 import network.loki.messenger.R
-import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.task
-import nl.komponents.kovenant.ui.failUi
-import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.groupSizeLimit
 import org.session.libsession.utilities.Address
@@ -43,12 +40,11 @@ import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.ClosedGroupManager.updateLegacyGroup
-import com.bumptech.glide.Glide
 import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
 
 @AndroidEntryPoint
-class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
+class EditLegacyGroupActivity : PassphraseRequiredActionBarActivity() {
 
     @Inject
     lateinit var groupConfigFactory: ConfigFactory
@@ -80,9 +76,9 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
 
     private val memberListAdapter by lazy {
         if (isSelfAdmin)
-            EditClosedGroupMembersAdapter(this, Glide.with(this), isSelfAdmin, this::onMemberClick)
+            EditLegacyGroupMembersAdapter(this, Glide.with(this), isSelfAdmin, this::onMemberClick)
         else
-            EditClosedGroupMembersAdapter(this, Glide.with(this), isSelfAdmin)
+            EditLegacyGroupMembersAdapter(this, Glide.with(this), isSelfAdmin)
     }
 
     private lateinit var mainContentContainer: LinearLayout
@@ -129,7 +125,7 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
 
         findViewById<RecyclerView>(R.id.rvUserList).apply {
             adapter = memberListAdapter
-            layoutManager = LinearLayoutManager(this@EditClosedGroupActivity)
+            layoutManager = LinearLayoutManager(this@EditLegacyGroupActivity)
         }
 
         lblGroupNameDisplay.text = originalName
@@ -162,13 +158,13 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         LoaderManager.getInstance(this).initLoader(loaderID, null, object : LoaderManager.LoaderCallbacks<GroupMembers> {
 
             override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<GroupMembers> {
-                return EditClosedGroupLoader(this@EditClosedGroupActivity, groupID)
+                return EditLegacyClosedGroupLoader(this@EditLegacyGroupActivity, groupID)
             }
 
             override fun onLoadFinished(loader: Loader<GroupMembers>, groupMembers: GroupMembers) {
                 // We no longer need any subsequent loading events
                 // (they will occur on every activity resume).
-                LoaderManager.getInstance(this@EditClosedGroupActivity).destroyLoader(loaderID)
+                LoaderManager.getInstance(this@EditLegacyGroupActivity).destroyLoader(loaderID)
 
                 members.clear()
                 members.addAll(groupMembers.members.toHashSet())
@@ -192,7 +188,6 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
     // endregion
 
     // region Updating
-    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -252,7 +247,7 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
     }
 
     private fun onAddMembersClick() {
-        val intent = Intent(this@EditClosedGroupActivity, SelectContactsActivity::class.java)
+        val intent = Intent(this@EditLegacyGroupActivity, SelectContactsActivity::class.java)
         intent.putExtra(SelectContactsActivity.usersToExcludeKey, allMembers.toTypedArray())
         intent.putExtra(SelectContactsActivity.emptyStateTextKey, "No contacts to add")
         startActivityForResult(intent, addUsersRequestCode)
@@ -320,10 +315,10 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         if (isClosedGroup) {
             isLoading = true
             loaderContainer.fadeIn()
-            val promise: Promise<Any, Exception> = if (!members.contains(Recipient.from(this, Address.fromSerialized(userPublicKey), false))) {
-                MessageSender.explicitLeave(groupPublicKey!!, false)
-            } else {
-                task {
+            try {
+                if (!members.contains(Recipient.from(this, Address.fromSerialized(userPublicKey), false))) {
+                    MessageSender.explicitLeave(groupPublicKey!!, false)
+                } else {
                     if (hasNameChanged) {
                         MessageSender.explicitNameChange(groupPublicKey!!, name)
                     }
@@ -334,15 +329,13 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
                         if (removes.isNotEmpty()) MessageSender.explicitRemoveMembers(groupPublicKey!!, removes.map { it.address.serialize() })
                     }
                 }
-            }
-            promise.successUi {
                 loaderContainer.fadeOut()
                 isLoading = false
                 updateGroupConfig()
                 finish()
-            }.failUi { exception ->
+            } catch (exception: Exception) {
                 val message = if (exception is MessageSender.Error) exception.description else "An error occurred"
-                Toast.makeText(this@EditClosedGroupActivity, message, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@EditLegacyGroupActivity, message, Toast.LENGTH_LONG).show()
                 loaderContainer.fadeOut()
                 isLoading = false
             }
@@ -350,8 +343,6 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
     }
 
     private fun updateGroupConfig() {
-        val latestRecipient = storage.getRecipientSettings(Address.fromSerialized(groupID))
-            ?: return Log.w("Loki", "No recipient settings when trying to update group config")
         val latestGroup = storage.getGroup(groupID)
             ?: return Log.w("Loki", "No group record when trying to update group config")
         groupConfigFactory.updateLegacyGroup(latestGroup)

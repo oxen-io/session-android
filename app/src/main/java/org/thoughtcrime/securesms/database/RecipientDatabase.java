@@ -65,13 +65,14 @@ public class RecipientDatabase extends Database {
   private static final String NOTIFY_TYPE              = "notify_type"; // all, mentions only, none
   private static final String WRAPPER_HASH             = "wrapper_hash";
   private static final String BLOCKS_COMMUNITY_MESSAGE_REQUESTS = "blocks_community_message_requests";
+  private static final String AUTO_DOWNLOAD            = "auto_download"; // 1 / 0 / -1 flag for whether to auto-download in a conversation, or if the user hasn't selected a preference
 
   private static final String[] RECIPIENT_PROJECTION = new String[] {
       BLOCK, APPROVED, APPROVED_ME, NOTIFICATION, CALL_RINGTONE, VIBRATE, CALL_VIBRATE, MUTE_UNTIL, COLOR, SEEN_INVITE_REMINDER, DEFAULT_SUBSCRIPTION_ID, EXPIRE_MESSAGES, REGISTERED,
       PROFILE_KEY, SYSTEM_DISPLAY_NAME, SYSTEM_PHOTO_URI, SYSTEM_PHONE_LABEL, SYSTEM_CONTACT_URI,
       SIGNAL_PROFILE_NAME, SESSION_PROFILE_AVATAR, PROFILE_SHARING, NOTIFICATION_CHANNEL,
       UNIDENTIFIED_ACCESS_MODE,
-      FORCE_SMS_SELECTION, NOTIFY_TYPE, DISAPPEARING_STATE, WRAPPER_HASH, BLOCKS_COMMUNITY_MESSAGE_REQUESTS
+      FORCE_SMS_SELECTION, NOTIFY_TYPE, DISAPPEARING_STATE, WRAPPER_HASH, BLOCKS_COMMUNITY_MESSAGE_REQUESTS, AUTO_DOWNLOAD,
   };
 
   static final List<String> TYPED_RECIPIENT_PROJECTION = Stream.of(RECIPIENT_PROJECTION)
@@ -108,6 +109,17 @@ public class RecipientDatabase extends Database {
   public static String getCreateNotificationTypeCommand() {
     return "ALTER TABLE "+ TABLE_NAME + " " +
             "ADD COLUMN " + NOTIFY_TYPE + " INTEGER DEFAULT 0;";
+  }
+
+  public static String getCreateAutoDownloadCommand() {
+    return "ALTER TABLE "+ TABLE_NAME + " " +
+          "ADD COLUMN " + AUTO_DOWNLOAD + " INTEGER DEFAULT -1;";
+  }
+
+  public static String getUpdateAutoDownloadValuesCommand() {
+    return "UPDATE "+TABLE_NAME+" SET "+AUTO_DOWNLOAD+" = 1 "+
+            "WHERE "+ADDRESS+" IN (SELECT "+SessionContactDatabase.sessionContactTable+"."+SessionContactDatabase.accountID+" "+
+            "FROM "+SessionContactDatabase.sessionContactTable+" WHERE ("+SessionContactDatabase.isTrusted+" != 0))";
   }
 
   public static String getCreateApprovedCommand() {
@@ -184,31 +196,32 @@ public class RecipientDatabase extends Database {
   }
 
   Optional<RecipientSettings> getRecipientSettings(@NonNull Cursor cursor) {
-    boolean blocked                = cursor.getInt(cursor.getColumnIndexOrThrow(BLOCK))                == 1;
-    boolean approved               = cursor.getInt(cursor.getColumnIndexOrThrow(APPROVED))             == 1;
-    boolean approvedMe             = cursor.getInt(cursor.getColumnIndexOrThrow(APPROVED_ME))          == 1;
-    String  messageRingtone        = cursor.getString(cursor.getColumnIndexOrThrow(NOTIFICATION));
-    String  callRingtone           = cursor.getString(cursor.getColumnIndexOrThrow(CALL_RINGTONE));
-    int     disappearingState      = cursor.getInt(cursor.getColumnIndexOrThrow(DISAPPEARING_STATE));
-    int     messageVibrateState    = cursor.getInt(cursor.getColumnIndexOrThrow(VIBRATE));
-    int     callVibrateState       = cursor.getInt(cursor.getColumnIndexOrThrow(CALL_VIBRATE));
-    long    muteUntil              = cursor.getLong(cursor.getColumnIndexOrThrow(MUTE_UNTIL));
-    int     notifyType             = cursor.getInt(cursor.getColumnIndexOrThrow(NOTIFY_TYPE));
-    String  serializedColor        = cursor.getString(cursor.getColumnIndexOrThrow(COLOR));
-    int     defaultSubscriptionId  = cursor.getInt(cursor.getColumnIndexOrThrow(DEFAULT_SUBSCRIPTION_ID));
-    int     expireMessages         = cursor.getInt(cursor.getColumnIndexOrThrow(EXPIRE_MESSAGES));
-    int     registeredState        = cursor.getInt(cursor.getColumnIndexOrThrow(REGISTERED));
-    String  profileKeyString       = cursor.getString(cursor.getColumnIndexOrThrow(PROFILE_KEY));
-    String  systemDisplayName      = cursor.getString(cursor.getColumnIndexOrThrow(SYSTEM_DISPLAY_NAME));
-    String  systemContactPhoto     = cursor.getString(cursor.getColumnIndexOrThrow(SYSTEM_PHOTO_URI));
-    String  systemPhoneLabel       = cursor.getString(cursor.getColumnIndexOrThrow(SYSTEM_PHONE_LABEL));
-    String  systemContactUri       = cursor.getString(cursor.getColumnIndexOrThrow(SYSTEM_CONTACT_URI));
-    String  signalProfileName      = cursor.getString(cursor.getColumnIndexOrThrow(SIGNAL_PROFILE_NAME));
-    String  signalProfileAvatar    = cursor.getString(cursor.getColumnIndexOrThrow(SESSION_PROFILE_AVATAR));
-    boolean profileSharing         = cursor.getInt(cursor.getColumnIndexOrThrow(PROFILE_SHARING))      == 1;
-    String  notificationChannel    = cursor.getString(cursor.getColumnIndexOrThrow(NOTIFICATION_CHANNEL));
-    int     unidentifiedAccessMode = cursor.getInt(cursor.getColumnIndexOrThrow(UNIDENTIFIED_ACCESS_MODE));
-    boolean forceSmsSelection      = cursor.getInt(cursor.getColumnIndexOrThrow(FORCE_SMS_SELECTION))  == 1;
+    boolean blocked                 = cursor.getInt(cursor.getColumnIndexOrThrow(BLOCK))                == 1;
+    boolean approved                = cursor.getInt(cursor.getColumnIndexOrThrow(APPROVED))             == 1;
+    boolean approvedMe              = cursor.getInt(cursor.getColumnIndexOrThrow(APPROVED_ME))          == 1;
+    String  messageRingtone         = cursor.getString(cursor.getColumnIndexOrThrow(NOTIFICATION));
+    String  callRingtone            = cursor.getString(cursor.getColumnIndexOrThrow(CALL_RINGTONE));
+    int     disappearingState       = cursor.getInt(cursor.getColumnIndexOrThrow(DISAPPEARING_STATE));
+    int     messageVibrateState     = cursor.getInt(cursor.getColumnIndexOrThrow(VIBRATE));
+    int     callVibrateState        = cursor.getInt(cursor.getColumnIndexOrThrow(CALL_VIBRATE));
+    long    muteUntil               = cursor.getLong(cursor.getColumnIndexOrThrow(MUTE_UNTIL));
+    int     notifyType              = cursor.getInt(cursor.getColumnIndexOrThrow(NOTIFY_TYPE));
+    boolean autoDownloadAttachments = cursor.getInt(cursor.getColumnIndexOrThrow(AUTO_DOWNLOAD))        == 1;
+    String  serializedColor         = cursor.getString(cursor.getColumnIndexOrThrow(COLOR));
+    int     defaultSubscriptionId   = cursor.getInt(cursor.getColumnIndexOrThrow(DEFAULT_SUBSCRIPTION_ID));
+    int     expireMessages          = cursor.getInt(cursor.getColumnIndexOrThrow(EXPIRE_MESSAGES));
+    int     registeredState         = cursor.getInt(cursor.getColumnIndexOrThrow(REGISTERED));
+    String  profileKeyString        = cursor.getString(cursor.getColumnIndexOrThrow(PROFILE_KEY));
+    String  systemDisplayName       = cursor.getString(cursor.getColumnIndexOrThrow(SYSTEM_DISPLAY_NAME));
+    String  systemContactPhoto      = cursor.getString(cursor.getColumnIndexOrThrow(SYSTEM_PHOTO_URI));
+    String  systemPhoneLabel        = cursor.getString(cursor.getColumnIndexOrThrow(SYSTEM_PHONE_LABEL));
+    String  systemContactUri        = cursor.getString(cursor.getColumnIndexOrThrow(SYSTEM_CONTACT_URI));
+    String  signalProfileName       = cursor.getString(cursor.getColumnIndexOrThrow(SIGNAL_PROFILE_NAME));
+    String  signalProfileAvatar     = cursor.getString(cursor.getColumnIndexOrThrow(SESSION_PROFILE_AVATAR));
+    boolean profileSharing          = cursor.getInt(cursor.getColumnIndexOrThrow(PROFILE_SHARING))      == 1;
+    String  notificationChannel     = cursor.getString(cursor.getColumnIndexOrThrow(NOTIFICATION_CHANNEL));
+    int     unidentifiedAccessMode  = cursor.getInt(cursor.getColumnIndexOrThrow(UNIDENTIFIED_ACCESS_MODE));
+    boolean forceSmsSelection       = cursor.getInt(cursor.getColumnIndexOrThrow(FORCE_SMS_SELECTION))  == 1;
     String  wrapperHash            = cursor.getString(cursor.getColumnIndexOrThrow(WRAPPER_HASH));
     boolean blocksCommunityMessageRequests = cursor.getInt(cursor.getColumnIndexOrThrow(BLOCKS_COMMUNITY_MESSAGE_REQUESTS)) == 1;
 
@@ -232,7 +245,7 @@ public class RecipientDatabase extends Database {
     }
 
     return Optional.of(new RecipientSettings(blocked, approved, approvedMe, muteUntil,
-                                             notifyType,
+                                             notifyType, autoDownloadAttachments,
                                              Recipient.DisappearingState.fromId(disappearingState),
                                              Recipient.VibrateState.fromId(messageVibrateState),
                                              Recipient.VibrateState.fromId(callVibrateState),
@@ -244,6 +257,22 @@ public class RecipientDatabase extends Database {
                                              signalProfileName, signalProfileAvatar, profileSharing,
                                              notificationChannel, Recipient.UnidentifiedAccessMode.fromMode(unidentifiedAccessMode),
                                              forceSmsSelection, wrapperHash, blocksCommunityMessageRequests));
+  }
+
+  public boolean isAutoDownloadFlagSet(Recipient recipient) {
+    SQLiteDatabase db = getReadableDatabase();
+    Cursor cursor = db.query(TABLE_NAME, new String[]{ AUTO_DOWNLOAD }, ADDRESS+" = ?", new String[]{ recipient.getAddress().serialize() }, null, null, null);
+    boolean flagUnset = false;
+    try {
+      if (cursor.moveToFirst()) {
+        // flag isn't set if it is -1
+        flagUnset = cursor.getInt(cursor.getColumnIndexOrThrow(AUTO_DOWNLOAD)) == -1;
+      }
+    } finally {
+      cursor.close();
+    }
+    // negate result (is flag set)
+    return !flagUnset;
   }
 
   public void setColor(@NonNull Recipient recipient, @NonNull MaterialColor color) {
@@ -314,6 +343,21 @@ public class RecipientDatabase extends Database {
         db.update(TABLE_NAME, values, ADDRESS + " = ?", new String[]{recipient.getAddress().serialize()});
         recipient.resolve().setBlocked(blocked);
       }
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+    notifyRecipientListeners();
+  }
+
+  public void setAutoDownloadAttachments(@NonNull Recipient recipient, boolean shouldAutoDownloadAttachments) {
+    SQLiteDatabase db = getWritableDatabase();
+    db.beginTransaction();
+    try {
+      ContentValues values = new ContentValues();
+      values.put(AUTO_DOWNLOAD, shouldAutoDownloadAttachments ? 1 : 0);
+      db.update(TABLE_NAME, values, ADDRESS+ " = ?", new String[]{recipient.getAddress().serialize()});
+      recipient.resolve().setAutoDownloadAttachments(shouldAutoDownloadAttachments);
       db.setTransactionSuccessful();
     } finally {
       db.endTransaction();

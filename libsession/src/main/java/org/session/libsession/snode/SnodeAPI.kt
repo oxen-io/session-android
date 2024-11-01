@@ -2,38 +2,50 @@
 
 package org.session.libsession.snode
 
+import android.os.SystemClock
+import com.fasterxml.jackson.databind.JsonNode
 import com.goterl.lazysodium.exceptions.SodiumException
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.PwHash
 import com.goterl.lazysodium.interfaces.SecretBox
-import com.goterl.lazysodium.interfaces.Sign
 import com.goterl.lazysodium.utils.Key
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.selects.select
 import com.goterl.lazysodium.utils.KeyPair
 import kotlinx.coroutines.coroutineScope
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.functional.bind
 import nl.komponents.kovenant.functional.map
-import nl.komponents.kovenant.task
 import nl.komponents.kovenant.unwrap
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
+import org.session.libsession.snode.model.BatchResponse
+import org.session.libsession.snode.model.StoreMessageResponse
+import org.session.libsession.snode.utilities.asyncPromise
 import org.session.libsession.snode.utilities.await
-import org.session.libsession.utilities.buildMutableMap
+import org.session.libsession.snode.utilities.retrySuspendAsPromise
 import org.session.libsession.utilities.mapValuesNotNull
 import org.session.libsession.utilities.toByteArray
 import org.session.libsignal.crypto.secureRandom
 import org.session.libsignal.crypto.shuffledRandom
 import org.session.libsignal.database.LokiAPIDatabaseProtocol
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Broadcaster
 import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.Snode
 import org.session.libsignal.utilities.prettifiedDescription
 import org.session.libsignal.utilities.retryIfNeeded
@@ -54,15 +66,11 @@ object SnodeAPI {
     internal var snodePool: Set<Snode>
         get() = database.getSnodePool()
         set(newValue) { database.setSnodePool(newValue) }
-    /**
-     * The offset between the user's clock and the Service Node's clock. Used in cases where the
-     * user's clock is incorrect.
-     */
-    internal var clockOffset = 0L
 
+    @Deprecated("Use a dependency injected SnodeClock.currentTimeMills() instead")
     @JvmStatic
     val nowWithOffset
-        get() = System.currentTimeMillis() + clockOffset
+        get() = MessagingModuleConfiguration.shared.clock.currentTimeMills()
 
     internal var forkInfo by observable(database.getForkInfo()) { _, oldValue, newValue ->
         if (newValue > oldValue) {
@@ -95,12 +103,15 @@ object SnodeAPI {
     private const val KEY_ED25519 = "pubkey_ed25519"
     private const val KEY_VERSION = "storage_server_version"
 
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     // Error
     sealed class Error(val description: String) : Exception(description) {
         object Generic : Error("An error occurred.")
         object ClockOutOfSync : Error("Your clock is out of sync with the Service Node network.")
         object NoKeyPair : Error("Missing user key pair.")
         object SigningFailed : Error("Couldn't sign verification data.")
+
         // ONS
         object DecryptionFailed : Error("Couldn't decrypt ONS name.")
         object HashingFailed : Error("Couldn't compute ONS name hash.")
@@ -112,7 +123,7 @@ object SnodeAPI {
         val method: String,
         val params: Map<String, Any>,
         @Transient
-        val namespace: Int?
+        val namespace: Int?,
     ) // assume signatures, pubkey and namespaces are attached in parameters if required
 
     // Internal API
@@ -126,7 +137,8 @@ object SnodeAPI {
         useOnionRequests -> OnionRequestAPI.sendOnionRequest(method, parameters, snode, version, publicKey).map {
             JsonUtil.fromJson(it.body ?: throw Error.Generic, Map::class.java)
         }
-        else -> task {
+
+        else -> scope.asyncPromise {
             HTTP.execute(
                 HTTP.Verb.POST,
                 url = "${snode.address}:${snode.port}/storage_rpc/v1",
@@ -145,6 +157,31 @@ object SnodeAPI {
         }
     }
 
+    private suspend fun<Res> invokeSuspend(
+        method: Snode.Method,
+        snode: Snode,
+        parameters: Map<String, Any>,
+        responseClass: Class<Res>,
+        publicKey: String? = null,
+        version: Version = Version.V3
+    ): Res = when {
+        useOnionRequests -> {
+            val resp = OnionRequestAPI.sendOnionRequest(method, parameters, snode, version, publicKey).await()
+            JsonUtil.fromJson(resp.body ?: throw Error.Generic, responseClass)
+        }
+
+        else -> HTTP.execute(
+            HTTP.Verb.POST,
+            url = "${snode.address}:${snode.port}/storage_rpc/v1",
+            parameters = buildMap {
+                this["method"] = method.rawValue
+                this["params"] = parameters
+            }
+        ).toString().let {
+            JsonUtil.fromJson(it, responseClass)
+        }
+    }
+
     private val GET_RANDOM_SNODE_PARAMS = buildMap<String, Any> {
         this["method"] = "get_n_service_nodes"
         this["params"] = buildMap {
@@ -154,7 +191,7 @@ object SnodeAPI {
     }
 
     internal fun getRandomSnode(): Promise<Snode, Exception> =
-        snodePool.takeIf { it.size >= minimumSnodePoolCount }?.secureRandom()?.let { Promise.of(it) } ?: task {
+        snodePool.takeIf { it.size >= minimumSnodePoolCount }?.secureRandom()?.let { Promise.of(it) } ?: scope.asyncPromise {
             val target = seedNodePool.random()
             Log.d("Loki", "Populating snode pool using: $target.")
             val url = "$target/json_rpc"
@@ -197,13 +234,13 @@ object SnodeAPI {
         }
     }
 
-    internal fun getSingleTargetSnode(publicKey: String): Promise<Snode, Exception> {
+    fun getSingleTargetSnode(publicKey: String): Promise<Snode, Exception> {
         // SecureRandom should be cryptographically secure
         return getSwarm(publicKey).map { it.shuffledRandom().random() }
     }
 
     // Public API
-    fun getAccountID(onsName: String): Promise<String, Exception> = task {
+    fun getAccountID(onsName: String): Promise<String, Exception> = scope.asyncPromise {
         val validationCount = 3
         val accountIDByteCount = 33
         // Hash the ONS name using BLAKE2b
@@ -277,76 +314,128 @@ object SnodeAPI {
                 database.setSwarm(publicKey, it)
             }
 
-    private fun signAndEncodeCatching(data: ByteArray, userED25519KeyPair: KeyPair): Result<String> =
-        runCatching { signAndEncode(data, userED25519KeyPair) }
-    private fun signAndEncode(data: ByteArray, userED25519KeyPair: KeyPair): String =
-        sign(data, userED25519KeyPair).let(Base64::encodeBytes)
-    private fun sign(data: ByteArray, userED25519KeyPair: KeyPair): ByteArray = ByteArray(Sign.BYTES).also {
-        sodium.cryptoSignDetached(it, data, data.size.toLong(), userED25519KeyPair.secretKey.asBytes)
+    /**
+     * Fetch swarm nodes for the specific public key.
+     *
+     * Note: this differs from [getSwarm] in that it doesn't store the swarm nodes in the database.
+     * This always fetches from network.
+     */
+    suspend fun fetchSwarmNodes(publicKey: String): List<Snode> {
+        val randomNode = getRandomSnode().await()
+        val response = invoke(
+            method = Snode.Method.GetSwarm,
+            snode = randomNode, parameters = buildMap { this["pubKey"] = publicKey },
+            publicKey = publicKey
+        ).await()
+
+        return parseSnodes(response)
     }
 
-    private fun getUserED25519KeyPairCatchingOrNull() = runCatching { MessagingModuleConfiguration.shared.getUserED25519KeyPair() }.getOrNull()
-    private fun getUserED25519KeyPair(): KeyPair? = MessagingModuleConfiguration.shared.getUserED25519KeyPair()
-    private fun getUserPublicKey() = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
 
-    fun getRawMessages(snode: Snode, publicKey: String, requiresAuth: Boolean = true, namespace: Int = 0): RawResponsePromise {
-        // Get last message hash
-        val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
-        val parameters = buildMutableMap<String, Any> {
-            this["pubKey"] = publicKey
-            this["last_hash"] = lastHashValue
-            // If the namespace is default (0) here it will be implicitly read as 0 on the storage server
-            // we only need to specify it explicitly if we want to (in future) or if it is non-zero
-            namespace.takeIf { it != 0 }?.let { this["namespace"] = it }
-        }
-        // Construct signature
-        if (requiresAuth) {
-            val userED25519KeyPair = try {
-                getUserED25519KeyPair() ?: return Promise.ofFail(Error.NoKeyPair)
-            } catch (e: Exception) {
-                Log.e("Loki", "Error getting KeyPair", e)
-                return Promise.ofFail(Error.NoKeyPair)
+    /**
+     * Build parameters required to call authenticated storage API.
+     *
+     * @param auth The authentication data required to sign the request
+     * @param namespace The namespace of the messages you want to retrieve. Null if not relevant.
+     * @param verificationData A function that returns the data to be signed. The function takes the namespace text and timestamp as arguments.
+     * @param timestamp The timestamp to be used in the request. Default is the current time.
+     * @param builder A lambda that allows the user to add additional parameters to the request.
+     */
+    private fun buildAuthenticatedParameters(
+        auth: SwarmAuth,
+        namespace: Int?,
+        verificationData: ((namespaceText: String, timestamp: Long) -> Any)? = null,
+        timestamp: Long = nowWithOffset,
+        builder: MutableMap<String, Any>.() -> Unit = {}
+    ): Map<String, Any> {
+        return buildMap {
+            // Build user provided parameter first
+            this.builder()
+
+            if (verificationData != null) {
+                // Namespace shouldn't be in the verification data if it's null or 0.
+                val namespaceText = when (namespace) {
+                    null, 0 -> ""
+                    else -> namespace.toString()
+                }
+
+                val verifyData = when (val verify = verificationData(namespaceText, timestamp)) {
+                    is String -> verify.toByteArray()
+                    is ByteArray -> verify
+                    else -> throw IllegalArgumentException("verificationData must return a String or ByteArray")
+                }
+
+                putAll(auth.sign(verifyData))
+                put("timestamp", timestamp)
             }
-            val timestamp = System.currentTimeMillis() + clockOffset
-            val ed25519PublicKey = userED25519KeyPair.publicKey.asHexString
-            val verificationData = buildString {
-                append("retrieve")
-                namespace.takeIf { it != 0 }?.let(::append)
-                append(timestamp)
-            }.toByteArray()
-            parameters["signature"] = signAndEncodeCatching(verificationData, userED25519KeyPair).getOrNull()
-                ?: return Promise.ofFail(Error.SigningFailed)
-            parameters["timestamp"] = timestamp
-            parameters["pubkey_ed25519"] = ed25519PublicKey
+
+            put("pubkey", auth.accountId.hexString)
+            if (namespace != null && namespace != 0) {
+                put("namespace", namespace)
+            }
+
+            auth.ed25519PublicKeyHex?.let { put("pubkey_ed25519", it) }
+        }
+    }
+
+    /**
+     * Retrieve messages from the swarm.
+     *
+     * @param snode The swarm service where you want to retrieve messages from. It can be a swarm for a specific user or a group. Call [getSingleTargetSnode] to get a swarm node.
+     * @param auth The authentication data required to retrieve messages. This can be a user or group authentication data.
+     * @param namespace The namespace of the messages you want to retrieve. Default is 0.
+     */
+    fun getRawMessages(
+        snode: Snode,
+        auth: SwarmAuth,
+        namespace: Int = 0
+    ): RawResponsePromise {
+        val parameters = buildAuthenticatedParameters(
+            namespace = namespace,
+            auth = auth,
+            verificationData = { ns, t -> "${Snode.Method.Retrieve.rawValue}$ns$t" }
+        ) {
+            put(
+                "last_hash",
+                database.getLastMessageHashValue(snode, auth.accountId.hexString, namespace).orEmpty()
+            )
         }
 
         // Make the request
+        return invoke(Snode.Method.Retrieve, snode, parameters, auth.accountId.hexString)
+    }
+
+    fun getUnauthenticatedRawMessages(
+        snode: Snode,
+        publicKey: String,
+        namespace: Int = 0
+    ): RawResponsePromise {
+        val parameters = buildMap {
+            put("last_hash", database.getLastMessageHashValue(snode, publicKey, namespace).orEmpty())
+            put("pubkey", publicKey)
+            if (namespace != 0) {
+                put("namespace", namespace)
+            }
+        }
+
         return invoke(Snode.Method.Retrieve, snode, parameters, publicKey)
     }
 
-    fun buildAuthenticatedStoreBatchInfo(namespace: Int, message: SnodeMessage): SnodeBatchRequestInfo? {
-        // used for sig generation since it is also the value used in timestamp parameter
-        val messageTimestamp = message.timestamp
-
-        val userED25519KeyPair = getUserED25519KeyPairCatchingOrNull() ?: return null
-
-        val verificationData = "store$namespace$messageTimestamp".toByteArray()
-        val signature = signAndEncodeCatching(verificationData, userED25519KeyPair).run {
-            getOrNull() ?: return null.also { Log.e("Loki", "Signing data failed with user secret key", exceptionOrNull()) }
+    fun buildAuthenticatedStoreBatchInfo(
+        namespace: Int,
+        message: SnodeMessage,
+        auth: SwarmAuth,
+    ): SnodeBatchRequestInfo {
+        check(message.recipient == auth.accountId.hexString) {
+            "Message sent to ${message.recipient} but authenticated with ${auth.accountId.hexString}"
         }
 
-        val params = buildMap {
-            // load the message data params into the sub request
-            // currently loads:
-            // pubKey
-            // data
-            // ttl
-            // timestamp
+        val params = buildAuthenticatedParameters(
+            namespace = namespace,
+            auth = auth,
+            verificationData = { ns, t -> "${Snode.Method.SendMessage.rawValue}$ns$t" },
+        ) {
             putAll(message.toJSON())
-            this["namespace"] = namespace
-            // timestamp already set
-            this["pubkey_ed25519"] = userED25519KeyPair.publicKey.asHexString
-            this["signature"] = signature
         }
 
         return SnodeBatchRequestInfo(
@@ -356,29 +445,78 @@ object SnodeAPI {
         )
     }
 
+    fun buildAuthenticatedUnrevokeSubKeyBatchRequest(
+        groupAdminAuth: OwnedSwarmAuth,
+        subAccountTokens: List<ByteArray>,
+    ): SnodeBatchRequestInfo {
+        val params = buildAuthenticatedParameters(
+            namespace = null,
+            auth = groupAdminAuth,
+            verificationData = { _, t ->
+                subAccountTokens.fold(
+                    "${Snode.Method.UnrevokeSubAccount.rawValue}$t".toByteArray()
+                ) { acc, subAccount -> acc + subAccount }
+            }
+        ) {
+            put("unrevoke", subAccountTokens.map(Base64::encodeBytes))
+        }
+
+        return SnodeBatchRequestInfo(
+            Snode.Method.UnrevokeSubAccount.rawValue,
+            params,
+            null
+        )
+    }
+
+    fun buildAuthenticatedRevokeSubKeyBatchRequest(
+        groupAdminAuth: OwnedSwarmAuth,
+        subAccountTokens: List<ByteArray>,
+    ): SnodeBatchRequestInfo {
+        val params = buildAuthenticatedParameters(
+            namespace = null,
+            auth = groupAdminAuth,
+            verificationData = { _, t ->
+                subAccountTokens.fold(
+                    "${Snode.Method.RevokeSubAccount.rawValue}$t".toByteArray()
+                ) { acc, subAccount -> acc + subAccount }
+            }
+        ) {
+            put("revoke", subAccountTokens.map(Base64::encodeBytes))
+        }
+
+        return SnodeBatchRequestInfo(
+            Snode.Method.RevokeSubAccount.rawValue,
+            params,
+            null
+        )
+    }
+
     /**
      * Message hashes can be shared across multiple namespaces (for a single public key destination)
      * @param publicKey the destination's identity public key to delete from (05...)
-     * @param messageHashes a list of stored message hashes to delete from the server
+     * @param ed25519PubKey the destination's ed25519 public key to delete from. Only required for user messages.
+     * @param messageHashes a list of stored message hashes to delete from all namespaces on the server
      * @param required indicates that *at least one* message in the list is deleted from the server, otherwise it will return 404
      */
-    fun buildAuthenticatedDeleteBatchInfo(publicKey: String, messageHashes: List<String>, required: Boolean = false): SnodeBatchRequestInfo? {
-        val userEd25519KeyPair = getUserED25519KeyPairCatchingOrNull() ?: return null
-        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
-        val verificationData = sequenceOf("delete").plus(messageHashes).toByteArray()
-        val signature = try {
-            signAndEncode(verificationData, userEd25519KeyPair)
-        } catch (e: Exception) {
-            Log.e("Loki", "Signing data failed with user secret key", e)
-            return null
+    fun buildAuthenticatedDeleteBatchInfo(
+        auth: SwarmAuth,
+        messageHashes: List<String>,
+        required: Boolean = false
+    ): SnodeBatchRequestInfo {
+        val params = buildAuthenticatedParameters(
+            namespace = null,
+            auth = auth,
+            verificationData = { _, _ ->
+                buildString {
+                    append(Snode.Method.DeleteMessage.rawValue)
+                    messageHashes.forEach(this::append)
+                }
+            }
+        ) {
+            put("messages", messageHashes)
+            put("required", required)
         }
-        val params = buildMap {
-            this["pubkey"] = publicKey
-            this["required"] = required // could be omitted technically but explicit here
-            this["messages"] = messageHashes
-            this["pubkey_ed25519"] = ed25519PublicKey
-            this["signature"] = signature
-        }
+
         return SnodeBatchRequestInfo(
             Snode.Method.DeleteMessage.rawValue,
             params,
@@ -386,28 +524,23 @@ object SnodeAPI {
         )
     }
 
-    fun buildAuthenticatedRetrieveBatchRequest(snode: Snode, publicKey: String, namespace: Int = 0, maxSize: Int? = null): SnodeBatchRequestInfo? {
-        val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
-        val userEd25519KeyPair = getUserED25519KeyPairCatchingOrNull() ?: return null
-        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
-        val timestamp = System.currentTimeMillis() + clockOffset
-        val verificationData = if (namespace == 0) "retrieve$timestamp".toByteArray()
-        else "retrieve$namespace$timestamp".toByteArray()
-        val signature = try {
-            signAndEncode(verificationData, userEd25519KeyPair)
-        } catch (e: Exception) {
-            Log.e("Loki", "Signing data failed with user secret key", e)
-            return null
+    fun buildAuthenticatedRetrieveBatchRequest(
+        auth: SwarmAuth,
+        lastHash: String?,
+        namespace: Int = 0,
+        maxSize: Int? = null
+    ): SnodeBatchRequestInfo {
+        val params = buildAuthenticatedParameters(
+            namespace = namespace,
+            auth = auth,
+            verificationData = { ns, t -> "${Snode.Method.Retrieve.rawValue}$ns$t" },
+        ) {
+            put("last_hash", lastHash.orEmpty())
+            if (maxSize != null) {
+                put("max_size", maxSize)
+            }
         }
-        val params = buildMap {
-            this["pubkey"] = publicKey
-            this["last_hash"] = lastHashValue
-            this["timestamp"] = timestamp
-            this["pubkey_ed25519"] = ed25519PublicKey
-            this["signature"] = signature
-            if (namespace != 0) this["namespace"] = namespace
-            if (maxSize != null) this["max_size"] = maxSize
-        }
+
         return SnodeBatchRequestInfo(
             Snode.Method.Retrieve.rawValue,
             params,
@@ -416,12 +549,14 @@ object SnodeAPI {
     }
 
     fun buildAuthenticatedAlterTtlBatchRequest(
+        auth: SwarmAuth,
         messageHashes: List<String>,
         newExpiry: Long,
-        publicKey: String,
         shorten: Boolean = false,
-        extend: Boolean = false): SnodeBatchRequestInfo? {
-        val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, extend, shorten) ?: return null
+        extend: Boolean = false
+    ): SnodeBatchRequestInfo {
+        val params =
+            buildAlterTtlParams(auth, messageHashes, newExpiry, extend, shorten)
         return SnodeBatchRequestInfo(
             Snode.Method.Expire.rawValue,
             params,
@@ -429,9 +564,20 @@ object SnodeAPI {
         )
     }
 
-    fun getRawBatchResponse(snode: Snode, publicKey: String, requests: List<SnodeBatchRequestInfo>, sequence: Boolean = false): RawResponsePromise {
+    @Suppress("UNCHECKED_CAST")
+    fun getRawBatchResponse(
+        snode: Snode,
+        publicKey: String,
+        requests: List<SnodeBatchRequestInfo>,
+        sequence: Boolean = false
+    ): RawResponsePromise {
         val parameters = buildMap { this["requests"] = requests }
-        return invoke(if (sequence) Snode.Method.Sequence else Snode.Method.Batch, snode, parameters, publicKey).success { rawResponses ->
+        return invoke(
+            if (sequence) Snode.Method.Sequence else Snode.Method.Batch,
+            snode,
+            parameters,
+            publicKey
+        ).success { rawResponses ->
             rawResponses["results"].let { it as List<RawResponse> }
                 .asSequence()
                 .filter { it["code"] as? Int != 200 }
@@ -447,138 +593,302 @@ object SnodeAPI {
         }
     }
 
-    fun getExpiries(messageHashes: List<String>, publicKey: String) : RawResponsePromise {
-        val userEd25519KeyPair = getUserED25519KeyPairCatchingOrNull() ?: return Promise.ofFail(NullPointerException("No user key pair"))
-        val hashes = messageHashes.takeIf { it.size != 1 } ?: (messageHashes + "///////////////////////////////////////////") // TODO remove this when bug is fixed on nodes.
-        return retryIfNeeded(maxRetryCount) {
-            val timestamp = System.currentTimeMillis() + clockOffset
-            val signData = sequenceOf(Snode.Method.GetExpiries.rawValue).plus(timestamp.toString()).plus(hashes).toByteArray()
+    private data class RequestInfo(
+        val snode: Snode,
+        val publicKey: String,
+        val request: SnodeBatchRequestInfo,
+        val responseType: Class<*>,
+        val callback: SendChannel<Result<Any>>,
+        val requestTime: Long = SystemClock.uptimeMillis(),
+    )
 
-            val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
-            val signature = try {
-                signAndEncode(signData, userEd25519KeyPair)
-            } catch (e: Exception) {
-                Log.e("Loki", "Signing data failed with user secret key", e)
-                return@retryIfNeeded Promise.ofFail(e)
-            }
-            val params = buildMap {
-                this["pubkey"] = publicKey
-                this["messages"] = hashes
-                this["timestamp"] = timestamp
-                this["pubkey_ed25519"] = ed25519PublicKey
-                this["signature"] = signature
-            }
-            getSingleTargetSnode(publicKey) bind { snode ->
-                invoke(Snode.Method.GetExpiries, snode, params, publicKey)
+    private val batchedRequestsSender: SendChannel<RequestInfo>
+
+    init {
+        val batchRequests = Channel<RequestInfo>()
+        batchedRequestsSender = batchRequests
+
+        val batchWindowMills = 100L
+
+        data class BatchKey(val snodeAddress: String, val publicKey: String)
+
+        @Suppress("OPT_IN_USAGE")
+        GlobalScope.launch {
+            val batches = hashMapOf<BatchKey, MutableList<RequestInfo>>()
+
+            while (true) {
+                val batch = select<List<RequestInfo>?> {
+                    // If we receive a request, add it to the batch
+                    batchRequests.onReceive {
+                        batches.getOrPut(BatchKey(it.snode.address, it.publicKey)) { mutableListOf() }.add(it)
+                        null
+                    }
+
+                    // If we have anything in the batch, look for the one that is about to expire
+                    // and wait for it to expire, remove it from the batches and send it for
+                    // processing.
+                    if (batches.isNotEmpty()) {
+                        val earliestBatch = batches.minBy { it.value.first().requestTime }
+                        val deadline = earliestBatch.value.first().requestTime + batchWindowMills
+                        onTimeout(
+                            timeMillis = (deadline - SystemClock.uptimeMillis()).coerceAtLeast(0)
+                        ) {
+                            batches.remove(earliestBatch.key)
+                        }
+                    }
+                }
+
+                if (batch != null) {
+                    launch batch@{
+                        val snode = batch.first().snode
+                        val responses = try {
+                            getBatchResponse(
+                                snode = snode,
+                                publicKey = batch.first().publicKey,
+                                requests = batch.mapNotNull { info ->
+                                    info.request.takeIf { !info.callback.isClosedForSend }
+                                },
+                                sequence = false
+                            )
+                        } catch (e: Exception) {
+                            for (req in batch) {
+                                runCatching {
+                                    req.callback.send(Result.failure(e))
+                                }
+                            }
+                            return@batch
+                        }
+
+                        // For each response, parse the result, match it with the request then send
+                        // back through the request's callback.
+                        for ((req, resp) in batch.zip(responses.results)) {
+                            val result = runCatching {
+                                check(resp.code == 200) {
+                                    "Error calling \"${req.request.method}\" with code = ${resp.code}, msg = ${resp.body}"
+                                }
+
+                                JsonUtil.fromJson(resp.body, req.responseType)
+                            }
+
+                            runCatching{
+                                req.callback.send(result)
+                            }
+                        }
+
+                        // Close all channels in the requests just in case we don't have paired up
+                        // responses.
+                        for (req in batch) {
+                            req.callback.close()
+                        }
+                    }
+                }
             }
         }
     }
 
-    fun alterTtl(messageHashes: List<String>, newExpiry: Long, publicKey: String, extend: Boolean = false, shorten: Boolean = false): RawResponsePromise =
-        retryIfNeeded(maxRetryCount) {
-            val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, extend, shorten)
-                ?: return@retryIfNeeded Promise.ofFail(
-                    Exception("Couldn't build signed params for alterTtl request for newExpiry=$newExpiry, extend=$extend, shorten=$shorten")
+    suspend fun <T> sendBatchRequest(
+        snode: Snode,
+        publicKey: String,
+        request: SnodeBatchRequestInfo,
+        responseType: Class<T>,
+    ): T {
+        val callback = Channel<Result<T>>()
+        @Suppress("UNCHECKED_CAST")
+        batchedRequestsSender.send(RequestInfo(snode, publicKey, request, responseType, callback as SendChannel<Any>))
+        try {
+            return callback.receive().getOrThrow()
+        } catch (e: CancellationException) {
+            // Close the channel if the coroutine is cancelled, so the batch processing won't
+            // handle this one (best effort only)
+            callback.close()
+            throw e
+        }
+    }
+
+    suspend fun sendBatchRequest(
+        snode: Snode,
+        publicKey: String,
+        request: SnodeBatchRequestInfo,
+    ): JsonNode {
+        return sendBatchRequest(snode, publicKey, request, JsonNode::class.java)
+    }
+
+    suspend fun getBatchResponse(
+        snode: Snode,
+        publicKey: String,
+        requests: List<SnodeBatchRequestInfo>,
+        sequence: Boolean = false
+    ): BatchResponse {
+        return invokeSuspend(
+            method = if (sequence) Snode.Method.Sequence else Snode.Method.Batch,
+            snode = snode,
+            parameters = mapOf("requests" to requests),
+            responseClass = BatchResponse::class.java,
+            publicKey = publicKey
+        ).also { resp ->
+            // If there's a unsuccessful response, go through specific logic to handle
+            // potential snode errors.
+            val firstError = resp.results.firstOrNull { !it.isSuccessful }
+            if (firstError != null) {
+                handleSnodeError(
+                    statusCode = firstError.code,
+                    json = if (firstError.body.isObject) {
+                        JsonUtil.fromJson(firstError.body, Map::class.java)
+                    } else {
+                        null
+                    },
+                    snode = snode,
+                    publicKey = publicKey
                 )
-            getSingleTargetSnode(publicKey).bind { snode ->
-                invoke(Snode.Method.Expire, snode, params, publicKey)
             }
         }
+    }
 
-    private fun buildAlterTtlParams( // TODO: in future this will probably need to use the closed group subkeys / admin keys for group swarms
+    fun getExpiries(
+        messageHashes: List<String>,
+        auth: SwarmAuth,
+    ): RawResponsePromise {
+        val hashes = messageHashes.takeIf { it.size != 1 }
+            ?: (messageHashes + "///////////////////////////////////////////") // TODO remove this when bug is fixed on nodes.
+        return scope.retrySuspendAsPromise(maxRetryCount) {
+            val params = buildAuthenticatedParameters(
+                auth = auth,
+                namespace = null,
+                verificationData = { _, t -> buildString {
+                    append(Snode.Method.GetExpiries.rawValue)
+                    append(t)
+                    hashes.forEach(this::append)
+                } },
+            ) {
+                this["messages"] = hashes
+            }
+
+            val snode = getSingleTargetSnode(auth.accountId.hexString).await()
+            invoke(Snode.Method.GetExpiries, snode, params, auth.accountId.hexString).await()
+        }
+    }
+
+    fun alterTtl(
+        auth: SwarmAuth,
         messageHashes: List<String>,
         newExpiry: Long,
-        publicKey: String,
         extend: Boolean = false,
         shorten: Boolean = false
-    ): Map<String, Any>? {
-        val userEd25519KeyPair = getUserED25519KeyPairCatchingOrNull() ?: return null
+    ): RawResponsePromise = scope.retrySuspendAsPromise(maxRetryCount) {
+        val params = buildAlterTtlParams(auth, messageHashes, newExpiry, extend, shorten)
+        val snode = getSingleTargetSnode(auth.accountId.hexString).await()
+        invoke(Snode.Method.Expire, snode, params, auth.accountId.hexString).await()
+    }
 
+    private fun buildAlterTtlParams(
+        auth: SwarmAuth,
+        messageHashes: List<String>,
+        newExpiry: Long,
+        extend: Boolean = false,
+        shorten: Boolean = false
+    ): Map<String, Any> {
         val shortenOrExtend = if (extend) "extend" else if (shorten) "shorten" else ""
 
-        val signData = sequenceOf(Snode.Method.Expire.rawValue).plus(shortenOrExtend).plus(newExpiry.toString()).plus(messageHashes).toByteArray()
-
-        val signature = try {
-            signAndEncode(signData, userEd25519KeyPair)
-        } catch (e: Exception) {
-            Log.e("Loki", "Signing data failed with user secret key", e)
-            return null
-        }
-
-        return buildMap {
+        return buildAuthenticatedParameters(
+            namespace = null,
+            auth = auth,
+            verificationData = { _, _ ->
+                buildString {
+                    append("expire")
+                    append(shortenOrExtend)
+                    append(newExpiry.toString())
+                    messageHashes.forEach(this::append)
+                }
+            }
+        ) {
             this["expiry"] = newExpiry
             this["messages"] = messageHashes
             when {
                 extend -> this["extend"] = true
                 shorten -> this["shorten"] = true
             }
-            this["pubkey"] = publicKey
-            this["pubkey_ed25519"] = userEd25519KeyPair.publicKey.asHexString
-            this["signature"] = signature
         }
     }
 
-    fun getMessages(publicKey: String): MessageListPromise = retryIfNeeded(maxRetryCount) {
-       getSingleTargetSnode(publicKey).bind { snode ->
-            getRawMessages(snode, publicKey).map { parseRawMessagesResponse(it, snode, publicKey) }
-        }
+    fun getMessages(auth: SwarmAuth): MessageListPromise = scope.retrySuspendAsPromise(maxRetryCount) {
+        val snode = getSingleTargetSnode(auth.accountId.hexString).await()
+        val resp = getRawMessages(snode, auth).await()
+        parseRawMessagesResponse(resp, snode, auth.accountId.hexString)
     }
 
-    private fun getNetworkTime(snode: Snode): Promise<Pair<Snode, Long>, Exception> =
+    fun getNetworkTime(snode: Snode): Promise<Pair<Snode, Long>, Exception> =
         invoke(Snode.Method.Info, snode, emptyMap()).map { rawResponse ->
             val timestamp = rawResponse["timestamp"] as? Long ?: -1
             snode to timestamp
         }
 
-    fun sendMessage(message: SnodeMessage, requiresAuth: Boolean = false, namespace: Int = 0): RawResponsePromise =
-        retryIfNeeded(maxRetryCount) {
-            val userED25519KeyPair = getUserED25519KeyPair() ?: return@retryIfNeeded Promise.ofFail(Error.NoKeyPair)
-            val parameters = message.toJSON().toMutableMap<String, Any>()
-            // Construct signature
-            if (requiresAuth) {
-                val sigTimestamp = nowWithOffset
-                val ed25519PublicKey = userED25519KeyPair.publicKey.asHexString
-                // assume namespace here is non-zero, as zero namespace doesn't require auth
-                val verificationData = "store$namespace$sigTimestamp".toByteArray()
-                val signature = try {
-                    signAndEncode(verificationData, userED25519KeyPair)
-                } catch (exception: Exception) {
-                    return@retryIfNeeded Promise.ofFail(Error.SigningFailed)
+    /**
+     * Note: After this method returns, [auth] will not be used by any of async calls and it's afe
+     * for the caller to clean up the associated resources if needed.
+     */
+    suspend fun sendMessage(
+        message: SnodeMessage,
+        auth: SwarmAuth?,
+        namespace: Int = 0
+    ): StoreMessageResponse {
+        return retryWithUniformInterval(maxRetryCount = maxRetryCount) {
+            val params = if (auth != null) {
+                check(auth.accountId.hexString == message.recipient) {
+                    "Message sent to ${message.recipient} but authenticated with ${auth.accountId.hexString}"
                 }
-                parameters["sig_timestamp"] = sigTimestamp
-                parameters["pubkey_ed25519"] = ed25519PublicKey
-                parameters["signature"] = signature
-            }
-            // If the namespace is default (0) here it will be implicitly read as 0 on the storage server
-            // we only need to specify it explicitly if we want to (in future) or if it is non-zero
-            if (namespace != 0) {
-                parameters["namespace"] = namespace
-            }
-            val destination = message.recipient
-            getSingleTargetSnode(destination).bind { snode ->
-                invoke(Snode.Method.SendMessage, snode, parameters, destination)
-            }
-        }
 
-    suspend fun deleteMessage(publicKey: String, serverHashes: List<String>) {
+                val timestamp = nowWithOffset
+
+                buildAuthenticatedParameters(
+                    auth = auth,
+                    namespace = namespace,
+                    verificationData = { ns, t -> "${Snode.Method.SendMessage.rawValue}$ns$t" },
+                    timestamp = timestamp
+                ) {
+                    put("sig_timestamp", timestamp)
+                    putAll(message.toJSON())
+                }
+            } else {
+                buildMap {
+                    putAll(message.toJSON())
+                    if (namespace != 0) {
+                        put("namespace", namespace)
+                    }
+                }
+            }
+
+            sendBatchRequest(
+                snode = getSingleTargetSnode(message.recipient).await(),
+                publicKey = message.recipient,
+                request = SnodeBatchRequestInfo(
+                    method = Snode.Method.SendMessage.rawValue,
+                    params = params,
+                    namespace = namespace
+                ),
+                responseType = StoreMessageResponse::class.java
+            )
+        }
+    }
+    
+    suspend fun deleteMessage(publicKey: String, swarmAuth: SwarmAuth, serverHashes: List<String>) {
         retryWithUniformInterval {
-            val userED25519KeyPair =
-                getUserED25519KeyPair() ?: throw (Error.NoKeyPair)
-            val userPublicKey =
-                getUserPublicKey() ?: throw (Error.NoKeyPair)
             val snode = getSingleTargetSnode(publicKey).await()
-            val verificationData =
-                sequenceOf(Snode.Method.DeleteMessage.rawValue).plus(serverHashes).toByteArray()
-            val deleteMessageParams = buildMap {
-                this["pubkey"] = userPublicKey
-                this["pubkey_ed25519"] = userED25519KeyPair.publicKey.asHexString
+            val params = buildAuthenticatedParameters(
+                auth = swarmAuth,
+                namespace = null,
+                verificationData = { _, _ ->
+                    buildString {
+                        append(Snode.Method.DeleteMessage.rawValue)
+                        serverHashes.forEach(this::append)
+                    }
+                }
+            ) {
                 this["messages"] = serverHashes
-                this["signature"] = signAndEncode(verificationData, userED25519KeyPair)
             }
             val rawResponse = invoke(
                 Snode.Method.DeleteMessage,
                 snode,
-                deleteMessageParams,
+                params,
                 publicKey
             ).await()
 
@@ -604,7 +914,9 @@ object SnodeAPI {
                         val signature = json["signature"] as String
                         val snodePublicKey = Key.fromHexString(hexSnodePublicKey)
                         // The signature looks like ( PUBKEY_HEX || RMSG[0] || ... || RMSG[N] || DMSG[0] || ... || DMSG[M] )
-                        val message = sequenceOf(userPublicKey).plus(serverHashes).plus(hashes)
+                        val message = sequenceOf(swarmAuth.accountId.hexString)
+                            .plus(serverHashes)
+                            .plus(hashes)
                             .toByteArray()
                         sodium.cryptoSignVerifyDetached(
                             Base64.decode(signature),
@@ -620,7 +932,7 @@ object SnodeAPI {
             if (deletedMessages.entries.all { !it.value }) throw (Error.Generic)
         }
     }
-
+    
     // Parsing
     private fun parseSnodes(rawResponse: Any): List<Snode> =
         (rawResponse as? Map<*, *>)
@@ -633,36 +945,45 @@ object SnodeAPI {
                     port = (it["port"] as? String)?.toInt(),
                     ed25519Key = it[KEY_ED25519] as? String,
                     x25519Key = it[KEY_X25519] as? String
-                ).apply { if (this == null) Log.d("Loki", "Failed to parse snode from: ${it.prettifiedDescription()}.") }
-            }?.toList() ?: listOf<Snode>().also { Log.d("Loki", "Failed to parse snodes from: ${rawResponse.prettifiedDescription()}.") }
-
-    fun deleteAllMessages(): Promise<Map<String,Boolean>, Exception> =
-        retryIfNeeded(maxRetryCount) {
-            val userED25519KeyPair = getUserED25519KeyPair() ?: return@retryIfNeeded Promise.ofFail(Error.NoKeyPair)
-            val userPublicKey = getUserPublicKey() ?: return@retryIfNeeded Promise.ofFail(Error.NoKeyPair)
-            getSingleTargetSnode(userPublicKey).bind { snode ->
-                retryIfNeeded(maxRetryCount) {
-                    getNetworkTime(snode).bind { (_, timestamp) ->
-                        val verificationData = sequenceOf(Snode.Method.DeleteAll.rawValue, Namespace.ALL, timestamp.toString()).toByteArray()
-                        val deleteMessageParams = buildMap {
-                            this["pubkey"] = userPublicKey
-                            this["pubkey_ed25519"] = userED25519KeyPair.publicKey.asHexString
-                            this["timestamp"] = timestamp
-                            this["signature"] = signAndEncode(verificationData, userED25519KeyPair)
-                            this["namespace"] = Namespace.ALL
-                        }
-                        invoke(Snode.Method.DeleteAll, snode, deleteMessageParams, userPublicKey)
-                            .map { rawResponse -> parseDeletions(userPublicKey, timestamp, rawResponse) }
-                            .fail { e -> Log.e("Loki", "Failed to clear data", e) }
-                    }
+                ).apply {
+                    if (this == null) Log.d(
+                        "Loki",
+                        "Failed to parse snode from: ${it.prettifiedDescription()}."
+                    )
                 }
-            }
+            }?.toList() ?: listOf<Snode>().also {
+            Log.d(
+                "Loki",
+                "Failed to parse snodes from: ${rawResponse.prettifiedDescription()}."
+            )
         }
 
-    fun parseRawMessagesResponse(rawResponse: RawResponse, snode: Snode, publicKey: String, namespace: Int = 0, updateLatestHash: Boolean = true, updateStoredHashes: Boolean = true): List<Pair<SignalServiceProtos.Envelope, String?>> =
+    fun deleteAllMessages(auth: SwarmAuth): Promise<Map<String, Boolean>, Exception> =
+        scope.retrySuspendAsPromise(maxRetryCount) {
+            val snode = getSingleTargetSnode(auth.accountId.hexString).await()
+            val timestamp = MessagingModuleConfiguration.shared.clock.waitForNetworkAdjustedTime()
+
+            val params = buildAuthenticatedParameters(
+                auth = auth,
+                namespace = null,
+                verificationData = { _, t -> "${Snode.Method.DeleteAll.rawValue}all$t" },
+                timestamp = timestamp
+            ) {
+                put("namespace", "all")
+            }
+
+            val rawResponse = invoke(Snode.Method.DeleteAll, snode, params, auth.accountId.hexString).await()
+            parseDeletions(
+                auth.accountId.hexString,
+                timestamp,
+                rawResponse
+            )
+        }
+
+    fun parseRawMessagesResponse(rawResponse: RawResponse, snode: Snode, publicKey: String, namespace: Int = 0, updateLatestHash: Boolean = true, updateStoredHashes: Boolean = true, decrypt: ((ByteArray) -> Pair<ByteArray, AccountId>?)? = null): List<Pair<SignalServiceProtos.Envelope, String?>> =
         (rawResponse["messages"] as? List<*>)?.let { messages ->
             if (updateLatestHash) updateLastMessageHashValueIfPossible(snode, publicKey, messages, namespace)
-            removeDuplicates(publicKey, messages, namespace, updateStoredHashes).let(::parseEnvelopes)
+            parseEnvelopes(removeDuplicates(publicKey, messages, namespace, updateStoredHashes), decrypt)
         } ?: listOf()
 
     fun updateLastMessageHashValueIfPossible(snode: Snode, publicKey: String, rawMessages: List<*>, namespace: Int) {
@@ -694,15 +1015,29 @@ object SnodeAPI {
         }
     }
 
-    private fun parseEnvelopes(rawMessages: List<Map<*, *>>): List<Pair<SignalServiceProtos.Envelope, String?>> = rawMessages.mapNotNull { rawMessage ->
-        val base64EncodedData = rawMessage["data"] as? String
-        val data = base64EncodedData?.let(Base64::decode)
-
-        data ?: Log.d("Loki", "Failed to decode data for message: ${rawMessage.prettifiedDescription()}.")
-
-        data?.runCatching { MessageWrapper.unwrap(this) to rawMessage["hash"] as? String }
-            ?.onFailure { Log.d("Loki", "Failed to unwrap data for message: ${rawMessage.prettifiedDescription()}.") }
-            ?.getOrNull()
+    private fun parseEnvelopes(rawMessages: List<*>, decrypt: ((ByteArray)->Pair<ByteArray, AccountId>?)?): List<Pair<SignalServiceProtos.Envelope, String?>> {
+        return rawMessages.mapNotNull { rawMessage ->
+            val rawMessageAsJSON = rawMessage as? Map<*, *>
+            val base64EncodedData = rawMessageAsJSON?.get("data") as? String
+            val data = base64EncodedData?.let { Base64.decode(it) }
+            if (data != null) {
+                try {
+                    if (decrypt != null) {
+                        val (decrypted, sender) = decrypt(data)!!
+                        val envelope = SignalServiceProtos.Envelope.parseFrom(decrypted).toBuilder()
+                        envelope.source = sender.hexString
+                        Pair(envelope.build(), rawMessageAsJSON["hash"] as? String)
+                    }
+                    else Pair(MessageWrapper.unwrap(data), rawMessageAsJSON["hash"] as? String)
+                } catch (e: Exception) {
+                    Log.d("Loki", "Failed to unwrap data for message: ${rawMessage.prettifiedDescription()}.", e)
+                    null
+                }
+            } else {
+                Log.d("Loki", "Failed to decode data for message: ${rawMessage?.prettifiedDescription()}.")
+                null
+            }
+        }
     }
 
     @Suppress("UNCHECKED_CAST")

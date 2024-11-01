@@ -1,5 +1,7 @@
 package org.session.libsession.snode
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
@@ -8,6 +10,7 @@ import nl.komponents.kovenant.functional.bind
 import nl.komponents.kovenant.functional.map
 import okhttp3.Request
 import org.session.libsession.messaging.file_server.FileServerApi
+import org.session.libsession.snode.utilities.asyncPromise
 import org.session.libsession.utilities.AESGCM
 import org.session.libsession.utilities.AESGCM.EncryptionResult
 import org.session.libsession.utilities.getBodyForOnionRequest
@@ -22,7 +25,6 @@ import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Snode
-import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.recover
 import org.session.libsignal.utilities.toHexString
 import java.util.concurrent.atomic.AtomicReference
@@ -114,26 +116,14 @@ object OnionRequestAPI {
      * Tests the given snode. The returned promise errors out if the snode is faulty; the promise is fulfilled otherwise.
      */
     private fun testSnode(snode: Snode): Promise<Unit, Exception> {
-        val deferred = deferred<Unit, Exception>()
-        ThreadUtils.queue { // No need to block the shared context for this
+        return GlobalScope.asyncPromise { // No need to block the shared context for this
             val url = "${snode.address}:${snode.port}/get_stats/v1"
-            try {
-                val response = HTTP.execute(HTTP.Verb.GET, url, 3).decodeToString()
-                val json = JsonUtil.fromJson(response, Map::class.java)
-                val version = json["version"] as? String
-                if (version == null) { deferred.reject(Exception("Missing snode version.")); return@queue }
-                if (version >= "2.0.7") {
-                    deferred.resolve(Unit)
-                } else {
-                    val message = "Unsupported snode version: $version."
-                    Log.d("Loki", message)
-                    deferred.reject(Exception(message))
-                }
-            } catch (exception: Exception) {
-                deferred.reject(exception)
-            }
+            val response = HTTP.execute(HTTP.Verb.GET, url, 3).decodeToString()
+            val json = JsonUtil.fromJson(response, Map::class.java)
+            val version = json["version"] as? String
+            require(version != null) { "Missing snode version." }
+            require(version >= "2.0.7") { "Unsupported snode version: $version." }
         }
-        return deferred.promise
     }
 
     /**
@@ -305,22 +295,22 @@ object OnionRequestAPI {
             is Destination.Snode -> destination.snode
             is Destination.Server -> null
         }
-        return getPath(snodeToExclude).bind { path ->
+        return getPath(snodeToExclude).map { path ->
             guardSnode = path.first()
             // Encrypt in reverse order, i.e. the destination first
-            OnionRequestEncryption.encryptPayloadForDestination(payload, destination, version).bind { r ->
+            OnionRequestEncryption.encryptPayloadForDestination(payload, destination, version).let { r ->
                 destinationSymmetricKey = r.symmetricKey
                 // Recursively encrypt the layers of the onion (again in reverse order)
                 encryptionResult = r
                 @Suppress("NAME_SHADOWING") var path = path
                 var rhs = destination
-                fun addLayer(): Promise<EncryptionResult, Exception> {
+                fun addLayer(): EncryptionResult {
                     return if (path.isEmpty()) {
-                        Promise.of(encryptionResult)
+                        encryptionResult
                     } else {
                         val lhs = Destination.Snode(path.last())
                         path = path.dropLast(1)
-                        OnionRequestEncryption.encryptHop(lhs, rhs, encryptionResult).bind { r ->
+                        OnionRequestEncryption.encryptHop(lhs, rhs, encryptionResult).let { r ->
                             encryptionResult = r
                             rhs = lhs
                             addLayer()
@@ -361,7 +351,7 @@ object OnionRequestAPI {
                 return@success deferred.reject(exception)
             }
             val destinationSymmetricKey = result.destinationSymmetricKey
-            ThreadUtils.queue {
+            GlobalScope.launch {
                 try {
                     val response = HTTP.execute(HTTP.Verb.POST, url, body)
                     handleResponse(response, destinationSymmetricKey, destination, version, deferred)
@@ -612,11 +602,7 @@ object OnionRequestAPI {
                                 val bodyAsString = json["body"] as String
                                 JsonUtil.fromJson(bodyAsString, Map::class.java)
                             }
-                            if (body["t"] != null) {
-                                val timestamp = body["t"] as Long
-                                val offset = timestamp - System.currentTimeMillis()
-                                SnodeAPI.clockOffset = offset
-                            }
+
                             if (body.containsKey("hf")) {
                                 @Suppress("UNCHECKED_CAST")
                                 val currentHf = body["hf"] as List<Int>

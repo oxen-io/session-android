@@ -25,6 +25,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.ui.getSubbedString
+import org.thoughtcrime.securesms.database.Storage
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,6 +38,7 @@ class ConversationActionBarView @JvmOverloads constructor(
 
     @Inject lateinit var lokiApiDb: LokiAPIDatabase
     @Inject lateinit var groupDb: GroupDatabase
+    @Inject lateinit var storage: Storage
 
     var delegate: ConversationActionBarDelegate? = null
 
@@ -45,6 +47,9 @@ class ConversationActionBarView @JvmOverloads constructor(
             delegate?.onDisappearingMessagesClicked()
         }
     }
+
+    val profilePictureView
+        get() = binding.profilePictureView
 
     init {
         var previousState: Int
@@ -75,7 +80,7 @@ class ConversationActionBarView @JvmOverloads constructor(
     ) {
         this.delegate = delegate
         binding.profilePictureView.layoutParams = resources.getDimensionPixelSize(
-            if (recipient.isClosedGroupRecipient) R.dimen.medium_profile_picture_size else R.dimen.small_profile_picture_size
+            if (recipient.isGroupRecipient) R.dimen.medium_profile_picture_size else R.dimen.small_profile_picture_size
         ).let { LayoutParams(it, it) }
         update(recipient, openGroup, config)
     }
@@ -128,12 +133,16 @@ class ConversationActionBarView @JvmOverloads constructor(
             )
         }
 
-        if (recipient.isGroupRecipient) {
+        if (recipient.isGroupOrCommunityRecipient) {
             val title = if (recipient.isCommunityRecipient) {
                 val userCount = openGroup?.let { lokiApiDb.getUserCount(it.room, it.server) } ?: 0
                 resources.getQuantityString(R.plurals.membersActive, userCount, userCount)
             } else {
-                val userCount = groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size
+                val userCount = if (recipient.isGroupV2Recipient) {
+                    storage.getMembers(recipient.address.serialize()).size
+                } else { // legacy closed groups
+                    groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size
+                }
                 resources.getQuantityString(R.plurals.members, userCount, userCount)
             }
             settings += ConversationSetting(title, ConversationSettingType.MEMBER_COUNT)

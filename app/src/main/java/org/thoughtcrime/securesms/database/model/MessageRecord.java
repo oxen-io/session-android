@@ -24,6 +24,7 @@ import android.text.style.StyleSpan;
 
 import androidx.annotation.NonNull;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.calls.CallMessageType;
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage;
 import org.session.libsession.messaging.utilities.UpdateMessageBuilder;
@@ -118,10 +119,19 @@ public abstract class MessageRecord extends DisplayRecord {
   public CharSequence getDisplayBody(@NonNull Context context) {
     if (isGroupUpdateMessage()) {
       UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(getBody());
-      return new SpannableString(UpdateMessageBuilder.INSTANCE.buildGroupUpdateMessage(context, updateMessageData, getIndividualRecipient().getAddress().serialize(), isOutgoing()));
+      if (updateMessageData == null) {
+        return "";
+      }
+
+      return new SpannableString(UpdateMessageBuilder.buildGroupUpdateMessage(
+              context,
+              updateMessageData,
+              MessagingModuleConfiguration.getShared().getConfigFactory(),
+              isOutgoing())
+      );
     } else if (isExpirationTimerUpdate()) {
       int seconds = (int) (getExpiresIn() / 1000);
-      boolean isGroup = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(getThreadId()).isGroupRecipient();
+      boolean isGroup = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(getThreadId()).isGroupOrCommunityRecipient();
       return new SpannableString(UpdateMessageBuilder.INSTANCE.buildExpirationTimerMessage(context, seconds, isGroup, getIndividualRecipient().getAddress().serialize(), isOutgoing(), getTimestamp(), expireStarted));
     } else if (isDataExtractionNotification()) {
       if (isScreenshotNotification()) return new SpannableString((UpdateMessageBuilder.INSTANCE.buildDataExtractionMessage(context, DataExtractionNotificationInfoMessage.Kind.SCREENSHOT, getIndividualRecipient().getAddress().serialize())));

@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.databind.type.TypeFactory
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.Sign
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
 import okhttp3.Headers.Companion.toHeaders
@@ -17,13 +19,15 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller.Companion.maxInactivityPeriod
-import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.OnionResponse
 import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.snode.utilities.asyncPromise
+import org.session.libsession.snode.utilities.await
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.utilities.AccountId
 import org.session.libsignal.utilities.Base64.decode
 import org.session.libsignal.utilities.Base64.encodeBytes
 import org.session.libsignal.utilities.HTTP
@@ -312,11 +316,10 @@ object OpenGroupApi {
             val publicKey =
                 MessagingModuleConfiguration.shared.storage.getOpenGroupPublicKey(request.server)
                     ?: return Promise.ofFail(Error.NoPublicKey)
-            val ed25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()
+            val ed25519KeyPair = MessagingModuleConfiguration.shared.storage.getUserED25519KeyPair()
                 ?: return Promise.ofFail(Error.NoEd25519KeyPair)
             val urlRequest = urlBuilder.toString()
             val headers = request.headers.toMutableMap()
-
             val nonce = sodium.nonce(16)
             val timestamp = TimeUnit.MILLISECONDS.toSeconds(SnodeAPI.nowWithOffset)
             var pubKey = ""
@@ -859,7 +862,9 @@ object OpenGroupApi {
     }
 
     fun getDefaultRoomsIfNeeded(): Promise<List<DefaultGroup>, Exception> {
-        return getAllRooms().map { groups ->
+        return GlobalScope.asyncPromise {
+            val groups = getAllRooms().await()
+
             val earlyGroups = groups.map { group ->
                 DefaultGroup(group.token, group.name, null)
             }
@@ -874,15 +879,13 @@ object OpenGroupApi {
             }
             groups.map { group ->
                 val image = try {
-                    images[group.token]!!.get()
+                    images[group.token]!!.await()
                 } catch (e: Exception) {
                     // No image or image failed to download
                     null
                 }
                 DefaultGroup(group.token, group.name, image)
-            }
-        }.success { new ->
-            defaultRooms.tryEmit(new)
+            }.also(defaultRooms::tryEmit)
         }
     }
 
