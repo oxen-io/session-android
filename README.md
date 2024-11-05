@@ -1,3 +1,6 @@
+# Repository Deprecated
+## This repository is now deprecated. However, Session Android is still actively developed [here](https://github.com/session-foundation/session-android). This is in line with announcements from [Session](https://getsession.org/blog/introducing-the-session-technology-foundation) and the [OPTF](https://optf.ngo/blog/the-optf-and-session), indicating that the OPTF has handed over the stewardship of the Session Project to the [Session Technology Foundation](https://session.foundation), a Swiss-based foundation dedicated to advancing digital rights and innovation.
+
 # Session Android 
 
 [Download on the Google Play Store](https://getsession.org/android)
