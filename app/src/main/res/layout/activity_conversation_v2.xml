@@ -271,14 +271,14 @@
 
     <TextView
         android:padding="@dimen/medium_spacing"
-        android:textSize="@dimen/small_font_size"
-        android:textColor="?android:textColorSecondary"
+        style="@style/Signal.Text.Preview"
+        android:textColor="?android:textColorTertiary"
         android:textAlignment="center"
         android:id="@+id/placeholderText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/large_spacing"
         app:layout_constraintTop_toBottomOf="@+id/outdatedBanner"
-        android:elevation="8dp"
         android:contentDescription="@string/AccessibilityId_control_message"
         tools:text="Some Control Message Text"
         />
@@ -304,7 +304,7 @@
             android:paddingHorizontal="@dimen/massive_spacing"
             android:paddingVertical="@dimen/small_spacing"
             android:textSize="@dimen/text_size"
-            android:text="@string/block"/>
+            android:text="@string/deleteAfterGroupPR1BlockUser"/>
 
         <TextView
             android:id="@+id/sendAcceptsTextView"
@@ -340,7 +340,7 @@
                 android:layout_height="@dimen/medium_button_height"
                 android:layout_marginStart="@dimen/medium_spacing"
                 android:layout_weight="1"
-                android:text="@string/decline" />
+                android:text="@string/delete" />
 
         </LinearLayout>
 
@@ -350,5 +350,24 @@
         android:id="@+id/dialog_open_url"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#A4000000"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            style="@style/SpinKitView.Large.ThreeBounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="8dp"
+            app:SpinKit_Color="@android:color/white" />
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

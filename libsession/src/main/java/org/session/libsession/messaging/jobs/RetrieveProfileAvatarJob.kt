@@ -19,7 +19,10 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.concurrent.ConcurrentSkipListSet
 
-class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipientAddress: Address): Job {
+class RetrieveProfileAvatarJob(
+    private val profileAvatar: String?, val recipientAddress: Address,
+    private val profileKey: ByteArray?
+): Job {
     override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
@@ -32,6 +35,7 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
         // Keys used for database storage
         private const val PROFILE_AVATAR_KEY = "profileAvatar"
         private const val RECEIPIENT_ADDRESS_KEY = "recipient"
+        private const val PROFILE_KEY = "profileKey"
 
         val errorUrls = ConcurrentSkipListSet<String>()
 
@@ -43,7 +47,6 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
         val recipient = Recipient.from(context, recipientAddress, true)
-        val profileKey = recipient.resolve().profileKey
 
         if (profileKey == null || (profileKey.size != 32 && profileKey.size != 16)) {
             return delegate.handleJobFailedPermanently(this, dispatcherName, Exception("Recipient profile key is gone!"))
@@ -69,7 +72,7 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
             }
 
             AvatarHelper.delete(context, recipient.address)
-            storage.setProfileAvatar(recipient, null)
+            storage.setProfilePicture(recipient, null, null)
             return
         }
 
@@ -87,7 +90,7 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
                 setProfilePictureURL(context, profileAvatar)
             }
 
-            storage.setProfileAvatar(recipient, profileAvatar)
+            storage.setProfilePicture(recipient, profileAvatar, profileKey)
         } catch (e: Exception) {
             Log.e("Loki", "Failed to download profile avatar", e)
             if (failureCount + 1 >= maxFailureCount) {
@@ -101,10 +104,15 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
     }
 
     override fun serialize(): Data {
-        return Data.Builder()
-                .putString(PROFILE_AVATAR_KEY, profileAvatar)
-                .putString(RECEIPIENT_ADDRESS_KEY, recipientAddress.serialize())
-                .build()
+        val data = Data.Builder()
+            .putString(PROFILE_AVATAR_KEY, profileAvatar)
+            .putString(RECEIPIENT_ADDRESS_KEY, recipientAddress.serialize())
+
+        if (profileKey != null) {
+            data.putByteArray(PROFILE_KEY, profileKey)
+        }
+
+        return data.build()
     }
 
     override fun getFactoryKey(): String {
@@ -115,7 +123,8 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
         override fun create(data: Data): RetrieveProfileAvatarJob {
             val profileAvatar = if (data.hasString(PROFILE_AVATAR_KEY)) { data.getString(PROFILE_AVATAR_KEY) } else { null }
             val recipientAddress = Address.fromSerialized(data.getString(RECEIPIENT_ADDRESS_KEY))
-            return RetrieveProfileAvatarJob(profileAvatar, recipientAddress)
+            val profileKey = data.getByteArray(PROFILE_KEY)
+            return RetrieveProfileAvatarJob(profileAvatar, recipientAddress, profileKey)
         }
     }
 }

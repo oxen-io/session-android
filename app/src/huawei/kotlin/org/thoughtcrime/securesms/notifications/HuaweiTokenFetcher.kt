@@ -24,6 +24,8 @@ class HuaweiTokenFetcher @Inject constructor(
     override suspend fun fetch(): String? = HmsInstanceId.getInstance(context).run {
         // https://developer.huawei.com/consumer/en/doc/development/HMS-Guides/push-basic-capability#h2-1576218800370
         // getToken may return an empty string, if so HuaweiPushService#onNewToken will be called.
-        withContext(Dispatchers.IO) { getToken(APP_ID, TOKEN_SCOPE) }
+        withContext(Dispatchers.IO) {
+            getToken(APP_ID, TOKEN_SCOPE)
+        }
     }
 }

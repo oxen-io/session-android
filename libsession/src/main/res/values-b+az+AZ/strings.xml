@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> artıq Admin deyil.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> və <b>digər {count} nəfər</b> Adminlikdən çıxarıldı.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> və <b>{other_name}</b> Adminlikdən çıxarıldı.</string>
-    <string name="adminSendingPromotion">Admin təyinatı göndərilir</string>
     <string name="adminSettings">Admin ayarları</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> və <b>{other_name}</b> Admin olaraq yüksəldildi.</string>
     <string name="andMore">+{count}</string>
@@ -143,6 +142,7 @@
     <string name="callsInProgress">Zəng davam edir</string>
     <string name="callsIncoming">{name} sizə zəng edir</string>
     <string name="callsIncomingUnknown">Gələn zəng</string>
+    <string name="callsMicrophonePermissionsRequired"><b>Mikrofon müraciətinə</b> icazə vermədiyiniz üçün <b>{name}</b> edən zəngi buraxdınız.</string>
     <string name="callsMissed">Buraxılmış zəng</string>
     <string name="callsMissedCallFrom">{name} kontaktından buraxılmış zəng</string>
     <string name="callsNotificationsRequired">Səsli və görüntülü zənglər, cihazınızın sistem ayarlarında bildirişlərin fəallaşdırılmasını tələb edir.</string>
@@ -202,6 +202,7 @@
     <string name="communityInvitation">İcma dəvəti</string>
     <string name="communityJoin">İcmaya qoşul</string>
     <string name="communityJoinDescription">{community_name} icmasına qoşulmaq istədiyinizə əminsiniz?</string>
+    <string name="communityJoinError">İcmaya qoşulma uğursuz oldu</string>
     <string name="communityJoinOfficial">Ya da bunlardan birinə qoşulun...</string>
     <string name="communityJoined">İcmaya qoşuldu</string>
     <string name="communityJoinedAlready">Artıq bu icmanın üzvüsünüz.</string>
@@ -255,7 +256,7 @@
     <string name="create">Yarat</string>
     <string name="cut">Kəs</string>
     <string name="databaseErrorGeneric">Bir databaza xətası baş verdi.\n\nProblemin aradan qaldırılması üçün tətbiq jurnalınızı paylaşmaq məqsədilə xaricə köçürün. Bu uğursuz olsa, {app_name} tətbiqini təkrar quraşdırıb hesabınızı bərpa edin.\n\nXəbərdarlıq: Bu, iki həftədən köhnə olan bütün mesajların, qoşmaların və hesab datasının itməsi ilə nəticələnəcək.</string>
-    <string name="databaseErrorTimeout">{app_name} tətbiqinin başladılmasının çox vaxt apardığına fikir verdik.\n\nGözləməyə davam edə, problemin aradan qaldırılması üçün cihazınızın jurnallarını xaricə köçürə və ya Session-u yenidən başlatmağa çalışa bilərsiniz.</string>
+    <string name="databaseErrorTimeout">{app_name} tətbiqinin başladılmasının çox vaxt apardığına fikir verdik.\n\nGözləməyə davam edə, problemin aradan qaldırılması üçün cihazınızın jurnallarını xaricə köçürə və ya {app_name}-u yenidən başlatmağa çalışa bilərsiniz.</string>
     <string name="databaseErrorUpdate">Tətbiqinizin databazası {app_name} tətbiqinin versiyası ilə uyumlu deyil. Yeni bir databaza yaratmaq və {app_name} istifadə etməyə davam etmək üçün tətbiqi yenidən quraşdırın və hesabınızı bərpa edin.\n\nXəbərdarlıq: Bu, iki həftədən köhnə olan bütün mesajların və qoşmaların itkisi ilə nəticələnəcək.</string>
     <string name="databaseOptimizing">Databaza optimallaşdırılır</string>
     <string name="debugLog">Sazlama jurnalı</string>
@@ -280,14 +281,12 @@
         <item quantity="one">Mesajı sil</item>
         <item quantity="other">Mesajları sil</item>
     </plurals>
-    <string name="deleteMessageConfirm">Bu mesajı silmək istədiyinizə əminsiniz?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Mesaj silindi</item>
         <item quantity="other">Mesajlar silindi</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">Bu mesaj silindi</string>
     <string name="deleteMessageDeletedLocally">Bu mesaj bu cihazda silindi</string>
-    <string name="deleteMessageDescriptionDevice">Bu mesajı yalnız bu cihazdan silmək istədiyinizə əminsiniz?</string>
     <string name="deleteMessageDescriptionEveryone">Bu mesajı hamı üçün silmək istədiyinizə əminsiniz?</string>
     <string name="deleteMessageDeviceOnly">Yalnız bu cihazda sil</string>
     <string name="deleteMessageDevicesAll">Bütün cihazlarımda sil</string>
@@ -296,8 +295,6 @@
         <item quantity="one">Mesajın silinməsi uğursuz oldu</item>
         <item quantity="other">Mesajların silinməsi uğursuz oldu</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Bu mesajları silmək istədiyinizə əminsiniz?</string>
-    <string name="deleteMessagesDescriptionDevice">Bu mesajları yalnız bu cihazdan silmək istədiyinizə əminsiniz?</string>
     <string name="deleteMessagesDescriptionEveryone">Bu mesajları hər kəs üçün silmək istədiyinizə əminsiniz?</string>
     <string name="deleting">Silinir</string>
     <string name="developerToolsToggle">Tərtibatçı Alətlərini aç/bağla</string>
@@ -310,6 +307,7 @@
     <string name="disappearingMessagesDeleteType">Silmə növü</string>
     <string name="disappearingMessagesDescription">Bu ayar, bu danışıqda hər kəsə aiddir.</string>
     <string name="disappearingMessagesDescription1">Bu ayar, bu danışıqda göndərdiyiniz mesajlara aiddir.</string>
+    <string name="disappearingMessagesDescriptionGroup">Bu ayar, bu danışıqdakı hər kəsə tətbiq olunur.\nYalnız qrup adminləri bu ayarı dəyişdirə bilər.</string>
     <string name="disappearingMessagesDisappear">{disappearing_messages_type} olduqdan {time} sonra yox olur</string>
     <string name="disappearingMessagesDisappearAfterRead">Oxunduqdan sonra yox olur</string>
     <string name="disappearingMessagesDisappearAfterReadDescription">Mesajlar oxunduqdan sonra silinir.</string>
@@ -403,9 +401,9 @@
     <string name="groupInviteFailedMultiple">{name} və digər {count} nəfəri {group_name} qrupuna dəvət etmə uğursuz oldu</string>
     <string name="groupInviteFailedTwo">{name} və {other_name} istifadəçilərini {group_name} qrupuna dəvət etmə uğursuz oldu</string>
     <string name="groupInviteFailedUser">{name} istifadəçisini {group_name} qrupuna dəvət etmə uğursuz oldu</string>
-    <string name="groupInviteSending">Dəvət göndərilir</string>
     <string name="groupInviteSent">Dəvət göndərildi</string>
     <string name="groupInviteSuccessful">Qrup dəvəti uğurludur</string>
+    <string name="groupInviteVersion">İstifadəçilər dəvətləri qəbul etmək üçün ən son versiyaya sahib olmalıdırlar</string>
     <string name="groupInviteYou"><b>Siz</b> qrupa qoşulmağa dəvət edildiniz.</string>
     <string name="groupInviteYouAndMoreNew"><b>Siz</b> və <b> digər {count} nəfər</b> qrupa qoşulmaq üçün dəvət edildiniz.</string>
     <string name="groupInviteYouAndOtherNew"><b>Siz</b> və <b>{other_name}</b> qrupa qoşulmaq üçün dəvət edildiniz.</string>
@@ -424,7 +422,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> və <b>digər {count} nəfər</b> qrupa qoşulmaq üçün dəvət edildi.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> və <b>{other_name}</b> qrupa qoşulmaq üçün dəvət edildi.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Siz</b> və <b>digər {count} nəfər</b> qrupa qoşulmaq üçün dəvət edildiniz. Söhbət tarixçəsi paylaşıldı.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Siz</b> və <b>{name}</b> qrupa qoşulmaq üçün dəvət edildiniz. Söhbət tarixçəsi paylaşıldı.</string>
     <string name="groupMemberYouLeft"><b>Siz</b> qrupu tərk etdiniz.</string>
     <string name="groupMembers">Qrup üzvləri</string>
     <string name="groupMembersNone">Bu qrupda başqa üzv yoxdur.</string>
@@ -673,9 +670,11 @@
     <string name="passwordSet">Parol təyin et</string>
     <string name="passwordSetDescription">Parolunuz təyin edildi. Lütfən, onu güvəndə saxlayın.</string>
     <string name="paste">Yapışdır</string>
+    <string name="permissionMusicAudioDenied">Fayl, musiqi və səs göndərə bilməyiniz üçün {app_name} musiqi və səslərə müraciət etməlidir, ancaq bu icazəyə birdəfəlik rədd cavabı verilib. Ayarlar → \"İcazələr\"ə toxunun və \"Musiqi və səs\"i işə salın.</string>
     <string name="permissionsAppleMusic">{app_name} media qoşmalarını oxutmaq üçün Apple Music-i istifadə etməlidir.</string>
     <string name="permissionsAutoUpdate">Avto-güncəlləmə</string>
     <string name="permissionsAutoUpdateDescription">Açılışda güncəlləmələri avto-yoxla</string>
+    <string name="permissionsCameraDenied">Foto və video göndərə bilməyiniz üçün {app_name} kameraya müraciət etməlidir, ancaq bu icazəyə birdəfəlik rədd cavabı verilib. Ayarlar → \"İcazələr\"ə toxunun və \"Kamera\"nı işə salın.</string>
     <string name="permissionsFaceId">{app_name} tətbiqinin ekran kilidi özəlliyi Face ID istifadə edir.</string>
     <string name="permissionsKeepInSystemTray">Sistem çubuğunda tut</string>
     <string name="permissionsKeepInSystemTrayDescription">Pəncərəni bağladıqda {app_name} arxaplanda işləməyə davam edir</string>
@@ -685,7 +684,9 @@
     <string name="permissionsMicrophoneAccessRequiredDesktop">{app_name} gizlilik ayarlarında mikrofona müraciəti fəallaşdıra bilərsiniz</string>
     <string name="permissionsMicrophoneAccessRequiredIos">{app_name} zəng etmək və səsli mesajlar yazmaq üçün mikrofona müraciət etməlidir.</string>
     <string name="permissionsMicrophoneDescription">Mikrofona müraciətə icazə verin.</string>
+    <string name="permissionsMusicAudio">Fayl, musiqi və səs göndərə bilməyiniz üçün {app_name} musiqi və səslərə müraciət etməlidir.</string>
     <string name="permissionsRequired">İcazə tələb edilir</string>
+    <string name="permissionsStorageDenied">Foto və video göndərə bilməyiniz üçün {app_name} foto kitabxanasına müraciət etməlidir, ancaq bu icazəyə birdəfəlik rədd cavabı verilib. Ayarlar → \"İcazələr\"ə toxunun və \"Foto və videolar\"ı işə salın.</string>
     <string name="permissionsStorageDeniedLegacy">{app_name}, qoşmaları göndərə və saxlaya bilməyiniz üçün anbara müraciət etməlidir. Ayarlar → İcazələr bölməsinə gedin və \"Anbar\"ı işə salın.</string>
     <string name="permissionsStorageSave">{app_name} qoşmaları və medianı saxlamaq üçün anbara müraciət etməlidir.</string>
     <string name="permissionsStorageSaveDenied">{app_name} foto və videoları saxlamaq üçün anbara müraciət etməlidir, ancaq bu icazəyə həmişəlik rədd cavabı verilib. Lütfən tətbiq ayarlarına gedin, \"İcazələr\"i seçin və \"Anbar\" icazəsini fəallaşdırın.</string>

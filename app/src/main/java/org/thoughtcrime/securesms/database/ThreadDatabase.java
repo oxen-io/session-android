@@ -188,6 +188,16 @@ public class ThreadDatabase extends Database {
     notifyConversationListListeners();
   }
 
+  public void clearSnippet(long threadId){
+    ContentValues contentValues = new ContentValues(1);
+
+    contentValues.put(SNIPPET, "");
+
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    db.update(TABLE_NAME, contentValues, ID + " = ?", new String[] {threadId + ""});
+    notifyConversationListListeners();
+  }
+
   public void updateSnippet(long threadId, String snippet, @Nullable Uri attachment, long date, long type, boolean unarchive) {
     ContentValues contentValues = new ContentValues(4);
 
@@ -281,7 +291,7 @@ public class ThreadDatabase extends Database {
         DatabaseComponent.get(context).smsDatabase().deleteMessagesInThreadBeforeDate(threadId, lastTweetDate);
         DatabaseComponent.get(context).mmsDatabase().deleteMessagesInThreadBeforeDate(threadId, lastTweetDate);
 
-        update(threadId, false, true);
+        update(threadId, false);
         notifyConversationListeners(threadId);
       }
     } finally {
@@ -294,7 +304,7 @@ public class ThreadDatabase extends Database {
     Log.i("ThreadDatabase", "Trimming thread: " + threadId + " before :"+timestamp);
     DatabaseComponent.get(context).smsDatabase().deleteMessagesInThreadBeforeDate(threadId, timestamp);
     DatabaseComponent.get(context).mmsDatabase().deleteMessagesInThreadBeforeDate(threadId, timestamp);
-    update(threadId, false, true);
+    update(threadId, false);
     notifyConversationListeners(threadId);
   }
 
@@ -722,17 +732,9 @@ public class ThreadDatabase extends Database {
     notifyConversationListListeners();
   }
 
-  public boolean update(long threadId, boolean unarchive, boolean shouldDeleteOnEmpty) {
+  public boolean update(long threadId, boolean unarchive) {
     MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
     long count                    = mmsSmsDatabase.getConversationCount(threadId);
-
-    boolean shouldDeleteEmptyThread = shouldDeleteOnEmpty && possibleToDeleteThreadOnEmpty(threadId);
-
-    if (count == 0 && shouldDeleteEmptyThread) {
-      deleteThread(threadId);
-      notifyConversationListListeners();
-      return true;
-    }
 
     try (MmsSmsDatabase.Reader reader = mmsSmsDatabase.readerFor(mmsSmsDatabase.getConversationSnippet(threadId))) {
       MessageRecord record = null;
@@ -748,11 +750,8 @@ public class ThreadDatabase extends Database {
                      record.getType(), unarchive, record.getExpiresIn(), record.getReadReceiptCount());
         return false;
       } else {
-        if (shouldDeleteEmptyThread) {
-          deleteThread(threadId);
-          return true;
-        }
-        // todo: add empty snippet that clears existing data
+        // for empty threads or if there is only deleted messages, show an empty snippet
+        clearSnippet(threadId);
         return false;
       }
     } finally {
@@ -798,11 +797,6 @@ public class ThreadDatabase extends Database {
     MarkReadReceiver.process(context, messages);
     ApplicationContext.getInstance(context).messageNotifier.updateNotification(context, threadId);
     return setLastSeen(threadId, lastSeenTime);
-  }
-
-  private boolean possibleToDeleteThreadOnEmpty(long threadId) {
-    Recipient threadRecipient = getRecipientForThreadId(threadId);
-    return threadRecipient != null && !threadRecipient.isCommunityRecipient();
   }
 
   private @NonNull String getFormattedBodyFor(@NonNull MessageRecord messageRecord) {

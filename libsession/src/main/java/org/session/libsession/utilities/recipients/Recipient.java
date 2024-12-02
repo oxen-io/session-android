@@ -17,6 +17,8 @@
  */
 package org.session.libsession.utilities.recipients;
 
+import static org.session.libsession.utilities.IdUtilKt.truncateIdForDisplay;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -60,7 +62,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 
-public class Recipient implements RecipientModifiedListener {
+public class Recipient implements RecipientModifiedListener, Cloneable {
 
   private static final String            TAG      = Recipient.class.getSimpleName();
   private static final RecipientProvider provider = new RecipientProvider();
@@ -1123,5 +1125,9 @@ public class Recipient implements RecipientModifiedListener {
 
   }
 
-
+  @NonNull
+  @Override
+  public Recipient clone() throws CloneNotSupportedException {
+    return (Recipient) super.clone();
+  }
 }

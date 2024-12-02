@@ -66,21 +66,21 @@ internal fun StartConversationScreen(
                     icon = R.drawable.ic_message,
                     modifier = Modifier.contentDescription(R.string.AccessibilityId_messageNew),
                     onClick = delegate::onNewMessageSelected)
-                Divider(startIndent = LocalDimensions.current.dividerIndent)
+                Divider(startIndent = LocalDimensions.current.minItemButtonHeight)
                 ItemButton(
                     textId = R.string.groupCreate,
                     icon = R.drawable.ic_group,
                     modifier = Modifier.contentDescription(R.string.AccessibilityId_groupCreate),
                     onClick = delegate::onCreateGroupSelected
                 )
-                Divider(startIndent = LocalDimensions.current.dividerIndent)
+                Divider(startIndent = LocalDimensions.current.minItemButtonHeight)
                 ItemButton(
                     textId = R.string.communityJoin,
                     icon = R.drawable.ic_globe,
                     modifier = Modifier.contentDescription(R.string.AccessibilityId_communityJoin),
                     onClick = delegate::onJoinCommunitySelected
                 )
-                Divider(startIndent = LocalDimensions.current.dividerIndent)
+                Divider(startIndent = LocalDimensions.current.minItemButtonHeight)
                 ItemButton(
                     textId = R.string.sessionInviteAFriend,
                     icon = R.drawable.ic_invite_friend,

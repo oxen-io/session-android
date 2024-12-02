@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> an cire shi a matsayin Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> da <b>{count} wasu</b> an cire su daga zama Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> da <b>{other_name}</b> an cire su daga zama Admin.</string>
-    <string name="adminSendingPromotion">Ana aika ƙara wa girma</string>
     <string name="adminSettings">Saitunan Admin</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> da <b>{other_name}</b> an tayar musu zuwa Admin.</string>
     <string name="andMore">+{count}</string>
@@ -256,7 +255,7 @@
     <string name="create">Ƙirƙiri</string>
     <string name="cut">Yanke</string>
     <string name="databaseErrorGeneric">An sami kuskuren bayanai.\n\nFitar da bayanan aikace-aikacen ku don rabawa don warware matsala. Idan wannan bai yi nasara ba, sake sanya {app_name} kuma dawo da asusunku.\n\nGargadi: Wannan zai haifar da asarar duk saƙonni, haɗe-haɗe, da bayanan asusu sama da sati biyu.</string>
-    <string name="databaseErrorTimeout">Mun lura cewa {app_name} yana ɗaukar dogon lokaci don farawa.\n\nZa ku iya ci gaba da jira, fitar da log ɗin na\'urarku don rabawa don magance matsaloli, ko sake farawa Session.</string>
+    <string name="databaseErrorTimeout">Mun lura cewa {app_name} yana ɗaukar dogon lokaci don farawa.\n\nZa ku iya ci gaba da jira, fitar da log ɗin na\'urarku don rabawa don magance matsaloli, ko sake farawa {app_name}.</string>
     <string name="databaseErrorUpdate">Bayanan aikace-aikacen ku ba su dace da wannan sigar {app_name}. Sake shigar da aikace-aikacen kuma dawo da asusunka don samar da sabon database kuma ci gaba da amfani da {app_name}.\n\nGargadi: Wannan zai haifar da rasa duk sakonni da fayiloli fiye da makonni biyu.</string>
     <string name="databaseOptimizing">Ƙarƙare Bayanai</string>
     <string name="debugLog">Kuskuren Tsari</string>
@@ -281,14 +280,12 @@
         <item quantity="one">Goge Saƙo</item>
         <item quantity="other">Goge Saƙonni</item>
     </plurals>
-    <string name="deleteMessageConfirm">Ka tabbata kana so ka goge wannan saƙon?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">An goge saƙo</item>
         <item quantity="other">An goge Saƙonni</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">An goge wannan saƙo</string>
     <string name="deleteMessageDeletedLocally">An share wannan saƙo a wannan na\'ura</string>
-    <string name="deleteMessageDescriptionDevice">Ka tabbata kana so ka goge wannan saƙon daga wannan na\'urar kawai?</string>
     <string name="deleteMessageDescriptionEveryone">Ka tabbata kana so ka goge wannan saƙon ga kowa?</string>
     <string name="deleteMessageDeviceOnly">Goge a wannan na\'ura kawai</string>
     <string name="deleteMessageDevicesAll">Goge akan dukkan na\'urorina</string>
@@ -297,8 +294,6 @@
         <item quantity="one">An kasa share saƙo</item>
         <item quantity="other">An kasa share saƙonni</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Ka tabbata kana so ka goge waɗannan saƙonnin?</string>
-    <string name="deleteMessagesDescriptionDevice">Kana tabbata kana so ka share waɗannan saƙonnin daga wannan na\'urar kawai?</string>
     <string name="deleteMessagesDescriptionEveryone">Kana tabbata kana so ka share waɗannan saƙonnin don kowa?</string>
     <string name="deleting">Ana gogewa</string>
     <string name="developerToolsToggle">Sauya Kayan Koya na Developer</string>
@@ -405,7 +400,6 @@
     <string name="groupInviteFailedMultiple">An kasa gayyatar {name} da {count} wasu zuwa {group_name}</string>
     <string name="groupInviteFailedTwo">An kasa gayyatar {name} da {other_name} zuwa {group_name}</string>
     <string name="groupInviteFailedUser">An kasa gayyatar {name} zuwa {group_name}</string>
-    <string name="groupInviteSending">Ana aika da gayyata</string>
     <string name="groupInviteSent">Gayyatar an aika</string>
     <string name="groupInviteSuccessful">Gayyatar rukuni ta yi nasara</string>
     <string name="groupInviteVersion">Masu amfani dole su kasance da sigar na karshe don su sami gayyata</string>
@@ -427,7 +421,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> da <b>{count} wasu</b> an gayyace su shiga ƙungiyar.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> da <b>{other_name}</b> an gayyace su shiga ƙungiyar.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Ku</b> da <b>{count} wasu</b> an gayyace ku shiga ƙungiyar. An raba tarihin hira.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Ku</b> da <b>{name}</b> an gayyace ku shiga ƙungiyar. An raba tarihin hira.</string>
     <string name="groupMemberYouLeft"><b>Ku</b> sun bar ƙungiyar.</string>
     <string name="groupMembers">Mambobin rukunin</string>
     <string name="groupMembersNone">Babu sauran mambobi a cikin wannan rukunin.</string>

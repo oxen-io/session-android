@@ -55,7 +55,6 @@ import org.thoughtcrime.securesms.ui.theme.bold
 
 class DialogButtonModel(
     val text: GetString,
-    val contentDescription: GetString = text,
     val color: Color = Color.Unspecified,
     val dismissOnClick: Boolean = true,
     val enabled: Boolean = true,
@@ -130,6 +129,7 @@ fun AlertDialog(
                                 textAlign = TextAlign.Center,
                                 style = LocalType.current.h7,
                                 modifier = Modifier.padding(bottom = LocalDimensions.current.xxsSpacing)
+                                    .qaTag(stringResource(R.string.AccessibilityId_modalTitle))
                             )
                         }
                         text?.let {
@@ -152,6 +152,7 @@ fun AlertDialog(
                                 textAlign = TextAlign.Center,
                                 style = textStyle,
                                 modifier = textModifier
+                                    .qaTag(stringResource(R.string.AccessibilityId_modalMessage))
                             )
                         }
                         content()
@@ -163,7 +164,7 @@ fun AlertDialog(
                                     text = it.text(),
                                     modifier = Modifier
                                         .fillMaxHeight()
-                                        .contentDescription(it.contentDescription())
+                                        .qaTag(it.text.string())
                                         .weight(1f),
                                     color = it.color,
                                     enabled = it.enabled
@@ -201,13 +202,11 @@ fun OpenURLAlertDialog(
         buttons = listOf(
             DialogButtonModel(
                 text = GetString(R.string.open),
-                contentDescription = GetString(R.string.AccessibilityId_urlOpenBrowser),
                 color = LocalColors.current.danger,
                 onClick = { context.openUrl(url) }
             ),
             DialogButtonModel(
                 text = GetString(android.R.string.copyUrl),
-                contentDescription = GetString(R.string.AccessibilityId_copy),
                 onClick = {
                     context.copyURLToClipboard(url)
                     Toast.makeText(context, R.string.copied, Toast.LENGTH_SHORT).show()
@@ -297,7 +296,8 @@ fun LoadingDialog(
                     title?.let {
                         Text(
                             it,
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                                .qaTag(stringResource(R.string.AccessibilityId_modalTitle)),
                             style = LocalType.current.large
                         )
                     }
@@ -340,12 +340,10 @@ fun PreviewXCloseDialog() {
             buttons = listOf(
                 DialogButtonModel(
                     text = GetString(R.string.onboardingTos),
-                    contentDescription = GetString(R.string.AccessibilityId_onboardingTos),
                     onClick = {}
                 ),
                 DialogButtonModel(
                     text = GetString(R.string.onboardingPrivacy),
-                    contentDescription = GetString(R.string.AccessibilityId_onboardingPrivacy),
                     onClick = {}
                 )
             ),

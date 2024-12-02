@@ -1,5 +1,6 @@
 package org.session.libsession.database
 
+import org.session.libsession.messaging.messages.MarkAsDeletedMessage
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentState
@@ -23,7 +24,8 @@ interface MessageDataProvider {
     fun getMessageIDs(serverIDs: List<Long>, threadID: Long): Pair<List<Long>, List<Long>>
     fun deleteMessage(messageID: Long, isSms: Boolean)
     fun deleteMessages(messageIDs: List<Long>, threadId: Long, isSms: Boolean)
-    fun updateMessageAsDeleted(timestamp: Long, author: String): Long?
+    fun markMessageAsDeleted(timestamp: Long, author: String, displayedMessage: String)
+    fun markMessagesAsDeleted(messages: List<MarkAsDeletedMessage>, isSms: Boolean, displayedMessage: String)
     fun getServerHashForMessage(messageID: Long, mms: Boolean): String?
     fun getDatabaseAttachment(attachmentId: Long): DatabaseAttachment?
     fun getAttachmentStream(attachmentId: Long): SessionServiceAttachmentStream?
@@ -36,6 +38,7 @@ interface MessageDataProvider {
     fun updateAudioAttachmentDuration(attachmentId: AttachmentId, durationMs: Long, threadId: Long)
     fun isMmsOutgoing(mmsMessageId: Long): Boolean
     fun isOutgoingMessage(timestamp: Long): Boolean
+    fun isDeletedMessage(timestamp: Long): Boolean
     fun handleSuccessfulAttachmentUpload(attachmentId: Long, attachmentStream: SignalServiceAttachmentStream, attachmentKey: ByteArray, uploadResult: UploadResult)
     fun handleFailedAttachmentUpload(attachmentId: Long)
     fun getMessageForQuote(timestamp: Long, author: Address): Triple<Long, Boolean, String>?

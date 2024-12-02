@@ -1,15 +1,20 @@
 package org.thoughtcrime.securesms.recoverypassword
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.BaseActionBarActivity
-import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.ui.setComposeContent
 
+
 class RecoveryPasswordActivity : BaseActionBarActivity() {
+
+    companion object {
+        const val RESULT_RECOVERY_HIDDEN = "recovery_hidden"
+    }
 
     private val viewModel: RecoveryPasswordViewModel by viewModels()
 
@@ -24,33 +29,14 @@ class RecoveryPasswordActivity : BaseActionBarActivity() {
             RecoveryPasswordScreen(
                 mnemonic = mnemonic,
                 seed = seed,
-                copyMnemonic = viewModel::copyMnemonic,
-                onHide = ::onHide
+                confirmHideRecovery = {
+                    val returnIntent = Intent()
+                    returnIntent.putExtra(RESULT_RECOVERY_HIDDEN, true)
+                    setResult(RESULT_OK, returnIntent)
+                    finish()
+                },
+                copyMnemonic = viewModel::copyMnemonic
             )
-        }
-    }
-
-    private fun onHide() {
-        showSessionDialog {
-            title(R.string.recoveryPasswordHidePermanently)
-            text(R.string.recoveryPasswordHidePermanentlyDescription1)
-            dangerButton(R.string.theContinue, R.string.AccessibilityId_theContinue) { onHideConfirm() }
-            cancelButton()
-        }
-    }
-
-    private fun onHideConfirm() {
-        showSessionDialog {
-            title(R.string.recoveryPasswordHidePermanently)
-            text(R.string.recoveryPasswordHidePermanentlyDescription2)
-            cancelButton()
-            dangerButton(
-                R.string.yes,
-                contentDescription = R.string.AccessibilityId_recoveryPasswordHidePermanentlyConfirm
-            ) {
-                viewModel.permanentlyHidePassword()
-                finish()
-            }
         }
     }
 }

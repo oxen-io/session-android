@@ -36,7 +36,6 @@
     <string name="adminRemovedUser">\"Usunięto z roli administratora: <b>{name}</b></string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> i <b>{count} innych użytkowników</b> nie są już administratorami.</string>
     <string name="adminRemovedUserOther">Użytkownicy <b>{name}</b> i <b>{other_name}</b> nie są już administratorami.</string>
-    <string name="adminSendingPromotion">Wysyłanie awansu na administratora</string>
     <string name="adminSettings">Ustawienia administratora</string>
     <string name="adminTwoPromotedToAdmin">Użytkownicy <b>{name}</b> i <b>{other_name}</b> zostali administratorami.</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
         <item quantity="many">Usuń wiadomości</item>
         <item quantity="other">Usuń wiadomości</item>
     </plurals>
-    <string name="deleteMessageConfirm">Czy na pewno chcesz usunąć tę wiadomość?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Wiadomość usunięta</item>
         <item quantity="few">Usunięto wiadomości</item>
@@ -294,7 +292,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Wiadomość została usunięta</string>
     <string name="deleteMessageDeletedLocally">Wiadomość została usunięta na tym urządzeniu</string>
-    <string name="deleteMessageDescriptionDevice">Czy na pewno chcesz usunąć tę wiadomość tylko z tego urządzenia?</string>
     <string name="deleteMessageDescriptionEveryone">Czy na pewno chcesz usunąć tę wiadomość u wszystkich?</string>
     <string name="deleteMessageDeviceOnly">Usuń tylko na tym urządzeniu</string>
     <string name="deleteMessageDevicesAll">Usuń na wszystkich moich urządzeniach</string>
@@ -305,8 +302,6 @@
         <item quantity="many">Nie udało się usunąć wiadomości</item>
         <item quantity="other">Nie udało się usunąć wiadomości</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Czy na pewno chcesz usunąć te wiadomości?</string>
-    <string name="deleteMessagesDescriptionDevice">Czy na pewno chcesz usunąć te wiadomości tylko z tego urządzenia?</string>
     <string name="deleteMessagesDescriptionEveryone">Czy na pewno chcesz usunąć te wiadomości u wszystkich?</string>
     <string name="deleting">Usuwanie</string>
     <string name="developerToolsToggle">Narzędzia dla programistów</string>
@@ -415,7 +410,6 @@
     <string name="groupInviteFailedMultiple">Nie udało się zaprosić użytkownika {name} i {count} innych użytkowników do grupy {group_name}</string>
     <string name="groupInviteFailedTwo">Nie udało się zaprosić użytkowników {name} i {other_name} do grupy {group_name}</string>
     <string name="groupInviteFailedUser">Nie udało się zaprosić użytkownika {name} do grupy {group_name}</string>
-    <string name="groupInviteSending">Wysyłanie zaproszenia</string>
     <string name="groupInviteSent">Zaproszenie zostało wysłane</string>
     <string name="groupInviteSuccessful">Zaproszenie do grupy zakończone sukcesem</string>
     <string name="groupInviteVersion">Aby otrzymywać zaproszenia, użytkownicy muszą mieć najnowszą wersję</string>
@@ -437,7 +431,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> i <b>{count} innych użytkowników </b> zostali zaproszeni do grupy.</string>
     <string name="groupMemberNewTwo">Użytkownicy <b>{name}</b> oraz <b>{other_name}</b> zostali zaproszeni do grupy.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Ty</b> i <b>{count} innych użytkowników</b> zostaliście zaproszeni do grupy. Udostępniono historię czatu.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Ty</b> oraz użytkownik <b>{name}</b> zostaliście zaproszeni do grupy. Udostępniono historię czatu.</string>
     <string name="groupMemberYouLeft"><b>Opuszczasz</b> grupę.</string>
     <string name="groupMembers">Członkowie grupy</string>
     <string name="groupMembersNone">W grupie nie ma innych członków.</string>
@@ -505,7 +498,7 @@
     <string name="legacyGroupMemberNewYouOther"><b>Ty</b> oraz użytkownik <b>{other_name}</b> dołączyliście do grupy.</string>
     <string name="legacyGroupMemberTwoNew"><b>{name}</b> i <b>{other_name}</b> dołączyli do grupy.</string>
     <string name="legacyGroupMemberYouNew"><b>Dołączono</b> do grupy.</string>
-    <string name="linkPreviews">Previzualizări ale linkurilor</string>
+    <string name="linkPreviews">Podgląd linków</string>
     <string name="linkPreviewsDescription">Pokaż podglądy linków dla obsługiwanych adresów URL.</string>
     <string name="linkPreviewsEnable">Włącz podgląd linków</string>
     <string name="linkPreviewsErrorLoad">Nie można wczytać podlągu linku</string>

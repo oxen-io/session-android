@@ -31,12 +31,11 @@
     <string name="adminRemoveAsAdmin">إزالة كمشرف</string>
     <string name="adminRemoveCommunityNone">لا يوجد مسؤولين في هذا المجتمع.</string>
     <string name="adminRemoveFailed">فشل في إزالة {name} كمدير.</string>
-    <string name="adminRemoveFailedMultiple">فشل في إزالة <b>{name}</b> و<b>{count} آخرين</b> كمسؤول.</string>
-    <string name="adminRemoveFailedOther">فشل في إزالة <b>{name}</b> و<b>{other_name}</b> كمسؤول.</string>
+    <string name="adminRemoveFailedMultiple">فشل في إزالة <b>{name}</b> و<b>{count} آخرين</b> كمشرف.</string>
+    <string name="adminRemoveFailedOther">فشل في إزالة <b>{name}</b> و<b>{other_name}</b> كمشرف.</string>
     <string name="adminRemovedUser"><b>{name}</b> تم إزالته كمشرف.</string>
-    <string name="adminRemovedUserMultiple">تمت إزالة <b>{name}</b> و<b>{count} آخرين</b> من منصبهم كمسؤولين.</string>
-    <string name="adminRemovedUserOther">تمت إزالة <b>{name}</b> و<b>{other_name}</b> من منصبي المسؤول.</string>
-    <string name="adminSendingPromotion">إرسال ترقية المشرف</string>
+    <string name="adminRemovedUserMultiple">تمت إزالة <b>{name}</b> و<b>{count} آخرين</b> من منصبهم كمشرفين.</string>
+    <string name="adminRemovedUserOther">تمت إزالة <b>{name}</b> و<b>{other_name}</b> من منصبي المشرف.</string>
     <string name="adminSettings">اعدادات المسؤول</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> و <b>{other_name}</b> تم ترقيتهم إلى مشرف.</string>
     <string name="andMore">+{count}</string>
@@ -59,7 +58,7 @@
     <string name="appearanceZoomOut">تصغير</string>
     <string name="attachment">مرفق</string>
     <string name="attachmentsAdd">إضافة مرفق</string>
-    <string name="attachmentsAlbumUnnamed">ألبوم بدون إسم</string>
+    <string name="attachmentsAlbumUnnamed">البوم بدون اسم</string>
     <string name="attachmentsAutoDownload">تنزيل المرفقات تلقائيًا</string>
     <string name="attachmentsAutoDownloadDescription">تنزيل الوسائط والملفات من هذه الدردشة تلقائيًا.</string>
     <string name="attachmentsAutoDownloadModalDescription">هل تود تنزيل كافة الملفات تلقائيًا من <b>{conversation_name}</b>؟</string>
@@ -148,6 +147,7 @@
     <string name="callsNotificationsRequired">المكالمات الصوتية والمرئية تتطلب تمكين الاشعارات في اعدادات نظامك.</string>
     <string name="callsPermissionsRequired">صلاحيات الاتصال مطلوبة</string>
     <string name="callsPermissionsRequiredDescription">يمكنك تفعيل صَلاحِيَة \"المكالمات الصوتية والمرئية\" في إعدادات الخصوصية.</string>
+    <string name="callsPermissionsRequiredDescription1">يمكنك تمكين إذن \"المكالمات الصوتية والفيديو\" في إعدادات الأذونات.</string>
     <string name="callsReconnecting">جار إعادة الاتصال…</string>
     <string name="callsRinging">يرن حاليا...</string>
     <string name="callsSessionCall">{app_name} Call</string>
@@ -252,7 +252,7 @@
     <string name="create">إنشاء</string>
     <string name="cut">قص</string>
     <string name="databaseErrorGeneric">حدث خطأ في قاعدة البيانات.\n \n صدر سجلات التطبيق الخاصة بك للمشاركة في استكشاف الأخطاء وإصلاحها. إذا لم ينجح ذلك، أعد تثبيت {app_name} واستعد حسابك. \n \nتحذير: سيؤدي ذلك إلى فقدان جميع الرسائل والمرفقات وبيانات الحساب التي يزيد عمرها عن أسبوعين.</string>
-    <string name="databaseErrorTimeout">لقد لاحظنا أن {app_name} يستغرق وقتًا طويلاً لبدء.\n\nيمكنك مواصلة الانتظار، تصدير سجلات الجهاز للمشاركة في استكشاف الأخطاء وإصلاحها، أو محاولة إعادة تشغيل Session.</string>
+    <string name="databaseErrorTimeout">لقد لاحظنا أن {app_name} يستغرق وقتًا طويلاً لبدء.\n\nيمكنك مواصلة الانتظار، تصدير سجلات الجهاز للمشاركة في استكشاف الأخطاء وإصلاحها، أو محاولة إعادة تشغيل {app_name}.</string>
     <string name="databaseErrorUpdate">قاعدة بيانات تطبيقك غير متوافقة مع هذا الإصدار من {app_name}. أعد تثبيت التطبيق واستعد حسابك لإنشاء قاعدة بيانات جديدة ومتابعة استخدام {app_name}.\n\nتحذير: سيؤدي هذا إلى فقدان جميع الرسائل والمرفقات التي يزيد عمرها عن أسبوعين.</string>
     <string name="databaseOptimizing">تحسين قاعدة البيانات</string>
     <string name="debugLog">سجل تصحيح الأخطاء</string>
@@ -281,7 +281,6 @@
         <item quantity="many">حذف الرسائل</item>
         <item quantity="other">حذف الرسائل</item>
     </plurals>
-    <string name="deleteMessageConfirm">هل أنت متأكد من أنك تريد حذف هذه الرسالة؟</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="zero">تم حذف الرسائل</item>
         <item quantity="one">تم حذف الرسالة</item>
@@ -292,13 +291,26 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">تم حذف هذه الرسالة</string>
     <string name="deleteMessageDeletedLocally">تم حذف هذه الرسالة على هذا الجهاز</string>
-    <string name="deleteMessageDescriptionDevice">هل أنت متأكد من أنك تريد حذف هذه الرسالة من هذا الجهاز فقط؟</string>
+    <plurals name="deleteMessageDescriptionDevice">
+        <item quantity="zero">هل أنت متأكد من حذف الرسائل من هذا الجهاز فقط؟</item>
+        <item quantity="one">هل أنت متأكد من حذف الرسالة من هذا الجهاز فقط؟</item>
+        <item quantity="two">هل أنت متأكد من حذف الرسائل من هذا الجهاز فقط؟</item>
+        <item quantity="few">هل أنت متأكد من حذف الرسائل من هذا الجهاز فقط؟</item>
+        <item quantity="many">هل أنت متأكد من حذف الرسائل من هذا الجهاز فقط؟</item>
+        <item quantity="other">هل أنت متأكد من حذف الرسائل من هذا الجهاز فقط؟</item>
+    </plurals>
     <string name="deleteMessageDescriptionEveryone">هل أنت متأكد من أنك تريد حذف هذه الرسالة للجميع؟</string>
     <string name="deleteMessageDeviceOnly">حذف على هذا الجهاز فقط</string>
     <string name="deleteMessageDevicesAll">حذف على جميع أجهزتي</string>
     <string name="deleteMessageEveryone">حذف للجميع</string>
-    <string name="deleteMessagesConfirm">هل أنت متأكد من أنك تريد حذف هذه الرسائل؟</string>
-    <string name="deleteMessagesDescriptionDevice">هل أنت متيقِّن من أنك تريد مسح هذه الرسائل من هذا الجهاز فقط؟</string>
+    <plurals name="deleteMessageNoteToSelfWarning">
+        <item quantity="zero">لا يمكن حذف بعض الرسائل التي حددتها من جميع أجهزتك</item>
+        <item quantity="one">لا يمكن حذف هذه الرسالة من جميع أجهزتك</item>
+        <item quantity="two">لا يمكن حذف بعض الرسائل التي حددتها من جميع أجهزتك</item>
+        <item quantity="few">لا يمكن حذف بعض الرسائل التي حددتها من جميع أجهزتك</item>
+        <item quantity="many">لا يمكن حذف بعض الرسائل التي حددتها من جميع أجهزتك</item>
+        <item quantity="other">لا يمكن حذف بعض الرسائل التي حددتها من جميع أجهزتك</item>
+    </plurals>
     <string name="deleteMessagesDescriptionEveryone">هل أنت متيقِّن من أنك تريد مسح هذه الرسائل لدى الجميع؟</string>
     <string name="deleting">حذف</string>
     <string name="developerToolsToggle">تحويل أدوات المطور</string>
@@ -329,7 +341,7 @@
     <string name="disappearingMessagesSetYou"><b>أنت</b> قمت بتعيين الرسائل لتختفي بعد {time} من {disappearing_messages_type}.</string>
     <string name="disappearingMessagesTimer">المؤقت</string>
     <string name="disappearingMessagesTurnedOff"><b>{name}</b> قام بإيقاف الرسائل المختفية. لن تختفي الرسائل التي يرسلها بعد الآن.</string>
-    <string name="disappearingMessagesTurnedOffGroup"><b>{name}</b> قام/ت بإيقاف تشغيل الرسائل المختفية <b>إيقاف</b>.</string>
+    <string name="disappearingMessagesTurnedOffGroup"><b>{name}</b> قام بإيقاف تشغيل الرسائل المختفية <b>إيقاف</b>.</string>
     <string name="disappearingMessagesTurnedOffYou"><b>أنت</b> أوقفت <b>الرسائل المختفية</b>. لم تعد الرسائل التي ترسلها تختفي.</string>
     <string name="disappearingMessagesTurnedOffYouGroup"><b>قمت</b> بإيقاف <b>تشغيل</b> الرسائل المختفية.</string>
     <string name="disappearingMessagesTypeRead">القراءة</string>
@@ -401,7 +413,6 @@
     <string name="groupInviteFailedMultiple">فشل دعوة {name} و {count} آخرين إلى {group_name}</string>
     <string name="groupInviteFailedTwo">فشل دعوة {name} و {other_name} إلى {group_name}</string>
     <string name="groupInviteFailedUser">فشل دعوة {name} إلى {group_name}</string>
-    <string name="groupInviteSending">إرسال دعوة</string>
     <string name="groupInviteSent">تم إرسال الدعوة</string>
     <string name="groupInviteSuccessful">الدعوة إلى المجموعة ناجحة</string>
     <string name="groupInviteVersion">يجب أن يمتلك المستخدمون الإصدار الأحدث لتلقي الدعوات</string>
@@ -423,7 +434,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> و <b>{count} اخرين</b> تمت دعوتهم للانضمام إلى المجموعة.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> و <b>{other_name}</b> تم دعوتهم للانضمام إلى المجموعة.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>أنت</b> و<b>{count} آخرين</b> انضموا للمجموعة. تمت مشاركة سجل الدردشة.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>أنت</b> و<b>{name}</b> انضموا للمجموعة. تمت مشاركة سجل الدردشة.</string>
     <string name="groupMemberYouLeft"><b>أنت</b> غادرت المجموعة.</string>
     <string name="groupMembers">أعضاء المجموعة</string>
     <string name="groupMembersNone">لا يوجد اعضاء اخرين في هذه المجموعة.</string>
@@ -476,7 +486,7 @@
     <string name="helpSupport">الدعم</string>
     <string name="helpWedLoveYourFeedback">نتطلع لقراءة أراءك</string>
     <string name="hide">إخفاء</string>
-    <string name="hideMenuBarDescription">Toggle system menu bar visibility</string>
+    <string name="hideMenuBarDescription">تبديل رؤية شريط قائمة النظام</string>
     <string name="hideOthers">إخفاء الآخرين</string>
     <string name="image">صورة</string>
     <string name="incognitoKeyboard">لوحة المفاتيح في وضع التستّر</string>
@@ -569,6 +579,14 @@
     </plurals>
     <string name="messageNewDescriptionDesktop">ابدأ محادثة جديدة عن طريق إدخال معرف حساب صديقك أو ONS.</string>
     <string name="messageNewDescriptionMobile">ابدأ محادثة جديدة عن طريق إدخال معرف حساب صديقك، ONS أو مسح رمزه QR.</string>
+    <plurals name="messageNewYouveGot">
+        <item quantity="zero">لديك %1$d رسائل جديدة.</item>
+        <item quantity="one">لديك رسالة جديدة.</item>
+        <item quantity="two">لديك رسالتين %1$d جدد.</item>
+        <item quantity="few">لديك %1$d رسائل جديدة.</item>
+        <item quantity="many">لديك %1$d رسائل جديدة.</item>
+        <item quantity="other">لديك %1$d رسائل جديدة.</item>
+    </plurals>
     <string name="messageReplyingTo">الرد على</string>
     <string name="messageRequestGroupInvite"><b>{name}</b> دعاك للانضمام إلى <b>{group_name}</b>.</string>
     <string name="messageRequestGroupInviteDescription">إرسال رسالة إلى هذه المجموعة سوف يقبل تلقائيًا دعوة المجموعة.</string>
@@ -620,9 +638,9 @@
     <string name="notificationsFastModeDescription">ستتم إعلامك بالرسائل الجديدة بشكل موثوق وفوري باستخدام خوادم إشعارات جوجل.</string>
     <string name="notificationsFastModeDescriptionIos">سوف يتم إعلامك برسائل جديدة بشكل موثوق وفوري باستخدام خوادم إشعارات Apple.</string>
     <string name="notificationsGoToDevice">اذهب إلى إعدادات تنبيهات الجهاز</string>
-    <string name="notificationsHeaderAllMessages">التنبيهات - الكل</string>
-    <string name="notificationsHeaderMentionsOnly">التنبيهات - الإشعارات فقط</string>
-    <string name="notificationsHeaderMute">التنبيهات - مكتومة</string>
+    <string name="notificationsHeaderAllMessages">الإشعارات - الكل</string>
+    <string name="notificationsHeaderMentionsOnly">الإشعارات- الإشارات فقط</string>
+    <string name="notificationsHeaderMute">الإشعارات - مكتومة</string>
     <string name="notificationsIosGroup">{name} إلى {conversation_name}</string>
     <string name="notificationsIosRestart">ربما تلقيت رسائل أثناء إعادة تشغيل {device} الخاص بك.</string>
     <string name="notificationsLedColor">لون ضوء التنبيه LED</string>
@@ -817,7 +835,7 @@
     <string name="showLess">عرض أقل</string>
     <string name="stickers">الملصقات</string>
     <string name="supportGoTo">اِذهب اِلى صفحة الدعم</string>
-    <string name="systemInformationDesktop">System Information: {information}</string>
+    <string name="systemInformationDesktop">معلومات النظام: {information}</string>
     <string name="theContinue">التالي</string>
     <string name="theDefault">افتراضي</string>
     <string name="theError">خطأ</string>
