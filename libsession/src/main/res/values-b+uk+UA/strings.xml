@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> було вилучено із групи.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> та ще <b>{count} інших</b> було вилучено з переліку адміністраторів.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> та <b>{other_name}</b> було вилучено з переліку адміністраторів.</string>
-    <string name="adminSendingPromotion">Надсилання прав адміністратора</string>
     <string name="adminSettings">Адміністраторські налаштування</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> та <b>{other_name}</b> було підвищено до адміністраторів.</string>
     <string name="andMore">+{count}</string>
@@ -149,6 +148,7 @@
     <string name="callsNotificationsRequired">Для голосових та відеодзвінків необхідно увімкнути сповіщення в налаштуваннях системи вашого пристрою.</string>
     <string name="callsPermissionsRequired">Потрібні дозволи для дзвінків</string>
     <string name="callsPermissionsRequiredDescription">Ви можете увімкнути дозвіл «Голосові та відеодзвінки» в налаштуваннях конфіденційності.</string>
+    <string name="callsPermissionsRequiredDescription1">Ви можете увімкнути «Голосові та відеодзвінки» в налаштуваннях конфіденційності.</string>
     <string name="callsReconnecting">Повторне з\'єднання…</string>
     <string name="callsRinging">Виклик...</string>
     <string name="callsSessionCall">{app_name} Дзвінок</string>
@@ -156,9 +156,9 @@
     <string name="callsVoiceAndVideo">Голосові та відеодзвінки</string>
     <string name="callsVoiceAndVideoBeta">Голосові та відеодзвінки (бета-версія)</string>
     <string name="callsVoiceAndVideoModalDescription">Ваша IP-адреса видима вашому партнеру по дзвінку та серверу Oxen Foundation при використанні бета-дзвінків.</string>
-    <string name="callsVoiceAndVideoToggleDescription">Дозволяє здійснювати голосові та відео виклики з іншими користувачами.</string>
+    <string name="callsVoiceAndVideoToggleDescription">Дозволяє голосові та відеодзвінки з іншими користувачами.</string>
     <string name="callsYouCalled">Ви дзвонили {name}</string>
-    <string name="callsYouMissedCallPermissions">Ви пропустили дзвінок від <b>{name}</b>, бо не увімкнули <b>Голосові та Відеодзвінки</b> у Налаштуваннях Приватності.</string>
+    <string name="callsYouMissedCallPermissions">Ви пропустили дзвінок від <b>{name}</b>, бо не увімкнули <b>Голосові та відеодзвінки</b> у налаштуваннях конфіденційності.</string>
     <string name="cameraErrorNotFound">Камеру не знайдено</string>
     <string name="cameraErrorUnavailable">Камера недоступна.</string>
     <string name="cameraGrantAccess">Дозволити доступ до камери</string>
@@ -243,8 +243,8 @@
     <string name="conversationsEnterNewLine">SHIFT + ENTER надсилає повідомлення, ENTER починає новий рядок</string>
     <string name="conversationsEnterSends">ENTER надсилає повідомлення, SHIFT + ENTER починає новий рядок</string>
     <string name="conversationsGroups">Групи</string>
-    <string name="conversationsMessageTrimming">Обрізка повідомлень</string>
-    <string name="conversationsMessageTrimmingTrimCommunities">Обрізати спільноти</string>
+    <string name="conversationsMessageTrimming">Автовидалення повідомлень</string>
+    <string name="conversationsMessageTrimmingTrimCommunities">Автовидалення повідомлень спільнот</string>
     <string name="conversationsMessageTrimmingTrimCommunitiesDescription">Видаляти повідомлення у спільнотах старше 6 місяців і де більше 2 000 повідомлень.</string>
     <string name="conversationsNew">Нова бесіда</string>
     <string name="conversationsNone">У вас ще немає жодних розмов</string>
@@ -286,6 +286,12 @@
         <item quantity="many">Видалити повідомлення</item>
         <item quantity="other">Видалити повідомлення</item>
     </plurals>
+    <plurals name="deleteMessageConfirm">
+        <item quantity="one">Ви дійсно хочете видалити це повідомлення?</item>
+        <item quantity="few">Ви дійсно хочете видалити ці повідомлення?</item>
+        <item quantity="many">Ви дійсно хочете видалити ці повідомлення?</item>
+        <item quantity="other">Ви дійсно хочете видалити ці повідомлення?</item>
+    </plurals>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Повідомлення видалено</item>
         <item quantity="few">Повідомлення видалені</item>
@@ -294,7 +300,12 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Це повідомлення було видалено</string>
     <string name="deleteMessageDeletedLocally">Це повідомлення було видалено на цьому пристрої</string>
-    <string name="deleteMessageDescriptionDevice">Ви впевнені, що хочете видалити це повідомлення лише з цього пристрою?</string>
+    <plurals name="deleteMessageDescriptionDevice">
+        <item quantity="one">Ви дійсно хочете видалити це повідомлення лише з цього пристрою?</item>
+        <item quantity="few">Ви дійсно хочете видалити ці повідомлення лише з цього пристрою?</item>
+        <item quantity="many">Ви дійсно хочете видалити ці повідомлення лише з цього пристрою?</item>
+        <item quantity="other">Ви дійсно хочете видалити ці повідомлення лише з цього пристрою?</item>
+    </plurals>
     <string name="deleteMessageDescriptionEveryone">Ви впевнені, що бажаєте видалити це повідомлення для всіх?</string>
     <string name="deleteMessageDeviceOnly">Видалити тільки на цьому пристрої</string>
     <string name="deleteMessageDevicesAll">Видалити на всіх моїх пристроях</string>
@@ -305,7 +316,6 @@
         <item quantity="many">Не вдалося видалити повідомлення</item>
         <item quantity="other">Не вдалося видалити повідомлення</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Ви впевнені, що хочете видалити ці повідомлення лише з цього пристрою?</string>
     <string name="deleteMessagesDescriptionEveryone">Ви впевнені, що хочете видалити ці повідомлення для всіх?</string>
     <string name="deleting">Видалення</string>
     <string name="developerToolsToggle">Відкрити засоби розробника</string>
@@ -402,6 +412,7 @@
     <string name="groupCreateErrorNoMembers">Будь ласка, виберіть принаймні 1 учасника групи.</string>
     <string name="groupDelete">Видалити групу</string>
     <string name="groupDeleteDescription">Ви впевнені, що хочете видалити <b>{group_name}?</b> Це видалить усіх учасників і всю інформацію групи.</string>
+    <string name="groupDeletedMemberDescription">{group_name} видалено адміністратором групи. Ви більше не зможете надсилати повідомлення.</string>
     <string name="groupDescriptionEnter">Введіть опис групи</string>
     <string name="groupDisplayPictureUpdated">Зображення групи для показу оновлено.</string>
     <string name="groupEdit">Редагувати групу</string>
@@ -414,7 +425,12 @@
     <string name="groupInviteFailedMultiple">Не вдалося запросити {name} та ще {count} інших до {group_name}</string>
     <string name="groupInviteFailedTwo">Не вдалося запросити {name} та {other_name} до {group_name}</string>
     <string name="groupInviteFailedUser">Не вдалося запросити {name} до {group_name}</string>
-    <string name="groupInviteSending">Надсилання запрошення</string>
+    <plurals name="groupInviteSending">
+        <item quantity="one">Надсилання запрошення</item>
+        <item quantity="few">Надсилання запрошень</item>
+        <item quantity="many">Надсилання запрошень</item>
+        <item quantity="other">Надсилання запрошень</item>
+    </plurals>
     <string name="groupInviteSent">Запрошення надіслано</string>
     <string name="groupInviteSuccessful">Запрошення до групи успішне</string>
     <string name="groupInviteVersion">Користувачі мають мати останню версію, щоб отримувати запрошення</string>
@@ -436,7 +452,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> та ще <b>{count} інших</b> були запрошені приєднатися до групи.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> та <b>{other_name}</b> були запрошені приєднатися до групи.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Ви</b> та <b>{count}</b> інших були запрошені приєднатися до групи. Було надано спільний доступ до історії чату.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Ви</b> та <b>{name}</b> були запрошені приєднатися до групи. Було надано спільний доступ до історії чату.</string>
     <string name="groupMemberYouLeft"><b>Ви</b> покинули групу.</string>
     <string name="groupMembers">Учасники групи</string>
     <string name="groupMembersNone">Відсутні учасники у цій групі.</string>
@@ -510,7 +525,7 @@
     <string name="linkPreviewsErrorLoad">Не вдалося завантажити попередній перегляд посилання</string>
     <string name="linkPreviewsErrorUnsecure">Попередній перегляд не застосовується для незахищеного посилання</string>
     <string name="linkPreviewsFirstDescription">Відображати попередній перегляд посилань, які ви надсилаєте та отримуєте. Це може бути корисно, однак {app_name} має зв\'язуватися з вебсайтами для генерації попереднього перегляду. Ви завжди можете вимкнути попередній перегляд посилань у налаштуваннях {app_name}.</string>
-    <string name="linkPreviewsSend">Надсилати попередній перегляд посилань</string>
+    <string name="linkPreviewsSend">Попередній перегляд надісланих посилань</string>
     <string name="linkPreviewsSendModalDescription">У вас не буде повного захисту метаданих при надсиланні попереднього перегляду посилань.</string>
     <string name="linkPreviewsTurnedOff">Попередній перегляд посилань вимкнено</string>
     <string name="linkPreviewsTurnedOffDescription">{app_name} повинен зв\'язуватися з підключеними веб-сайтами, щоб створити попередній перегляд посилань, що ви надсилаєте і отримуєте.\n\nВи можете увімкнути їх у налаштуваннях {app_name}.</string>
@@ -646,7 +661,7 @@
     <string name="notificationsSound">Звук</string>
     <string name="notificationsSoundDescription">Звукові сповіщення у відкритому застосунку</string>
     <string name="notificationsSoundDesktop">Аудіосповіщення</string>
-    <string name="notificationsStrategy">Стратегія сповіщення</string>
+    <string name="notificationsStrategy">Принцип оповіщення</string>
     <string name="notificationsStyle">Стиль сповіщень</string>
     <string name="notificationsSystem">{message_count} нових повідомлень у {conversation_count} розмовах</string>
     <string name="notificationsVibrate">Вібрація</string>
@@ -829,7 +844,7 @@
     <string name="theError">Помилка</string>
     <string name="tryAgain">Спробуйте ще</string>
     <string name="typingIndicators">Індикатор введення тексту</string>
-    <string name="typingIndicatorsDescription">Бачити та надсилати індикатори набору тексту.</string>
+    <string name="typingIndicatorsDescription">Бачити та надсилати індикатори введення тексту.</string>
     <string name="undo">Назад</string>
     <string name="unknown">Невідомо</string>
     <string name="updateApp">Оновлення застосунку</string>

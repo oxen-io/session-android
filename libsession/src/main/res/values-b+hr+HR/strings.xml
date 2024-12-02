@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> je uklonjen kao Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> i <b>{count} drugi</b> su uklonjeni kao administratori.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> i <b>{other_name}</b> su uklonjeni kao administratori.</string>
-    <string name="adminSendingPromotion">Slanje promocije administracije</string>
     <string name="adminSettings">Postavke za administratore</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> i <b>{other_name}</b> promovirani su u Admina.</string>
     <string name="andMore">+{count}</string>
@@ -257,7 +256,7 @@
     <string name="create">Stvori</string>
     <string name="cut">Izreži</string>
     <string name="databaseErrorGeneric">Došlo je do pogreške u bazi podataka.\n\nIzvezite svoje zapisnike aplikacije kako biste ih podijelili za otklanjanje poteškoća. Ako to ne uspije, ponovo instalirajte {app_name} i vratite svoj račun.\n\nUpozorenje: Ovo će rezultirati gubitkom svih poruka, privitaka i podataka računa starijih od dva tjedna.</string>
-    <string name="databaseErrorTimeout">Primijetili smo da pokretanje {app_name} traje dugo.\n\nMožete nastaviti čekati, izvesti zapise uređaja za dijeljenje radi rješavanja problema ili pokušati ponovo pokrenuti Session.</string>
+    <string name="databaseErrorTimeout">Primijetili smo da pokretanje {app_name} traje dugo.\n\nMožete nastaviti čekati, izvesti zapise uređaja za dijeljenje radi rješavanja problema ili pokušati ponovo pokrenuti {app_name}.</string>
     <string name="databaseErrorUpdate">Vaša aplikacijska baza podataka nije kompatibilna s ovom verzijom {app_name}. Ponovno instalirajte aplikaciju i vratite svoj račun kako biste generirali novu bazu podataka i nastavili koristiti {app_name}.\n\nUpozorenje: Ovo će rezultirati gubitkom svih poruka i privitaka starijih od dva tjedna.</string>
     <string name="databaseOptimizing">Optimizacija Baze podataka</string>
     <string name="debugLog">Evidencija o otklanjanju grešaka</string>
@@ -290,7 +289,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ova poruka je izbrisana</string>
     <string name="deleteMessageDeletedLocally">Ova poruka je izbrisana na ovom uređaju</string>
-    <string name="deleteMessageDescriptionDevice">Jeste li sigurni da želite izbrisati ovu poruku samo s ovog uređaja?</string>
     <string name="deleteMessageDescriptionEveryone">Jeste li sigurni da želite izbrisati ovu poruku za sve?</string>
     <string name="deleteMessageDeviceOnly">Obriši samo na ovom uređaju</string>
     <string name="deleteMessageDevicesAll">Obriši na svim uređajima</string>
@@ -300,7 +298,6 @@
         <item quantity="few">Neuspješno brisanje poruka</item>
         <item quantity="other">Neuspješno brisanje poruka</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Jeste li sigurni da želite izbrisati ove poruke samo s ovog uređaja?</string>
     <string name="deleteMessagesDescriptionEveryone">Jeste li sigurni da želite izbrisati ove poruke za sve?</string>
     <string name="deleting">Brisanje</string>
     <string name="developerToolsToggle">Uključi razvojne alate</string>
@@ -408,7 +405,6 @@
     <string name="groupInviteFailedMultiple">Pozivanje {name} i {count} drugih u {group_name} nije uspjelo</string>
     <string name="groupInviteFailedTwo">Pozivanje {name} i {other_name} u {group_name} nije uspjelo</string>
     <string name="groupInviteFailedUser">Pozivanje {name} u {group_name} nije uspjelo</string>
-    <string name="groupInviteSending">Slanje pozivnice</string>
     <string name="groupInviteSent">Poziv poslan</string>
     <string name="groupInviteSuccessful">Poziv u grupu uspješan</string>
     <string name="groupInviteVersion">Korisnici moraju imati najnoviju verziju za primanje pozivnica</string>
@@ -430,7 +426,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> i <b>{count} drugi</b> pozvani su da se pridruže grupi.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> i <b>{other_name}</b> pozvani su da se pridruže grupi.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Vi</b> i <b>{count} drugi</b> pozvani ste da se pridružite grupi. Povijest razgovora je podijeljena.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Vi</b> i <b>{name}</b> pozvani ste da se pridružite grupi. Povijest razgovora je podijeljena.</string>
     <string name="groupMemberYouLeft"><b>Napustili ste</b> grupu.</string>
     <string name="groupMembers">Članovi grupe</string>
     <string name="groupMembersNone">Nema drugih članova u ovoj grupi.</string>

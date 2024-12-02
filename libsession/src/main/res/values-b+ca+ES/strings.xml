@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> ha estat eliminat com a Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> i <b>{count} altres</b> han estat eliminats com a administradors.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> i <b>{other_name}</b> han estat eliminats com a administradors.</string>
-    <string name="adminSendingPromotion">Enviant promoció d\'administrador</string>
     <string name="adminSettings">Configuració d\'Admins</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> i <b>{other_name}</b> han estat ascendits a Admin.</string>
     <string name="andMore">+{count}</string>
@@ -256,7 +255,7 @@
     <string name="create">Crear</string>
     <string name="cut">Retalla</string>
     <string name="databaseErrorGeneric">S\'ha produït un error de la base de dades.\n\nExporteu els registres de l\'aplicació per compartir-los per a la resolució de problemes. Si no té èxit, reinstal·leu {app_name} i restaureu el vostre compte.\n\nAdvertència: Això suposarà la pèrdua de tots els missatges, fitxers adjunts i dades del compte anteriors a dues setmanes.</string>
-    <string name="databaseErrorTimeout">Hem notat que {app_name} està trigant molt a començar.\n\nPodeu continuar esperant, exportar els registres del dispositiu per compartir-los per solucionar problemes, o intentar reiniciar Session.</string>
+    <string name="databaseErrorTimeout">Hem notat que {app_name} està trigant molt a començar.\n\nPodeu continuar esperant, exportar els registres del dispositiu per compartir-los per solucionar problemes, o intentar reiniciar {app_name}.</string>
     <string name="databaseErrorUpdate">La base de dades de la vostra aplicació no és compatible amb aquesta versió de {app_name}. Reinstal·leu l\'aplicació i restaureu el vostre compte per generar una nova base de dades i continuar utilitzant {app_name}.\n\nAvís: Això donarà lloc a la pèrdua de tots els missatges i adjunts anteriors a dues setmanes.</string>
     <string name="databaseOptimizing">Optimitzant la base de dades</string>
     <string name="debugLog">Registre de depuració</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Aquest missatge s\'ha suprimit</string>
     <string name="deleteMessageDeletedLocally">Aquest missatge s\'ha suprimit en aquest dispositiu</string>
-    <string name="deleteMessageDescriptionDevice">Esteu segur que voleu suprimir aquest missatge només d\'aquest dispositiu?</string>
     <string name="deleteMessageDescriptionEveryone">Esteu segur que voleu suprimir aquest missatge per a tothom?</string>
     <string name="deleteMessageDeviceOnly">Suprimeix només en aquest dispositiu</string>
     <string name="deleteMessageDevicesAll">Suprimeix als meus dispositius</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Error en eliminar el missatge</item>
         <item quantity="other">Error en eliminar els missatges</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Esteu segur que voleu esborrar aquests missatges només d\'aquest dispositiu?</string>
     <string name="deleteMessagesDescriptionEveryone">Esteu segur que voleu suprimir aquests missatges per a tothom?</string>
     <string name="deleting">Suprimint</string>
     <string name="developerToolsToggle">Activa o desactiva les eines de desenvolupament</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Error al convidar {name} i {count} altres a {group_name}</string>
     <string name="groupInviteFailedTwo">Error al convidar {name} i {other_name} a {group_name}</string>
     <string name="groupInviteFailedUser">Error al convidar {name} a {group_name}</string>
-    <string name="groupInviteSending">Enviant invitació</string>
     <string name="groupInviteSent">Invitació enviada</string>
     <string name="groupInviteSuccessful">Invitació al grup amb èxit</string>
     <string name="groupInviteVersion">Els usuaris han de tenir la versió més recent per rebre invitacions</string>
@@ -425,7 +421,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> i <b>{count} altres</b> han estat convidats a unir-se al grup.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> i <b>{other_name}</b> han estat convidats a unir-se al grup.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Tu</b> i <b>{count} altres</b> heu estat convidats a unir-vos al grup. S\'ha compartit l\'historial de la conversa.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Tu</b> i <b>{name}</b> heu estat convidats a unir-vos al grup. S\'ha compartit l\'historial de la conversa.</string>
     <string name="groupMemberYouLeft"><b>Tu</b> has abandonat el grup.</string>
     <string name="groupMembers">Membres del Grup</string>
     <string name="groupMembersNone">No hi ha altres membres en aquest grup.</string>
