@@ -136,12 +136,10 @@
     <string name="deleteAfterGroupPR1BlockUser">ຫ້າມຜູ້ນັກ</string>
     <string name="deleteAfterGroupPR3GroupErrorLeave">ບໍ່ສາມາດອອກໄດ້ໃນຂະນະນີ້ທ່ານກໍາລັງເພີ່ມຫຼຶລົບສະມາຊິກ.</string>
     <string name="deleteAfterLegacyDisappearingMessagesTheyChangedTimer"><b>{name}</b>ໄດ້ກຳນົດລະຍະເວລາໃນການຂໍແກ້ຂອງຂໍ້ຄາບຊ່ວງທ່ານ<b>{time}</b></string>
-    <string name="deleteMessageDescriptionDevice">ທ່ານແນ່ໃຈບໍ່ວ່າທ່ານຕ້ອງການລຶບຂໍ້ຄວາມນີ້ຂອງຕ່າງອຸປະກອນນີ້ເທົ່ານັ້ນ?</string>
     <string name="deleteMessageDescriptionEveryone">ທ່ານແນ່ໃຈບໍ່ວ່າທ່ານຕ້ອງການລຶບຂໍ້ຄວາມນີ້ກັບທຸກຄົນ?</string>
     <string name="deleteMessageDeviceOnly">ລຶບແຕ່ອຸປະກອນນີ້ເທົ່ານັ້ນ</string>
     <string name="deleteMessageDevicesAll">ລຶບເທິງທຸກອຸປະກອນຂອງຂ້ອຍ</string>
     <string name="deleteMessageEveryone">ລຶບໃຫ້ແກ່ທຸກຄົນ</string>
-    <string name="deleteMessagesDescriptionDevice">ທ່ານແນ່ໃຈບໍ່ວ່າທ່ານຕ້ອງການລຶບຂໍ້ຄວາມເຫົານີ້ຂອງຕ່າງອຸປະກອນນີ້ເທົ່ານັ້ນ?</string>
     <string name="deleteMessagesDescriptionEveryone">ທ່ານແນ່ໃຈບໍ່ວ່າທ່ານຕ້ອງການລຶບຂໍ້ຄວາມເຫົານີ້ສຳລັບທຸກຄົນ?</string>
     <string name="deleting">ລາຍການລຶບ</string>
     <string name="disappearingMessages">ຂໍ້ຄວາມສະບາຍພັງ</string>

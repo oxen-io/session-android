@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> беше премахнат като Администратор.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> и <b>{count} други</b> бяха премахнати като администратори.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> и <b>{other_name}</b> бяха премахнати като администратори.</string>
-    <string name="adminSendingPromotion">Изпращане на администраторска промоция</string>
     <string name="adminSettings">Администраторски настройки</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> и <b>{other_name}</b> бяха повишени в Администратор.</string>
     <string name="andMore">+{count}</string>
@@ -256,7 +255,7 @@
     <string name="create">Създай</string>
     <string name="cut">Изрязване</string>
     <string name="databaseErrorGeneric">Възникна грешка в базата данни.\n\nЕкспортирайте логовете на приложението, за да ги споделите за отстраняване на проблемите. Ако това не успее, преинсталирайте {app_name} и възстановете акаунта си.\n\nПредупреждение: Това ще доведе до загуба на всички съобщения, прикачени файлове и данни за акаунта, по-стари от две седмици.</string>
-    <string name="databaseErrorTimeout">Забелязахме, че стартирането на {app_name} отнема много време.\n\nМожете да продължите да чакате, да експортирате дневници на устройството си, за да ги споделите за отстраняване на неизправности, или да опитате да рестартирате Session.</string>
+    <string name="databaseErrorTimeout">Забелязахме, че стартирането на {app_name} отнема много време.\n\nМожете да продължите да чакате, да експортирате дневници на устройството си, за да ги споделите за отстраняване на неизправности, или да опитате да рестартирате {app_name}.</string>
     <string name="databaseErrorUpdate">Вашата база данни на приложението е несъвместима с тази версия на {app_name}. Инсталирайте повторно приложението и възстановете своя акаунт, за да генерирате нова база данни и да продължите да използвате {app_name}.\n\nВнимание: Това ще доведе до загуба на всички съобщения и прикачени файлове по-стари от две седмици.</string>
     <string name="databaseOptimizing">Опресняване на базата данни</string>
     <string name="debugLog">Debug Log</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Това съобщение беше изтрито</string>
     <string name="deleteMessageDeletedLocally">Това съобщение беше изтрито на това устройство</string>
-    <string name="deleteMessageDescriptionDevice">Сигурен ли си, че искаш да изтриеш това съобщение само от това устройство?</string>
     <string name="deleteMessageDescriptionEveryone">Сигурен ли си, че искаш да изтриеш това съобщение за всички?</string>
     <string name="deleteMessageDeviceOnly">Изтрий само на това устройство</string>
     <string name="deleteMessageDevicesAll">Изтрий на всички мои устройства</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Неуспешно изтриване на съобщение</item>
         <item quantity="other">Неуспешно изтриване на съобщения</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Сигурен ли/ли сте, че искате да изтриете тези съобщения само от това устройство?</string>
     <string name="deleteMessagesDescriptionEveryone">Сигурен ли/ли сте, че искате да изтриете тези съобщения за всички?</string>
     <string name="deleting">Изтриване</string>
     <string name="developerToolsToggle">Превключване на инструменти за разработчици</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Неуспешно поканване на {name} и {count} други в {group_name}</string>
     <string name="groupInviteFailedTwo">Неуспешно поканване на {name} и {other_name} в {group_name}</string>
     <string name="groupInviteFailedUser">Неуспешно поканване на {name} в {group_name}</string>
-    <string name="groupInviteSending">Изпращане на покана</string>
     <string name="groupInviteSent">Поканата изпратена</string>
     <string name="groupInviteSuccessful">Поканата в групата е успешна</string>
     <string name="groupInviteVersion">Потребителите трябва да имат последната версия, за да получават покани</string>
@@ -425,7 +421,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> и <b>{count} други</b> бяха поканени да се присъединят към групата.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> и <b>{other_name}</b> бяха поканени да се присъединят към групата.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Вие</b> и <b>{count} други</b> бяхте поканени да се присъедините към групата. История на чатовете беше споделена.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Вие</b> и <b>{name}</b> бяхте поканени да се присъедините към групата. История на чатовете беше споделена.</string>
     <string name="groupMemberYouLeft"><b>Вие</b> напуснахте групата.</string>
     <string name="groupMembers">Членове на групата</string>
     <string name="groupMembersNone">Няма други членове в тази група.</string>
