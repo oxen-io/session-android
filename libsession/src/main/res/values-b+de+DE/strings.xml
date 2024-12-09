@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> wurde als Admin entfernt.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> und <b>{count} andere</b> wurden als Admin entfernt.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> und <b>{other_name}</b> wurden als Administrator entfernt.</string>
-    <string name="adminSendingPromotion">Administratorenbeförderung wird gesendet</string>
     <string name="adminSettings">Admin-Einstellungen</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> und <b>{other_name}</b> wurden zu Admin befördert.</string>
     <string name="andMore">+{count}</string>
@@ -288,7 +287,10 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Diese Nachricht wurde gelöscht</string>
     <string name="deleteMessageDeletedLocally">Diese Nachricht wurde auf diesem Gerät gelöscht</string>
-    <string name="deleteMessageDescriptionDevice">Möchtest du diese Nachricht nur von diesem Gerät löschen?</string>
+    <plurals name="deleteMessageDescriptionDevice">
+        <item quantity="one">Bist du sicher, du möchtest diese Nachrichten nur von diesem Gerät löschen?</item>
+        <item quantity="other">Möchtest du diese Nachrichten wirklich nur von diesem Gerät löschen?</item>
+    </plurals>
     <string name="deleteMessageDescriptionEveryone">Möchtest du diese Nachricht wirklich für alle löschen?</string>
     <string name="deleteMessageDeviceOnly">Nur auf diesem Gerät löschen</string>
     <string name="deleteMessageDevicesAll">Von allen meinen Geräten löschen</string>
@@ -297,7 +299,6 @@
         <item quantity="one">Die Nachricht konnte nicht gelöscht werden</item>
         <item quantity="other">Die Nachrichten konnten nicht gelöscht werden</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Möchtest du diese Nachrichten wirklich nur von diesem Gerät löschen?</string>
     <string name="deleteMessagesDescriptionEveryone">Möchtest du diese Nachrichten wirklich für alle löschen?</string>
     <string name="deleting">Wird gelöscht</string>
     <string name="developerToolsToggle">Entwicklertools ein-/ausblenden</string>
@@ -404,7 +405,6 @@
     <string name="groupInviteFailedMultiple">Fehler bei der Einladung von {name} und {count} anderen zu {group_name}</string>
     <string name="groupInviteFailedTwo">Fehler bei der Einladung von {name} und {other_name} zu {group_name}</string>
     <string name="groupInviteFailedUser">Fehler bei der Einladung von {name} zu {group_name}</string>
-    <string name="groupInviteSending">Einladung wird gesendet</string>
     <string name="groupInviteSent">Einladung gesendet</string>
     <string name="groupInviteSuccessful">Gruppeneinladung erfolgreich</string>
     <string name="groupInviteVersion">Die Empfänger müssen die neueste App-Version haben, um Gruppeneinladungen zu erhalten</string>
@@ -426,7 +426,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> und <b>{count} andere</b> wurden eingeladen, der Gruppe beizutreten.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> und <b>{other_name}</b> wurden eingeladen, der Gruppe beizutreten.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Du</b> und <b>{count} andere</b> wurden eingeladen, der Gruppe beizutreten. Der Chatverlauf wurde freigegeben.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Du</b> und <b>{name}</b> wurden eingeladen, der Gruppe beizutreten. Der Chatverlauf wurde freigegeben.</string>
     <string name="groupMemberYouLeft"><b>Du</b> hast die Gruppe verlassen.</string>
     <string name="groupMembers">Gruppenmitglieder</string>
     <string name="groupMembersNone">Es gibt keine anderen Mitglieder in dieser Gruppe.</string>

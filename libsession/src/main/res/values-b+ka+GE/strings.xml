@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}ს</b> აღარ არის ადმინისტრატორი.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> და <b>{count} სხვა</b> წაიშალნენ ადმინისტრატორის როლიდან.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> და <b>{other_name}</b> წაიშალნენ ადმინისტრატორის როლიდან.</string>
-    <string name="adminSendingPromotion">ადმინად დაწინაურების გაგზავნა</string>
     <string name="adminSettings">ადმინის პარამეტრები</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}ს</b> და <b>{other_name}ს</b> მიენიჭათ ადმინისტრატორის როლი.</string>
     <string name="andMore">+{count}</string>
@@ -256,7 +255,7 @@
     <string name="create">შექმნა</string>
     <string name="cut">ამოჭრა</string>
     <string name="databaseErrorGeneric">მოხდა მონაცემთა ბაზის შეცდომა.\n\nგამოიტანეთ თქვენი აპლიკაციის ჟურნალები, რათა გააზიაროთ პრობლემების აღმოფხვრა. თუ ეს წარუმატებელია, ხელახლა დააინსტალირეთ {app_name} და აღადგინეთ თქვენი ანგარიში.\n\nგაფრთხილება: ეს გამოიწვევს ყველა შეტყობინების, დანართის და ორ კვირაზე ძველი ანგარიშის მონაცემის დაკარგვას.</string>
-    <string name="databaseErrorTimeout">გავიგეთ {app_name}-ის გაშვება დიდ დროს იკავებს.\n\nთქვენ შეგიძლიათ დაელოდოთ, ექსპორტირდეთ თქვენი მოწყობილობის ჟურნალები რათა გაუზიაროთ პრობლემების დიაგნოსტირებისთვის, ან სცადოთ Session-ის გადატვირთვა.</string>
+    <string name="databaseErrorTimeout">გავიგეთ {app_name}-ის გაშვება დიდ დროს იკავებს.\n\nთქვენ შეგიძლიათ დაელოდოთ, ექსპორტირდეთ თქვენი მოწყობილობის ჟურნალები რათა გაუზიაროთ პრობლემების დიაგნოსტირებისთვის, ან სცადოთ {app_name}-ის გადატვირთვა.</string>
     <string name="databaseErrorUpdate">თქვენი აპლიკაციის მონაცემთა ბაზა არ შეესაბამება {app_name}-ის ამ ვერსიას. ხელახლა დააინსტალირეთ აპლიკაცია და აღადგინეთ თქვენი ანგარიში ახალი მონაცემთა ბაზის შესაქმნელად და {app_name} გამოყენების გაგრძელებისთვის.\n\nგაფრთხილება: ეს გამოიწვევს ყველა მესიჯის და ფაილის დაკარგვას, რომლებიც ორ კვირაზე მეტი ხნისაა.</string>
     <string name="databaseOptimizing">მონაცემთა ბაზის ოპტიმიზაცია</string>
     <string name="debugLog">გამართვის ჟურნალი</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">ეს შეტყობინება წაშლილია</string>
     <string name="deleteMessageDeletedLocally">ეს შეტყობინება წაშლილია ამ მოწყობილობაზე</string>
-    <string name="deleteMessageDescriptionDevice">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინების წაშლა მხოლოდ ამ მოწყობილობიდან?</string>
     <string name="deleteMessageDescriptionEveryone">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინების წაშლა ყველასთვის?</string>
     <string name="deleteMessageDeviceOnly">მხოლოდ ამ მოწყობილობაზე წაშლა</string>
     <string name="deleteMessageDevicesAll">წაშლა ყველა ჩემს მოწყობილობაზე</string>
@@ -296,7 +294,6 @@
         <item quantity="one">შეტყობინების წაშლა ვერ მოხერხდა</item>
         <item quantity="other">შეტყობინებების წაშლა ვერ მოხერხდა</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინებების წაშლა მხოლოდ ამ მოწყობილობიდან?</string>
     <string name="deleteMessagesDescriptionEveryone">დარწმუნებული ხართ, რომ გსურთ ამ შეტყობინებების წაშლა ყველასთვის?</string>
     <string name="deleting">წაშლა მიმდინარეობს</string>
     <string name="developerToolsToggle">დეველოპერის ხელსაწყოების გადართვა</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">ვერ შევძელიში {name} და {count} სხვა პირი ჯგუფში {group_name} მიიწვია</string>
     <string name="groupInviteFailedTwo">ვერ შევძელიში {name} და {other_name} ჯგუფში {group_name} მიიწვია</string>
     <string name="groupInviteFailedUser">ვერ შევძელიში {name} ჯგუფში {group_name} მიიწვია</string>
-    <string name="groupInviteSending">მოწვევის გაგზავნა</string>
     <string name="groupInviteSent">მოწვევა გაგზავნილია</string>
     <string name="groupInviteSuccessful">ჯგუფის მოწვევა წარმატებული იყო</string>
     <string name="groupInviteVersion">მომხმარებელმა უნდა ჰქონდეს უახლესი ვერსია მიწვევების მისაღებად</string>
@@ -425,7 +421,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> და <b>{count} სხვა</b> მოიწვიეს ჯგუფში.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> და <b>{other_name}</b> მოიწვიეს ჯგუფში.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>თქვენ</b> და <b>{count} სხვა</b> მიწვეული იყავით ჯგუფში. ჩეთის ისტორია გაზიარდა.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>თქვენ</b> და <b>{name}</b> მიწვეული იყავით ჯგუფში. ჩეთის ისტორია გაზიარდა.</string>
     <string name="groupMemberYouLeft"><b>თქვენ</b> დატოვეთ ჯგუფი.</string>
     <string name="groupMembers">ჯგუფის წევრები</string>
     <string name="groupMembersNone">ამ ჯგუფში სხვა წევრები არ არიან.</string>
