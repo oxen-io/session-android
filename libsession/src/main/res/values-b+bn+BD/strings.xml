@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> অ্যাডমিন হিসেবে থেকে সরিয়ে দেওয়া হয়েছে।</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> এবং <b>{count} জন অন্য সদস্য</b> অ্যাডমিন হিসেবে সরিয়ে দেওয়া হয়েছে।</string>
     <string name="adminRemovedUserOther"><b>{name}</b> এবং <b>{other_name}</b> অ্যাডমিন হিসেবে সরিয়ে দেওয়া হয়েছে।</string>
-    <string name="adminSendingPromotion">এডমিন পদোন্নতি প্রেরণ করা হচ্ছে</string>
     <string name="adminSettings">অ্যাডমিন সেটিংস</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> এবং <b>{other_name}</b> অ্যাডমিন হিসেবে উন্নীত হয়েছে।</string>
     <string name="andMore">+{count}</string>
@@ -256,7 +255,7 @@
     <string name="create">তৈরি করুন</string>
     <string name="cut">কাটুন</string>
     <string name="databaseErrorGeneric">একটি ডাটাবেস ত্রুটি ঘটেছে।\n\nআপনার অ্যাপ্লিকেশন লগগুলি রপ্তানি করুন, সমস্যার সমাধানের জন্য শেয়ার করুন। এটি ব্যর্থ হলে, {app_name} পুনঃইনস্টল করুন এবং আপনার অ্যাকাউন্ট পুনরুদ্ধার করুন।\n\nসতর্কতা: এটি সমস্ত মেসেজ, সংযুক্তি এবং দুই সপ্তাহের পুরানো অ্যাকাউন্ট ডেটার ক্ষতি করবে।</string>
-    <string name="databaseErrorTimeout">We\'ve noticed {app_name} is taking a long time to start.\n\nYou can continue to wait, export your device logs to share for troubleshooting, or try restarting Session.</string>
+    <string name="databaseErrorTimeout">We\'ve noticed {app_name} is taking a long time to start.\n\nYou can continue to wait, export your device logs to share for troubleshooting, or try restarting {app_name}.</string>
     <string name="databaseErrorUpdate">আপনার অ্যাপ্লিকেশন ডাটাবেস {app_name} এর এই সংস্করণের সাথে অসঙ্গতিপূর্ণ। অ্যাপ পুনরায় ইনস্টল করুন এবং আপনার অ্যাকাউন্ট পুনরুদ্ধার করুন একটি নতুন ডাটাবেস তৈরি করতে এবং {app_name} ব্যবহার করতে থাকুন।\n\nসতর্কতা: এর ফলে আপনার সমস্ত বার্তা এবং সংযুক্তিগুলি দুই সপ্তাহের বেশি পুরানো হারিয়ে যাবে।</string>
     <string name="databaseOptimizing">ডাটাবেস অপ্টিমাইজ করা হচ্ছে</string>
     <string name="debugLog">ডিবাগ লগ</string>
@@ -281,14 +280,12 @@
         <item quantity="one">বার্তা মুছুন</item>
         <item quantity="other">বার্তাগুলি মুছুন</item>
     </plurals>
-    <string name="deleteMessageConfirm">আপনি কি এই বার্তাটি মুছে দিতে নিশ্চিত?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">বার্তা মুছে ফেলা হয়েছে</item>
         <item quantity="other">বার্তাগুলি মুছে ফেলা হয়েছে</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">এই মেসেজটি মুছে ফেলা হয়েছে</string>
     <string name="deleteMessageDeletedLocally">এই মেসেজটি এই ডিভাইসে মুছে ফেলা হয়েছে</string>
-    <string name="deleteMessageDescriptionDevice">আপনি কি এই বার্তাটি শুধু এই যন্ত্র থেকে মুছে ফেলতে চান?</string>
     <string name="deleteMessageDescriptionEveryone">আপনি কি এই বার্তা সবাই জন্য মুছে ফেলতে চান?</string>
     <string name="deleteMessageDeviceOnly">শুধু এই ডিভাইস থেকে মুছে ফেলুন</string>
     <string name="deleteMessageDevicesAll">সমস্ত ডিভাইসে মুছে ফেলুন</string>
@@ -297,8 +294,6 @@
         <item quantity="one">Failed to delete message</item>
         <item quantity="other">Failed to delete messages</item>
     </plurals>
-    <string name="deleteMessagesConfirm">আপনি কি এই বার্তাগুলি মুছে ফেলতে চান?</string>
-    <string name="deleteMessagesDescriptionDevice">আপনি কি নিশ্চিত যে আপনি এই বার্তাগুলি শুধুমাত্র এই ডিভাইস থেকে মুছে ফেলতে চান?</string>
     <string name="deleteMessagesDescriptionEveryone">আপনি কি নিশ্চিত যে আপনি এইবার্তাগুলো সবাইকে জন্য মুছে ফেলতে চান?</string>
     <string name="deleting">মুছে ফেলা হচ্ছে</string>
     <string name="developerToolsToggle">ডেভেলপার টুলগুলি টগল করুন</string>
@@ -405,7 +400,6 @@
     <string name="groupInviteFailedMultiple">{name} এবং {count} অন্যান্যকে {group_name} তে আমন্ত্রণ জানাতে ব্যর্থ হয়েছে</string>
     <string name="groupInviteFailedTwo">{name} এবং {other_name} কে {group_name} তে আমন্ত্রণ জানাতে ব্যর্থ হয়েছে</string>
     <string name="groupInviteFailedUser">{name} কে {group_name} তে আমন্ত্রণ জানাতে ব্যর্থ হয়েছে</string>
-    <string name="groupInviteSending">আমন্ত্রণ পাঠানো হচ্ছে</string>
     <string name="groupInviteSent">আমন্ত্রণ পাঠানো হয়েছে</string>
     <string name="groupInviteSuccessful">গ্রুপ আমন্ত্রণ সফল</string>
     <string name="groupInviteVersion">ইউজারদের আপডেট অথবা উচ্চতর ভার্সন থাকতে হবে ইনভাইটেশন গ্রহণ করার জন্য</string>
@@ -427,7 +421,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> এবং <b>{count} জন অন্য সদস্য</b> গ্রুপে যোগ দেওয়ার জন্য আমন্ত্রিত হয়েছে।</string>
     <string name="groupMemberNewTwo"><b>{name}</b> এবং <b>{other_name}</b> গ্রুপে যোগ দেওয়ার জন্য আমন্ত্রিত হয়েছে।</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>আপনি</b> এবং <b>{count} জন অন্য সদস্য</b> গ্রুপে যোগ দেওয়ার জন্য আমন্ত্রিত হয়েছে। চ্যাট ইতিহাস শেয়ার করা হয়েছে।</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>আপনি</b> এবং <b>{name}</b> গ্রুপে যোগ দেওয়ার জন্য আমন্ত্রিত হয়েছে। চ্যাট ইতিহাস শেয়ার করা হয়েছে।</string>
     <string name="groupMemberYouLeft"><b>আপনি</b> গ্রুপ থেকে বের হয়ে গিয়েছেন।</string>
     <string name="groupMembers">গ্রুপ সদস্যবৃন্দ</string>
     <string name="groupMembersNone">এই গ্রুপে অন্য কোনো সদস্য নেই।</string>

@@ -6,6 +6,7 @@ import com.google.protobuf.ByteString
 import org.greenrobot.eventbus.EventBus
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.MarkAsDeletedMessage
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
@@ -144,6 +145,12 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         return smsDatabase.isOutgoingMessage(timestamp) || mmsDatabase.isOutgoingMessage(timestamp)
     }
 
+    override fun isDeletedMessage(timestamp: Long): Boolean {
+        val smsDatabase = DatabaseComponent.get(context).smsDatabase()
+        val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
+        return smsDatabase.isDeletedMessage(timestamp) || mmsDatabase.isDeletedMessage(timestamp)
+    }
+
     override fun handleSuccessfulAttachmentUpload(attachmentId: Long, attachmentStream: SignalServiceAttachmentStream, attachmentKey: ByteArray, uploadResult: UploadResult) {
         val database = DatabaseComponent.get(context).attachmentDatabase()
         val databaseAttachment = getDatabaseAttachment(attachmentId) ?: return
@@ -198,7 +205,6 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     }
 
     override fun deleteMessages(messageIDs: List<Long>, threadId: Long, isSms: Boolean) {
-
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
 
@@ -215,18 +221,32 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         threadId?.let{ MessagingModuleConfiguration.shared.lastSentTimestampCache.delete(it, messages.map { it.timestamp }) }
     }
 
-    override fun updateMessageAsDeleted(timestamp: Long, author: String): Long? {
+    override fun markMessageAsDeleted(timestamp: Long, author: String, displayedMessage: String) {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val address = Address.fromSerialized(author)
-        val message = database.getMessageFor(timestamp, address) ?: return null
-        val messagingDatabase: MessagingDatabase = if (message.isMms)  DatabaseComponent.get(context).mmsDatabase()
-                                                   else DatabaseComponent.get(context).smsDatabase()
-        messagingDatabase.markAsDeleted(message.id, message.isRead, message.hasMention)
-        if (message.isOutgoing) {
-            messagingDatabase.deleteMessage(message.id)
-        }
+        val message = database.getMessageFor(timestamp, address) ?: return Log.w("", "Failed to find message to mark as deleted")
 
-        return message.id
+        markMessagesAsDeleted(
+            messages = listOf(MarkAsDeletedMessage(
+                messageId = message.id,
+                isOutgoing = message.isOutgoing
+            )),
+            isSms = !message.isMms,
+            displayedMessage = displayedMessage
+        )
+    }
+
+    override fun markMessagesAsDeleted(
+        messages: List<MarkAsDeletedMessage>,
+        isSms: Boolean,
+        displayedMessage: String
+    ) {
+        val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
+        else DatabaseComponent.get(context).mmsDatabase()
+
+        messages.forEach { message ->
+            messagingDatabase.markAsDeleted(message.messageId, message.isOutgoing, displayedMessage)
+        }
     }
 
     override fun getServerHashForMessage(messageID: Long, mms: Boolean): String? =

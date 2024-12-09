@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> ကို အုပ်ချုပ်ရေးမှူးအဖြစ်မှ ဖယ်ရှားခဲ့သည်။</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> နှင့် <b>{count} ဦး</b> အုပ်ချုပ်ရေးမှူးအဖြစ် တန်းမြင့်နေသည်။</string>
     <string name="adminRemovedUserOther"><b>{name}</b>နှင့် <b>{other_name}</b> အုပ်ချုပ်ရေးမှူးအဖြစ် တန်းမြင့်နေသည်။</string>
-    <string name="adminSendingPromotion">အုပ်ချုပ်ရေးမတက္ကသိုလ် သတင်းပေးမည်</string>
     <string name="adminSettings">Admin ဆက်တင်များ</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> နှင့် <b>{other_name}</b> အုပ်ချုပ်ရေးမှူး အဖြစ်တိုးတက်လာသည်။</string>
     <string name="andMore">+{count}</string>
@@ -255,7 +254,7 @@
     <string name="create">ဖန်တီးပါ</string>
     <string name="cut">ချည်းကုတ်</string>
     <string name="databaseErrorGeneric">ဒေတာဘေ့စ အမှားတစ်ခု ဖြစ်ပွားသည်။\n\nသင့်အက်ပလီကေးရှင်း လော့ဂ်များကို ထုတ်လွှင့်ပြီး ပြဿနာရှင်းရန် မျှဝေပါ။ ဤအောင်မြင်မှုမရှိပါက {app_name} ကို ပြန်ထည့်သွင်းပြီး သင့်အကောင့်ကို ပြန်လည်ထူထောင်ပါ။\n\nသတိပေးချက်- ဤလုပ်ဆောင်ချက်သည် သင့်မက်ဆေ့ချ်များ၊ ပူးတွဲချက်နှင့် သုံးလကြာသော အကောင့်ဒေတာအားလုံး ပျောက်ဆုံးစေနိုင်ပါသည်။</string>
-    <string name="databaseErrorTimeout">We\'ve noticed {app_name} is taking a long time to start.\n\nYou can continue to wait, export your device logs to share for troubleshooting, or try restarting Session.</string>
+    <string name="databaseErrorTimeout">We\'ve noticed {app_name} is taking a long time to start.\n\nYou can continue to wait, export your device logs to share for troubleshooting, or try restarting {app_name}.</string>
     <string name="databaseErrorUpdate">သင့်အက်ပ်ဒေတာဘေ့စ်သည် {app_name} ၏ ဤဗားရှင်းနှင့် မက်စ်ပေါ်နိုင်ပါ။ အက်ပ်ကို ပြန်ထည့်သွင်းပြီး သင့်အကောင့်ကို ပြန်လည်ထားပြီး {app_name} ကို ဆက်လက်သုံးဆောင်ရန် အချက်ပြပီးနောက် ငါးပတ်အတွင်းလက်ရှိမက်ဆေ့ခ်ျနှင့်လိုက်ဖက်မှုအတင်ပျောက်သွားနိုင်သည်။ \n\n သတိပေးချက်: ဤလုပ်ဆောင်ချက်ကြောင့် အဆိုပါကာလထက်ပိုကြာသော မက်ဆေ့ခ်ျများနှင့် ပျက်စီးပိုင်ဆိုင်မှုများ ပျောက်ဆုံးသွားမည်။</string>
     <string name="databaseOptimizing">ဒေတာဘေ့စ် ဖြည့်စွမ်းနေသည်</string>
     <string name="debugLog">Debug မှတ်တမ်း</string>
@@ -279,13 +278,11 @@
     <plurals name="deleteMessage">
         <item quantity="other">မက်ဆေ့ချ် ဖျက်မည်</item>
     </plurals>
-    <string name="deleteMessageConfirm">ဤမက်ဆေ့ချ်ကို ဖျက်လိုသည်မှာ သေချာပါသလား။</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">မက်ဆေ့ချ်များ ဖျက်ထားသည်</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">ဤမက်ဆေ့ခ်ျကို ဖျက်သိမ်းပြီးပါပြီ။</string>
     <string name="deleteMessageDeletedLocally">ဤမက်ဆေ့ခ်ျကို ဤကိရိယာတွင် ဖျက်သိမ်းပြီးပါပြီ။</string>
-    <string name="deleteMessageDescriptionDevice">ဤမက်ဆေ့ချ်ကို ဤစက်ကိရိယာမှသာ ဖျက်လိုသည်မှာ သေချာပါသလား။</string>
     <string name="deleteMessageDescriptionEveryone">ဤမက်ဆေ့ချ်ကို အားလုံးအတွက်ဖျက်လိုသည်မှာ သေချာပါသလား။</string>
     <string name="deleteMessageDeviceOnly">ဤ deviceတွင်သာ ဖျက်မည်</string>
     <string name="deleteMessageDevicesAll">ကျွန်ုပ်၏ devices များတွင်အားလုံးကို ဖျက်မည်</string>
@@ -293,8 +290,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">မက်ဆေ့ခ်ျဖျက်ရန် မအောင်မြင်ပါ</item>
     </plurals>
-    <string name="deleteMessagesConfirm">ဤမက်ဆေ့ချ်များကို ဖျက်လိုသည်မှာ သေချာပါသလား။</string>
-    <string name="deleteMessagesDescriptionDevice">ဤစက်ကိရိယာ မှသာ မက်ဆေ့ချ်များဖျက်လိုပါသလား။</string>
     <string name="deleteMessagesDescriptionEveryone">မက်ဆေ့ဂျ်တွေ အားလုံး ကိုဖျက်လိုပါသလား?</string>
     <string name="deleting">ဖျက်နေသည်</string>
     <string name="developerToolsToggle">အဖွဲ့အတွက် ထုတ်ဖော် အခြေအနေ တွင် Developer Tools ကို ခလုတ်ဖွင့်ပါ။</string>
@@ -400,7 +395,6 @@
     <string name="groupInviteFailedMultiple">အဖွဲ့ {group_name} သို့ {name} နှင့် {count} ဦးကိုဖိတ်ချက်ပေးမည်သည် မအောင်မြင်ပါ</string>
     <string name="groupInviteFailedTwo">အဖွဲ့ {group_name} သို့ {name} နှင့် {other_name} ကိုဖိတ်ချက်ပေးမည်သည် မအောင်မြင်ပါ</string>
     <string name="groupInviteFailedUser">အဖွဲ့ {group_name} သို့ {name} ကိုဖိတ်ချက်ပေးမည်သည် မအောင်မြင်ပါ</string>
-    <string name="groupInviteSending">ဖိတ်ကြားချက် ပို့နေသည်</string>
     <string name="groupInviteSent">ဖိတ်ကြားမှု ပို့ထားပါသည်</string>
     <string name="groupInviteSuccessful">အုပ်စုဖိတ်ကြားမှုအောင်မြင်</string>
     <string name="groupInviteVersion">ဖိတ်ကြားပေးရန်အတွက် အသုံးပြုသူများသည် နောက်ဆုံးထွက်ရှိပါ</string>
@@ -422,7 +416,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> နှင့် <b>{count} ဦး</b> အဖွဲ့သို့ ဖိတ်ကြားခံရသည်။</string>
     <string name="groupMemberNewTwo"><b>{name}</b> နှင့် <b>{other_name}</b> အဖွဲ့သို့ ဖိတ်ကြားခံရသည်။</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>သင်</b> နှင့် <b>{count} ဦး</b> အဖွဲ့သို့ ဖိတ်ကြားခံရသည်။ စကားဝိုင်းမှတ်တမ်းကိုမျှဝေခဲ့သည်။</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>သင်</b>နှင့် <b>{name}</b> အဖွဲ့သို့ ဖိတ်ကြားခံရပြီ။ စကားဝိုင်းမှတ်တမ်းကိုမျှဝေခဲ့သည်။</string>
     <string name="groupMemberYouLeft"><b>သင်</b> အဖွဲ့မှ ထွက်သွားပါပြီ။</string>
     <string name="groupMembers">အုပ်စုဝင်များ</string>
     <string name="groupMembersNone">ဤအုပ်စုတွင် အခြား အဖွဲ့ဝင်မရှိပါ။</string>

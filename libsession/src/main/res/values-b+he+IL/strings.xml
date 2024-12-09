@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}‏</b> הוסר/ה כמנהל.</string>
     <string name="adminRemovedUserMultiple"><b>{name}‏</b> ו<b>{count} אחרים‏</b> הוסרו מניהול.</string>
     <string name="adminRemovedUserOther"><b>{name}‏</b> ו<b>{other_name}‏</b> הוסרו מניהול.</string>
-    <string name="adminSendingPromotion">שליחת קידום למנהל</string>
     <string name="adminSettings">הגדרות מנהל</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}‏</b> ו<b>{other_name}‏</b> קודמו למנהלים.</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
         <item quantity="many">מחק הודעות</item>
         <item quantity="other">מחק הודעות</item>
     </plurals>
-    <string name="deleteMessageConfirm">האם אתה בטוח שברצונך למחוק את ההודעה הזו?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">הודעה נמחקה</item>
         <item quantity="two">הודעות נמחקו</item>
@@ -294,7 +292,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">הודעה זו נמחקה</string>
     <string name="deleteMessageDeletedLocally">הודעה זו נמחקה במכשיר זה</string>
-    <string name="deleteMessageDescriptionDevice">אתה בטוח שברצונך למחוק את ההודעה הזו רק מהמכשיר הזה?</string>
     <string name="deleteMessageDescriptionEveryone">אתה בטוח שברצונך למחוק את ההודעה הזו לכולם?</string>
     <string name="deleteMessageDeviceOnly">מחק במכשיר זה בלבד</string>
     <string name="deleteMessageDevicesAll">מחק בכל המכשירים שלי</string>
@@ -305,8 +302,6 @@
         <item quantity="many">נכשל במחיקת הודעות</item>
         <item quantity="other">נכשל במחיקת הודעות</item>
     </plurals>
-    <string name="deleteMessagesConfirm">אתה בטוח שברצונך למחוק הודעות אלה?</string>
-    <string name="deleteMessagesDescriptionDevice">האם אתה בטוח שברצונך למחוק את ההודעות האלו מהמכשיר הזה בלבד?</string>
     <string name="deleteMessagesDescriptionEveryone">האם אתה בטוח שברצונך למחוק את ההודעות האלה לכולם?</string>
     <string name="deleting">מוחק</string>
     <string name="developerToolsToggle">עורר כלי מפתחים</string>
@@ -415,7 +410,6 @@
     <string name="groupInviteFailedMultiple">נכשל להזמין את {name} ו-{count} אחרים ל-{group_name}</string>
     <string name="groupInviteFailedTwo">נכשל להזמין את {name} ו-{other_name} ל-{group_name}</string>
     <string name="groupInviteFailedUser">נכשל להזמין את {name} ל-{group_name}</string>
-    <string name="groupInviteSending">שולח הזמנה</string>
     <string name="groupInviteSent">הזמנה נשלחה</string>
     <string name="groupInviteSuccessful">הזמנת הקבוצה הצליחה</string>
     <string name="groupInviteVersion">משתמשים חייבים להיות בגרסה האחרונה כדי לקבל הזמנות</string>
@@ -437,7 +431,6 @@
     <string name="groupMemberNewMultiple"><b>{name}‏</b> ו<b>{count} אחרים‏</b> הוזמנו להצטרף לקבוצה.</string>
     <string name="groupMemberNewTwo"><b>{name}‏</b> ו<b>{other_name}‏</b> הוזמנו להצטרף לקבוצה.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>את/ה</b> ו<b>{count} אחרים‏</b> הוזמנתם להצטרף לקבוצה. היסטוריית הצ\'אט שותפה.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>את/ה</b> ו<b>{name}‏</b> הוזמנתם להצטרף לקבוצה. היסטוריית הצ\'אט שותפה.</string>
     <string name="groupMemberYouLeft"><b>את/ה</b> עזבת את הקבוצה.</string>
     <string name="groupMembers">חברי קבוצה</string>
     <string name="groupMembersNone">אין חברים אחרים בקבוצה זו.</string>

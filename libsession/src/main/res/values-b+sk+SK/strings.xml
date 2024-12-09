@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> bol/a odstránený/á ako správca.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> a <b>{count} ďalší</b> boli odstránení ako správcovia.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> a <b>{other_name}</b> boli odstránení ako správcovia.</string>
-    <string name="adminSendingPromotion">Odosiela sa povýšenie správcu</string>
     <string name="adminSettings">Nastavenia správcu</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> a <b>{other_name}</b> boli povýšení na správcov.</string>
     <string name="andMore">+{count}</string>
@@ -143,6 +142,7 @@
     <string name="callsInProgress">Prebiehajúci hovor</string>
     <string name="callsIncoming">Prichádzajúci hovor od {name}</string>
     <string name="callsIncomingUnknown">Prichádzajúci hovor</string>
+    <string name="callsMicrophonePermissionsRequired">Zmeškali ste hovor od <b>{name}</b>, pretože ste neudelili <b>prístup k mikrofónu</b>.</string>
     <string name="callsMissed">Zmeškaný hovor</string>
     <string name="callsMissedCallFrom">Zmeškaný hovor od {name}</string>
     <string name="callsNotificationsRequired">Hlasové a video hovory vyžadujú povolenie upozornení v systémových nastaveniach vášho zariadenia.</string>
@@ -242,7 +242,7 @@
     <string name="conversationsEnterNewLine">SHIFT + ENTER odošle správu, ENTER začne nový riadok</string>
     <string name="conversationsEnterSends">ENTER odosiela správu, SHIFT + ENTER začína nový riadok</string>
     <string name="conversationsGroups">Skupiny</string>
-    <string name="conversationsMessageTrimming">Premazávanie správ</string>
+    <string name="conversationsMessageTrimming">Prečistenie správ</string>
     <string name="conversationsMessageTrimmingTrimCommunities">Prečistiť komunity</string>
     <string name="conversationsMessageTrimmingTrimCommunitiesDescription">Vymazať správy z Community konverzácií starších ako 6 mesiacov, a kde je viac ako 2,000 správ.</string>
     <string name="conversationsNew">Nová konverzácia</string>
@@ -285,7 +285,6 @@
         <item quantity="many">Vymazať správy</item>
         <item quantity="other">Vymazať správy</item>
     </plurals>
-    <string name="deleteMessageConfirm">Naozaj chcete vymazať túto správu?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Správa vymazaná</item>
         <item quantity="few">Správy vymazané</item>
@@ -294,7 +293,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Táto správa bola vymazaná</string>
     <string name="deleteMessageDeletedLocally">Táto správa bola vymazaná na tomto zariadení</string>
-    <string name="deleteMessageDescriptionDevice">Naozaj chcete vymazať túto správu len z tohto zariadenia?</string>
     <string name="deleteMessageDescriptionEveryone">Naozaj chcete túto správu vymazať u všetkých?</string>
     <string name="deleteMessageDeviceOnly">Vymazať iba na tomto zariadení</string>
     <string name="deleteMessageDevicesAll">Vymazať na všetkých mojich zariadeniach</string>
@@ -305,8 +303,6 @@
         <item quantity="many">Správy sa nepodarilo vymazať</item>
         <item quantity="other">Správy sa nepodarilo vymazať</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Naozaj chcete vymazať tieto správy?</string>
-    <string name="deleteMessagesDescriptionDevice">Naozaj chcete odstrániť tieto správy iba z tohto zariadenia?</string>
     <string name="deleteMessagesDescriptionEveryone">Naozaj chcete odstrániť tieto správy pre všetkých?</string>
     <string name="deleting">Mazanie</string>
     <string name="developerToolsToggle">Nástroje pre vývojárov</string>
@@ -415,7 +411,6 @@
     <string name="groupInviteFailedMultiple">Nepodarilo sa pozvať používateľa {name} a {count} ďalších do {group_name}</string>
     <string name="groupInviteFailedTwo">Nepodarilo sa pozvať používateľa {name} a {other_name} do {group_name}</string>
     <string name="groupInviteFailedUser">Zlyhalo pozvanie používateľa {name} do {group_name}</string>
-    <string name="groupInviteSending">Odosiela sa pozvánka</string>
     <string name="groupInviteSent">Pozvánka bola odoslaná</string>
     <string name="groupInviteSuccessful">Pozvanie do skupiny úspešné</string>
     <string name="groupInviteVersion">Používatelia musia mať najnovšiu verziu na prijatie pozvánok</string>
@@ -437,7 +432,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> a <b>{count} ďalší</b> boli pozvaní, aby sa pripojili do skupiny.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> a <b>{other_name}</b> boli pozvaní, aby sa pripojili do skupiny.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Vy</b> a <b>{count} ďalší</b> ste boli pozvaní, aby ste sa pripojili do skupiny. História chatu bola zdieľaná.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Vy</b> a <b>{name}</b> ste boli pozvaní, aby ste sa pripojili do skupiny. História chatu bola zdieľaná.</string>
     <string name="groupMemberYouLeft"><b>Vy</b> ste opustili skupinu.</string>
     <string name="groupMembers">Členovia skupiny</string>
     <string name="groupMembersNone">V tejto skupine nie sú žiadni ďalší členovia.</string>

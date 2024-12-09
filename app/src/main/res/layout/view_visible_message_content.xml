@@ -24,6 +24,7 @@
             android:id="@+id/deletedMessageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_bias="0"
             />
 
         <include layout="@layout/view_untrusted_attachment"

@@ -61,12 +61,9 @@ class ProfileManager(private val context: Context, private val configFactory: Co
             .getAllJobs(RetrieveProfileAvatarJob.KEY).any {
                 (it.value as? RetrieveProfileAvatarJob)?.recipientAddress == recipient.address
             }
-        val resolved = recipient.resolve()
-        DatabaseComponent.get(context).storage().setProfilePicture(
-            recipient = resolved,
-            newProfileKey = profileKey,
-            newProfilePicture = profilePictureURL
-        )
+
+        recipient.resolve()
+
         val accountID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
         var contact = contactDatabase.getContactWithAccountID(accountID)
@@ -79,7 +76,7 @@ class ProfileManager(private val context: Context, private val configFactory: Co
         }
         contactUpdatedInternal(contact)
         if (!hasPendingDownload) {
-            val job = RetrieveProfileAvatarJob(profilePictureURL, recipient.address)
+            val job = RetrieveProfileAvatarJob(profilePictureURL, recipient.address, profileKey)
             JobQueue.shared.add(job)
         }
     }

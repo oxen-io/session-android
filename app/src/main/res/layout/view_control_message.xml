@@ -27,7 +27,7 @@
         android:visibility="gone"
         app:tint="?android:textColorTertiary"
         tools:src="@drawable/ic_timer"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <org.thoughtcrime.securesms.conversation.v2.components.ExpirationTimerView
         android:id="@+id/expirationTimerView"
@@ -37,47 +37,57 @@
         android:visibility="gone"
         app:tint="?android:textColorTertiary"
         tools:src="@drawable/ic_timer"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:contentDescription="@string/AccessibilityId_control_message"
+    <LinearLayout
+        android:id="@+id/controlContentView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="?android:textColorTertiary"
-        android:textSize="@dimen/very_small_font_size"
-        tools:text="You disabled disappearing messages" />
-
-    <FrameLayout
-        android:id="@+id/call_view"
-        style="@style/CallMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/call_text_view"
-            android:textColor="?message_received_text_color"
-            android:textAlignment="center"
-            android:layout_gravity="center"
-            android:gravity="center"
-            tools:text="You missed a call"
+            android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:drawableStartCompat="@drawable/ic_missed_call" />
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/AccessibilityId_control_message"
+            android:gravity="center"
+            android:textColor="?android:textColorTertiary"
+            android:textSize="@dimen/very_small_font_size"
+            tools:text="You disabled disappearing messages" />
 
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/call_view"
+            style="@style/CallMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/followSetting"
-        style="@style/Widget.Session.Button.Common.Borderless"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/accent_green"
-        android:textSize="@dimen/very_small_font_size"
-        android:text="@string/disappearingMessagesFollowSetting"
-        android:contentDescription="@string/AccessibilityId_disappearingMessagesFollowSetting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/call_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="?message_received_text_color"
+                app:drawableStartCompat="@drawable/ic_missed_call"
+                tools:text="You missed a call" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/followSetting"
+            style="@style/Widget.Session.Button.Common.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@null"
+            android:contentDescription="@string/AccessibilityId_disappearingMessagesFollowSetting"
+            android:text="@string/disappearingMessagesFollowSetting"
+            android:textColor="@color/accent_green"
+            android:textSize="@dimen/very_small_font_size" />
+
+    </LinearLayout>
 
 </LinearLayout>

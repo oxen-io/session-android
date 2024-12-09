@@ -23,7 +23,7 @@ class FirebasePushService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         Log.d(TAG, "Received a push notification.")
-        pushReceiver.onPush(message.data)
+        pushReceiver.onPushDataReceived(message.data)
     }
 
     override fun onDeletedMessages() {

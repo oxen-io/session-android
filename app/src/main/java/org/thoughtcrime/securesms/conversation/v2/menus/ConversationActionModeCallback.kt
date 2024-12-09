@@ -10,6 +10,7 @@ import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.v2.ConversationAdapter
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -42,15 +43,6 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
             ?.let { AccountId(IdPrefix.BLINDED, it) }?.hexString
 
         // Embedded function
-        fun userCanDeleteSelectedItems(): Boolean {
-            val allSentByCurrentUser = selectedItems.all { it.isOutgoing }
-            val allReceivedByCurrentUser = selectedItems.all { !it.isOutgoing }
-            if (openGroup == null) { return allSentByCurrentUser || allReceivedByCurrentUser }
-            if (allSentByCurrentUser) { return true }
-            return OpenGroupManager.isUserModerator(context, openGroup.groupId, userPublicKey, blindedPublicKey)
-        }
-
-        // Embedded function
         fun userCanBanSelectedUsers(): Boolean {
             if (openGroup == null) { return false }
             val anySentByCurrentUser = selectedItems.any { it.isOutgoing }
@@ -63,7 +55,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
 
 
         // Delete message
-        menu.findItem(R.id.menu_context_delete_message).isVisible = userCanDeleteSelectedItems()
+        menu.findItem(R.id.menu_context_delete_message).isVisible = true // can always delete since delete logic will be handled by the VM
         // Ban user
         menu.findItem(R.id.menu_context_ban_user).isVisible = userCanBanSelectedUsers()
         // Ban and delete all
@@ -92,7 +84,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-        val selectedItems = adapter.selectedItems
+        val selectedItems = adapter.selectedItems.toSet()
         when (item.itemId) {
             R.id.menu_context_delete_message -> delegate?.deleteMessages(selectedItems)
             R.id.menu_context_ban_user -> delegate?.banUser(selectedItems)

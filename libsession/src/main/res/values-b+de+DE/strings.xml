@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> wurde als Admin entfernt.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> und <b>{count} andere</b> wurden als Admin entfernt.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> und <b>{other_name}</b> wurden als Administrator entfernt.</string>
-    <string name="adminSendingPromotion">Administratorenbeförderung wird gesendet</string>
     <string name="adminSettings">Admin-Einstellungen</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> und <b>{other_name}</b> wurden zu Admin befördert.</string>
     <string name="andMore">+{count}</string>
@@ -146,7 +145,7 @@
     <string name="callsMicrophonePermissionsRequired">Du hast einen Anruf von <b>{name}</b> verpasst, weil Du keinen <b>Mikrofonzugriff</b> gewährt hast.</string>
     <string name="callsMissed">Verpasster Anruf</string>
     <string name="callsMissedCallFrom">Verpasster Anruf von {name}</string>
-    <string name="callsNotificationsRequired">Sprach- und Videoanrufe erfordern Benachrichtigungen, die in den Systemeinstellungen Ihres Geräts aktiviert sind.</string>
+    <string name="callsNotificationsRequired">Sprach- und Videoanrufe erfordern Benachrichtigungen, die in den Systemeinstellungen deines Geräts aktiviert werden können.</string>
     <string name="callsPermissionsRequired">Anrufberechtigung erforderlich</string>
     <string name="callsPermissionsRequiredDescription">Du kannst die Berechtigung für \"Sprach- und Videoanrufe\" in den Datenschutzeinstellungen aktivieren.</string>
     <string name="callsReconnecting">Wiederverbinden…</string>
@@ -176,7 +175,7 @@
         <item quantity="one">Daten konnten nicht von %1$d Serviceknoten gelöscht werden. Service Node ID: %2$s.</item>
         <item quantity="other">Daten konnten nicht von %1$d Serviceknoten gelöscht werden. Service Node IDs: %2$s.</item>
     </plurals>
-    <string name="clearDataErrorDescriptionGeneric">Ein unbekannter Fehler ist aufgetreten und deine Daten wurden nicht gelöscht. Möchtest du stattdessen Ihre Daten nur von diesem Gerät löschen?</string>
+    <string name="clearDataErrorDescriptionGeneric">Ein unbekannter Fehler ist aufgetreten, und deine Daten wurden nicht gelöscht. Möchtest du stattdessen deine Daten nur von diesem Gerät entfernen?</string>
     <string name="clearDevice">Gerät entfernen</string>
     <string name="clearDeviceAndNetwork">Geräte- und Netzwerkdaten löschen</string>
     <string name="clearDeviceAndNetworkConfirm">Bist du sicher, dass du deine Daten aus dem Netzwerk löschen möchtest? Wenn du fortfährst, kannst du deine Nachrichten oder Kontakte nicht wiederherstellen.</string>
@@ -243,7 +242,7 @@
     <string name="conversationsGroups">Gruppen</string>
     <string name="conversationsMessageTrimming">Nachrichtenkürzung</string>
     <string name="conversationsMessageTrimmingTrimCommunities">Communities kürzen</string>
-    <string name="conversationsMessageTrimmingTrimCommunitiesDescription">Löschen Sie Nachrichten aus Community-Gesprächen, die älter als 6 Monate sind und bei denen es mehr als 2.000 Nachrichten gibt.</string>
+    <string name="conversationsMessageTrimmingTrimCommunitiesDescription">Lösche Nachrichten von Community-Konversationen, die älter als 6 Monate sind, und wo es über 2.000 Nachrichten gibt.</string>
     <string name="conversationsNew">Neue Unterhaltung</string>
     <string name="conversationsNone">Du hast noch keine Unterhaltungen</string>
     <string name="conversationsSendWithEnterKey">Mit Eingabetaste senden</string>
@@ -282,14 +281,16 @@
         <item quantity="one">Nachricht löschen</item>
         <item quantity="other">Nachrichten löschen</item>
     </plurals>
-    <string name="deleteMessageConfirm">Möchtest du diese Nachricht wirklich löschen?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Nachricht gelöscht</item>
         <item quantity="other">Nachrichten gelöscht</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">Diese Nachricht wurde gelöscht</string>
     <string name="deleteMessageDeletedLocally">Diese Nachricht wurde auf diesem Gerät gelöscht</string>
-    <string name="deleteMessageDescriptionDevice">Möchtest du diese Nachricht nur von diesem Gerät löschen?</string>
+    <plurals name="deleteMessageDescriptionDevice">
+        <item quantity="one">Bist du sicher, du möchtest diese Nachrichten nur von diesem Gerät löschen?</item>
+        <item quantity="other">Möchtest du diese Nachrichten wirklich nur von diesem Gerät löschen?</item>
+    </plurals>
     <string name="deleteMessageDescriptionEveryone">Möchtest du diese Nachricht wirklich für alle löschen?</string>
     <string name="deleteMessageDeviceOnly">Nur auf diesem Gerät löschen</string>
     <string name="deleteMessageDevicesAll">Von allen meinen Geräten löschen</string>
@@ -298,8 +299,6 @@
         <item quantity="one">Die Nachricht konnte nicht gelöscht werden</item>
         <item quantity="other">Die Nachrichten konnten nicht gelöscht werden</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Möchtest du diese Nachrichten wirklich löschen?</string>
-    <string name="deleteMessagesDescriptionDevice">Möchtest du diese Nachrichten wirklich nur von diesem Gerät löschen?</string>
     <string name="deleteMessagesDescriptionEveryone">Möchtest du diese Nachrichten wirklich für alle löschen?</string>
     <string name="deleting">Wird gelöscht</string>
     <string name="developerToolsToggle">Entwicklertools ein-/ausblenden</string>
@@ -331,7 +330,7 @@
     <string name="disappearingMessagesTimer">Zeitraum</string>
     <string name="disappearingMessagesTurnedOff"><b>{name}</b> hat verschwindende Nachrichten deaktiviert. Nachrichten verschwinden nicht mehr.</string>
     <string name="disappearingMessagesTurnedOffGroup"><b>{name}</b> hat verschwindende Nachrichten <b>deaktiviert</b>.</string>
-    <string name="disappearingMessagesTurnedOffYou"><b>Sie</b> haben verschwindende Nachrichten <b>deaktiviert</b>. Nachrichten, die Sie senden, verschwinden nicht mehr.</string>
+    <string name="disappearingMessagesTurnedOffYou"><b>Du</b> hast verschwindende Nachrichten <b>deaktiviert</b>. Die von dir gesendeten Nachrichten verschwinden nicht mehr.</string>
     <string name="disappearingMessagesTurnedOffYouGroup"><b>Du</b> hast verschwindende Nachrichten <b>deaktiviert</b>.</string>
     <string name="disappearingMessagesTypeRead">gelesen</string>
     <string name="disappearingMessagesTypeSent">gesendet</string>
@@ -406,7 +405,6 @@
     <string name="groupInviteFailedMultiple">Fehler bei der Einladung von {name} und {count} anderen zu {group_name}</string>
     <string name="groupInviteFailedTwo">Fehler bei der Einladung von {name} und {other_name} zu {group_name}</string>
     <string name="groupInviteFailedUser">Fehler bei der Einladung von {name} zu {group_name}</string>
-    <string name="groupInviteSending">Einladung wird gesendet</string>
     <string name="groupInviteSent">Einladung gesendet</string>
     <string name="groupInviteSuccessful">Gruppeneinladung erfolgreich</string>
     <string name="groupInviteVersion">Die Empfänger müssen die neueste App-Version haben, um Gruppeneinladungen zu erhalten</string>
@@ -428,7 +426,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> und <b>{count} andere</b> wurden eingeladen, der Gruppe beizutreten.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> und <b>{other_name}</b> wurden eingeladen, der Gruppe beizutreten.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Du</b> und <b>{count} andere</b> wurden eingeladen, der Gruppe beizutreten. Der Chatverlauf wurde freigegeben.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Du</b> und <b>{name}</b> wurden eingeladen, der Gruppe beizutreten. Der Chatverlauf wurde freigegeben.</string>
     <string name="groupMemberYouLeft"><b>Du</b> hast die Gruppe verlassen.</string>
     <string name="groupMembers">Gruppenmitglieder</string>
     <string name="groupMembersNone">Es gibt keine anderen Mitglieder in dieser Gruppe.</string>
@@ -478,7 +475,7 @@
     <string name="hideOthers">Andere ausblenden</string>
     <string name="image">Bild</string>
     <string name="incognitoKeyboard">Inkognito-Tastatur</string>
-    <string name="incognitoKeyboardDescription">Fordere den Inkognito-Modus an, wenn verfügbar. Dies hängt von der Tastatur ab, die du verwendest, deine Tastatur könnte diese Anfrage ignorieren.</string>
+    <string name="incognitoKeyboardDescription">Fordere den Inkognito-Modus an, wenn verfügbar. Abhängig von der Tastatur, die du verwendest, kann deine Tastatur diese Anfrage ignorieren.</string>
     <string name="info">Info</string>
     <string name="invalidShortcut">Ungültige Verknüpfung</string>
     <string name="join">Beitreten</string>
@@ -540,7 +537,7 @@
     <string name="messageEmpty">Diese Nachricht ist leer.</string>
     <string name="messageErrorDelivery">Nachrichtenübermittlung gescheitert</string>
     <string name="messageErrorLimit">Nachrichtenlimit erreicht</string>
-    <string name="messageErrorOld">Eine Nachricht verschlüsselt mit einer alten Version von {app_name} erhalten, die nicht mehr unterstützt wird. Bitte fragen Sie den Absender, auf die neueste Version zu aktualisieren und die Nachricht erneut zu senden.</string>
+    <string name="messageErrorOld">Eine Nachricht wurde mit einer alten Version von {app_name} verschlüsselt, die nicht mehr unterstützt wird. Bitte den Absender, auf die neueste Version zu aktualisieren und die Nachricht erneut zu senden.</string>
     <string name="messageErrorOriginal">Originalnachricht nicht gefunden</string>
     <string name="messageInfo">Nachrichten-Info</string>
     <string name="messageMarkRead">Als gelesen markieren</string>
@@ -556,14 +553,14 @@
         <item quantity="other">Du hast %1$d neue Nachrichten.</item>
     </plurals>
     <string name="messageReplyingTo">Antwort auf</string>
-    <string name="messageRequestGroupInvite"><b>{name}</b> hat Sie eingeladen, der Gruppe <b>{group_name}</b> beizutreten.</string>
+    <string name="messageRequestGroupInvite"><b>{name}</b> hat dich eingeladen, der Gruppe <b>{group_name}</b> beizutreten.</string>
     <string name="messageRequestGroupInviteDescription">Das Senden einer Nachricht an diese Gruppe bestätigt automatisch die Gruppeneinladung.</string>
     <string name="messageRequestPending">Deine Nachrichtenanfrage ist derzeit ausstehend.</string>
     <string name="messageRequestPendingDescription">Du kannst Sprachnachrichten und Anhänge senden, sobald der Empfänger diese Nachrichtenanfrage genehmigt hat.</string>
     <string name="messageRequestYouHaveAccepted">Du hast die Nachrichtenanfrage von <b>{name}</b> angenommen.</string>
     <string name="messageRequestsAcceptDescription">Das Senden einer Nachricht an dieser Person bestätigt automatisch die Nachrichtenanfrage und gibt deine Account-ID bekannt.</string>
     <string name="messageRequestsAccepted">Deine Nachrichtenanfrage wurde akzeptiert.</string>
-    <string name="messageRequestsClearAllExplanation">Sind Sie sich sicher, dass Sie alle Nachrichtenanforderungen und Gruppeneinladungen löschen möchten?</string>
+    <string name="messageRequestsClearAllExplanation">Bist du sich sicher, dass du alle Nachrichtenanforderungen und Gruppeneinladungen löschen möchtest?</string>
     <string name="messageRequestsCommunities">Community-Nachrichtenanfragen</string>
     <string name="messageRequestsCommunitiesDescription">Erlaube Nachrichtenanfragen von Community-Unterhaltungen.</string>
     <string name="messageRequestsDelete">Bist du sicher, dass du diese Nachrichtenanfrage löschen möchten?</string>
@@ -757,7 +754,7 @@
     <string name="scan">Scannen</string>
     <string name="screenSecurity">Bildschirmschutz</string>
     <string name="screenshotNotifications">Bildschirmfoto-Benachrichtigungen</string>
-    <string name="screenshotNotificationsDescription">Erhalte eine Benachrichtigung, wenn ein Kontakt ein Bildschirmfoto eines Eins-zu-eins-Chats erstellt.</string>
+    <string name="screenshotNotificationsDescription">Erhalte eine Benachrichtigung, wenn ein Kontakt ein Bildschirmfoto in einer Unterhaltung macht.</string>
     <string name="screenshotTaken"><b>{name}</b> hat einen Screenshot gemacht.</string>
     <string name="search">Suchen</string>
     <string name="searchContacts">Kontakte durchsuchen</string>

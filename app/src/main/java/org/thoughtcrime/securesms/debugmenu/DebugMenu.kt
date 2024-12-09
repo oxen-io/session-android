@@ -74,12 +74,10 @@ fun DebugMenu(
                 buttons = listOf(
                     DialogButtonModel(
                         text = GetString(R.string.cancel),
-                        contentDescription = GetString(R.string.cancel),
                         onClick = { sendCommand(HideEnvironmentWarningDialog) }
                     ),
                     DialogButtonModel(
                         text = GetString(R.string.ok),
-                        contentDescription = GetString(R.string.ok),
                         onClick = { sendCommand(ChangeEnvironment) }
                     )
                 )
@@ -149,9 +147,11 @@ fun ColumnScope.DebugCell(
 ) {
     Spacer(modifier = Modifier.height(LocalDimensions.current.smallSpacing))
 
-    Cell {
+    Cell(
+        modifier = modifier
+    ) {
         Column(
-            modifier = modifier.padding(LocalDimensions.current.spacing)
+            modifier = Modifier.padding(LocalDimensions.current.spacing)
         ) {
             Text(
                 text = title,
