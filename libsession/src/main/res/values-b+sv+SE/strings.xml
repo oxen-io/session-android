@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> blev borttagen som Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> och <b>{count} andra</b> togs bort som Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> och <b>{other_name}</b> togs bort som Admin.</string>
-    <string name="adminSendingPromotion">Sänder administratörsbefordran</string>
     <string name="adminSettings">Admin Settings</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> och <b>{other_name}</b> blev befordrade till Admin.</string>
     <string name="andMore">+{count}</string>
@@ -282,13 +281,16 @@
         <item quantity="one">Radera meddelande</item>
         <item quantity="other">Radera meddelanden</item>
     </plurals>
+    <plurals name="deleteMessageConfirm">
+        <item quantity="one">Är du säker på att du vill radera detta meddelande?</item>
+        <item quantity="other">Är du säker på att du vill radera dessa meddelanden?</item>
+    </plurals>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Meddelande raderat</item>
         <item quantity="other">Meddelanden raderade</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">Detta meddelande har raderats</string>
     <string name="deleteMessageDeletedLocally">Detta meddelande har tagits bort på denna enhet</string>
-    <string name="deleteMessageDescriptionDevice">Är du säker på att du vill radera detta meddelande från denna enhet?</string>
     <string name="deleteMessageDescriptionEveryone">Är du säker på att du vill radera detta meddelande för alla?</string>
     <string name="deleteMessageDeviceOnly">Radera endast på denna enhet</string>
     <string name="deleteMessageDevicesAll">Radera på alla mina enheter</string>
@@ -297,7 +299,6 @@
         <item quantity="one">Misslyckades med att radera meddelandet</item>
         <item quantity="other">Misslyckades med att radera meddelanden</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Är du säker på att du vill radera dessa meddelanden endast från denna enhet?</string>
     <string name="deleteMessagesDescriptionEveryone">Är du säker på att du vill radera dessa meddelanden för alla?</string>
     <string name="deleting">Raderar</string>
     <string name="developerToolsToggle">Slå på utvecklingsverktyg</string>
@@ -404,7 +405,6 @@
     <string name="groupInviteFailedMultiple">Misslyckades med att bjuda in {name} och {count} andra till {group_name}</string>
     <string name="groupInviteFailedTwo">Misslyckades med att bjuda in {name} och {other_name} till {group_name}</string>
     <string name="groupInviteFailedUser">Misslyckades med att bjuda in {name} till {group_name}</string>
-    <string name="groupInviteSending">Skickar inbjudan</string>
     <string name="groupInviteSent">Inbjudan skickad</string>
     <string name="groupInviteSuccessful">Grupinbjudan lyckades</string>
     <string name="groupInviteVersion">Användare måste ha den senaste versionen för att ta emot inbjudningar</string>
@@ -426,7 +426,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> och <b>{count} andra</b> bjöds in till gruppen.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> och <b>{other_name}</b> bjöds in att gå med i gruppen.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Du</b> och <b>{count} andra</b> bjöds in att gå med i gruppen. Chatt historik delades.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Du</b> och <b>{name}</b> bjöds in att gå med i gruppen. Chatt historik delades.</string>
     <string name="groupMemberYouLeft"><b>Du</b> lämnade gruppen.</string>
     <string name="groupMembers">Gruppmedlemmar</string>
     <string name="groupMembersNone">Det finns inga andra medlemmar i denna grupp.</string>

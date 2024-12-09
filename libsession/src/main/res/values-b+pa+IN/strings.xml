@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b>ਨੂੰ ਪ੍ਰਸ਼ਾਸਕ ਵਜੋਂ ਹਟਾ ਦਿੱਤਾ ਗਿਆ ਹੈ।</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> ਅਤੇ <b>{count} ਹੋਰ</b> ਨੂੰ ਐਡਮਿਨ ਤੋਂ ਹਟਾ ਦਿੱਤਾ ਗਿਆ ਹੈ।</string>
     <string name="adminRemovedUserOther"><b>{name}</b> ਤੇ <b>{other_name}</b> ਨੂੰ ਐਡਮਿਨ ਤੋਂ ਹਟਾ ਦਿੱਤਾ ਗਿਆ ਹੈ।</string>
-    <string name="adminSendingPromotion">ਐਡਮਿਨ ਪ੍ਰੋਮੋਸ਼ਨ ਭੇਜ ਰਿਹਾ ਹੈ</string>
     <string name="adminSettings">ਸੰਚਾਲਕ ਸੈਟਿੰਗਜ਼</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b>ਅਤੇ<b>{other_name}</b>ਨੂੰ ਪ੍ਰਸ਼ਾਸਕ ਬਣਾ ਦਿੱਤਾ ਗਿਆ ਹੈ।</string>
     <string name="andMore">+{count}</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">ਇਹ ਸੁਨੇਹਾ ਮਿਟਾਇਆ ਗਿਆ</string>
     <string name="deleteMessageDeletedLocally">ਇਹ ਸੁਨੇਹਾ ਇਸ ਡਿਵਾਈਸ ਤੇ ਮਿਟਾਇਆ ਗਿਆ</string>
-    <string name="deleteMessageDescriptionDevice">ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਹ ਸੁਨੇਹਾ ਸਿਰਫ਼ ਇਸ ਜੰਤਰ ਤੋਂ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="deleteMessageDescriptionEveryone">ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਹ ਸੁਨੇਹਾ ਸਭ ਲਈ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="deleteMessageDeviceOnly">ਸਿਰਫ ਇਸ ਯੰਤਰ ਤੇ ਹਟਾਓ</string>
     <string name="deleteMessageDevicesAll">ਮੇਰੇ ਸਾਰੇ ਯੰਤਰਾਂ ਤੇ ਹਟਾਓ</string>
@@ -296,7 +294,6 @@
         <item quantity="one">ਸੁਨੇਹਾ ਮਿਟਾਉਣ ਵਿੱਚ ਅਸਫਲ</item>
         <item quantity="other">ਸੁਨੇਹੇ ਮਿਟਾਉਣ ਵਿੱਚ ਅਸਫਲ</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਹ ਸੁਨੇਹੇ ਸਿਰਫ਼ ਇਸ ਸੰਦ ਤੋਂ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="deleteMessagesDescriptionEveryone">ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਇਹ ਸੁਨੇਹੇ ਸਾਰੇ ਲਈ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="deleting">ਹਟਾਇਆ ਜਾ ਰਿਹਾ ਹੈ</string>
     <string name="developerToolsToggle">ਡਿਵੈਲਪਰ ਟੂਲਜ਼ ਅਨਲਾਕ ਕਰੋ</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">{name} ਅਤੇ {count} ਹੋਰਾਂ ਨੂੰ {group_name} ਤੇ ਸੱਦਾ ਦੇਣ ਵਿੱਚ ਅਸਫਲ</string>
     <string name="groupInviteFailedTwo">{name} ਅਤੇ {other_name} ਨੂੰ {group_name} ਤੇ ਸੱਦਾ ਦੇਣ ਵਿੱਚ ਅਸਫਲ ਹੋਇਆ</string>
     <string name="groupInviteFailedUser">{name} ਨੂੰ {group_name} ਤੇ ਸੱਦਾ ਦੇਣ ਵਿੱਚ ਅਸਫਲ</string>
-    <string name="groupInviteSending">ਨਿਮਿੰਤਰਣ ਭੇਜ ਰਿਹਾ ਹੈ</string>
     <string name="groupInviteSent">ਸੱਦਾ ਭੇਜਿਆ</string>
     <string name="groupInviteSuccessful">ਗਰੁੱਪ ਨਿਮੰਤ੍ਰਣ ਸਫਲ</string>
     <string name="groupInviteVersion">ਨਿਮੰਤਰਣ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਉਪਭੋਗਤਾਵਾਂ ਕੋਲ ਸਭ ਤੋਂ ਨਵਾਂ ਰਿਲੀਜ਼ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।</string>
