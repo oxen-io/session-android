@@ -27,7 +27,9 @@
     <string name="adminPromotionFailedDescription">Failed to promote {name} in {group_name}</string>
     <string name="adminPromotionFailedDescriptionMultiple">Failed to promote {name} and {count} others in {group_name}</string>
     <string name="adminPromotionFailedDescriptionTwo">Failed to promote {name} and {other_name} in {group_name}</string>
+    <string name="adminPromotionNotSent">Promotion not sent</string>
     <string name="adminPromotionSent">Admin promotion sent</string>
+    <string name="adminPromotionStatusUnknown">Promotion status unknown</string>
     <string name="adminRemove">Remove Admins</string>
     <string name="adminRemoveAsAdmin">Remove as Admin</string>
     <string name="adminRemoveCommunityNone">There are no Admins in this Community.</string>
@@ -37,7 +39,10 @@
     <string name="adminRemovedUser"><b>{name}</b> was removed as Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> and <b>{count} others</b> were removed as Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> and <b>{other_name}</b> were removed as Admin.</string>
-    <string name="adminSendingPromotion">Sending admin promotion</string>
+    <plurals name="adminSendingPromotion">
+        <item quantity="one">Sending admin promotion</item>
+        <item quantity="other">Sending admin promotions</item>
+    </plurals>
     <string name="adminSettings">Admin Settings</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> and <b>{other_name}</b> were promoted to Admin.</string>
     <string name="andMore">+{count}</string>
@@ -150,6 +155,7 @@
     <string name="callsNotificationsRequired">Voice and Video Calls require notifications to be enabled in your device system settings.</string>
     <string name="callsPermissionsRequired">Call Permissions Required</string>
     <string name="callsPermissionsRequiredDescription">You can enable the \"Voice and Video Calls\" permission in Privacy Settings.</string>
+    <string name="callsPermissionsRequiredDescription1">You can enable the \"Voice and Video Calls\" permission in Permissions Settings.</string>
     <string name="callsReconnecting">Reconnecting…</string>
     <string name="callsRinging">Ringing...</string>
     <string name="callsSessionCall">{app_name} Call</string>
@@ -293,7 +299,10 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">This message was deleted</string>
     <string name="deleteMessageDeletedLocally">This message was deleted on this device</string>
-    <string name="deleteMessageDescriptionDevice">Are you sure you want to delete this message from this device only?</string>
+    <plurals name="deleteMessageDescriptionDevice">
+        <item quantity="one">Are you sure you want to delete this message from this device only?</item>
+        <item quantity="other">Are you sure you want to delete these messages from this device only?</item>
+    </plurals>
     <string name="deleteMessageDescriptionEveryone">Are you sure you want to delete this message for everyone?</string>
     <string name="deleteMessageDeviceOnly">Delete on this device only</string>
     <string name="deleteMessageDevicesAll">Delete on all my devices</string>
@@ -310,7 +319,6 @@
         <item quantity="one">This message cannot be deleted for everyone</item>
         <item quantity="other">Some of the messages you have selected cannot be deleted for everyone</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Are you sure you want to delete these messages from this device only?</string>
     <string name="deleteMessagesDescriptionEveryone">Are you sure you want to delete these messages for everyone?</string>
     <string name="deleting">Deleting</string>
     <string name="developerToolsToggle">Toggle Developer Tools</string>
@@ -406,6 +414,8 @@
     <string name="groupCreateErrorNoMembers">Please pick at least one other group member.</string>
     <string name="groupDelete">Delete Group</string>
     <string name="groupDeleteDescription">Are you sure you want to delete <b>{group_name}</b>? This will remove all members and delete all group content.</string>
+    <string name="groupDeleteDescriptionMember">Are you sure you want to delete <b>{group_name}</b>?</string>
+    <string name="groupDeletedMemberDescription">{group_name} has been deleted by a group admin. You will not be able to send any more messages.</string>
     <string name="groupDescriptionEnter">Enter a group description</string>
     <string name="groupDisplayPictureUpdated">Group display picture updated.</string>
     <string name="groupEdit">Edit Group</string>
@@ -418,10 +428,15 @@
     <string name="groupInviteFailedMultiple">Failed to invite {name} and {count} others to {group_name}</string>
     <string name="groupInviteFailedTwo">Failed to invite {name} and {other_name} to {group_name}</string>
     <string name="groupInviteFailedUser">Failed to invite {name} to {group_name}</string>
+    <string name="groupInviteNotSent">Invite not sent</string>
     <string name="groupInviteReinvite"><b>{name}</b> invited you to rejoin <b>{group_name}</b>, where you are an Admin.</string>
     <string name="groupInviteReinviteYou">You were invited to rejoin <b>{group_name}</b>, where you are an Admin.</string>
-    <string name="groupInviteSending">Sending invite</string>
+    <plurals name="groupInviteSending">
+        <item quantity="one">Sending invite</item>
+        <item quantity="other">Sending invites</item>
+    </plurals>
     <string name="groupInviteSent">Invite sent</string>
+    <string name="groupInviteStatusUnknown">Invite status unknown</string>
     <string name="groupInviteSuccessful">Group invite successful</string>
     <string name="groupInviteVersion">Users must have the latest release to receive invitations</string>
     <string name="groupInviteYou"><b>You</b> were invited to join the group.</string>
@@ -443,7 +458,7 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> and <b>{count} others</b> were invited to join the group.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> and <b>{other_name}</b> were invited to join the group.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>You</b> and <b>{count} others</b> were invited to join the group. Chat history was shared.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>You</b> and <b>{name}</b> were invited to join the group. Chat history was shared.</string>
+    <string name="groupMemberNewYouHistoryTwo"><b>You</b> and <b>{other_name}</b> were invited to join the group. Chat history was shared.</string>
     <string name="groupMemberYouLeft"><b>You</b> left the group.</string>
     <string name="groupMembers">Group Members</string>
     <string name="groupMembersNone">There are no other members in this group.</string>
@@ -456,6 +471,7 @@
     <string name="groupNameVisible">Group name is visible to all group members.</string>
     <string name="groupNoMessages">You have no messages from <b>{group_name}</b>. Send a message to start the conversation!</string>
     <string name="groupOnlyAdmin">You are the only admin in <b>{group_name}</b>.\n\nGroup members and settings cannot be changed without an admin.</string>
+    <string name="groupPendingRemoval">Pending removal</string>
     <string name="groupPromotedYou"><b>You</b> were promoted to Admin.</string>
     <string name="groupPromotedYouMultiple"><b>You</b> and <b>{count} others</b> were promoted to Admin.</string>
     <string name="groupPromotedYouTwo"><b>You</b> and <b>{name}</b> were promoted to Admin.</string>

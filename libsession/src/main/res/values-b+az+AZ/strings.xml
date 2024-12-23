@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> artıq Admin deyil.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> və <b>digər {count} nəfər</b> Adminlikdən çıxarıldı.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> və <b>{other_name}</b> Adminlikdən çıxarıldı.</string>
-    <string name="adminSendingPromotion">Admin təyinatı göndərilir</string>
     <string name="adminSettings">Admin ayarları</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> və <b>{other_name}</b> Admin olaraq yüksəldildi.</string>
     <string name="andMore">+{count}</string>
@@ -257,7 +256,7 @@
     <string name="create">Yarat</string>
     <string name="cut">Kəs</string>
     <string name="databaseErrorGeneric">Bir databaza xətası baş verdi.\n\nProblemin aradan qaldırılması üçün tətbiq jurnalınızı paylaşmaq məqsədilə xaricə köçürün. Bu uğursuz olsa, {app_name} tətbiqini təkrar quraşdırıb hesabınızı bərpa edin.\n\nXəbərdarlıq: Bu, iki həftədən köhnə olan bütün mesajların, qoşmaların və hesab datasının itməsi ilə nəticələnəcək.</string>
-    <string name="databaseErrorTimeout">{app_name} tətbiqinin başladılmasının çox vaxt apardığına fikir verdik.\n\nGözləməyə davam edə, problemin aradan qaldırılması üçün cihazınızın jurnallarını xaricə köçürə və ya Session-u yenidən başlatmağa çalışa bilərsiniz.</string>
+    <string name="databaseErrorTimeout">{app_name} tətbiqinin başladılmasının çox vaxt apardığına fikir verdik.\n\nGözləməyə davam edə, problemin aradan qaldırılması üçün cihazınızın jurnallarını xaricə köçürə və ya {app_name}-u yenidən başlatmağa çalışa bilərsiniz.</string>
     <string name="databaseErrorUpdate">Tətbiqinizin databazası {app_name} tətbiqinin versiyası ilə uyumlu deyil. Yeni bir databaza yaratmaq və {app_name} istifadə etməyə davam etmək üçün tətbiqi yenidən quraşdırın və hesabınızı bərpa edin.\n\nXəbərdarlıq: Bu, iki həftədən köhnə olan bütün mesajların və qoşmaların itkisi ilə nəticələnəcək.</string>
     <string name="databaseOptimizing">Databaza optimallaşdırılır</string>
     <string name="debugLog">Sazlama jurnalı</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Bu mesaj silindi</string>
     <string name="deleteMessageDeletedLocally">Bu mesaj bu cihazda silindi</string>
-    <string name="deleteMessageDescriptionDevice">Bu mesajı yalnız bu cihazdan silmək istədiyinizə əminsiniz?</string>
     <string name="deleteMessageDescriptionEveryone">Bu mesajı hamı üçün silmək istədiyinizə əminsiniz?</string>
     <string name="deleteMessageDeviceOnly">Yalnız bu cihazda sil</string>
     <string name="deleteMessageDevicesAll">Bütün cihazlarımda sil</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Mesajın silinməsi uğursuz oldu</item>
         <item quantity="other">Mesajların silinməsi uğursuz oldu</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Bu mesajları yalnız bu cihazdan silmək istədiyinizə əminsiniz?</string>
     <string name="deleteMessagesDescriptionEveryone">Bu mesajları hər kəs üçün silmək istədiyinizə əminsiniz?</string>
     <string name="deleting">Silinir</string>
     <string name="developerToolsToggle">Tərtibatçı Alətlərini aç/bağla</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">{name} və digər {count} nəfəri {group_name} qrupuna dəvət etmə uğursuz oldu</string>
     <string name="groupInviteFailedTwo">{name} və {other_name} istifadəçilərini {group_name} qrupuna dəvət etmə uğursuz oldu</string>
     <string name="groupInviteFailedUser">{name} istifadəçisini {group_name} qrupuna dəvət etmə uğursuz oldu</string>
-    <string name="groupInviteSending">Dəvət göndərilir</string>
     <string name="groupInviteSent">Dəvət göndərildi</string>
     <string name="groupInviteSuccessful">Qrup dəvəti uğurludur</string>
     <string name="groupInviteVersion">İstifadəçilər dəvətləri qəbul etmək üçün ən son versiyaya sahib olmalıdırlar</string>
@@ -426,7 +422,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> və <b>digər {count} nəfər</b> qrupa qoşulmaq üçün dəvət edildi.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> və <b>{other_name}</b> qrupa qoşulmaq üçün dəvət edildi.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Siz</b> və <b>digər {count} nəfər</b> qrupa qoşulmaq üçün dəvət edildiniz. Söhbət tarixçəsi paylaşıldı.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Siz</b> və <b>{name}</b> qrupa qoşulmaq üçün dəvət edildiniz. Söhbət tarixçəsi paylaşıldı.</string>
     <string name="groupMemberYouLeft"><b>Siz</b> qrupu tərk etdiniz.</string>
     <string name="groupMembers">Qrup üzvləri</string>
     <string name="groupMembersNone">Bu qrupda başqa üzv yoxdur.</string>

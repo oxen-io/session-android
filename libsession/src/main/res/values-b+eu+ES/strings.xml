@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> Admin izateko kendu dute.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> eta <b>{count} beste</b> Admin moduan kendu dituzte.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> eta <b>{other_name}</b> Admin moduan kendu dituzte.</string>
-    <string name="adminSendingPromotion">Admin promozioa bidaltzen</string>
     <string name="adminSettings">Administratzailearen Ezarpenak</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> eta <b>{other_name}</b> Admin izendatu dira.</string>
     <string name="andMore">+{count}</string>
@@ -256,7 +255,7 @@
     <string name="create">Sortu</string>
     <string name="cut">Ebaki</string>
     <string name="databaseErrorGeneric">Datu-base errorea gertatu da.\n\nAplikazioaren egunkariak esportatu arakatzean partekatzeko. Honek huts egiten badu, {app_name} berriro instalatu eta zure kontua berreskuratu.\n\nAbisua: Honek bi aste baino gehiagoko mezu, fitxategi eta kontu datu guztiak galduko ditu.</string>
-    <string name="databaseErrorTimeout">{app_name} martxan jartzeko denbora gehiegi hartzen ari dela nabaritu dugu.\n\nJarrai itzazu itxaroten, esportatu zure gailu-erregistroak konpontzeko partekatzeko edo saiatu Session berrabiarazten.</string>
+    <string name="databaseErrorTimeout">{app_name} martxan jartzeko denbora gehiegi hartzen ari dela nabaritu dugu.\n\nJarrai itzazu itxaroten, esportatu zure gailu-erregistroak konpontzeko partekatzeko edo saiatu {app_name} berrabiarazten.</string>
     <string name="databaseErrorUpdate">Zure aplikazio-datubasea ez da bateragarria {app_name} bertsio honekin. Berrinstalatu aplikazioa eta leheneratu zure kontua datubase berri bat sortzeko eta {app_name} erabiltzen jarraitzeko.\n\nAbisua: Honek bi astetik gorako mezu eta eranskinen galera eragingo du.</string>
     <string name="databaseOptimizing">Datu Basea Optimizatzen</string>
     <string name="debugLog">Arazketa egunkaria</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Mezu hau ezabatu da.</string>
     <string name="deleteMessageDeletedLocally">Mezu hau tokian tokiko gailu honetan ezabatu da.</string>
-    <string name="deleteMessageDescriptionDevice">Ziur zaude mezu hau gailu honetatik bakarrik ezabatu nahi duzula?</string>
     <string name="deleteMessageDescriptionEveryone">Ziur zaude mezu hau guztiontzat ezabatu nahi duzula?</string>
     <string name="deleteMessageDeviceOnly">Gailu honetan bakarrik ezabatu</string>
     <string name="deleteMessageDevicesAll">Nire gailu guztietan ezabatu</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Ezin izan da mezua ezabatu</item>
         <item quantity="other">Ezin izan dira mezuak ezabatu</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Ziur zaude mezu hauek gailu honetatik soilik ezabatu nahi dituzula?</string>
     <string name="deleteMessagesDescriptionEveryone">Ziur zaude mezu hauek denentzat ezabatu nahi dituzula?</string>
     <string name="deleting">Ezabatzen</string>
     <string name="developerToolsToggle">Garatu Tresna Aldaketa</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Hutsa izan da {name} eta {count} beste batzuk {group_name} Gonbidatzeko</string>
     <string name="groupInviteFailedTwo">Hutsa izan da {name} eta {other_name} {group_name} Gonbidatzeko</string>
     <string name="groupInviteFailedUser">Hutsa izan da {name} {group_name} Gonbidatzeko</string>
-    <string name="groupInviteSending">Gonbidapena bidaltzen</string>
     <string name="groupInviteSent">Gonbidapena bidalita</string>
     <string name="groupInviteSuccessful">Talde gonbidapena arrakastatsua</string>
     <string name="groupInviteVersion">Erabiltzaileek azken bertsioa izan behar dute gonbidapenak jasotzeko</string>
@@ -425,7 +421,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> eta <b>{count} beste</b> taldera batzeko gonbidatu dira.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> eta <b>{other_name}</b> taldera batzeko gonbidatu dira.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Zuk</b> eta <b>{count} beste</b> taldera batzeko gonbidatu zaituzte. Txat historia partekatu da.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Zuk</b> eta <b>{name}</b> taldera batzeko gonbidatu zaituzte. Txat historia partekatu da.</string>
     <string name="groupMemberYouLeft"><b>Zuk</b> taldea utzi duzu.</string>
     <string name="groupMembers">Taldeko Kideak</string>
     <string name="groupMembersNone">Ez dago beste kiderik talde honetan.</string>
