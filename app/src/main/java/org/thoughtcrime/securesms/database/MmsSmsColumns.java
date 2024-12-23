@@ -42,6 +42,7 @@ public interface MmsSmsColumns {
     protected static final long JOINED_TYPE                        = 4;
     protected static final long FIRST_MISSED_CALL_TYPE             = 5;
 
+    protected static final long BASE_DELETED_INCOMING_TYPE         = 19;
     protected static final long BASE_INBOX_TYPE                    = 20;
     protected static final long BASE_OUTBOX_TYPE                   = 21;
     protected static final long BASE_SENDING_TYPE                  = 22;
@@ -50,7 +51,7 @@ public interface MmsSmsColumns {
     protected static final long BASE_PENDING_SECURE_SMS_FALLBACK   = 25;
     protected static final long BASE_PENDING_INSECURE_SMS_FALLBACK = 26;
     public    static final long BASE_DRAFT_TYPE                    = 27;
-    protected static final long BASE_DELETED_TYPE                  = 28;
+    protected static final long BASE_DELETED_OUTGOING_TYPE         = 28;
     protected static final long BASE_SYNCING_TYPE                  = 29;
     protected static final long BASE_RESYNCING_TYPE                = 30;
     protected static final long BASE_SYNC_FAILED_TYPE              = 31;
@@ -61,6 +62,7 @@ public interface MmsSmsColumns {
                                                             BASE_SENDING_TYPE, BASE_SENT_FAILED_TYPE,
                                                             BASE_PENDING_SECURE_SMS_FALLBACK,
                                                             BASE_PENDING_INSECURE_SMS_FALLBACK,
+                                                            BASE_DELETED_OUTGOING_TYPE,
                                                             OUTGOING_CALL_TYPE};
 
 
@@ -182,7 +184,9 @@ public interface MmsSmsColumns {
       return (type & BASE_TYPE_MASK) == BASE_INBOX_TYPE;
     }
 
-    public static boolean isDeletedMessage(long type) { return (type & BASE_TYPE_MASK) == BASE_DELETED_TYPE; }
+    public static boolean isDeletedMessage(long type) {
+      return (type & BASE_TYPE_MASK) == BASE_DELETED_OUTGOING_TYPE || (type & BASE_TYPE_MASK) == BASE_DELETED_INCOMING_TYPE;
+    }
 
     public static boolean isJoinedType(long type) {
       return (type & BASE_TYPE_MASK) == JOINED_TYPE;

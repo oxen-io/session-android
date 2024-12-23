@@ -13,8 +13,8 @@ configurations.forEach {
     it.exclude module: "commons-logging"
 }
 
-def canonicalVersionCode = 382
-def canonicalVersionName = "1.20.0"
+def canonicalVersionCode = 384
+def canonicalVersionName = "1.20.2"
 
 def postFixSize = 10
 def abiPostFix = ['armeabi-v7a' : 1,
@@ -56,7 +56,7 @@ android {
 
     splits {
         abi {
-            enable true
+            enable !project.hasProperty('huawei') // huawei builds do not need the split variants
             reset()
             include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             universalApk true
@@ -68,7 +68,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.14'
+        kotlinCompilerExtensionVersion '1.5.15'
     }
 
     defaultConfig {
@@ -105,6 +105,13 @@ android {
         String sharedTestDir = 'src/sharedTest/java'
         test.java.srcDirs += sharedTestDir
         androidTest.java.srcDirs += sharedTestDir
+        main {
+            assets.srcDirs += "$buildDir/generated/binary"
+        }
+        test {
+            resources.srcDirs += "$buildDir/generated/binary"
+            resources.srcDirs += "$projectDir/src/main/assets"
+        }
     }
 
     buildTypes {
@@ -115,6 +122,25 @@ android {
             isDefault true
             minifyEnabled false
             enableUnitTestCoverage true
+        }
+    }
+
+    signingConfigs {
+        play {
+            if (project.hasProperty('SESSION_STORE_FILE')) {
+                storeFile file(SESSION_STORE_FILE)
+                storePassword SESSION_STORE_PASSWORD
+                keyAlias SESSION_KEY_ALIAS
+                keyPassword SESSION_KEY_PASSWORD
+            }
+        }
+        huawei {
+            if (project.hasProperty('SESSION_HUAWEI_STORE_FILE')) {
+                storeFile file(SESSION_HUAWEI_STORE_FILE)
+                storePassword SESSION_HUAWEI_STORE_PASSWORD
+                keyAlias SESSION_HUAWEI_KEY_ALIAS
+                keyPassword SESSION_HUAWEI_KEY_PASSWORD
+            }
         }
     }
 
@@ -129,6 +155,7 @@ android {
             buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.ANDROID"
             buildConfigField "String", "NOPLAY_UPDATE_URL", "$ext.websiteUpdateUrl"
             buildConfigField 'String', 'PUSH_KEY_SUFFIX', '\"\"'
+            signingConfig signingConfigs.play
         }
 
         huawei {
@@ -138,6 +165,7 @@ android {
             buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.HUAWEI"
             buildConfigField "String", "NOPLAY_UPDATE_URL", "$ext.websiteUpdateUrl"
             buildConfigField 'String', 'PUSH_KEY_SUFFIX', '\"_HUAWEI\"'
+            signingConfig signingConfigs.huawei
         }
 
         website {
@@ -150,13 +178,15 @@ android {
         }
     }
 
-    applicationVariants.forEach { variant ->
+    applicationVariants.configureEach { variant ->
         variant.outputs.each { output ->
             def abiName = output.getFilter("ABI") ?: 'universal'
             def postFix = abiPostFix.get(abiName, 0)
 
+            def flavour = (variant.flavorName == 'huawei') ? "-huawei" : ""
+
             if (postFix >= postFixSize) throw new AssertionError("postFix is too large")
-            output.outputFileName = output.outputFileName = "session-${variant.versionName}-${abiName}.apk"
+            output.outputFileName = output.outputFileName = "session-${variant.versionName}-${abiName}${flavour}.apk"
             output.versionCodeOverride = canonicalVersionCode * postFixSize + postFix
         }
     }
@@ -219,6 +249,12 @@ android {
     }
 }
 
+apply {
+    from("ipToCode.gradle.kts")
+}
+
+preBuild.dependsOn ipToCode
+
 dependencies {
     implementation project(':content-descriptions')
 
@@ -245,9 +281,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
-    implementation 'androidx.activity:activity-ktx:1.5.1'
-    implementation 'androidx.activity:activity-compose:1.5.1'
-    implementation 'androidx.fragment:fragment-ktx:1.5.3'
+    implementation 'androidx.activity:activity-ktx:1.9.2'
+    implementation 'androidx.activity:activity-compose:1.9.2'
+    implementation 'androidx.fragment:fragment-ktx:1.8.4'
     implementation "androidx.core:core-ktx:$coreVersion"
     implementation "androidx.work:work-runtime-ktx:2.7.1"
 
@@ -353,15 +389,21 @@ dependencies {
     testImplementation 'org.conscrypt:conscrypt-openjdk-uber:2.5.2' // For Robolectric
     testImplementation 'app.cash.turbine:turbine:1.1.0'
 
-    implementation 'com.github.bumptech.glide:compose:1.0.0-alpha.5'
-    implementation "androidx.compose.ui:ui:$composeVersion"
-    implementation "androidx.compose.animation:animation:$composeVersion"
-    implementation "androidx.compose.ui:ui-tooling:$composeVersion"
-    implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
-    implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
-    implementation "androidx.compose.material3:material3:1.2.1"
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4-android:$composeVersion"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
+    // compose
+    Dependency composeBom = platform('androidx.compose:compose-bom:2024.09.01')
+    implementation composeBom
+    testImplementation composeBom
+    androidTestImplementation composeBom
+
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.animation:animation"
+    implementation "androidx.compose.ui:ui-tooling"
+    implementation "androidx.compose.runtime:runtime-livedata"
+    implementation "androidx.compose.foundation:foundation-layout"
+    implementation "androidx.compose.material3:material3"
+
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4-android"
+    debugImplementation "androidx.compose.ui:ui-test-manifest"
 
     implementation "com.google.accompanist:accompanist-themeadapter-appcompat:0.33.1-alpha"
     implementation "com.google.accompanist:accompanist-permissions:0.36.0"

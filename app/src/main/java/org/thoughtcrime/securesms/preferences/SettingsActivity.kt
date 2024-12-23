@@ -134,6 +134,16 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         cropImage(inputFile, outputFile)
     }
 
+    private val hideRecoveryLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+
+        if(result.data?.getBooleanExtra(RecoveryPasswordActivity.RESULT_RECOVERY_HIDDEN, false) == true){
+            viewModel.permanentlyHidePassword()
+        }
+    }
+
     private val avatarSelection = AvatarSelection(this, onAvatarCropped, onPickImage)
 
     private var showAvatarDialog: Boolean by mutableStateOf(false)
@@ -163,11 +173,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         }
 
         binding.run {
-            profilePictureView.apply {
-                publicKey = viewModel.hexEncodedPublicKey
-                displayName = viewModel.getDisplayName()
-                update()
-            }
             profilePictureView.setOnClickListener {
                 binding.avatarDialog.isVisible = true
                 showAvatarDialog = true
@@ -183,7 +188,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         }
 
         binding.composeView.setThemedContent {
-            Buttons()
+            val recoveryHidden by viewModel.recoveryHidden.collectAsState()
+            Buttons(recoveryHidden = recoveryHidden)
         }
 
         lifecycleScope.launch {
@@ -196,6 +202,18 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             viewModel.refreshAvatar.collect {
                 binding.profilePictureView.recycle()
                 binding.profilePictureView.update()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.avatarData.collect {
+                if(it == null) return@collect
+
+                binding.profilePictureView.apply {
+                    publicKey = it.publicKey
+                    displayName = it.displayName
+                    update(it.recipient)
+                }
             }
         }
     }
@@ -390,7 +408,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     }
 
     @Composable
-    fun Buttons() {
+    fun Buttons(
+        recoveryHidden: Boolean
+    ) {
         Column(
             modifier = Modifier
                 .padding(horizontal = LocalDimensions.current.spacing)
@@ -452,12 +472,15 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                     Divider()
 
                     // Only show the recovery password option if the user has not chosen to permanently hide it
-                    if (!prefs.getHidePassword()) {
+                    if (!recoveryHidden) {
                         LargeItemButton(
                             R.string.sessionRecoveryPassword,
                             R.drawable.ic_shield_outline,
                             Modifier.contentDescription(R.string.AccessibilityId_sessionRecoveryPasswordMenuItem)
-                        ) { push<RecoveryPasswordActivity>() }
+                        ) {
+                            hideRecoveryLauncher.launch(Intent(baseContext, RecoveryPasswordActivity::class.java))
+                            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+                        }
                         Divider()
                     }
 
@@ -573,13 +596,11 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             buttons = listOf(
                 DialogButtonModel(
                     text = GetString(R.string.save),
-                    contentDescription = GetString(R.string.AccessibilityId_save),
                     enabled = state is TempAvatar,
                     onClick = saveAvatar
                 ),
                 DialogButtonModel(
                     text = GetString(R.string.remove),
-                    contentDescription = GetString(R.string.AccessibilityId_remove),
                     color = LocalColors.current.danger,
                     enabled = state is UserAvatar || // can remove is the user has an avatar set
                             (state is TempAvatar && state.hasAvatar),

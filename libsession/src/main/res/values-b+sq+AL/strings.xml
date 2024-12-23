@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> u largua si Administrator.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> dhe <b>{count} të tjerë</b> u larguan nga roli i Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> dhe <b>{other_name}</b> u larguan nga roli i Admin.</string>
-    <string name="adminSendingPromotion">Dërgimi i promovimit të administratorit</string>
     <string name="adminSettings">Rregullimet e Administratorit</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> dhe <b>{other_name}</b> u promovuan në Administratorë.</string>
     <string name="andMore">+{count}</string>
@@ -281,13 +280,11 @@
         <item quantity="one">Fshije Mesazhin</item>
         <item quantity="other">Fshini mesazhe</item>
     </plurals>
-    <string name="deleteMessageConfirm">A jeni të sigurt që doni ta fshini këtë mesazh?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Mesazhi u fshi</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ky mesazh u fshi</string>
     <string name="deleteMessageDeletedLocally">Ky mesazh u fshi në këtë pajisje</string>
-    <string name="deleteMessageDescriptionDevice">A jeni të sigurt që doni ta fshini këtë mesazh vetëm nga kjo pajisje?</string>
     <string name="deleteMessageDescriptionEveryone">A jeni të sigurt që doni ta fshini këtë mesazh për të gjithë?</string>
     <string name="deleteMessageDeviceOnly">Fshije vetëm në këtë pajisje</string>
     <string name="deleteMessageDevicesAll">Fshije në të gjitha pajisjet e mia</string>
@@ -296,8 +293,6 @@
         <item quantity="one">Dështoi të fshihej mesazhi</item>
         <item quantity="other">Dështoi të fshihen mesazhet</item>
     </plurals>
-    <string name="deleteMessagesConfirm">A jeni të sigurt që doni të fshini këto mesazhe?</string>
-    <string name="deleteMessagesDescriptionDevice">A jeni të sigurt që doni t\'i fshini këto mesazhe vetëm nga kjo pajisje?</string>
     <string name="deleteMessagesDescriptionEveryone">A jeni të sigurt që doni t\'i fshini këto mesazhe për të gjithë?</string>
     <string name="deleting">Po fshihet</string>
     <string name="developerToolsToggle">Shfaq/Fshih Mjete Zhvilluesi</string>
@@ -404,7 +399,6 @@
     <string name="groupInviteFailedMultiple">Dështoi ftesa e {name} dhe {count} të tjerëve në {group_name}</string>
     <string name="groupInviteFailedTwo">Dështoi ftesa e {name} dhe {other_name} në {group_name}</string>
     <string name="groupInviteFailedUser">Dështoi ftesa e {name} në {group_name}</string>
-    <string name="groupInviteSending">Dërgimi i ftesës</string>
     <string name="groupInviteSent">Ftesa dërguar</string>
     <string name="groupInviteSuccessful">Ftesa për grupin ishte e suksesshme</string>
     <string name="groupInviteVersion">Përdoruesit duhet të kenë versionin më të ri për të marrë ftesa</string>
@@ -426,7 +420,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> dhe <b>{count} të tjerë</b> u ftuat të bashkoheni me grupin.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> dhe <b>{other_name}</b> u ftuat të bashkoheni me grupin.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Ju</b> dhe <b>{count} të tjerë</b> u ftuat të bashkoheni me grupin. Historia e bisedës u ndanë.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Ju</b> dhe <b>{name}</b> u ftuat të bashkoheni me grupin. Historia e bisedës u ndanë.</string>
     <string name="groupMemberYouLeft"><b>Ju</b> braktisët grupin.</string>
     <string name="groupMembers">Anëtarë grupi</string>
     <string name="groupMembersNone">Nuk ka anëtarë të tjerë në këtë grup.</string>

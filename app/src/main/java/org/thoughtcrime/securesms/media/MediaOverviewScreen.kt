@@ -231,8 +231,8 @@ private fun SaveAttachmentWarningDialog(
         title = context.getString(R.string.warning),
         text = context.resources.getString(R.string.attachmentsWarning),
         buttons = listOf(
-            DialogButtonModel(GetString(R.string.save), GetString(R.string.AccessibilityId_saveAttachment), color = LocalColors.current.danger, onClick = onAccepted),
-            DialogButtonModel(GetString(android.R.string.cancel), GetString(R.string.AccessibilityId_cancel), dismissOnClick = true)
+            DialogButtonModel(GetString(R.string.save), color = LocalColors.current.danger, onClick = onAccepted),
+            DialogButtonModel(GetString(android.R.string.cancel), dismissOnClick = true)
         )
     )
 }

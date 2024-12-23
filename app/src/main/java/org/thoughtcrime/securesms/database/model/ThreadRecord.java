@@ -102,7 +102,11 @@ public class ThreadRecord extends DisplayRecord {
 
     @Override
     public CharSequence getDisplayBody(@NonNull Context context) {
-        if (isGroupUpdateMessage()) {
+        // no need to display anything if there are no messages
+        if(lastMessage == null){
+            return "";
+        }
+        else if (isGroupUpdateMessage()) {
             return context.getString(R.string.groupUpdated);
         } else if (isOpenGroupInvitation()) {
             return context.getString(R.string.communityInvitation);
@@ -144,14 +148,17 @@ public class ThreadRecord extends DisplayRecord {
                     .format().toString();
 
         } else if (MmsSmsColumns.Types.isMessageRequestResponse(type)) {
-            if (lastMessage.getRecipient().getAddress().serialize().equals(
-                    TextSecurePreferences.getLocalNumber(context))) {
-                return UtilKt.getSubbedCharSequence(
-                        context,
-                        R.string.messageRequestYouHaveAccepted,
-                        new Pair<>(NAME_KEY, getName())
-                );
+            try {
+                if (lastMessage.getRecipient().getAddress().serialize().equals(
+                        TextSecurePreferences.getLocalNumber(context))) {
+                    return UtilKt.getSubbedCharSequence(
+                            context,
+                            R.string.messageRequestYouHaveAccepted,
+                            new Pair<>(NAME_KEY, getName())
+                    );
+                }
             }
+            catch (Exception e){} // the above can throw a null exception
 
             return context.getString(R.string.messageRequestsAccepted);
         } else if (getCount() == 0) {

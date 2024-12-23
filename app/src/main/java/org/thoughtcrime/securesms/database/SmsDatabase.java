@@ -158,7 +158,7 @@ public class SmsDatabase extends MessagingDatabase {
 
     long threadId = getThreadIdForMessage(id);
 
-    DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
+    DatabaseComponent.get(context).threadDatabase().update(threadId, false);
     notifyConversationListeners(threadId);
   }
 
@@ -237,14 +237,18 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   @Override
-  public void markAsDeleted(long messageId, boolean read, boolean hasMention) {
+  public void markAsDeleted(long messageId, boolean isOutgoing, String displayedMessage) {
     SQLiteDatabase database     = databaseHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues();
     contentValues.put(READ, 1);
-    contentValues.put(BODY, "");
+    contentValues.put(BODY, displayedMessage);
     contentValues.put(HAS_MENTION, 0);
+    contentValues.put(STATUS, Status.STATUS_NONE);
     database.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {String.valueOf(messageId)});
-    updateTypeBitmask(messageId, Types.BASE_TYPE_MASK, Types.BASE_DELETED_TYPE);
+
+    updateTypeBitmask(messageId, Types.BASE_TYPE_MASK,
+            isOutgoing? MmsSmsColumns.Types.BASE_DELETED_OUTGOING_TYPE : MmsSmsColumns.Types.BASE_DELETED_INCOMING_TYPE
+    );
   }
 
   @Override
@@ -257,7 +261,7 @@ public class SmsDatabase extends MessagingDatabase {
 
     long threadId = getThreadIdForMessage(id);
 
-    DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
+    DatabaseComponent.get(context).threadDatabase().update(threadId, false);
     notifyConversationListeners(threadId);
   }
 
@@ -296,6 +300,28 @@ public class SmsDatabase extends MessagingDatabase {
     return isOutgoing;
   }
 
+  public boolean isDeletedMessage(long timestamp) {
+    SQLiteDatabase database     = databaseHelper.getWritableDatabase();
+    Cursor         cursor       = null;
+    boolean        isDeleted   = false;
+
+    try {
+      cursor = database.query(TABLE_NAME, new String[] { ID, THREAD_ID, ADDRESS, TYPE },
+              DATE_SENT + " = ?", new String[] { String.valueOf(timestamp) },
+              null, null, null, null);
+
+      while (cursor.moveToNext()) {
+        if (Types.isDeletedMessage(cursor.getLong(cursor.getColumnIndexOrThrow(TYPE)))) {
+          isDeleted = true;
+        }
+      }
+    } finally {
+      if (cursor != null) cursor.close();
+    }
+
+    return isDeleted;
+  }
+
   public void incrementReceiptCount(SyncMessageId messageId, boolean deliveryReceipt, boolean readReceipt) {
     SQLiteDatabase database     = databaseHelper.getWritableDatabase();
     Cursor         cursor       = null;
@@ -320,7 +346,7 @@ public class SmsDatabase extends MessagingDatabase {
                              ID + " = ?",
                              new String[] {String.valueOf(cursor.getLong(cursor.getColumnIndexOrThrow(ID)))});
 
-            DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
+            DatabaseComponent.get(context).threadDatabase().update(threadId, false);
             notifyConversationListeners(threadId);
             foundMessage = true;
           }
@@ -403,7 +429,7 @@ public class SmsDatabase extends MessagingDatabase {
 
     long threadId = getThreadIdForMessage(messageId);
 
-    DatabaseComponent.get(context).threadDatabase().update(threadId, true, true);
+    DatabaseComponent.get(context).threadDatabase().update(threadId, true);
     notifyConversationListeners(threadId);
     notifyConversationListListeners();
 
@@ -478,7 +504,7 @@ public class SmsDatabase extends MessagingDatabase {
       long           messageId = db.insert(TABLE_NAME, null, values);
 
       if (runThreadUpdate) {
-        DatabaseComponent.get(context).threadDatabase().update(threadId, true, true);
+        DatabaseComponent.get(context).threadDatabase().update(threadId, true);
       }
 
       if (message.getSubscriptionId() != -1) {
@@ -570,7 +596,7 @@ public class SmsDatabase extends MessagingDatabase {
     }
 
     if (runThreadUpdate) {
-      DatabaseComponent.get(context).threadDatabase().update(threadId, true, true);
+      DatabaseComponent.get(context).threadDatabase().update(threadId, true);
     }
     long lastSeen = DatabaseComponent.get(context).threadDatabase().getLastSeenAndHasSent(threadId).first();
     if (lastSeen < message.getSentTimestampMillis()) {
@@ -630,7 +656,7 @@ public class SmsDatabase extends MessagingDatabase {
     long threadId = getThreadIdForMessage(messageId);
     db.delete(TABLE_NAME, ID_WHERE, new String[] {messageId+""});
     notifyConversationListeners(threadId);
-    boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false, false);
+    boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false);
     return threadDeleted;
   }
 
@@ -650,7 +676,7 @@ public class SmsDatabase extends MessagingDatabase {
       ID + " IN (" + StringUtils.join(argsArray, ',') + ")",
       argValues
     );
-    boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
+    boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false);
     notifyConversationListeners(threadId);
     return threadDeleted;
   }

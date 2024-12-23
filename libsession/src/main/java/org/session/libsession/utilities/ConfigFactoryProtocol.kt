@@ -16,6 +16,8 @@ interface ConfigFactoryProtocol {
 
     fun conversationInConfig(publicKey: String?, groupPublicKey: String?, openGroupId: String?, visibleOnly: Boolean): Boolean
     fun canPerformChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean
+
+    fun getConfigTimestamp(forConfigObject: ConfigBase, publicKey: String): Long
 }
 
 interface ConfigFactoryUpdateListener {

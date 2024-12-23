@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> был(а) снят(а) с должности администратора.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> и <b>{count} других пользователей</b> были удалены админом.</string>
     <string name="adminRemovedUserOther">Пользователи <b>{name}</b> и <b>{other_name}</b> были удалены админом.</string>
-    <string name="adminSendingPromotion">Изменение статуса до уровня администратора</string>
     <string name="adminSettings">Настройки администратора</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> и <b>{other_name}</b> назначены администраторами.</string>
     <string name="andMore">+{count}</string>
@@ -286,7 +285,12 @@
         <item quantity="many">Удалить сообщения</item>
         <item quantity="other">Удалить сообщения</item>
     </plurals>
-    <string name="deleteMessageConfirm">Вы уверены, что хотите удалить это сообщение?</string>
+    <plurals name="deleteMessageConfirm">
+        <item quantity="one">Вы уверены, что хотите удалить это сообщение?</item>
+        <item quantity="few">Вы уверены, что хотите удалить эти сообщения?</item>
+        <item quantity="many">Вы уверены, что хотите удалить эти сообщения?</item>
+        <item quantity="other">Вы уверены, что хотите удалить эти сообщения?</item>
+    </plurals>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Сообщение удалено</item>
         <item quantity="few">Сообщения удалены</item>
@@ -295,7 +299,12 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Это сообщение было удалено</string>
     <string name="deleteMessageDeletedLocally">Это сообщение было удалено на этом устройстве</string>
-    <string name="deleteMessageDescriptionDevice">Вы уверены, что хотите удалить это сообщение (оно будет удалено только с этого устройства)?</string>
+    <plurals name="deleteMessageDescriptionDevice">
+        <item quantity="one">Вы уверены, что хотите удалить это сообщение только с этого устройства?</item>
+        <item quantity="few">Вы уверены, что хотите удалить эти сообщения только с этого устройства?</item>
+        <item quantity="many">Вы уверены, что хотите удалить эти сообщения только с этого устройства?</item>
+        <item quantity="other">Вы уверены, что хотите удалить эти сообщения только с этого устройства?</item>
+    </plurals>
     <string name="deleteMessageDescriptionEveryone">Вы уверены, что хотите удалить это сообщение для всех?</string>
     <string name="deleteMessageDeviceOnly">Удалить только на этом устройстве</string>
     <string name="deleteMessageDevicesAll">Удалить на всех моих устройствах</string>
@@ -306,8 +315,6 @@
         <item quantity="many">Не удалось удалить сообщения</item>
         <item quantity="other">Не удалось удалить сообщения</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Вы уверены, что хотите удалить эти сообщения?</string>
-    <string name="deleteMessagesDescriptionDevice">Вы уверены, что хотите удалить эти сообщения (они будут удалены только с этого устройства)?</string>
     <string name="deleteMessagesDescriptionEveryone">Вы уверены, что хотите удалить эти сообщения для всех?</string>
     <string name="deleting">Удаление</string>
     <string name="developerToolsToggle">Включить инструменты разработчика</string>
@@ -416,7 +423,12 @@
     <string name="groupInviteFailedMultiple">Не удалось пригласить {name} и {count} других в {group_name}</string>
     <string name="groupInviteFailedTwo">Не удалось пригласить {name} и {other_name} в {group_name}</string>
     <string name="groupInviteFailedUser">Не удалось пригласить {name} в {group_name}</string>
-    <string name="groupInviteSending">Отправка приглашения</string>
+    <plurals name="groupInviteSending">
+        <item quantity="one">Отправка приглашения</item>
+        <item quantity="few">Отправка приглашений</item>
+        <item quantity="many">Отправка приглашений</item>
+        <item quantity="other">Отправка приглашений</item>
+    </plurals>
     <string name="groupInviteSent">Приглашение отправлено</string>
     <string name="groupInviteSuccessful">Приглашение в группу успешно</string>
     <string name="groupInviteVersion">Пользователи должны иметь последнюю версию приложения для получения приглашений</string>
@@ -438,7 +450,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> и <b>{count} других человек</b> были приглашены в группу.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> и <b>{other_name}</b> были приглашены в группу.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Вы</b> и <b>{count} других пользователей</b> приглашены вступить в группу. История чата была передана.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Вы</b> и пользователь <b>{name}</b> приглашены вступить в группу. История чата была передана.</string>
     <string name="groupMemberYouLeft"><b>Вы</b> покинули группу.</string>
     <string name="groupMembers">Участники группы</string>
     <string name="groupMembersNone">В этой группе нет других участников.</string>
@@ -531,7 +542,7 @@
     <string name="max">Максимальный</string>
     <string name="media">Медиа</string>
     <plurals name="members">
-        <item quantity="one">%1$d участник</item>
+        <item quantity="one">%1$d Участник</item>
         <item quantity="few">%1$d участника</item>
         <item quantity="many">%1$d участников</item>
         <item quantity="other">%1$d участников</item>

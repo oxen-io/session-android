@@ -36,6 +36,7 @@ class ProfilePictureView @JvmOverloads constructor(
     var displayName: String? = null
     var additionalPublicKey: String? = null
     var additionalDisplayName: String? = null
+    var recipient: Recipient? = null
 
     private val profilePicturesCache = mutableMapOf<View, Recipient>()
     private val resourcePadding by lazy {
@@ -51,6 +52,7 @@ class ProfilePictureView @JvmOverloads constructor(
     }
 
     fun update(recipient: Recipient) {
+        this.recipient = recipient
         recipient.run { update(address, isClosedGroupRecipient, isOpenGroupInboxRecipient) }
     }
 
@@ -121,9 +123,18 @@ class ProfilePictureView @JvmOverloads constructor(
 
     private fun setProfilePictureIfNeeded(imageView: ImageView, publicKey: String, displayName: String?) {
         if (publicKey.isNotEmpty()) {
-            val recipient = Recipient.from(context, Address.fromSerialized(publicKey), false)
+            // if we already have a recipient that matches the current key, reuse it
+            val recipient = if(this.recipient != null && this.recipient?.address?.serialize() == publicKey){
+                this.recipient!!
+            }
+            else {
+                this.recipient = Recipient.from(context, Address.fromSerialized(publicKey), false)
+                this.recipient!!
+            }
+            
             if (profilePicturesCache[imageView] == recipient) return
-            profilePicturesCache[imageView] = recipient
+            // recipient is mutable so without cloning it the line above always returns true as the changes to the underlying recipient happens on both shared instances
+            profilePicturesCache[imageView] = recipient.clone()
             val signalProfilePicture = recipient.contactPhoto
             val avatar = (signalProfilePicture as? ProfileContactPhoto)?.avatarObject
 

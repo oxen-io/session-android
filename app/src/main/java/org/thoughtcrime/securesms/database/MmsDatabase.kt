@@ -106,6 +106,23 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 .any { MmsSmsColumns.Types.isOutgoingMessageType(it) }
         }
 
+    fun isDeletedMessage(timestamp: Long): Boolean =
+        databaseHelper.writableDatabase.query(
+            TABLE_NAME,
+            arrayOf(ID, THREAD_ID, MESSAGE_BOX, ADDRESS),
+            DATE_SENT + " = ?",
+            arrayOf(timestamp.toString()),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            cursor.asSequence()
+                .map { cursor.getColumnIndexOrThrow(MESSAGE_BOX) }
+                .map(cursor::getLong)
+                .any { MmsSmsColumns.Types.isDeletedMessage(it) }
+        }
+
     fun incrementReceiptCount(
         messageId: SyncMessageId,
         timestamp: Long,
@@ -158,7 +175,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                         )
                         get(context).groupReceiptDatabase()
                             .update(ourAddress, id, status, timestamp)
-                        get(context).threadDatabase().update(threadId, false, true)
+                        get(context).threadDatabase().update(threadId, false)
                         notifyConversationListeners(threadId)
                     }
                 }
@@ -257,7 +274,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     " WHERE " + ID + " = ?", arrayOf(id.toString() + "")
         )
         if (threadId.isPresent) {
-            get(context).threadDatabase().update(threadId.get(), false, true)
+            get(context).threadDatabase().update(threadId.get(), false)
         }
     }
 
@@ -304,18 +321,21 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         db.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(messageId.toString()))
     }
 
-    override fun markAsDeleted(messageId: Long, read: Boolean, hasMention: Boolean) {
+    override fun markAsDeleted(messageId: Long, isOutgoing: Boolean, displayedMessage: String) {
         val database = databaseHelper.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(READ, 1)
-        contentValues.put(BODY, "")
+        contentValues.put(BODY, displayedMessage)
         contentValues.put(HAS_MENTION, 0)
         database.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(messageId.toString()))
         val attachmentDatabase = get(context).attachmentDatabase()
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })
         val threadId = getThreadIdForMessage(messageId)
 
-        markAs(messageId, MmsSmsColumns.Types.BASE_DELETED_TYPE, threadId)
+        val deletedType = if (isOutgoing) {  MmsSmsColumns.Types.BASE_DELETED_OUTGOING_TYPE} else {
+            MmsSmsColumns.Types.BASE_DELETED_INCOMING_TYPE
+        }
+        markAs(messageId, deletedType, threadId)
     }
 
     override fun markExpireStarted(messageId: Long, startedTimestamp: Long) {
@@ -626,7 +646,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         )
         if (!MmsSmsColumns.Types.isExpirationTimerUpdate(mailbox)) {
             if (runThreadUpdate) {
-                get(context).threadDatabase().update(threadId, true, true)
+                get(context).threadDatabase().update(threadId, true)
             }
         }
         notifyConversationListeners(threadId)
@@ -771,7 +791,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             }
             setHasSent(threadId, true)
             if (runThreadUpdate) {
-                update(threadId, true, true)
+                update(threadId, true)
             }
         }
         return messageId
@@ -910,7 +930,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         groupReceiptDatabase.deleteRowsForMessage(messageId)
         val database = databaseHelper.writableDatabase
         database!!.delete(TABLE_NAME, ID_WHERE, arrayOf(messageId.toString()))
-        val threadDeleted = get(context).threadDatabase().update(threadId, false, true)
+        val threadDeleted = get(context).threadDatabase().update(threadId, false)
         notifyConversationListeners(threadId)
         notifyStickerListeners()
         notifyStickerPackListeners()
@@ -928,7 +948,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             argValues
         )
 
-        val threadDeleted = get(context).threadDatabase().update(threadId, false, true)
+        val threadDeleted = get(context).threadDatabase().update(threadId, false)
         notifyConversationListeners(threadId)
         notifyStickerListeners()
         notifyStickerPackListeners()
@@ -1125,7 +1145,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
         val threadDb = get(context).threadDatabase()
         for (threadId in threadIds) {
-            val threadDeleted = threadDb.update(threadId, false, true)
+            val threadDeleted = threadDb.update(threadId, false)
             notifyConversationListeners(threadId)
         }
         notifyStickerListeners()

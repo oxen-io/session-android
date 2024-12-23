@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.database
 
 import android.content.Context
 import android.net.Uri
-import network.loki.messenger.R
 import java.security.MessageDigest
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_HIDDEN
@@ -74,6 +73,8 @@ import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol.Co
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.Recipient.DisappearingState
+import org.session.libsession.utilities.recipients.MessageType
+import org.session.libsession.utilities.recipients.getType
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
@@ -190,11 +191,6 @@ open class Storage(
         return Profile(displayName, profileKey, profilePictureUrl)
     }
 
-    override fun setProfileAvatar(recipient: Recipient, profileAvatar: String?) {
-        val database = DatabaseComponent.get(context).recipientDatabase()
-        database.setProfileAvatar(recipient, profileAvatar)
-    }
-
     override fun setProfilePicture(recipient: Recipient, newProfilePicture: String?, newProfileKey: ByteArray?) {
         val db = DatabaseComponent.get(context).recipientDatabase()
         db.setProfileAvatar(recipient, newProfilePicture)
@@ -215,7 +211,7 @@ open class Storage(
         TextSecurePreferences.setProfilePictureURL(context, newProfilePicture)
 
         if (newProfileKey != null) {
-            JobQueue.shared.add(RetrieveProfileAvatarJob(newProfilePicture, ourRecipient.address))
+            JobQueue.shared.add(RetrieveProfileAvatarJob(newProfilePicture, ourRecipient.address, newProfileKey))
         }
     }
 
@@ -286,7 +282,7 @@ open class Storage(
 
     override fun updateThread(threadId: Long, unarchive: Boolean) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
-        threadDb.update(threadId, unarchive, false)
+        threadDb.update(threadId, unarchive)
     }
 
     override fun persist(message: VisibleMessage,
@@ -756,6 +752,12 @@ open class Storage(
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val address = fromSerialized(author)
         return database.getMessageFor(timestamp, address)?.run { getId() to isMms }
+    }
+
+    override fun getMessageType(timestamp: Long, author: String): MessageType? {
+        val database = DatabaseComponent.get(context).mmsSmsDatabase()
+        val address = fromSerialized(author)
+        return database.getMessageFor(timestamp, address)?.individualRecipient?.getType()
     }
 
     override fun updateSentTimestamp(
@@ -1258,6 +1260,16 @@ open class Storage(
             }
             setRecipientHash(recipient, contact.hashCode().toString())
         }
+
+        // if we have contacts locally but that are missing from the config, remove their corresponding thread
+        val  removedContacts = getAllContacts().filter { localContact ->
+            moreContacts.firstOrNull {
+                it.id == localContact.accountID
+            } == null
+        }
+        removedContacts.forEach {
+            getThreadId(fromSerialized(it.accountID))?.let(::deleteConversation)
+        }
     }
 
     override fun addContacts(contacts: List<ConfigurationMessage.Contact>) {
@@ -1582,6 +1594,10 @@ open class Storage(
         DatabaseComponent.get(context).recipientDatabase().setApproved(recipient, approved)
         if (recipient.isLocalNumber || !recipient.isContactRecipient) return
         configFactory.contacts?.upsertContact(recipient.address.serialize()) {
+            // if the contact wasn't approved before but is approved now, make sure it's visible
+            if(approved && !this.approved) this.priority = PRIORITY_VISIBLE
+
+            // update approval
             this.approved = approved
         }
     }
@@ -1675,12 +1691,21 @@ open class Storage(
         val timestamp = reaction.timestamp
         val localId = reaction.localId
         val isMms = reaction.isMms
+
         val messageId = if (localId != null && localId > 0 && isMms != null) {
+            // bail early is the message is marked as deleted
+            val messagingDatabase: MessagingDatabase = if (isMms == true) DatabaseComponent.get(context).mmsDatabase()
+            else DatabaseComponent.get(context).smsDatabase()
+            if(messagingDatabase.getMessageRecord(localId)?.isDeleted == true) return
+
             MessageId(localId, isMms)
         } else if (timestamp != null && timestamp > 0) {
             val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(timestamp) ?: return
+            if (messageRecord.isDeleted) return
+
             MessageId(messageRecord.id, messageRecord.isMms)
         } else return
+        
         DatabaseComponent.get(context).reactionDatabase().addReaction(
             messageId,
             ReactionRecord(
@@ -1722,6 +1747,12 @@ open class Storage(
 
     override fun deleteReactions(messageId: Long, mms: Boolean) {
         DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(MessageId(messageId, mms))
+    }
+
+    override fun deleteReactions(messageIds: List<Long>, mms: Boolean) {
+        DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(
+            messageIds.map { MessageId(it, mms) }
+        )
     }
 
     override fun setBlocked(recipients: Iterable<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean) {

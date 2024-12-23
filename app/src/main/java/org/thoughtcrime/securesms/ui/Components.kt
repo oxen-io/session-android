@@ -275,23 +275,19 @@ fun ItemButton(
     onClick: () -> Unit
 ) {
     TextButton(
-        modifier = modifier.fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .heightIn(min = minHeight)
-            .padding(horizontal = LocalDimensions.current.xsSpacing),
+        modifier = modifier.fillMaxWidth(),
         colors = colors,
         onClick = onClick,
+        contentPadding = PaddingValues(),
         shape = RectangleShape,
     ) {
         Box(
-            modifier = Modifier.fillMaxHeight()
-                .aspectRatio(1f)
-                .align(Alignment.CenterVertically)
-        ) {
-            icon()
-        }
-
-        Spacer(modifier = Modifier.width(LocalDimensions.current.smallSpacing))
+            modifier = Modifier
+                .padding(horizontal = LocalDimensions.current.xxsSpacing)
+                .size(minHeight)
+                .align(Alignment.CenterVertically),
+            content = icon
+        )
 
         Text(
             text,
@@ -308,6 +304,18 @@ fun ItemButton(
 fun PreviewItemButton() {
     PreviewTheme {
         ItemButton(
+            textId = R.string.groupCreate,
+            icon = R.drawable.ic_group,
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewLargeItemButton() {
+    PreviewTheme {
+        LargeItemButton(
             textId = R.string.groupCreate,
             icon = R.drawable.ic_group,
             onClick = {}

@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> è stato rimosso come amministratore.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> e <b>altri {count}</b> sono stati rimossi come Amministratori.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> e <b>{other_name}</b> sono stati rimossi come amministratori.</string>
-    <string name="adminSendingPromotion">Invio promozione ad amministratore</string>
     <string name="adminSettings">Impostazioni amministratore</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> e <b>{other_name}</b> sono ora amministratori.</string>
     <string name="andMore">+{count}</string>
@@ -143,6 +142,7 @@
     <string name="callsInProgress">Chiamata in corso</string>
     <string name="callsIncoming">Chiamata in arrivo da {name}</string>
     <string name="callsIncomingUnknown">Chiamata in arrivo</string>
+    <string name="callsMicrophonePermissionsRequired">Hai perso una chiamata da <b>{name}</b> perché non hai concesso l\'accesso al <b>microfono</b>.</string>
     <string name="callsMissed">Chiamata persa</string>
     <string name="callsMissedCallFrom">Chiamata persa da {name}</string>
     <string name="callsNotificationsRequired">Le chiamate vocali e video richiedono che le notifiche siano abilitate nelle impostazioni di sistema del dispositivo.</string>
@@ -202,6 +202,7 @@
     <string name="communityInvitation">Invito a una Comunità</string>
     <string name="communityJoin">Unisciti alla Comunità</string>
     <string name="communityJoinDescription">Sei sicuro di voler unirti a {community_name}?</string>
+    <string name="communityJoinError">Impossibile unirsi alla community</string>
     <string name="communityJoinOfficial">Oppure unisciti a uno di questi...</string>
     <string name="communityJoined">Sei entrato nella Comunità</string>
     <string name="communityJoinedAlready">Fai già parte di questa Comunità.</string>
@@ -280,14 +281,12 @@
         <item quantity="one">Elimina Messaggio</item>
         <item quantity="other">Elimina Messaggi</item>
     </plurals>
-    <string name="deleteMessageConfirm">Sei sicuro di voler eliminare questo messaggio?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Messaggio eliminato</item>
         <item quantity="other">Messaggi eliminati</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">Questo messaggio è stato eliminato</string>
     <string name="deleteMessageDeletedLocally">Questo messaggio è stato eliminato su questo dispositivo</string>
-    <string name="deleteMessageDescriptionDevice">Sei sicuro di voler eliminare questo messaggio solo da questo dispositivo?</string>
     <string name="deleteMessageDescriptionEveryone">Sei sicuro di voler eliminare questo messaggio per tutti?</string>
     <string name="deleteMessageDeviceOnly">Elimina solo da questo dispositivo</string>
     <string name="deleteMessageDevicesAll">Elimina da tutti i miei dispositivi</string>
@@ -296,8 +295,6 @@
         <item quantity="one">Impossibile eliminare il messaggio</item>
         <item quantity="other">Impossibile eliminare i messaggi</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Sei sicuro di voler eliminare questi messaggi?</string>
-    <string name="deleteMessagesDescriptionDevice">Sei sicuro di voler eliminare questi messaggi solo da questo dispositivo?</string>
     <string name="deleteMessagesDescriptionEveryone">Sei sicuro di voler eliminare questi messaggi per tutti?</string>
     <string name="deleting">Eliminazione</string>
     <string name="developerToolsToggle">Apri gli strumenti di sviluppo</string>
@@ -404,9 +401,9 @@
     <string name="groupInviteFailedMultiple">Impossibile invitare {name} e altri {count} su {group_name}</string>
     <string name="groupInviteFailedTwo">Impossibile invitare {name} e {other_name} su {group_name}</string>
     <string name="groupInviteFailedUser">Impossibile invitare {name} su {group_name}</string>
-    <string name="groupInviteSending">Invio invito</string>
     <string name="groupInviteSent">Invito inviato</string>
     <string name="groupInviteSuccessful">Invito al gruppo riuscito</string>
+    <string name="groupInviteVersion">Gli utenti devono disporre della versione più recente per ricevere gli inviti</string>
     <string name="groupInviteYou"><b>Sei stata invitato</b> a unirti al gruppo.</string>
     <string name="groupInviteYouAndMoreNew"><b>Tu</b> e <b>{count} altri</b> vi siete uniti al gruppo.</string>
     <string name="groupInviteYouAndOtherNew"><b>Tu</b> e <b>{other_name}</b> fate ora parte del gruppo.</string>
@@ -425,7 +422,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> e <b>altri {count}</b> hanno ricevuto un invito a unirsi al gruppo.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> e <b>{other_name}</b> hanno ricevuto un invito a unirsi al gruppo.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Tu</b> e <b>altri {count}</b> avete ricevuto un invito a unirvi al gruppo. La cronologia della chat è condivisa.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Tu</b> e <b>{name}</b> avete ricevuto un invito a unirvi al gruppo. La cronologia della chat è condivisa.</string>
     <string name="groupMemberYouLeft"><b>Hai</b> lasciato il gruppo.</string>
     <string name="groupMembers">Membri del gruppo</string>
     <string name="groupMembersNone">Non ci sono altri membri in questo gruppo.</string>

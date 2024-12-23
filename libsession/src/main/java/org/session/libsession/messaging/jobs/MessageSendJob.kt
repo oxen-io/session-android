@@ -37,6 +37,13 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
         val message = message as? VisibleMessage
         val storage = MessagingModuleConfiguration.shared.storage
 
+        // do not attempt to send if the message is marked as deleted
+        message?.sentTimestamp?.let{
+            if(messageDataProvider.isDeletedMessage(it)){
+                return@execute
+            }
+        }
+
         val sentTimestamp = this.message.sentTimestamp
         val sender = storage.getUserPublicKey()
         if (sentTimestamp != null && sender != null) {
@@ -107,7 +114,10 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
         Log.w(TAG, "Failed to send $message::class.simpleName.")
         val message = message as? VisibleMessage
         if (message != null) {
-            if (!MessagingModuleConfiguration.shared.messageDataProvider.isOutgoingMessage(message.sentTimestamp!!)) {
+            if (
+                MessagingModuleConfiguration.shared.messageDataProvider.isDeletedMessage(message.sentTimestamp!!) ||
+                !MessagingModuleConfiguration.shared.messageDataProvider.isOutgoingMessage(message.sentTimestamp!!)
+                ) {
                 return // The message has been deleted
             }
         }

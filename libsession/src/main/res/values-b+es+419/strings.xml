@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> fue removido como Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> y <b>{count} más</b> fueron removidos como Admins.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> y <b>{other_name}</b> fueron removidos como Admins.</string>
-    <string name="adminSendingPromotion">Enviando promoción a admin</string>
     <string name="adminSettings">Configuración del administrador</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> y <b>{other_name}</b> fueron promovidos a Admin.</string>
     <string name="andMore">+{count}</string>
@@ -282,14 +281,12 @@
         <item quantity="one">Eliminar el mensaje</item>
         <item quantity="other">Eliminar el mensaje</item>
     </plurals>
-    <string name="deleteMessageConfirm">¿Estás seguro de que deseas eliminar este mensaje?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Mensaje eliminado</item>
         <item quantity="other">Mensajes eliminados</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">Este mensaje ha sido eliminado</string>
     <string name="deleteMessageDeletedLocally">Este mensaje ha sido eliminado en este dispositivo</string>
-    <string name="deleteMessageDescriptionDevice">¿Estás seguro de que deseas eliminar este mensaje solo de este dispositivo?</string>
     <string name="deleteMessageDescriptionEveryone">¿Estás seguro de que deseas eliminar este mensaje para todos?</string>
     <string name="deleteMessageDeviceOnly">Eliminar solo en este dispositivo</string>
     <string name="deleteMessageDevicesAll">Eliminar en todos mis dispositivos</string>
@@ -298,8 +295,6 @@
         <item quantity="one">Error al eliminar el mensaje</item>
         <item quantity="other">Error al eliminar los mensajes</item>
     </plurals>
-    <string name="deleteMessagesConfirm">¿Estás seguro de que deseas eliminar estos mensajes?</string>
-    <string name="deleteMessagesDescriptionDevice">¿Estás seguro de que quieres eliminar estos mensajes solo de este dispositivo?</string>
     <string name="deleteMessagesDescriptionEveryone">¿Estás seguro de que quieres eliminar estos mensajes para todos?</string>
     <string name="deleting">Eliminando</string>
     <string name="developerToolsToggle">Activar herramientas de desarrollador</string>
@@ -406,7 +401,6 @@
     <string name="groupInviteFailedMultiple">No se pudo invitar a {name} y {count} otros a {group_name}</string>
     <string name="groupInviteFailedTwo">No se pudo invitar a {name} y {other_name} a {group_name}</string>
     <string name="groupInviteFailedUser">No se pudo invitar a {name} a {group_name}</string>
-    <string name="groupInviteSending">Enviando invitación</string>
     <string name="groupInviteSent">Invitación enviada</string>
     <string name="groupInviteSuccessful">Invitación al grupo exitosa</string>
     <string name="groupInviteVersion">Los usuarios deben tener la última versión para recibir invitaciones.</string>
@@ -428,7 +422,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> y <b>{count} más</b> fueron invitados a unirse al grupo.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> y <b>{other_name}</b> fueron invitados a unirse al grupo.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Tú</b> y <b>{count}</b> más fueron invitados a unirse al grupo. El historial de chat fue compartido.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Tú</b> y <b>{name}</b> fueron invitados a unirse al grupo. El historial de chat fue compartido.</string>
     <string name="groupMemberYouLeft"><b>Tú</b> abandonaste el grupo.</string>
     <string name="groupMembers">Miembros del grupo</string>
     <string name="groupMembersNone">No hay otros miembros en este grupo.</string>

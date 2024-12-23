@@ -21,7 +21,7 @@
     <string name="adminPromoteMoreDescription">क्या आप वाकई <b>{name}</b> और <b>{count} अन्य</b> को एडमिन के रूप में बढ़ावा देना चाहते हैं? एडमिन्स को हटाया नहीं जा सकता है।</string>
     <string name="adminPromoteToAdmin">एडमिन में पदोन्नत करें</string>
     <string name="adminPromoteTwoDescription">क्या आप वाकई <b>{name}</b> और <b>{other_name}</b> को एडमिन के रूप में बढ़ावा देना चाहते हैं? एडमिन्स को हटाया नहीं जा सकता है।</string>
-    <string name="adminPromotedToAdmin"><b>{name}</b> को Admin बनाया गया।</string>
+    <string name="adminPromotedToAdmin"><b>{name}</b> को एडमिन बनाया गया।</string>
     <string name="adminPromotionFailed">एडमिन पदोन्नति विफल रही</string>
     <string name="adminPromotionFailedDescription">{name} को {group_name} में पदोन्नत करने में विफल</string>
     <string name="adminPromotionFailedDescriptionMultiple">{name} और {count} अन्य को {group_name} में पदोन्नत करने में विफल</string>
@@ -33,10 +33,9 @@
     <string name="adminRemoveFailed">{name} को एडमिन के रूप में हटाने में विफल।</string>
     <string name="adminRemoveFailedMultiple"><b>{name}</b> और <b>{count} अन्य</b> को व्यवस्थापक पद से हटाने में विफल |</string>
     <string name="adminRemoveFailedOther"><b>{name}</b> और <b>{other_name}</b> व्यवस्थापक पद  से हटाने में विफल |</string>
-    <string name="adminRemovedUser"><b>{name}</b> को Admin से हटा दिया गया।</string>
+    <string name="adminRemovedUser"><b>{name}</b> को एडमिन से हटा दिया गया।</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> और <b>{count} अन्य</b> को व्यवस्थापक पद से हटा दिया गया |</string>
     <string name="adminRemovedUserOther"><b>{name}</b> and <b>{other_name}</b> को व्यवस्थापक पद से हटा दिया गया |</string>
-    <string name="adminSendingPromotion">एडमिन प्रमोशन भेजा जा रहा है</string>
     <string name="adminSettings">एडमिन सेटिंग्स</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> और <b>{other_name}</b> को Admin बनाया गया।</string>
     <string name="andMore">+{count}</string>
@@ -282,24 +281,20 @@
         <item quantity="one">संदेश मिटाएं</item>
         <item quantity="other">संदेश मिटाएं</item>
     </plurals>
-    <string name="deleteMessageConfirm">क्या आप वाकई इस संदेश को हटाना चाहते हैं?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">संदेश मिटाया गया</item>
         <item quantity="other">संदेश मिटाये गए</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">यह संदेश हटा दिया गया है</string>
     <string name="deleteMessageDeletedLocally">यह संदेश इस डिवाइस पर हटा दिया गया है</string>
-    <string name="deleteMessageDescriptionDevice">क्या आप वाकई केवल इस डिवाइस से इस संदेश को हटाना चाहते हैं?</string>
     <string name="deleteMessageDescriptionEveryone">क्या आप वाकई इस संदेश को सभी के लिए हटाना चाहते हैं?</string>
     <string name="deleteMessageDeviceOnly">केवल इस डिवाइस पर मिटाएँ</string>
     <string name="deleteMessageDevicesAll">सभी उपकरणों पर मिटाएँ</string>
     <string name="deleteMessageEveryone">सभी के लिए मिटायें |</string>
     <plurals name="deleteMessageFailed">
-        <item quantity="one">संदेश को हटाने में विफल रहा</item>
+        <item quantity="one">संदेश हटाने में विफल</item>
         <item quantity="other">संदेशों को हटाने में विफल रहा</item>
     </plurals>
-    <string name="deleteMessagesConfirm">क्या आप वाकई इन संदेशों को मिटाना चाहते हैं?</string>
-    <string name="deleteMessagesDescriptionDevice">क्या आप वाकई केवल इस डिवाइस से इन संदेशों को हटाना चाहते हैं?</string>
     <string name="deleteMessagesDescriptionEveryone">क्या आप वाकई सभी के लिए इन संदेशों को हटाना चाहते हैं?</string>
     <string name="deleting">हटाया जा रहा है</string>
     <string name="developerToolsToggle">डेवलपर टूल टॉगल करें</string>
@@ -406,7 +401,6 @@
     <string name="groupInviteFailedMultiple">{name} और {count} अन्य को {group_name} में आमंत्रित करने में विफल</string>
     <string name="groupInviteFailedTwo">{name} और {other_name} को {group_name} में आमंत्रित करने में विफल</string>
     <string name="groupInviteFailedUser">{name} को {group_name} में आमंत्रित करने में विफल</string>
-    <string name="groupInviteSending">निमंत्रण भेजा जा रहा है</string>
     <string name="groupInviteSent">आमंत्रण भेजा गया</string>
     <string name="groupInviteSuccessful">समूह आमंत्रण सफल</string>
     <string name="groupInviteVersion">निमंत्रण प्राप्त करने के लिए उपयोगकर्ताओं के पास नवीनतम रिलीज़ होनी चाहिए</string>
@@ -421,14 +415,13 @@
     <string name="groupMemberLeft"><b>{name}</b> ने समूह छोड़ दिया।</string>
     <string name="groupMemberLeftMultiple"><b>{name}</b> और <b>{count} अन्य</b> समूह से निकल गए।</string>
     <string name="groupMemberLeftTwo"><b>{name}</b> और <b>{other_name}</b> समूह से निकल गए।</string>
-    <string name="groupMemberNew"><b>{name}</b> समूह में शामिल हो गए।</string>
+    <string name="groupMemberNew"><b>{name}</b> समूह में शामिल के लिए आमंत्रित किया है।</string>
     <string name="groupMemberNewHistory"><b>{name}</b> को समूह में शामिल होने के लिए आमंत्रित किया गया। चैट इतिहास साझा किया गया।</string>
     <string name="groupMemberNewHistoryMultiple"><b>{name}</b> और <b>{count} अन्य</b> को समूह में शामिल होने के लिए आमंत्रित किया गया। चैट इतिहास साझा किया गया।</string>
     <string name="groupMemberNewHistoryTwo"><b>{name}</b> और <b>{other_name}</b> को समूह में शामिल होने के लिए आमंत्रित किया गया। चैट इतिहास साझा किया गया।</string>
     <string name="groupMemberNewMultiple"><b>{name}</b> और <b>{count} अन्य</b> को समूह में शामिल होने के लिए आमंत्रित किया गया।</string>
     <string name="groupMemberNewTwo"><b>{name}</b> और <b>{other_name}</b> को समूह में शामिल होने के लिए आमंत्रित किया गया था।</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>आप</b> और <b>{count} अन्य</b> को समूह में शामिल होने के लिए आमंत्रित किया गया। चैट इतिहास साझा किया गया।</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>आप</b> और <b>{name}</b> को समूह में शामिल होने के लिए आमंत्रित किया गया। चैट इतिहास साझा किया गया।</string>
     <string name="groupMemberYouLeft"><b>आप</b> ने समूह छोड़ दिया।</string>
     <string name="groupMembers">समूह के सदस्य</string>
     <string name="groupMembersNone">इस समूह में कोई अन्य सदस्य नहीं है।</string>
@@ -527,7 +520,7 @@
     <string name="membersAddAccountIdOrOns">खाता आईडी या ONS जोड़ें</string>
     <string name="membersInvite">मित्रों को आमंत्रित करें</string>
     <plurals name="membersInviteSend">
-        <item quantity="one">आमंत्रण सेंड करें</item>
+        <item quantity="one">आमंत्रण भेजे</item>
         <item quantity="other">आमंत्रण सेंड करें</item>
     </plurals>
     <string name="membersInviteShareDescription">क्या आप <b>{name}</b> के साथ समूह संदेश इतिहास साझा करना चाहेंगे?</string>
@@ -684,7 +677,7 @@
     <string name="permissionsCameraDenied">{app_name} को फ़ोटो और वीडियो लेने के लिए कैमरा अनुमति की आवश्यकता होती है, लेकिन इसे स्थायी रूप से मना कर दिया गया है। सेटिंग्स → अनुमतियां पर टैप करें और \"कैमरा\" चालू करें।</string>
     <string name="permissionsFaceId">{app_name} पर स्क्रीन लॉक फीचर Face ID का उपयोग करता है।</string>
     <string name="permissionsKeepInSystemTray">सिस्टम ट्रे में रखें</string>
-    <string name="permissionsKeepInSystemTrayDescription">{app_name} तब भी पृष्ठभूमि में चलता रहता है जब आप विंडो बंद करते हैं</string>
+    <string name="permissionsKeepInSystemTrayDescription">जब आप विंडो बंद करते हैं तो {app_name} पृष्ठभूमि में चलता रहता है</string>
     <string name="permissionsLibrary">{app_name} को जारी रखने के लिए फ़ोटो लाइब्रेरी पहुंच की आवश्यकता है। आप iOS सेटिंग्स में पहुंच सक्षम कर सकते हैं।</string>
     <string name="permissionsMicrophone">माइक्रोफ़ोन</string>
     <string name="permissionsMicrophoneAccessRequired">{app_name} को कॉल करने और ऑडियो संदेश भेजने के लिए माइक्रोफ़ोन अनुमति की आवश्यकता है, लेकिन इसे स्थायी रूप से मना कर दिया गया है। सेटिंग्स → अनुमतियां पर टैप करें, और \"माइक्रोफ़ोन\" चालू करें।</string>
@@ -812,7 +805,7 @@
     <string name="updateDownloaded">अपडेट इंस्टॉल हो गया, पुनः प्रारंभ करने के लिए क्लिक करें</string>
     <string name="updateDownloading">अपडेट डाउनलोड हो रहा है: {percent_loader}%</string>
     <string name="updateError">अद्यतन नहीं हो रहा</string>
-    <string name="updateErrorDescription">{app_name} अपडेट होने में विफल. कृपया {session_download_url} पर जाएं और नए संस्करण को मैन्युअल रूप से इंस्टॉल करें, फिर इस समस्या के बारे में हमें बताने के लिए हमारे सहायता केंद्र से संपर्क करें |</string>
+    <string name="updateErrorDescription">{app_name} अपडेट होने में विफल. कृपया {session_download_url} पर जाएं और नए संस्करण को मैन्युअल रूप से इंस्टॉल करें, फिर इस समस्या के बारे में हमें हमारे सहायता केंद्र से संपर्क करें |</string>
     <string name="updateNewVersion">{app_name} का एक नया संस्करण उपलब्ध है, अपडेट करने के लिए टैप करें</string>
     <string name="updateNewVersionDescription">{app_name} का एक नया संस्करण उपलब्ध है।</string>
     <string name="updateReleaseNotes">रिलीज़ नोट्स पे जाइए</string>

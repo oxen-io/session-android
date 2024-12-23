@@ -36,7 +36,12 @@
     <string name="adminRemovedUser"><b>{name}</b> byl/a odebrán/a jako správce.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> a <b>{count} dalším</b> bylo odebráno správcovství.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> a <b>{other_name}</b> bylo odebráno správcovství.</string>
-    <string name="adminSendingPromotion">Odesílání povýšení na správce</string>
+    <plurals name="adminSendingPromotion">
+        <item quantity="one">Odesílání povýšení na správce</item>
+        <item quantity="few">Odesílání povýšení na správce</item>
+        <item quantity="many">Odesílání povýšení na správce</item>
+        <item quantity="other">Odesílání povýšení na správce</item>
+    </plurals>
     <string name="adminSettings">Nastavení správce</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> a <b>{other_name}</b> byli povýšeni na správce.</string>
     <string name="andMore">+{count}</string>
@@ -149,6 +154,7 @@
     <string name="callsNotificationsRequired">Pro používání hlasových a video hovorů je třeba povolit upozornění/oznámení v systémových nastaveních zařízení.</string>
     <string name="callsPermissionsRequired">Požaduje se oprávnění k volání</string>
     <string name="callsPermissionsRequiredDescription">Oprávnění pro \"Hlasové a video hovory\" můžete povolit v nastavení Soukromí.</string>
+    <string name="callsPermissionsRequiredDescription1">Oprávnění pro \"Hlasové a video hovory\" můžete povolit v nastavení Oprávnění.</string>
     <string name="callsReconnecting">Opětovné připojení…</string>
     <string name="callsRinging">Vyzvání...</string>
     <string name="callsSessionCall">{app_name} hovor</string>
@@ -286,7 +292,12 @@
         <item quantity="many">Smazat zprávy</item>
         <item quantity="other">Smazat zprávy</item>
     </plurals>
-    <string name="deleteMessageConfirm">Opravdu chcete smazat tuto zprávu?</string>
+    <plurals name="deleteMessageConfirm">
+        <item quantity="one">Opravdu chcete smazat tuto zprávu?</item>
+        <item quantity="few">Opravdu chcete smazat tyto zprávy?</item>
+        <item quantity="many">Opravdu chcete smazat tyto zprávy?</item>
+        <item quantity="other">Opravdu chcete smazat tyto zprávy?</item>
+    </plurals>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Zpráva smazána</item>
         <item quantity="few">Zprávy smazány</item>
@@ -295,7 +306,12 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Tato zpráva byla odstraněna.</string>
     <string name="deleteMessageDeletedLocally">Tato zpráva byla odstraněna na tomto zařízení.</string>
-    <string name="deleteMessageDescriptionDevice">Jste si jisti, že chcete smazat tuto zprávu pouze z tohoto zařízení?</string>
+    <plurals name="deleteMessageDescriptionDevice">
+        <item quantity="one">Opravdu chcete smazat tuto zprávu pouze z tohoto zařízení?</item>
+        <item quantity="few">Opravdu chcete smazat tyto zprávy pouze z tohoto zařízení?</item>
+        <item quantity="many">Opravdu chcete smazat tyto zprávy pouze z tohoto zařízení?</item>
+        <item quantity="other">Opravdu chcete smazat tyto zprávy pouze z tohoto zařízení?</item>
+    </plurals>
     <string name="deleteMessageDescriptionEveryone">Jste si jisti, že chcete smazat tuto zprávu pro všechny?</string>
     <string name="deleteMessageDeviceOnly">Smazat pouze na tomto zařízení</string>
     <string name="deleteMessageDevicesAll">Smazat ze všech mých zařízení</string>
@@ -306,8 +322,18 @@
         <item quantity="many">Nepodařilo se smazat zprávy</item>
         <item quantity="other">Nepodařilo se smazat zprávy</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Opravdu chcete smazat tyto zprávy?</string>
-    <string name="deleteMessagesDescriptionDevice">Jste si jisti, že chcete smazat tyto zprávy pouze z tohoto zařízení?</string>
+    <plurals name="deleteMessageNoteToSelfWarning">
+        <item quantity="one">Tuto zprávu nelze smazat ze všech vašich zařízení</item>
+        <item quantity="few">Některé z vybraných zpráv nelze smazat ze všech vašich zařízení</item>
+        <item quantity="many">Některé z vybraných zpráv nelze smazat ze všech vašich zařízení</item>
+        <item quantity="other">Některé z vybraných zpráv nelze smazat ze všech vašich zařízení</item>
+    </plurals>
+    <plurals name="deleteMessageWarning">
+        <item quantity="one">Tuto zprávu nelze smazat pro všechny</item>
+        <item quantity="few">Některé z vybraných zpráv nelze smazat pro všechny</item>
+        <item quantity="many">Některé z vybraných zpráv nelze smazat pro všechny</item>
+        <item quantity="other">Některé z vybraných zpráv nelze smazat pro všechny</item>
+    </plurals>
     <string name="deleteMessagesDescriptionEveryone">Jste si jisti, že chcete smazat tyto zprávy pro všechny?</string>
     <string name="deleting">Mazání</string>
     <string name="developerToolsToggle">Přepnout nástroje vývojáře</string>
@@ -354,6 +380,7 @@
     <string name="displayNameNew">Vyberte nové zobrazované jméno</string>
     <string name="displayNamePick">Vyberte zobrazované jméno</string>
     <string name="displayNameSet">Nastavte zobrazované jméno</string>
+    <string name="displayNameVisible">Vaše zobrazované jméno je viditelné pro uživatele, skupiny a komunity, se kterými jste ve spojení.</string>
     <string name="document">Dokument</string>
     <string name="done">Hotovo</string>
     <string name="download">Stáhnout</string>
@@ -404,6 +431,7 @@
     <string name="groupCreateErrorNoMembers">Prosím vyberte alespoň jednoho dalšího člena skupiny.</string>
     <string name="groupDelete">Smazat skupinu</string>
     <string name="groupDeleteDescription">Jste si jisti, že chcete smazat <b>{group_name}</b>? Tímto odstraníte všechny členy a smažete veškerý obsah skupiny.</string>
+    <string name="groupDeletedMemberDescription">Skupina {group_name} byla smazána správcem skupiny. Nebudete moci posílat další zprávy.</string>
     <string name="groupDescriptionEnter">Zadejte popis skupiny</string>
     <string name="groupDisplayPictureUpdated">Obrázek skupiny aktualizován.</string>
     <string name="groupEdit">Upravit skupinu</string>
@@ -416,13 +444,21 @@
     <string name="groupInviteFailedMultiple">Nepodařilo se pozvat {name} a {count} další do {group_name}</string>
     <string name="groupInviteFailedTwo">Nepodařilo se pozvat {name} a {other_name} do {group_name}</string>
     <string name="groupInviteFailedUser">Nepodařilo se pozvat {name} do {group_name}</string>
-    <string name="groupInviteSending">Odesílání pozvánky</string>
+    <string name="groupInviteReinvite"><b>{name}</b> vás pozval(a), abyste se znovu připojili k <b>{group_name}</b>, kde jste správcem.</string>
+    <string name="groupInviteReinviteYou">Byli jste pozváni, abyste se znovu připojili k <b>{group_name}</b>, kde jste správcem.</string>
+    <plurals name="groupInviteSending">
+        <item quantity="one">Odesílání pozvánky</item>
+        <item quantity="few">Odeslání pozvánek</item>
+        <item quantity="many">Odeslání pozvánek</item>
+        <item quantity="other">Odeslání pozvánek</item>
+    </plurals>
     <string name="groupInviteSent">Pozvánka odeslána</string>
     <string name="groupInviteSuccessful">Pozvánka do skupiny byla úspěšná</string>
     <string name="groupInviteVersion">Uživatelé musí používat nejnovější verzi, aby mohli přijímat pozvánky</string>
     <string name="groupInviteYou"><b>Byli jste pozváni k připojení do skupiny.</b></string>
     <string name="groupInviteYouAndMoreNew"><b>Vy</b> a <b>{count} dalších</b> bylo pozváno do skupiny.</string>
     <string name="groupInviteYouAndOtherNew"><b>Vy</b> a <b>{other_name}</b> jste byli pozváni do skupiny.</string>
+    <string name="groupInviteYouHistory">Byli <b>jste</b> pozváni do skupiny. Historie konverzace byla sdílena.</string>
     <string name="groupLeave">Opustit skupinu</string>
     <string name="groupLeaveDescription">Opravdu chcete opustit <b>{group_name}</b>?</string>
     <string name="groupLeaveDescriptionAdmin">Jste si jisti, že chcete opustit <b>{group_name}</b>?\n\nTímto odeberete všechny členy a smažete veškerý obsah skupiny.</string>
@@ -438,7 +474,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> a <b>{count} dalších</b> bylo pozváno do skupiny.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> a <b>{other_name}</b> byli pozváni do skupiny.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Vy</b> a <b>{count} dalších</b> bylo pozváno do skupiny. Historie konverzace byla sdílena.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Vy</b> a <b>{name}</b> byli pozváni do skupiny. Historie konverzace byla sdílena.</string>
     <string name="groupMemberYouLeft"><b>Opustil/a jste skupinu.</b></string>
     <string name="groupMembers">Členové skupiny</string>
     <string name="groupMembersNone">V této skupině nejsou žádní další členové.</string>
@@ -448,6 +483,7 @@
     <string name="groupNameEnterShorter">Prosím zadejte kratší název skupiny.</string>
     <string name="groupNameNew">Název skupiny je nyní {group_name}.</string>
     <string name="groupNameUpdated">Název skupiny aktualizován.</string>
+    <string name="groupNameVisible">Název skupiny je viditelný pro všechny členy skupiny.</string>
     <string name="groupNoMessages">Nemáte žádné zprávy od <b>{group_name}</b>. Pošlete zprávu pro zahájení konverzace!</string>
     <string name="groupOnlyAdmin">Jste jediný správce ve skupině <b>{group_name}</b>.\n\nČlenové skupiny a nastavení nelze změnit bez správce.</string>
     <string name="groupPromotedYou"><b>Byli jste povýšeni na správce.</b></string>
@@ -472,6 +508,7 @@
     <string name="groupRemovedMultiple"><b>{name}</b> a <b>{count} dalších</b> byli odebráni ze skupiny.</string>
     <string name="groupRemovedTwo"><b>{name}</b> a <b>{other_name}</b> byli odebráni ze skupiny.</string>
     <string name="groupRemovedYou">Byli jste odebráni z <b>{group_name}</b>.</string>
+    <string name="groupRemovedYouGeneral">Byli jste odebráni ze skupiny.</string>
     <string name="groupRemovedYouMultiple"><b>Vy</b> a <b>{count} dalších</b> bylo odebráno ze skupiny.</string>
     <string name="groupRemovedYouTwo"><b>Vy</b> a <b>{other_name}</b> byli odebráni ze skupiny.</string>
     <string name="groupSetDisplayPicture">Nastavit zobrazovaný obrázek skupiny</string>
@@ -610,6 +647,7 @@
     <string name="next">Další</string>
     <string name="nicknameDescription">Vyberte přezdívku pro <b>{name}</b>. Tato přezdívka se vám zobrazí ve vašich 1-1 a skupinových konverzacích.</string>
     <string name="nicknameEnter">Zadejte přezdívku</string>
+    <string name="nicknameErrorShorter">Zadejte prosím kratší přezdívku</string>
     <string name="nicknameRemove">Odstranit přezdívku</string>
     <string name="nicknameSet">Nastavit přezdívku</string>
     <string name="no">Ne</string>
@@ -653,7 +691,7 @@
     <string name="notificationsSystem">{message_count} nových zpráv v {conversation_count} konverzacích</string>
     <string name="notificationsVibrate">Vibrace</string>
     <string name="off">Vypnuto</string>
-    <string name="okay">Okay</string>
+    <string name="okay">OK</string>
     <string name="on">Zap.</string>
     <string name="onboardingAccountCreate">Vytvořit účet</string>
     <string name="onboardingAccountCreated">Účet vytvořen</string>
@@ -806,7 +844,7 @@
     <string name="sessionClearData">Vyčistit data</string>
     <string name="sessionConversations">Konverzace</string>
     <string name="sessionHelp">Nápověda</string>
-    <string name="sessionInviteAFriend">Pozvat přítele</string>
+    <string name="sessionInviteAFriend">Pozvat přátele</string>
     <string name="sessionMessageRequests">Žádosti o komunikaci</string>
     <string name="sessionNotifications">Upozornění</string>
     <string name="sessionPermissions">Oprávnění</string>
@@ -816,7 +854,7 @@
     <string name="set">Nastavit</string>
     <string name="settingsRestartDescription">Pro použití nových nastavení musíte restartovat {app_name}.</string>
     <string name="share">Sdílet</string>
-    <string name="shareAccountIdDescription">Pozvěte svého přítele nebo přítelkyni ke komunikaci pomocí {app_name} sdílením svého ID účtu.</string>
+    <string name="shareAccountIdDescription">Pozvěte své přátele ke komunikaci pomocí {app_name} sdílením svého ID účtu.</string>
     <string name="shareAccountIdDescriptionCopied">Sdílejte se svými přáteli tam, kde s nimi obvykle mluvíte — a pak konverzaci přesuňte sem.</string>
     <string name="shareExtensionDatabaseError">Při otevírání databáze se vyskytl problém. Prosím, restartujte aplikaci a zkuste to znovu.</string>
     <string name="shareToSession">Sdílet do {app_name}</string>

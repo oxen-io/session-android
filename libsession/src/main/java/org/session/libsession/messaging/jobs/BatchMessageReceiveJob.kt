@@ -5,10 +5,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import network.loki.messenger.libsession_util.ConfigBase
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Message
+import org.session.libsession.messaging.messages.Message.Companion.senderOrSync
 import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
@@ -96,6 +98,26 @@ class BatchMessageReceiveJob(
         executeAsync(dispatcherName).get()
     }
 
+    private fun isHidden(message: Message): Boolean{
+        // if the contact is marked as hidden for 1on1 messages
+        // and  the message's sentTimestamp is earlier than the sentTimestamp of the last config
+        val config = MessagingModuleConfiguration.shared.configFactory
+        val publicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
+        if(config.contacts == null || message.sentTimestamp == null || publicKey == null) return false
+        val contactConfigTimestamp = config.getConfigTimestamp(config.contacts!!, publicKey)
+        if(message.groupPublicKey == null && // not a group
+            message.openGroupServerMessageID == null && // not a community
+            // not marked as hidden
+            config.contacts?.get(message.senderOrSync)?.priority == ConfigBase.PRIORITY_HIDDEN &&
+            // the message's sentTimestamp is earlier than the sentTimestamp of the last config
+            message.sentTimestamp!! < contactConfigTimestamp
+        ) {
+            return true
+        }
+
+        return false
+    }
+
     fun executeAsync(dispatcherName: String): Promise<Unit, Exception> {
         return task {
             val threadMap = mutableMapOf<Long, MutableList<ParsedMessage>>()
@@ -112,6 +134,9 @@ class BatchMessageReceiveJob(
                     val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey, currentClosedGroups = currentClosedGroups)
                     message.serverHash = serverHash
                     val parsedParams = ParsedMessage(messageParameters, message, proto)
+
+                    if(isHidden(message)) return@forEach
+
                     val threadID = Message.getThreadId(message, openGroupID, storage, shouldCreateThread(parsedParams)) ?: NO_THREAD_MAPPING
                     if (!threadMap.containsKey(threadID)) {
                         threadMap[threadID] = mutableListOf(parsedParams)

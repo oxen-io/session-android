@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> el lett távolítva mint adminisztrátor.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> és <b>{count} másik személy</b> el lettek távolítva adminisztrátorként.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> és <b>{other_name}</b> el lettek távolítva adminisztrátorként.</string>
-    <string name="adminSendingPromotion">Adminisztrátori előléptetés küldése</string>
     <string name="adminSettings">Adminisztrátor beállítások</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> és <b>{other_name}</b> adminisztrátorrá lettek előléptetve.</string>
     <string name="andMore">+{count}</string>
@@ -60,7 +59,7 @@
     <string name="attachment">Melléklet</string>
     <string name="attachmentsAdd">Melléklet hozzáadása</string>
     <string name="attachmentsAlbumUnnamed">Névtelen album</string>
-    <string name="attachmentsAutoDownload">Csatolmányok automatikus letöltése</string>
+    <string name="attachmentsAutoDownload">Mellékletek automatikus letöltése</string>
     <string name="attachmentsAutoDownloadDescription">Média és fájlok automatikus letötltése ebből a beszélgetésből.</string>
     <string name="attachmentsAutoDownloadModalDescription">Szeretnéd automatikusan letölteni az összes fájlt a <b>{conversation_name}</b> beszélgetésből?</string>
     <string name="attachmentsAutoDownloadModalTitle">Automatikus letöltés</string>
@@ -282,14 +281,12 @@
         <item quantity="one">Üzenet törlése</item>
         <item quantity="other">Üzenetek törlése</item>
     </plurals>
-    <string name="deleteMessageConfirm">Biztos, hogy törölni szeretnéd ezt az üzenetet?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Üzenet törölve</item>
         <item quantity="other">Üzenetek törölve</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ez az üzenet törölve lett</string>
     <string name="deleteMessageDeletedLocally">Ez az üzenet törölve lett ezen az eszközön</string>
-    <string name="deleteMessageDescriptionDevice">Biztos, hogy törölni szeretnéd ezt az üzenetet csak erről az eszközről?</string>
     <string name="deleteMessageDescriptionEveryone">Biztos, hogy törölni szeretnéd ezt az üzenetet mindenki számára?</string>
     <string name="deleteMessageDeviceOnly">Törlés csak ezen az eszközön</string>
     <string name="deleteMessageDevicesAll">Törlés minden eszközömön</string>
@@ -298,8 +295,6 @@
         <item quantity="one">Nem sikerült az üzenet törlése</item>
         <item quantity="other">Nem sikerült az üzenetek törlése</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Biztos, hogy törölni szeretnéd ezeket az üzeneteket?</string>
-    <string name="deleteMessagesDescriptionDevice">Biztos, hogy törölni szeretnéd ezeket az üzeneteket csak ebből az eszközről?</string>
     <string name="deleteMessagesDescriptionEveryone">Biztos, hogy törölni szeretnéd ezeket az üzeneteket mindenki számára?</string>
     <string name="deleting">Törlés</string>
     <string name="developerToolsToggle">Fejlesztői eszközök be-/kikapcsolása</string>
@@ -406,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Nem sikerült meghívni {name}-t és {count} másik személyt a {group_name} csoportba</string>
     <string name="groupInviteFailedTwo">Nem sikerült meghívni {name}-t és {other_name}-t a {group_name} csoportba</string>
     <string name="groupInviteFailedUser">Nem sikerült meghívni {name}-t a {group_name} csoportba</string>
-    <string name="groupInviteSending">Meghívás küldése</string>
     <string name="groupInviteSent">Meghívás elküldve</string>
     <string name="groupInviteSuccessful">A meghívás sikeres volt.</string>
     <string name="groupInviteVersion">A felhasználóknak a legújabb verzióval kell rendelkezniük, hogy meghívásokat kaphassanak</string>
@@ -428,7 +422,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> és <b>{count} másik személy</b> meghívást kaptak a csoportba.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> és <b>{other_name}</b> meghívást kaptak a csoportba.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Te</b> és <b>{count} másik személy</b> meg lettetek hívva a csoportba. A beszélgetési előzményeket megosztottuk.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Te</b> és <b>{name}</b> meg lettetek hívva a csoportba. A beszélgetési előzményeket megosztottuk.</string>
     <string name="groupMemberYouLeft"><b>Te</b> kiléptél a csoportból.</string>
     <string name="groupMembers">Csoporttagok</string>
     <string name="groupMembersNone">Nincsenek más tagok ebben a csoportban.</string>
@@ -563,7 +556,7 @@
     <string name="messageRequestYouHaveAccepted">Elfogadtad <b>{name}</b> üzenetkérését.</string>
     <string name="messageRequestsAcceptDescription">Ha üzenetet küld ennek a felhasználónak, akkor automatikusan elfogadja az üzenetkérelmét és a Felhasználó ID megosztásra kerül.</string>
     <string name="messageRequestsAccepted">Az üzenetkérelmedet elfogadták.</string>
-    <string name="messageRequestsClearAllExplanation">Biztos, hogy törölni akarja az összes üzenetkérelmet és csoportmeghívót?</string>
+    <string name="messageRequestsClearAllExplanation">Biztos, hogy törölni szeretnéd az összes üzenetkérelmet és csoportmeghívót?</string>
     <string name="messageRequestsCommunities">Közösségi üzenetkérelmek</string>
     <string name="messageRequestsCommunitiesDescription">A közösségi beszélgetésekből származó üzenetek engedélyezése.</string>
     <string name="messageRequestsDelete">Biztos, hogy törölni szeretnéd ezt az üzenetkérelmet?</string>

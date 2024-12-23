@@ -196,6 +196,18 @@ class ConfigFactory(
         }
     }
 
+    override fun getConfigTimestamp(forConfigObject: ConfigBase, publicKey: String): Long {
+        val variant = when (forConfigObject) {
+            is UserProfile -> SharedConfigMessage.Kind.USER_PROFILE.name
+            is Contacts -> SharedConfigMessage.Kind.CONTACTS.name
+            is ConversationVolatileConfig -> SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name
+            is UserGroupsConfig -> SharedConfigMessage.Kind.GROUPS.name
+            else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
+        }
+
+        return configDatabase.retrieveConfigLastUpdateTimestamp(variant, publicKey)
+    }
+
     override fun conversationInConfig(
         publicKey: String?,
         groupPublicKey: String?,

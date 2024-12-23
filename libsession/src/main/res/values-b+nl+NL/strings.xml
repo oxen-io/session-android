@@ -36,7 +36,10 @@
     <string name="adminRemovedUser"><b>{name}</b> is verwijderd als Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> en <b>{count} anderen</b> zijn verwijderd als beheerder.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> en <b>{other_name}</b> zijn verwijderd als beheerder.</string>
-    <string name="adminSendingPromotion">Beheerder promotie versturen</string>
+    <plurals name="adminSendingPromotion">
+        <item quantity="one">Beheerder promotie versturen</item>
+        <item quantity="other">Beheerder promoties versturen</item>
+    </plurals>
     <string name="adminSettings">Admin instellingen</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> en <b>{other_name}</b> zijn gepromoveerd tot Admin.</string>
     <string name="andMore">+{count}</string>
@@ -149,6 +152,7 @@
     <string name="callsNotificationsRequired">Spraak- en video-oproepen vereisen dat meldingen zijn ingeschakeld in de systeeminstellingen van uw apparaat.</string>
     <string name="callsPermissionsRequired">Oproepmachtigingen vereist</string>
     <string name="callsPermissionsRequiredDescription">U kunt de machtiging \"Spraak- en video-oproepen\" inschakelen in de privacy-instellingen.</string>
+    <string name="callsPermissionsRequiredDescription1">U kunt de machtiging voor \"Spraak- en video-oproepen\" inschakelen in de privacy-instellingen.</string>
     <string name="callsReconnecting">Herverbinden…</string>
     <string name="callsRinging">Gaat over...</string>
     <string name="callsSessionCall">{app_name} Gesprek</string>
@@ -282,14 +286,20 @@
         <item quantity="one">Verwijder bericht</item>
         <item quantity="other">Verwijder berichten</item>
     </plurals>
-    <string name="deleteMessageConfirm">Weet u zeker dat u dit bericht wilt verwijderen?</string>
+    <plurals name="deleteMessageConfirm">
+        <item quantity="one">Weet u zeker dat u dit bericht wilt verwijderen?</item>
+        <item quantity="other">Weet u zeker dat u deze berichten wilt verwijderen?</item>
+    </plurals>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Bericht verwijderd</item>
         <item quantity="other">Berichten verwijderd</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">Dit bericht is verwijderd</string>
     <string name="deleteMessageDeletedLocally">Dit bericht is op dit apparaat verwijderd</string>
-    <string name="deleteMessageDescriptionDevice">Weet u zeker dat u dit bericht alleen van dit apparaat wilt verwijderen?</string>
+    <plurals name="deleteMessageDescriptionDevice">
+        <item quantity="one">Weet u zeker dat u dit bericht enkel van dit apparaat wilt verwijderen?</item>
+        <item quantity="other">Weet u zeker dat u deze berichten enkel van dit apparaat wilt verwijderen?</item>
+    </plurals>
     <string name="deleteMessageDescriptionEveryone">Weet u zeker dat u dit bericht voor iedereen wilt verwijderen?</string>
     <string name="deleteMessageDeviceOnly">Alleen verwijderen op dit apparaat</string>
     <string name="deleteMessageDevicesAll">Verwijder op al mijn apparaten</string>
@@ -298,8 +308,6 @@
         <item quantity="one">Bericht verwijderen mislukt</item>
         <item quantity="other">Berichten verwijderen mislukt</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Weet u zeker dat u deze berichten wilt verwijderen?</string>
-    <string name="deleteMessagesDescriptionDevice">Weet u zeker dat u deze berichten alleen van dit apparaat wilt wissen?</string>
     <string name="deleteMessagesDescriptionEveryone">Weet u zeker dat u deze berichten voor iedereen wilt wissen?</string>
     <string name="deleting">Aan het verwijderen</string>
     <string name="developerToolsToggle">Ontwikkelopties weergeven</string>
@@ -394,6 +402,7 @@
     <string name="groupCreateErrorNoMembers">Kies ten minste één ander groepslid.</string>
     <string name="groupDelete">Verwijder groep</string>
     <string name="groupDeleteDescription">Weet je zeker dat je <b>{group_name}</b> wilt verwijderen? Dit zal alle leden verwijderen en alle groepsinhoud wissen.</string>
+    <string name="groupDeletedMemberDescription">{group_name} is verwijderd door een groepsbeheerder. U kunt geen berichten meer versturen.</string>
     <string name="groupDescriptionEnter">Voer een groepsbeschrijving in</string>
     <string name="groupDisplayPictureUpdated">Groepsafbeelding bijgewerkt.</string>
     <string name="groupEdit">Groep bewerken</string>
@@ -406,7 +415,10 @@
     <string name="groupInviteFailedMultiple">Het uitnodigen van {name} en {count} anderen naar {group_name} is mislukt</string>
     <string name="groupInviteFailedTwo">Het uitnodigen van {name} en {other_name} naar {group_name} is mislukt</string>
     <string name="groupInviteFailedUser">Het uitnodigen van {name} naar {group_name} is mislukt</string>
-    <string name="groupInviteSending">Uitnodiging versturen</string>
+    <plurals name="groupInviteSending">
+        <item quantity="one">Uitnodiging versturen</item>
+        <item quantity="other">Uitnodigingen versturen</item>
+    </plurals>
     <string name="groupInviteSent">Uitnodiging verzonden</string>
     <string name="groupInviteSuccessful">Groepsuitnodiging succesvol</string>
     <string name="groupInviteVersion">Gebruikers moeten de nieuwste versie hebben om uitnodigingen te ontvangen</string>
@@ -428,7 +440,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> en <b>{count} anderen</b> zijn uitgenodigd om lid te worden van de groep.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> en <b>{other_name}</b> zijn uitgenodigd om lid te worden van de groep.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>U</b> en <b>{count} anderen</b> zijn uitgenodigd om lid te worden van de groep. Geschiedenis van het gesprek is gedeeld.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>U</b> en <b>{name}</b> zijn uitgenodigd om lid te worden van de groep. Geschiedenis van het gesprek is gedeeld.</string>
     <string name="groupMemberYouLeft"><b>U</b> heeft de groep verlaten.</string>
     <string name="groupMembers">Groepsleden</string>
     <string name="groupMembersNone">Er zijn geen andere leden in deze groep.</string>

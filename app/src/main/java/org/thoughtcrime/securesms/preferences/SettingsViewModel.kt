@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
@@ -25,6 +26,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.ProfilePictureUtilities
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.truncateIdForDisplay
 import org.session.libsignal.utilities.ExternalStorageUtil.getImageDir
 import org.session.libsignal.utilities.Log
@@ -51,7 +53,7 @@ class SettingsViewModel @Inject constructor(
 
     private var tempFile: File? = null
 
-    val hexEncodedPublicKey: String get() = prefs.getLocalNumber() ?: ""
+    val hexEncodedPublicKey: String = prefs.getLocalNumber() ?: ""
 
     private val userAddress = Address.fromSerialized(hexEncodedPublicKey)
 
@@ -65,12 +67,33 @@ class SettingsViewModel @Inject constructor(
     val showLoader: StateFlow<Boolean>
         get() = _showLoader
 
+    private val _recoveryHidden: MutableStateFlow<Boolean> = MutableStateFlow(prefs.getHidePassword())
+    val recoveryHidden: StateFlow<Boolean>
+        get() = _recoveryHidden
+
+    private val _avatarData: MutableStateFlow<AvatarData?> = MutableStateFlow(null)
+    val avatarData: StateFlow<AvatarData?>
+        get() = _avatarData
+
     /**
      * Refreshes the avatar on the main settings page
      */
     private val _refreshAvatar: MutableSharedFlow<Unit> = MutableSharedFlow()
     val refreshAvatar: SharedFlow<Unit>
         get() = _refreshAvatar.asSharedFlow()
+
+    init {
+        viewModelScope.launch(Dispatchers.Default) {
+            val recipient = Recipient.from(context, Address.fromSerialized(hexEncodedPublicKey), false)
+            _avatarData.update {
+                AvatarData(
+                    publicKey = hexEncodedPublicKey,
+                    displayName = getDisplayName(),
+                    recipient = recipient
+                )
+            }
+        }
+    }
 
     fun getDisplayName(): String =
         prefs.getProfileName() ?: truncateIdForDisplay(hexEncodedPublicKey)
@@ -230,6 +253,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun permanentlyHidePassword() {
+        //todo we can simplify this once we expose all our sharedPrefs as flows
+        prefs.setHidePassword(true)
+        _recoveryHidden.update { true }
+    }
+
     sealed class AvatarDialogState() {
         object NoAvatar : AvatarDialogState()
         data class UserAvatar(val address: Address) : AvatarDialogState()
@@ -238,4 +267,10 @@ class SettingsViewModel @Inject constructor(
             val hasAvatar: Boolean // true if the user has an avatar set already but is in this temp state because they are trying out a new avatar
         ) : AvatarDialogState()
     }
+
+    data class AvatarData(
+        val publicKey: String,
+        val displayName: String,
+        val recipient: Recipient
+    )
 }

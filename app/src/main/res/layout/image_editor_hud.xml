@@ -31,7 +31,8 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:src="@drawable/ic_trash_filled_32" />
+                app:tint="@color/white"
+                android:src="@drawable/ic_delete" />
 
             <ImageView
                 android:id="@+id/scribble_undo_button"

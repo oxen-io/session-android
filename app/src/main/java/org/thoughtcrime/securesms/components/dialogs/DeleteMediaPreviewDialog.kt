@@ -1,7 +1,8 @@
-package org.thoughtcrime.securesms
+package org.thoughtcrime.securesms.components.dialogs
 
 import android.content.Context
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.showSessionDialog
 
 class DeleteMediaPreviewDialog {
     companion object {

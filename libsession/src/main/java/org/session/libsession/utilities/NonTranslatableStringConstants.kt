@@ -1,6 +1,5 @@
 package org.session.libsession.utilities
 
-
 // Non-translatable strings for use with the UI
 object NonTranslatableStringConstants {
     const val APP_NAME             = "Session"
@@ -8,3 +7,4 @@ object NonTranslatableStringConstants {
     const val GIF                  = "GIF"
     const val OXEN_FOUNDATION      = "Oxen Foundation"
 }
+

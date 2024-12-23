@@ -9,52 +9,46 @@ import com.opencsv.CSVReader
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
-import java.io.File
-import java.io.FileOutputStream
-import java.io.FileReader
-import java.util.SortedMap
-import java.util.TreeMap
+import java.io.DataInputStream
+import java.io.InputStream
+import java.io.InputStreamReader
+import kotlin.math.absoluteValue
 
-class IP2Country private constructor(private val context: Context) {
-    private val pathsBuiltEventReceiver: BroadcastReceiver
+private fun ipv4Int(ip: String): UInt =
+    ip.split(".", "/", ",").take(4).fold(0U) { acc, s -> acc shl 8 or s.toUInt() }
+
+@OptIn(ExperimentalUnsignedTypes::class)
+class IP2Country internal constructor(
+    private val context: Context,
+    private val openStream: (String) -> InputStream = context.assets::open
+) {
     val countryNamesCache = mutableMapOf<String, String>()
 
-    private fun Ipv4Int(ip: String): Int {
-        var result = 0L
-        var currentValue = 0L
-        var octetIndex = 0
+    private val ips: UIntArray by lazy { ipv4ToCountry.first }
+    private val codes: IntArray by lazy { ipv4ToCountry.second }
 
-        for (char in ip) {
-            if (char == '.' || char == '/') {
-                result = result or (currentValue shl (8 * (3 - octetIndex)))
-                currentValue = 0
-                octetIndex++
-                if (char == '/') break
-            } else {
-                currentValue = currentValue * 10 + (char - '0')
+    private val ipv4ToCountry: Pair<UIntArray, IntArray> by lazy {
+        openStream("geolite2_country_blocks_ipv4.bin")
+            .let(::DataInputStream)
+            .use {
+                val size = it.available() / 8
+
+                val ips = UIntArray(size)
+                val codes = IntArray(size)
+                var i = 0
+
+                while (it.available() > 0) {
+                    ips[i] = it.readInt().toUInt()
+                    codes[i] = it.readInt()
+                    i++
+                }
+
+                ips to codes
             }
-        }
-
-        // Handle the last octet
-        result = result or (currentValue shl (8 * (3 - octetIndex)))
-
-        return result.toInt()
-    }
-
-    private val ipv4ToCountry: TreeMap<Int, Int?> by lazy {
-        val file = loadFile("geolite2_country_blocks_ipv4.csv")
-        CSVReader(FileReader(file.absoluteFile)).use { csv ->
-            csv.skip(1)
-
-            csv.asSequence().associateTo(TreeMap()) { cols ->
-                Ipv4Int(cols[0]).toInt() to cols[1].toIntOrNull()
-            }
-        }
     }
 
     private val countryToNames: Map<Int, String> by lazy {
-        val file = loadFile("geolite2_country_locations_english.csv")
-        CSVReader(FileReader(file.absoluteFile)).use { csv ->
+        CSVReader(InputStreamReader(openStream("csv/geolite2_country_locations_english.csv"))).use { csv ->
             csv.skip(1)
 
             csv.asSequence()
@@ -68,81 +62,57 @@ class IP2Country private constructor(private val context: Context) {
     // region Initialization
     companion object {
 
-        public lateinit var shared: IP2Country
+        lateinit var shared: IP2Country
 
-        public val isInitialized: Boolean get() = Companion::shared.isInitialized
+        val isInitialized: Boolean get() = Companion::shared.isInitialized
 
-        public fun configureIfNeeded(context: Context) {
+        fun configureIfNeeded(context: Context) {
             if (isInitialized) { return; }
             shared = IP2Country(context.applicationContext)
+
+            val pathsBuiltEventReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    shared.populateCacheIfNeeded()
+                }
+            }
+            LocalBroadcastManager.getInstance(context).registerReceiver(pathsBuiltEventReceiver, IntentFilter("pathsBuilt"))
         }
     }
 
     init {
         populateCacheIfNeeded()
-        pathsBuiltEventReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                populateCacheIfNeeded()
-            }
-        }
-        LocalBroadcastManager.getInstance(context).registerReceiver(pathsBuiltEventReceiver, IntentFilter("pathsBuilt"))
     }
 
     // TODO: Deinit?
     // endregion
 
     // region Implementation
-    private fun loadFile(fileName: String): File {
-        val directory = File(context.applicationInfo.dataDir)
-        val file = File(directory, fileName)
-        if (directory.list().contains(fileName)) { return file }
-        val inputStream = context.assets.open("csv/$fileName")
-        val outputStream = FileOutputStream(file)
-        val buffer = ByteArray(1024)
-        while (true) {
-            val count = inputStream.read(buffer)
-            if (count < 0) { break }
-            outputStream.write(buffer, 0, count)
-        }
-        inputStream.close()
-        outputStream.close()
-        return file
-    }
-
-    private fun cacheCountryForIP(ip: String): String? {
-
+    internal fun cacheCountryForIP(ip: String): String? {
         // return early if cached
         countryNamesCache[ip]?.let { return it }
 
-        val ipInt = Ipv4Int(ip)
-        val bestMatchCountry = ipv4ToCountry.floorEntry(ipInt)?.let { (_, code) ->
-            if (code != null) {
-                countryToNames[code]
-            } else {
-                null
-            }
-        }
+        val ipInt = ipv4Int(ip)
+        val index = ips.binarySearch(ipInt).let { it.takeIf { it >= 0 } ?: (it.absoluteValue - 2) }
+        val code = codes.getOrNull(index)
+        val bestMatchCountry = countryToNames[code]
 
-        if (bestMatchCountry != null) {
-            countryNamesCache[ip] = bestMatchCountry
-            return bestMatchCountry
-        } else {
-            Log.d("Loki","Country name for $ip couldn't be found")
-        }
-        return null
+        if (bestMatchCountry != null) countryNamesCache[ip] = bestMatchCountry
+        else Log.d("Loki","Country name for $ip couldn't be found")
+
+        return bestMatchCountry
     }
 
     private fun populateCacheIfNeeded() {
         ThreadUtils.queue {
+            val start = System.currentTimeMillis()
             OnionRequestAPI.paths.iterator().forEach { path ->
                 path.iterator().forEach { snode ->
                     cacheCountryForIP(snode.ip) // Preload if needed
                 }
             }
+            Log.d("Loki","Cache populated in ${System.currentTimeMillis() - start}ms")
             Broadcaster(context).broadcast("onionRequestPathCountriesLoaded")
-            Log.d("Loki", "Finished preloading onion request path countries.")
         }
     }
     // endregion
 }
-

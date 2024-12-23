@@ -35,13 +35,9 @@ class DownloadDialog(private val recipient: Recipient) : DialogFragment() {
         title(getString(R.string.attachmentsAutoDownloadModalTitle))
 
         val explanation = Phrase.from(context, R.string.attachmentsAutoDownloadModalDescription)
-            .put(CONVERSATION_NAME_KEY, recipient.name)
+            .put(CONVERSATION_NAME_KEY, recipient.toShortString())
             .format()
-        val spannable = SpannableStringBuilder(explanation)
-
-        val startIndex = explanation.indexOf(name)
-        spannable.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + name.count(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        text(spannable)
+        text(explanation)
 
         button(R.string.download, R.string.AccessibilityId_download) { trust() }
         cancelButton { dismiss() }

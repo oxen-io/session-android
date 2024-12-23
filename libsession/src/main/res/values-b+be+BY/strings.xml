@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> быў выдалены як Адміністратар.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> і яшчэ <b>{count} іншых</b> былі паніжаны на пасадзе адміністратара.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> і <b>{other_name}</b> былі паніжаны на пасадзе адміністратара.</string>
-    <string name="adminSendingPromotion">Адпраўка прасоўвання адміністратара</string>
     <string name="adminSettings">Налады адміністратара</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> і <b>{other_name}</b> былі павышаны да адміністратараў.</string>
     <string name="andMore">+{count}</string>
@@ -258,7 +257,7 @@
     <string name="create">Стварыць</string>
     <string name="cut">Выразаць</string>
     <string name="databaseErrorGeneric">Адбылася памылка базы дадзеных.\n\nЭкспартаваць часопісы прыкладання для падзелу для ліквідацыі непаладак. Калі гэта не ўдасца, перавстанавіць {app_name} і аднавіць свой уліковы запіс.\n\nПапярэджанне: гэта прывядзе да страты ўсіх паведамленняў, укладанняў і дадзеных уліковага запісу, старэйшых за два тыдні.</string>
-    <string name="databaseErrorTimeout">Мы заўважылі, што {app_name} патрабуе шмат часу для запуску.\n\nВы можаце працягваць чакаць, экспартаваць журналы вашай прылады для спагнання праблем, альбо паспрабаваць перазапусціць Session.</string>
+    <string name="databaseErrorTimeout">Мы заўважылі, што {app_name} патрабуе шмат часу для запуску.\n\nВы можаце працягваць чакаць, экспартаваць журналы вашай прылады для спагнання праблем, альбо паспрабаваць перазапусціць {app_name}.</string>
     <string name="databaseErrorUpdate">Ваша база даных прыкладання несумяшчальная з гэтай версіяй {app_name}. Пераўсталюйце прыкладанне і аднавіце ўліковы запіс, каб стварыць новую базу даных і працягнуць выкарыстанне {app_name}.\n\nУвага: гэта прывядзе да страты ўсіх паведамленняў і ўкладанняў старэйшых за два тыдні.</string>
     <string name="databaseOptimizing">Аптымізацыя базы даных</string>
     <string name="debugLog">Логі адладкі</string>
@@ -285,7 +284,6 @@
         <item quantity="many">Выдаліць паведамленні</item>
         <item quantity="other">Выдаліць паведамленні</item>
     </plurals>
-    <string name="deleteMessageConfirm">Вы ўпэўненыя, што жадаеце выдаліць гэтае паведамленне?</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="one">Паведамленне выдалена</item>
         <item quantity="few">Паведамленні выдалены</item>
@@ -294,7 +292,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Гэта паведамленне было выдалена</string>
     <string name="deleteMessageDeletedLocally">Гэта паведамленне было выдалена на гэтай прыладзе</string>
-    <string name="deleteMessageDescriptionDevice">Вы ўпэўненыя, што жадаеце выдаліць гэтае паведамленне толькі з гэтай прылады?</string>
     <string name="deleteMessageDescriptionEveryone">Вы ўпэўненыя, што жадаеце выдаліць гэтае паведамленне для ўсіх?</string>
     <string name="deleteMessageDeviceOnly">Выдаліць толькі на гэтай прыладзе</string>
     <string name="deleteMessageDevicesAll">Выдаліць на ўсіх маіх прыладах</string>
@@ -305,8 +302,6 @@
         <item quantity="many">Не атрымалася выдаліць паведамленні</item>
         <item quantity="other">Не атрымалася выдаліць паведамленні</item>
     </plurals>
-    <string name="deleteMessagesConfirm">Вы ўпэўненыя, што жадаеце выдаліць гэтыя паведамленні?</string>
-    <string name="deleteMessagesDescriptionDevice">Вы ўпэўнены, што жадаеце выдаліць гэтыя паведамленні толькі з гэтай прылады?</string>
     <string name="deleteMessagesDescriptionEveryone">Вы ўпэўнены, што жадаеце выдаліць гэтыя паведамленні для ўсіх?</string>
     <string name="deleting">Выдаленне</string>
     <string name="developerToolsToggle">Пераключыць інструменты распрацоўшчыка</string>
@@ -415,7 +410,6 @@
     <string name="groupInviteFailedMultiple">Не ўдалося запрасіць {name}, {count} і іншых у {group_name}</string>
     <string name="groupInviteFailedTwo">Не ўдалося запрасіць {name} і {other_name} у {group_name}</string>
     <string name="groupInviteFailedUser">Не ўдалося запрасіць {name} у {group_name}</string>
-    <string name="groupInviteSending">Адпраўка запрашэння</string>
     <string name="groupInviteSent">Запрашэнне адпраўлена</string>
     <string name="groupInviteSuccessful">Запрашэнне ў групу паспяхова</string>
     <string name="groupInviteVersion">Карыстальнікі павінны мець апошнюю версію для атрымання запрашэнняў</string>
@@ -437,7 +431,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> і <b>{count} іншых</b> былі запрошаны далучыцца да групы.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> і <b>{other_name}</b> былі запрошаны далучыцца да групы.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Вы</b> і яшчэ <b>{count} іншых</b> былі запрошаны далучыцца да групы. Гісторыя чатаў была абагулена.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Вы</b> і <b>{name}</b> былі запрошаны далучыцца да групы. Гісторыя чатаў была абагулена.</string>
     <string name="groupMemberYouLeft"><b>Вы</b> пакінулі групу.</string>
     <string name="groupMembers">Удзельнікі групы</string>
     <string name="groupMembersNone">У гэтай групе больш няма ўдзельнікаў.</string>
@@ -755,7 +748,7 @@
     <string name="recoveryPasswordErrorMessageIncorrect">Некаторыя з слоў у вашым Recovery password няправільныя. Калі ласка, праверце і паспрабуйце яшчэ раз.</string>
     <string name="recoveryPasswordErrorMessageShort">The Recovery Password you entered is not long enough. Please check and try again.</string>
     <string name="recoveryPasswordErrorTitle">Няправільны Recovery Password</string>
-    <string name="recoveryPasswordExplanation">Для загрузкі вашага акаўнта ўвядзіце ваш Recovery Password.</string>
+    <string name="recoveryPasswordExplanation">Для загрузкі вашага ўліковага запісу ўвядзіце Recovery Password.</string>
     <string name="recoveryPasswordHidePermanently">Схаваць Recovery Password назусім</string>
     <string name="recoveryPasswordHidePermanentlyDescription1">Без вашага Recovery password вы не зможаце загрузіць свой уліковы запіс на новыя прылады. \n\nМы настойліва рэкамендуем захаваць ваш Recovery password у надзейным і бяспечным месцы перад прадаўжэннем.</string>
     <string name="recoveryPasswordHidePermanentlyDescription2">Вы ўпэўненыя, што жадаеце пастаянна схаваць ваш канчатковы пароль аднаўлення на гэтай прыладзе? Гэта немагчыма адмяніць.</string>

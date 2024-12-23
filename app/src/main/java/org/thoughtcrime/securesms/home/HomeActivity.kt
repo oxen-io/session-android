@@ -71,6 +71,7 @@ import org.thoughtcrime.securesms.home.search.GlobalSearchViewModel
 import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import org.session.libsession.utilities.truncateIdForDisplay
 import org.thoughtcrime.securesms.notifications.PushRegistry
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.SettingsActivity
@@ -371,6 +372,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             binding.seedReminderView.isVisible = false
         }
 
+        // refresh search on resume, in case we a conversation was deleted
+        if (binding.globalSearchRecycler.isVisible){
+            globalSearchViewModel.refresh()
+        }
+
         updateLegacyConfigView()
 
         // Sync config changes if there are any
@@ -507,7 +513,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         showSessionDialog {
             title(R.string.block)
             text(Phrase.from(context, R.string.blockDescription)
-                .put(NAME_KEY, thread.recipient.name)
+                .put(NAME_KEY, thread.recipient.toShortString())
                 .format())
             dangerButton(R.string.block, R.string.AccessibilityId_blockConfirm) {
                 lifecycleScope.launch(Dispatchers.IO) {
@@ -518,7 +524,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     }
                 }
                 // Block confirmation toast added as per SS-64
-                val txt = Phrase.from(context, R.string.blockBlockedUser).put(NAME_KEY, thread.recipient.name).format().toString()
+                val txt = Phrase.from(context, R.string.blockBlockedUser).put(NAME_KEY, thread.recipient.toShortString()).format().toString()
                 Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
             }
             cancelButton()
@@ -528,7 +534,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun unblockConversation(thread: ThreadRecord) {
         showSessionDialog {
             title(R.string.blockUnblock)
-            text(Phrase.from(context, R.string.blockUnblockName).put(NAME_KEY, thread.recipient.name).format())
+            text(Phrase.from(context, R.string.blockUnblockName).put(NAME_KEY, thread.recipient.toShortString()).format())
             dangerButton(R.string.blockUnblock, R.string.AccessibilityId_unblockConfirm) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     storage.setBlocked(listOf(thread.recipient), false)
@@ -552,7 +558,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         } else {
             showMuteDialog(this) { until ->
                 lifecycleScope.launch(Dispatchers.IO) {
-                    Log.d("", "**** until: $until")
                     recipientDatabase.setMuted(thread.recipient, until)
                     withContext(Dispatchers.Main) {
                         binding.recyclerView.adapter!!.notifyDataSetChanged()
@@ -616,7 +621,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             if (recipient.name != null) {
                 title = getString(R.string.conversationsDelete)
                 message = Phrase.from(this.applicationContext, R.string.conversationsDeleteDescription)
-                    .put(NAME_KEY, recipient.name)
+                    .put(NAME_KEY, recipient.toShortString())
                     .format()
             }
             else {

@@ -17,6 +17,9 @@
 package org.thoughtcrime.securesms.database;
 
 import static org.thoughtcrime.securesms.database.MmsDatabase.MESSAGE_BOX;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.Types.BASE_DELETED_INCOMING_TYPE;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.Types.BASE_DELETED_OUTGOING_TYPE;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.Types.BASE_TYPE_MASK;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -91,6 +94,14 @@ public class MmsSmsDatabase extends Database {
 
   public @Nullable MessageRecord getMessageForTimestamp(long timestamp) {
     try (Cursor cursor = queryTables(PROJECTION, MmsSmsColumns.NORMALIZED_DATE_SENT + " = " + timestamp, null, null)) {
+      MmsSmsDatabase.Reader reader = readerFor(cursor);
+      return reader.getNext();
+    }
+  }
+
+  public @Nullable MessageRecord getNonDeletedMessageForTimestamp(long timestamp) {
+    String selection = MmsSmsColumns.NORMALIZED_DATE_SENT + " = " + timestamp;
+    try (Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
       MmsSmsDatabase.Reader reader = readerFor(cursor);
       return reader.getNext();
     }
@@ -323,7 +334,9 @@ public class MmsSmsDatabase extends Database {
 
   public long getLastMessageTimestamp(long threadId) {
     String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
-    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
+    // make sure the last message isn't marked as deleted
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId + " AND " +
+            "(ifnull("+SmsDatabase.TYPE+", "+MmsDatabase.MESSAGE_BOX+") & "+BASE_TYPE_MASK+") NOT IN ("+BASE_DELETED_OUTGOING_TYPE+", "+BASE_DELETED_INCOMING_TYPE+")"; // this ugly line checks whether the type is deleted (incoming or outgoing) for either the sms table or the mms table
 
     try (Cursor cursor = queryTables(PROJECTION, selection, order, "1")) {
       if (cursor.moveToFirst()) {

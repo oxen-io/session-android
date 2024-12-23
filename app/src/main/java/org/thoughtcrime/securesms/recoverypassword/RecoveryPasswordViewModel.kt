@@ -34,10 +34,6 @@ class RecoveryPasswordViewModel @Inject constructor(
         .map { MnemonicCodec { MnemonicUtilities.loadFileContents(application, it) }.encode(it, MnemonicCodec.Language.Configuration.english) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
 
-    fun permanentlyHidePassword() {
-        prefs.setHidePassword(true)
-    }
-
     fun copyMnemonic() {
         prefs.setHasViewedSeed(true)
         ClipData.newPlainText("Seed", mnemonic.value)

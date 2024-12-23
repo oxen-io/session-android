@@ -36,8 +36,8 @@
     <string name="adminRemovedUser"><b>{name}</b> はアドミンから削除されました</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> と <b>{count}名</b> がAdminから削除されました。</string>
     <string name="adminRemovedUserOther"><b>{name}</b> と <b>{other_name}</b> がAdminに昇格しました。</string>
-    <string name="adminSendingPromotion">管理者への昇進を送信中</string>
     <string name="adminSettings">アドミン設定</string>
+    <string name="adminTwoPromotedToAdmin"><b>{name}</b> と <b>{other_name}</b> がアドミンに昇格しました</string>
     <string name="andMore">+{count}</string>
     <string name="anonymous">匿名</string>
     <string name="appearanceAutoDarkMode">オートダークモード</string>
@@ -150,7 +150,7 @@
     <string name="callsPermissionsRequiredDescription">プライバシー設定で「音声とビデオ通話」の許可を有効にできます。</string>
     <string name="callsReconnecting">再接続しています...</string>
     <string name="callsRinging">呼び出し中...</string>
-    <string name="callsSessionCall">{app_name} Call</string>
+    <string name="callsSessionCall">{app_name} 電話</string>
     <string name="callsSettings">通話 (ベータ版)</string>
     <string name="callsVoiceAndVideo">音声とビデオ通話</string>
     <string name="callsVoiceAndVideoBeta">音声通話とビデオ通話 (ベータ版)</string>
@@ -236,7 +236,7 @@
     <string name="conversationsEmpty">{conversation_name} にはメッセージがありません。</string>
     <string name="conversationsEnter">キーを入力</string>
     <string name="conversationsEnterDescription">会話中のEnterキーの機能</string>
-    <string name="conversationsEnterNewLine">SHIFT + ENTER 送信, ENTER 改行</string>
+    <string name="conversationsEnterNewLine">シフト + エンター 送信、エンター 改行</string>
     <string name="conversationsEnterSends">エンターでメッセージを送信、シフト + エンターで改行を開始</string>
     <string name="conversationsGroups">グループ</string>
     <string name="conversationsMessageTrimming">メッセージの削減</string>
@@ -244,10 +244,11 @@
     <string name="conversationsMessageTrimmingTrimCommunitiesDescription">6ヶ月以上のコミュニティと2,000以上のメッセージがあるコミュニティからメッセージを削除します。</string>
     <string name="conversationsNew">新しい会話</string>
     <string name="conversationsNone">まだ通知はありません</string>
-    <string name="conversationsSendWithEnterKey">Enter キーで送信</string>
+    <string name="conversationsSendWithEnterKey">エンターキーで送信</string>
     <string name="conversationsSendWithEnterKeyDescription">Enterキーをタップすると、改行ではなく、メッセージが送信されます。</string>
     <string name="conversationsSettingsAllMedia">すべてのメディア</string>
     <string name="conversationsSpellCheck">スペルチェック</string>
+    <string name="conversationsSpellCheckDescription">メッセージを入力するときにスペルチェックを有効にします</string>
     <string name="conversationsStart">会話を開始する</string>
     <string name="copied">コピーしました</string>
     <string name="copy">コピーする</string>
@@ -278,13 +279,11 @@
     <plurals name="deleteMessage">
         <item quantity="other">メッセージを削除</item>
     </plurals>
-    <string name="deleteMessageConfirm">本当にこのメッセージを削除しますか？</string>
     <plurals name="deleteMessageDeleted">
         <item quantity="other">メッセージが削除されました</item>
     </plurals>
     <string name="deleteMessageDeletedGlobally">このメッセージは削除されました</string>
     <string name="deleteMessageDeletedLocally">このメッセージはこのデバイス上で削除されました</string>
-    <string name="deleteMessageDescriptionDevice">本当にこのメッセージをこのデバイスのみから削除しますか？</string>
     <string name="deleteMessageDescriptionEveryone">本当にこのメッセージを全員に対して削除しますか？</string>
     <string name="deleteMessageDeviceOnly">このデバイスのみを削除</string>
     <string name="deleteMessageDevicesAll">すべてのデバイスから削除</string>
@@ -292,8 +291,6 @@
     <plurals name="deleteMessageFailed">
         <item quantity="other">メッセージの削除に失敗しました</item>
     </plurals>
-    <string name="deleteMessagesConfirm">本当にこれらのメッセージを削除しますか？</string>
-    <string name="deleteMessagesDescriptionDevice">このデバイスからのみメッセージを削除してもよろしいですか？</string>
     <string name="deleteMessagesDescriptionEveryone">すべてのユーザーのメッセージを削除してもよろしいですか？</string>
     <string name="deleting">削除中</string>
     <string name="developerToolsToggle">開発者ツールを切り替える</string>
@@ -316,8 +313,9 @@
     <string name="disappearingMessagesDisappearAfterSendState">送信後に消えます - {time}</string>
     <string name="disappearingMessagesFollowSetting">設定をフォロー</string>
     <string name="disappearingMessagesFollowSettingOff">送信したメッセージはもう消滅しません。消滅メッセージを<b>オフ</b>にしてもよろしいですか？</string>
-    <string name="disappearingMessagesFollowSettingOn">あなたのメッセージを<b>{time}</b>後に<b>{disappearing_messages_type}</b>消えるように設定しますか？</string>
+    <string name="disappearingMessagesFollowSettingOn">メッセージを<b>{time}</b>後に<b>{disappearing_messages_type}</b>消えるようにセットしますか？</string>
     <string name="disappearingMessagesLegacy">{name}は古いクライアントを使用しています。消えるメッセージが期待通りに動作しない場合があります。</string>
+    <string name="disappearingMessagesOnlyAdmins">この設定はグループアドミンのみ変更可能です</string>
     <string name="disappearingMessagesSent">送信済み</string>
     <string name="disappearingMessagesSet"><b>{name}</b> が {time} になった後、{disappearing_messages_type}メッセージが消えるように設定しました。</string>
     <string name="disappearingMessagesSetYou"><b>You</b> は {time} になった後、{disappearing_messages_type}メッセージが消えるように設定しました。</string>
@@ -327,7 +325,7 @@
     <string name="disappearingMessagesTurnedOffYou"><b>You</b> は<b>消えるメッセージ</b>をオフにしました。送信されたメッセージは消えなくなります。</string>
     <string name="disappearingMessagesTurnedOffYouGroup"><b>あなた</b> は消えているメッセージを <b>オフ</b>にしました。</string>
     <string name="disappearingMessagesTypeRead">既読</string>
-    <string name="disappearingMessagesTypeSent">送信</string>
+    <string name="disappearingMessagesTypeSent">送信済み</string>
     <string name="disappearingMessagesUpdated"><b>{admin_name}</b>が消えるメッセージの設定を更新しました</string>
     <string name="disappearingMessagesUpdatedYou"><b>You</b> は消えるメッセージの設定を更新しました</string>
     <string name="dismiss">キャンセル</string>
@@ -338,7 +336,7 @@
     <string name="displayNameErrorNew">表示名を読み込めませんでした。続行するには新しい表示名を入力してください。</string>
     <string name="displayNameNew">新しい表示名を選択してください</string>
     <string name="displayNamePick">表示名を選択してください</string>
-    <string name="displayNameSet">表示名を設定</string>
+    <string name="displayNameSet">表示名をセット</string>
     <string name="document">ドキュメント</string>
     <string name="done">完了</string>
     <string name="download">ダウンロード</string>
@@ -351,11 +349,15 @@
     <string name="emojiCategoryFlags">フラグ</string>
     <string name="emojiCategoryFood">食べ物・飲み物</string>
     <string name="emojiCategoryObjects">オブジェクト</string>
-    <string name="emojiCategorySmileys">スマイル &amp;amp; 人</string>
+    <string name="emojiCategoryRecentlyUsed">最近使用</string>
+    <string name="emojiCategorySmileys">スマイリーと人</string>
     <string name="emojiCategorySymbols">記号</string>
     <string name="emojiCategoryTravel">旅行&amp;場所</string>
     <string name="emojiReactsClearAll">すべての項目の{emoji}を削除してもよろしいですか？</string>
-    <string name="emojiReactsCoolDown">スローダウンしました。絵文字リアクターが多すぎます。しばらくしてからもう一度試してください。</string>
+    <string name="emojiReactsCoolDown">スローダウンしてください。絵文字リアクションが多すぎます。しばらくしてからもう一度試してください。</string>
+    <plurals name="emojiReactsCountOthers">
+        <item quantity="other">%1$d が %2$s をこのメッセージに反応しました</item>
+    </plurals>
     <string name="emojiReactsHoverNameDesktop">{name}が{emoji_name}でリアクションしました</string>
     <string name="emojiReactsHoverNameTwoDesktop">{name}と{other_name}が{emoji_name}でリアクションしました</string>
     <string name="emojiReactsHoverTwoNameMultipleDesktop">{name}と<span>{count}その他</span>が{emoji_name}で反応しました</string>
@@ -388,13 +390,12 @@
     <string name="groupError">グループエラー</string>
     <string name="groupErrorCreate">グループの作成に失敗しました。インターネット接続を確認して、もう一度やり直してください。</string>
     <string name="groupErrorJoin">{group_name} への参加に失敗しました</string>
-    <string name="groupInformationSet">Set Group Information</string>
+    <string name="groupInformationSet">グループの詳細をセット</string>
     <string name="groupInviteDelete">本当にこのグループ招待を削除しますか？</string>
     <string name="groupInviteFailed">招待に失敗しました</string>
     <string name="groupInviteFailedMultiple">{name} と他 {count} 人を {group_name} に招待できませんでした</string>
     <string name="groupInviteFailedTwo">{name} と {other_name} を {group_name} に招待できませんでした</string>
     <string name="groupInviteFailedUser">{name} を {group_name} に招待できませんでした</string>
-    <string name="groupInviteSending">招待状を送信中</string>
     <string name="groupInviteSent">招待を送信しました</string>
     <string name="groupInviteSuccessful">グループの招待が成功しました</string>
     <string name="groupInviteVersion">ユーザーは最新のリリースを持っている必要があります</string>
@@ -416,7 +417,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> と <b>{count}名</b> がグループに招待されました。</string>
     <string name="groupMemberNewTwo"><b>{name}</b> と <b>{other_name}</b> がグループに招待されました。</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>あなた</b> と <b>{count}名</b> がグループに招待されました。チャット履歴が共有されました。</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>あなた</b> と <b>{name}</b> がグループに招待されました。チャット履歴が共有されました。</string>
     <string name="groupMemberYouLeft"><b>You</b>がグループを退会しました</string>
     <string name="groupMembers">グループメンバー</string>
     <string name="groupMembersNone">このグループには他のメンバーがいません。</string>
@@ -446,13 +446,13 @@
     <string name="groupRemovedYou"><b>{group_name}</b>から削除されました。</string>
     <string name="groupRemovedYouMultiple"><b>あなた</b> と <b>{count}名</b> がグループから削除されました。</string>
     <string name="groupRemovedYouTwo"><b>あなた</b> と <b>{other_name}</b> がグループから削除されました。</string>
-    <string name="groupSetDisplayPicture">グループのアイコン画像を設定</string>
+    <string name="groupSetDisplayPicture">グループのアイコン画像をセット</string>
     <string name="groupUnknown">不明なグループ</string>
     <string name="groupUpdated">グループが更新されました</string>
     <string name="helpFAQ">よくある質問</string>
     <string name="helpHelpUsTranslateSession">{app_name}の翻訳にご協力ください</string>
     <string name="helpReportABug">バグを報告</string>
-    <string name="helpReportABugDescription">詳細を共有して、私たちが問題を解決するのを手伝ってください。ログをエクスポートし、{app_name}のヘルプデスクを通じてファイルをアップロードしてください。</string>
+    <string name="helpReportABugDescription">詳細を共有して問題解決にご協力ください。ログをエクスポートして、{app_name}のヘルプデスクからファイルをアップロードしてください</string>
     <string name="helpReportABugExportLogs">ログのエクスポート</string>
     <string name="helpReportABugExportLogsDescription">ログをエクスポートし、{app_name} のヘルプデスクにてファイルをアップロードします。</string>
     <string name="helpReportABugExportLogsSaveToDesktop">デスクトップに保存</string>
@@ -479,12 +479,12 @@
     <string name="legacyGroupMemberTwoNew"><b>{name}</b> と <b>{other_name}</b> がグループに加わりました</string>
     <string name="legacyGroupMemberYouNew"><b>あなた</b>がグループに加わりました</string>
     <string name="linkPreviews">リンクプレビュー</string>
-    <string name="linkPreviewsDescription">サポートされている URL のリンクプレビューを表示します。</string>
+    <string name="linkPreviewsDescription">サポートされている URL のリンクプレビューを表示します</string>
     <string name="linkPreviewsEnable">リンクプレビューを有効にする</string>
     <string name="linkPreviewsErrorLoad">リンクプレビューを読み込めません</string>
     <string name="linkPreviewsErrorUnsecure">セキュアでないリンクのプレビューは読み込めません</string>
     <string name="linkPreviewsFirstDescription">送受信する URL のプレビューを表示します。これは便利ですが、{app_name} はプレビューを生成するためにリンクされた サイトにアクセスする必要があります。 {app_name} の設定でいつでもリンクのプレビューをオフにできます。</string>
-    <string name="linkPreviewsSend">リンクプレビューを送る</string>
+    <string name="linkPreviewsSend">リンクプレビューを表示</string>
     <string name="linkPreviewsSendModalDescription">リンクのプレビューを送信するとき、完全なメタデータ保護はありません。</string>
     <string name="linkPreviewsTurnedOff">リンクプレビューが無効です</string>
     <string name="linkPreviewsTurnedOffDescription">{app_name}は、送受信するリンクのプレビューを生成するためにリンクされたウェブサイトに接続する必要があります。\n\n{app_name}の設定でプレビューをオンにできます。</string>
@@ -516,8 +516,8 @@
     <string name="membersInviteShareDescription"><b>{name}</b>にグループメッセージ履歴を共有しますか？</string>
     <string name="membersInviteShareDescriptionMultiple"><b>{name}</b>と<b>{count}人</b>にグループメッセージ履歴を共有しますか？</string>
     <string name="membersInviteShareDescriptionTwo"><b>{name}</b>と<b>{other_name}</b>にグループメッセージ履歴を共有しますか？</string>
-    <string name="membersInviteShareMessageHistory">Share message history</string>
-    <string name="membersInviteShareNewMessagesOnly">Share new messages only</string>
+    <string name="membersInviteShareMessageHistory">メッセージ履歴を共有</string>
+    <string name="membersInviteShareNewMessagesOnly">新しいメッセージのみを共有</string>
     <string name="membersInviteTitle">招待</string>
     <string name="message">メッセージ</string>
     <string name="messageEmpty">このメッセージは空です。</string>
@@ -542,7 +542,7 @@
     <string name="messageRequestPending">メッセージ・リクエストは現在承認待ちです。</string>
     <string name="messageRequestPendingDescription">受信者がこのメッセージリクエストを承認すると、音声メッセージと添付ファイルを送信できます.</string>
     <string name="messageRequestYouHaveAccepted"><b>{name}さん</b>のメッセージリクエストを承認しました</string>
-    <string name="messageRequestsAcceptDescription">このユーザーにメッセージを送信すると、自動的にメッセージリクエストが承認され、あなたのAccount IDが公開されます。</string>
+    <string name="messageRequestsAcceptDescription">このユーザーにメッセージを送ると、メッセージリクエストが自動的に承認され、アカウントIDが公開されます。</string>
     <string name="messageRequestsAccepted">メッセージ・リクエストが承認されました。</string>
     <string name="messageRequestsClearAllExplanation">本当に全てのメッセージリクエストとグループ招待を消去しますか？</string>
     <string name="messageRequestsCommunities">コミュニティメッセージリクエスト</string>
@@ -568,7 +568,7 @@
     <string name="nicknameDescription"><b>{name}</b>のニックネームを選んでください。これが1対1およびグループ会話で表示されます。</string>
     <string name="nicknameEnter">ニックネームを入力してください</string>
     <string name="nicknameRemove">ニックネームを削除</string>
-    <string name="nicknameSet">Set Nickname</string>
+    <string name="nicknameSet">ニックネームをセット</string>
     <string name="no">いいえ</string>
     <string name="noSuggestions">候補はありません</string>
     <string name="none">なし</string>
@@ -594,6 +594,7 @@
     <string name="notificationsIosRestart">{device}の再起動中にメッセージが届いたかもしれません</string>
     <string name="notificationsLedColor">LED色</string>
     <string name="notificationsMentionsOnly">メンションのみ</string>
+    <string name="notificationsMessage">メッセージ通知</string>
     <string name="notificationsMostRecent">最新の受信: {name}</string>
     <string name="notificationsMute">ミュート</string>
     <string name="notificationsMuteFor">{time_large}間ミュート</string>
@@ -630,7 +631,7 @@
     <string name="onionRoutingPathDescription">{app_name}は、{app_name}の分散型ネットワークの複数のService Nodeを介してメッセージをバウンスすることにより、IPアドレスを隠します。これが現在の経路です:</string>
     <string name="onionRoutingPathDestination">目的先</string>
     <string name="onionRoutingPathEntryNode">エントリーノード</string>
-    <string name="onionRoutingPathServiceNode">Service Node</string>
+    <string name="onionRoutingPathServiceNode">サービスノード</string>
     <string name="onionRoutingPathUnknownCountry">国名が不明</string>
     <string name="onsErrorNotRecognized">このONSを認識できませんでした。内容を確認して再度お試しください。</string>
     <string name="onsErrorUnableToSearch">このONSを検索できませんでした。後でもう一度お試しください。</string>
@@ -642,6 +643,7 @@
     <string name="passwordConfirm">パスワードを再確認</string>
     <string name="passwordCreate">パスワードを作成してください</string>
     <string name="passwordCurrentIncorrect">現在のパスワードが間違っています。</string>
+    <string name="passwordDescription">{app_name} のロックを解除するにはパスワードが必要です</string>
     <string name="passwordEnter">パスワードを入力してください</string>
     <string name="passwordEnterCurrent">現在のパスワードを入力してください</string>
     <string name="passwordEnterNew">新しいパスワードを入力してください</string>
@@ -653,7 +655,7 @@
     <string name="passwordRemove">パスワードを削除</string>
     <string name="passwordRemoveDescription">{app_name} のロックを解除するために必要なパスワードを削除します</string>
     <string name="passwordRemovedDescription">パスワードを削除しました。</string>
-    <string name="passwordSet">パスワードを設定</string>
+    <string name="passwordSet">パスワードをセット</string>
     <string name="passwordSetDescription">パスワードが設定されました。安全に保管してください。</string>
     <string name="paste">貼り付け</string>
     <string name="permissionMusicAudioDenied">{app_name} は、ファイル、音楽、およびオーディオを送信するために音楽およびオーディオアクセスが必要ですが、それが恒久的に拒否されています。設定に移動して、「権限」を選択し、「音楽およびオーディオ」を有効にしてください。</string>
@@ -685,20 +687,21 @@
     <string name="profile">プロフィール</string>
     <string name="profileDisplayPicture">ディスプレイの画像</string>
     <string name="profileDisplayPictureRemoveError">表示画像の削除に失敗しました。</string>
-    <string name="profileDisplayPictureSet">ディスプレイの画像を設定</string>
+    <string name="profileDisplayPictureSet">ディスプレイの画像をセット</string>
     <string name="profileDisplayPictureSizeError">小さいファイルを選んでください</string>
     <string name="profileErrorUpdate">プロフィールを更新できませんでした</string>
     <string name="promote">昇格</string>
     <string name="qrCode">QR コード</string>
     <string name="qrNotAccountId">このQRコードにはアカウントIDが含まれていません</string>
     <string name="qrNotRecoveryPassword">このQRコードにはリカバリーパスワードが含まれていません</string>
-    <string name="qrScan">QRコードを読み取る</string>
+    <string name="qrScan">QRコードをスキャン</string>
     <string name="qrView">QRコードを表示</string>
+    <string name="qrYoursDescription">友達があなたのQRコードをスキャンすることでメッセージを送信できます</string>
     <string name="quit">{app_name} を終了</string>
     <string name="quitButton">終了</string>
     <string name="read">既読</string>
     <string name="readReceipts">既読通知</string>
-    <string name="readReceiptsDescription">送信したすべてのメッセージに対する既読通知を表示します。</string>
+    <string name="readReceiptsDescription">送信したすべてのメッセージに対する既読通知を表示します</string>
     <string name="received">受信:</string>
     <string name="recommended">オススメ</string>
     <string name="recoveryPasswordBannerDescription">リカバリーパスワードを保存して、アカウントにアクセスできなくならないようにしてください</string>
@@ -733,8 +736,8 @@
     <string name="savedMessages">保存済みのメッセージ</string>
     <string name="saving">保存中...</string>
     <string name="scan">スキャン</string>
-    <string name="screenSecurity">スクリーン・セキュリティ</string>
-    <string name="screenshotNotifications">スクリーンショット撮影時の通知</string>
+    <string name="screenSecurity">スクリーンセキュリティ</string>
+    <string name="screenshotNotifications">スクリーンショット通知</string>
     <string name="screenshotNotificationsDescription">連絡先が1対1チャットのスクリーンショットを撮ったときに通知を受け取ります</string>
     <string name="screenshotTaken"><b>{name}</b>はスクリーンショットを撮りました</string>
     <string name="search">検索</string>
@@ -768,12 +771,12 @@
     <string name="settingsRestartDescription">新しい設定を適用するために {app_name} を再起動する必要があります.</string>
     <string name="share">共有</string>
     <string name="shareAccountIdDescription">友達を{app_name} に招待して、チャットを始めましょう。アカウントIDを共有して招待できます。</string>
-    <string name="shareAccountIdDescriptionCopied">いつもどこでも友達と共有してください — ここで会話を移動します。</string>
+    <string name="shareAccountIdDescriptionCopied">いつでもどこでも友達と共有 — ここで会話を始めましょう</string>
     <string name="shareExtensionDatabaseError">データベースを開く際に問題が発生しました。アプリを再起動して再度お試しください。</string>
     <string name="shareToSession">{app_name}に共有</string>
     <string name="show">表示</string>
     <string name="showAll">すべて表示</string>
-    <string name="showLess">最小化</string>
+    <string name="showLess">少なく表示</string>
     <string name="stickers">ステッカー</string>
     <string name="supportGoTo">サポートページへ</string>
     <string name="systemInformationDesktop">システム情報: {information}</string>
@@ -782,7 +785,7 @@
     <string name="theError">エラー</string>
     <string name="tryAgain">再試行</string>
     <string name="typingIndicators">入力中アイコン</string>
-    <string name="typingIndicatorsDescription">入力中アイコンを表示する</string>
+    <string name="typingIndicatorsDescription">入力中アイコンを表示</string>
     <string name="undo">元に戻す</string>
     <string name="unknown">不明</string>
     <string name="updateApp">アプリ更新</string>

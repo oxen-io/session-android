@@ -115,7 +115,7 @@ class ShareLogsDialog(private val updateCallback: (Boolean)->Unit): DialogFragme
             } catch (e: Exception) {
                 withContext(Main) {
                     Log.e("Loki", "Error saving logs", e)
-                    Toast.makeText(context,"Error saving logs", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context,getString(R.string.errorUnknown), Toast.LENGTH_LONG).show()
                 }
             }
         }.also { shareJob ->

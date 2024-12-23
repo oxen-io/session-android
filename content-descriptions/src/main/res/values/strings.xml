@@ -128,6 +128,9 @@
     <string name="AccessibilityId_messageVoice">Voice message</string>
     <string name="AccessibilityId_deliveryIndicator">Delivered</string>
     <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
+    <!-- Modals -->
+    <string name="AccessibilityId_modalTitle">Modal heading</string>
+    <string name="AccessibilityId_modalMessage">Modal description</string>
     <!-- Delete message modal-->
     <string name="AccessibilityId_deleteMessageCancel">Cancel deletion</string>
     <string name="AccessibilityId_deleteMessageEveryone">Delete for everyone</string>   <!-- ACL: Perhaps should be "AccessibilityId_clearMessagesForEveryone"? -->
