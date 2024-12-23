@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> is as Admin verwyder</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> en <b>{count} ander</b> is verwyder as Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> en <b>{other_name}</b> is verwyder as Admin.</string>
-    <string name="adminSendingPromotion">Bevordering van admin word gestuur</string>
     <string name="adminSettings">Admin-instellings</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> en <b>{other_name}</b> is bevorder tot Admin.</string>
     <string name="andMore">+{count}</string>
@@ -256,7 +255,7 @@
     <string name="create">Skep</string>
     <string name="cut">Sny</string>
     <string name="databaseErrorGeneric">’n Databasisfout het voorgekom.\n\nVoer jou toepassingslogboeke uit om te deel vir foutsporing. Indien dit onsuksesvol is, herinstalleer {app_name} en herstel jou rekening.\n\nWaarskuwing: Dit sal lei tot die verlies van alle boodskappe, aanhegsels, en rekeningdata ouer as twee weke.</string>
-    <string name="databaseErrorTimeout">Ons het opgemerk {app_name} neem lank om te begin.\n\nJy kan aanhou wag, jou toestel logs uitvoer om te deel vir foutsporing, of probeer om Session te herbegin.</string>
+    <string name="databaseErrorTimeout">Ons het opgemerk {app_name} neem lank om te begin.\n\nJy kan aanhou wag, jou toestel logs uitvoer om te deel vir foutsporing, of probeer om {app_name} te herbegin.</string>
     <string name="databaseErrorUpdate">Jou app databasis is onversoenbaar met hierdie weergawe van {app_name}. Herinstalleer die app en herstel jou rekening om \'n nuwe databasis te genereer en voort te gaan met die gebruik van {app_name}.\n\nWaarskuwing: Dit sal lei tot die verlies van alle boodskappe en aanhegsels ouer as twee weke.</string>
     <string name="databaseOptimizing">Optimalisering databasis</string>
     <string name="debugLog">Ontfout Log</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Hierdie boodskap is verwyder</string>
     <string name="deleteMessageDeletedLocally">Hierdie boodskap is op hierdie toestel verwyder</string>
-    <string name="deleteMessageDescriptionDevice">Is jy seker jy wil hierdie boodskap slegs van hierdie toestel skrap?</string>
     <string name="deleteMessageDescriptionEveryone">Is jy seker jy wil hierdie boodskap vir almal skrap?</string>
     <string name="deleteMessageDeviceOnly">Skrap net op hierdie toestel</string>
     <string name="deleteMessageDevicesAll">Skrap op al my toestelle</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Kon nie boodskap uitvee nie</item>
         <item quantity="other">Kon nie boodskappe uitvee nie</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Is jy seker jy wil hierdie boodskappe net van hierdie toestel verwyder?</string>
     <string name="deleteMessagesDescriptionEveryone">Is jy seker jy wil hierdie boodskappe vir almal verwyder?</string>
     <string name="deleting">Skrap...</string>
     <string name="developerToolsToggle">Skakel Ontwikkelaarhulpmiddels aan/af</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Kon nie {name} en {count} ander na {group_name} nooi nie</string>
     <string name="groupInviteFailedTwo">Kon nie {name} en {other_name} na {group_name} nooi nie</string>
     <string name="groupInviteFailedUser">Kon nie {name} na {group_name} nooi nie</string>
-    <string name="groupInviteSending">Uitnodiging word gestuur</string>
     <string name="groupInviteSent">Nooi gestuur</string>
     <string name="groupInviteSuccessful">Groepuitnodiging suksesvol</string>
     <string name="groupInviteVersion">Gebruikers moet die nuutste weergawe hê om uitnodigings te ontvang</string>
@@ -425,7 +421,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> en <b>{count} ander</b> is genooi om by die groep aan te sluit.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> en <b>{other_name}</b> is genooi om by die groep aan te sluit.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Jy</b> en <b>{count} ander</b> is genooi om by die groep aan te sluit. Kletsgeskiedenis is gedeel.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Jy</b> en <b>{name}</b> is genooi om by die groep aan te sluit. Kletsgeskiedenis is gedeel.</string>
     <string name="groupMemberYouLeft"><b>You</b> het die groep verlaat</string>
     <string name="groupMembers">Groep Lede</string>
     <string name="groupMembersNone">Daar is geen ander lede in hierdie groep nie.</string>

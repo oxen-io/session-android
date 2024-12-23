@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> buvo pašalintas kaip adminas.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> ir <b>dar {count}</b> buvo pašalinti iš administratorių.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> ir <b>{other_name}</b> buvo pašalinti iš administratorių.</string>
-    <string name="adminSendingPromotion">Siunčiama administratoriams</string>
     <string name="adminSettings">Administratoriaus nustatymai</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> ir <b>{other_name}</b> buvo paskirti adminais.</string>
     <string name="andMore">+{count}</string>
@@ -293,7 +292,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ši žinutė ištrinta</string>
     <string name="deleteMessageDeletedLocally">Ši žinutė ištrinta šiame įrenginyje</string>
-    <string name="deleteMessageDescriptionDevice">Ar tikrai norite ištrinti šią žinutę tik iš šio įrenginio?</string>
     <string name="deleteMessageDescriptionEveryone">Ar tikrai norite ištrinti šią žinutę visiems?</string>
     <string name="deleteMessageDeviceOnly">Ištrinti tik šiame įrenginyje</string>
     <string name="deleteMessageDevicesAll">Ištrinti visuose mano įrenginiuose</string>
@@ -304,7 +302,6 @@
         <item quantity="many">Nepavyko ištrinti žinučių</item>
         <item quantity="other">Nepavyko ištrinti žinučių</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Ar tikrai norite ištrinti šias žinutes tik iš šio įrenginio?</string>
     <string name="deleteMessagesDescriptionEveryone">Ar tikrai norite ištrinti šias žinutes visiems?</string>
     <string name="deleting">Ištrinama</string>
     <string name="developerToolsToggle">Perjungti kūrėjo įrankius</string>
@@ -413,7 +410,6 @@
     <string name="groupInviteFailedMultiple">Nepavyko pakviesti {name} ir {count} kitų į {group_name}</string>
     <string name="groupInviteFailedTwo">Nepavyko pakviesti {name} ir {other_name} į {group_name}</string>
     <string name="groupInviteFailedUser">Nepavyko pakviesti {name} į {group_name}</string>
-    <string name="groupInviteSending">Siunčiamas kvietimas</string>
     <string name="groupInviteSent">Pakvietimas išsiųstas</string>
     <string name="groupInviteSuccessful">Grupės kvietimas sėkmingas</string>
     <string name="groupInviteVersion">Norint gauti kvietimus, vartotojai privalo turėti naujausią versiją</string>
@@ -435,7 +431,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> ir <b>{count} kiti</b> buvote pakviesti prisijungti prie grupės.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> ir <b>{other_name}</b> buvote pakviesti prisijungti prie grupės.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Jūs</b> ir <b>dar {count}</b> buvo pakviesti prisijungti prie grupės. Pokalbio istorija buvo pasidalinta.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Jūs</b> ir <b>{name}</b> buvo pakviesti prisijungti prie grupės. Pokalbio istorija buvo pasidalinta.</string>
     <string name="groupMemberYouLeft"><b>Jūs</b> išėjote iš grupės.</string>
     <string name="groupMembers">Grupės dalyviai</string>
     <string name="groupMembersNone">Šioje grupėje nėra kitų narių.</string>
@@ -445,6 +440,7 @@
     <string name="groupNameEnterShorter">Įveskite trumpesnį grupės pavadinimą.</string>
     <string name="groupNameNew">Dabar, grupės pavadinimas yra \"{group_name}\".</string>
     <string name="groupNameUpdated">Grupės pavadinimas atnaujintas.</string>
+    <string name="groupNameVisible">Grupės pavadinimas yra matomas visiems grupės nariams.</string>
     <string name="groupNoMessages">Neturite žinučių iš <b>{group_name}</b>. Parašykite žinutę, kad pradėtumėte pokalbį!</string>
     <string name="groupOnlyAdmin">Jūs esate vienintelis administratorius grupėje <b>{group_name}</b>.\n\nGrupės nariai ir nustatymai negali būti keičiami be administratoriaus.</string>
     <string name="groupPromotedYou"><b>Jūs</b> buvote paskirti adminu.</string>
@@ -469,6 +465,7 @@
     <string name="groupRemovedMultiple"><b>{name}</b> ir <b>{count} kiti</b> buvo pašalinti iš grupės.</string>
     <string name="groupRemovedTwo"><b>{name}</b> ir <b>{other_name}</b> buvo pašalinti iš grupės.</string>
     <string name="groupRemovedYou">Jūs buvote pašalinti iš <b>{group_name}</b>.</string>
+    <string name="groupRemovedYouGeneral">Jūs buvote pašalinti iš grupės.</string>
     <string name="groupRemovedYouMultiple"><b>Jūs</b> ir <b>dar {count}</b> buvo pašalinti iš grupės.</string>
     <string name="groupRemovedYouTwo"><b>Jūs</b> ir <b>{other_name}</b> buvo pašalinti iš grupės.</string>
     <string name="groupSetDisplayPicture">Nustatyti grupės rodomą paveikslėlį</string>
@@ -531,7 +528,7 @@
         <item quantity="one">%1$d narys</item>
         <item quantity="few">%1$d nariai</item>
         <item quantity="many">%1$d narių</item>
-        <item quantity="other">%1$d nariai</item>
+        <item quantity="other">%1$d narys</item>
     </plurals>
     <plurals name="membersActive">
         <item quantity="one">%1$d aktyvus narys</item>
@@ -607,6 +604,7 @@
     <string name="next">Kitas</string>
     <string name="nicknameDescription">Pasirinkite slapyvardį <b>{name}</b>. Jis bus matomas jums pokalbiuose vienas prieš vieną ir grupinėse diskusijose.</string>
     <string name="nicknameEnter">Įveskite slapyvardį</string>
+    <string name="nicknameErrorShorter">Įveskite trumpesnį slapyvardį</string>
     <string name="nicknameRemove">Šalinti slapyvardį</string>
     <string name="nicknameSet">Nustatyti pravardę</string>
     <string name="no">Ne</string>

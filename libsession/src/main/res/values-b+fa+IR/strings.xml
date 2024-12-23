@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> از مدیریت حذف شد.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> و<b>{count} سایرین</b> از مدیریت حذف شدند.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> و <b>{other_name}</b> از مدیریت حذف شدند.</string>
-    <string name="adminSendingPromotion">ارسال ترفیع ادمین</string>
     <string name="adminSettings">تنظیمات ادمین</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> و <b>{other_name}</b> به مدیر ارتقاء یافتند.</string>
     <string name="andMore">+{count}</string>
@@ -285,7 +284,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">این پیام حذف شده است</string>
     <string name="deleteMessageDeletedLocally">این پیام در این دستگاه پاک شد</string>
-    <string name="deleteMessageDescriptionDevice">آیا مطمئن هستید که می‌خواهید این پیام را فقط از این دستگاه حذف کنید؟</string>
     <string name="deleteMessageDescriptionEveryone">آیا مطمئن هستید که می‌خواهید این پیام را برای همه حذف کنید؟</string>
     <string name="deleteMessageDeviceOnly">حذف فقط از این دستگاه</string>
     <string name="deleteMessageDevicesAll">حذف از تمام دستگاه‌هایم</string>
@@ -294,7 +292,10 @@
         <item quantity="one">خطا در حذف پیام</item>
         <item quantity="other">خطا در حذف پیام ها</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">آیا مطمئن هستید می‌خواهید این پیام‌ها را فقط از این دستگاه حذف کنید؟</string>
+    <plurals name="deleteMessageWarning">
+        <item quantity="one">این پیام قابل حذف برای همه نیست</item>
+        <item quantity="other">برخی از پیام هایی که انتخاب کرده اید را نمیتوان برای همه حذف کرد</item>
+    </plurals>
     <string name="deleteMessagesDescriptionEveryone">آیا مطمئن هستید می‌خواهید این پیام‌ها را برای همه حذف کنید؟</string>
     <string name="deleting">در حال حذف</string>
     <string name="developerToolsToggle">تاگل ابزار های توسعه دهنده</string>
@@ -401,7 +402,10 @@
     <string name="groupInviteFailedMultiple">دعوت از {name} و {count} نفر دیگر به {group_name} انجام نشد</string>
     <string name="groupInviteFailedTwo">دعوت از {name} و {other_name} به {group_name} انجام نشد</string>
     <string name="groupInviteFailedUser">دعوت از {name} به {group_name} انجام نشد</string>
-    <string name="groupInviteSending">ارسال دعوت نامه</string>
+    <plurals name="groupInviteSending">
+        <item quantity="one">ارسال دعوت نامه</item>
+        <item quantity="other">ارسال دعوت نامه ها</item>
+    </plurals>
     <string name="groupInviteSent">دعوت نامه ارسال شد</string>
     <string name="groupInviteSuccessful">دعوت به گروه موفقیت‌آمیز بود</string>
     <string name="groupInviteVersion">کاربران باید آخرین نسخه را داشته باشند تا دعوت‌نامه دریافت کنند</string>
@@ -422,7 +426,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> و <b>{count} سایرین</b> برای عضویت در گروه دعوت شدند.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> و <b>{other_name}</b> برای عضویت در گروه دعوت شدند.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>شما</b> و<b>{count} سایرین</b> دعوت شدید تا به گروه بپیوندید. تاریخچه ی چت به اشتراک گذاشته شد.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>شما</b> و <b>{name}</b> دعوت شدید تا به گروه بپیوندید. تاریخچه ی چت به اشتراک گذاشته شد.</string>
     <string name="groupMemberYouLeft"><b>شما</b> گروه را ترک کردید.</string>
     <string name="groupMembers">اعضای گروه</string>
     <string name="groupMembersNone">هیچ عضو دیگری در این گروه نیست.</string>

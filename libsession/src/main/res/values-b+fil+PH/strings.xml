@@ -36,7 +36,6 @@
     <string name="adminRemovedUser">Tinanggal si <b>{name}</b> bilang Admin.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> at <b>{count} iba pa</b> ay tinanggal bilang Admin.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> at <b>{other_name}</b> ay tinanggal bilang Admin.</string>
-    <string name="adminSendingPromotion">Sending admin promotion</string>
     <string name="adminSettings">Mga Setting ng Admin</string>
     <string name="adminTwoPromotedToAdmin"><b>{name} </b> at <b>{other_name}</b> na-promote sa Admin.</string>
     <string name="andMore">+{count}</string>
@@ -256,7 +255,7 @@
     <string name="create">Lumikha</string>
     <string name="cut">I-cut</string>
     <string name="databaseErrorGeneric">Nagkaroon ng error sa database.\n\n I-export ang mga log ng iyong application para i-share para sa pag-troubleshoot. Kung hindi ito matagumpay, muling i-install ang {app_name} at ibalik ang iyong account.\n\nBabala: Magreresulta ito sa pagkawala ng lahat ng mga mensahe, attachment, at data ng account na mas matanda kaysa dalawang linggo.</string>
-    <string name="databaseErrorTimeout">Napansin naming matagal bago mag-start ang {app_name}.\n\nPuwede kang maghintay nalang, i-export ang iyong device logs para i-share para sa troubleshooting, o subukan i-restart ang Session.</string>
+    <string name="databaseErrorTimeout">Napansin naming matagal bago mag-start ang {app_name}.\n\nPuwede kang maghintay nalang, i-export ang iyong device logs para i-share para sa troubleshooting, o subukan i-restart ang {app_name}.</string>
     <string name="databaseErrorUpdate">Ang iyong app database ay hindi compatible sa bersyon na ito ng {app_name}. I-reinstall ang app at i-restore ang iyong account upang makabuo ng bagong database at ipagpatuloy ang paggamit ng {app_name}.\n\nBabala: Ito ay magreresulta sa pagkawala ng lahat ng mensahe at attachments na higit sa dalawang linggo.</string>
     <string name="databaseOptimizing">Ina-optimize ang Database</string>
     <string name="debugLog">I-debug ang Log</string>
@@ -287,7 +286,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Ang mensaheng ito ay nabura na</string>
     <string name="deleteMessageDeletedLocally">Ang mensaheng ito ay nabura sa device na ito</string>
-    <string name="deleteMessageDescriptionDevice">Sigurado ka bang gusto mong burahin ang mensaheng ito mula sa device lamang na ito?</string>
     <string name="deleteMessageDescriptionEveryone">Sigurado ka bang gusto mong burahin ang mensaheng ito para sa lahat?</string>
     <string name="deleteMessageDeviceOnly">Burahin sa aparatong ito lamang</string>
     <string name="deleteMessageDevicesAll">Burahin sa lahat ng aking mga aparato</string>
@@ -296,7 +294,6 @@
         <item quantity="one">Nabigong tanggalin ang mensahe</item>
         <item quantity="other">Nabigong tanggalin ang mga mensahe</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Sigurado ka bang gusto mong tanggalin ang mga mensaheng ito mula sa device na ito lamang?</string>
     <string name="deleteMessagesDescriptionEveryone">Sigurado ka bang gusto mong tanggalin ang mga mensaheng ito para sa lahat?</string>
     <string name="deleting">Binubura</string>
     <string name="developerToolsToggle">I-toggle ang Mga Tool ng Developer</string>
@@ -403,7 +400,6 @@
     <string name="groupInviteFailedMultiple">Nabigo sa pag-imbita kay {name} at {count} iba pa sa {group_name}</string>
     <string name="groupInviteFailedTwo">Nabigo sa pag-imbita kay {name} at {other_name} sa {group_name}</string>
     <string name="groupInviteFailedUser">Nabigo sa pag-imbita kay {name} sa {group_name}</string>
-    <string name="groupInviteSending">Sending invite</string>
     <string name="groupInviteSent">Naipadala ang imbitasyon</string>
     <string name="groupInviteSuccessful">Matagumpay ang paanyaya ng grupo</string>
     <string name="groupInviteVersion">Mga user ay dapat may pinakabagong bersyon upang makatanggap ng mga imbitasyon</string>
@@ -425,7 +421,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> at <b>{count} iba pa</b> ay naimbitahan na sumali sa grupo.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> at <b>{other_name}</b> ay naimbitahan na sumali sa grupo.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Ikaw</b> at <b>{count} iba pa</b> ay naimbitahan na sumali sa grupo. Ibinahagi ang kasaysayan ng chat.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Ikaw</b> at <b>{name}</b> ay naimbitahan na sumali sa grupo. Ibinahagi ang kasaysayan ng chat.</string>
     <string name="groupMemberYouLeft"><b>Ikaw</b> ay umalis sa grupo.</string>
     <string name="groupMembers">Mga Miyembro ng Grupo</string>
     <string name="groupMembersNone">Walang ibang miyembro sa grupong ito.</string>

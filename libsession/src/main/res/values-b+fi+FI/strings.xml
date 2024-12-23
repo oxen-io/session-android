@@ -36,7 +36,6 @@
     <string name="adminRemovedUser"><b>{name}</b> poistettiin ylläpitäjänä.</string>
     <string name="adminRemovedUserMultiple"><b>{name}</b> ja <b>{count} muuta</b> poistettiin ylläpitäjästä.</string>
     <string name="adminRemovedUserOther"><b>{name}</b> ja <b>{other_name}</b> poistettiin ylläpitäjästä.</string>
-    <string name="adminSendingPromotion">Ylläpitoylennystä lähetetään</string>
     <string name="adminSettings">Admin-asetukset</string>
     <string name="adminTwoPromotedToAdmin"><b>{name}</b> ja <b>{other_name}</b> ylennettiin ylläpitäjiksi.</string>
     <string name="andMore">+{count}</string>
@@ -257,7 +256,7 @@
     <string name="create">Luo</string>
     <string name="cut">Leikkaa</string>
     <string name="databaseErrorGeneric">Tapahtui tietokantavirhe.\n\nVie sovelluslokisi vianselvitystä varten. Jollei tämä onnistu, asenna {app_name} uudelleen ja palauta tilisi.\n\nVaroitus: Tämän seurauksena kaikki kahta viikkoa vanhemmat viestit, liitteet ja tilitiedot menetetään.</string>
-    <string name="databaseErrorTimeout">Huomasimme, että {app_name} käynnistyy hitaasti.\n\nVoit jatkaa odottamista, viedä laitteesi lokit jaettavaksi vianmäärityksessä tai yrittää käynnistää Sessionin uudelleen.</string>
+    <string name="databaseErrorTimeout">Huomasimme, että {app_name} käynnistyy hitaasti.\n\nVoit jatkaa odottamista, viedä laitteesi lokit jaettavaksi vianmäärityksessä tai yrittää käynnistää {app_name} uudelleen.</string>
     <string name="databaseErrorUpdate">Sovellustietokanta ei ole yhteensopiva tämän {app_name} version kanssa. Asenna sovellus uudelleen ja palauta tilisi, jotta voit luoda uuden tietokannan ja jatkaa {app_name} käyttöä.\n\nVaroitus: Tämä johtaa yli kaksi viikkoa vanhojen viestien ja liitteiden menetykseen.</string>
     <string name="databaseOptimizing">Optimoidaan tietokanta</string>
     <string name="debugLog">Virheenkorjausloki</string>
@@ -288,7 +287,6 @@
     </plurals>
     <string name="deleteMessageDeletedGlobally">Tämä viesti on poistettu</string>
     <string name="deleteMessageDeletedLocally">Tämä viesti on poistettu tästä laitteesta</string>
-    <string name="deleteMessageDescriptionDevice">Oletko varma, että haluat poistaa tämän viestin ainoastaan tästä laitteesta?</string>
     <string name="deleteMessageDescriptionEveryone">Haluatko varmasti poistaa tämän viestin kaikilta?</string>
     <string name="deleteMessageDeviceOnly">Poista vain tältä laitteelta</string>
     <string name="deleteMessageDevicesAll">Poista kaikilta laitteiltani</string>
@@ -297,7 +295,6 @@
         <item quantity="one">Viestin poisto epäonnistui</item>
         <item quantity="other">Viestien poisto epäonnistui</item>
     </plurals>
-    <string name="deleteMessagesDescriptionDevice">Haluatko varmasti poistaa nämä viestit vain tästä laitteesta?</string>
     <string name="deleteMessagesDescriptionEveryone">Haluatko varmasti poistaa nämä viestit kaikilta?</string>
     <string name="deleting">Poistetaan</string>
     <string name="developerToolsToggle">Näytä/piilota kehittäjätyökalut</string>
@@ -404,7 +401,6 @@
     <string name="groupInviteFailedMultiple">Käyttäjien {name} ja {count} muun kutsuminen ryhmään {group_name} epäonnistui</string>
     <string name="groupInviteFailedTwo">Käyttäjien {name} ja {other_name} kutsuminen ryhmään {group_name} epäonnistui</string>
     <string name="groupInviteFailedUser">Käyttäjän {name} kutsuminen ryhmään {group_name} epäonnistui</string>
-    <string name="groupInviteSending">Kutsua lähetetään</string>
     <string name="groupInviteSent">Kutsu on lähetetty</string>
     <string name="groupInviteSuccessful">Ryhmän kutsu onnistui</string>
     <string name="groupInviteVersion">Käyttäjillä on oltava uusin versio vastaanottaakseen kutsuja</string>
@@ -426,7 +422,6 @@
     <string name="groupMemberNewMultiple"><b>{name}</b> ja <b>{count} muuta</b> kutsuttiin ryhmään.</string>
     <string name="groupMemberNewTwo"><b>{name}</b> ja <b>{other_name}</b> kutsuttiin ryhmään.</string>
     <string name="groupMemberNewYouHistoryMultiple"><b>Sinä</b> ja <b>{count} muuta</b> kutsuttiin ryhmään. Keskusteluhistoria jaetaan.</string>
-    <string name="groupMemberNewYouHistoryTwo"><b>Sinä</b> ja <b>{name}</b> kutsuttiin ryhmään. Keskusteluhistoria jaetaan.</string>
     <string name="groupMemberYouLeft"><b>Sinä</b> poistuit ryhmästä.</string>
     <string name="groupMembers">Ryhmän jäsenet</string>
     <string name="groupMembersNone">Ryhmässä ei ole muita jäseniä.</string>
