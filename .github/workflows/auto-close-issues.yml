@@ -1,0 +1,38 @@
+name: Auto Close issues
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  close_issue_from_unwhitelisted:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check issue author and act
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // Define your whitelist of allowed users here:
+            const whitelist = ['KeeJef'];
+            
+            const issueAuthor = context.payload.issue.user.login;
+
+            // If the user is not in the whitelist, comment and close the issue
+            if (!whitelist.includes(issueAuthor)) {
+              // Post a comment directing them to the new repository
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: "Hi @"+issueAuthor+", thanks for opening an issue, this repository is now deprecated. However, Session Android is still actively developed [here](https://github.com/session-foundation/session-android). This is in line with announcements from [Session](https://getsession.org/blog/introducing-the-session-technology-foundation) and the [OPTF](https://optf.ngo/blog/the-optf-and-session), indicating that the OPTF has handed over the stewardship of the Session Project to the [Session Technology Foundation](https://session.foundation), a Swiss-based foundation dedicated to advancing digital rights and innovation. Please reopen your issue in the new repo: [here](https://github.com/session-foundation/session-android/issues)."
+              });
+
+              // Close the issue
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                state: 'closed'
+              });
+            }
